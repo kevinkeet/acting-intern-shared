@@ -1857,8 +1857,22 @@ const AICoworker = {
         this._autoResizeTextarea(textarea);
 
         // Smart routing: detect question vs. clinical thinking
-        const isQuestion = /\?$/.test(text) ||
-            /^(what|why|how|when|where|who|which|is|are|does|do|can|could|should|would|will|tell|explain|describe|summarize|list|compare)/i.test(text);
+        // In hands-free mode, ALWAYS route as clinical thinking (doctors think out loud,
+        // they don't ask the AI questions while wearing glasses). This lets them say things
+        // like "I think this could be CHF exacerbation, should start diuresis" without
+        // the "should" keyword misrouting it as a question.
+        let isQuestion = false;
+        if (!this._handsFreeActive) {
+            // Typed input: only detect as question if it ends with '?' OR
+            // starts with a question word followed by a space (standalone question).
+            // Exclude clinical statements like "Can hear crackles" or "Should start diuresis"
+            // by requiring the question word to be at the very start AND the sentence structure
+            // to look like a genuine question (not a clinical action/observation).
+            isQuestion = /\?\s*$/.test(text) ||
+                /^(what|why|how|where|who|which)\s/i.test(text) ||
+                /^(tell me|explain|describe|summarize|list|compare)\s/i.test(text) ||
+                /^(is there|are there|is it|is this|do we|does the|does this|can you|could you|should we|should I)\s/i.test(text);
+        }
 
         if (isQuestion) {
             this._pushToThread('user', 'ask', text);
@@ -2549,8 +2563,28 @@ Respond with ONLY the JSON, no preamble.`;
                     // Check for voice commands in each final chunk
                     var command = self._detectVoiceCommand(transcript);
                     if (command) {
-                        // Strip the command phrase from the transcript
+                        // Strip the command phrase from the accumulated transcript
                         self._hfFinalTranscript = self._hfFinalTranscript.replace(command.regex, '').trim();
+
+                        // PRESERVE BUFFER: If there's accumulated speech before the command,
+                        // submit it as clinical thinking first (e.g., "I think this patient
+                        // needs lasix, submit order" → submit "I think this patient needs
+                        // lasix" as dictation, THEN execute the "submit order" command)
+                        var bufferedSpeech = self._hfFinalTranscript.trim();
+                        if (bufferedSpeech.length > 0) {
+                            var textarea = document.getElementById('copilot-inline-input');
+                            if (textarea) {
+                                textarea.value = bufferedSpeech;
+                            }
+                            // Submit the buffered speech as clinical thinking
+                            self._hfFinalTranscript = '';
+                            self._hfInterimTranscript = '';
+                            self.handleInlineSubmit();
+                        }
+
+                        // Clear remaining buffer and execute the voice command
+                        self._hfFinalTranscript = '';
+                        self._hfInterimTranscript = '';
                         self._executeVoiceCommand(command);
                         return;
                     }
@@ -4639,6 +4673,21 @@ RULES:
         // Track completed action so it doesn't reappear
         this._completedActions = this._completedActions || new Set();
         this._completedActions.add(text);
+
+        // Feed back to AI context — store with metadata so the AI knows what's been done
+        if (!this.state.executedActions) this.state.executedActions = [];
+        this.state.executedActions.push({
+            text: text,
+            category: category || 'unknown',
+            orderType: action.orderType || null,
+            timestamp: new Date().toISOString()
+        });
+        // Keep last 20 executed actions
+        if (this.state.executedActions.length > 20) {
+            this.state.executedActions = this.state.executedActions.slice(-20);
+        }
+        this.saveState();
+
         this._removeActionFromUI(actionId);
 
         // 1. Communication actions → route to patient or nurse chat

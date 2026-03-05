@@ -200,13 +200,16 @@ RULES:
             );
         }
 
+        // Build executed actions context if available
+        const executedActionsBlock = this._getExecutedActionsBlock();
+
         const userMessage = `## Clinical Context (with AI Memory)
 ${context}
-
+${executedActionsBlock}
 ## Doctor's Current Assessment/Thoughts
 "${doctorThoughts}"
 
-Based on the doctor's thoughts and the clinical context above, provide an updated synthesis. Update the trajectory assessment, key findings, open questions, AND your patient summary based on this new information.`;
+Based on the doctor's thoughts and the clinical context above, provide an updated synthesis. Update the trajectory assessment, key findings, open questions, AND your patient summary based on this new information. Do NOT re-suggest actions that have already been completed (see "Already Completed Actions" above if present).`;
 
         const maxTokens = mode ? mode.responseStyle.maxTokensDictation : 2500;
         return { systemPrompt, userMessage, maxTokens };
@@ -317,12 +320,15 @@ RULES:
             );
         }
 
+        // Build executed actions context if available
+        const executedActionsBlock = this._getExecutedActionsBlock();
+
         const userMessage = `## Full Clinical Context (with AI Memory)
 ${context}
-
+${executedActionsBlock}
 ${dictation ? `## Doctor's Current Assessment\n"${dictation}"` : '## No doctor assessment recorded yet'}
 
-Provide a concise case synthesis. Be brief and clinical — no filler.`;
+Provide a concise case synthesis. Be brief and clinical — no filler. Do NOT re-suggest actions that have already been completed (see "Already Completed Actions" above if present).`;
 
         const maxTokens = mode ? mode.responseStyle.maxTokensRefresh : 3000;
         return { systemPrompt, userMessage, maxTokens };
@@ -475,6 +481,32 @@ ${noteData}`;
         }
 
         return updates;
+    }
+
+    /**
+     * Build a context block of already-completed actions so the LLM doesn't re-suggest them.
+     * Pulls from AICoworker.state.executedActions if available.
+     * @returns {string} A formatted block or empty string if no actions completed.
+     */
+    _getExecutedActionsBlock() {
+        if (typeof AICoworker === 'undefined' || !AICoworker.state || !AICoworker.state.executedActions) {
+            return '';
+        }
+        const actions = AICoworker.state.executedActions;
+        if (!actions || actions.length === 0) return '';
+
+        const lines = actions.map(function(a) {
+            var timeStr = '';
+            if (a.timestamp) {
+                try {
+                    var d = new Date(a.timestamp);
+                    timeStr = ' (' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ')';
+                } catch(e) {}
+            }
+            return '- [DONE] ' + a.text + timeStr;
+        });
+
+        return '\n## Already Completed Actions (do NOT re-suggest these)\n' + lines.join('\n') + '\n';
     }
 }
 
