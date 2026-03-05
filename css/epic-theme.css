@@ -6829,6 +6829,104 @@ html, body {
     background: var(--primary-dark);
 }
 
+/* ===== Hands-Free Voice Mode ===== */
+
+.inline-mic-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #f3f4f6;
+    color: var(--text-muted);
+    border: 1px solid var(--border-light);
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+.inline-mic-btn:hover {
+    background: #e5e7eb;
+    color: var(--text-primary);
+    border-color: var(--border-medium);
+}
+
+.inline-mic-btn.recording {
+    background: linear-gradient(135deg, #dc2626 0%, #f87171 100%);
+    color: white;
+    border-color: #dc2626;
+    animation: micPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes micPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4); }
+    50% { box-shadow: 0 0 0 8px rgba(220, 38, 38, 0); }
+}
+
+.inline-textarea.voice-active {
+    border-color: #dc2626;
+    background: #fef2f2;
+}
+
+.hands-free-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    color: #dc2626;
+    font-weight: 500;
+    padding: 3px 0;
+    transition: all 0.3s ease;
+}
+
+.hands-free-status.submitted {
+    color: #16a34a;
+}
+
+.hf-pulse {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #dc2626;
+    animation: hfDot 1s ease-in-out infinite;
+    flex-shrink: 0;
+}
+
+@keyframes hfDot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+.hands-free-status.submitted .hf-pulse {
+    background: #16a34a;
+    animation: none;
+}
+
+/* Voice command flash */
+.voice-command-toast {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.85);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    z-index: 10000;
+    pointer-events: none;
+    animation: vcToast 1.5s ease-out forwards;
+}
+
+@keyframes vcToast {
+    0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    70% { opacity: 1; }
+    100% { opacity: 0; transform: translate(-50%, -60%) scale(0.95); }
+}
+
 .inline-action-bar {
     display: flex;
     gap: 4px;

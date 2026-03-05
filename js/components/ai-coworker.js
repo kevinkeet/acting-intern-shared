@@ -1691,13 +1691,20 @@ const AICoworker = {
             else if (mode.id === 'heavy') placeholder = 'Share your thinking or ask for teaching...';
         }
         html += '<div class="inline-input-row">';
-        html += '<textarea id="copilot-inline-input" class="inline-textarea" rows="1" placeholder="' + placeholder + '" onkeydown="AICoworker.handleInputKeydown(event)"></textarea>';
+        var isHandsFree = this._handsFreeActive || false;
+        html += '<button class="inline-mic-btn' + (isHandsFree ? ' recording' : '') + '" onclick="AICoworker.toggleHandsFree()" title="' + (isHandsFree ? 'Stop hands-free' : 'Hands-free voice mode') + '">&#127908;</button>';
+        html += '<textarea id="copilot-inline-input" class="inline-textarea' + (isHandsFree ? ' voice-active' : '') + '" rows="1" placeholder="' + (isHandsFree ? 'Listening... speak now' : placeholder) + '" onkeydown="AICoworker.handleInputKeydown(event)"></textarea>';
         html += '<button class="inline-send-btn" onclick="AICoworker.handleInlineSubmit()" title="Send">&#9654;</button>';
         html += '</div>';
+        // Silence timer indicator
+        if (isHandsFree) {
+            var secs = Math.round((this._handsFreeTimeout || 3000) / 1000);
+            html += '<div class="hands-free-status" id="hands-free-status"><span class="hf-pulse"></span> Hands-free mode &mdash; auto-submits after ' + secs + 's silence</div>';
+        }
 
         // Action buttons
         html += '<div class="inline-action-bar">';
-        html += '<button class="inline-action-btn" onclick="AICoworker.openDictationModal()" title="Voice dictation"><span>&#127897;</span> Voice</button>';
+        html += '<button class="inline-action-btn" onclick="AICoworker.openDictationModal()" title="Voice dictation"><span>&#127897;</span> Dictate</button>';
         html += '<button class="inline-action-btn" onclick="AICoworker.openNoteModal()" title="Write clinical note"><span>&#128221;</span> Write Note</button>';
         html += '<button class="inline-action-btn inline-more-btn" onclick="AICoworker.toggleMoreMenu()" title="More actions"><span>&#8943;</span> More</button>';
         html += '<div class="inline-more-menu" id="inline-more-menu">';
@@ -2491,6 +2498,364 @@ Respond with ONLY the JSON, no preamble.`;
             btn.querySelector('.voice-text').textContent = 'Start Recording';
             btn.querySelector('.voice-icon').textContent = '🎙️';
         }
+    },
+
+    // ==================== Hands-Free Voice Mode ====================
+
+    /**
+     * Toggle hands-free voice mode.
+     * When active, continuously listens and auto-submits after silence.
+     */
+    toggleHandsFree() {
+        if (this._handsFreeActive) {
+            this.stopHandsFree();
+        } else {
+            this.startHandsFree();
+        }
+    },
+
+    /**
+     * Start hands-free voice mode.
+     * Uses Web Speech API with continuous listening + silence detection.
+     */
+    startHandsFree() {
+        var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+            if (typeof App !== 'undefined') App.showToast('Speech recognition not supported in this browser', 'error');
+            return;
+        }
+
+        this._handsFreeActive = true;
+        this._handsFreeTimeout = 3000; // 3 seconds of silence to auto-submit
+        this._hfSilenceTimer = null;
+        this._hfFinalTranscript = '';
+        this._hfInterimTranscript = '';
+
+        this._hfRecognition = new SpeechRecognition();
+        this._hfRecognition.continuous = true;
+        this._hfRecognition.interimResults = true;
+        this._hfRecognition.lang = 'en-US';
+        this._hfRecognition.maxAlternatives = 1;
+
+        var self = this;
+
+        this._hfRecognition.onresult = function(event) {
+            self._hfInterimTranscript = '';
+            for (var i = event.resultIndex; i < event.results.length; i++) {
+                var transcript = event.results[i][0].transcript;
+                if (event.results[i].isFinal) {
+                    self._hfFinalTranscript += transcript;
+
+                    // Check for voice commands in each final chunk
+                    var command = self._detectVoiceCommand(transcript);
+                    if (command) {
+                        // Strip the command phrase from the transcript
+                        self._hfFinalTranscript = self._hfFinalTranscript.replace(command.regex, '').trim();
+                        self._executeVoiceCommand(command);
+                        return;
+                    }
+                } else {
+                    self._hfInterimTranscript += transcript;
+                }
+            }
+
+            // Update the inline textarea with live transcription
+            var textarea = document.getElementById('copilot-inline-input');
+            if (textarea) {
+                textarea.value = self._hfFinalTranscript + self._hfInterimTranscript;
+                textarea.style.height = 'auto';
+                textarea.style.height = textarea.scrollHeight + 'px';
+            }
+
+            // Reset silence timer — speech was detected
+            self._resetSilenceTimer();
+        };
+
+        this._hfRecognition.onerror = function(event) {
+            console.error('Hands-free recognition error:', event.error);
+            if (event.error === 'not-allowed') {
+                if (typeof App !== 'undefined') App.showToast('Microphone access denied', 'error');
+                self.stopHandsFree();
+            } else if (event.error === 'no-speech') {
+                // No speech detected — browser timed out, restart if still active
+                // Don't stop, let onend handler restart
+            } else if (event.error === 'aborted') {
+                // Intentional stop, do nothing
+            } else {
+                if (typeof App !== 'undefined') App.showToast('Voice error: ' + event.error, 'warning');
+            }
+        };
+
+        this._hfRecognition.onend = function() {
+            // Auto-restart if still in hands-free mode (browser may stop on its own)
+            if (self._handsFreeActive) {
+                try {
+                    self._hfRecognition.start();
+                } catch (e) {
+                    // May fail if already started, ignore
+                }
+            }
+        };
+
+        try {
+            this._hfRecognition.start();
+            this.render();
+            if (typeof App !== 'undefined') App.showToast('Hands-free mode active', 'success');
+        } catch (e) {
+            console.error('Failed to start hands-free:', e);
+            this._handsFreeActive = false;
+            this.render();
+        }
+    },
+
+    /**
+     * Reset the silence timer — called each time speech is detected.
+     * When the timer fires, auto-submit the accumulated text.
+     */
+    _resetSilenceTimer() {
+        var self = this;
+        if (this._hfSilenceTimer) {
+            clearTimeout(this._hfSilenceTimer);
+        }
+        this._hfSilenceTimer = setTimeout(function() {
+            self._onSilenceDetected();
+        }, this._handsFreeTimeout || 3000);
+    },
+
+    /**
+     * Called when silence is detected for the configured duration.
+     * Auto-submits accumulated text and resets for next utterance.
+     */
+    _onSilenceDetected() {
+        var text = (this._hfFinalTranscript || '').trim();
+        if (!text) return; // Nothing to submit
+
+        // Put the text in the textarea and submit
+        var textarea = document.getElementById('copilot-inline-input');
+        if (textarea) {
+            textarea.value = text;
+        }
+
+        // Reset transcript for next utterance
+        this._hfFinalTranscript = '';
+        this._hfInterimTranscript = '';
+
+        // Auto-submit through the standard handler
+        this.handleInlineSubmit();
+
+        // Flash the status indicator
+        var status = document.getElementById('hands-free-status');
+        if (status) {
+            status.classList.add('submitted');
+            setTimeout(function() {
+                if (status) status.classList.remove('submitted');
+            }, 1500);
+        }
+    },
+
+    /**
+     * Stop hands-free voice mode.
+     */
+    stopHandsFree() {
+        this._handsFreeActive = false;
+        if (this._hfSilenceTimer) {
+            clearTimeout(this._hfSilenceTimer);
+            this._hfSilenceTimer = null;
+        }
+        if (this._hfRecognition) {
+            try {
+                this._hfRecognition.onend = null; // Prevent auto-restart
+                this._hfRecognition.stop();
+            } catch (e) { /* ignore */ }
+            this._hfRecognition = null;
+        }
+        this._hfFinalTranscript = '';
+        this._hfInterimTranscript = '';
+        this.render();
+        if (typeof App !== 'undefined') App.showToast('Hands-free mode stopped', 'info');
+    },
+
+    // ==================== Voice Commands ====================
+
+    /**
+     * Voice command registry.
+     * Each command has: trigger phrases (regex), action function, and display label.
+     */
+    _getVoiceCommands() {
+        return [
+            {
+                id: 'submit',
+                regex: /\b(submit|send it|send that)\b/i,
+                label: 'Submit',
+                action: function() {
+                    // Force submit whatever is in the buffer right now
+                    this._onSilenceDetected();
+                }.bind(this)
+            },
+            {
+                id: 'message_nurse',
+                regex: /\b(message nurse|message the nurse|text nurse|tell the nurse|talk to nurse|nurse chat)\b/i,
+                label: 'Message Nurse',
+                action: function() {
+                    if (typeof NurseChat !== 'undefined') {
+                        NurseChat.openChat();
+                        // If there's buffered text, put it in nurse chat
+                        var text = (this._hfFinalTranscript || '').trim();
+                        if (text) {
+                            setTimeout(function() {
+                                var input = document.getElementById('nurse-chat-input');
+                                if (input) input.value = text;
+                            }, 300);
+                        }
+                    }
+                    this._hfFinalTranscript = '';
+                    this._hfInterimTranscript = '';
+                }.bind(this)
+            },
+            {
+                id: 'message_patient',
+                regex: /\b(message patient|talk to patient|patient chat|ask the patient|ask patient)\b/i,
+                label: 'Talk to Patient',
+                action: function() {
+                    if (typeof PatientChat !== 'undefined') {
+                        PatientChat.openChat();
+                        var text = (this._hfFinalTranscript || '').trim();
+                        if (text) {
+                            setTimeout(function() {
+                                var input = document.getElementById('patient-chat-input');
+                                if (input) input.value = text;
+                            }, 300);
+                        }
+                    }
+                    this._hfFinalTranscript = '';
+                    this._hfInterimTranscript = '';
+                }.bind(this)
+            },
+            {
+                id: 'place_order',
+                regex: /\b(place order|submit order|new order|open orders|order entry)\b/i,
+                label: 'Place Order',
+                action: function() {
+                    if (typeof OrderEntry !== 'undefined') {
+                        OrderEntry.openOrderEntry();
+                    }
+                    this._hfFinalTranscript = '';
+                    this._hfInterimTranscript = '';
+                }.bind(this)
+            },
+            {
+                id: 'write_note',
+                regex: /\b(write note|write a note|clinical note|progress note|open note)\b/i,
+                label: 'Write Note',
+                action: function() {
+                    this.openNoteModal();
+                    this._hfFinalTranscript = '';
+                    this._hfInterimTranscript = '';
+                }.bind(this)
+            },
+            {
+                id: 'refresh',
+                regex: /\b(refresh analysis|refresh thinking|update analysis|re-analyze|reanalyze)\b/i,
+                label: 'Refresh Analysis',
+                action: function() {
+                    this.refreshThinking();
+                    this._hfFinalTranscript = '';
+                    this._hfInterimTranscript = '';
+                }.bind(this)
+            },
+            {
+                id: 'stop_listening',
+                regex: /\b(stop listening|hands free off|stop hands free|mic off|stop recording)\b/i,
+                label: 'Stop Listening',
+                action: function() {
+                    this.stopHandsFree();
+                }.bind(this)
+            },
+            {
+                id: 'switch_light',
+                regex: /\b(switch to light|light mode|go light)\b/i,
+                label: 'Light Mode',
+                action: function() {
+                    if (typeof AIPanel !== 'undefined') AIPanel.setMode('light');
+                    this._hfFinalTranscript = '';
+                    this._hfInterimTranscript = '';
+                }.bind(this)
+            },
+            {
+                id: 'switch_medium',
+                regex: /\b(switch to medium|medium mode|go medium)\b/i,
+                label: 'Medium Mode',
+                action: function() {
+                    if (typeof AIPanel !== 'undefined') AIPanel.setMode('medium');
+                    this._hfFinalTranscript = '';
+                    this._hfInterimTranscript = '';
+                }.bind(this)
+            },
+            {
+                id: 'switch_heavy',
+                regex: /\b(switch to heavy|heavy mode|go heavy)\b/i,
+                label: 'Heavy Mode',
+                action: function() {
+                    if (typeof AIPanel !== 'undefined') AIPanel.setMode('heavy');
+                    this._hfFinalTranscript = '';
+                    this._hfInterimTranscript = '';
+                }.bind(this)
+            }
+        ];
+    },
+
+    /**
+     * Detect a voice command in a transcript chunk.
+     * Returns the matching command object or null.
+     */
+    _detectVoiceCommand(transcript) {
+        var commands = this._getVoiceCommands();
+        for (var i = 0; i < commands.length; i++) {
+            if (commands[i].regex.test(transcript)) {
+                return commands[i];
+            }
+        }
+        return null;
+    },
+
+    /**
+     * Execute a detected voice command with visual feedback.
+     */
+    _executeVoiceCommand(command) {
+        // Show big centered toast with command name
+        this._showVoiceCommandToast(command.label);
+
+        // Clear the silence timer so we don't double-submit
+        if (this._hfSilenceTimer) {
+            clearTimeout(this._hfSilenceTimer);
+            this._hfSilenceTimer = null;
+        }
+
+        // Update the textarea to remove command text
+        var textarea = document.getElementById('copilot-inline-input');
+        if (textarea) {
+            textarea.value = (this._hfFinalTranscript || '').trim();
+        }
+
+        // Execute the command action
+        command.action();
+    },
+
+    /**
+     * Show a big centered toast for voice command feedback.
+     */
+    _showVoiceCommandToast(label) {
+        var existing = document.querySelector('.voice-command-toast');
+        if (existing) existing.remove();
+
+        var toast = document.createElement('div');
+        toast.className = 'voice-command-toast';
+        toast.textContent = '🎤 ' + label;
+        document.body.appendChild(toast);
+
+        setTimeout(function() {
+            if (toast.parentNode) toast.remove();
+        }, 1600);
     },
 
     // ==================== Note Writing ====================
