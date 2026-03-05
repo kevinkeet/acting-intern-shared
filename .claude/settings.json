@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git *)",
+      "Bash(npx http-server*)",
+      "Bash(npm *)",
+      "Bash(ls *)",
+      "Bash(pwd)",
+      "Bash(wc *)",
+      "Bash(which *)"
+    ]
+  }
+}
