@@ -1,6 +1,6 @@
 /**
  * AI Panel Component
- * Manages the AI side panel — single panel with collapse/expand + settings + resize.
+ * Manages the AI side panel — single panel with collapse/expand + settings + resize + mode toggle.
  */
 
 const AIPanel = {
@@ -14,6 +14,11 @@ const AIPanel = {
      * Initialize the AI panel
      */
     init() {
+        // Initialize mode config
+        if (typeof AIModeConfig !== 'undefined') {
+            AIModeConfig.init();
+        }
+
         // Default to collapsed unless the user has explicitly expanded before
         const savedState = localStorage.getItem('ai-panel-collapsed');
         this.isCollapsed = savedState === null ? true : savedState === 'true';
@@ -39,6 +44,11 @@ const AIPanel = {
 
         // Initialize resize handle
         this.initResize();
+
+        // Sync mode toggle UI to saved mode
+        if (typeof AIModeConfig !== 'undefined') {
+            this.syncModeUI(AIModeConfig.currentMode);
+        }
 
         console.log('AI Panel initialized');
     },
@@ -138,9 +148,16 @@ const AIPanel = {
     /**
      * Trigger AI analysis automatically if no LLM data is present yet.
      * Called when the panel is expanded for the first time.
+     * Respects mode setting — Light mode skips auto-refresh.
      */
     _autoAnalyzeIfNeeded() {
         if (typeof AICoworker === 'undefined') return;
+
+        // Check mode — Light mode doesn't auto-refresh
+        if (typeof AIModeConfig !== 'undefined') {
+            var mode = AIModeConfig.getMode();
+            if (!mode.proactive.autoRefreshOnExpand) return;
+        }
 
         // Check if we already have LLM-enriched problem data
         const hasLLMData = AICoworker.state &&
@@ -159,6 +176,38 @@ const AIPanel = {
         setTimeout(() => {
             AICoworker.refreshThinking();
         }, 300);
+    },
+
+    /**
+     * Set AI assistant mode (Light / Medium / Heavy)
+     */
+    setMode(modeId) {
+        if (typeof AIModeConfig === 'undefined') return;
+        AIModeConfig.setMode(modeId);
+        this.syncModeUI(modeId);
+        // Trigger re-render of AI content with new mode
+        if (typeof AICoworker !== 'undefined') {
+            AICoworker.onModeChanged(modeId);
+        }
+    },
+
+    /**
+     * Sync mode toggle UI to reflect current mode
+     */
+    syncModeUI(modeId) {
+        // Update toggle button active states
+        var toggle = document.getElementById('ai-mode-toggle');
+        if (toggle) {
+            var buttons = toggle.querySelectorAll('.mode-btn');
+            buttons.forEach(function(btn) {
+                btn.classList.toggle('active', btn.dataset.mode === modeId);
+            });
+        }
+        // Set data attribute on panel for CSS mode-specific styling
+        var panel = document.getElementById('ai-panel');
+        if (panel) {
+            panel.dataset.mode = modeId;
+        }
     },
 
     /**

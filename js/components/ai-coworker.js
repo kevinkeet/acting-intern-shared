@@ -22,6 +22,11 @@ const AICoworker = {
     model: 'claude-sonnet-4-6',
     analysisModel: 'claude-sonnet-4-6', // Default all tasks to Sonnet 4.6
 
+    // Current mode config (synced from AIModeConfig)
+    get mode_config() {
+        return typeof AIModeConfig !== 'undefined' ? AIModeConfig.getMode() : null;
+    },
+
     // Available models for the settings picker
     availableModels: [
         { id: 'claude-haiku-4-5-20251001', label: 'Haiku 4.5', description: 'Fastest, good for structured tasks' },
@@ -179,6 +184,8 @@ const AICoworker = {
             clinicalSummary: null, // LLM-refined 3-sentence summary {demographics, functional, presentation}
             problemList: [], // Prioritized problem list [{name, urgency, ddx, plan}]
             categorizedActions: null, // Actions by category {communication, labs, imaging, medications, other}
+            teachingPoints: [], // Heavy mode: clinical pearls from attending
+            ddxChallenge: '', // Heavy mode: differential challenge from attending
             chartData: {
                 patientInfo: null,
                 vitals: [],
@@ -787,6 +794,21 @@ const AICoworker = {
     },
 
     /**
+     * Handle AI mode change (Light / Medium / Heavy)
+     */
+    onModeChanged(modeId) {
+        // Re-render with new mode's section visibility and chips
+        this.render();
+        // Show toast indicating mode change
+        if (typeof AIModeConfig !== 'undefined') {
+            var mode = AIModeConfig.getMode();
+            if (typeof App !== 'undefined') {
+                App.showToast('AI Mode: ' + mode.label, 'info');
+            }
+        }
+    },
+
+    /**
      * Handle external messages (postMessage API)
      */
     handleExternalMessage(event) {
@@ -848,23 +870,30 @@ const AICoworker = {
 
         try {
         let html = '';
+        var sections = this.mode_config ? this.mode_config.sections : { alertBar: true, clinicalSummary: true, problemList: true, suggestedActions: true, conversationThread: true, teachingPoints: false, ddxChallenge: false };
 
         // ===== SECTION 1: SAFETY BAR (sticky top, only when alerts exist) =====
-        html += this.renderAlertBar();
+        if (sections.alertBar) html += this.renderAlertBar();
 
         // ===== SECTION 2: CLINICAL SUMMARY (3 sentences) =====
-        html += this.renderClinicalSummary();
+        if (sections.clinicalSummary) html += this.renderClinicalSummary();
 
-        // ===== SECTION 4: PROBLEM LIST =====
-        html += this.renderProblemList();
+        // ===== SECTION 3: PROBLEM LIST =====
+        if (sections.problemList) html += this.renderProblemList();
 
-        // ===== SECTION 5: SUGGESTED ACTIONS =====
-        html += this.renderSuggestedActions();
+        // ===== SECTION 4: SUGGESTED ACTIONS =====
+        if (sections.suggestedActions) html += this.renderSuggestedActions();
 
-        // ===== SECTION 6: CONVERSATION THREAD =====
-        html += this.renderConversationThread();
+        // ===== SECTION 5: TEACHING POINTS (Heavy mode only) =====
+        if (sections.teachingPoints) html += this.renderTeachingPoints();
 
-        // ===== SECTION 7: INLINE INPUT (sticky bottom) =====
+        // ===== SECTION 6: DDx CHALLENGE (Heavy mode only) =====
+        if (sections.ddxChallenge) html += this.renderDDxChallenge();
+
+        // ===== SECTION 7: CONVERSATION THREAD =====
+        if (sections.conversationThread) html += this.renderConversationThread();
+
+        // ===== SECTION 8: INLINE INPUT (always shown) =====
         html += this.renderInlineInput();
 
         body.innerHTML = html;
@@ -1498,6 +1527,48 @@ const AICoworker = {
     },
 
     /**
+     * Render Teaching Points section (Heavy mode only).
+     * Shows clinical pearls and evidence-based insights from the attending.
+     */
+    renderTeachingPoints() {
+        var points = this.state.teachingPoints;
+        if (!points || points.length === 0) return '';
+
+        var collapsed = this.isSectionCollapsed('teaching');
+        var chevron = collapsed ? '&#9654;' : '&#9660;';
+
+        var html = '<div class="copilot-section copilot-teaching-points">';
+        html += '<div class="copilot-section-header collapsible-header" onclick="AICoworker.toggleSection(\'teaching\')">';
+        html += '<span class="collapse-chevron">' + chevron + '</span>';
+        html += '<span>&#127891;</span> Teaching Points';
+        html += '</div>';
+
+        if (!collapsed) {
+            html += '<div class="copilot-section-body">';
+            for (var i = 0; i < points.length; i++) {
+                html += '<div class="teaching-point-item">' + this.formatText(points[i]) + '</div>';
+            }
+            html += '</div>';
+        }
+        html += '</div>';
+        return html;
+    },
+
+    /**
+     * Render DDx Challenge section (Heavy mode only).
+     * Shows a differential diagnosis challenge from the attending.
+     */
+    renderDDxChallenge() {
+        var challenge = this.state.ddxChallenge;
+        if (!challenge) return '';
+
+        return '<div class="copilot-ddx-challenge">' +
+            '<div class="ddx-challenge-label">&#129300; DDx Challenge</div>' +
+            '<div class="ddx-challenge-text">' + this.formatText(challenge) + '</div>' +
+            '</div>';
+    },
+
+    /**
      * Render suggested actions — 6 always-visible categories with specific LLM items.
      */
     renderSuggestedActions() {
@@ -1594,18 +1665,30 @@ const AICoworker = {
      * Replaces both Ask Modal and Quick Actions bar.
      */
     renderInlineInput() {
+        var mode = this.mode_config;
         let html = '<div class="copilot-inline-input">';
 
-        // Suggestion chips
+        // Mode-driven suggestion chips
         html += '<div class="inline-chips">';
-        html += '<button class="suggestion-chip" onclick="AICoworker.handleChip(\'Summarize case\')">Summarize</button>';
-        html += '<button class="suggestion-chip" onclick="AICoworker.handleChip(\'What are the key concerns?\')">Concerns?</button>';
-        html += '<button class="suggestion-chip" onclick="AICoworker.handleChip(\'What haven\\\'t I checked yet?\')">Missing?</button>';
+        var chips = mode ? mode.chips : [
+            { label: 'Summarize', prompt: 'Summarize case' },
+            { label: 'Concerns?', prompt: 'What are the key concerns?' },
+            { label: 'Missing?', prompt: "What haven't I checked yet?" }
+        ];
+        chips.forEach(function(chip) {
+            var safePrompt = chip.prompt.replace(/'/g, "\\'");
+            html += '<button class="suggestion-chip" onclick="AICoworker.handleChip(\'' + safePrompt + '\')">' + chip.label + '</button>';
+        });
         html += '</div>';
 
-        // Input row
+        // Input row with mode-specific placeholder
+        var placeholder = 'Ask a question or share your thinking...';
+        if (mode) {
+            if (mode.id === 'light') placeholder = 'Ask me to do something...';
+            else if (mode.id === 'heavy') placeholder = 'Share your thinking or ask for teaching...';
+        }
         html += '<div class="inline-input-row">';
-        html += '<textarea id="copilot-inline-input" class="inline-textarea" rows="1" placeholder="Ask a question or share your thinking..." onkeydown="AICoworker.handleInputKeydown(event)"></textarea>';
+        html += '<textarea id="copilot-inline-input" class="inline-textarea" rows="1" placeholder="' + placeholder + '" onkeydown="AICoworker.handleInputKeydown(event)"></textarea>';
         html += '<button class="inline-send-btn" onclick="AICoworker.handleInlineSubmit()" title="Send">&#9654;</button>';
         html += '</div>';
 
@@ -1638,6 +1721,15 @@ const AICoworker = {
 
         textarea.value = '';
         this._autoResizeTextarea(textarea);
+
+        var modeId = typeof AIModeConfig !== 'undefined' ? AIModeConfig.currentMode : 'medium';
+
+        // Light mode: route ALL input through ask (simple Q&A, no state updates)
+        if (modeId === 'light') {
+            this._pushToThread('user', 'ask', text);
+            this.askClaudeAbout(text);
+            return;
+        }
 
         // Smart routing: detect question vs. clinical thinking
         const isQuestion = /\?$/.test(text) ||
@@ -3758,6 +3850,12 @@ RULES:
 - keyFindings should be durable insights, not transient observations
 - openQuestions are things that still need to be resolved`;
 
+            // Inject mode personality prefix (fallback path)
+            var fbMode = typeof AIModeConfig !== 'undefined' ? AIModeConfig.getMode() : null;
+            if (fbMode && fbMode.responseStyle.personalityPrefix) {
+                systemPrompt = fbMode.responseStyle.personalityPrefix + '\n\n' + systemPrompt;
+            }
+
             clinicalContext = this.buildFullClinicalContext();
             userMessage = `## Current Clinical Context\n${clinicalContext}\n\n## Doctor's Current Assessment/Thoughts\n"${doctorThoughts}"\n\nBased on the doctor's thoughts and the clinical context above, provide an updated synthesis. Update the trajectory assessment, key findings, and open questions based on this new information.`;
         }
@@ -3829,6 +3927,14 @@ RULES:
             }
             if (result.categorizedActions) {
                 this.state.categorizedActions = result.categorizedActions;
+            }
+
+            // Heavy mode: extract teaching points and DDx challenge
+            if (result.teachingPoints && Array.isArray(result.teachingPoints)) {
+                this.state.teachingPoints = result.teachingPoints;
+            }
+            if (result.ddxChallenge) {
+                this.state.ddxChallenge = result.ddxChallenge;
             }
 
             // Push synthesis summary to conversation thread
@@ -3926,6 +4032,12 @@ RULES:
 - keyConsiderations: allergies, contraindications, drug interactions. "critical" = life-threatening only
 - Keep ALL text fields brief and clinical`;
 
+            // Inject mode personality prefix (fallback path)
+            var fbMode2 = typeof AIModeConfig !== 'undefined' ? AIModeConfig.getMode() : null;
+            if (fbMode2 && fbMode2.responseStyle.personalityPrefix) {
+                systemPrompt = fbMode2.responseStyle.personalityPrefix + '\n\n' + systemPrompt;
+            }
+
             clinicalContext = this.buildFullClinicalContext();
             userMessage = `## Clinical Context\n${clinicalContext}\n\n${this.state.dictation ? `## Doctor's Current Assessment\n"${this.state.dictation}"` : '## No doctor assessment recorded yet'}\n\nProvide a comprehensive case synthesis. Build a trajectory assessment covering all active problems.`;
         }
@@ -3987,6 +4099,14 @@ RULES:
             }
             if (result.categorizedActions) {
                 this.state.categorizedActions = result.categorizedActions;
+            }
+
+            // Heavy mode: extract teaching points and DDx challenge
+            if (result.teachingPoints && Array.isArray(result.teachingPoints)) {
+                this.state.teachingPoints = result.teachingPoints;
+            }
+            if (result.ddxChallenge) {
+                this.state.ddxChallenge = result.ddxChallenge;
             }
 
             this.state.status = 'ready';

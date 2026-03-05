@@ -22,8 +22,9 @@ class ContextAssembler {
      */
     buildAskPrompt(question) {
         const context = this.workingMemory.assemble('ask', { question });
+        const mode = typeof AIModeConfig !== 'undefined' ? AIModeConfig.getMode() : null;
 
-        const systemPrompt = `You are an AI clinical assistant helping a physician. You have a PERSISTENT MEMORY of this patient that accumulates across interactions — use it. Don't re-derive what you already know.
+        let systemPrompt = `You are an AI clinical assistant helping a physician. You have a PERSISTENT MEMORY of this patient that accumulates across interactions — use it. Don't re-derive what you already know.
 
 Answer their question or help with their task using the clinical context provided. Be concise, clinically relevant, and actionable. Use plain text, not markdown.
 
@@ -39,13 +40,19 @@ After answering, include a brief memory update in this JSON block at the end of 
 
 Only include the memory_update block if you have meaningful updates. If you're just answering a simple factual question, skip it.`;
 
+        // Inject mode personality prefix
+        if (mode && mode.responseStyle.personalityPrefix) {
+            systemPrompt = mode.responseStyle.personalityPrefix + '\n\n' + systemPrompt;
+        }
+
         const userMessage = `## Clinical Context
 ${context}
 
 ## Physician's Question
 ${question}`;
 
-        return { systemPrompt, userMessage, maxTokens: 2048 };
+        const maxTokens = mode ? mode.responseStyle.maxTokensAsk : 2048;
+        return { systemPrompt, userMessage, maxTokens };
     }
 
     /**
@@ -54,8 +61,9 @@ ${question}`;
      */
     buildDictationPrompt(doctorThoughts) {
         const context = this.workingMemory.assemble('dictate', { dictation: doctorThoughts });
+        const mode = typeof AIModeConfig !== 'undefined' ? AIModeConfig.getMode() : null;
 
-        const systemPrompt = `You are an AI clinical assistant helping a physician manage a patient case. You maintain a PERSISTENT MEMORY of this patient that accumulates across interactions.
+        let systemPrompt = `You are an AI clinical assistant helping a physician manage a patient case. You maintain a PERSISTENT MEMORY of this patient that accumulates across interactions.
 
 Your role:
 1. Synthesize the doctor's clinical reasoning with the available patient data
@@ -167,6 +175,19 @@ RULES:
   List any prior observations now outdated in supersededObservations
 - conflictsDetected: Flag any contradictions you notice between existing information and new data (e.g. nurse asking about anticoagulation when it's contraindicated)`;
 
+        // Inject mode personality prefix
+        if (mode && mode.responseStyle.personalityPrefix) {
+            systemPrompt = mode.responseStyle.personalityPrefix + '\n\n' + systemPrompt;
+        }
+
+        // For Heavy mode, inject extra response fields into the JSON format
+        if (mode && mode.responseStyle.includeTeachingPoints) {
+            systemPrompt = systemPrompt.replace(
+                '"conflictsDetected"',
+                '"teachingPoints": ["Clinical pearl or evidence-based insight relevant to this case"],\n    "ddxChallenge": "A brief challenge to the differential — what else should be considered and why?",\n    "conflictsDetected"'
+            );
+        }
+
         const userMessage = `## Clinical Context (with AI Memory)
 ${context}
 
@@ -175,7 +196,8 @@ ${context}
 
 Based on the doctor's thoughts and the clinical context above, provide an updated synthesis. Update the trajectory assessment, key findings, open questions, AND your patient summary based on this new information.`;
 
-        return { systemPrompt, userMessage, maxTokens: 2500 };
+        const maxTokens = mode ? mode.responseStyle.maxTokensDictation : 2500;
+        return { systemPrompt, userMessage, maxTokens };
     }
 
     /**
@@ -184,8 +206,9 @@ Based on the doctor's thoughts and the clinical context above, provide an update
      */
     buildRefreshPrompt(dictation) {
         const context = this.workingMemory.assemble('refresh');
+        const mode = typeof AIModeConfig !== 'undefined' ? AIModeConfig.getMode() : null;
 
-        const systemPrompt = `You are an AI clinical assistant embedded in an EHR. Analyze this patient and provide a synthesis.
+        let systemPrompt = `You are an AI clinical assistant embedded in an EHR. Analyze this patient and provide a synthesis.
 
 You maintain PERSISTENT MEMORY via a longitudinal clinical document. Your insights accumulate over time.
 
@@ -257,6 +280,19 @@ RULES:
 - memoryClassification: pendingDecisions, activeConditions (w/ trend), backgroundFacts, supersededObservations
 - conflictsDetected: flag contradictions between existing and new data`;
 
+        // Inject mode personality prefix
+        if (mode && mode.responseStyle.personalityPrefix) {
+            systemPrompt = mode.responseStyle.personalityPrefix + '\n\n' + systemPrompt;
+        }
+
+        // For Heavy mode, inject extra response fields into the JSON format
+        if (mode && mode.responseStyle.includeTeachingPoints) {
+            systemPrompt = systemPrompt.replace(
+                '"conflictsDetected"',
+                '"teachingPoints": ["Clinical pearl or evidence-based insight relevant to this case"],\n    "ddxChallenge": "A brief challenge to the differential — what else should be considered and why?",\n    "conflictsDetected"'
+            );
+        }
+
         const userMessage = `## Full Clinical Context (with AI Memory)
 ${context}
 
@@ -264,7 +300,8 @@ ${dictation ? `## Doctor's Current Assessment\n"${dictation}"` : '## No doctor a
 
 Provide a concise case synthesis. Be brief and clinical — no filler.`;
 
-        return { systemPrompt, userMessage, maxTokens: 3000 };
+        const maxTokens = mode ? mode.responseStyle.maxTokensRefresh : 3000;
+        return { systemPrompt, userMessage, maxTokens };
     }
 
     /**

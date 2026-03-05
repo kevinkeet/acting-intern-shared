@@ -2499,21 +2499,135 @@ html, body {
     opacity: 0.4;
 }
 
-/* Top bar */
+/* Top bar — 2-row layout: title row + mode toggle */
 .ai-panel-topbar {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 6px 12px;
+    flex-direction: column;
     background: var(--primary);
     color: white;
     flex-shrink: 0;
     font-size: 13px;
     font-weight: 600;
+    transition: background 0.3s ease;
+}
+
+.ai-panel-topbar-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 12px;
 }
 
 .ai-panel-topbar-title {
     font-size: 13px;
+}
+
+/* Mode Toggle — 3-segment control */
+.ai-mode-toggle {
+    display: flex;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.15);
+    padding: 3px;
+    gap: 2px;
+}
+
+.mode-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 5px 8px;
+    border: none;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: all 0.2s ease;
+    font-family: var(--font-family);
+}
+
+.mode-btn:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.mode-btn.active {
+    color: var(--primary);
+    background: white;
+    font-weight: 600;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.mode-btn .mode-icon {
+    font-size: 12px;
+}
+
+/* Mode-specific topbar accent colors */
+.ai-panel[data-mode="light"] .ai-panel-topbar {
+    background: #4a5568;
+}
+
+.ai-panel[data-mode="light"] .mode-btn.active {
+    color: #4a5568;
+}
+
+.ai-panel[data-mode="medium"] .ai-panel-topbar {
+    background: var(--primary);
+}
+
+.ai-panel[data-mode="heavy"] .ai-panel-topbar {
+    background: #9b2c2c;
+}
+
+.ai-panel[data-mode="heavy"] .mode-btn.active {
+    color: #9b2c2c;
+}
+
+/* Attending-only sections: Teaching Points */
+.copilot-teaching-points {
+    margin: 0 8px 8px 8px;
+}
+
+.copilot-teaching-points .copilot-section-header {
+    color: #9b2c2c;
+}
+
+.teaching-point-item {
+    padding: 6px 10px;
+    margin: 4px 0;
+    background: #fef5f5;
+    border-left: 3px solid #9b2c2c;
+    border-radius: 0 4px 4px 0;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--text-primary);
+}
+
+/* Attending-only sections: DDx Challenge */
+.copilot-ddx-challenge {
+    margin: 0 8px 8px 8px;
+    padding: 8px 10px;
+    background: #fefcf3;
+    border-left: 3px solid #d69e2e;
+    border-radius: 0 4px 4px 0;
+    font-size: 12px;
+}
+
+.ddx-challenge-label {
+    font-weight: 600;
+    color: #b7791f;
+    margin-bottom: 4px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.ddx-challenge-text {
+    line-height: 1.5;
+    color: var(--text-primary);
 }
 
 /* Tab Switcher */
