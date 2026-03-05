@@ -1,36 +1,27 @@
 /**
  * Clinical Images Component
  * Displays EKG and radiology images for interpretation
- * Uses local SVG files with external URL fallbacks
+ * EKG requires doctor interpretation (scored in debrief)
  */
 
 const ClinicalImages = {
-    // Image sources - local SVGs primary, Wikimedia Commons fallback
+    // Image sources - local files primary, fallbacks optional
     images: {
         'ekg-afib': {
             title: 'EKG - Current',
-            description: 'Rhythm strip showing current cardiac rhythm',
-            // Local SVG (reliable, no network dependency)
-            localUrl: 'images/ekg-afib.svg',
-            // Wikimedia fallbacks (may be blocked by CORS/firewalls)
-            url: 'https://upload.wikimedia.org/wikipedia/commons/3/35/Atrial_fibrillation.png',
-            fallbackUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Atrial_fibrillation.png/800px-Atrial_fibrillation.png',
-            findings: [
-                'Irregularly irregular rhythm',
-                'No discernible P waves',
-                'Fibrillatory baseline',
-                'Ventricular rate approximately 140 bpm',
-                'Narrow QRS complexes'
-            ],
-            interpretation: 'Atrial fibrillation with rapid ventricular response',
-            credit: 'Simulation illustration (clinical teaching purposes)'
+            description: '12-lead EKG obtained at bedside',
+            localUrl: 'images/ekg-patient.png',
+            url: 'images/ekg-afib.svg',   // Fallback to existing SVG
+            fallbackUrl: null,
+            findings: [],                   // Empty: doctor must interpret
+            interpretation: '',             // Empty: no giveaway
+            requiresInterpretation: true,   // Flag: show interpretation input
+            credit: 'Clinical EKG (teaching purposes)'
         },
         'cxr-chf': {
             title: 'Chest X-Ray - PA View',
             description: 'Portable chest radiograph',
-            // Local SVG (reliable, no network dependency)
             localUrl: 'images/cxr-chf.svg',
-            // Wikimedia fallbacks
             url: 'https://upload.wikimedia.org/wikipedia/commons/5/5e/Chest_radiograph_of_a_lung_with_Kerley_B_lines.jpg',
             fallbackUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Chest_radiograph_of_a_lung_with_Kerley_B_lines.jpg/600px-Chest_radiograph_of_a_lung_with_Kerley_B_lines.jpg',
             findings: [
@@ -47,6 +38,9 @@ const ClinicalImages = {
 
     // Track which images have been viewed
     viewedImages: new Set(),
+
+    // User's EKG interpretation (null = not submitted)
+    userInterpretation: null,
 
     /**
      * Initialize the component
@@ -82,8 +76,24 @@ const ClinicalImages = {
                         <div class="clinical-image-credit" id="clinical-image-credit"></div>
                     </div>
                 </div>
+                <!-- EKG Interpretation Input (shown only for EKGs) -->
+                <div class="clinical-image-interpret" id="clinical-image-interpret" style="display: none;">
+                    <div class="interpret-prompt">
+                        <h4>Your Interpretation</h4>
+                        <p>What rhythm do you see? Include rate, rhythm, and any notable findings.</p>
+                    </div>
+                    <div class="interpret-input-row">
+                        <input type="text" id="ekg-interpretation-input"
+                               placeholder="e.g., sinus tachycardia, atrial fibrillation with RVR..."
+                               autocomplete="off" />
+                        <button class="btn btn-primary" id="ekg-submit-btn" onclick="ClinicalImages.submitInterpretation()">
+                            Submit
+                        </button>
+                    </div>
+                    <div class="interpret-feedback" id="interpret-feedback" style="display: none;"></div>
+                </div>
                 <div class="clinical-image-footer">
-                    <button class="btn" onclick="ClinicalImages.toggleFindings()">
+                    <button class="btn" id="findings-toggle-btn" onclick="ClinicalImages.toggleFindings()">
                         <span id="findings-toggle-text">Show Findings</span>
                     </button>
                     <button class="btn btn-primary" onclick="ClinicalImages.close()">Close</button>
@@ -115,22 +125,62 @@ const ClinicalImages = {
         title.textContent = image.title;
         description.textContent = image.description;
 
-        // Build findings HTML
-        let findingsHtml = '<h4>Findings:</h4><ul>';
-        image.findings.forEach(function(f) {
-            findingsHtml += '<li>' + f + '</li>';
-        });
-        findingsHtml += '</ul>';
-        findings.innerHTML = findingsHtml;
+        // Build findings HTML (only if findings exist)
+        const hasFindings = image.findings && image.findings.length > 0;
+        if (hasFindings) {
+            let findingsHtml = '<h4>Findings:</h4><ul>';
+            image.findings.forEach(function(f) {
+                findingsHtml += '<li>' + f + '</li>';
+            });
+            findingsHtml += '</ul>';
+            findings.innerHTML = findingsHtml;
+        } else {
+            findings.innerHTML = '';
+        }
         findings.style.display = 'none';
 
-        interpretation.innerHTML = '<h4>Interpretation:</h4><p>' + image.interpretation + '</p>';
+        if (image.interpretation) {
+            interpretation.innerHTML = '<h4>Interpretation:</h4><p>' + image.interpretation + '</p>';
+        } else {
+            interpretation.innerHTML = '';
+        }
         interpretation.style.display = 'none';
 
         credit.textContent = 'Image: ' + image.credit;
 
-        // Reset toggle button
+        // Show/hide findings toggle button based on whether findings exist
+        const findingsBtn = document.getElementById('findings-toggle-btn');
+        if (findingsBtn) {
+            findingsBtn.style.display = hasFindings ? 'inline-block' : 'none';
+        }
         document.getElementById('findings-toggle-text').textContent = 'Show Findings';
+
+        // Show/hide interpretation input for EKGs
+        const interpretSection = document.getElementById('clinical-image-interpret');
+        if (interpretSection) {
+            if (image.requiresInterpretation) {
+                interpretSection.style.display = 'block';
+                const input = document.getElementById('ekg-interpretation-input');
+                const submitBtn = document.getElementById('ekg-submit-btn');
+                const feedback = document.getElementById('interpret-feedback');
+                if (this.userInterpretation) {
+                    // Already submitted — show read-only state
+                    if (input) { input.value = this.userInterpretation; input.disabled = true; }
+                    if (submitBtn) submitBtn.disabled = true;
+                    if (feedback) {
+                        feedback.style.display = 'block';
+                        feedback.innerHTML = '<p>Interpretation recorded. This will be reviewed in your debrief.</p>';
+                    }
+                } else {
+                    // Fresh — ready for input
+                    if (input) { input.value = ''; input.disabled = false; }
+                    if (submitBtn) submitBtn.disabled = false;
+                    if (feedback) feedback.style.display = 'none';
+                }
+            } else {
+                interpretSection.style.display = 'none';
+            }
+        }
 
         // Load image with cascading fallbacks: local → url → fallbackUrl → text-only
         img.style.display = 'none';
@@ -154,7 +204,7 @@ const ClinicalImages = {
             if (fallbackAttempt < fallbackChain.length) {
                 img.src = fallbackChain[fallbackAttempt];
             } else {
-                // All image sources failed — show findings as text-only fallback
+                // All image sources failed — show text-only fallback
                 img.style.display = 'none';
                 modal.querySelector('.clinical-image-loading').innerHTML =
                     '<div class="image-unavailable">' +
@@ -162,10 +212,12 @@ const ClinicalImages = {
                     '<div style="font-weight: 500; margin-bottom: 8px;">Image unavailable</div>' +
                     '<div style="font-size: 12px; color: #888;">See findings and interpretation below</div>' +
                     '</div>';
-                // Auto-show findings when image can't load
-                findings.style.display = 'block';
-                interpretation.style.display = 'block';
-                document.getElementById('findings-toggle-text').textContent = 'Hide Findings';
+                // Auto-show findings when image can't load (if they exist)
+                if (hasFindings) {
+                    findings.style.display = 'block';
+                    interpretation.style.display = 'block';
+                    document.getElementById('findings-toggle-text').textContent = 'Hide Findings';
+                }
             }
         };
 
@@ -180,6 +232,50 @@ const ClinicalImages = {
         // Record for scoring
         if (typeof SimulationEngine !== 'undefined' && typeof SimulationEngine.recordDecision === 'function') {
             SimulationEngine.recordDecision('IMAGE_REVIEW', 'viewed_' + imageId, { imageId: imageId, title: image.title });
+        }
+    },
+
+    /**
+     * Submit EKG interpretation for scoring
+     */
+    submitInterpretation() {
+        const input = document.getElementById('ekg-interpretation-input');
+        const feedback = document.getElementById('interpret-feedback');
+        const submitBtn = document.getElementById('ekg-submit-btn');
+        if (!input || !feedback) return;
+
+        const text = input.value.trim();
+        if (!text) {
+            if (typeof App !== 'undefined') {
+                App.showToast('Please type your interpretation first', 'error');
+            }
+            return;
+        }
+
+        // Store the interpretation
+        this.userInterpretation = text;
+
+        // Score it via the score tracker
+        if (typeof SimulationScoreTracker !== 'undefined' && typeof SimulationScoreTracker.trackEKGInterpretation === 'function') {
+            SimulationScoreTracker.trackEKGInterpretation(text);
+        }
+
+        // Record as a decision in the simulation engine
+        if (typeof SimulationEngine !== 'undefined' && typeof SimulationEngine.recordDecision === 'function') {
+            SimulationEngine.recordDecision('EKG_INTERPRETATION', text, { imageId: 'ekg-afib' });
+        }
+
+        // Show neutral feedback (don't reveal the answer)
+        feedback.style.display = 'block';
+        feedback.innerHTML = '<p>Interpretation recorded. This will be reviewed in your debrief.</p>';
+
+        // Disable the input after submission
+        input.disabled = true;
+        if (submitBtn) submitBtn.disabled = true;
+
+        // Show toast
+        if (typeof App !== 'undefined') {
+            App.showToast('EKG interpretation recorded', 'info');
         }
     },
 

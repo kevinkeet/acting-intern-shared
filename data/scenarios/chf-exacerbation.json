@@ -3,7 +3,7 @@
   "name": "Shortness of Breath",
   "description": "72-year-old male presenting with progressive shortness of breath",
   "difficulty": "challenging",
-  "estimatedDuration": "2-4 hours simulation time",
+  "estimatedDuration": "~15 minutes real-time (at 15x speed)",
   "learningObjectives": [
     "Take a thorough history from a vague historian",
     "Recognize subtle clues pointing to the underlying diagnosis",
@@ -182,7 +182,7 @@
       "type": "time",
       "atMinutes": 45,
       "action": "nurseAlert",
-      "message": "Doctor, Mr. Morrison's heart rate just jumped to 142 and it's irregular - looks like rapid A-fib on the monitor. He's feeling his heart racing and he's more short of breath. BP is 138/88. I've got an EKG running. His CHA2DS2-VASc score is going to be high with his history - should I go ahead and get a heparin drip started for stroke prevention? I want to make sure we get that going if you want it. What are your orders?",
+      "message": "Doctor, Mr. Morrison's heart rate just jumped to 142 and it looks irregular on the monitor. He's feeling his heart racing and he's more short of breath. BP is 138/88. I've got an EKG running now — it should be ready for you to review. What would you like me to do?",
       "priority": "urgent",
       "stateChanges": {
         "vitals": {
@@ -310,6 +310,15 @@
       },
       "action": "nurseAlert",
       "message": "Patient has had good urine output. Weight down significantly. Symptoms improving.",
+      "priority": "info"
+    },
+    {
+      "id": "TRIG_NOTE_PROMPT",
+      "name": "Note Writing Prompt",
+      "type": "time",
+      "atMinutes": 150,
+      "action": "nurseAlert",
+      "message": "Doctor, Mr. Morrison seems more comfortable now. His vitals are looking better and we're in a good routine with the diuresis. When you get a chance, the attending will be rounding soon — do you want to get your admission note written up?",
       "priority": "info"
     }
   ],

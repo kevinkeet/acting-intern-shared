@@ -347,6 +347,14 @@ const SimulationEngine = {
             NurseChat.messages = [];
         }
 
+        // 5. Reset EKG interpretation
+        if (typeof ClinicalImages !== 'undefined') {
+            ClinicalImages.userInterpretation = null;
+        }
+
+        // 6. Reset challenge banner text
+        this._challengeText = 'New admission. Gather history from the patient, ask the nurse key questions, review the chart for critical information, and place all necessary orders.';
+
         // ---- Reload scenario ----
 
         if (this.currentScenario) {
@@ -510,8 +518,19 @@ const SimulationEngine = {
                 // Show EKG availability toast after a short delay
                 setTimeout(function() {
                     if (typeof App !== 'undefined') {
-                        App.showToast('📊 EKG ready for review - click to view', 'info', 8000);
+                        App.showToast('EKG ready for review — click View EKG in the vitals banner', 'info', 8000);
                     }
+                }, 2000);
+            }
+
+            // If this is the note-writing prompt, show prominent toast and update challenge
+            if (trigger.id === 'TRIG_NOTE_PROMPT') {
+                setTimeout(function() {
+                    if (typeof App !== 'undefined') {
+                        App.showToast('Time to write your admission note — click Write Note in the AI panel', 'info', 12000);
+                    }
+                    SimulationEngine._challengeText = 'Acute management phase complete. Write your admission H&P note, then end the simulation to see your debrief.';
+                    SimulationEngine.showChallengeBanner();
                 }, 2000);
             }
         }

@@ -2644,6 +2644,11 @@ IMPORTANT:
         storedNotes.push(newNote);
         localStorage.setItem('ehr-generated-notes', JSON.stringify(storedNotes));
 
+        // Score the note for simulation debrief
+        if (typeof SimulationScoreTracker !== 'undefined' && typeof SimulationScoreTracker.trackNoteSubmission === 'function') {
+            SimulationScoreTracker.trackNoteSubmission(textarea.value.trim(), noteTypeName);
+        }
+
         // Notify the notes list component if it exists
         if (window.NotesList && typeof NotesList.addGeneratedNote === 'function') {
             NotesList.addGeneratedNote(newNote);

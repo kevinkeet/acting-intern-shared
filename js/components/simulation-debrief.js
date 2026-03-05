@@ -270,6 +270,38 @@ const SimulationDebrief = {
             }
         }
 
+        // Check EKG interpretation
+        if (typeof SimulationScoreTracker !== 'undefined' && SimulationScoreTracker.ekgInterpretation) {
+            if (SimulationScoreTracker.ekgInterpretation.submitted) {
+                const ekgScore = SimulationScoreTracker.ekgInterpretation.score;
+                if (ekgScore >= 50) {
+                    decisions.push({
+                        status: 'success',
+                        title: 'Correct EKG Interpretation',
+                        description: 'You correctly identified the cardiac rhythm. Your interpretation: "' + SimulationScoreTracker.ekgInterpretation.text + '"',
+                        teachingPoint: 'Atrial fibrillation is characterized by an irregularly irregular rhythm with absence of P waves and fibrillatory baseline. With a rapid ventricular response, rate control is the priority.',
+                        icon: '&#9989;'
+                    });
+                } else {
+                    decisions.push({
+                        status: 'error',
+                        title: 'EKG Interpretation Needs Improvement',
+                        description: 'Your interpretation ("' + SimulationScoreTracker.ekgInterpretation.text + '") did not fully identify the rhythm.',
+                        teachingPoint: 'This EKG shows atrial fibrillation with rapid ventricular response. Key features: irregularly irregular rhythm, absence of organized P waves, fibrillatory baseline, and a rapid ventricular rate (~140 bpm).',
+                        icon: '&#128161;'
+                    });
+                }
+            } else if (typeof ClinicalImages !== 'undefined' && ClinicalImages.hasViewed('ekg-afib')) {
+                decisions.push({
+                    status: 'error',
+                    title: 'EKG Viewed but Not Interpreted',
+                    description: 'You viewed the EKG but did not submit an interpretation.',
+                    teachingPoint: 'Always document your EKG interpretation. This EKG shows atrial fibrillation with rapid ventricular response — a common finding in decompensated heart failure.',
+                    icon: '&#128161;'
+                });
+            }
+        }
+
         return decisions;
     },
 
@@ -435,6 +467,9 @@ const SimulationDebrief = {
                         ${this.renderScoreCategory('Medication Management (30%)', data.scores.medicationManagement, '&#128138;')}
                         ${this.renderScoreCategory('Safety & Allergies (10%)', data.scores.safety, '&#9888;')}
                         ${this.renderScoreCategory('Empathy (10%)', data.scores.empathy, '&#128154;')}
+                        ${data.scores.ekgInterpretation ? this.renderScoreCategory('EKG Interpretation (10%)', data.scores.ekgInterpretation, '&#128147;') : ''}
+                        ${data.scores.noteQuality ? this.renderScoreCategory('Note Quality (15%)', data.scores.noteQuality, '&#128221;') : ''}
+                        ${data.scores.noteQuality && data.scores.noteQuality.thoroughness !== undefined ? '<div class="note-score-breakdown"><span>Thoroughness: ' + data.scores.noteQuality.thoroughness + '%</span> <span>Clinical Reasoning: ' + data.scores.noteQuality.reasoning + '%</span></div>' : ''}
                     </div>
                 </div>
             </div>

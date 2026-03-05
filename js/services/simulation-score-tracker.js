@@ -80,6 +80,23 @@ const SimulationScoreTracker = {
         rapport:            { earned: false, points: 10, label: 'Maintained rapport (meaningful conversation)' }
     },
 
+    // ========== EKG INTERPRETATION ==========
+    ekgInterpretation: {
+        submitted: false,
+        text: '',
+        score: 0,
+        details: []
+    },
+
+    // ========== NOTE QUALITY ==========
+    noteQuality: {
+        submitted: false,
+        noteText: '',
+        thoroughnessScore: 0,
+        reasoningScore: 0,
+        details: []
+    },
+
     // Track whether emotional trigger has fired
     emotionalTriggerFired: false,
     patientMessageCount: 0,
@@ -117,6 +134,10 @@ const SimulationScoreTracker = {
         this.allergyViolations = [];
         this.emotionalTriggerFired = false;
         this.patientMessageCount = 0;
+        // Reset EKG interpretation
+        this.ekgInterpretation = { submitted: false, text: '', score: 0, details: [] };
+        // Reset note quality
+        this.noteQuality = { submitted: false, noteText: '', thoroughnessScore: 0, reasoningScore: 0, details: [] };
     },
 
     // ========== TRACKING METHODS ==========
@@ -359,6 +380,139 @@ const SimulationScoreTracker = {
         this.emotionalTriggerFired = true;
     },
 
+    // ========== EKG INTERPRETATION TRACKING ==========
+
+    /**
+     * Score the user's EKG interpretation via keyword matching
+     */
+    trackEKGInterpretation(text) {
+        if (this.ekgInterpretation.submitted) return; // Only score first submission
+
+        this.ekgInterpretation.submitted = true;
+        this.ekgInterpretation.text = text;
+
+        const lower = text.toLowerCase();
+        let score = 0;
+        const details = [];
+
+        // Primary diagnosis (50 points)
+        const afibKeywords = ['a-fib', 'afib', 'a fib', 'atrial fib', 'atrial fibrillation'];
+        if (afibKeywords.some(k => lower.includes(k))) {
+            score += 50;
+            details.push({ text: 'Correctly identified atrial fibrillation', earned: true, points: 50 });
+        } else {
+            details.push({ text: 'Identify atrial fibrillation', earned: false, points: 50, critical: true });
+        }
+
+        // Rate characterization (20 points)
+        const rvrKeywords = ['rapid', 'rvr', 'rapid ventricular', 'tachycardic', 'tachycardia', 'fast rate', 'rapid rate', 'rate of 14'];
+        if (rvrKeywords.some(k => lower.includes(k))) {
+            score += 20;
+            details.push({ text: 'Noted rapid ventricular response', earned: true, points: 20 });
+        } else {
+            details.push({ text: 'Note rapid ventricular rate', earned: false, points: 20 });
+        }
+
+        // Supporting features (15 points each)
+        const irregularKeywords = ['irregularly irregular', 'irregular rhythm', 'irregular'];
+        if (irregularKeywords.some(k => lower.includes(k))) {
+            score += 15;
+            details.push({ text: 'Noted irregularly irregular rhythm', earned: true, points: 15 });
+        } else {
+            details.push({ text: 'Note irregular rhythm', earned: false, points: 15 });
+        }
+
+        const pWaveKeywords = ['no p wave', 'absent p wave', 'no discernible p', 'without p wave', 'p waves absent', 'no p-wave'];
+        if (pWaveKeywords.some(k => lower.includes(k))) {
+            score += 15;
+            details.push({ text: 'Noted absence of P waves', earned: true, points: 15 });
+        } else {
+            details.push({ text: 'Note absence of P waves', earned: false, points: 15 });
+        }
+
+        this.ekgInterpretation.score = score;
+        this.ekgInterpretation.details = details;
+
+        console.log(`[Score] EKG Interpretation: ${score}/100 - "${text}"`);
+    },
+
+    // ========== NOTE QUALITY TRACKING ==========
+
+    /**
+     * Score a clinical note for thoroughness and clinical reasoning
+     */
+    trackNoteSubmission(noteText, noteType) {
+        if (this.noteQuality.submitted) return; // Only score first note
+
+        this.noteQuality.submitted = true;
+        this.noteQuality.noteText = noteText;
+
+        const lower = noteText.toLowerCase();
+        const details = [];
+        let thoroughnessPoints = 0;
+        let thoroughnessTotal = 0;
+        let reasoningPoints = 0;
+        let reasoningTotal = 0;
+
+        // ---- THOROUGHNESS: Check for key note sections ----
+        const sections = [
+            { name: 'Chief Complaint / HPI', keywords: ['chief complaint', 'hpi', 'history of present illness', 'presenting', 'presents with', 'shortness of breath', 'dyspnea'], points: 10 },
+            { name: 'Past Medical History', keywords: ['past medical', 'pmh', 'medical history', 'history of heart failure', 'history of atrial'], points: 8 },
+            { name: 'Medications', keywords: ['medication', 'home meds', 'current medications', 'carvedilol', 'entresto', 'furosemide', 'lantus'], points: 8 },
+            { name: 'Allergies', keywords: ['allerg', 'nkda', 'penicillin', 'sulfa', 'lisinopril'], points: 8 },
+            { name: 'Social History', keywords: ['social', 'lives with', 'wife', 'retired', 'smoking', 'alcohol', 'tobacco'], points: 5 },
+            { name: 'Vital Signs', keywords: ['vital', 'blood pressure', 'heart rate', 'bp ', 'hr ', 'spo2', 'oxygen sat', 'respiratory rate', 'temp'], points: 8 },
+            { name: 'Physical Exam', keywords: ['physical exam', 'exam:', 'lung', 'crackle', 'jvp', 'jugular', 'edema', 's3', 'gallop', 'murmur'], points: 10 },
+            { name: 'Labs / Results', keywords: ['lab', 'bnp', 'troponin', 'creatinine', 'potassium', 'sodium', 'hemoglobin', 'cbc', 'bmp'], points: 8 },
+            { name: 'Assessment', keywords: ['assessment', 'impression', 'diagnosis', 'diagnoses'], points: 10 },
+            { name: 'Plan', keywords: ['plan', 'treatment plan', 'disposition', 'orders', 'will continue', 'will start'], points: 10 }
+        ];
+
+        for (const section of sections) {
+            thoroughnessTotal += section.points;
+            const found = section.keywords.some(k => lower.includes(k));
+            if (found) {
+                thoroughnessPoints += section.points;
+                details.push({ text: 'Included: ' + section.name, earned: true, points: section.points });
+            } else {
+                details.push({ text: 'Missing: ' + section.name, earned: false, points: section.points });
+            }
+        }
+
+        // ---- CLINICAL REASONING: Check for key clinical concepts ----
+        const reasoningItems = [
+            { name: 'CHF exacerbation identified', keywords: ['chf', 'heart failure', 'hf exacerbation', 'decompensated', 'volume overload', 'acute on chronic'], points: 15 },
+            { name: 'Medication non-compliance as trigger', keywords: ['ran out', 'non-compliance', 'noncompliance', 'noncompliant', 'missed doses', 'not taking', 'stopped taking', 'without furosemide'], points: 10 },
+            { name: 'Diuresis rationale', keywords: ['diuresis', 'diuretic', 'furosemide', 'volume removal', 'fluid removal', 'decongestion', 'iv lasix'], points: 10 },
+            { name: 'A-fib identification/management', keywords: ['atrial fibrillation', 'a-fib', 'afib', 'rate control', 'rhythm control'], points: 10 },
+            { name: 'Anticoagulation reasoning', keywords: ['anticoagul', 'gi bleed', 'bleeding risk', 'cha2ds2', 'stroke risk', 'contraindicated', 'not a candidate', 'high rebleed', 'hold anticoag'], points: 15 },
+            { name: 'Renal considerations', keywords: ['renal', 'kidney', 'creatinine', 'ckd', 'gfr', 'aki', 'nephro', 'renal function'], points: 10 },
+            { name: 'Electrolyte monitoring plan', keywords: ['electrolyte', 'potassium', 'magnesium', 'monitor', 'bmp', 'metabolic panel', 'replete'], points: 5 }
+        ];
+
+        for (const item of reasoningItems) {
+            reasoningTotal += item.points;
+            const found = item.keywords.some(k => lower.includes(k));
+            if (found) {
+                reasoningPoints += item.points;
+                details.push({ text: 'Reasoning: ' + item.name, earned: true, points: item.points });
+            } else {
+                details.push({ text: 'Reasoning: ' + item.name, earned: false, points: item.points });
+            }
+        }
+
+        // Calculate scores
+        const thoroughnessPct = thoroughnessTotal > 0 ? (thoroughnessPoints / thoroughnessTotal) * 100 : 0;
+        const reasoningPct = reasoningTotal > 0 ? (reasoningPoints / reasoningTotal) * 100 : 0;
+
+        this.noteQuality.thoroughnessScore = Math.round(thoroughnessPct);
+        this.noteQuality.reasoningScore = Math.round(reasoningPct);
+        this.noteQuality.details = details;
+
+        const combined = Math.round(thoroughnessPct * 0.5 + reasoningPct * 0.5);
+        console.log(`[Score] Note Quality: ${combined}/100 (Thoroughness: ${Math.round(thoroughnessPct)}%, Reasoning: ${Math.round(reasoningPct)}%)`);
+    },
+
     // ========== ALLERGY CHECK ==========
 
     /**
@@ -400,16 +554,16 @@ const SimulationScoreTracker = {
     calculateFinalScores() {
         const scores = {};
 
-        // 1. PATIENT HISTORY (20% weight)
+        // 1. PATIENT HISTORY (15% weight)
         scores.patientHistory = this._calcCategoryScore(this.patientHistoryItems, 'asked');
 
-        // 2. NURSE INTERACTION (15% weight)
+        // 2. NURSE INTERACTION (10% weight)
         scores.nurseInteraction = this._calcCategoryScore(this.nurseHistoryItems, 'asked');
 
-        // 3. CHART REVIEW (15% weight)
+        // 3. CHART REVIEW (10% weight)
         scores.chartReview = this._calcCategoryScore(this.chartReviewItems, 'viewed');
 
-        // 4. MEDICATION MANAGEMENT (30% weight)
+        // 4. MEDICATION MANAGEMENT (20% weight)
         scores.medicationManagement = this._calcMedicationScore();
 
         // 5. SAFETY (10% weight)
@@ -418,15 +572,23 @@ const SimulationScoreTracker = {
         // 6. EMPATHY (10% weight)
         scores.empathy = this._calcEmpathyScore();
 
+        // 7. EKG INTERPRETATION (10% weight)
+        scores.ekgInterpretation = this._calcEKGScore();
+
+        // 8. NOTE QUALITY (15% weight)
+        scores.noteQuality = this._calcNoteScore();
+
         // OVERALL weighted score
         scores.overall = {
             score: Math.round(
-                scores.patientHistory.score * 0.20 +
-                scores.nurseInteraction.score * 0.15 +
-                scores.chartReview.score * 0.15 +
-                scores.medicationManagement.score * 0.30 +
+                scores.patientHistory.score * 0.15 +
+                scores.nurseInteraction.score * 0.10 +
+                scores.chartReview.score * 0.10 +
+                scores.medicationManagement.score * 0.20 +
                 scores.safety.score * 0.10 +
-                scores.empathy.score * 0.10
+                scores.empathy.score * 0.10 +
+                scores.ekgInterpretation.score * 0.10 +
+                scores.noteQuality.score * 0.15
             ),
             max: 100
         };
@@ -576,6 +738,38 @@ const SimulationScoreTracker = {
         };
     },
 
+    _calcEKGScore() {
+        if (!this.ekgInterpretation.submitted) {
+            return {
+                score: 0,
+                details: [{ text: 'EKG interpretation not submitted', earned: false, critical: true }]
+            };
+        }
+        return {
+            score: this.ekgInterpretation.score,
+            details: this.ekgInterpretation.details
+        };
+    },
+
+    _calcNoteScore() {
+        if (!this.noteQuality.submitted) {
+            return {
+                score: 0,
+                thoroughness: 0,
+                reasoning: 0,
+                details: [{ text: 'No admission note written', earned: false, critical: true }]
+            };
+        }
+
+        const combined = Math.round(this.noteQuality.thoroughnessScore * 0.5 + this.noteQuality.reasoningScore * 0.5);
+        return {
+            score: combined,
+            thoroughness: this.noteQuality.thoroughnessScore,
+            reasoning: this.noteQuality.reasoningScore,
+            details: this.noteQuality.details
+        };
+    },
+
     _parseDose(doseStr) {
         if (!doseStr) return 0;
         const match = String(doseStr).match(/(\d+\.?\d*)/);
@@ -686,8 +880,34 @@ const SimulationScoreTracker = {
             };
         }
 
-        // Overall
-        const weights = { patientHistory: 0.20, nurseInteraction: 0.15, chartReview: 0.15, orders: 0.30, safety: 0.10, empathy: 0.10 };
+        // EKG Interpretation
+        summary.ekgInterpretation = {
+            earned: this.ekgInterpretation.submitted ? this.ekgInterpretation.score : 0,
+            total: 100,
+            percentage: this.ekgInterpretation.submitted ? this.ekgInterpretation.score : -1,
+            count: this.ekgInterpretation.submitted ? 1 : 0, countTotal: 1,
+            label: 'EKG', fullLabel: 'EKG Interpretation'
+        };
+
+        // Note Quality
+        if (this.noteQuality.submitted) {
+            const noteCombined = Math.round(this.noteQuality.thoroughnessScore * 0.5 + this.noteQuality.reasoningScore * 0.5);
+            summary.noteQuality = {
+                earned: noteCombined, total: 100,
+                percentage: noteCombined,
+                count: 1, countTotal: 1,
+                label: 'Note', fullLabel: 'Note Quality'
+            };
+        } else {
+            summary.noteQuality = {
+                earned: 0, total: 100, percentage: -1,
+                count: 0, countTotal: 1,
+                label: 'Note', fullLabel: 'Note Quality'
+            };
+        }
+
+        // Overall (updated weights)
+        const weights = { patientHistory: 0.15, nurseInteraction: 0.10, chartReview: 0.10, orders: 0.20, safety: 0.10, empathy: 0.10, ekgInterpretation: 0.10, noteQuality: 0.15 };
         let overall = 0;
         for (const [key, weight] of Object.entries(weights)) {
             const pct = summary[key].percentage === -1 ? 50 : summary[key].percentage;

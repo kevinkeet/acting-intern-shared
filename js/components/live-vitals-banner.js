@@ -298,7 +298,7 @@ const LiveVitalsBanner = {
         // Check if A-fib has been triggered
         if (state && state.events && state.events.rapidAfib) {
             rhythmContainer.style.display = 'flex';
-            rhythmValue.textContent = 'A-fib with RVR';
+            rhythmValue.textContent = 'Irregular - Rapid';
             rhythmValue.className = 'rhythm-value critical';
             if (ekgBtn) ekgBtn.style.display = 'inline-block';
         } else {
