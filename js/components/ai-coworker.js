@@ -159,6 +159,14 @@ const AICoworker = {
         await this.initializeLongitudinalDocument(patientId);
         // Re-render now that longitudinal data is fully loaded
         this.render();
+
+        // Now that patient data + context assembler are ready, auto-analyze
+        // if the panel is already expanded (or will be expanded shortly).
+        // This covers the case where the panel was open from a previous session
+        // and _autoAnalyzeIfNeeded was never called from expand().
+        if (typeof AIPanel !== 'undefined' && !AIPanel.isCollapsed) {
+            AIPanel._autoAnalyzeIfNeeded();
+        }
     },
 
     /**

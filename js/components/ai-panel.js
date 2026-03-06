@@ -147,11 +147,14 @@ const AIPanel = {
 
     /**
      * Trigger AI analysis automatically if no LLM data is present yet.
-     * Called when the panel is expanded. Runs for ALL modes (including Reactive)
-     * so the user never has to manually click refresh on first open.
+     * Called when the panel is expanded AND after patient data finishes loading.
+     * Runs for ALL modes (including Reactive) so the user never has to click refresh.
      */
     _autoAnalyzeIfNeeded() {
         if (typeof AICoworker === 'undefined') return;
+
+        // Wait until the context assembler is ready (patient data loaded)
+        if (!AICoworker.contextAssembler) return;
 
         // Check if we already have a cached analysis for the current mode
         if (typeof AIModeConfig !== 'undefined') {
@@ -179,8 +182,10 @@ const AIPanel = {
 
         // Short delay to let the panel expand animation finish
         setTimeout(() => {
+            // Double-check context assembler is still ready (guard async race)
+            if (!AICoworker.contextAssembler) return;
             AICoworker.refreshThinking();
-        }, 300);
+        }, 500);
     },
 
     /**
