@@ -149,6 +149,9 @@ const AIPanel = {
      * Trigger AI analysis automatically if no LLM data is present yet.
      * Called when the panel is expanded AND after patient data finishes loading.
      * Runs for ALL modes (including Reactive) so the user never has to click refresh.
+     *
+     * Skips if analysis was recently performed (e.g. background run on API key entry).
+     * Manual refresh (clicking the refresh button) always bypasses this check.
      */
     _autoAnalyzeIfNeeded() {
         if (typeof AICoworker === 'undefined') return;
@@ -176,6 +179,13 @@ const AIPanel = {
         // Don't re-run if already thinking or already has data
         if (hasLLMData) return;
         if (AICoworker.state && AICoworker.state.status === 'thinking') return;
+
+        // Skip if analysis was performed recently (e.g. background analysis
+        // triggered by API key entry). User can always click Refresh manually.
+        if (AICoworker.wasRecentlyAnalyzed()) {
+            console.log('⏭️ Skipping auto-analysis — was recently analyzed');
+            return;
+        }
 
         // Check that API is configured before attempting
         if (!AICoworker.isApiConfigured()) return;

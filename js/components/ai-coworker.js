@@ -20,6 +20,10 @@ const AICoworker = {
     // so switching modes can restore previous analysis without re-calling the API
     _modeAnalysisCache: {},
 
+    // Timestamp of last successful LLM analysis — used to skip redundant
+    // auto-analysis when the panel is expanded shortly after a background run
+    _lastAnalysisTimestamp: 0,
+
     // API Configuration
     apiKey: null,
     apiEndpoint: 'https://api.anthropic.com/v1/messages',
@@ -5551,6 +5555,20 @@ RULES:
             lastUpdated: this.state.lastUpdated,
             timestamp: Date.now()
         };
+        // Record when this analysis finished — used to skip redundant auto-analysis
+        this._lastAnalysisTimestamp = Date.now();
+    },
+
+    /**
+     * Check if analysis was performed recently (within the last 2 minutes).
+     * Used by _autoAnalyzeIfNeeded to skip redundant re-analysis when the
+     * panel is expanded shortly after a background analysis (e.g. API key entry).
+     * Manual refresh always bypasses this check.
+     */
+    wasRecentlyAnalyzed() {
+        if (!this._lastAnalysisTimestamp) return false;
+        var elapsed = Date.now() - this._lastAnalysisTimestamp;
+        return elapsed < 120000; // 2 minutes
     },
 
     /**
