@@ -105,6 +105,11 @@ const FloatingChat = {
         } else if (chatType === 'nurse' && typeof NurseChat !== 'undefined') {
             NurseChat.init();
         }
+
+        // Initialize summary panel (async — populates after API response)
+        if (typeof ChatSummaryPanel !== 'undefined') {
+            ChatSummaryPanel.initPanel(chatType);
+        }
     },
 
     /**
@@ -144,6 +149,11 @@ const FloatingChat = {
         const keydownFn = isPatient ? 'PatientChat.handleKeyDown(event)' : 'NurseChat.handleKeyDown(event)';
         const clearFn = isPatient ? 'PatientChat.clearChat()' : 'NurseChat.clearChat()';
 
+        // Get summary panel HTML if ChatSummaryPanel is available
+        const summaryPanelHTML = (typeof ChatSummaryPanel !== 'undefined')
+            ? (isPatient ? ChatSummaryPanel.getPatientPanelHTML() : ChatSummaryPanel.getNursePanelHTML())
+            : '';
+
         chatWindow.innerHTML = `
             <div class="floating-chat-header ${chatType}-chat-header">
                 <div class="floating-chat-header-left">
@@ -170,6 +180,7 @@ const FloatingChat = {
                     </button>
                 </div>
             </div>
+            ${summaryPanelHTML}
             <div class="floating-chat-body" id="${messagesId}">
                 <div class="chat-welcome">
                     <div class="welcome-avatar">${icon}</div>
