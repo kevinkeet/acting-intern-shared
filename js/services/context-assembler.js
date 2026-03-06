@@ -192,11 +192,19 @@ RULES:
             );
         }
 
-        // For Heavy mode, inject extra response fields into the JSON format
+        // Inject DDx challenge field into JSON format (Lead mode)
+        if (mode && mode.responseStyle.includeDDxChallenge) {
+            systemPrompt = systemPrompt.replace(
+                '"conflictsDetected"',
+                '"ddxChallenge": "A brief challenge to the differential — what else should be considered and why?",\n    "conflictsDetected"'
+            );
+        }
+
+        // Inject teaching points field into JSON format (if enabled)
         if (mode && mode.responseStyle.includeTeachingPoints) {
             systemPrompt = systemPrompt.replace(
                 '"conflictsDetected"',
-                '"teachingPoints": ["Clinical pearl or evidence-based insight relevant to this case"],\n    "ddxChallenge": "A brief challenge to the differential — what else should be considered and why?",\n    "conflictsDetected"'
+                '"teachingPoints": ["Clinical pearl or evidence-based insight relevant to this case"],\n    "conflictsDetected"'
             );
         }
 
@@ -324,11 +332,19 @@ RULES:
             );
         }
 
-        // For Heavy mode, inject extra response fields into the JSON format
+        // Inject DDx challenge field into JSON format (Lead mode)
+        if (mode && mode.responseStyle.includeDDxChallenge) {
+            systemPrompt = systemPrompt.replace(
+                '"conflictsDetected"',
+                '"ddxChallenge": "A brief challenge to the differential — what else should be considered and why?",\n    "conflictsDetected"'
+            );
+        }
+
+        // Inject teaching points field into JSON format (if enabled)
         if (mode && mode.responseStyle.includeTeachingPoints) {
             systemPrompt = systemPrompt.replace(
                 '"conflictsDetected"',
-                '"teachingPoints": ["Clinical pearl or evidence-based insight relevant to this case"],\n    "ddxChallenge": "A brief challenge to the differential — what else should be considered and why?",\n    "conflictsDetected"'
+                '"teachingPoints": ["Clinical pearl or evidence-based insight relevant to this case"],\n    "conflictsDetected"'
             );
         }
 

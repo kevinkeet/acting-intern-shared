@@ -1,13 +1,17 @@
 /**
  * AI Mode Configuration
  *
- * Defines three AI assistant modes: Light, Medium, Heavy.
- * Controls system prompt personality, visible sections, suggestion chips,
- * proactive behavior, response verbosity, and per-section prompt instructions.
+ * Defines three AI assistant modes that differ STRUCTURALLY — not just by prompt.
  *
- * Light  — Minimal. Facts and expected orders only.
- * Medium — Balanced copilot. Concise summaries, flags safety.
- * Heavy  — Maximalist attending. Comprehensive, teaches, challenges.
+ * Follow  — Butler. Executes tasks the doctor requests. No unsolicited analysis.
+ *           Shows only a minimal context line + conversation thread.
+ *           Full internal context is maintained so it can interpret orders correctly.
+ *
+ * Abreast — Copilot. Mirrors the doctor's thinking, surfaces relevant data,
+ *           flags safety concerns. Balanced analysis.
+ *
+ * Lead    — Senior colleague. Opinionated, challenges DDx, full analysis.
+ *           No teaching points — treats the user as a peer, not a learner.
  *
  * Each mode has editable promptSections (summary, problemList, actions)
  * that persist to localStorage when customized by the user.
@@ -15,50 +19,52 @@
 
 const AIModeConfig = {
     MODES: {
-        'light': {
-            id: 'light',
-            label: 'Light',
+        'follow': {
+            id: 'follow',
+            label: 'Follow',
             icon: '\u25CB',     // ○
-            description: 'Does what you ask. Minimal opinions.',
+            description: 'Follows your lead. Executes tasks, no unsolicited analysis.',
             sections: {
-                alertBar: true,
-                clinicalSummary: true,
-                problemList: true,
-                suggestedActions: true,
-                conversationThread: true,
+                alertBar: true,           // Safety flags always visible
+                contextLine: true,        // Minimal 1-line patient context
+                clinicalSummary: false,    // No full summary
+                problemList: false,        // No problem list
+                suggestedActions: false,   // No suggested actions
+                conversationThread: true,  // Chat history
                 teachingPoints: false,
                 ddxChallenge: false
             },
             chips: [
-                { label: 'Summarize', prompt: 'Summarize case briefly' },
-                { label: 'Orders?', prompt: 'What orders are pending?' },
-                { label: 'Labs', prompt: 'Show recent lab results' }
+                { label: 'Place Order', prompt: 'Help me place an order' },
+                { label: 'Check Labs', prompt: 'Show me the latest lab results' },
+                { label: 'Summarize', prompt: 'Give me a brief summary of this patient' }
             ],
             proactive: {
-                autoRefreshOnExpand: true,
-                autoSynthesizeOnDictation: true
+                autoRefreshOnExpand: false,       // No auto-analysis
+                autoSynthesizeOnDictation: false   // No auto-synthesis
             },
             responseStyle: {
                 maxTokensAsk: 1024,
-                maxTokensDictation: 1500,
-                maxTokensRefresh: 2000,
-                personalityPrefix: 'You are a minimal clinical task assistant. Be extremely brief. Only answer what is asked. Do not volunteer opinions, teaching points, or differential diagnoses unless explicitly requested. Keep responses under 3 sentences when possible.',
+                maxTokensDictation: 800,
+                maxTokensRefresh: 1200,
+                personalityPrefix: 'You are a clinical order entry assistant and scribe. Execute tasks the physician requests. Do not offer clinical opinions, differentials, or analysis unless explicitly asked. Keep responses under 3 sentences. When the doctor dictates clinical thinking, acknowledge it and note any actionable orders — do NOT synthesize a full clinical analysis or generate a problem list.',
                 includeTeachingPoints: false,
                 includeDDxChallenge: false
             },
             promptSections: {
-                summary: 'Minimal summary. One sentence describing current clinical state. No detailed history.',
-                problemList: 'List ONLY objective findings and reported symptoms as short labels. Examples: "SOB", "Hyperkalemia", "Tachycardia", "Elevated troponin". Do NOT include differential diagnoses, plans, or reasoning. Just the facts.',
-                actions: 'List only the most expected, standard next orders. Keep to 3-5 items. No explanations.'
+                summary: 'Not used in Follow mode.',
+                problemList: 'Not used in Follow mode.',
+                actions: 'Not used in Follow mode.'
             }
         },
-        'medium': {
-            id: 'medium',
-            label: 'Medium',
+        'abreast': {
+            id: 'abreast',
+            label: 'Abreast',
             icon: '\u25D0',     // ◐
-            description: 'Balanced. Mirrors your thinking, flags safety.',
+            description: 'Stays alongside. Mirrors your thinking, flags safety.',
             sections: {
                 alertBar: true,
+                contextLine: false,
                 clinicalSummary: true,
                 problemList: true,
                 suggestedActions: true,
@@ -89,25 +95,26 @@ const AIModeConfig = {
                 actions: 'Standard categorized actions. 1-3 items per category. Each action is one discrete step with an action verb.'
             }
         },
-        'heavy': {
-            id: 'heavy',
-            label: 'Heavy',
+        'lead': {
+            id: 'lead',
+            label: 'Lead',
             icon: '\u25CF',     // ●
-            description: 'Opinionated. Teaches, challenges, leads.',
+            description: 'Opinionated. Challenges your thinking, full analysis.',
             sections: {
                 alertBar: true,
+                contextLine: false,
                 clinicalSummary: true,
                 problemList: true,
                 suggestedActions: true,
                 conversationThread: true,
-                teachingPoints: true,
+                teachingPoints: false,
                 ddxChallenge: true
             },
             chips: [
-                { label: 'Teach me', prompt: 'What should I learn from this case?' },
                 { label: 'Challenge DDx', prompt: 'Challenge my differential diagnosis. What am I missing?' },
                 { label: 'Critique plan', prompt: 'Critique my current plan. What would you change?' },
-                { label: 'Pimp me', prompt: 'Ask me a tough clinical question about this case' }
+                { label: 'What else?', prompt: 'What am I not considering in this case?' },
+                { label: 'Deep dive', prompt: 'Give me a deep analysis of the most critical problem' }
             ],
             proactive: {
                 autoRefreshOnExpand: true,
@@ -117,20 +124,16 @@ const AIModeConfig = {
                 maxTokensAsk: 4096,
                 maxTokensDictation: 4096,
                 maxTokensRefresh: 4096,
-                personalityPrefix: `You are a senior attending physician who is brilliant, opinionated, and a great teacher. You:
-- Actively push differential diagnoses and challenge the learner's thinking
+                personalityPrefix: `You are a senior attending physician who is brilliant, opinionated, and direct. You:
+- Actively push differential diagnoses and challenge the doctor's thinking
 - Offer your own assessment when you have one, clearly labeled as "My thinking:"
-- Provide teaching points relevant to the case (evidence-based, practical pearls)
 - Point out things the doctor may have missed or not considered
-- Use Socratic questioning when appropriate
 - Are direct and confident but not dismissive
-- Flag when the doctor's plan diverges from best practices
-- Include a "Teaching Point" section in your synthesis responses
+- Flag when the doctor's plan diverges from best practices or guidelines
 
-Include these additional JSON fields in your synthesis:
-"teachingPoints": ["Clinical pearl or evidence-based teaching point relevant to this case"],
+Include this additional JSON field in your synthesis:
 "ddxChallenge": "A brief challenge to the current differential — what else should be considered and why?"`,
-                includeTeachingPoints: true,
+                includeTeachingPoints: false,
                 includeDDxChallenge: true
             },
             promptSections: {
@@ -141,7 +144,7 @@ Include these additional JSON fields in your synthesis:
         }
     },
 
-    currentMode: 'medium',
+    currentMode: 'abreast',
 
     /**
      * Get the current mode configuration
@@ -163,7 +166,7 @@ Include these additional JSON fields in your synthesis:
 
     /**
      * Get a prompt section for a mode — returns custom override if saved, else default.
-     * @param {string} modeId - 'light', 'medium', or 'heavy'
+     * @param {string} modeId - 'follow', 'abreast', or 'lead'
      * @param {string} section - 'summary', 'problemList', or 'actions'
      * @returns {string} The prompt section text
      */
@@ -212,20 +215,39 @@ Include these additional JSON fields in your synthesis:
     },
 
     /**
-     * Load saved mode from localStorage
+     * Load saved mode from localStorage, with migration from old names
      */
     loadMode() {
         var saved = localStorage.getItem('ai-assistant-mode');
+        // Migration: old mode names → new mode names
+        var migration = { 'light': 'follow', 'medium': 'abreast', 'heavy': 'lead' };
+        if (saved && migration[saved]) {
+            saved = migration[saved];
+            localStorage.setItem('ai-assistant-mode', saved);
+        }
         if (saved && this.MODES[saved]) {
             this.currentMode = saved;
         }
     },
 
     /**
-     * Initialize — load persisted mode
+     * Initialize — load persisted mode and migrate old data
      */
     init() {
         this.loadMode();
+        // Migrate custom prompt keys from old mode names
+        var migrations = { 'light': 'follow', 'medium': 'abreast', 'heavy': 'lead' };
+        ['summary', 'problemList', 'actions'].forEach(function(section) {
+            Object.keys(migrations).forEach(function(oldId) {
+                var oldKey = 'modePrompt_' + oldId + '_' + section;
+                var newKey = 'modePrompt_' + migrations[oldId] + '_' + section;
+                var oldVal = localStorage.getItem(oldKey);
+                if (oldVal !== null && localStorage.getItem(newKey) === null) {
+                    localStorage.setItem(newKey, oldVal);
+                    localStorage.removeItem(oldKey);
+                }
+            });
+        });
     }
 };
 

@@ -1323,6 +1323,9 @@ const AICoworker = {
         // ===== SECTION 1: SAFETY BAR (sticky top, only when alerts exist) =====
         if (sections.alertBar) html += this.renderAlertBar();
 
+        // ===== SECTION 1.5: CONTEXT LINE (Follow mode — minimal 1-line summary) =====
+        if (sections.contextLine) html += this.renderContextLine();
+
         // ===== SECTION 2: CLINICAL SUMMARY (3 sentences) =====
         if (sections.clinicalSummary) html += this.renderClinicalSummary(isThinking);
 
@@ -1422,6 +1425,50 @@ const AICoworker = {
             <span class="${pulseClass}"></span>
             <span class="status-line-text">${this.escapeHtml(this.state.aiOneLiner)}</span>
         </div>`;
+    },
+
+    /**
+     * Render Follow mode's minimal context line.
+     * Shows a 1-2 line patient identifier like "73M w/ HFrEF, CKD3b, T2DM | fatigue, Temp 98.6"
+     * Built from local data (no LLM call needed). Falls back to aiOneLiner from previous analyses.
+     */
+    renderContextLine() {
+        // Try aiOneLiner first (if an LLM analysis has been done, possibly from another mode)
+        var contextText = this.state.aiOneLiner || '';
+
+        if (!contextText) {
+            // Build from local longitudinal doc data
+            var summary = this._buildLocalSummary();
+            if (summary) {
+                contextText = summary.demographics || '';
+                // Append chief complaint from presentation sentence
+                if (summary.presentation) {
+                    var ccPart = summary.presentation;
+                    // Truncate to keep it short — take first clause
+                    var dotIdx = ccPart.indexOf('.');
+                    if (dotIdx > 0 && dotIdx < 80) ccPart = ccPart.substring(0, dotIdx);
+                    if (ccPart.length > 80) ccPart = ccPart.substring(0, 77) + '...';
+                    if (contextText && ccPart) contextText += ' | ' + ccPart;
+                    else if (ccPart) contextText = ccPart;
+                }
+            }
+        }
+
+        if (!contextText) {
+            // Fallback: just show patient name if we have it
+            var doc = this.longitudinalDoc;
+            if (doc && doc.patientKnowledgeBase && doc.patientKnowledgeBase.demographics) {
+                var d = doc.patientKnowledgeBase.demographics;
+                contextText = (d.name || 'Patient') + (d.age ? ', ' + d.age : '');
+            }
+        }
+
+        if (!contextText) return '';
+
+        return '<div class="follow-context-line">' +
+            '<span class="context-pulse"></span>' +
+            '<span class="context-line-text">' + this.escapeHtml(contextText) + '</span>' +
+        '</div>';
     },
 
     // ==================== Local Data Builders ====================
@@ -2138,8 +2185,8 @@ const AICoworker = {
         // Input row with mode-specific placeholder
         var placeholder = 'Ask a question or share your thinking...';
         if (mode) {
-            if (mode.id === 'light') placeholder = 'Ask me to do something...';
-            else if (mode.id === 'heavy') placeholder = 'Share your thinking or ask for teaching...';
+            if (mode.id === 'follow') placeholder = 'Give an order or ask a question...';
+            else if (mode.id === 'lead') placeholder = 'Share your thinking or challenge me...';
         }
         html += '<div class="inline-input-row">';
         var isHandsFree = this._handsFreeActive || false;
@@ -2701,6 +2748,16 @@ const AICoworker = {
      */
     onDictationUpdated(text) {
         console.log('🩺 onDictationUpdated called with:', text.substring(0, 100) + '...');
+
+        // Check mode — Follow mode does NOT auto-synthesize
+        var mode = this.mode_config;
+        if (mode && !mode.proactive.autoSynthesizeOnDictation) {
+            // Follow mode: acknowledge dictation but skip full LLM synthesis
+            this.state.status = 'ready';
+            this.saveState();
+            this.render();
+            return;
+        }
 
         // Show thinking status
         this.state.status = 'thinking';
@@ -3544,31 +3601,31 @@ Respond with ONLY the JSON, no preamble.`;
                 }.bind(this)
             },
             {
-                id: 'switch_light',
-                regex: /\b(switch to light|light mode|go light)\b/i,
-                label: 'Light Mode',
+                id: 'switch_follow',
+                regex: /\b(switch to follow|follow mode|go follow)\b/i,
+                label: 'Follow Mode',
                 action: function() {
-                    if (typeof AIPanel !== 'undefined') AIPanel.setMode('light');
+                    if (typeof AIPanel !== 'undefined') AIPanel.setMode('follow');
                     this._hfFinalTranscript = '';
                     this._hfInterimTranscript = '';
                 }.bind(this)
             },
             {
-                id: 'switch_medium',
-                regex: /\b(switch to medium|medium mode|go medium)\b/i,
-                label: 'Medium Mode',
+                id: 'switch_abreast',
+                regex: /\b(switch to abreast|abreast mode|go abreast)\b/i,
+                label: 'Abreast Mode',
                 action: function() {
-                    if (typeof AIPanel !== 'undefined') AIPanel.setMode('medium');
+                    if (typeof AIPanel !== 'undefined') AIPanel.setMode('abreast');
                     this._hfFinalTranscript = '';
                     this._hfInterimTranscript = '';
                 }.bind(this)
             },
             {
-                id: 'switch_heavy',
-                regex: /\b(switch to heavy|heavy mode|go heavy)\b/i,
-                label: 'Heavy Mode',
+                id: 'switch_lead',
+                regex: /\b(switch to lead|lead mode|go lead)\b/i,
+                label: 'Lead Mode',
                 action: function() {
-                    if (typeof AIPanel !== 'undefined') AIPanel.setMode('heavy');
+                    if (typeof AIPanel !== 'undefined') AIPanel.setMode('lead');
                     this._hfFinalTranscript = '';
                     this._hfInterimTranscript = '';
                 }.bind(this)
