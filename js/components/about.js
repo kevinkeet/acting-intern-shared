@@ -38,24 +38,24 @@ const About = {
                 <h2>What's Inside</h2>
                 <div class="about-feature-grid">
                     <div class="about-feature-card">
-                        <div class="about-feature-icon">&#128172;</div>
-                        <h3>Chat Interfaces</h3>
-                        <p>Talk to a simulated patient to gather history and build rapport, or communicate with the charge nurse who responds to your orders and flags clinical changes in real time.</p>
+                        <div class="about-feature-icon">&#128203;</div>
+                        <h3>Full EHR Chart</h3>
+                        <p>Navigate a complete electronic health record with labs, medications, vitals, imaging, notes, and problem lists — all built from synthetic patient data with no PHI.</p>
                     </div>
                     <div class="about-feature-card">
-                        <div class="about-feature-icon">&#129302;</div>
-                        <h3>AI Assistant Panel</h3>
-                        <p>An AI coworker lives in the right-side panel, offering clinical decision support. It can help draft notes, suggest orders, review labs, and reason through differential diagnoses — always deferring to your judgment.</p>
-                    </div>
-                    <div class="about-feature-card">
-                        <div class="about-feature-icon">&#127919;</div>
+                        <div class="about-feature-icon"><span class="about-sim-icon"></span></div>
                         <h3>Clinical Simulation</h3>
                         <p>Run through realistic patient scenarios with dynamic vitals, timed lab results, and clinical triggers. Manage the case from admission through stabilization while the simulation responds to your decisions.</p>
                     </div>
                     <div class="about-feature-card">
-                        <div class="about-feature-icon">&#128209;</div>
-                        <h3>Full EHR Chart</h3>
-                        <p>Navigate a complete electronic health record with labs, medications, vitals, imaging, notes, and problem lists — all built from synthetic patient data with no PHI.</p>
+                        <div class="about-feature-icon about-chat-icons">&#128100; &#128105;&#8205;&#9877;&#65039;</div>
+                        <h3>Chat Interfaces</h3>
+                        <p>Talk to a simulated patient to gather history and build rapport, or communicate with the charge nurse who responds to your orders and flags clinical changes in real time.</p>
+                    </div>
+                    <div class="about-feature-card">
+                        <div class="about-feature-icon">&#10024;</div>
+                        <h3>AI Assistant Panel</h3>
+                        <p>An AI coworker lives in the right-side panel, offering clinical decision support. It can help draft notes, suggest orders, review labs, and reason through differential diagnoses — always deferring to your judgment.</p>
                     </div>
                 </div>
             </div>

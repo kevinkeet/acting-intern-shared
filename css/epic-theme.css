@@ -1896,6 +1896,23 @@ html, body {
     line-height: 1;
 }
 
+/* Simulation icon on About page — matches the sim-indicator dot from the header */
+.about-sim-icon {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #48bb78;
+    box-shadow: 0 0 6px rgba(72, 187, 120, 0.5);
+    vertical-align: middle;
+}
+
+/* Chat icons pair on About page */
+.about-chat-icons {
+    font-size: 20px;
+    letter-spacing: 4px;
+}
+
 .about-feature-card h3 {
     font-size: 13px;
     font-weight: 600;
