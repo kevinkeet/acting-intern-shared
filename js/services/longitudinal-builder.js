@@ -156,26 +156,28 @@ class LongitudinalDocumentBuilder {
     async loadNotesWithContent(patientId, notesIndex) {
         if (!notesIndex?.notes) return [];
 
-        const notes = [];
         const ninetyDaysAgo = new Date();
         ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
 
+        // Split into recent (need full content) and older (metadata only)
+        const recentRefs = [];
+        const olderNotes = [];
         for (const noteRef of notesIndex.notes) {
-            const noteDate = new Date(noteRef.date);
-            if (noteDate >= ninetyDaysAgo) {
-                // Load full note content for recent notes
-                try {
-                    const fullNote = await this.dataLoader.loadNote(noteRef.id, patientId);
-                    notes.push(fullNote);
-                } catch (e) {
-                    notes.push(noteRef); // Fall back to metadata only
-                }
+            if (new Date(noteRef.date) >= ninetyDaysAgo) {
+                recentRefs.push(noteRef);
             } else {
-                // Keep just metadata for older notes
-                notes.push(noteRef);
+                olderNotes.push(noteRef);
             }
         }
-        return notes;
+
+        // Fetch all recent notes in parallel (was serial)
+        const recentNotes = await Promise.all(
+            recentRefs.map(ref =>
+                this.dataLoader.loadNote(ref.id, patientId).catch(() => ref)
+            )
+        );
+
+        return [...recentNotes, ...olderNotes];
     }
 
     // ============================================================

@@ -4463,7 +4463,16 @@ Format your response as JSON:
         if (key) {
             this.saveApiKey(key);
             this.closeApiKeyModal();
-            App.showToast('API key saved', 'success');
+            App.showToast('API key saved — running initial analysis...', 'success');
+
+            // Auto-trigger AI analysis in the background immediately.
+            // This way, by the time the user navigates to the AI panel,
+            // the analysis is already done (or nearly done).
+            if (this.contextAssembler) {
+                setTimeout(() => {
+                    this.refreshThinking();
+                }, 500);
+            }
         }
     },
 

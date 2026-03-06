@@ -75,15 +75,20 @@ const App = {
     async loadPatient(patientId) {
         await PatientHeader.init(patientId);
 
-        // Build search index in background
+        // Build search index in background (non-blocking)
         SearchUtils.buildSearchIndex(patientId).then(() => {
             console.log('Search index ready');
         });
 
-        // Now that patient data is loaded, initialize the AI copilot's
-        // longitudinal document and re-render with real data
+        // Initialize AI longitudinal document in background (non-blocking).
+        // This used to block the entire page render — now the chart loads
+        // immediately while the AI context builds in the background.
         if (typeof AICoworker !== 'undefined') {
-            await AICoworker.onPatientLoaded(patientId);
+            AICoworker.onPatientLoaded(patientId).then(() => {
+                console.log('AI longitudinal document ready');
+            }).catch(err => {
+                console.warn('AI longitudinal doc init failed (non-fatal):', err);
+            });
         }
     },
 

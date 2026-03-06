@@ -108,30 +108,41 @@ class DataLoader {
     }
 
     /**
-     * Load all lab results (flattened from panels)
-     * For smaller datasets, can load all at once
+     * Load all lab results (flattened from panels).
+     * Fetches all panels in parallel for speed, with results cached.
      */
     async loadAllLabs(patientId = this.currentPatientId) {
+        // Return cached results if available
+        const cacheKey = `_labsCache_${patientId}`;
+        if (this[cacheKey]) return this[cacheKey];
+
         const index = await this.loadLabsIndex(patientId);
-        const allResults = [];
 
-        for (const panel of index.panels) {
-            try {
-                const panelData = await this.loadLabPanel(panel.id, patientId);
-                for (const result of panelData.results) {
-                    allResults.push({
-                        ...result,
-                        panelName: panelData.name,
-                        panelId: panelData.id,
-                        collectedDate: panelData.collectedDate,
-                        orderedBy: panelData.orderedBy
-                    });
-                }
-            } catch (e) {
+        // Fetch all panels in parallel (was serial — 214 sequential fetches)
+        const panelPromises = index.panels.map(panel =>
+            this.loadLabPanel(panel.id, patientId).catch(e => {
                 console.warn(`Could not load panel ${panel.id}:`, e);
-            }
-        }
+                return null;
+            })
+        );
+        const panels = await Promise.all(panelPromises);
 
+        const allResults = [];
+        panels.forEach(panelData => {
+            if (!panelData) return;
+            for (const result of panelData.results) {
+                allResults.push({
+                    ...result,
+                    panelName: panelData.name,
+                    panelId: panelData.id,
+                    collectedDate: panelData.collectedDate,
+                    orderedBy: panelData.orderedBy
+                });
+            }
+        });
+
+        // Cache for subsequent calls (ChartReview, longitudinal builder, etc.)
+        this[cacheKey] = allResults;
         return allResults;
     }
 
