@@ -197,7 +197,7 @@ const AIPanel = {
     },
 
     /**
-     * Set AI assistant mode (Light / Medium / Heavy)
+     * Set AI assistant mode (Reactive / Responsive / Anticipatory)
      */
     setMode(modeId) {
         if (typeof AIModeConfig === 'undefined') return;

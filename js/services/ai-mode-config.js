@@ -3,15 +3,15 @@
  *
  * Defines three AI assistant modes that differ STRUCTURALLY — not just by prompt.
  *
- * Follow  — Butler. Executes tasks the doctor requests. No unsolicited analysis.
- *           Shows only a minimal context line + conversation thread.
- *           Full internal context is maintained so it can interpret orders correctly.
+ * Reactive      — Butler. Executes tasks the doctor requests. No unsolicited analysis.
+ *                 Shows only a minimal context line + conversation thread.
+ *                 Full internal context is maintained so it can interpret orders correctly.
  *
- * Abreast — Copilot. Mirrors the doctor's thinking, surfaces relevant data,
- *           flags safety concerns. Balanced analysis.
+ * Responsive    — Copilot. Mirrors the doctor's thinking, surfaces relevant data,
+ *                 flags safety concerns. Balanced analysis.
  *
- * Lead    — Senior colleague. Opinionated, challenges DDx, full analysis.
- *           No teaching points — treats the user as a peer, not a learner.
+ * Anticipatory  — Senior colleague. Opinionated, challenges DDx, full analysis.
+ *                 No teaching points — treats the user as a peer, not a learner.
  *
  * Each mode has editable promptSections (summary, problemList, actions)
  * that persist to localStorage when customized by the user.
@@ -19,11 +19,11 @@
 
 const AIModeConfig = {
     MODES: {
-        'follow': {
-            id: 'follow',
-            label: 'Follow',
+        'reactive': {
+            id: 'reactive',
+            label: 'Reactive',
             icon: '\u25CB',     // ○
-            description: 'Follows your lead. Executes tasks, no unsolicited analysis.',
+            description: 'Reacts to your requests. Executes tasks, no unsolicited analysis.',
             sections: {
                 alertBar: true,           // Safety flags always visible
                 contextLine: true,        // Minimal 1-line patient context
@@ -52,14 +52,14 @@ const AIModeConfig = {
                 includeDDxChallenge: false
             },
             promptSections: {
-                summary: 'Not used in Follow mode.',
-                problemList: 'Not used in Follow mode.',
-                actions: 'Not used in Follow mode.'
+                summary: 'Not used in Reactive mode.',
+                problemList: 'Not used in Reactive mode.',
+                actions: 'Not used in Reactive mode.'
             }
         },
-        'abreast': {
-            id: 'abreast',
-            label: 'Abreast',
+        'responsive': {
+            id: 'responsive',
+            label: 'Responsive',
             icon: '\u25D0',     // ◐
             description: 'Stays alongside. Mirrors your thinking, flags safety.',
             sections: {
@@ -95,9 +95,9 @@ const AIModeConfig = {
                 actions: 'Standard categorized actions. 1-3 items per category. Each action is one discrete step with an action verb.'
             }
         },
-        'lead': {
-            id: 'lead',
-            label: 'Lead',
+        'anticipatory': {
+            id: 'anticipatory',
+            label: 'Anticipatory',
             icon: '\u25CF',     // ●
             description: 'Opinionated. Challenges your thinking, full analysis.',
             sections: {
@@ -144,7 +144,7 @@ Include this additional JSON field in your synthesis:
         }
     },
 
-    currentMode: 'abreast',
+    currentMode: 'responsive',
 
     /**
      * Get the current mode configuration
@@ -166,7 +166,7 @@ Include this additional JSON field in your synthesis:
 
     /**
      * Get a prompt section for a mode — returns custom override if saved, else default.
-     * @param {string} modeId - 'follow', 'abreast', or 'lead'
+     * @param {string} modeId - 'reactive', 'responsive', or 'anticipatory'
      * @param {string} section - 'summary', 'problemList', or 'actions'
      * @returns {string} The prompt section text
      */
@@ -220,7 +220,7 @@ Include this additional JSON field in your synthesis:
     loadMode() {
         var saved = localStorage.getItem('ai-assistant-mode');
         // Migration: old mode names → new mode names
-        var migration = { 'light': 'follow', 'medium': 'abreast', 'heavy': 'lead' };
+        var migration = { 'light': 'reactive', 'medium': 'responsive', 'heavy': 'anticipatory', 'follow': 'reactive', 'abreast': 'responsive', 'lead': 'anticipatory' };
         if (saved && migration[saved]) {
             saved = migration[saved];
             localStorage.setItem('ai-assistant-mode', saved);
@@ -236,7 +236,7 @@ Include this additional JSON field in your synthesis:
     init() {
         this.loadMode();
         // Migrate custom prompt keys from old mode names
-        var migrations = { 'light': 'follow', 'medium': 'abreast', 'heavy': 'lead' };
+        var migrations = { 'light': 'reactive', 'medium': 'responsive', 'heavy': 'anticipatory', 'follow': 'reactive', 'abreast': 'responsive', 'lead': 'anticipatory' };
         ['summary', 'problemList', 'actions'].forEach(function(section) {
             Object.keys(migrations).forEach(function(oldId) {
                 var oldKey = 'modePrompt_' + oldId + '_' + section;

@@ -1323,7 +1323,7 @@ const AICoworker = {
         // ===== SECTION 1: SAFETY BAR (sticky top, only when alerts exist) =====
         if (sections.alertBar) html += this.renderAlertBar();
 
-        // ===== SECTION 1.5: CONTEXT LINE (Follow mode — minimal 1-line summary) =====
+        // ===== SECTION 1.5: CONTEXT LINE (Reactive mode — minimal 1-line summary) =====
         if (sections.contextLine) html += this.renderContextLine();
 
         // ===== SECTION 2: CLINICAL SUMMARY (3 sentences) =====
@@ -1428,7 +1428,7 @@ const AICoworker = {
     },
 
     /**
-     * Render Follow mode's minimal context line.
+     * Render Reactive mode's minimal context line.
      * Shows a 1-2 line patient identifier like "73M w/ HFrEF, CKD3b, T2DM | fatigue, Temp 98.6"
      * Built from local data (no LLM call needed). Falls back to aiOneLiner from previous analyses.
      */
@@ -1465,7 +1465,7 @@ const AICoworker = {
 
         if (!contextText) return '';
 
-        return '<div class="follow-context-line">' +
+        return '<div class="reactive-context-line">' +
             '<span class="context-pulse"></span>' +
             '<span class="context-line-text">' + this.escapeHtml(contextText) + '</span>' +
         '</div>';
@@ -2185,8 +2185,8 @@ const AICoworker = {
         // Input row with mode-specific placeholder
         var placeholder = 'Ask a question or share your thinking...';
         if (mode) {
-            if (mode.id === 'follow') placeholder = 'Give an order or ask a question...';
-            else if (mode.id === 'lead') placeholder = 'Share your thinking or challenge me...';
+            if (mode.id === 'reactive') placeholder = 'Give an order or ask a question...';
+            else if (mode.id === 'anticipatory') placeholder = 'Share your thinking or challenge me...';
         }
         html += '<div class="inline-input-row">';
         var isHandsFree = this._handsFreeActive || false;
@@ -2749,10 +2749,10 @@ const AICoworker = {
     onDictationUpdated(text) {
         console.log('🩺 onDictationUpdated called with:', text.substring(0, 100) + '...');
 
-        // Check mode — Follow mode does NOT auto-synthesize
+        // Check mode — Reactive mode does NOT auto-synthesize
         var mode = this.mode_config;
         if (mode && !mode.proactive.autoSynthesizeOnDictation) {
-            // Follow mode: acknowledge dictation but skip full LLM synthesis
+            // Reactive mode: acknowledge dictation but skip full LLM synthesis
             this.state.status = 'ready';
             this.saveState();
             this.render();
@@ -3601,31 +3601,31 @@ Respond with ONLY the JSON, no preamble.`;
                 }.bind(this)
             },
             {
-                id: 'switch_follow',
-                regex: /\b(switch to follow|follow mode|go follow)\b/i,
-                label: 'Follow Mode',
+                id: 'switch_reactive',
+                regex: /\b(switch to reactive|reactive mode|go reactive)\b/i,
+                label: 'Reactive Mode',
                 action: function() {
-                    if (typeof AIPanel !== 'undefined') AIPanel.setMode('follow');
+                    if (typeof AIPanel !== 'undefined') AIPanel.setMode('reactive');
                     this._hfFinalTranscript = '';
                     this._hfInterimTranscript = '';
                 }.bind(this)
             },
             {
-                id: 'switch_abreast',
-                regex: /\b(switch to abreast|abreast mode|go abreast)\b/i,
-                label: 'Abreast Mode',
+                id: 'switch_responsive',
+                regex: /\b(switch to responsive|responsive mode|go responsive)\b/i,
+                label: 'Responsive Mode',
                 action: function() {
-                    if (typeof AIPanel !== 'undefined') AIPanel.setMode('abreast');
+                    if (typeof AIPanel !== 'undefined') AIPanel.setMode('responsive');
                     this._hfFinalTranscript = '';
                     this._hfInterimTranscript = '';
                 }.bind(this)
             },
             {
-                id: 'switch_lead',
-                regex: /\b(switch to lead|lead mode|go lead)\b/i,
-                label: 'Lead Mode',
+                id: 'switch_anticipatory',
+                regex: /\b(switch to anticipatory|anticipatory mode|go anticipatory)\b/i,
+                label: 'Anticipatory Mode',
                 action: function() {
-                    if (typeof AIPanel !== 'undefined') AIPanel.setMode('lead');
+                    if (typeof AIPanel !== 'undefined') AIPanel.setMode('anticipatory');
                     this._hfFinalTranscript = '';
                     this._hfInterimTranscript = '';
                 }.bind(this)

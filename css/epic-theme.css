@@ -2621,23 +2621,23 @@ html, body {
 }
 
 /* Mode-specific topbar accent colors */
-.ai-panel[data-mode="follow"] .ai-panel-topbar {
+.ai-panel[data-mode="reactive"] .ai-panel-topbar {
     background: #4a5568;
 }
 
-.ai-panel[data-mode="follow"] .mode-btn.active {
+.ai-panel[data-mode="reactive"] .mode-btn.active {
     color: #4a5568;
 }
 
-.ai-panel[data-mode="abreast"] .ai-panel-topbar {
+.ai-panel[data-mode="responsive"] .ai-panel-topbar {
     background: var(--primary);
 }
 
-.ai-panel[data-mode="lead"] .ai-panel-topbar {
+.ai-panel[data-mode="anticipatory"] .ai-panel-topbar {
     background: #9b2c2c;
 }
 
-.ai-panel[data-mode="lead"] .mode-btn.active {
+.ai-panel[data-mode="anticipatory"] .mode-btn.active {
     color: #9b2c2c;
 }
 
@@ -6762,8 +6762,8 @@ html, body {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* ---- FOLLOW MODE CONTEXT LINE ---- */
-.follow-context-line {
+/* ---- REACTIVE MODE CONTEXT LINE ---- */
+.reactive-context-line {
     display: flex;
     align-items: center;
     gap: 8px;

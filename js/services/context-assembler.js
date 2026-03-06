@@ -192,7 +192,7 @@ RULES:
             );
         }
 
-        // Inject DDx challenge field into JSON format (Lead mode)
+        // Inject DDx challenge field into JSON format (Anticipatory mode)
         if (mode && mode.responseStyle.includeDDxChallenge) {
             systemPrompt = systemPrompt.replace(
                 '"conflictsDetected"',
@@ -332,7 +332,7 @@ RULES:
             );
         }
 
-        // Inject DDx challenge field into JSON format (Lead mode)
+        // Inject DDx challenge field into JSON format (Anticipatory mode)
         if (mode && mode.responseStyle.includeDDxChallenge) {
             systemPrompt = systemPrompt.replace(
                 '"conflictsDetected"',
