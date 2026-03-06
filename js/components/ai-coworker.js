@@ -1352,8 +1352,12 @@ const AICoworker = {
         // ===== THINKING BANNER (shown when AI is processing) =====
         if (isThinking) {
             html += '<div class="copilot-thinking-banner">';
+            html += '<div class="thinking-banner-content">';
             html += '<span class="thinking-sparkle">&#10024;</span>';
-            html += '<span>Analyzing clinical context...</span>';
+            html += '<span class="thinking-label">Analyzing clinical context</span>';
+            html += '<span class="thinking-dots"><span>.</span><span>.</span><span>.</span></span>';
+            html += '</div>';
+            html += '<div class="thinking-progress-bar"><div class="thinking-progress-fill"></div></div>';
             html += '</div>';
         }
 
@@ -2043,7 +2047,8 @@ const AICoworker = {
 
         if (!collapsed) {
             html += '<div class="conversation-thread">';
-            this.state.conversationThread.slice(-10).forEach(msg => {
+            var recentMsgs = this.state.conversationThread.slice(-10);
+            recentMsgs.forEach(msg => {
                 const cls = msg.role === 'user' ? 'thread-msg-user' : 'thread-msg-ai';
                 const label = msg.role === 'user' ? (msg.type === 'think' ? '&#127897; You' : '&#128100; You') : '&#10024; AI';
                 html += `<div class="thread-msg ${cls}">`;
@@ -2051,6 +2056,13 @@ const AICoworker = {
                 html += `<div class="thread-msg-text">${msg.role === 'ai' ? this.formatText(msg.text) : this.escapeHtml(msg.text)}</div>`;
                 html += '</div>';
             });
+            // Show typing indicator when AI is thinking and last message was from user
+            if (this.state.status === 'thinking' && recentMsgs.length > 0 && recentMsgs[recentMsgs.length - 1].role === 'user') {
+                html += '<div class="thread-msg thread-msg-ai thread-msg-typing">';
+                html += '<div class="thread-msg-label">&#10024; AI</div>';
+                html += '<div class="thread-msg-text"><span class="typing-indicator"><span></span><span></span><span></span></span></div>';
+                html += '</div>';
+            }
             html += '</div>';
         }
 
@@ -2223,7 +2235,7 @@ const AICoworker = {
         var placeholder = 'Ask a question or share your thinking...';
         if (mode) {
             if (mode.id === 'reactive') placeholder = 'Give an order or ask a question...';
-            else if (mode.id === 'anticipatory') placeholder = 'Share your thinking or challenge me...';
+            else if (mode.id === 'proactive') placeholder = 'Share your thinking or challenge me...';
         }
         html += '<div class="inline-input-row">';
         var isHandsFree = this._handsFreeActive || false;
@@ -3651,21 +3663,21 @@ Respond with ONLY the JSON, no preamble.`;
                 }.bind(this)
             },
             {
-                id: 'switch_responsive',
-                regex: /\b(switch to responsive|responsive mode|go responsive)\b/i,
-                label: 'Responsive Mode',
+                id: 'switch_active',
+                regex: /\b(switch to active|active mode|go active)\b/i,
+                label: 'Active Mode',
                 action: function() {
-                    if (typeof AIPanel !== 'undefined') AIPanel.setMode('responsive');
+                    if (typeof AIPanel !== 'undefined') AIPanel.setMode('active');
                     this._hfFinalTranscript = '';
                     this._hfInterimTranscript = '';
                 }.bind(this)
             },
             {
-                id: 'switch_anticipatory',
-                regex: /\b(switch to anticipatory|anticipatory mode|go anticipatory)\b/i,
-                label: 'Anticipatory Mode',
+                id: 'switch_proactive',
+                regex: /\b(switch to proactive|proactive mode|go proactive)\b/i,
+                label: 'Proactive Mode',
                 action: function() {
-                    if (typeof AIPanel !== 'undefined') AIPanel.setMode('anticipatory');
+                    if (typeof AIPanel !== 'undefined') AIPanel.setMode('proactive');
                     this._hfFinalTranscript = '';
                     this._hfInterimTranscript = '';
                 }.bind(this)
@@ -5539,7 +5551,7 @@ RULES:
      * Called after a successful refreshWithLLM so mode switches can restore results.
      */
     _saveModeCache() {
-        var modeId = typeof AIModeConfig !== 'undefined' ? AIModeConfig.currentMode : 'responsive';
+        var modeId = typeof AIModeConfig !== 'undefined' ? AIModeConfig.currentMode : 'active';
         this._modeAnalysisCache[modeId] = {
             summary: this.state.summary,
             thinking: this.state.thinking,

@@ -217,7 +217,7 @@ const AIPanel = {
     },
 
     /**
-     * Set AI assistant mode (Reactive / Responsive / Anticipatory)
+     * Set AI assistant mode (Reactive / Active / Proactive)
      */
     setMode(modeId) {
         if (typeof AIModeConfig === 'undefined') return;
@@ -245,6 +245,12 @@ const AIPanel = {
         var panel = document.getElementById('ai-panel');
         if (panel) {
             panel.dataset.mode = modeId;
+        }
+        // Toggle "Acting Intern" ↔ "AI" logo animation
+        // Middle mode (Active) shows full "Acting Intern"; other modes collapse to "AI"
+        var logo = document.querySelector('.ai-panel-topbar-title .logo-animated');
+        if (logo) {
+            logo.classList.toggle('ai-reveal', modeId !== 'active');
         }
     },
 

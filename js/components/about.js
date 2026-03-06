@@ -221,6 +221,21 @@ const About = {
     },
 
     /**
+     * Start the tour from the About page route (not the modal).
+     * Navigates to the chart first so the tour targets are visible.
+     */
+    startTourFromPage() {
+        if (typeof App !== 'undefined' && typeof App.navigate === 'function') {
+            App.navigate('/');
+        } else {
+            window.location.hash = '#/';
+        }
+        if (typeof Tutorial !== 'undefined') {
+            setTimeout(() => Tutorial.start(), 300);
+        }
+    },
+
+    /**
      * Render the About page in the main content area (for #/about route)
      */
     async render() {
@@ -270,6 +285,9 @@ const About = {
         if (loadingEl) {
             loadingEl.outerHTML = bodyContent + `
                 <div class="about-footer">
+                    <button class="about-tour-btn" onclick="About.startTourFromPage()">
+                        Take a Quick Tour
+                    </button>
                     <p>Built with care in the spirit of better clinical reasoning.</p>
                 </div>
             `;
