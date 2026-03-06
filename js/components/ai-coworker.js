@@ -160,10 +160,16 @@ const AICoworker = {
         // Re-render now that longitudinal data is fully loaded
         this.render();
 
-        // Now that patient data + context assembler are ready, auto-analyze
-        // if the panel is already expanded (or will be expanded shortly).
-        // This covers the case where the panel was open from a previous session
-        // and _autoAnalyzeIfNeeded was never called from expand().
+        // If user already entered an API key (e.g. during the About modal/tour)
+        // before the context assembler was ready, run the queued analysis now.
+        if (this._pendingAutoAnalysis && this.isApiConfigured()) {
+            this._pendingAutoAnalysis = false;
+            console.log('🚀 Running queued AI analysis (API key was entered before context was ready)');
+            setTimeout(() => this.refreshThinking(), 300);
+            return; // Skip the panel-expand check — analysis is already triggered
+        }
+
+        // Auto-analyze if the panel is already expanded from a previous session
         if (typeof AIPanel !== 'undefined' && !AIPanel.isCollapsed) {
             AIPanel._autoAnalyzeIfNeeded();
         }
@@ -4464,15 +4470,24 @@ Format your response as JSON:
             this.saveApiKey(key);
             this.closeApiKeyModal();
             App.showToast('API key saved — running initial analysis...', 'success');
+            this._triggerBackgroundAnalysis();
+        }
+    },
 
-            // Auto-trigger AI analysis in the background immediately.
-            // This way, by the time the user navigates to the AI panel,
-            // the analysis is already done (or nearly done).
-            if (this.contextAssembler) {
-                setTimeout(() => {
-                    this.refreshThinking();
-                }, 500);
-            }
+    /**
+     * Trigger AI analysis in the background after API key is set.
+     * If the context assembler is ready, runs immediately.
+     * If not (still loading patient data), sets a flag so onPatientLoaded
+     * picks it up and runs analysis as soon as it's ready.
+     */
+    _triggerBackgroundAnalysis() {
+        if (this.contextAssembler) {
+            // Context is ready — analyze now
+            setTimeout(() => this.refreshThinking(), 300);
+        } else {
+            // Context isn't ready yet — queue for when onPatientLoaded finishes
+            this._pendingAutoAnalysis = true;
+            console.log('⏳ AI analysis queued — waiting for patient data to finish loading');
         }
     },
 
