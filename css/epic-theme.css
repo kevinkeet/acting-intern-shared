@@ -10987,3 +10987,252 @@ html, body {
         height: 95vh;
     }
 }
+
+/* ===================================================================
+   SMART GLASSES HUD OVERLAY
+   Simulates Even Realities G1 micro-LED display
+   =================================================================== */
+
+.glasses-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.glasses-overlay.visible {
+    opacity: 1;
+}
+
+.glasses-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.92);
+}
+
+.glasses-frame {
+    position: relative;
+    width: 92vw;
+    max-width: 1100px;
+    background: #0a0a0a;
+    border-radius: 40px;
+    border: 2px solid #1a3a2a;
+    padding: 16px 24px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-shadow: 0 0 80px rgba(0, 255, 136, 0.06), inset 0 0 40px rgba(0, 0, 0, 0.5);
+    animation: glassesSlideIn 0.3s ease;
+}
+
+@keyframes glassesSlideIn {
+    from { transform: scale(0.92); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.glasses-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 8px 4px;
+}
+.glasses-header-title {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: #00aa5c;
+    text-transform: uppercase;
+}
+.glasses-header-source {
+    font-family: 'Courier New', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: #0d4a2a;
+    text-transform: uppercase;
+    margin-left: auto;
+    margin-right: 12px;
+}
+.glasses-close {
+    background: none;
+    border: 1px solid #1a3a2a;
+    color: #00aa5c;
+    font-size: 20px;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+    line-height: 1;
+}
+.glasses-close:hover {
+    background: rgba(0, 255, 136, 0.15);
+    color: #00ff88;
+    border-color: #00ff88;
+}
+
+.glasses-viewport {
+    display: flex;
+    gap: 0;
+    align-items: stretch;
+    min-height: 260px;
+}
+
+.glasses-lens {
+    flex: 1;
+    background: #0d1117;
+    border-radius: 20px;
+    border: 1px solid #1a3a2a;
+    padding: 18px 20px 12px;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Courier New', monospace;
+    color: #00ff88;
+    position: relative;
+    overflow: hidden;
+}
+.glasses-lens::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 255, 136, 0.015) 2px,
+        rgba(0, 255, 136, 0.015) 4px
+    );
+    pointer-events: none;
+    border-radius: 20px;
+}
+
+.glasses-bridge {
+    width: 24px;
+    min-width: 24px;
+    background: #0a0a0a;
+    align-self: center;
+    height: 40px;
+    border-radius: 0 0 12px 12px;
+    border-left: 1px solid #1a3a2a;
+    border-right: 1px solid #1a3a2a;
+    border-bottom: 1px solid #1a3a2a;
+    margin-top: 40px;
+}
+
+.lens-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #00aa5c;
+    margin-bottom: 2px;
+    text-transform: uppercase;
+}
+.lens-separator {
+    font-size: 10px;
+    color: #1a3a2a;
+    margin-bottom: 8px;
+    overflow: hidden;
+    white-space: nowrap;
+    line-height: 1;
+}
+
+.lens-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    transition: opacity 0.08s ease;
+}
+
+.lens-line {
+    font-size: 13.5px;
+    line-height: 1.65;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    letter-spacing: 0.3px;
+    min-height: 1.65em;
+}
+
+.lens-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid #1a3a2a;
+}
+.lens-nav-btn {
+    background: none;
+    border: 1px solid #1a3a2a;
+    color: #00aa5c;
+    font-size: 10px;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+}
+.lens-nav-btn:hover {
+    background: rgba(0, 255, 136, 0.15);
+    color: #00ff88;
+    border-color: #00ff88;
+}
+.lens-nav-indicator {
+    font-size: 11px;
+    color: #00aa5c;
+    letter-spacing: 1px;
+    min-width: 30px;
+    text-align: center;
+}
+
+.glasses-footer {
+    text-align: center;
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    color: #0d4a2a;
+    letter-spacing: 1.5px;
+    padding: 4px 0 0;
+}
+
+/* Glasses trigger button green glow */
+.glasses-btn:hover {
+    background: rgba(0, 255, 136, 0.25) !important;
+}
+
+/* Responsive: stack lenses vertically on mobile */
+@media (max-width: 768px) {
+    .glasses-frame {
+        border-radius: 24px;
+        padding: 12px 12px 8px;
+        max-height: 92vh;
+        overflow-y: auto;
+    }
+    .glasses-viewport {
+        flex-direction: column;
+        gap: 8px;
+    }
+    .glasses-bridge {
+        width: 40px;
+        height: 12px;
+        min-width: unset;
+        align-self: center;
+        margin-top: 0;
+        border-radius: 0 0 8px 8px;
+        border-top: none;
+    }
+    .glasses-lens {
+        border-radius: 16px;
+        padding: 14px 16px 10px;
+    }
+}

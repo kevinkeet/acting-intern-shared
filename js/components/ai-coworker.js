@@ -2977,6 +2977,7 @@ Respond with ONLY the JSON, no preamble.`;
             if (data.clinicalSummary) this.state.clinicalSummary = data.clinicalSummary;
             if (data.problemList && Array.isArray(data.problemList)) this.state.problemList = data.problemList;
             if (data.categorizedActions) this.state.categorizedActions = data.categorizedActions;
+            if (data.glassesDisplay) this.state.glassesDisplay = data.glassesDisplay;
 
             this.state.status = 'ready';
             this.saveState();
@@ -5331,6 +5332,9 @@ RULES:
             if (result.categorizedActions) {
                 this.state.categorizedActions = result.categorizedActions;
             }
+            if (result.glassesDisplay) {
+                this.state.glassesDisplay = result.glassesDisplay;
+            }
 
             // Heavy mode: extract teaching points and DDx challenge
             if (result.teachingPoints && Array.isArray(result.teachingPoints)) {
@@ -5507,6 +5511,9 @@ RULES:
             if (result.categorizedActions) {
                 this.state.categorizedActions = result.categorizedActions;
             }
+            if (result.glassesDisplay) {
+                this.state.glassesDisplay = result.glassesDisplay;
+            }
 
             // Heavy mode: extract teaching points and DDx challenge
             if (result.teachingPoints && Array.isArray(result.teachingPoints)) {
@@ -5564,6 +5571,7 @@ RULES:
             observations: this.state.observations ? this.state.observations.slice() : [],
             teachingPoints: this.state.teachingPoints ? this.state.teachingPoints.slice() : [],
             ddxChallenge: this.state.ddxChallenge || null,
+            glassesDisplay: this.state.glassesDisplay || null,
             lastUpdated: this.state.lastUpdated,
             timestamp: Date.now()
         };
@@ -5600,6 +5608,7 @@ RULES:
         this.state.observations = cache.observations;
         this.state.teachingPoints = cache.teachingPoints;
         this.state.ddxChallenge = cache.ddxChallenge;
+        this.state.glassesDisplay = cache.glassesDisplay;
         this.state.lastUpdated = cache.lastUpdated;
         this.state.status = 'ready';
         this.saveState();

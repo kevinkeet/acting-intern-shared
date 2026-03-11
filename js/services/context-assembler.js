@@ -112,6 +112,17 @@ Respond in this exact JSON format:
         "backgroundFacts": ["Stable facts that don't change (e.g. EF 35%, prior GI bleed, baseline Cr)"],
         "supersededObservations": ["Text of any prior AI observations that are now outdated or proven wrong by new data"]
     },
+    "glassesDisplay": {
+        "rightLens": [
+            {"title": "PATIENT", "lines": ["73M HFrEF EF25% CKD3b T2DM AFib", "Dyspnea+fatigue x3d, orthopnea", "8lb wt gain, 3+ LE edema, JVP up", "BNP>2000 Cr2.4(↑1.8) K5.8", "Volume overloaded → IV diuresis"]},
+            {"title": "PROBLEMS", "lines": ["! ADHF exacerb - diuresis+echo", "! AKI on CKD - Cr1.8→2.4 monitor", "! HyperK 5.8 - kayexalate,hold K+", "  AFib - rate ctrl, on anticoag", "~ T2DM - hold metformin for AKI"]},
+            {"title": "ALERTS", "lines": ["⚠ K+ 5.8 CRITICAL", "⚠ PCN allergy ANAPHYLAXIS", "⚠ Cr trending ↑ 1.8→2.4", "⚠ On anticoag - fall risk", ""]}
+        ],
+        "leftLens": [
+            {"title": "ORDERS", "lines": ["STAT: BMP CBC Trop BNP Lactate", "IMG: CXR portable, TTE", "RX: Lasix 40mg IV now", "RX: Kayexalate 15g PO x1", "HOLD: spironolactone, metformin"]},
+            {"title": "COMMS", "lines": ["ASK PT: dietary Na+ intake?", "ASK PT: med compliance?", "NOTIFY: attending re K+ 5.8", "", ""]}
+        ]
+    },
     "conflictsDetected": [
         {"description": "Brief description of any contradiction between existing info and new data", "severity": "critical|warning"}
     ]
@@ -173,7 +184,14 @@ RULES:
   2. activeConditions: Evolving clinical state with trend direction (patient trending toward AKI, volume overload improving)
   3. backgroundFacts: Stable historical information that doesn't change (EF 35%, prior GI bleed history, baseline Cr 1.8)
   List any prior observations now outdated in supersededObservations
-- conflictsDetected: Flag any contradictions you notice between existing information and new data (e.g. nurse asking about anticoagulation when it's contraindicated)`;
+- conflictsDetected: Flag any contradictions you notice between existing information and new data (e.g. nurse asking about anticoagulation when it's contraindicated)
+- glassesDisplay: This is for a smart glasses HUD (Even Realities G1). CRITICAL formatting rules:
+  * Each screen has a "title" (category label) and exactly 5 "lines" (pad empty strings if needed)
+  * Each line MUST be ≤45 characters. Truncate aggressively — use abbreviations freely (pt, hx, dx, rx, tx, sx, w/, w/o, s/p, c/o, ↑, ↓, →, +, &)
+  * rightLens: Screen 1 "PATIENT" = ultra-dense clinical snapshot (demographics+presentation+key values in 5 lines). Screen 2 "PROBLEMS" = top 5 problems with urgency prefix (! urgent, ~ monitoring, space for active) + abbreviated plan. Screen 3 "ALERTS" = critical safety flags only (allergies, critical values, contraindications). Omit ALERTS screen if no critical items.
+  * leftLens: Screen 1 "ORDERS" = ALL pending orders compressed into 5 lines using category prefixes (STAT:, IMG:, RX:, HOLD:, CONSULT:). Pack multiple items per line with commas. Screen 2 "COMMS" = questions to ask patient/nurse/team, prefixed (ASK PT:, ASK RN:, NOTIFY:). Omit COMMS screen if no communication items.
+  * This is the MOST IMPORTANT display — a doctor glances at this during patient care. Prioritize: (1) safety-critical info, (2) actionable orders, (3) key clinical values with trends
+  * Use ↑↓ for trends, actual values not ranges, bold abbreviations. Every character counts.`;
 
         // Inject mode personality prefix
         if (mode && mode.responseStyle.personalityPrefix) {
@@ -286,6 +304,17 @@ Respond in this exact JSON format:
         "backgroundFacts": ["Stable facts (EF 35%, prior GI bleed)"],
         "supersededObservations": ["Prior observations now outdated"]
     },
+    "glassesDisplay": {
+        "rightLens": [
+            {"title": "PATIENT", "lines": ["73M HFrEF EF25% CKD3b T2DM AFib", "Dyspnea+fatigue x3d, orthopnea", "8lb wt gain, 3+ LE edema, JVP up", "BNP>2000 Cr2.4(↑1.8) K5.8", "Volume overloaded → IV diuresis"]},
+            {"title": "PROBLEMS", "lines": ["! ADHF exacerb - diuresis+echo", "! AKI on CKD - Cr1.8→2.4 monitor", "! HyperK 5.8 - kayexalate,hold K+", "  AFib - rate ctrl, on anticoag", "~ T2DM - hold metformin for AKI"]},
+            {"title": "ALERTS", "lines": ["⚠ K+ 5.8 CRITICAL", "⚠ PCN allergy ANAPHYLAXIS", "⚠ Cr trending ↑ 1.8→2.4", "⚠ On anticoag - fall risk", ""]}
+        ],
+        "leftLens": [
+            {"title": "ORDERS", "lines": ["STAT: BMP CBC Trop BNP Lactate", "IMG: CXR portable, TTE", "RX: Lasix 40mg IV now", "RX: Kayexalate 15g PO x1", "HOLD: spironolactone, metformin"]},
+            {"title": "COMMS", "lines": ["ASK PT: dietary Na+ intake?", "ASK PT: med compliance?", "NOTIFY: attending re K+ 5.8", "", ""]}
+        ]
+    },
     "conflictsDetected": [
         {"description": "Contradiction found", "severity": "critical|warning"}
     ]
@@ -313,7 +342,14 @@ RULES:
 - keyConsiderations: allergies, contraindications, drug interactions. Use "critical" for life-threatening only
 - patientSummaryUpdate: your CORE MEMORY — one concise paragraph, not multiple
 - memoryClassification: pendingDecisions, activeConditions (w/ trend), backgroundFacts, supersededObservations
-- conflictsDetected: flag contradictions between existing and new data`;
+- conflictsDetected: flag contradictions between existing and new data
+- glassesDisplay: This is for a smart glasses HUD (Even Realities G1). CRITICAL formatting rules:
+  * Each screen has a "title" (category label) and exactly 5 "lines" (pad empty strings if needed)
+  * Each line MUST be ≤45 characters. Truncate aggressively — use abbreviations freely (pt, hx, dx, rx, tx, sx, w/, w/o, s/p, c/o, ↑, ↓, →, +, &)
+  * rightLens: Screen 1 "PATIENT" = ultra-dense clinical snapshot (demographics+presentation+key values in 5 lines). Screen 2 "PROBLEMS" = top 5 problems with urgency prefix (! urgent, ~ monitoring, space for active) + abbreviated plan. Screen 3 "ALERTS" = critical safety flags only (allergies, critical values, contraindications). Omit ALERTS screen if no critical items.
+  * leftLens: Screen 1 "ORDERS" = ALL pending orders compressed into 5 lines using category prefixes (STAT:, IMG:, RX:, HOLD:, CONSULT:). Pack multiple items per line with commas. Screen 2 "COMMS" = questions to ask patient/nurse/team, prefixed (ASK PT:, ASK RN:, NOTIFY:). Omit COMMS screen if no communication items.
+  * This is the MOST IMPORTANT display — a doctor glances at this during patient care. Prioritize: (1) safety-critical info, (2) actionable orders, (3) key clinical values with trends
+  * Use ↑↓ for trends, actual values not ranges, bold abbreviations. Every character counts.`;
 
         // Inject mode personality prefix
         if (mode && mode.responseStyle.personalityPrefix) {
