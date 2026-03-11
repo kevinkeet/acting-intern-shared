@@ -11282,3 +11282,340 @@ html, body {
         padding: 14px 16px 10px;
     }
 }
+
+/* ===================================================================
+   DICTATION WIDGET — Floating dual-pane persistent dictation
+   =================================================================== */
+
+.dictation-widget {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 520px;
+    max-height: 420px;
+    z-index: 1002;
+    background: #1a1d23;
+    border: 1px solid #3a3f4b;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    overflow: hidden;
+}
+.dictation-widget.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+.dictation-widget.minimized .dictation-body {
+    display: none;
+}
+.dictation-widget.minimized {
+    width: auto;
+    max-height: none;
+    bottom: 80px;
+}
+
+.dictation-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    background: #22262e;
+    border-bottom: 1px solid #3a3f4b;
+    cursor: pointer;
+    user-select: none;
+}
+.dictation-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: #c8ccd4;
+    letter-spacing: 0.5px;
+    flex: 1;
+}
+.dictation-header-actions {
+    display: flex;
+    gap: 2px;
+}
+.dictation-header-btn {
+    background: none;
+    border: none;
+    color: #8a8f9a;
+    font-size: 14px;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+}
+.dictation-header-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #e0e0e0;
+}
+
+/* Mic indicator */
+.dictation-mic-indicator {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.mic-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #555;
+    transition: background 0.2s;
+}
+.dictation-mic-indicator.active .mic-dot {
+    background: #ef4444;
+    animation: micPulse 1.5s ease-in-out infinite;
+}
+@keyframes micPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+    50% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+}
+
+/* Body */
+.dictation-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* Dual panes */
+.dictation-panes {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+.dictation-pane {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+}
+.dictation-pane-divider {
+    width: 1px;
+    background: #3a3f4b;
+}
+
+.pane-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 6px 10px 4px;
+    color: #6b7280;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.context-pane .pane-label { color: #60a5fa; }
+.order-pane .pane-label { color: #f59e0b; }
+
+.pane-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 6px 8px;
+    min-height: 120px;
+    max-height: 260px;
+}
+.pane-content::-webkit-scrollbar { width: 4px; }
+.pane-content::-webkit-scrollbar-thumb { background: #3a3f4b; border-radius: 2px; }
+
+.pane-placeholder {
+    font-size: 11px;
+    color: #555;
+    padding: 12px 4px;
+    line-height: 1.5;
+}
+
+/* Interim text */
+.pane-interim {
+    font-size: 12px;
+    padding: 4px 10px 6px;
+    min-height: 22px;
+    color: #888;
+    font-style: italic;
+    border-top: 1px solid rgba(255, 255, 255, 0.03);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.context-interim { color: rgba(96, 165, 250, 0.5); }
+.order-interim { color: rgba(245, 158, 11, 0.5); }
+
+/* Transcript lines */
+.dictation-line {
+    font-size: 12px;
+    line-height: 1.5;
+    padding: 3px 4px;
+    color: #d1d5db;
+    border-radius: 4px;
+    margin-bottom: 2px;
+    word-wrap: break-word;
+}
+.dictation-timestamp {
+    font-size: 10px;
+    color: #555;
+    margin-right: 6px;
+    font-family: 'Courier New', monospace;
+}
+
+/* Context lines */
+.context-line {
+    border-left: 2px solid rgba(96, 165, 250, 0.3);
+    padding-left: 8px;
+}
+
+/* Order lines */
+.order-line {
+    border-left: 2px solid rgba(245, 158, 11, 0.3);
+    padding-left: 8px;
+}
+.order-line.confirmed {
+    color: #34d399;
+    border-left-color: #34d399;
+}
+.order-line.cancelled {
+    color: #6b7280;
+    text-decoration: line-through;
+    border-left-color: #6b7280;
+}
+.order-line.error {
+    border-left-color: #ef4444;
+}
+.order-line.parsing {
+    border-left-color: rgba(245, 158, 11, 0.6);
+}
+
+.parsing-tag, .error-tag, .parsed-tag {
+    display: block;
+    font-size: 10px;
+    margin-top: 2px;
+}
+.parsing-tag { color: #f59e0b; }
+.error-tag { color: #ef4444; }
+.parsed-tag { color: #34d399; }
+
+/* Order confirmation card */
+.dictation-confirm-card {
+    margin: 6px 8px 8px;
+    padding: 10px 12px;
+    background: #1f2937;
+    border: 1px solid #f59e0b;
+    border-radius: 8px;
+    animation: cardSlideIn 0.2s ease;
+}
+.dictation-confirm-card.low-confidence {
+    border-color: #ef4444;
+}
+@keyframes cardSlideIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.confirm-card-header {
+    font-size: 13px;
+    font-weight: 600;
+    color: #f59e0b;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.low-confidence .confirm-card-header { color: #ef4444; }
+.low-conf-badge {
+    font-size: 9px;
+    font-weight: 600;
+    padding: 1px 6px;
+    border-radius: 3px;
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    letter-spacing: 0.3px;
+}
+
+.confirm-card-details {
+    margin-bottom: 8px;
+}
+.order-detail {
+    font-size: 12px;
+    color: #d1d5db;
+    line-height: 1.6;
+}
+
+.confirm-card-actions {
+    display: flex;
+    gap: 6px;
+}
+.confirm-btn {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.15s;
+}
+.confirm-btn.confirm {
+    background: rgba(52, 211, 153, 0.15);
+    border: 1px solid #34d399;
+    color: #34d399;
+}
+.confirm-btn.confirm:hover {
+    background: rgba(52, 211, 153, 0.3);
+}
+.confirm-btn.edit {
+    background: rgba(96, 165, 250, 0.15);
+    border: 1px solid #60a5fa;
+    color: #60a5fa;
+}
+.confirm-btn.edit:hover {
+    background: rgba(96, 165, 250, 0.3);
+}
+.confirm-btn.cancel {
+    background: none;
+    border: 1px solid #4b5563;
+    color: #9ca3af;
+}
+.confirm-btn.cancel:hover {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: #ef4444;
+    color: #ef4444;
+}
+
+.confirm-card-hint {
+    font-size: 10px;
+    color: #555;
+    margin-top: 6px;
+    text-align: center;
+}
+
+/* Dictation trigger button accent */
+.dictation-trigger {
+    border-left: 2px solid rgba(245, 158, 11, 0.3) !important;
+}
+.dictation-trigger:hover {
+    background: rgba(245, 158, 11, 0.15) !important;
+}
+
+/* Responsive: compact on mobile */
+@media (max-width: 768px) {
+    .dictation-widget {
+        width: calc(100vw - 20px);
+        right: 10px;
+        bottom: 70px;
+    }
+}

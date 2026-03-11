@@ -3102,9 +3102,12 @@ Respond with ONLY the JSON, no preamble.`;
             return;
         }
 
-        // Mutual exclusion: stop ambient scribe if active
+        // Mutual exclusion: stop ambient scribe and dictation if active
         if (typeof AmbientScribe !== 'undefined' && AmbientScribe.isListening) {
             AmbientScribe.stopListening();
+        }
+        if (typeof DictationWidget !== 'undefined' && DictationWidget.isListening) {
+            DictationWidget.stopListening();
         }
 
         this._handsFreeActive = true;

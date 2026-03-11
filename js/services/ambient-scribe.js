@@ -60,9 +60,12 @@ const AmbientScribe = {
             return false;
         }
 
-        // Mutual exclusion: stop hands-free if active
+        // Mutual exclusion: stop hands-free and dictation if active
         if (typeof AICoworker !== 'undefined' && AICoworker._handsFreeActive) {
             AICoworker.stopHandsFree();
+        }
+        if (typeof DictationWidget !== 'undefined' && DictationWidget.isListening) {
+            DictationWidget.stopListening();
         }
 
         this.isListening = true;
