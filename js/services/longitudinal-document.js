@@ -436,7 +436,13 @@ class LongitudinalClinicalDocument {
             suggestionOutcomes: [],        // Outcome tracking: suggestion → order → result connections
             lastFullIngestion: null,       // When PKB was last fully analyzed by LLM
             consolidationCount: 0,         // Number of interactions since last memory consolidation
-            version: 0                     // Increments on meaningful updates
+            version: 0,                    // Increments on meaningful updates
+
+            // Structured memory document — built by "Learn Patient", updated by "Refresh"
+            // Contains: patientOverview, problemAnalysis[], safetyProfile, medicationRationale[], pendingItems[], clinicalGestalt
+            memoryDocument: null,
+            lastLearnedAt: null,           // ISO timestamp — when Learn was last run
+            lastRefreshedAt: null          // ISO timestamp — when incremental refresh last ran
         };
 
         // Confidence-scored key findings (replaces plain string array in clinicalNarrative)
@@ -563,7 +569,10 @@ class LongitudinalClinicalDocument {
                 suggestionOutcomes: (this.aiMemory.suggestionOutcomes || []).slice(-20),
                 lastFullIngestion: this.aiMemory.lastFullIngestion,
                 consolidationCount: this.aiMemory.consolidationCount || 0,
-                version: this.aiMemory.version
+                version: this.aiMemory.version,
+                memoryDocument: this.aiMemory.memoryDocument || null,
+                lastLearnedAt: this.aiMemory.lastLearnedAt || null,
+                lastRefreshedAt: this.aiMemory.lastRefreshedAt || null
             },
             scoredFindings: (this.scoredFindings || []).slice(-30),
             options: {
@@ -721,6 +730,9 @@ class LongitudinalClinicalDocument {
             doc.aiMemory.lastFullIngestion = data.aiMemory.lastFullIngestion || null;
             doc.aiMemory.consolidationCount = data.aiMemory.consolidationCount || 0;
             doc.aiMemory.version = data.aiMemory.version || 0;
+            doc.aiMemory.memoryDocument = data.aiMemory.memoryDocument || null;
+            doc.aiMemory.lastLearnedAt = data.aiMemory.lastLearnedAt || null;
+            doc.aiMemory.lastRefreshedAt = data.aiMemory.lastRefreshedAt || null;
             // Restore problemInsights Map from array of entries
             doc.aiMemory.problemInsights = new Map();
             if (data.aiMemory.problemInsights && Array.isArray(data.aiMemory.problemInsights)) {

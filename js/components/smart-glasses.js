@@ -236,6 +236,79 @@ const SmartGlasses = {
         }
     },
 
+    // ==================== Live Updates from Dictation ====================
+
+    /**
+     * Push a new context line to the left lens (patient info).
+     * Called by DictationWidget when context is dictated.
+     * Adds a new "DICTATION" screen or appends to the last one.
+     */
+    pushContextToLeftLens(text) {
+        if (!this.isOpen) return;
+
+        const truncated = this._truncate(text, this.MAX_LINE_CHARS);
+
+        // Find or create a DICTATION screen
+        let dictScreen = this.leftScreens.find(s => s.title === 'DICTATION');
+        if (!dictScreen) {
+            dictScreen = { title: 'DICTATION', lines: [] };
+            this.leftScreens.push(dictScreen);
+        }
+
+        // Add line, rolling window of 5 lines (most recent)
+        dictScreen.lines.push(truncated);
+        if (dictScreen.lines.length > this.LINES_PER_SCREEN) {
+            dictScreen.lines = dictScreen.lines.slice(-this.LINES_PER_SCREEN);
+        }
+
+        // Pad to 5 lines
+        while (dictScreen.lines.length < this.LINES_PER_SCREEN) {
+            dictScreen.lines.push('');
+        }
+
+        // Auto-navigate to the dictation screen
+        const dictIdx = this.leftScreens.indexOf(dictScreen);
+        if (dictIdx >= 0) {
+            this.leftScreen = dictIdx;
+            this._updateLens('left');
+        }
+    },
+
+    /**
+     * Push a parsed order line to the right lens (orders).
+     * Called by DictationWidget when an order is being parsed or confirmed.
+     */
+    pushOrderToRightLens(orderText, status) {
+        if (!this.isOpen || this._orderConfirmation) return;
+
+        const truncated = this._truncate(orderText, this.MAX_LINE_CHARS);
+        const prefix = status === 'confirmed' ? '\u2713 ' : (status === 'parsing' ? '\u23F3 ' : '\u25B8 ');
+
+        // Find or create an ORDERS LIVE screen
+        let ordScreen = this.rightScreens.find(s => s.title === 'ORDERS LIVE');
+        if (!ordScreen) {
+            ordScreen = { title: 'ORDERS LIVE', lines: [] };
+            this.rightScreens.push(ordScreen);
+        }
+
+        // Add line, rolling window
+        ordScreen.lines.push(this._truncate(prefix + orderText, this.MAX_LINE_CHARS));
+        if (ordScreen.lines.length > this.LINES_PER_SCREEN) {
+            ordScreen.lines = ordScreen.lines.slice(-this.LINES_PER_SCREEN);
+        }
+
+        while (ordScreen.lines.length < this.LINES_PER_SCREEN) {
+            ordScreen.lines.push('');
+        }
+
+        // Auto-navigate to the live orders screen
+        const ordIdx = this.rightScreens.indexOf(ordScreen);
+        if (ordIdx >= 0) {
+            this.rightScreen = ordIdx;
+            this._updateLens('right');
+        }
+    },
+
     // ==================== LLM Data Parsing ====================
 
     _parseLLMScreens(lensData, fallbackTitle) {

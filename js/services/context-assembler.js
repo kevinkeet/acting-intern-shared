@@ -21,7 +21,11 @@ class ContextAssembler {
      * Uses focused context (~3-5K chars) from working memory.
      */
     buildAskPrompt(question) {
-        const context = this.workingMemory.assemble('ask', { question });
+        // Use memory-based context when available (much cheaper)
+        const hasMemory = this.workingMemory.longitudinalDoc?.aiMemory?.memoryDocument;
+        const context = hasMemory
+            ? this.workingMemory.assembleForInteraction(question)
+            : this.workingMemory.assemble('ask', { question });
         const mode = typeof AIModeConfig !== 'undefined' ? AIModeConfig.getMode() : null;
 
         let systemPrompt = `You are an AI clinical assistant helping a physician. You have a PERSISTENT MEMORY of this patient that accumulates across interactions — use it. Don't re-derive what you already know.
@@ -60,7 +64,11 @@ ${question}`;
      * Uses moderate context (~6-10K chars) from working memory.
      */
     buildDictationPrompt(doctorThoughts) {
-        const context = this.workingMemory.assemble('dictate', { dictation: doctorThoughts });
+        // Use memory-based context when available (much cheaper)
+        const hasMemory = this.workingMemory.longitudinalDoc?.aiMemory?.memoryDocument;
+        const context = hasMemory
+            ? this.workingMemory.assembleForInteraction(doctorThoughts)
+            : this.workingMemory.assemble('dictate', { dictation: doctorThoughts });
         const mode = typeof AIModeConfig !== 'undefined' ? AIModeConfig.getMode() : null;
 
         let systemPrompt = `You are an AI clinical assistant helping a physician manage a patient case. You maintain a PERSISTENT MEMORY of this patient that accumulates across interactions.
@@ -666,6 +674,158 @@ Your patientSummaryUpdate should incorporate ALL important details from both ver
         return '\n## Ambient Scribe \u2014 Overheard Conversation Summary\n' +
             '(Extracted from doctor-patient conversation — use to inform your analysis)\n' +
             contextBlock + '\n';
+    }
+
+    // =====================================================
+    // LEARN / REFRESH / INTERACT / ORDER SAFETY PROMPTS
+    // =====================================================
+
+    /**
+     * Build prompt for "Learn About Patient" — comprehensive chart digest.
+     * Sends the FULL chart to build a structured memory document.
+     * Model: Sonnet (quality matters). Max tokens: 4096.
+     */
+    buildLearnPrompt() {
+        const chartContext = this.workingMemory.assembleForLearn();
+
+        const systemPrompt = `You are an AI clinical co-pilot reading a patient's complete chart for the first time. Your task is to build a comprehensive structured MEMORY DOCUMENT that will be your persistent memory for ALL future interactions with this patient's physician.
+
+This memory document must be thorough enough that you can answer clinical questions, suggest orders, and catch safety issues WITHOUT re-reading the chart. Think of it as your mental model after a detailed chart review.
+
+Read the chart carefully and produce this EXACT JSON structure:
+
+{
+    "patientOverview": "3-4 paragraph comprehensive mental model. Include: demographics, chief complaint, HPI, key PMH with clinical qualifiers (EF%, baseline Cr, A1c, NYHA class), social/functional status, and current clinical trajectory. Write as a clinician would think about this patient.",
+    "problemAnalysis": [
+        {
+            "problem": "Problem name",
+            "status": "active|stable|acute|chronic|resolving",
+            "trajectory": "improving|worsening|stable|fluctuating",
+            "keyData": ["Key lab values, imaging findings, exam findings relevant to this problem"],
+            "plan": "Current/recommended management plan",
+            "medRationale": "Why the patient is on specific meds for this problem"
+        }
+    ],
+    "safetyProfile": {
+        "allergies": [{"substance": "...", "reaction": "...", "implications": "Clinical implications — what to avoid"}],
+        "contraindications": ["Specific drugs/classes contraindicated and why"],
+        "criticalValues": ["Any critical lab values or vital signs with clinical significance"],
+        "interactions": ["Significant drug-drug or drug-disease interactions to watch"]
+    },
+    "medicationRationale": [
+        {"name": "Med name + dose + frequency", "indication": "What it's for", "rationale": "Why this specific med/dose — clinical reasoning"}
+    ],
+    "pendingItems": ["Pending results, decisions, follow-ups, questions to resolve"],
+    "clinicalGestalt": "One-line clinical gestalt — what is the story of this patient right now?"
+}
+
+RULES:
+- problemAnalysis: Include ALL active problems, ordered by acuity. Include clinical qualifiers (EF%, baseline Cr, etc.)
+- safetyProfile: Be EXHAUSTIVE — this is safety-critical. Include cross-reactivity implications (e.g., PCN allergy → avoid cephalosporins in severe cases)
+- medicationRationale: Include EVERY current medication with reasoning. If the reason is unclear from the chart, note that.
+- pendingItems: Include anything that needs follow-up, is awaited, or is unresolved
+- clinicalGestalt: This is the "elevator pitch" — what would you tell a covering physician?
+
+Respond with ONLY the JSON, no preamble or markdown fences.`;
+
+        const userMessage = `Here is the complete patient chart. Build your memory document:\n\n${chartContext}`;
+
+        return {
+            systemPrompt,
+            userMessage,
+            maxTokens: 4096
+        };
+    }
+
+    /**
+     * Build prompt for incremental memory refresh.
+     * Sends existing memory + delta data for the AI to update.
+     * Model: Haiku (existing memory provides context). Max tokens: 2048.
+     */
+    buildRefreshMemoryPrompt() {
+        const refreshContext = this.workingMemory.assembleForIncrementalRefresh();
+
+        const systemPrompt = `You previously learned this patient and built a memory document. New data has arrived since your last review. Update your memory document to reflect the new information.
+
+RULES:
+- Preserve everything from your current memory that is still accurate
+- Update any values, statuses, or trajectories that have changed based on new data
+- Add new problems, findings, or orders that weren't in your memory
+- Update pendingItems (remove resolved items, add new pending items)
+- If new data contradicts your memory, update your memory and note the change
+- Keep the same JSON structure
+
+Respond with the COMPLETE updated memory document as JSON (same schema as before), no preamble or markdown fences.
+
+{
+    "patientOverview": "...",
+    "problemAnalysis": [...],
+    "safetyProfile": {...},
+    "medicationRationale": [...],
+    "pendingItems": [...],
+    "clinicalGestalt": "..."
+}`;
+
+        const userMessage = refreshContext;
+
+        return {
+            systemPrompt,
+            userMessage,
+            maxTokens: 2048
+        };
+    }
+
+    /**
+     * Build prompt for order safety checking.
+     * Sends memory document safety profile + current meds + the proposed order.
+     * Model: Haiku (fast). Max tokens: 512.
+     */
+    buildOrderSafetyPrompt(parsedOrder, memoryDocument) {
+        const safety = memoryDocument.safetyProfile || {};
+        const meds = memoryDocument.medicationRationale || [];
+        const problems = memoryDocument.problemAnalysis || [];
+
+        let safetyContext = '## SAFETY PROFILE\n';
+        if (safety.allergies && safety.allergies.length) {
+            safetyContext += 'Allergies: ' + safety.allergies.map(a => `${a.substance} (${a.reaction}) — ${a.implications || ''}`).join('; ') + '\n';
+        }
+        if (safety.contraindications && safety.contraindications.length) {
+            safetyContext += 'Contraindications: ' + safety.contraindications.join('; ') + '\n';
+        }
+        if (safety.interactions && safety.interactions.length) {
+            safetyContext += 'Known interactions: ' + safety.interactions.join('; ') + '\n';
+        }
+        if (safety.criticalValues && safety.criticalValues.length) {
+            safetyContext += 'Critical values: ' + safety.criticalValues.join('; ') + '\n';
+        }
+
+        let medContext = '## CURRENT MEDICATIONS\n';
+        meds.forEach(m => { medContext += `- ${m.name}: ${m.indication}\n`; });
+
+        let problemContext = '## ACTIVE PROBLEMS\n';
+        problems.forEach(p => { problemContext += `- ${p.problem} (${p.status})\n`; });
+
+        const systemPrompt = `You are a clinical safety checker. Given a patient's safety profile, current medications, and active problems, check the proposed order for safety concerns.
+
+Check for:
+1. Allergy conflicts (including cross-reactivity)
+2. Drug-drug interactions with current medications
+3. Contraindications given active conditions (e.g., NSAIDs in CKD+HF, metformin in AKI)
+4. Duplicate/redundant orders
+5. Dose concerns (obviously wrong doses)
+
+Respond with ONLY JSON:
+{"safe": true/false, "concerns": [{"type": "allergy|interaction|contraindication|duplicate|dose", "description": "Brief explanation", "severity": "critical|warning|info"}], "suggestedAlternative": "If unsafe, suggest an alternative (or null)"}
+
+If the order is safe, return {"safe": true, "concerns": [], "suggestedAlternative": null}`;
+
+        const userMessage = `${safetyContext}\n${medContext}\n${problemContext}\n## PROPOSED ORDER\n${JSON.stringify(parsedOrder, null, 2)}`;
+
+        return {
+            systemPrompt,
+            userMessage,
+            maxTokens: 512
+        };
     }
 }
 

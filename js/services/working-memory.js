@@ -636,6 +636,167 @@ class WorkingMemoryAssembler {
 
         return '## FROM AMBIENT CONVERSATION (doctor-patient dialogue)\n' + lines.join('\n');
     }
+    // =====================================================
+    // LEARN / REFRESH / INTERACT ASSEMBLY
+    // =====================================================
+
+    /**
+     * LEARN: Full chart render for initial patient learning.
+     * Like assembleForRefresh but WITHOUT prior AI memory (clean slate).
+     * Budget: ~12,000-15,000 chars
+     */
+    assembleForLearn() {
+        return this.renderer.render(this.pkb);
+    }
+
+    /**
+     * INCREMENTAL REFRESH: Existing memory document + delta data.
+     * Much cheaper than full learn.
+     * Budget: ~4,000-6,000 chars
+     */
+    assembleForIncrementalRefresh() {
+        var sections = [];
+        var mem = this.pkb.aiMemory;
+
+        // 1. Existing memory document (the AI's current understanding)
+        if (mem && mem.memoryDocument) {
+            sections.push('## YOUR CURRENT MEMORY DOCUMENT\n' + JSON.stringify(mem.memoryDocument, null, 2));
+        }
+
+        // 2. Delta data since last refresh
+        var since = mem.lastRefreshedAt || mem.lastLearnedAt || null;
+        sections.push(this._buildDeltaContext(since));
+
+        return sections.filter(function(s) { return s && s.trim(); }).join('\n\n');
+    }
+
+    /**
+     * INTERACTION: Memory-only context for questions and dictation.
+     * NO chart data — works entirely from the memory document.
+     * Budget: ~2,000-3,000 chars
+     */
+    assembleForInteraction(question) {
+        var mem = this.pkb.aiMemory;
+        if (!mem || !mem.memoryDocument) {
+            // Fallback to legacy behavior if no memory document
+            return question ? this.assembleForAsk(question) : this.assembleDefault();
+        }
+
+        var sections = [];
+        var doc = mem.memoryDocument;
+
+        // 1. Patient overview (always)
+        sections.push('## PATIENT OVERVIEW\n' + (doc.patientOverview || ''));
+
+        // 2. Safety profile (always)
+        if (doc.safetyProfile) {
+            var safety = '## SAFETY PROFILE\n';
+            if (doc.safetyProfile.allergies && doc.safetyProfile.allergies.length) {
+                safety += 'Allergies: ' + doc.safetyProfile.allergies.map(function(a) {
+                    return a.substance + ' (' + a.reaction + ') — ' + (a.implications || '');
+                }).join('; ') + '\n';
+            }
+            if (doc.safetyProfile.contraindications && doc.safetyProfile.contraindications.length) {
+                safety += 'Contraindications: ' + doc.safetyProfile.contraindications.join('; ') + '\n';
+            }
+            if (doc.safetyProfile.criticalValues && doc.safetyProfile.criticalValues.length) {
+                safety += 'Critical values: ' + doc.safetyProfile.criticalValues.join('; ') + '\n';
+            }
+            if (doc.safetyProfile.interactions && doc.safetyProfile.interactions.length) {
+                safety += 'Interactions: ' + doc.safetyProfile.interactions.join('; ') + '\n';
+            }
+            sections.push(safety);
+        }
+
+        // 3. Relevant problem analysis (filtered by question if provided)
+        if (doc.problemAnalysis && doc.problemAnalysis.length) {
+            var problems = doc.problemAnalysis;
+            if (question) {
+                var q = question.toLowerCase();
+                problems = problems.filter(function(p) {
+                    var text = (p.problem + ' ' + p.status + ' ' + (p.plan || '')).toLowerCase();
+                    // Check if any word in the question appears in the problem
+                    return q.split(/\s+/).some(function(word) {
+                        return word.length > 3 && text.indexOf(word) !== -1;
+                    }) || true; // Include all if no specific match (for short questions)
+                });
+            }
+            var probText = '## PROBLEM ANALYSIS\n';
+            problems.forEach(function(p) {
+                probText += '- **' + p.problem + '** [' + (p.status || 'active') + ', ' + (p.trajectory || 'stable') + ']\n';
+                if (p.keyData && p.keyData.length) probText += '  Data: ' + p.keyData.join(', ') + '\n';
+                if (p.plan) probText += '  Plan: ' + p.plan + '\n';
+            });
+            sections.push(probText);
+        }
+
+        // 4. Medication rationale (if question mentions meds or always include brief list)
+        if (doc.medicationRationale && doc.medicationRationale.length) {
+            var medText = '## MEDICATIONS\n';
+            doc.medicationRationale.forEach(function(m) {
+                medText += '- ' + m.name + ': ' + m.rationale + '\n';
+            });
+            sections.push(medText);
+        }
+
+        // 5. Pending items
+        if (doc.pendingItems && doc.pendingItems.length) {
+            sections.push('## PENDING\n' + doc.pendingItems.map(function(i) { return '- ' + i; }).join('\n'));
+        }
+
+        // 6. Session context (recent interactions)
+        if (this.session) {
+            var sessionStr = this.session.toContextString();
+            if (sessionStr) sections.push(sessionStr);
+        }
+
+        return sections.filter(function(s) { return s && s.trim(); }).join('\n\n');
+    }
+
+    /**
+     * Build delta context string for incremental refresh.
+     * Only includes data newer than the given timestamp.
+     */
+    _buildDeltaContext(sinceTimestamp) {
+        var lines = [];
+        var since = sinceTimestamp ? new Date(sinceTimestamp).getTime() : 0;
+
+        // New dictation entries
+        if (this.pkb.sessionContext && this.pkb.sessionContext.doctorDictation) {
+            var newDicts = this.pkb.sessionContext.doctorDictation.filter(function(d) {
+                return !sinceTimestamp || (d.timestamp && new Date(d.timestamp).getTime() > since);
+            });
+            if (newDicts.length > 0) {
+                lines.push('NEW DICTATION:\n' + newDicts.map(function(d) { return '- ' + (d.text || d); }).join('\n'));
+            }
+        }
+
+        // New executed orders
+        var mem = this.pkb.aiMemory;
+        if (mem && mem.executedActions) {
+            var newOrders = mem.executedActions.filter(function(a) {
+                return !sinceTimestamp || (a.timestamp && new Date(a.timestamp).getTime() > since);
+            });
+            if (newOrders.length > 0) {
+                lines.push('NEW ORDERS PLACED:\n' + newOrders.map(function(o) { return '- ' + (o.text || JSON.stringify(o)); }).join('\n'));
+            }
+        }
+
+        // New ambient scribe findings
+        var ambientBlock = this.getAmbientFindingsBlock();
+        if (ambientBlock) {
+            lines.push(ambientBlock);
+        }
+
+        // Recent lab/vitals changes (rendered from longitudinal data)
+        var recentData = this.getRecentDataBlock();
+        if (recentData) {
+            lines.push('RECENT DATA:\n' + recentData);
+        }
+
+        if (lines.length === 0) return '## DELTA SINCE LAST REVIEW\nNo new data.';
+        return '## DELTA SINCE LAST REVIEW\n' + lines.join('\n\n');
+    }
 }
 
 window.WorkingMemoryAssembler = WorkingMemoryAssembler;

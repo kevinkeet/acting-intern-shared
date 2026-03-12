@@ -11611,6 +11611,180 @@ html, body {
     background: rgba(245, 158, 11, 0.15) !important;
 }
 
+/* Order safety warning in confirmation card */
+.dictation-confirm-card.has-safety-concerns {
+    border-color: #ef4444;
+    background: #1a0a0a;
+}
+.order-safety-warning {
+    margin: 8px 0;
+    padding: 8px;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 4px;
+}
+.safety-warning-header {
+    font-size: 11px;
+    font-weight: 600;
+    color: #ef4444;
+    margin-bottom: 4px;
+}
+.safety-concern {
+    font-size: 10px;
+    color: #ccc;
+    margin: 3px 0;
+    padding-left: 8px;
+    border-left: 2px solid #f59e0b;
+}
+.safety-concern.critical {
+    border-left-color: #ef4444;
+    color: #fca5a5;
+}
+.safety-concern.high {
+    border-left-color: #f97316;
+}
+.concern-type {
+    font-weight: 600;
+    color: #f59e0b;
+    margin-right: 4px;
+}
+.safety-concern.critical .concern-type {
+    color: #ef4444;
+}
+.safety-alternative {
+    font-size: 10px;
+    color: #86efac;
+    margin-top: 6px;
+    font-style: italic;
+}
+
+/* ==================== Learn Patient UI ==================== */
+
+/* Mode toggle — hidden, saved for future reuse */
+.ai-mode-toggle {
+    display: none !important;
+}
+
+/* Learn bar — two-button layout at top of AI panel */
+.learn-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: rgba(30, 30, 40, 0.6);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Shared styles for Learn + Analyze buttons */
+.learn-action-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 14px;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex: 1;
+    justify-content: center;
+}
+.learn-action-icon {
+    font-size: 14px;
+}
+.learn-action-label {
+    white-space: nowrap;
+}
+.learn-action-time {
+    font-size: 9px;
+    color: rgba(255, 255, 255, 0.4);
+    margin-left: 2px;
+}
+
+/* Learn Patient — primary (not yet learned) */
+.learn-action-btn.learn-primary {
+    background: linear-gradient(135deg, #3b82f6, #6366f1);
+    color: #fff;
+    animation: learn-pulse 2s ease-in-out infinite;
+}
+.learn-action-btn.learn-primary:hover {
+    background: linear-gradient(135deg, #2563eb, #4f46e5);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+
+/* Learn Patient — done (already learned) */
+.learn-action-btn.learn-done {
+    background: rgba(134, 239, 172, 0.1);
+    color: #86efac;
+    border: 1px solid rgba(134, 239, 172, 0.2);
+}
+.learn-action-btn.learn-done:hover {
+    background: rgba(134, 239, 172, 0.2);
+    border-color: rgba(134, 239, 172, 0.4);
+}
+
+/* Analyze Case — primary (not yet analyzed) */
+.learn-action-btn.analyze-primary {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #fff;
+}
+.learn-action-btn.analyze-primary:hover {
+    background: linear-gradient(135deg, #d97706, #b45309);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+}
+
+/* Analyze Case — done (already analyzed) */
+.learn-action-btn.analyze-done {
+    background: rgba(134, 239, 172, 0.1);
+    color: #86efac;
+    border: 1px solid rgba(134, 239, 172, 0.2);
+}
+.learn-action-btn.analyze-done:hover {
+    background: rgba(134, 239, 172, 0.2);
+    border-color: rgba(134, 239, 172, 0.4);
+}
+
+@keyframes learn-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.3); }
+    50% { box-shadow: 0 0 0 6px rgba(99, 102, 241, 0); }
+}
+
+/* Learning banner stages */
+.learning-banner {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(59, 130, 246, 0.1)) !important;
+    border-color: rgba(99, 102, 241, 0.3) !important;
+}
+.learning-stages {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 0;
+    font-size: 10px;
+    color: #888;
+}
+.learning-stage {
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.04);
+    transition: all 0.3s;
+}
+.learning-stage.active {
+    background: rgba(99, 102, 241, 0.2);
+    color: #a5b4fc;
+    font-weight: 600;
+}
+.learning-stage-arrow {
+    color: #555;
+    font-size: 9px;
+}
+.thinking-progress-fill.learning-fill {
+    background: linear-gradient(90deg, #6366f1, #3b82f6, #6366f1) !important;
+    animation-duration: 3s !important;
+}
+
 /* Responsive: compact on mobile */
 @media (max-width: 768px) {
     .dictation-widget {

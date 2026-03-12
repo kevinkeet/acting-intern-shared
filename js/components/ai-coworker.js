@@ -1347,7 +1347,27 @@ const AICoworker = {
         try {
         let html = '';
         var isThinking = this.state.status === 'thinking';
+        var isLearning = this.state.status === 'learning';
         var sections = this.mode_config ? this.mode_config.sections : { alertBar: true, clinicalSummary: true, problemList: true, suggestedActions: true, conversationThread: true, teachingPoints: false, ddxChallenge: false };
+
+        // ===== LEARNING BANNER (shown when AI is reading the chart) =====
+        if (isLearning) {
+            html += '<div class="copilot-thinking-banner learning-banner">';
+            html += '<div class="thinking-banner-content">';
+            html += '<span class="thinking-sparkle">&#129504;</span>';
+            html += '<span class="thinking-label">Learning patient chart</span>';
+            html += '<span class="thinking-dots"><span>.</span><span>.</span><span>.</span></span>';
+            html += '</div>';
+            html += '<div class="learning-stages">';
+            html += '<span class="learning-stage active">Reading chart</span>';
+            html += '<span class="learning-stage-arrow">→</span>';
+            html += '<span class="learning-stage">Building memory</span>';
+            html += '<span class="learning-stage-arrow">→</span>';
+            html += '<span class="learning-stage">Safety profile</span>';
+            html += '</div>';
+            html += '<div class="thinking-progress-bar"><div class="thinking-progress-fill learning-fill"></div></div>';
+            html += '</div>';
+        }
 
         // ===== THINKING BANNER (shown when AI is processing) =====
         if (isThinking) {
@@ -1360,6 +1380,9 @@ const AICoworker = {
             html += '<div class="thinking-progress-bar"><div class="thinking-progress-fill"></div></div>';
             html += '</div>';
         }
+
+        // ===== LEARN PATIENT BAR =====
+        html += this.renderLearnBar();
 
         // ===== SECTION 1: SAFETY BAR (sticky top, only when alerts exist) =====
         if (sections.alertBar) html += this.renderAlertBar();
@@ -1451,6 +1474,73 @@ const AICoworker = {
         });
         html += '</div>';
         return html;
+    },
+
+    /**
+     * Render Learn Patient bar — shows Learn button or Learned badge + Refresh
+     */
+    renderLearnBar() {
+        const status = this.getMemoryStatus();
+        const isLearning = this.state.status === 'learning';
+        const isThinking = this.state.status === 'thinking';
+
+        if (isLearning || isThinking) return ''; // Banners handle these states
+
+        let html = '<div class="learn-bar">';
+
+        // === Learn Patient Button ===
+        if (!status.hasMemory) {
+            // Not yet learned — prominent
+            html += '<button class="learn-action-btn learn-primary" onclick="AICoworker.learnPatient()" title="Read the full chart and build AI memory">';
+            html += '<span class="learn-action-icon">&#129504;</span>';
+            html += '<span class="learn-action-label">Learn Patient</span>';
+            html += '</button>';
+        } else {
+            // Already learned — subtle with status
+            const learnedAt = status.lastLearnedAt ? new Date(status.lastLearnedAt) : null;
+            const learnTime = learnedAt ? this._formatTimeAgo(learnedAt) : '';
+            html += '<button class="learn-action-btn learn-done" onclick="AICoworker.learnPatient()" title="Re-read full chart">';
+            html += '<span class="learn-action-icon">&#9989;</span>';
+            html += '<span class="learn-action-label">Learned</span>';
+            if (learnTime) html += `<span class="learn-action-time">${learnTime}</span>`;
+            html += '</button>';
+        }
+
+        // === Analyze Case Button ===
+        const hasAnalysis = !!(this.state.aiOneLiner || this.state.problemList?.length > 0);
+        if (!hasAnalysis) {
+            // Not yet analyzed — prominent
+            html += '<button class="learn-action-btn analyze-primary" onclick="AICoworker.refreshThinking()" title="Full case synthesis and analysis">';
+            html += '<span class="learn-action-icon">&#128269;</span>';
+            html += '<span class="learn-action-label">Analyze Case</span>';
+            html += '</button>';
+        } else {
+            // Already analyzed — subtle with status
+            const analyzedAt = this.state.lastUpdated ? new Date(this.state.lastUpdated) : null;
+            const analyzeTime = analyzedAt ? this._formatTimeAgo(analyzedAt) : '';
+            html += '<button class="learn-action-btn analyze-done" onclick="AICoworker.refreshThinking()" title="Re-analyze case">';
+            html += '<span class="learn-action-icon">&#9989;</span>';
+            html += '<span class="learn-action-label">Analyzed</span>';
+            if (analyzeTime) html += `<span class="learn-action-time">${analyzeTime}</span>`;
+            html += '</button>';
+        }
+
+        html += '</div>';
+        return html;
+    },
+
+    /**
+     * Format a date as "Xm ago", "Xh ago", etc.
+     */
+    _formatTimeAgo(date) {
+        const now = new Date();
+        const diffMs = now - date;
+        const diffMin = Math.floor(diffMs / 60000);
+        if (diffMin < 1) return 'just now';
+        if (diffMin < 60) return `${diffMin}m ago`;
+        const diffHr = Math.floor(diffMin / 60);
+        if (diffHr < 24) return `${diffHr}h ago`;
+        return `${Math.floor(diffHr / 24)}d ago`;
     },
 
     /**
@@ -2218,17 +2308,9 @@ const AICoworker = {
         // Inline prompt editor (shown/hidden by toggle)
         html += this.renderInlinePromptEditor();
 
-        // Mode-driven suggestion chips + edit prompt button
+        // Quick action chip — Draft Note (context-aware)
         html += '<div class="inline-chips">';
-        var chips = mode ? mode.chips : [
-            { label: 'Summarize', prompt: 'Summarize case' },
-            { label: 'Concerns?', prompt: 'What are the key concerns?' },
-            { label: 'Missing?', prompt: "What haven't I checked yet?" }
-        ];
-        chips.forEach(function(chip) {
-            var safePrompt = chip.prompt.replace(/'/g, "\\'");
-            html += '<button class="suggestion-chip" onclick="AICoworker.handleChip(\'' + safePrompt + '\')">' + chip.label + '</button>';
-        });
+        html += '<button class="suggestion-chip" onclick="AICoworker.draftContextualNote()">&#128221; Draft Note</button>';
         html += '</div>';
 
         // Input row with mode-specific placeholder
@@ -2249,13 +2331,9 @@ const AICoworker = {
             html += '<div class="hands-free-status" id="hands-free-status"><span class="hf-pulse"></span> Hands-free mode &mdash; auto-submits after ' + secs + 's silence</div>';
         }
 
-        // Action buttons — icon-only with CSS tooltips
+        // Action buttons — simplified (dictation/scribe/refresh removed, handled by Learn Bar + DictationWidget)
         html += '<div class="inline-action-bar">';
-        html += '<button class="inline-action-btn" onclick="AICoworker.openDictationModal()" data-tooltip="Dictate"><span>&#127897;</span></button>';
-        var isScribing = typeof AmbientScribe !== 'undefined' && AmbientScribe.isListening;
-        html += '<button class="inline-action-btn ambient-scribe-btn' + (isScribing ? ' active' : '') + '" onclick="AICoworker.toggleAmbientScribe()" data-tooltip="' + (isScribing ? 'Stop Scribe' : 'Scribe') + '"><span>&#127911;</span></button>';
         html += '<button class="inline-action-btn" onclick="AICoworker.openNoteModal()" data-tooltip="Write Note"><span>&#128221;</span></button>';
-        html += '<button class="inline-action-btn" onclick="AICoworker.refreshThinking()" data-tooltip="Refresh"><span>&#128260;</span></button>';
         html += '<button class="inline-action-btn inline-more-btn" onclick="AICoworker.toggleMoreMenu()" data-tooltip="More"><span>&#8943;</span></button>';
         html += '<div class="inline-more-menu" id="inline-more-menu">';
         html += '<button onclick="AICoworker.openPromptEditor()">&#9999; Edit Prompts</button>';
@@ -3744,6 +3822,52 @@ Respond with ONLY the JSON, no preamble.`;
     },
 
     // ==================== Note Writing ====================
+
+    /**
+     * Draft a clinical note with auto-detected note type based on context.
+     * H&P if first encounter (no memory doc), Progress Note if subsequent.
+     * Skips the note type modal — one click to draft.
+     */
+    draftContextualNote() {
+        // Auto-detect note type
+        const hasMemory = this.longitudinalDoc?.aiMemory?.memoryDocument;
+        const noteType = hasMemory ? 'progress' : 'hp';
+        const noteTypeName = this.getNoteTypeName(noteType);
+
+        App.showToast(`Drafting ${noteTypeName}...`, 'info');
+
+        // Gather chart data
+        this.gatherChartData();
+
+        // Build all-sources-enabled config by creating temporary DOM elements
+        // (generateNote reads from DOM checkboxes, so we simulate the modal state)
+        const tempDiv = document.createElement('div');
+        tempDiv.style.display = 'none';
+        tempDiv.innerHTML = `
+            <input type="radio" name="note-type" value="${noteType}" checked>
+            <input type="checkbox" id="include-vitals" checked>
+            <input type="checkbox" id="include-labs" checked>
+            <input type="checkbox" id="include-meds" checked>
+            <input type="checkbox" id="include-imaging" checked>
+            <input type="checkbox" id="include-nursing" checked>
+            <input type="checkbox" id="include-dictation" checked>
+            <input type="checkbox" id="include-ambient" checked>
+            <input type="checkbox" id="include-previous" checked>
+            <textarea id="note-instructions"></textarea>
+        `;
+        document.body.appendChild(tempDiv);
+
+        // Track note writing in session context
+        if (this.sessionContext) {
+            this.sessionContext.trackNote(noteType);
+        }
+
+        // Call generateNote which reads from these DOM elements
+        this.generateNote().finally(() => {
+            // Clean up temp DOM
+            document.body.removeChild(tempDiv);
+        });
+    },
 
     openNoteModal() {
         const modal = document.getElementById('ai-note-modal');
@@ -5384,6 +5508,72 @@ RULES:
             btn.classList.add('spinning');
         }
 
+        // === INCREMENTAL REFRESH PATH ===
+        // If we have a memoryDocument, use the cheap incremental refresh instead of full chart
+        if (this.contextAssembler && this.longitudinalDoc?.aiMemory?.memoryDocument) {
+            try {
+                this.syncSessionStateToDocument();
+                this._checkOutcomeResults();
+
+                const prompt = this.contextAssembler.buildRefreshMemoryPrompt();
+                console.log(`🔄 Incremental refresh: ${prompt.userMessage.length} chars (vs full chart)`);
+
+                const response = await this.callLLM(
+                    prompt.systemPrompt,
+                    prompt.userMessage,
+                    prompt.maxTokens,
+                    { model: 'claude-haiku-4-5-20251001' }
+                );
+
+                const memoryDoc = this._parseJSONResponse(response);
+                if (memoryDoc && memoryDoc.patientOverview) {
+                    // Update memory document
+                    this.longitudinalDoc.aiMemory.memoryDocument = memoryDoc;
+                    this.longitudinalDoc.aiMemory.lastRefreshedAt = new Date().toISOString();
+                    this.longitudinalDoc.aiMemory.patientSummary = memoryDoc.patientOverview;
+
+                    // Update panel state
+                    if (memoryDoc.clinicalGestalt) this.state.aiOneLiner = memoryDoc.clinicalGestalt;
+                    if (memoryDoc.patientOverview) this.state.summary = memoryDoc.patientOverview;
+                    if (memoryDoc.problemAnalysis) {
+                        this.state.problemList = memoryDoc.problemAnalysis.map(p => ({
+                            name: p.problem,
+                            urgency: p.status === 'acute' ? 'urgent' : (p.status === 'active' ? 'active' : 'monitoring'),
+                            ddx: null,
+                            plan: p.plan || ''
+                        }));
+                    }
+                    if (memoryDoc.pendingItems) {
+                        this.state.suggestedActions = memoryDoc.pendingItems.map((item, idx) => ({
+                            id: 'refresh_pending_' + idx,
+                            text: item
+                        }));
+                    }
+                    if (memoryDoc.safetyProfile?.criticalValues) {
+                        const flags = memoryDoc.safetyProfile.criticalValues.map(cv => ({
+                            text: cv, severity: 'critical'
+                        }));
+                        if (flags.length > 0) this.state.keyConsiderations = flags;
+                    }
+
+                    this.saveLongitudinalDoc();
+                    this.state.status = 'ready';
+                    this.state.lastUpdated = new Date().toISOString();
+                    this.saveState();
+                    this._saveModeCache();
+                    this.render();
+                    App.showToast('AI memory refreshed (incremental)', 'success');
+                    if (btn) btn.classList.remove('spinning');
+                    return;
+                }
+                // If parse failed, fall through to full refresh
+                console.warn('Incremental refresh parse failed, falling back to full refresh');
+            } catch (incErr) {
+                console.warn('Incremental refresh failed, falling back:', incErr);
+            }
+        }
+
+        // === FULL REFRESH PATH (legacy or no memoryDocument) ===
         // Use context assembler for comprehensive context, fall back to legacy
         let systemPrompt, userMessage, clinicalContext;
         if (this.contextAssembler) {
@@ -6300,6 +6490,243 @@ RULES:
 
         console.error('All JSON parse attempts failed. Response preview:', response.substring(0, 300));
         return null;
+    },
+
+    // ==================== Learn / Refresh / Interact / Order Pipeline ====================
+
+    /**
+     * Learn about the patient — expensive one-time chart digest.
+     * Builds a comprehensive memoryDocument from the full longitudinal chart.
+     * Uses Sonnet for quality. Stores result in aiMemory.memoryDocument.
+     */
+    async learnPatient() {
+        if (!this.contextAssembler) {
+            App.showToast('Initialize patient chart first', 'warning');
+            return;
+        }
+
+        this.state.status = 'learning';
+        this.render();
+
+        // Animate learn button
+        const learnBtn = document.querySelector('.learn-patient-btn');
+        if (learnBtn) learnBtn.classList.add('learning');
+
+        App.showToast('Learning patient chart...', 'info');
+
+        try {
+            // Ensure longitudinal document is up to date
+            if (!this.longitudinalDoc) {
+                await this.initializeLongitudinalDocument();
+            }
+            this.syncSessionStateToDocument();
+
+            // Build the learn prompt (full chart → structured memory)
+            const prompt = this.contextAssembler.buildLearnPrompt();
+
+            console.log(`🧠 Learn: Sending ${prompt.userMessage.length} chars to Sonnet`);
+
+            // Call LLM with Sonnet for quality
+            const response = await this.callLLM(
+                prompt.systemPrompt,
+                prompt.userMessage,
+                prompt.maxTokens,
+                { model: 'claude-sonnet-4-6' }
+            );
+
+            // Parse the memory document JSON
+            const memoryDoc = this._parseJSONResponse(response);
+            if (!memoryDoc || !memoryDoc.patientOverview) {
+                throw new Error('Could not parse memory document from AI response');
+            }
+
+            // Store in longitudinal doc's aiMemory
+            this.longitudinalDoc.aiMemory.memoryDocument = memoryDoc;
+            this.longitudinalDoc.aiMemory.lastLearnedAt = new Date().toISOString();
+            this.longitudinalDoc.aiMemory.lastRefreshedAt = new Date().toISOString();
+
+            // Backward compat: sync patientSummary from overview
+            this.longitudinalDoc.aiMemory.patientSummary = memoryDoc.patientOverview;
+
+            // Update panel state from memory
+            if (memoryDoc.clinicalGestalt) {
+                this.state.aiOneLiner = memoryDoc.clinicalGestalt;
+            }
+            if (memoryDoc.patientOverview) {
+                this.state.summary = memoryDoc.patientOverview;
+            }
+
+            // Extract safety flags from memory
+            if (memoryDoc.safetyProfile) {
+                const flags = [];
+                if (memoryDoc.safetyProfile.criticalValues) {
+                    memoryDoc.safetyProfile.criticalValues.forEach(cv => {
+                        flags.push({ text: cv, severity: 'critical' });
+                    });
+                }
+                if (memoryDoc.safetyProfile.contraindications) {
+                    memoryDoc.safetyProfile.contraindications.forEach(ci => {
+                        flags.push({ text: ci, severity: 'important' });
+                    });
+                }
+                if (flags.length > 0) {
+                    this.state.keyConsiderations = flags;
+                }
+            }
+
+            // Build problem list from memory
+            if (memoryDoc.problemAnalysis && Array.isArray(memoryDoc.problemAnalysis)) {
+                this.state.problemList = memoryDoc.problemAnalysis.map(p => ({
+                    name: p.problem,
+                    urgency: p.status === 'acute' ? 'urgent' : (p.status === 'active' ? 'active' : 'monitoring'),
+                    ddx: null,
+                    plan: p.plan || ''
+                }));
+            }
+
+            // Build pending items as suggested actions
+            if (memoryDoc.pendingItems && Array.isArray(memoryDoc.pendingItems)) {
+                this.state.suggestedActions = memoryDoc.pendingItems.map((item, idx) => ({
+                    id: 'learn_pending_' + idx,
+                    text: item
+                }));
+            }
+
+            // Save everything
+            this.saveLongitudinalDoc();
+            this.state.status = 'ready';
+            this.state.lastUpdated = new Date().toISOString();
+            this.saveState();
+            this._saveModeCache();
+            this.render();
+
+            console.log('🧠 Learn complete:', {
+                problems: memoryDoc.problemAnalysis?.length || 0,
+                meds: memoryDoc.medicationRationale?.length || 0,
+                allergies: memoryDoc.safetyProfile?.allergies?.length || 0,
+                pending: memoryDoc.pendingItems?.length || 0
+            });
+
+            App.showToast('Patient chart learned successfully', 'success');
+
+        } catch (error) {
+            console.error('Learn patient error:', error);
+            this.state.status = 'ready';
+            this.render();
+            if (error.message === 'API key not configured') {
+                App.showToast('Configure API key in settings to enable AI', 'warning');
+            } else {
+                App.showToast(`Learn failed: ${error.message}`, 'error');
+            }
+        } finally {
+            if (learnBtn) learnBtn.classList.remove('learning');
+        }
+    },
+
+    /**
+     * Check an order for safety concerns against the AI memory.
+     * Uses Haiku for speed. Returns {safe, concerns[], suggestedAlternative?}
+     */
+    async checkOrderSafety(parsedOrder) {
+        if (!this.contextAssembler || !this.longitudinalDoc?.aiMemory?.memoryDocument) {
+            // No memory doc — skip safety check, return safe
+            return { safe: true, concerns: [], suggestedAlternative: null };
+        }
+
+        try {
+            const memoryDoc = this.longitudinalDoc.aiMemory.memoryDocument;
+            const prompt = this.contextAssembler.buildOrderSafetyPrompt(parsedOrder, memoryDoc);
+
+            console.log(`⚕️ Safety check: ${parsedOrder.name || parsedOrder.text || 'order'}`);
+
+            const response = await this.callLLM(
+                prompt.systemPrompt,
+                prompt.userMessage,
+                prompt.maxTokens,
+                { model: 'claude-haiku-4-5-20251001' }
+            );
+
+            const result = this._parseJSONResponse(response);
+            if (!result) {
+                console.warn('Could not parse safety check response');
+                return { safe: true, concerns: [], suggestedAlternative: null };
+            }
+
+            if (result.concerns && result.concerns.length > 0) {
+                console.log(`⚠️ Safety concerns found:`, result.concerns);
+            } else {
+                console.log(`✅ Order safe: ${parsedOrder.name || parsedOrder.text || 'order'}`);
+            }
+
+            return {
+                safe: result.safe !== false,
+                concerns: result.concerns || [],
+                suggestedAlternative: result.suggestedAlternative || null
+            };
+
+        } catch (error) {
+            console.error('Safety check error:', error);
+            // On error, don't block the order — return safe with a note
+            return { safe: true, concerns: [], suggestedAlternative: null };
+        }
+    },
+
+    /**
+     * Record an executed order in AI memory.
+     * Updates memoryDocument in-memory and persists.
+     */
+    recordExecutedOrder(order) {
+        if (!this.longitudinalDoc) return;
+
+        // Add to executedActions
+        if (!this.longitudinalDoc.aiMemory.executedActions) {
+            this.longitudinalDoc.aiMemory.executedActions = [];
+        }
+        this.longitudinalDoc.aiMemory.executedActions.push({
+            text: order.text || order.name || 'Unknown order',
+            timestamp: new Date().toISOString(),
+            details: order
+        });
+
+        // Update memoryDocument in-memory if it exists
+        const memDoc = this.longitudinalDoc.aiMemory.memoryDocument;
+        if (memDoc) {
+            // Add new medication to medicationRationale if it's a med order
+            if (order.orderType === 'medication' && order.orderData) {
+                if (!memDoc.medicationRationale) memDoc.medicationRationale = [];
+                memDoc.medicationRationale.push({
+                    name: `${order.orderData.name} ${order.orderData.dose || ''} ${order.orderData.route || ''} ${order.orderData.frequency || ''}`.trim(),
+                    indication: order.orderData.indication || 'As ordered',
+                    rationale: 'Ordered during this encounter'
+                });
+            }
+
+            // Remove from pendingItems if this resolves something
+            if (memDoc.pendingItems && Array.isArray(memDoc.pendingItems)) {
+                const orderText = (order.text || order.name || '').toLowerCase();
+                memDoc.pendingItems = memDoc.pendingItems.filter(item =>
+                    !orderText.includes(item.toLowerCase().split(' ')[0])
+                );
+            }
+        }
+
+        this.saveLongitudinalDoc();
+        console.log(`📋 Recorded executed order: ${order.text || order.name}`);
+    },
+
+    /**
+     * Get the current memory document status for UI rendering.
+     */
+    getMemoryStatus() {
+        if (!this.longitudinalDoc) return { hasMemory: false };
+        const mem = this.longitudinalDoc.aiMemory;
+        return {
+            hasMemory: !!mem.memoryDocument,
+            lastLearnedAt: mem.lastLearnedAt,
+            lastRefreshedAt: mem.lastRefreshedAt,
+            problemCount: mem.memoryDocument?.problemAnalysis?.length || 0,
+            medCount: mem.memoryDocument?.medicationRationale?.length || 0
+        };
     },
 
     escapeHtml(text) {

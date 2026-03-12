@@ -219,12 +219,22 @@ const DictationWidget = {
             this.orderLines.push({ text, timestamp, orderPhrase, isParsing: true });
             this._renderOrderPane();
             this._parseOrderWithClaude(orderPhrase);
+
+            // Live update glasses right lens with order being parsed
+            if (typeof SmartGlasses !== 'undefined' && SmartGlasses.isOpen) {
+                SmartGlasses.pushOrderToRightLens(orderPhrase, 'parsing');
+            }
         } else {
             this.contextLines.push({ text, timestamp });
             this._renderContextPane();
 
             // Forward context to AI system
             this._forwardContextToAI(text);
+
+            // Live update glasses left lens with context
+            if (typeof SmartGlasses !== 'undefined' && SmartGlasses.isOpen) {
+                SmartGlasses.pushContextToLeftLens(text);
+            }
         }
 
         this._scrollPanes();
@@ -326,7 +336,7 @@ Respond with ONLY valid JSON, no markdown fences:
         }
     },
 
-    _handleParsedOrders(orders) {
+    async _handleParsedOrders(orders) {
         // Update the last order line with parsed data
         const lastOrder = this.orderLines[this.orderLines.length - 1];
         if (lastOrder) {
@@ -337,10 +347,34 @@ Respond with ONLY valid JSON, no markdown fences:
         // Queue remaining orders
         this._orderQueue = orders.slice(1);
 
-        // Show first order for confirmation
+        // Run safety check on first order, then show for confirmation
         if (orders.length > 0) {
-            this._showOrderConfirmation(orders[0]);
+            await this._safetyCheckAndShow(orders[0]);
         }
+    },
+
+    async _safetyCheckAndShow(order) {
+        // Run AI safety check if available
+        if (typeof AICoworker !== 'undefined' && AICoworker.checkOrderSafety) {
+            try {
+                const parsedOrder = {
+                    name: order.summary || order.type,
+                    text: order.summary || '',
+                    orderType: order.type,
+                    orderData: order.details || {}
+                };
+                const safety = await AICoworker.checkOrderSafety(parsedOrder);
+                order._safety = safety;
+
+                if (!safety.safe && safety.concerns.length > 0) {
+                    console.log('⚠️ Order safety concerns:', safety.concerns);
+                }
+            } catch (err) {
+                console.warn('Safety check failed (non-blocking):', err);
+            }
+        }
+
+        this._showOrderConfirmation(order);
     },
 
     _showOrderConfirmation(order) {
@@ -364,16 +398,30 @@ Respond with ONLY valid JSON, no markdown fences:
             OrderEntry.openWithPrefill(order.type, order.details);
         }
 
+        // Record in AI memory
+        if (typeof AICoworker !== 'undefined' && AICoworker.recordExecutedOrder) {
+            AICoworker.recordExecutedOrder({
+                text: order.summary || order.type,
+                orderType: order.type,
+                orderData: order.details || {}
+            });
+        }
+
         // Mark in order lines
         const now = new Date();
         const timestamp = now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
         this.orderLines.push({ text: '\u2713 ' + (order.summary || order.type), timestamp, confirmed: true });
 
+        // Live update glasses right lens with confirmed order
+        if (typeof SmartGlasses !== 'undefined' && SmartGlasses.isOpen) {
+            SmartGlasses.pushOrderToRightLens(order.summary || order.type, 'confirmed');
+        }
+
         this._renderOrderPane();
 
         // Show next queued order
         if (this._orderQueue.length > 0) {
-            setTimeout(() => this._showOrderConfirmation(this._orderQueue.shift()), 500);
+            setTimeout(() => this._safetyCheckAndShow(this._orderQueue.shift()), 500);
         }
     },
 
@@ -536,12 +584,30 @@ Respond with ONLY valid JSON, no markdown fences:
         }
 
         const lowConf = order.confidence < 0.6;
+        const safety = order._safety;
+        const hasConcerns = safety && !safety.safe && safety.concerns && safety.concerns.length > 0;
+
+        let safetyHtml = '';
+        if (hasConcerns) {
+            safetyHtml = '<div class="order-safety-warning">';
+            safetyHtml += '<div class="safety-warning-header">\u26A0\uFE0F Safety Concerns</div>';
+            safety.concerns.forEach(c => {
+                const sevClass = c.severity === 'critical' ? 'critical' : (c.severity === 'high' ? 'high' : 'moderate');
+                safetyHtml += `<div class="safety-concern ${sevClass}"><span class="concern-type">${this._esc(c.type || 'Warning')}</span> ${this._esc(c.description || c.text || '')}</div>`;
+            });
+            if (safety.suggestedAlternative) {
+                safetyHtml += `<div class="safety-alternative">Suggested: ${this._esc(safety.suggestedAlternative)}</div>`;
+            }
+            safetyHtml += '</div>';
+        }
+
         cardContainer.innerHTML = `
-            <div class="dictation-confirm-card${lowConf ? ' low-confidence' : ''}">
+            <div class="dictation-confirm-card${lowConf ? ' low-confidence' : ''}${hasConcerns ? ' has-safety-concerns' : ''}">
                 <div class="confirm-card-header">${this._esc(order.summary || 'Confirm Order')}${lowConf ? '<span class="low-conf-badge">Low confidence</span>' : ''}</div>
                 <div class="confirm-card-details">${detailLines}</div>
+                ${safetyHtml}
                 <div class="confirm-card-actions">
-                    <button class="confirm-btn confirm" onclick="DictationWidget._confirmCurrentOrder()">\u2713 Confirm</button>
+                    <button class="confirm-btn confirm" onclick="DictationWidget._confirmCurrentOrder()">\u2713 ${hasConcerns ? 'Proceed Anyway' : 'Confirm'}</button>
                     <button class="confirm-btn edit" onclick="DictationWidget._editCurrentOrder()">\u270E Edit</button>
                     <button class="confirm-btn cancel" onclick="DictationWidget._cancelCurrentOrder()">\u2717</button>
                 </div>
