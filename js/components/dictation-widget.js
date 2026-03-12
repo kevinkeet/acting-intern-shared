@@ -47,6 +47,10 @@ const DictationWidget = {
     _swapSpeakersRegex: /\b(?:that was the patient|swap speakers|switch speakers|that's the patient|patient speaking)\b/i,
     _reviewNotesRegex: /\b(?:review (?:recent )?notes|show (?:recent )?notes|pull up notes)\b/i,
     _reviewDataRegex: /\b(?:review (?:recent )?(?:data|labs|imaging|results)|show (?:recent )?(?:data|labs|results)|pull up (?:data|labs|results))\b/i,
+    _filterNotesTypeRegex: /\b(?:show|filter)\s+(progress|consult|h\s*&\s*p|discharge|telephone|admission|phone)\s*notes?\b/i,
+    _filterNotesByAuthorRegex: /\bnotes?\s+(?:by|from)\s+(?:dr\.?\s+)?(.+)/i,
+    _clearFilterRegex: /\b(?:show all notes|clear (?:note )?filter|remove filter|all notes)\b/i,
+    _askAIRegex: /\b(?:ask ai|ask claude|question)\s+(.+)/i,
     // Interim classification hint — does it LOOK like an order so far?
     _orderHintRegex: /\b(?:order|put in|i need|let's get|let's order|can we get|start|hold|discontinue|call|page|notify|tell the|ask the)\b/i,
 
@@ -291,6 +295,49 @@ const DictationWidget = {
             if (typeof DeepgramClient !== 'undefined' && this._useDeepgram) {
                 DeepgramClient.swapSpeakers();
                 if (typeof App !== 'undefined') App.showToast('Speaker roles swapped', 'info');
+            }
+            return;
+        }
+        // Note filtering commands (must check before generic review notes)
+        if (this._clearFilterRegex.test(text)) {
+            if (typeof SmartGlasses !== 'undefined') {
+                if (!SmartGlasses.isOpen) SmartGlasses.open();
+                SmartGlasses.clearNoteFilter();
+                if (typeof App !== 'undefined') App.showToast('📝 Showing all notes', 'info');
+            }
+            return;
+        }
+        const filterTypeMatch = text.match(this._filterNotesTypeRegex);
+        if (filterTypeMatch) {
+            if (typeof SmartGlasses !== 'undefined') {
+                if (!SmartGlasses.isOpen) SmartGlasses.open();
+                SmartGlasses.filterNotes({ type: filterTypeMatch[1].trim() });
+                if (typeof App !== 'undefined') App.showToast('📝 Filtering: ' + filterTypeMatch[1].trim() + ' notes', 'info');
+            }
+            return;
+        }
+        const filterAuthorMatch = text.match(this._filterNotesByAuthorRegex);
+        if (filterAuthorMatch) {
+            if (typeof SmartGlasses !== 'undefined') {
+                if (!SmartGlasses.isOpen) SmartGlasses.open();
+                SmartGlasses.filterNotes({ author: filterAuthorMatch[1].trim() });
+                if (typeof App !== 'undefined') App.showToast('📝 Notes by ' + filterAuthorMatch[1].trim(), 'info');
+            }
+            return;
+        }
+        // Ask AI command
+        const askMatch = text.match(this._askAIRegex);
+        if (askMatch) {
+            if (typeof SmartGlasses !== 'undefined') {
+                if (!SmartGlasses.isOpen) SmartGlasses.open();
+                SmartGlasses.showAskMode();
+                setTimeout(() => {
+                    const input = document.getElementById('lens-ask-input');
+                    if (input) {
+                        input.value = askMatch[1].trim();
+                        SmartGlasses._submitAskQuestion();
+                    }
+                }, 200);
             }
             return;
         }

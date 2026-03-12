@@ -6895,15 +6895,55 @@ RULES:
                 this.state.aiOneLiner = result.updatedGestalt;
             }
 
-            // Update panel state from updated memoryDocument
-            if (mem.memoryDocument.problemAnalysis.length > 0) {
+            // === NEW: Full panel state update from digest ===
+
+            // Updated problem list (complete replacement if provided)
+            if (result.updatedProblemList && Array.isArray(result.updatedProblemList) && result.updatedProblemList.length > 0) {
+                this.state.problemList = result.updatedProblemList;
+                // Write back to memoryDocument for persistence
+                mem.memoryDocument.problemAnalysis = result.updatedProblemList.map(p => ({
+                    problem: p.name,
+                    status: p.urgency === 'urgent' ? 'acute' : p.urgency,
+                    plan: p.plan || '',
+                    ddx: p.ddx || ''
+                }));
+            } else if (mem.memoryDocument.problemAnalysis.length > 0) {
+                // Fallback: update panel from existing problemAnalysis
                 this.state.problemList = mem.memoryDocument.problemAnalysis.map(p => ({
                     name: p.problem,
                     urgency: p.status === 'acute' ? 'urgent' : (p.status === 'active' ? 'active' : 'monitoring'),
-                    ddx: null,
+                    ddx: p.ddx || null,
                     plan: p.plan || ''
                 }));
             }
+
+            // Suggested actions
+            if (result.suggestedActions && Array.isArray(result.suggestedActions) && result.suggestedActions.length > 0) {
+                this.state.suggestedActions = result.suggestedActions.map((a, i) =>
+                    typeof a === 'string' ? { id: 'digest_' + Date.now() + '_' + i, text: a } : a
+                );
+                // Write back to memoryDocument
+                mem.memoryDocument.pendingItems = result.suggestedActions.map(a =>
+                    typeof a === 'string' ? a : a.text
+                );
+            }
+
+            // Categorized actions (orderable items)
+            if (result.categorizedActions && typeof result.categorizedActions === 'object') {
+                this.state.categorizedActions = result.categorizedActions;
+            }
+
+            // Clinical summary
+            if (result.updatedSummary && typeof result.updatedSummary === 'object') {
+                this.state.clinicalSummary = result.updatedSummary;
+            }
+
+            // Key considerations / safety alerts
+            if (result.keyConsiderations && Array.isArray(result.keyConsiderations) && result.keyConsiderations.length > 0) {
+                this.state.keyConsiderations = result.keyConsiderations;
+            }
+
+            // === END new panel state update ===
 
             // Set timestamp
             mem.lastDigestedAt = new Date().toISOString();

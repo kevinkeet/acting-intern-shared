@@ -29,7 +29,16 @@ const SmartGlasses = {
     _savedRightScreens: null, // Saved screens during confirmation mode
     _savedRightScreen: 0,
     _sessionOrders: [],       // Orders confirmed this session (for right lens)
-    _leftMode: 'context',     // 'context' | 'notes' | 'data'
+    _leftMode: 'context',     // 'context' | 'notes' | 'data' | 'ask'
+    _leftDetailView: false,    // true when showing note/lab/imaging detail (scrollable)
+    _lastGroupedRecs: null,    // cached grouped recommendations for click handlers
+    _noteFilter: null,         // {type?, author?} filter for notes list
+    _allNotesCache: [],        // full unfiltered notes list
+    _currentNoteIdx: -1,       // current index into _notesCache for next/prev
+    _labPanelsCache: [],       // sorted lab panel index for next/prev navigation
+    _currentLabIdx: -1,        // current index into _labPanelsCache
+    _askHistory: [],           // [{role: 'user'|'assistant', content}]
+    _askStreaming: false,      // true while waiting for AI response
 
     LINES_PER_SCREEN: 5,
     MAX_LINE_CHARS: 45,
@@ -47,30 +56,40 @@ const SmartGlasses = {
         this._orderConfirmation = null;
         this._savedRightScreens = null;
         this._leftMode = 'context';
+        this._leftDetailView = false;
 
-        const state = (typeof AICoworker !== 'undefined') ? AICoworker.state : null;
-        const glassesData = state ? state.glassesDisplay : null;
-
-        // Left lens: paged screens (patient context)
-        if (glassesData && glassesData.leftLens) {
-            this.leftScreens = this._parseLLMScreens(glassesData.leftLens, 'PATIENT');
-        } else {
-            const data = this._getGlassesData();
-            this.leftScreens = this._buildLeftScreensFallback(data);
-        }
+        // Left lens context now built as scrollable HTML in _createOverlay
         // Right lens: unified scrollable orders view (built in _createOverlay via _buildOrdersViewHTML)
 
         this._createOverlay();
 
+        // After overlay is created, populate context content
+        const contentEl = document.getElementById('lens-content-left');
+        if (contentEl) {
+            const data = this._getGlassesData();
+            contentEl.innerHTML = this._buildContextScrollableHTML(data);
+        }
+
         this._keyHandler = (e) => {
             if (e.key === 'Escape') {
                 if (this._orderConfirmation) { this.cancelOrderConfirmation(); return; }
+                if (this._leftDetailView) { e.preventDefault(); this._backToList(); return; }
                 this.close(); return;
             }
-            if (e.key === 'ArrowLeft') { e.preventDefault(); this.prevScreen('left'); }
-            if (e.key === 'ArrowRight') { e.preventDefault(); this.nextScreen('left'); }
-            if (e.key === 'ArrowUp') { e.preventDefault(); this._scrollRightLens(-60); }
-            if (e.key === 'ArrowDown') { e.preventDefault(); this._scrollRightLens(60); }
+            if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                if (this._leftDetailView) { this._backToList(); return; }
+            }
+            if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                this._scrollLeftLens(-60);
+                this._scrollRightLens(-60);
+            }
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                this._scrollLeftLens(60);
+                this._scrollRightLens(60);
+            }
             if (e.key === 'Enter' && this._orderConfirmation) { e.preventDefault(); this.confirmOrder(); }
         };
         document.addEventListener('keydown', this._keyHandler);
@@ -86,6 +105,7 @@ const SmartGlasses = {
         this._orderConfirmation = null;
         this._savedRightScreens = null;
         this._leftMode = 'context';
+        this._leftDetailView = false;
         this.isOpen = false;
     },
 
@@ -279,162 +299,708 @@ const SmartGlasses = {
 
     /**
      * Switch left lens to notes review mode.
-     * Loads recent notes and displays them as paged screens.
+     * Shows scrollable list of recent notes; click to drill into full note.
      */
     async showNotesReview() {
         if (!this.isOpen) return;
         this._leftMode = 'notes';
-        this.leftScreen = 0;
+        this._leftDetailView = false;
 
         const titleEl = document.getElementById('lens-title-left');
         const contentEl = document.getElementById('lens-content-left');
         const navEl = document.getElementById('lens-nav-left');
 
         if (titleEl) titleEl.textContent = 'RECENT NOTES';
-        if (contentEl) contentEl.innerHTML = this._renderLines(['', 'Loading notes...', '', '', '']);
-        if (navEl) navEl.textContent = '...';
+        if (navEl) navEl.textContent = '\u2191\u2193 scroll';
+        this._setLeftScrollable(true);
+
+        if (contentEl) contentEl.innerHTML = '<div class="lens-line">Loading notes...</div>';
 
         try {
-            // Load notes from data loader
-            let notes = [];
-            if (typeof dataLoader !== 'undefined' && dataLoader.loadNotesIndex) {
-                const index = await dataLoader.loadNotesIndex();
-                notes = Array.isArray(index) ? index : (index?.notes || []);
+            // Load notes (or use cached list)
+            if (!this._allNotesCache.length) {
+                let notes = [];
+                if (typeof dataLoader !== 'undefined' && dataLoader.loadNotesIndex) {
+                    const index = await dataLoader.loadNotesIndex();
+                    notes = Array.isArray(index) ? index : (index?.notes || []);
+                }
+                this._allNotesCache = notes.sort((a, b) => new Date(b.date || b.noteDate || 0) - new Date(a.date || a.noteDate || 0));
             }
 
-            if (notes.length === 0) {
-                this.leftScreens = [{ title: 'RECENT NOTES', lines: ['', 'No notes found.', '', '', ''] }];
-            } else {
-                // Sort by date descending, take recent 10
-                const sorted = notes.sort((a, b) => new Date(b.date || b.noteDate || 0) - new Date(a.date || a.noteDate || 0)).slice(0, 10);
+            // Apply filter if set
+            let filtered = this._allNotesCache;
+            if (this._noteFilter) {
+                const f = this._noteFilter;
+                filtered = filtered.filter(n => {
+                    if (f.type) {
+                        const noteType = (n.type || n.noteType || '').toLowerCase();
+                        if (!noteType.includes(f.type.toLowerCase())) return false;
+                    }
+                    if (f.author) {
+                        const noteAuthor = (n.author || n.provider || '').toLowerCase();
+                        if (!noteAuthor.includes(f.author.toLowerCase())) return false;
+                    }
+                    return true;
+                });
+            }
 
-                this.leftScreens = [];
-                for (const note of sorted) {
-                    const lines = [];
+            const display = filtered.slice(0, 20);
+            this._notesCache = display;
+
+            let html = '';
+
+            // Filter indicator
+            if (this._noteFilter) {
+                const desc = this._noteFilter.type
+                    ? `Type: ${this._noteFilter.type}`
+                    : `Author: ${this._noteFilter.author}`;
+                html += `<div class="lens-filter-indicator"><span>Filtered: ${this._esc(desc)}</span><span class="lens-filter-clear" onclick="SmartGlasses.clearNoteFilter()">✕ clear</span></div>`;
+            }
+
+            if (display.length === 0) {
+                html += '<div class="lens-line" style="opacity:0.6">No matching notes.</div>';
+            } else {
+                for (const note of display) {
                     const date = this._formatDate(note.date || note.noteDate);
                     const type = note.type || note.noteType || 'Note';
                     const author = note.author || note.provider || '';
+                    const preview = note.preview || note.chiefComplaint || note.title || '';
+                    const typeIcon = this._noteTypeIcon(type);
 
-                    lines.push(this._truncate(`${type}`, this.MAX_LINE_CHARS));
-                    lines.push(this._truncate(date, this.MAX_LINE_CHARS));
-                    lines.push(this._truncate(author, this.MAX_LINE_CHARS));
-
-                    // Try to get a snippet
-                    const snippet = note.chiefComplaint || note.assessment || note.summary || note.title || '';
-                    if (snippet) {
-                        this._wordWrap(this._truncate(snippet, this.MAX_LINE_CHARS * 2), lines);
+                    html += `<div class="lens-note-card" onclick="SmartGlasses._showNoteDetail('${this._esc(note.id)}')" role="button" tabindex="0">`;
+                    html += `<div class="lens-note-type">${typeIcon} ${this._esc(type)}</div>`;
+                    html += `<div class="lens-note-meta">${this._esc(date)} \u00B7 ${this._esc(author)}</div>`;
+                    if (preview) {
+                        html += `<div class="lens-note-preview">${this._esc(this._truncate(preview, 80))}</div>`;
                     }
-
-                    while (lines.length < this.LINES_PER_SCREEN) lines.push('');
-                    this.leftScreens.push({ title: type.toUpperCase(), lines: lines.slice(0, this.LINES_PER_SCREEN) });
+                    html += '</div>';
                 }
             }
+            if (contentEl) contentEl.innerHTML = html;
         } catch (err) {
             console.error('Failed to load notes for glasses:', err);
-            this.leftScreens = [{ title: 'NOTES', lines: ['', 'Error loading notes.', '', '', ''] }];
+            if (contentEl) contentEl.innerHTML = '<div class="lens-line">Error loading notes.</div>';
         }
 
-        this.leftScreen = 0;
-        this._updateLens('left');
-        this._updateLeftNav();
         this._updateLeftModeButtons();
+    },
+
+    filterNotes(filter) {
+        this._noteFilter = filter;
+        this.showNotesReview();
+    },
+
+    clearNoteFilter() {
+        this._noteFilter = null;
+        this.showNotesReview();
+    },
+
+    // ==================== Ask AI Mode ====================
+
+    showAskMode() {
+        if (!this.isOpen) return;
+        this._leftMode = 'ask';
+        this._leftDetailView = false;
+        this._setLeftScrollable(true);
+
+        const titleEl = document.getElementById('lens-title-left');
+        const contentEl = document.getElementById('lens-content-left');
+        const navEl = document.getElementById('lens-nav-left');
+
+        if (titleEl) titleEl.textContent = 'ASK AI';
+        if (navEl) navEl.textContent = '';
+
+        this._renderAskView(contentEl);
+        this._updateLeftModeButtons();
+
+        setTimeout(() => {
+            const input = document.getElementById('lens-ask-input');
+            if (input) input.focus();
+        }, 100);
+    },
+
+    _renderAskView(contentEl) {
+        if (!contentEl) contentEl = document.getElementById('lens-content-left');
+        if (!contentEl) return;
+
+        let html = '';
+        html += '<div class="lens-ask-input-wrap">';
+        html += '<input type="text" class="lens-ask-input" id="lens-ask-input" placeholder="Type a question..." onkeydown="if(event.key===\'Enter\')SmartGlasses._submitAskQuestion()">';
+        html += '<button class="lens-ask-submit" onclick="SmartGlasses._submitAskQuestion()">ASK</button>';
+        html += '</div>';
+
+        html += '<div class="lens-ask-history" id="lens-ask-history">';
+        if (this._askHistory.length === 0) {
+            html += '<div class="lens-ask-placeholder">Ask about the patient, medical facts, differential diagnosis, treatment options...</div>';
+        } else {
+            for (const msg of this._askHistory) {
+                const cls = msg.role === 'user' ? 'lens-ask-user' : 'lens-ask-ai';
+                const label = msg.role === 'user' ? 'You' : 'AI';
+                html += `<div class="${cls}"><span class="lens-ask-role">${label}:</span> ${this._esc(msg.content)}</div>`;
+            }
+        }
+        html += '</div>';
+
+        contentEl.innerHTML = html;
+    },
+
+    async _submitAskQuestion() {
+        const input = document.getElementById('lens-ask-input');
+        if (!input || !input.value.trim() || this._askStreaming) return;
+
+        const question = input.value.trim();
+        input.value = '';
+
+        this._askHistory.push({ role: 'user', content: question });
+        if (this._askHistory.length > 10) {
+            this._askHistory = this._askHistory.slice(-10);
+        }
+
+        // Show user message + streaming placeholder
+        const historyEl = document.getElementById('lens-ask-history');
+        if (historyEl) {
+            // Clear placeholder
+            const placeholder = historyEl.querySelector('.lens-ask-placeholder');
+            if (placeholder) placeholder.remove();
+
+            const userDiv = document.createElement('div');
+            userDiv.className = 'lens-ask-user';
+            userDiv.innerHTML = `<span class="lens-ask-role">You:</span> ${this._esc(question)}`;
+            historyEl.appendChild(userDiv);
+
+            const streamDiv = document.createElement('div');
+            streamDiv.className = 'lens-ask-ai';
+            streamDiv.id = 'lens-ask-stream';
+            streamDiv.innerHTML = '<span class="lens-ask-role">AI:</span> <span class="lens-ask-stream-text">thinking...</span>';
+            historyEl.appendChild(streamDiv);
+            historyEl.scrollTop = historyEl.scrollHeight;
+        }
+
+        this._askStreaming = true;
+
+        try {
+            // Build prompt with patient context
+            let systemPrompt = 'You are a clinical assistant helping a doctor during a patient encounter. Answer concisely and accurately. Use clinical shorthand where appropriate.';
+            let messages = [];
+
+            const ca = (typeof AICoworker !== 'undefined' && AICoworker._contextAssembler)
+                ? AICoworker._contextAssembler
+                : null;
+
+            if (ca && ca.buildAskPrompt) {
+                const prompt = ca.buildAskPrompt(question);
+                systemPrompt = prompt.systemPrompt || systemPrompt;
+                // Include prior conversation context
+                const priorMsgs = this._askHistory.slice(0, -1).map(m => ({ role: m.role, content: m.content }));
+                messages = [...priorMsgs, { role: 'user', content: prompt.userMessage || question }];
+            } else {
+                const priorMsgs = this._askHistory.slice(0, -1).map(m => ({ role: m.role, content: m.content }));
+                messages = [...priorMsgs, { role: 'user', content: question }];
+            }
+
+            // Stream response
+            const streamTextEl = document.querySelector('#lens-ask-stream .lens-ask-stream-text');
+
+            if (typeof ClaudeAPI !== 'undefined' && ClaudeAPI.chatStream) {
+                const fullResponse = await ClaudeAPI.chatStream(systemPrompt, messages, (accumulated) => {
+                    if (streamTextEl) {
+                        const clean = accumulated.replace(/<memory_update>[\s\S]*?<\/memory_update>/g, '').trim();
+                        streamTextEl.textContent = clean || 'thinking...';
+                    }
+                    if (historyEl) historyEl.scrollTop = historyEl.scrollHeight;
+                });
+
+                const cleanResponse = fullResponse.replace(/<memory_update>[\s\S]*?<\/memory_update>/g, '').trim();
+                this._askHistory.push({ role: 'assistant', content: cleanResponse });
+            } else if (typeof ClaudeAPI !== 'undefined' && ClaudeAPI.chat) {
+                const response = await ClaudeAPI.chat(systemPrompt, messages);
+                const cleanResponse = response.replace(/<memory_update>[\s\S]*?<\/memory_update>/g, '').trim();
+                this._askHistory.push({ role: 'assistant', content: cleanResponse });
+            } else {
+                this._askHistory.push({ role: 'assistant', content: 'AI not available — API key required.' });
+            }
+
+            // Re-render full history
+            this._renderAskView();
+
+        } catch (err) {
+            console.error('Ask AI failed:', err);
+            this._askHistory.push({ role: 'assistant', content: 'Error: ' + (err.message || 'Unknown error') });
+            this._renderAskView();
+        }
+
+        this._askStreaming = false;
+        // Re-focus input
+        setTimeout(() => {
+            const input2 = document.getElementById('lens-ask-input');
+            if (input2) input2.focus();
+        }, 100);
+    },
+
+    _noteTypeIcon(type) {
+        const t = (type || '').toLowerCase();
+        if (t.includes('progress')) return '\uD83D\uDCCB';
+        if (t.includes('h&p') || t.includes('admission')) return '\uD83C\uDFE5';
+        if (t.includes('discharge')) return '\uD83D\uDEAA';
+        if (t.includes('consult')) return '\uD83E\uDE7A';
+        if (t.includes('telephone') || t.includes('phone')) return '\uD83D\uDCDE';
+        return '\uD83D\uDCDD';
+    },
+
+    /**
+     * Show full note detail — loads via dataLoader.loadNote().
+     */
+    async _showNoteDetail(noteId) {
+        if (!this.isOpen) return;
+        this._leftMode = 'notes';
+        this._leftDetailView = true;
+        this._setLeftScrollable(true);
+
+        // Track position in notes cache for next/prev
+        if (this._notesCache && this._notesCache.length > 0) {
+            this._currentNoteIdx = this._notesCache.findIndex(n => n.id === noteId);
+        }
+
+        const titleEl = document.getElementById('lens-title-left');
+        const contentEl = document.getElementById('lens-content-left');
+        const navEl = document.getElementById('lens-nav-left');
+
+        if (titleEl) titleEl.textContent = 'NOTE';
+        if (navEl) navEl.textContent = 'Esc back';
+        if (contentEl) contentEl.innerHTML = '<div class="lens-line">Loading...</div>';
+
+        try {
+            let note = null;
+            if (typeof dataLoader !== 'undefined' && dataLoader.loadNote) {
+                note = await dataLoader.loadNote(noteId);
+            }
+            if (!note) {
+                if (contentEl) contentEl.innerHTML = '<div class="lens-line">Note not found.</div>';
+                return;
+            }
+
+            let html = '';
+
+            // Next/Prev navigation bar
+            const total = this._notesCache ? this._notesCache.length : 0;
+            const idx = this._currentNoteIdx;
+            if (total > 1 && idx >= 0) {
+                const isFirst = idx <= 0;
+                const isLast = idx >= total - 1;
+                html += '<div class="lens-lab-nav">';
+                html += `<button class="lens-lab-nav-btn" onclick="SmartGlasses._prevNote()" ${isFirst ? 'disabled' : ''}>\u25C0 PREV</button>`;
+                html += `<span class="lens-lab-nav-pos">${idx + 1} / ${total}</span>`;
+                html += `<button class="lens-lab-nav-btn" onclick="SmartGlasses._nextNote()" ${isLast ? 'disabled' : ''}>NEXT \u25B6</button>`;
+                html += '</div>';
+            }
+
+            // Header
+            html += `<div class="lens-detail-header">`;
+            html += `<div class="lens-note-type">${this._noteTypeIcon(note.type)} ${this._esc(note.type || 'Note')}</div>`;
+            html += `<div class="lens-note-meta">${this._esc(this._formatDate(note.date))} \u00B7 ${this._esc(note.author || '')}</div>`;
+            if (note.department) html += `<div class="lens-note-meta">${this._esc(note.department)}</div>`;
+            html += '</div>';
+
+            // Simple content field (telephone encounters, etc.)
+            if (note.content && !note.hpi && !note.physicalExam) {
+                html += `<div class="lens-detail-section">`;
+                html += `<div class="lens-detail-text">${this._esc(note.content)}</div>`;
+                html += '</div>';
+            }
+
+            // Chief Complaint
+            if (note.chiefComplaint) {
+                html += `<div class="lens-detail-section">`;
+                html += `<div class="lens-detail-label">CC</div>`;
+                html += `<div class="lens-detail-text">${this._esc(note.chiefComplaint)}</div>`;
+                html += '</div>';
+            }
+
+            // HPI
+            if (note.hpi) {
+                html += `<div class="lens-detail-section">`;
+                html += `<div class="lens-detail-label">HPI</div>`;
+                html += `<div class="lens-detail-text">${this._esc(note.hpi)}</div>`;
+                html += '</div>';
+            }
+
+            // Vitals (compact one-liner)
+            if (note.vitals) {
+                const v = note.vitals;
+                const parts = [];
+                if (v.bp) parts.push(`BP ${v.bp}`);
+                if (v.hr) parts.push(`HR ${v.hr}`);
+                if (v.rr) parts.push(`RR ${v.rr}`);
+                if (v.temp) parts.push(`T ${v.temp}`);
+                if (v.spo2) parts.push(`SpO2 ${v.spo2}`);
+                if (v.weight) parts.push(`Wt ${v.weight}`);
+                if (parts.length > 0) {
+                    html += `<div class="lens-detail-section">`;
+                    html += `<div class="lens-detail-label">VITALS</div>`;
+                    html += `<div class="lens-detail-text lens-vitals-compact">${this._esc(parts.join(' | '))}</div>`;
+                    html += '</div>';
+                }
+            }
+
+            // Physical Exam
+            if (note.physicalExam && typeof note.physicalExam === 'object') {
+                html += `<div class="lens-detail-section">`;
+                html += `<div class="lens-detail-label">EXAM</div>`;
+                for (const [system, finding] of Object.entries(note.physicalExam)) {
+                    html += `<div class="lens-detail-text"><strong>${this._esc(system)}:</strong> ${this._esc(finding)}</div>`;
+                }
+                html += '</div>';
+            }
+
+            // Assessment
+            if (note.assessment && Array.isArray(note.assessment) && note.assessment.length > 0) {
+                html += `<div class="lens-detail-section">`;
+                html += `<div class="lens-detail-label">ASSESSMENT</div>`;
+                note.assessment.forEach((a, i) => {
+                    html += `<div class="lens-detail-text">${i + 1}. <strong>${this._esc(a.diagnosis || '')}</strong>`;
+                    if (a.notes) html += ` \u2014 ${this._esc(a.notes)}`;
+                    html += '</div>';
+                });
+                html += '</div>';
+            }
+
+            // Plan
+            if (note.plan && Array.isArray(note.plan) && note.plan.length > 0) {
+                html += `<div class="lens-detail-section">`;
+                html += `<div class="lens-detail-label">PLAN</div>`;
+                note.plan.forEach(p => {
+                    html += `<div class="lens-detail-text"><strong>${this._esc(p.problem || '')}:</strong> ${this._esc(p.action || '')}</div>`;
+                });
+                html += '</div>';
+            }
+
+            if (contentEl) {
+                contentEl.innerHTML = html;
+                contentEl.scrollTop = 0;
+            }
+        } catch (err) {
+            console.error('Failed to load note detail:', err);
+            if (contentEl) contentEl.innerHTML = '<div class="lens-line">Error loading note.</div>';
+        }
     },
 
     /**
      * Switch left lens to data review mode.
-     * Loads recent labs, imaging, and EKGs.
+     * Shows scrollable list of labs and imaging; click to drill into detail.
      */
     async showDataReview() {
         if (!this.isOpen) return;
         this._leftMode = 'data';
-        this.leftScreen = 0;
+        this._leftDetailView = false;
 
         const titleEl = document.getElementById('lens-title-left');
         const contentEl = document.getElementById('lens-content-left');
         const navEl = document.getElementById('lens-nav-left');
 
         if (titleEl) titleEl.textContent = 'REVIEW DATA';
-        if (contentEl) contentEl.innerHTML = this._renderLines(['', 'Loading data...', '', '', '']);
-        if (navEl) navEl.textContent = '...';
+        if (navEl) navEl.textContent = '\u2191\u2193 scroll';
+        this._setLeftScrollable(true);
+
+        if (contentEl) contentEl.innerHTML = '<div class="lens-line">Loading data...</div>';
 
         try {
-            this.leftScreens = [];
+            let html = '';
 
             // === LABS ===
+            let labPanels = [];
             if (typeof dataLoader !== 'undefined' && dataLoader.loadLabsIndex) {
                 const labIndex = await dataLoader.loadLabsIndex();
-                const panels = Array.isArray(labIndex) ? labIndex : (labIndex?.panels || labIndex?.labs || []);
-
-                // Sort by date, take 5 most recent
-                const recent = panels
+                labPanels = Array.isArray(labIndex) ? labIndex : (labIndex?.panels || labIndex?.labs || []);
+                labPanels = labPanels
                     .sort((a, b) => new Date(b.collectedDate || b.date || 0) - new Date(a.collectedDate || a.date || 0))
-                    .slice(0, 5);
+                    .slice(0, 10);
+            }
 
-                for (const panel of recent) {
-                    const lines = [];
+            // Cache for next/prev navigation in lab detail
+            this._labPanelsCache = labPanels;
+
+            if (labPanels.length > 0) {
+                html += '<div class="lens-section-title">\uD83E\uDDEA LABS</div>';
+                for (const panel of labPanels) {
                     const name = panel.name || panel.panelName || 'Lab Panel';
                     const date = this._formatDate(panel.collectedDate || panel.date);
-
-                    lines.push(this._truncate(`LAB: ${name}`, this.MAX_LINE_CHARS));
-                    lines.push(this._truncate(date, this.MAX_LINE_CHARS));
-
-                    // Show abnormal results if available
-                    const results = panel.results || panel.tests || [];
-                    const abnormals = results.filter(r => r.flag || r.abnormal || (r.status && r.status !== 'Normal'));
-                    if (abnormals.length > 0) {
-                        for (const r of abnormals.slice(0, 3)) {
-                            const val = r.value || r.result || '';
-                            const name = r.name || r.testName || '';
-                            lines.push(this._truncate(`\u26A0 ${name}: ${val}`, this.MAX_LINE_CHARS));
-                        }
-                    } else {
-                        lines.push('All within normal limits');
-                    }
-
-                    while (lines.length < this.LINES_PER_SCREEN) lines.push('');
-                    this.leftScreens.push({ title: 'LABS', lines: lines.slice(0, this.LINES_PER_SCREEN) });
+                    html += `<div class="lens-data-card" onclick="SmartGlasses._showLabDetail('${this._esc(panel.id)}')" role="button" tabindex="0">`;
+                    html += `<div class="lens-data-name">${this._esc(name)}</div>`;
+                    html += `<div class="lens-note-meta">${this._esc(date)}</div>`;
+                    html += '</div>';
                 }
             }
 
             // === IMAGING ===
+            let imagingStudies = [];
             if (typeof dataLoader !== 'undefined' && dataLoader.loadImaging) {
                 const imaging = await dataLoader.loadImaging();
-                const studies = Array.isArray(imaging) ? imaging : (imaging?.studies || imaging?.imaging || []);
-
-                const recent = studies
+                imagingStudies = Array.isArray(imaging) ? imaging : (imaging?.studies || imaging?.imaging || []);
+                imagingStudies = imagingStudies
                     .sort((a, b) => new Date(b.date || b.orderDate || 0) - new Date(a.date || a.orderDate || 0))
-                    .slice(0, 3);
+                    .slice(0, 8);
+            }
 
-                for (const study of recent) {
-                    const lines = [];
+            if (imagingStudies.length > 0) {
+                html += '<div class="lens-section-title">\uD83D\uDCF7 IMAGING</div>';
+                for (const study of imagingStudies) {
                     const type = study.type || study.modality || 'Imaging';
-                    const bodyPart = study.bodyPart || study.description || '';
+                    const desc = study.description || study.bodyPart || '';
                     const date = this._formatDate(study.date || study.orderDate);
-                    const impression = study.impression || study.finding || study.result || '';
-
-                    lines.push(this._truncate(`${type}: ${bodyPart}`, this.MAX_LINE_CHARS));
-                    lines.push(this._truncate(date, this.MAX_LINE_CHARS));
-                    if (impression) {
-                        this._wordWrap(this._truncate(impression, this.MAX_LINE_CHARS * 3), lines);
-                    }
-
-                    while (lines.length < this.LINES_PER_SCREEN) lines.push('');
-                    this.leftScreens.push({ title: 'IMAGING', lines: lines.slice(0, this.LINES_PER_SCREEN) });
+                    html += `<div class="lens-data-card" onclick="SmartGlasses._showImagingDetail('${this._esc(study.id)}')" role="button" tabindex="0">`;
+                    html += `<div class="lens-data-name">${this._esc(type)}: ${this._esc(desc)}</div>`;
+                    html += `<div class="lens-note-meta">${this._esc(date)}</div>`;
+                    html += '</div>';
                 }
             }
 
-            if (this.leftScreens.length === 0) {
-                this.leftScreens = [{ title: 'DATA', lines: ['', 'No data available.', '', '', ''] }];
+            if (!html) {
+                html = '<div class="lens-line">No data available.</div>';
             }
+
+            if (contentEl) contentEl.innerHTML = html;
         } catch (err) {
             console.error('Failed to load data for glasses:', err);
-            this.leftScreens = [{ title: 'DATA', lines: ['', 'Error loading data.', '', '', ''] }];
+            if (contentEl) contentEl.innerHTML = '<div class="lens-line">Error loading data.</div>';
         }
 
-        this.leftScreen = 0;
-        this._updateLens('left');
-        this._updateLeftNav();
         this._updateLeftModeButtons();
+    },
+
+    /**
+     * Show full lab panel detail with table of results.
+     */
+    async _showLabDetail(panelId) {
+        if (!this.isOpen) return;
+        this._leftMode = 'data';
+        this._leftDetailView = true;
+        this._setLeftScrollable(true);
+
+        // Track position in lab panels cache for next/prev
+        if (this._labPanelsCache.length > 0) {
+            this._currentLabIdx = this._labPanelsCache.findIndex(p => p.id === panelId);
+        }
+
+        const titleEl = document.getElementById('lens-title-left');
+        const contentEl = document.getElementById('lens-content-left');
+        const navEl = document.getElementById('lens-nav-left');
+
+        if (titleEl) titleEl.textContent = 'LAB RESULTS';
+        if (navEl) navEl.textContent = 'Esc back';
+        if (contentEl) contentEl.innerHTML = '<div class="lens-line">Loading...</div>';
+
+        try {
+            let panel = null;
+            if (typeof dataLoader !== 'undefined' && dataLoader.loadLabPanel) {
+                panel = await dataLoader.loadLabPanel(panelId);
+            }
+            if (!panel) {
+                if (contentEl) contentEl.innerHTML = '<div class="lens-line">Panel not found.</div>';
+                return;
+            }
+
+            let html = '';
+
+            // Next/Prev navigation bar at top
+            const total = this._labPanelsCache.length;
+            const idx = this._currentLabIdx;
+            if (total > 1 && idx >= 0) {
+                const isFirst = idx <= 0;
+                const isLast = idx >= total - 1;
+                html += '<div class="lens-lab-nav">';
+                html += `<button class="lens-lab-nav-btn" onclick="SmartGlasses._prevLab()" ${isFirst ? 'disabled' : ''}>\u25C0 PREV</button>`;
+                html += `<span class="lens-lab-nav-pos">${idx + 1} / ${total}</span>`;
+                html += `<button class="lens-lab-nav-btn" onclick="SmartGlasses._nextLab()" ${isLast ? 'disabled' : ''}>NEXT \u25B6</button>`;
+                html += '</div>';
+            }
+
+            html += `<div class="lens-detail-header">`;
+            html += `<div class="lens-data-name">${this._esc(panel.name || 'Lab Panel')}</div>`;
+            html += `<div class="lens-note-meta">${this._esc(this._formatDate(panel.collectedDate || panel.date))} \u00B7 ${this._esc(panel.orderedBy || '')}</div>`;
+            html += `<div class="lens-note-meta">${this._esc(panel.status || '')} \u00B7 ${this._esc(panel.specimen || '')}</div>`;
+            html += '</div>';
+
+            // Lab results table
+            const results = panel.results || [];
+            if (results.length > 0) {
+                html += '<div class="lens-lab-table">';
+                html += '<div class="lens-lab-row lens-lab-header-row"><span class="lens-lab-name">Test</span><span class="lens-lab-val">Value</span><span class="lens-lab-ref">Ref</span></div>';
+                for (const r of results) {
+                    const name = r.name || r.testName || '';
+                    const val = r.value != null ? String(r.value) : '';
+                    const unit = r.unit || '';
+                    const ref = r.referenceRange || '';
+                    const isAbnormal = this._isLabAbnormal(r);
+                    const cls = isAbnormal ? 'lens-lab-row lens-lab-abnormal' : 'lens-lab-row';
+                    const flag = isAbnormal ? ' \u26A0' : '';
+                    html += `<div class="${cls}"><span class="lens-lab-name">${this._esc(name)}</span><span class="lens-lab-val">${this._esc(val)} ${this._esc(unit)}${flag}</span><span class="lens-lab-ref">${this._esc(ref)}</span></div>`;
+                }
+                html += '</div>';
+            } else {
+                html += '<div class="lens-line">No results.</div>';
+            }
+
+            if (contentEl) {
+                contentEl.innerHTML = html;
+                contentEl.scrollTop = 0;
+            }
+        } catch (err) {
+            console.error('Failed to load lab detail:', err);
+            if (contentEl) contentEl.innerHTML = '<div class="lens-line">Error loading lab.</div>';
+        }
+    },
+
+    _prevLab() {
+        if (this._currentLabIdx <= 0 || !this._labPanelsCache.length) return;
+        this._currentLabIdx--;
+        this._showLabDetail(this._labPanelsCache[this._currentLabIdx].id);
+    },
+
+    _nextLab() {
+        if (this._currentLabIdx >= this._labPanelsCache.length - 1 || !this._labPanelsCache.length) return;
+        this._currentLabIdx++;
+        this._showLabDetail(this._labPanelsCache[this._currentLabIdx].id);
+    },
+
+    _prevNote() {
+        if (this._currentNoteIdx <= 0 || !this._notesCache || !this._notesCache.length) return;
+        this._currentNoteIdx--;
+        this._showNoteDetail(this._notesCache[this._currentNoteIdx].id);
+    },
+
+    _nextNote() {
+        if (!this._notesCache || this._currentNoteIdx >= this._notesCache.length - 1) return;
+        this._currentNoteIdx++;
+        this._showNoteDetail(this._notesCache[this._currentNoteIdx].id);
+    },
+
+    /**
+     * Check if a lab result is abnormal based on reference range.
+     */
+    _isLabAbnormal(result) {
+        if (result.flag || result.abnormal) return true;
+        if (result.status && result.status !== 'Normal') return true;
+        const val = parseFloat(result.value);
+        const ref = result.referenceRange || '';
+        if (isNaN(val) || !ref) return false;
+
+        // Parse "X-Y" range
+        const rangeMatch = ref.match(/^([\d.]+)\s*[-\u2013]\s*([\d.]+)$/);
+        if (rangeMatch) {
+            const lo = parseFloat(rangeMatch[1]);
+            const hi = parseFloat(rangeMatch[2]);
+            return val < lo || val > hi;
+        }
+        // Parse ">X" range
+        const gtMatch = ref.match(/^>\s*([\d.]+)$/);
+        if (gtMatch) return val < parseFloat(gtMatch[1]);
+        // Parse "<X" range
+        const ltMatch = ref.match(/^<\s*([\d.]+)$/);
+        if (ltMatch) return val > parseFloat(ltMatch[1]);
+
+        return false;
+    },
+
+    /**
+     * Show imaging report detail.
+     */
+    async _showImagingDetail(studyId) {
+        if (!this.isOpen) return;
+        this._leftMode = 'data';
+        this._leftDetailView = true;
+        this._setLeftScrollable(true);
+
+        const titleEl = document.getElementById('lens-title-left');
+        const contentEl = document.getElementById('lens-content-left');
+        const navEl = document.getElementById('lens-nav-left');
+
+        if (titleEl) titleEl.textContent = 'IMAGING';
+        if (navEl) navEl.textContent = '\u2190 back';
+        if (contentEl) contentEl.innerHTML = '<div class="lens-line">Loading...</div>';
+
+        try {
+            let report = null;
+            if (typeof dataLoader !== 'undefined' && dataLoader.loadImagingReport) {
+                report = await dataLoader.loadImagingReport(studyId);
+            }
+            if (!report) {
+                if (contentEl) contentEl.innerHTML = '<div class="lens-line">Report not found.</div>';
+                return;
+            }
+
+            let html = '';
+            html += `<div class="lens-detail-header">`;
+            html += `<div class="lens-data-name">${this._esc(report.modality || '')} \u2014 ${this._esc(report.description || '')}</div>`;
+            html += `<div class="lens-note-meta">${this._esc(this._formatDate(report.date))} \u00B7 ${this._esc(report.radiologist || '')}</div>`;
+            html += '</div>';
+
+            if (report.indication) {
+                html += `<div class="lens-detail-section">`;
+                html += `<div class="lens-detail-label">INDICATION</div>`;
+                html += `<div class="lens-detail-text">${this._esc(report.indication)}</div>`;
+                html += '</div>';
+            }
+
+            // Impression (most important)
+            if (report.impression) {
+                html += `<div class="lens-detail-section">`;
+                html += `<div class="lens-detail-label">IMPRESSION</div>`;
+                if (Array.isArray(report.impression)) {
+                    report.impression.forEach((item, i) => {
+                        html += `<div class="lens-detail-text">${i + 1}. ${this._esc(item)}</div>`;
+                    });
+                } else {
+                    html += `<div class="lens-detail-text">${this._esc(report.impression)}</div>`;
+                }
+                html += '</div>';
+            }
+
+            if (report.findings) {
+                html += `<div class="lens-detail-section">`;
+                html += `<div class="lens-detail-label">FINDINGS</div>`;
+                html += `<div class="lens-detail-text">${this._esc(report.findings)}</div>`;
+                html += '</div>';
+            }
+
+            if (report.recommendations) {
+                html += `<div class="lens-detail-section">`;
+                html += `<div class="lens-detail-label">RECOMMENDATIONS</div>`;
+                html += `<div class="lens-detail-text">${this._esc(report.recommendations)}</div>`;
+                html += '</div>';
+            }
+
+            if (contentEl) {
+                contentEl.innerHTML = html;
+                contentEl.scrollTop = 0;
+            }
+        } catch (err) {
+            console.error('Failed to load imaging detail:', err);
+            if (contentEl) contentEl.innerHTML = '<div class="lens-line" style="opacity:0.6">Report not available for this study.</div>';
+        }
+    },
+
+    /**
+     * Navigate back from detail view to list view.
+     */
+    _backToList() {
+        if (this._leftMode === 'notes') {
+            this.showNotesReview();
+        } else if (this._leftMode === 'data') {
+            this.showDataReview();
+        }
+    },
+
+    /**
+     * Toggle left lens content between scrollable HTML mode and paged mode.
+     */
+    _setLeftScrollable(scrollable) {
+        const contentEl = document.getElementById('lens-content-left');
+        if (!contentEl) return;
+        if (scrollable) {
+            contentEl.classList.add('lens-content-scrollable');
+        } else {
+            contentEl.classList.remove('lens-content-scrollable');
+        }
     },
 
     /**
@@ -442,26 +1008,116 @@ const SmartGlasses = {
      */
     showContextMode() {
         this._leftMode = 'context';
-        this.leftScreen = 0;
+        this._leftDetailView = false;
+        this._setLeftScrollable(true);
 
-        const state = (typeof AICoworker !== 'undefined') ? AICoworker.state : null;
-        const glassesData = state ? state.glassesDisplay : null;
+        const titleEl = document.getElementById('lens-title-left');
+        const contentEl = document.getElementById('lens-content-left');
+        const navEl = document.getElementById('lens-nav-left');
 
-        if (glassesData && glassesData.leftLens) {
-            this.leftScreens = this._parseLLMScreens(glassesData.leftLens, 'PATIENT');
-        } else {
-            const data = this._getGlassesData();
-            this.leftScreens = this._buildLeftScreensFallback(data);
+        if (titleEl) titleEl.textContent = 'PATIENT CONTEXT';
+        if (navEl) navEl.textContent = '\u2191\u2193 scroll';
+
+        const data = this._getGlassesData();
+        if (contentEl) {
+            contentEl.innerHTML = this._buildContextScrollableHTML(data);
+            contentEl.scrollTop = 0;
         }
 
-        this._updateLens('left');
-        this._updateLeftNav();
         this._updateLeftModeButtons();
+    },
+
+    _buildContextScrollableHTML(data) {
+        if (!data) {
+            return '<div class="lens-line" style="opacity:0.6">No AI analysis yet. Run analysis first.</div>';
+        }
+
+        let html = '';
+
+        // === PATIENT ONE-LINER ===
+        if (data.oneLiner) {
+            html += `<div class="lens-ctx-summary">${this._esc(data.oneLiner)}</div>`;
+        }
+
+        // === DEMOGRAPHICS / PRESENTATION ===
+        const cs = data.clinicalSummary || {};
+        if (cs.demographics) {
+            html += `<div class="lens-ctx-demo">${this._esc(cs.demographics)}</div>`;
+        }
+        if (cs.presentation) {
+            html += `<div class="lens-detail-section">`;
+            html += `<div class="lens-detail-label">PRESENTATION</div>`;
+            html += `<div class="lens-detail-text">${this._esc(cs.presentation)}</div>`;
+            html += '</div>';
+        }
+        if (cs.functional) {
+            html += `<div class="lens-detail-section">`;
+            html += `<div class="lens-detail-label">FUNCTIONAL</div>`;
+            html += `<div class="lens-detail-text" style="opacity:0.7">${this._esc(cs.functional)}</div>`;
+            html += '</div>';
+        }
+
+        // === ACTIVE PROBLEMS ===
+        if (data.problemList && data.problemList.length > 0) {
+            html += '<div class="lens-section-title">ACTIVE PROBLEMS</div>';
+            for (const p of data.problemList) {
+                const urgIcon = p.urgency === 'urgent' ? '!' : (p.urgency === 'monitoring' ? '~' : '\u00B7');
+                const urgClass = p.urgency === 'urgent' ? ' lens-problem-urgent' : '';
+                html += `<div class="lens-problem-item${urgClass}">`;
+                html += `<span class="lens-problem-urgency">${urgIcon}</span>`;
+                html += `<span class="lens-problem-name">${this._esc(p.name || '')}</span>`;
+                if (p.plan) html += `<div class="lens-problem-plan">${this._esc(p.plan)}</div>`;
+                if (p.ddx) html += `<div class="lens-problem-ddx">DDx: ${this._esc(p.ddx)}</div>`;
+                html += '</div>';
+            }
+        }
+
+        // === ALERTS & SAFETY FLAGS ===
+        const alerts = [];
+        if (data.flags && data.flags.length > 0) {
+            for (const f of data.flags) {
+                const text = typeof f === 'string' ? f : (f.text || '');
+                if (text) alerts.push({ text, severity: f.severity || 'info' });
+            }
+        }
+        if (data.keyConsiderations && data.keyConsiderations.length > 0) {
+            for (const k of data.keyConsiderations) {
+                const text = typeof k === 'string' ? k : (k.text || '');
+                if (text) alerts.push({ text, severity: k.severity || 'important' });
+            }
+        }
+        if (alerts.length > 0) {
+            html += '<div class="lens-section-title">\u26A0 ALERTS</div>';
+            for (const a of alerts) {
+                const cls = a.severity === 'critical' ? 'lens-alert-critical' : 'lens-alert-item';
+                html += `<div class="${cls}">\u26A0 ${this._esc(a.text)}</div>`;
+            }
+        }
+
+        // === KEY MEDICATIONS (from AICoworker state) ===
+        const state = (typeof AICoworker !== 'undefined') ? AICoworker.state : null;
+        const meds = state?.medications || state?.clinicalSummary?.medications || [];
+        if (meds.length > 0) {
+            html += '<div class="lens-section-title">\uD83D\uDC8A KEY MEDS</div>';
+            const medLines = Array.isArray(meds) ? meds.slice(0, 8) : [];
+            for (const m of medLines) {
+                const name = typeof m === 'string' ? m : (m.name || m.medication || '');
+                const dose = typeof m === 'object' ? (m.dose || m.dosage || '') : '';
+                html += `<div class="lens-ctx-med">${this._esc(name)}${dose ? ' ' + this._esc(dose) : ''}</div>`;
+            }
+        }
+
+        return html || '<div class="lens-line" style="opacity:0.6">No context data available.</div>';
     },
 
     _updateLeftNav() {
         const navEl = document.getElementById('lens-nav-left');
-        if (navEl) navEl.textContent = `${this.leftScreen + 1}/${this.leftScreens.length}`;
+        if (!navEl) return;
+        if (this._leftDetailView) {
+            navEl.textContent = 'Esc back';
+        } else {
+            navEl.textContent = '\u2191\u2193 scroll';
+        }
     },
 
     _updateLeftModeButtons() {
@@ -598,49 +1254,147 @@ const SmartGlasses = {
         // === SEPARATOR ===
         lines.push('<div class="lens-order-separator">\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500</div>');
 
-        // === RECOMMENDED ORDERS ===
-        lines.push('<div class="lens-section-title">RECOMMENDED</div>');
+        // === RECOMMENDED — grouped by category ===
+        const grouped = this._getGroupedRecommendations();
+        this._lastGroupedRecs = grouped;
+        const hasAny = Object.values(grouped).some(arr => arr.length > 0);
 
-        const recs = this._getRecommendedOrders();
-        if (recs.length > 0) {
-            for (const rec of recs) {
-                const isOrdered = this._sessionOrders.some(o =>
-                    o.toLowerCase().includes(rec.text.toLowerCase().slice(0, 15)));
-                const cls = isOrdered ? 'lens-line lens-order-done' : 'lens-line lens-order-rec';
-                const prefix = isOrdered ? '\u2713' : '\u25CB';
-                lines.push(`<div class="${cls}">${prefix} ${this._esc(this._truncate(rec.text, this.MAX_LINE_CHARS - 2))}</div>`);
+        if (hasAny) {
+            const categories = [
+                { key: 'medications', icon: '\uD83D\uDC8A', label: 'MEDICATIONS' },
+                { key: 'labs', icon: '\uD83E\uDDEA', label: 'LABS' },
+                { key: 'imaging', icon: '\uD83D\uDCF7', label: 'STUDIES' },
+                { key: 'communication', icon: '\uD83D\uDCE2', label: 'COMMUNICATION' },
+                { key: 'notes', icon: '\uD83D\uDCDD', label: 'DOCUMENTATION' },
+                { key: 'other', icon: '\u2022', label: 'OTHER' }
+            ];
+
+            for (const cat of categories) {
+                const items = grouped[cat.key];
+                if (!items || items.length === 0) continue;
+
+                lines.push(`<div class="lens-section-title">${cat.icon} ${cat.label}</div>`);
+                for (let i = 0; i < items.length; i++) {
+                    const item = items[i];
+                    const isOrdered = this._sessionOrders.some(o =>
+                        o.toLowerCase().includes(item.text.toLowerCase().slice(0, 15)));
+                    if (isOrdered) {
+                        lines.push(`<div class="lens-line lens-order-done">\u2713 ${this._esc(this._truncate(item.text, this.MAX_LINE_CHARS - 2))}</div>`);
+                    } else {
+                        lines.push(`<div class="lens-line lens-order-rec lens-order-clickable" onclick="SmartGlasses._onOrderClick('${cat.key}', ${i})" role="button" tabindex="0">\u25CB ${this._esc(this._truncate(item.text, this.MAX_LINE_CHARS - 2))}</div>`);
+                    }
+                }
             }
         } else {
+            lines.push('<div class="lens-section-title">RECOMMENDED</div>');
             lines.push('<div class="lens-line lens-order-empty">Run analysis for recommendations</div>');
         }
 
         return lines.join('');
     },
 
-    _getRecommendedOrders() {
-        if (typeof AICoworker === 'undefined' || !AICoworker.state) return [];
+    /**
+     * Get recommended actions grouped by category.
+     * Pulls from categorizedActions first, then fills from suggestedActions.
+     */
+    _getGroupedRecommendations() {
+        const groups = { medications: [], labs: [], imaging: [], communication: [], notes: [], other: [] };
+        if (typeof AICoworker === 'undefined' || !AICoworker.state) return groups;
 
-        const recs = [];
+        const cats = AICoworker.state.categorizedActions || {};
 
-        const actions = AICoworker.state.suggestedActions || [];
-        for (const a of actions) {
-            const text = typeof a === 'string' ? a : (a.text || '');
-            if (text) recs.push({ text });
-        }
-
-        if (recs.length === 0) {
-            const cats = AICoworker.state.categorizedActions || {};
-            for (const key of ['labs', 'imaging', 'medications', 'communication', 'other']) {
-                const items = cats[key];
-                if (!items) continue;
-                for (const item of items) {
-                    const text = typeof item === 'string' ? item : (item.text || '');
-                    if (text) recs.push({ text });
-                }
+        // Pull from categorizedActions (already grouped)
+        for (const key of ['labs', 'imaging', 'medications', 'communication']) {
+            const items = cats[key];
+            if (!items || !Array.isArray(items)) continue;
+            for (const item of items) {
+                const text = typeof item === 'string' ? item : (item.text || '');
+                if (text) groups[key].push({ text, orderType: item.orderType, orderData: item.orderData });
             }
         }
 
-        return recs;
+        // Notes/documentation category
+        const noteItems = cats['notes'] || cats['documentation'] || [];
+        if (Array.isArray(noteItems)) {
+            for (const item of noteItems) {
+                const text = typeof item === 'string' ? item : (item.text || '');
+                if (text) groups.notes.push({ text });
+            }
+        }
+
+        // Other category
+        const otherItems = cats['other'] || [];
+        if (Array.isArray(otherItems)) {
+            for (const item of otherItems) {
+                const text = typeof item === 'string' ? item : (item.text || '');
+                if (text) groups.other.push({ text });
+            }
+        }
+
+        // Also pull from suggestedActions and classify them into categories
+        const actions = AICoworker.state.suggestedActions || [];
+        const existingTexts = new Set(Object.values(groups).flat().map(g => g.text.toLowerCase()));
+
+        for (const a of actions) {
+            const text = typeof a === 'string' ? a : (a.text || '');
+            if (!text || existingTexts.has(text.toLowerCase())) continue;
+            existingTexts.add(text.toLowerCase());
+
+            // Classify by keywords
+            const lower = text.toLowerCase();
+            if (/\b(order|check|draw|send|bmp|cbc|cmp|bnp|troponin|lactate|abg|culture|panel|level)\b/.test(lower)) {
+                groups.labs.push({ text });
+            } else if (/\b(xr|x-ray|ct |ct$|mri|echo|ultrasound|imaging|scan|ekg|ecg)\b/.test(lower)) {
+                groups.imaging.push({ text });
+            } else if (/\b(start|give|administer|bolus|infusion|mg|mcg|units|dose|medication|rx|prescribe)\b/.test(lower)) {
+                groups.medications.push({ text });
+            } else if (/\b(consult|call|notify|discuss|page|communicate|family|update)\b/.test(lower)) {
+                groups.communication.push({ text });
+            } else if (/\b(document|note|attestation|write|addendum|discharge summary)\b/.test(lower)) {
+                groups.notes.push({ text });
+            } else {
+                groups.other.push({ text });
+            }
+        }
+
+        return groups;
+    },
+
+    /**
+     * Handle click on a recommended order — show confirmation card.
+     */
+    _onOrderClick(category, index) {
+        if (!this._lastGroupedRecs) return;
+        const items = this._lastGroupedRecs[category];
+        if (!items || !items[index]) return;
+        const item = items[index];
+
+        // Synthesize orderType from category if not present
+        const typeMap = { labs: 'lab', imaging: 'imaging', medications: 'medication', communication: 'consult' };
+        const orderType = item.orderType || typeMap[category] || null;
+
+        if (orderType && item.orderData) {
+            // Structured order — use full confirmation flow
+            this.showOrderConfirmation({
+                type: orderType,
+                summary: item.text,
+                details: item.orderData
+            });
+        } else if (orderType) {
+            // Has a type but no orderData — synthesize minimal data
+            this.showOrderConfirmation({
+                type: orderType,
+                summary: item.text,
+                details: { name: item.text }
+            });
+        } else {
+            // Communication/documentation — no order form, just confirm as task
+            this.showOrderConfirmation({
+                type: 'task',
+                summary: item.text,
+                details: { description: item.text }
+            });
+        }
     },
 
     refreshOrdersView() {
@@ -661,9 +1415,8 @@ const SmartGlasses = {
         overlay.setAttribute('role', 'dialog');
         overlay.setAttribute('aria-label', 'Smart Glasses HUD');
 
-        const totalLeft = this.leftScreens.length;
-        const isLLM = (typeof AICoworker !== 'undefined') && AICoworker.state.glassesDisplay;
-        const sourceLabel = isLLM ? 'AI-optimized' : 'fallback';
+        const isLLM = (typeof AICoworker !== 'undefined') && AICoworker.state?.glassesDisplay;
+        const sourceLabel = isLLM ? 'AI' : 'FALLBACK';
 
         overlay.innerHTML = `
             <div class="glasses-backdrop" onclick="SmartGlasses.close()"></div>
@@ -675,20 +1428,18 @@ const SmartGlasses = {
                 </div>
                 <div class="glasses-viewport">
                     <div class="glasses-lens glasses-lens-left" id="glasses-lens-left">
-                        <div class="lens-title" id="lens-title-left">${this._esc(this.leftScreens[0]?.title || 'PATIENT')}</div>
+                        <div class="lens-title" id="lens-title-left">PATIENT CONTEXT</div>
                         <div class="lens-separator">\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500</div>
-                        <div class="lens-content" id="lens-content-left">
-                            ${this._renderLines(this.leftScreens[0]?.lines || [])}
+                        <div class="lens-content lens-content-scrollable" id="lens-content-left">
                         </div>
                         <div class="lens-mode-bar">
                             <button class="lens-mode-btn active" data-mode="context" onclick="SmartGlasses.showContextMode()" title="Patient context">\uD83D\uDC64 Context</button>
                             <button class="lens-mode-btn" data-mode="notes" onclick="SmartGlasses.showNotesReview()" title="Review recent notes">\uD83D\uDCDD Notes</button>
                             <button class="lens-mode-btn" data-mode="data" onclick="SmartGlasses.showDataReview()" title="Review labs & imaging">\uD83D\uDCCA Data</button>
+                            <button class="lens-mode-btn" data-mode="ask" onclick="SmartGlasses.showAskMode()" title="Ask AI a question">\u2753 Ask</button>
                         </div>
                         <div class="lens-nav">
-                            <button class="lens-nav-btn" onclick="SmartGlasses.prevScreen('left')" title="Previous (Left arrow)">\u25C0</button>
-                            <span class="lens-nav-indicator" id="lens-nav-left">1/${totalLeft}</span>
-                            <button class="lens-nav-btn" onclick="SmartGlasses.nextScreen('left')" title="Next (Right arrow)">\u25B6</button>
+                            <span class="lens-nav-indicator" id="lens-nav-left">\u2191\u2193 scroll</span>
                         </div>
                     </div>
                     <div class="glasses-bridge"></div>
@@ -704,7 +1455,7 @@ const SmartGlasses = {
                     </div>
                 </div>
                 <div class="glasses-footer">
-                    PROTOTYPE \u00B7 Even Realities G1 \u00B7 \u2190\u2192 Patient \u00B7 \u2191\u2193 Scroll Orders
+                    PROTOTYPE \u00B7 Even Realities G1 \u00B7 \u2191\u2193 Scroll \u00B7 Esc Close
                 </div>
             </div>
         `;
@@ -764,9 +1515,14 @@ const SmartGlasses = {
         if (navEl) navEl.textContent = `${idx + 1}/${screens.length}`;
     },
 
+    _scrollLeftLens(delta) {
+        const contentEl = document.getElementById('lens-content-left');
+        if (contentEl) contentEl.scrollTop += delta;
+    },
+
     _scrollRightLens(delta) {
         const contentEl = document.getElementById('lens-content-right');
-        if (contentEl) contentEl.scrollBy({ top: delta, behavior: 'smooth' });
+        if (contentEl) contentEl.scrollTop += delta;
     },
 
     // ==================== Utilities ====================

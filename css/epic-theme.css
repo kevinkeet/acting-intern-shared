@@ -11081,7 +11081,7 @@ html, body {
     display: flex;
     gap: 0;
     align-items: stretch;
-    height: 340px;
+    height: 520px;
 }
 
 .glasses-lens {
@@ -11219,12 +11219,11 @@ html, body {
 }
 
 /* Right lens scroll fix — needs min-height:0 to allow flex child to shrink and scroll */
-.glasses-lens-right {
-    overflow: hidden;
-}
 .glasses-lens-right .lens-content-scrollable {
     min-height: 0;
     flex: 1 1 0;
+    overflow-y: auto !important;
+    display: block;
 }
 
 /* Orders view section titles */
@@ -11267,6 +11266,359 @@ html, body {
     color: #00ff88;
     opacity: 0.35;
     font-style: italic;
+}
+
+/* === Left lens scrollable mode (notes/data) === */
+.glasses-lens-left .lens-content-scrollable {
+    min-height: 0;
+    flex: 1 1 0 !important;
+    overflow-y: auto !important;
+    display: block;
+}
+/* Prevent mode bar and nav from shrinking when content is scrollable */
+.glasses-lens-left .lens-mode-bar,
+.glasses-lens-left .lens-nav {
+    flex-shrink: 0;
+}
+.glasses-lens-left .lens-title,
+.glasses-lens-left .lens-separator {
+    flex-shrink: 0;
+}
+
+/* Note list cards */
+.lens-note-card, .lens-data-card {
+    padding: 5px 4px;
+    border-bottom: 1px solid #1a3a2a;
+    cursor: pointer;
+    transition: background 0.12s ease;
+    line-height: 1.3;
+}
+.lens-note-card:hover, .lens-data-card:hover {
+    background: rgba(0, 255, 136, 0.08);
+}
+.lens-note-card:last-child, .lens-data-card:last-child {
+    border-bottom: none;
+}
+.lens-note-type {
+    font-size: 12px;
+    font-weight: 600;
+    color: #00ff88;
+    letter-spacing: 0.5px;
+}
+.lens-note-meta {
+    font-size: 10.5px;
+    color: #00aa5c;
+    opacity: 0.7;
+    letter-spacing: 0.3px;
+}
+.lens-note-preview {
+    font-size: 11px;
+    color: #00cc6a;
+    opacity: 0.6;
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.lens-data-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: #00ff88;
+}
+
+/* Detail view sections */
+.lens-detail-header {
+    padding-bottom: 6px;
+    border-bottom: 1px solid #1a3a2a;
+    margin-bottom: 4px;
+}
+.lens-detail-section {
+    margin: 6px 0;
+    padding-bottom: 4px;
+    border-bottom: 1px dotted #0d2a1a;
+}
+.lens-detail-section:last-child {
+    border-bottom: none;
+}
+.lens-detail-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: #00cc6a;
+    opacity: 0.8;
+    margin-bottom: 2px;
+}
+.lens-detail-text {
+    font-size: 11.5px;
+    line-height: 1.5;
+    color: #00ff88;
+    white-space: normal;
+    word-wrap: break-word;
+}
+.lens-detail-text strong {
+    color: #00ffaa;
+}
+.lens-vitals-compact {
+    font-size: 11px;
+    letter-spacing: 0.2px;
+}
+
+/* Lab results table */
+.lens-lab-table {
+    width: 100%;
+    font-size: 11px;
+    line-height: 1.5;
+}
+.lens-lab-row {
+    display: flex;
+    gap: 4px;
+    padding: 1px 0;
+    border-bottom: 1px solid rgba(0, 255, 136, 0.05);
+}
+.lens-lab-header-row {
+    font-weight: 700;
+    color: #00cc6a;
+    opacity: 0.8;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #1a3a2a;
+    margin-bottom: 2px;
+    padding-bottom: 2px;
+}
+.lens-lab-name {
+    flex: 1 1 35%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.lens-lab-val {
+    flex: 1 1 35%;
+    text-align: right;
+    white-space: nowrap;
+}
+.lens-lab-ref {
+    flex: 0 0 30%;
+    text-align: right;
+    opacity: 0.5;
+    font-size: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.lens-lab-abnormal {
+    color: #ffaa00;
+    font-weight: 600;
+}
+.lens-lab-abnormal .lens-lab-ref {
+    color: #ffaa00;
+    opacity: 0.7;
+}
+
+/* === Clickable Orders === */
+.lens-order-clickable {
+    cursor: pointer;
+    transition: background 0.15s;
+    border-radius: 3px;
+    padding: 1px 4px;
+    margin: 0 -4px;
+}
+.lens-order-clickable:hover {
+    background: rgba(0, 255, 65, 0.15);
+}
+.lens-order-clickable:active {
+    background: rgba(0, 255, 65, 0.25);
+}
+
+/* === Note Filter Indicator === */
+.lens-filter-indicator {
+    padding: 4px 8px;
+    background: rgba(0, 255, 65, 0.1);
+    border: 1px solid rgba(0, 255, 65, 0.25);
+    font-size: 10px;
+    color: #00ff41;
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 3px;
+}
+.lens-filter-clear {
+    cursor: pointer;
+    opacity: 0.6;
+    font-size: 10px;
+}
+.lens-filter-clear:hover {
+    opacity: 1;
+}
+
+/* === Lab Navigation (Next/Prev) === */
+.lens-lab-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(0, 255, 65, 0.15);
+}
+.lens-lab-nav-btn {
+    background: rgba(0, 255, 65, 0.1);
+    border: 1px solid rgba(0, 255, 65, 0.3);
+    color: #00ff41;
+    padding: 3px 10px;
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+.lens-lab-nav-btn:hover:not(:disabled) {
+    background: rgba(0, 255, 65, 0.2);
+}
+.lens-lab-nav-btn:disabled {
+    opacity: 0.25;
+    cursor: default;
+}
+.lens-lab-nav-pos {
+    font-size: 10px;
+    color: rgba(0, 255, 65, 0.5);
+    font-family: 'Courier New', monospace;
+}
+
+/* === Scrollable Context Sections === */
+.lens-ctx-summary {
+    font-size: 12px;
+    line-height: 1.35;
+    margin-bottom: 6px;
+    color: #00ff41;
+    font-weight: 600;
+}
+.lens-ctx-demo {
+    font-size: 10.5px;
+    opacity: 0.65;
+    margin-bottom: 8px;
+    line-height: 1.3;
+}
+.lens-problem-item {
+    padding: 3px 0;
+    border-bottom: 1px solid rgba(0, 255, 65, 0.06);
+}
+.lens-problem-urgent {
+    border-left: 2px solid #ff6b35;
+    padding-left: 6px;
+}
+.lens-problem-urgency {
+    display: inline-block;
+    width: 12px;
+    font-weight: bold;
+}
+.lens-problem-item.lens-problem-urgent .lens-problem-urgency {
+    color: #ff6b35;
+}
+.lens-problem-name {
+    font-weight: 600;
+    font-size: 11px;
+}
+.lens-problem-plan {
+    font-size: 10px;
+    opacity: 0.65;
+    padding-left: 12px;
+    margin-top: 1px;
+    line-height: 1.3;
+}
+.lens-problem-ddx {
+    font-size: 9.5px;
+    opacity: 0.5;
+    padding-left: 12px;
+    margin-top: 1px;
+    font-style: italic;
+    line-height: 1.25;
+}
+.lens-alert-item {
+    padding: 2px 0;
+    font-size: 10.5px;
+    color: #ffaa00;
+}
+.lens-alert-critical {
+    padding: 2px 4px;
+    font-size: 10.5px;
+    color: #ff4444;
+    font-weight: 600;
+    background: rgba(255, 68, 68, 0.08);
+    border-radius: 2px;
+    margin: 2px 0;
+}
+.lens-ctx-med {
+    font-size: 10px;
+    opacity: 0.7;
+    padding: 1px 0;
+    line-height: 1.3;
+}
+
+/* === Ask AI Mode === */
+.lens-ask-input-wrap {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 8px;
+}
+.lens-ask-input {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(0, 255, 65, 0.4);
+    color: #00ff41;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    padding: 5px 7px;
+    outline: none;
+    border-radius: 3px;
+}
+.lens-ask-input:focus {
+    border-color: rgba(0, 255, 65, 0.7);
+    box-shadow: 0 0 4px rgba(0, 255, 65, 0.15);
+}
+.lens-ask-input::placeholder {
+    color: rgba(0, 255, 65, 0.25);
+}
+.lens-ask-submit {
+    background: rgba(0, 255, 65, 0.15);
+    border: 1px solid rgba(0, 255, 65, 0.4);
+    color: #00ff41;
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+.lens-ask-submit:hover {
+    background: rgba(0, 255, 65, 0.25);
+}
+.lens-ask-history {
+    overflow-y: auto;
+    flex: 1;
+}
+.lens-ask-user {
+    padding: 4px 0;
+    font-size: 11px;
+    color: rgba(0, 255, 65, 0.9);
+    border-bottom: 1px solid rgba(0, 255, 65, 0.06);
+    margin-bottom: 4px;
+}
+.lens-ask-ai {
+    padding: 4px 0;
+    font-size: 11px;
+    color: rgba(0, 255, 65, 0.7);
+    border-bottom: 1px solid rgba(0, 255, 65, 0.1);
+    margin-bottom: 6px;
+    line-height: 1.4;
+}
+.lens-ask-role {
+    font-weight: bold;
+    opacity: 0.8;
+}
+.lens-ask-placeholder {
+    font-size: 10.5px;
+    opacity: 0.35;
+    text-align: center;
+    padding: 30px 10px;
+    line-height: 1.5;
 }
 
 .lens-line {

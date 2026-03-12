@@ -107,7 +107,7 @@ Respond in this exact JSON format:
         {"text": "Safety concern or important clinical factor", "severity": "critical|important|info"}
     ],
     "thinking": "2-4 sentences about patient trajectory. Where is the patient heading? Is the situation improving, worsening, or stable? Include supporting data points.",
-    "suggestedActions": ["action 1", "action 2", "action 3", "action 4", "action 5"],
+    "suggestedActions": ["Must mirror top items from categorizedActions — same text, no vague items"],
     "observations": ["any new observations based on the data"],
     "trajectoryAssessment": "Brief assessment of each active problem's trajectory (improving, worsening, stable). Include key data points. BUILD ON existing trajectory if present — refine, don't restart.",
     "keyFindings": ["Critical clinical findings that should be remembered across sessions"],
@@ -163,11 +163,12 @@ RULES:
   * Problem #1 MUST ALWAYS have a DDx with 2-4 plausible differential diagnoses, each with brief supporting/refuting evidence from the patient's data
   * Problems #2+ can be specific active diagnoses (e.g. "Hyperkalemia", "AKI on CKD") with plans
   * The DDx for #1 should demonstrate clinical reasoning — what could this be and why?
-- categorizedActions: Each action is ONE discrete step — a single verbal order, a single question, a single task. NOT a plan or a category.
+- categorizedActions: These are ACTUAL ORDERS that will be placed in the EHR. Each action is ONE discrete step — a single verbal order, a single question, a single task. NOT a suggestion or recommendation.
   * CRITICAL: Each action = one thing you could say to one person in one sentence. If it has "and" connecting two different tasks, split it into two actions.
-  * WRONG: "Consider increasing diuretics" (vague), "Monitor renal function" (not actionable), "Discuss fluid status and potassium" (two things), "Check labs and adjust medications" (two things)
-  * RIGHT: "Give furosemide 40mg IV Push x1 now", "Ask patient how many pillows they sleep with", "Repeat BMP in 6 hours"
-  * Start each action text with an action verb: Give, Order, Ask, Hold, Start, Stop, Increase, Decrease, Check, Send, Consult, Place
+  * NEVER start with "Consider", "Evaluate", "Assess", "Think about", "May want to", "Recommend", "Suggest". These are ORDERS, not suggestions. Be definitive.
+  * WRONG: "Consider increasing diuretics" (vague suggestion), "Consider repeating BMP" (hedge), "Evaluate for PE" (vague), "Monitor renal function" (not actionable), "Discuss fluid status and potassium" (two things), "Check labs and adjust medications" (two things)
+  * RIGHT: "Give furosemide 40mg IV Push x1 now", "Ask patient how many pillows they sleep with", "Order BMP STAT", "Start heparin drip per ACS protocol"
+  * Start each action text with a DEFINITIVE action verb: Give, Order, Ask, Hold, Start, Stop, Increase, Decrease, Send, Consult, Place, Draw, Repeat, Get, Obtain
   * TWO types of medication actions:
     - NEW medication orders: use orderType="medication" with orderData (name, dose, route, frequency, indication). Example: {"text": "Give furosemide 40mg IV x1 now", "orderType": "medication", "orderData": {...}}
     - CHANGES to existing meds (hold, stop, discontinue, increase dose, decrease dose, wean, titrate): NO orderType — just {"text": "Hold spironolactone"} or {"text": "Discontinue lisinopril"}. These get routed to the nurse, not the order form.
@@ -180,6 +181,9 @@ RULES:
   * For med changes (hold/stop/discontinue/increase/decrease): NO orderType, just {"text": "Hold spironolactone until K+ < 5.0"} — these go to nurse chat, not order entry
   * Keep each category to 1-3 items MAX. Quality over quantity. Only the most important next steps.
   * Empty array is fine for categories with no actions needed
+- suggestedActions: MUST mirror the top items from categorizedActions verbatim. Do NOT add vague items to suggestedActions that aren't already in categorizedActions with full orderData. suggestedActions exists only for backward compatibility.
+- NEVER suggest vague actions like "monitor renal function", "consider anticoagulation", "order labs in 3 months", "follow up with specialist", "check electrolytes". Every action must be something you can do RIGHT NOW in this encounter — a specific order with dose/route/frequency, a specific question to ask, a specific consult to place.
+- For FUTURE follow-up items (recheck labs in X months, follow-up appointment): put in "documentation" category as {"text": "Add to discharge instructions: recheck BMP in 3 months"} — NOT as a lab order.
 - suggestedActions should ALIGN with the doctor's stated plan, not contradict it
 - If doctor says "no anticoagulation", don't suggest anticoagulation
 - Always consider safety flags when making suggestions
@@ -299,7 +303,7 @@ Respond in this exact JSON format:
         {"text": "Safety concern", "severity": "critical|important|info"}
     ],
     "thinking": "1-2 sentences on trajectory — where is the patient heading?",
-    "suggestedActions": ["top 3 most important next steps only"],
+    "suggestedActions": ["Must mirror top items from categorizedActions verbatim — no vague items"],
     "observations": ["key observations"],
     "trajectoryAssessment": "2-3 sentences MAX. Concise trajectory for active problems — status, trend, concerns.",
     "keyFindings": ["durable findings worth remembering"],
@@ -339,7 +343,12 @@ RULES:
 - clinicalSummary.functional: One short sentence — functional class, ADL status, living situation. E.g. "NYHA II-III, independent ADLs, wife manages meds, lives at home"
 - clinicalSummary.presentation: CC w/ timeline, key positive/negative exam findings, abnormal labs w/ values. E.g. "1wk progressive dyspnea, JVP elevated, bibasilar crackles, 3+ LE edema, BNP 1850, Cr 2.4"
 - problemList: 3-5 problems MAX. #1 = chief complaint (NOT diagnosis) w/ DDx. Plans = one sentence each — a verbal order, not a paragraph
-- categorizedActions: One discrete step per action. Action verb first (Give, Order, Ask, Hold, Start, Stop, Check, Consult). 1-3 items per category MAX.
+- categorizedActions: These are ACTUAL ORDERS placed in the EHR. One discrete step per action. 1-3 items per category MAX.
+  * NEVER start with "Consider", "Evaluate", "Assess", "Recommend", "Suggest", "May want to". These are ORDERS, not suggestions. Be definitive.
+  * Start each action text with a DEFINITIVE action verb: Give, Order, Ask, Hold, Start, Stop, Increase, Decrease, Send, Consult, Place, Draw, Repeat, Get, Obtain
+  * EVERY lab/imaging/medication action MUST include orderType and complete orderData so it can be submitted directly as an order. If you can't specify the exact order details, don't include it.
+  * NEVER use vague language: "monitor X", "consider Y", "order labs in Z months", "follow up with", "check electrolytes", "trend renal function". Each action = one specific order you can place RIGHT NOW.
+  * For FUTURE follow-up items (recheck labs in X months, schedule follow-up): put in "documentation" category as {"text": "Add to follow-up: recheck BMP in 3 months"} — NOT as a lab order.
   * NEW meds: orderType="medication", orderData={name, dose, route (PO|IV|IV Push|IV Piggyback|IM|SC|SL|PR|Topical|Inhaled|Intranasal), frequency (Once|Daily|BID|TID|QID|Q2H|Q4H|Q6H|Q8H|Q12H|Q24H|PRN|Continuous), indication}
   * Med CHANGES (hold/stop/increase/decrease): just {"text": "Hold spironolactone"} — NO orderType
   * Labs: orderType="lab", orderData={name, specimen (Blood|Urine|Arterial Blood), priority (Routine|Urgent|STAT), indication}
@@ -347,6 +356,7 @@ RULES:
   * Consults: orderType="consult", orderData={specialty, priority, reason}
   * Nursing: orderType="nursing", orderData={orderType, details, priority}
   * Communication: just {"text": "Ask patient..."} — NO orderType
+- suggestedActions: MUST mirror top items from categorizedActions verbatim. No vague items here either.
 - keyConsiderations: allergies, contraindications, drug interactions. Use "critical" for life-threatening only
 - patientSummaryUpdate: your CORE MEMORY — one concise paragraph, not multiple
 - memoryClassification: pendingDecisions, activeConditions (w/ trend), backgroundFacts, supersededObservations
@@ -785,41 +795,68 @@ Respond with the COMPLETE updated memory document as JSON (same schema as before
         const existingNarrative = memoryDocument?.encounterNarrative || {};
         const existingProblems = memoryDocument?.problemAnalysis || [];
         const existingGestalt = memoryDocument?.clinicalGestalt || '';
+        const existingMeds = memoryDocument?.medicationRationale || [];
+        const existingSafety = memoryDocument?.safetyProfile || {};
+        const existingPending = memoryDocument?.pendingItems || [];
 
-        const systemPrompt = `You are an AI clinical scribe. The attending physician and patient have been speaking during a clinical encounter. Their speech has been transcribed with speaker labels: [Doctor] and [Patient].
+        const systemPrompt = `You are an AI clinical copilot. The attending physician and patient have been speaking during a clinical encounter. Their speech has been transcribed with speaker labels: [Doctor] and [Patient].
 
 CRITICAL: The physician's clinical reasoning takes highest priority. Their assessment and thinking should heavily influence your output.
 
 You will receive:
-1. NEW DICTATION — speaker-labeled transcript lines. Lines starting with [Doctor] are the physician. Lines starting with [Patient] are the patient. If no speaker labels are present, assume all text is from the doctor.
-2. EXISTING ENCOUNTER NARRATIVE — what you've parsed so far (may be empty on first digest)
-3. EXISTING PROBLEMS — the current problem list from the memory document
-4. EXISTING GESTALT — the current one-liner clinical summary
+1. NEW DICTATION — speaker-labeled transcript lines
+2. EXISTING ENCOUNTER NARRATIVE — what you've parsed so far
+3. EXISTING PROBLEMS — the current problem list
+4. EXISTING GESTALT — current one-liner clinical summary
+5. CHART CONTEXT — current medications, safety profile, and existing suggested actions
 
-Your job: MERGE the new dictation into the existing encounter narrative. Append new info, don't lose old info.
+Your job: Parse the new dictation into the encounter narrative AND reason about the clinical implications. Update the full clinical picture: problem list, suggested orders, summary, and safety considerations.
 
 Respond with JSON only, no preamble or markdown fences:
 {
     "encounterNarrative": {
         "hpiComponents": [{"component": "onset|duration|severity|quality|context|modifying|associated", "text": "..."}],
         "examFindings": [{"system": "cardiac|pulmonary|neuro|abdominal|extremities|general|other", "finding": "..."}],
-        "clinicalReasoning": ["Physician's reasoning point 1", "Physician's reasoning point 2"],
-        "patientReported": ["What the patient said, organized by relevance"],
+        "clinicalReasoning": ["Physician's reasoning point 1", "..."],
+        "patientReported": ["What the patient said"],
         "assessmentPlan": "Running synthesis of the clinical picture and plan"
     },
-    "problemUpdates": [{"problem": "Problem Name", "status": "acute|active|stable|monitoring", "newInfo": "what changed based on dictation", "plan": "updated plan if any"}],
-    "updatedGestalt": "Updated one-liner clinical summary incorporating new dictation"
+    "problemUpdates": [{"problem": "Problem Name", "status": "acute|active|stable|monitoring", "newInfo": "what changed", "plan": "updated plan"}],
+    "updatedGestalt": "Updated one-liner clinical summary",
+    "updatedProblemList": [
+        {"name": "Problem", "urgency": "urgent|active|monitoring", "ddx": "differential if relevant or null", "plan": "one sentence plan"}
+    ],
+    "suggestedActions": ["Must mirror top items from categorizedActions verbatim — no vague items"],
+    "categorizedActions": {
+        "labs": [{"text": "Order description", "orderType": "lab", "orderData": {"name": "...", "priority": "routine|stat|urgent"}}],
+        "imaging": [{"text": "Order description", "orderType": "imaging", "orderData": {"modality": "...", "bodyPart": "...", "priority": "routine|stat"}}],
+        "medications": [{"text": "Order description", "orderType": "medication", "orderData": {"name": "...", "dose": "...", "route": "...", "frequency": "..."}}],
+        "communication": ["Consult or communication action"],
+        "other": ["Other action"]
+    },
+    "updatedSummary": {
+        "demographics": "Brief patient identifier and HPI opener",
+        "functional": "Functional status if relevant",
+        "presentation": "Chief complaint + key findings including new dictation findings"
+    },
+    "keyConsiderations": [{"text": "Safety or clinical concern", "severity": "critical|important|info"}]
 }
 
 RULES:
 - MERGE with existing narrative — append new items, preserve old ones
-- [Doctor] lines → clinicalReasoning (thoughts, reasoning) and examFindings (physical exam observations)
-- [Patient] lines → patientReported (symptoms, concerns, history as told by patient) and hpiComponents
-- For clinicalReasoning, always add the physician's thoughts verbatim or near-verbatim
+- [Doctor] lines → clinicalReasoning and examFindings
+- [Patient] lines → patientReported and hpiComponents
+- For clinicalReasoning, add the physician's thoughts verbatim or near-verbatim
 - For examFindings, extract specific findings with their system
-- For patientReported, capture patient statements and concerns
-- For hpiComponents, map to standard HPI components when possible
-- problemUpdates: only include problems that have NEW information from this dictation
+- After parsing, REASON about clinical implications of the new information
+- updatedProblemList: return the COMPLETE problem list — re-rank urgency based on new findings. If new exam findings suggest a diagnosis, add it to the differential
+- suggestedActions: MUST mirror the top items from categorizedActions verbatim. No vague items. Every action must be orderable RIGHT NOW.
+- categorizedActions: These are ACTUAL ORDERS placed in the EHR. Provide orderable items with full orderData so they can be submitted directly. NEVER start with "Consider", "Evaluate", "Assess", "Recommend", "Suggest". NEVER use vague language like "monitor X", "consider Y", "order labs in Z months", "follow up with". Start with definitive verbs: Give, Order, Ask, Hold, Start, Stop, Draw, Repeat, Obtain. Each action = one specific order with all details.
+- For FUTURE follow-up items (recheck labs in X months, follow-up appointment): put in "documentation" category — NOT as a lab/imaging order.
+- Account for the patient's CURRENT MEDICATIONS and SAFETY PROFILE when suggesting orders — avoid contraindicated medications, consider drug interactions
+- updatedSummary.presentation MUST incorporate new exam findings and dictation
+- keyConsiderations: flag safety-critical findings (e.g., Beck's triad → tamponade, altered mental status → immediate workup)
+- If orders from EXISTING SUGGESTED ACTIONS are still relevant and not addressed, keep them
 - updatedGestalt: brief, must reflect the physician's current thinking`;
 
         let userMessage = '## NEW DICTATION\n';
@@ -835,7 +872,7 @@ RULES:
         userMessage += '## EXISTING PROBLEMS\n';
         if (existingProblems.length) {
             existingProblems.forEach(p => {
-                userMessage += `- ${p.problem} [${p.status}]: ${p.plan || 'no plan yet'}\n`;
+                userMessage += `- ${p.problem} [${p.status}]${p.ddx ? ` (DDx: ${p.ddx})` : ''}: ${p.plan || 'no plan yet'}\n`;
             });
         } else {
             userMessage += '(No problems analyzed yet — run Learn Patient first for full context)\n';
@@ -844,11 +881,44 @@ RULES:
 
         userMessage += '## EXISTING GESTALT\n';
         userMessage += existingGestalt || '(none yet)';
+        userMessage += '\n\n';
+
+        // Chart context for clinical reasoning
+        userMessage += '## CURRENT MEDICATIONS\n';
+        if (existingMeds.length) {
+            existingMeds.forEach(m => {
+                userMessage += `- ${m.name}: ${m.indication || 'indication not specified'}\n`;
+            });
+        } else {
+            userMessage += '(No medications documented)\n';
+        }
+        userMessage += '\n';
+
+        userMessage += '## SAFETY PROFILE\n';
+        if (existingSafety.allergies && existingSafety.allergies.length) {
+            userMessage += 'Allergies: ' + existingSafety.allergies.map(a => `${a.substance} (${a.reaction})`).join('; ') + '\n';
+        }
+        if (existingSafety.contraindications && existingSafety.contraindications.length) {
+            userMessage += 'Contraindications: ' + existingSafety.contraindications.join('; ') + '\n';
+        }
+        if (!existingSafety.allergies?.length && !existingSafety.contraindications?.length) {
+            userMessage += '(No safety data documented)\n';
+        }
+        userMessage += '\n';
+
+        userMessage += '## EXISTING SUGGESTED ACTIONS\n';
+        if (existingPending.length) {
+            existingPending.forEach(a => {
+                userMessage += `- ${typeof a === 'string' ? a : a.text || a}\n`;
+            });
+        } else {
+            userMessage += '(No existing suggestions)\n';
+        }
 
         return {
             systemPrompt,
             userMessage,
-            maxTokens: 2048
+            maxTokens: 3072
         };
     }
 
