@@ -11081,7 +11081,7 @@ html, body {
     display: flex;
     gap: 0;
     align-items: stretch;
-    min-height: 260px;
+    height: 280px;
 }
 
 .glasses-lens {
@@ -11163,6 +11163,15 @@ html, body {
 }
 .lens-content-scrollable::-webkit-scrollbar-track {
     background: transparent;
+}
+
+/* Right lens scroll fix — needs min-height:0 to allow flex child to shrink and scroll */
+.glasses-lens-right {
+    overflow: hidden;
+}
+.glasses-lens-right .lens-content-scrollable {
+    min-height: 0;
+    flex: 1 1 0;
 }
 
 /* Orders view section titles */

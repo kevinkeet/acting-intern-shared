@@ -2353,9 +2353,8 @@ const AICoworker = {
             html += '<div class="hands-free-status" id="hands-free-status"><span class="hf-pulse"></span> Hands-free mode &mdash; auto-submits after ' + secs + 's silence</div>';
         }
 
-        // Action buttons — simplified (dictation/scribe/refresh removed, handled by Learn Bar + DictationWidget)
+        // Action buttons — simplified (Write Note removed, Draft Note chip handles it)
         html += '<div class="inline-action-bar">';
-        html += '<button class="inline-action-btn" onclick="AICoworker.openNoteModal()" data-tooltip="Write Note"><span>&#128221;</span></button>';
         html += '<button class="inline-action-btn inline-more-btn" onclick="AICoworker.toggleMoreMenu()" data-tooltip="More"><span>&#8943;</span></button>';
         html += '<div class="inline-more-menu" id="inline-more-menu">';
         html += '<button onclick="AICoworker.openPromptEditor()">&#9999; Edit Prompts</button>';
