@@ -11415,6 +11415,19 @@ html, body {
     background: rgba(255, 255, 255, 0.1);
     color: #e0e0e0;
 }
+.dictation-pause-btn {
+    font-size: 10px;
+    letter-spacing: -2px;
+}
+.dictation-pause-btn.paused {
+    color: #4ade80;
+    font-size: 12px;
+    letter-spacing: 0;
+}
+.dictation-pause-btn.paused:hover {
+    background: rgba(74, 222, 128, 0.15);
+    color: #86efac;
+}
 
 /* Mic indicator */
 .dictation-mic-indicator {

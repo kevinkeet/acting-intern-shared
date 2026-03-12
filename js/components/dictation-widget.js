@@ -97,6 +97,31 @@ const DictationWidget = {
         this._renderOrderPane();
     },
 
+    togglePause() {
+        if (this.isListening) {
+            this.stopListening();
+            if (typeof App !== 'undefined') App.showToast('Dictation paused', 'info');
+        } else {
+            this.startListening();
+            if (typeof App !== 'undefined') App.showToast('Dictation resumed', 'info');
+        }
+        this._updatePauseButton();
+    },
+
+    _updatePauseButton() {
+        const btn = document.getElementById('dictation-pause-btn');
+        if (!btn) return;
+        if (this.isListening) {
+            btn.innerHTML = '&#9646;&#9646;';
+            btn.title = 'Pause dictation';
+            btn.classList.remove('paused');
+        } else {
+            btn.innerHTML = '&#9654;';
+            btn.title = 'Resume dictation';
+            btn.classList.add('paused');
+        }
+    },
+
     // ==================== Speech Recognition ====================
 
     startListening() {
@@ -580,6 +605,7 @@ Respond with ONLY valid JSON, no markdown fences:
                 </div>
                 <span class="dictation-title">Dictation</span>
                 <div class="dictation-header-actions">
+                    <button class="dictation-header-btn dictation-pause-btn" id="dictation-pause-btn" onclick="event.stopPropagation(); DictationWidget.togglePause()" title="Pause dictation">&#9646;&#9646;</button>
                     <button class="dictation-header-btn" onclick="event.stopPropagation(); DictationWidget.clearTranscript()" title="Clear transcript">\u21BA</button>
                     <button class="dictation-header-btn" onclick="event.stopPropagation(); DictationWidget.minimize()" title="Minimize">\u2014</button>
                     <button class="dictation-header-btn" onclick="event.stopPropagation(); DictationWidget.close()" title="Close">\u00D7</button>
@@ -751,6 +777,7 @@ Respond with ONLY valid JSON, no markdown fences:
         const mic = document.getElementById('dictation-mic');
         if (!mic) return;
         mic.classList.toggle('active', this.isListening);
+        this._updatePauseButton();
     },
 
     // ==================== Utilities ====================
