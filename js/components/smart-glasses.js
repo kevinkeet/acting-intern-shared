@@ -23,6 +23,7 @@ const SmartGlasses = {
     _orderConfirmation: null, // Active order confirmation data
     _savedRightScreens: null, // Saved screens during confirmation mode
     _savedRightScreen: 0,
+    _sessionOrders: [],       // Orders confirmed this session (for right lens)
 
     LINES_PER_SCREEN: 5,
     MAX_LINE_CHARS: 45,
@@ -61,8 +62,8 @@ const SmartGlasses = {
             }
             if (e.key === 'ArrowLeft') { e.preventDefault(); this.prevScreen('left'); }
             if (e.key === 'ArrowRight') { e.preventDefault(); this.nextScreen('left'); }
-            if (e.key === 'ArrowUp') { e.preventDefault(); this.prevScreen('right'); }
-            if (e.key === 'ArrowDown') { e.preventDefault(); this.nextScreen('right'); }
+            if (e.key === 'ArrowUp') { e.preventDefault(); this._scrollRightLens(-60); }
+            if (e.key === 'ArrowDown') { e.preventDefault(); this._scrollRightLens(60); }
             if (e.key === 'Enter' && this._orderConfirmation) { e.preventDefault(); this.confirmOrder(); }
         };
         document.addEventListener('keydown', this._keyHandler);
@@ -179,6 +180,12 @@ const SmartGlasses = {
 
         const order = this._orderConfirmation;
 
+        // Track in session orders
+        const orderName = order.summary || order.details?.name || 'Order';
+        if (!this._sessionOrders.some(o => o === orderName)) {
+            this._sessionOrders.push(orderName);
+        }
+
         // Submit the order through the existing order entry system
         if (typeof OrderEntry !== 'undefined' && order.details) {
             if (order.type === 'medication') {
@@ -196,7 +203,7 @@ const SmartGlasses = {
         if (titleEl) titleEl.textContent = 'ORDER PLACED';
         if (contentEl) {
             contentEl.innerHTML = this._renderLines([
-                '\u2713 ' + this._truncate(order.summary || 'Order confirmed', this.MAX_LINE_CHARS - 2),
+                '\u2713 ' + this._truncate(orderName, this.MAX_LINE_CHARS - 2),
                 '',
                 'Order sent to chart.',
                 '',
@@ -204,7 +211,7 @@ const SmartGlasses = {
             ]);
         }
 
-        // Restore normal screens after brief delay
+        // Restore orders view after brief delay
         setTimeout(() => this._restoreRightLens(), 1500);
     },
 
@@ -213,26 +220,22 @@ const SmartGlasses = {
     },
 
     _restoreRightLens() {
-        if (this._savedRightScreens) {
-            this.rightScreens = this._savedRightScreens;
-            this.rightScreen = this._savedRightScreen;
-            this._savedRightScreens = null;
-        }
         this._orderConfirmation = null;
 
         const lens = document.getElementById('glasses-lens-right');
         if (lens) lens.classList.remove('lens-confirming');
 
-        this._updateLens('right');
+        // Restore title
+        const titleEl = document.getElementById('lens-title-right');
+        if (titleEl) titleEl.textContent = 'ORDERS';
+
+        // Refresh the unified scrollable orders view
+        this.refreshOrdersView();
 
         // Restore normal nav
         const nav = lens ? lens.querySelector('.lens-nav') : null;
         if (nav) {
-            nav.innerHTML = `
-                <button class="lens-nav-btn" onclick="SmartGlasses.prevScreen('right')" title="Previous (Up arrow)">\u25B2</button>
-                <span class="lens-nav-indicator" id="lens-nav-right">${this.rightScreen + 1}/${this.rightScreens.length}</span>
-                <button class="lens-nav-btn" onclick="SmartGlasses.nextScreen('right')" title="Next (Down arrow)">\u25BC</button>
-            `;
+            nav.innerHTML = '<span class="lens-nav-indicator" id="lens-nav-right">\u2191\u2193 scroll</span>';
         }
     },
 
@@ -281,32 +284,16 @@ const SmartGlasses = {
     pushOrderToRightLens(orderText, status) {
         if (!this.isOpen || this._orderConfirmation) return;
 
-        const truncated = this._truncate(orderText, this.MAX_LINE_CHARS);
-        const prefix = status === 'confirmed' ? '\u2713 ' : (status === 'parsing' ? '\u23F3 ' : '\u25B8 ');
-
-        // Find or create an ORDERS LIVE screen
-        let ordScreen = this.rightScreens.find(s => s.title === 'ORDERS LIVE');
-        if (!ordScreen) {
-            ordScreen = { title: 'ORDERS LIVE', lines: [] };
-            this.rightScreens.push(ordScreen);
+        // Track confirmed orders in session list
+        if (status === 'confirmed') {
+            // Avoid duplicates
+            if (!this._sessionOrders.some(o => o === orderText)) {
+                this._sessionOrders.push(orderText);
+            }
         }
 
-        // Add line, rolling window
-        ordScreen.lines.push(this._truncate(prefix + orderText, this.MAX_LINE_CHARS));
-        if (ordScreen.lines.length > this.LINES_PER_SCREEN) {
-            ordScreen.lines = ordScreen.lines.slice(-this.LINES_PER_SCREEN);
-        }
-
-        while (ordScreen.lines.length < this.LINES_PER_SCREEN) {
-            ordScreen.lines.push('');
-        }
-
-        // Auto-navigate to the live orders screen
-        const ordIdx = this.rightScreens.indexOf(ordScreen);
-        if (ordIdx >= 0) {
-            this.rightScreen = ordIdx;
-            this._updateLens('right');
-        }
+        // Refresh the unified orders view
+        this.refreshOrdersView();
     },
 
     // ==================== LLM Data Parsing ====================
@@ -417,44 +404,89 @@ const SmartGlasses = {
 
     // Right lens = Orders (swapped from original)
 
-    _buildRightScreensFallback(data) {
-        const screens = [];
+    /**
+     * Build unified orders view HTML for the right lens.
+     * Single scrollable view: "ORDERED THIS SESSION" at top, separator, then recommended orders.
+     */
+    _buildOrdersViewHTML() {
+        const lines = [];
 
-        if (!data) {
-            screens.push({ title: 'ORDERS', lines: ['', 'No AI analysis available.', 'Run analysis first.', '', ''] });
-            return screens;
+        // === ORDERED THIS SESSION ===
+        lines.push('<div class="lens-section-title">ORDERED THIS SESSION</div>');
+
+        if (this._sessionOrders.length > 0) {
+            for (const order of this._sessionOrders) {
+                lines.push(`<div class="lens-line lens-order-confirmed">\u2713 ${this._esc(this._truncate(order, this.MAX_LINE_CHARS - 2))}</div>`);
+            }
+        } else {
+            lines.push('<div class="lens-line lens-order-empty">No orders yet</div>');
         }
 
-        const cats = data.categorizedActions || {};
-        const categoryMap = [
-            { key: 'labs', title: 'LABS' },
-            { key: 'imaging', title: 'IMAGING' },
-            { key: 'medications', title: 'MEDS' },
-            { key: 'communication', title: 'COMMS' },
-            { key: 'other', title: 'OTHER' }
-        ];
+        // === SEPARATOR ===
+        lines.push('<div class="lens-order-separator">\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500</div>');
 
-        for (const { key, title } of categoryMap) {
-            const items = cats[key];
-            if (!items || !items.length) continue;
+        // === RECOMMENDED ORDERS ===
+        lines.push('<div class="lens-section-title">RECOMMENDED</div>');
 
-            for (let i = 0; i < items.length; i += this.LINES_PER_SCREEN) {
-                const chunk = items.slice(i, i + this.LINES_PER_SCREEN);
-                const lines = chunk.map(item => {
+        const recs = this._getRecommendedOrders();
+        if (recs.length > 0) {
+            for (const rec of recs) {
+                // Check if already ordered this session
+                const isOrdered = this._sessionOrders.some(o =>
+                    o.toLowerCase().includes(rec.text.toLowerCase().slice(0, 15)));
+                const cls = isOrdered ? 'lens-line lens-order-done' : 'lens-line lens-order-rec';
+                const prefix = isOrdered ? '\u2713' : '\u25CB';
+                lines.push(`<div class="${cls}">${prefix} ${this._esc(this._truncate(rec.text, this.MAX_LINE_CHARS - 2))}</div>`);
+            }
+        } else {
+            lines.push('<div class="lens-line lens-order-empty">Run analysis for recommendations</div>');
+        }
+
+        return lines.join('');
+    },
+
+    /**
+     * Get recommended orders from AICoworker state.
+     */
+    _getRecommendedOrders() {
+        if (typeof AICoworker === 'undefined' || !AICoworker.state) return [];
+
+        const recs = [];
+
+        // From suggested actions
+        const actions = AICoworker.state.suggestedActions || [];
+        for (const a of actions) {
+            const text = typeof a === 'string' ? a : (a.text || '');
+            if (text) recs.push({ text });
+        }
+
+        // From categorized actions if available
+        if (recs.length === 0) {
+            const cats = AICoworker.state.categorizedActions || {};
+            for (const key of ['labs', 'imaging', 'medications', 'communication', 'other']) {
+                const items = cats[key];
+                if (!items) continue;
+                for (const item of items) {
                     const text = typeof item === 'string' ? item : (item.text || '');
-                    return '\u25CB ' + this._truncate(text, this.MAX_LINE_CHARS - 2);
-                });
-                while (lines.length < this.LINES_PER_SCREEN) lines.push('');
-                const suffix = items.length > this.LINES_PER_SCREEN ? ` (${Math.floor(i / this.LINES_PER_SCREEN) + 1})` : '';
-                screens.push({ title: title + suffix, lines });
+                    if (text) recs.push({ text });
+                }
             }
         }
 
-        if (screens.length === 0) {
-            screens.push({ title: 'ORDERS', lines: ['', 'No pending orders.', '', '', ''] });
-        }
+        return recs;
+    },
 
-        return screens;
+    /**
+     * Refresh the orders view on the right lens (call after any order change).
+     */
+    refreshOrdersView() {
+        if (!this.isOpen || this._orderConfirmation) return;
+        const contentEl = document.getElementById('lens-content-right');
+        if (contentEl) {
+            contentEl.innerHTML = this._buildOrdersViewHTML();
+            // Auto-scroll to bottom to show latest
+            contentEl.scrollTop = contentEl.scrollHeight;
+        }
     },
 
     // ==================== Overlay Creation ====================
@@ -494,20 +526,18 @@ const SmartGlasses = {
                     </div>
                     <div class="glasses-bridge"></div>
                     <div class="glasses-lens glasses-lens-right" id="glasses-lens-right">
-                        <div class="lens-title" id="lens-title-right">${this._esc(this.rightScreens[0]?.title || 'ORDERS')}</div>
+                        <div class="lens-title" id="lens-title-right">ORDERS</div>
                         <div class="lens-separator">\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500</div>
-                        <div class="lens-content" id="lens-content-right">
-                            ${this._renderLines(this.rightScreens[0]?.lines || [])}
+                        <div class="lens-content lens-content-scrollable" id="lens-content-right">
+                            ${this._buildOrdersViewHTML()}
                         </div>
-                        <div class="lens-nav">
-                            <button class="lens-nav-btn" onclick="SmartGlasses.prevScreen('right')" title="Previous (Up arrow)">\u25B2</button>
-                            <span class="lens-nav-indicator" id="lens-nav-right">1/${totalRight}</span>
-                            <button class="lens-nav-btn" onclick="SmartGlasses.nextScreen('right')" title="Next (Down arrow)">\u25BC</button>
+                        <div class="lens-nav" id="lens-nav-right-container">
+                            <span class="lens-nav-indicator" id="lens-nav-right">\u2191\u2193 scroll</span>
                         </div>
                     </div>
                 </div>
                 <div class="glasses-footer">
-                    PROTOTYPE \u00B7 Even Realities G1 \u00B7 \u2190\u2192 Patient \u00B7 \u2191\u2193 Orders
+                    PROTOTYPE \u00B7 Even Realities G1 \u00B7 \u2190\u2192 Patient \u00B7 \u2191\u2193 Scroll Orders
                 </div>
             </div>
         `;
@@ -565,6 +595,11 @@ const SmartGlasses = {
             }, 80);
         }
         if (navEl) navEl.textContent = `${idx + 1}/${screens.length}`;
+    },
+
+    _scrollRightLens(delta) {
+        const contentEl = document.getElementById('lens-content-right');
+        if (contentEl) contentEl.scrollBy({ top: delta, behavior: 'smooth' });
     },
 
     // ==================== Utilities ====================

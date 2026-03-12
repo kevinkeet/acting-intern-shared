@@ -11149,6 +11149,63 @@ html, body {
     gap: 2px;
     transition: opacity 0.08s ease;
 }
+.lens-content-scrollable {
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #1a3a2a transparent;
+}
+.lens-content-scrollable::-webkit-scrollbar {
+    width: 4px;
+}
+.lens-content-scrollable::-webkit-scrollbar-thumb {
+    background: #1a3a2a;
+    border-radius: 2px;
+}
+.lens-content-scrollable::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* Orders view section titles */
+.lens-section-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: #00cc6a;
+    opacity: 0.7;
+    margin: 6px 0 3px;
+    white-space: nowrap;
+}
+.lens-section-title:first-child {
+    margin-top: 0;
+}
+
+/* Orders view separator */
+.lens-order-separator {
+    color: #1a3a2a;
+    font-size: 13.5px;
+    line-height: 1.4;
+    margin: 4px 0;
+    opacity: 0.6;
+}
+
+/* Order line styles */
+.lens-order-confirmed {
+    color: #00ff88;
+}
+.lens-order-rec {
+    color: #00ff88;
+    opacity: 0.75;
+}
+.lens-order-done {
+    color: #00cc6a;
+    opacity: 0.5;
+    text-decoration: line-through;
+}
+.lens-order-empty {
+    color: #00ff88;
+    opacity: 0.35;
+    font-style: italic;
+}
 
 .lens-line {
     font-size: 13.5px;
