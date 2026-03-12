@@ -39,6 +39,9 @@ const DictationWidget = {
     _confirmRegex: /\b(?:confirm|yes confirm|confirm that|go ahead|approve|submit that)\b/i,
     _cancelRegex: /\b(?:cancel|nevermind|never mind|cancel that|scratch that)\b/i,
     _refreshRegex: /\b(?:refresh analysis|refresh thinking|update analysis|re-analyze|reanalyze|analyze case)\b/i,
+    _writeNoteRegex: /\b(?:write (?:a )?(?:progress )?note|write (?:a )?(?:h\s*(?:and|&)\s*p|hp)|draft (?:a )?note|draft (?:a )?progress note)\b/i,
+    _messageNurseRegex: /\b(?:message (?:the )?nurse|text (?:the )?nurse|tell (?:the )?nurse)\b\s*(.*)/i,
+    _messagePatientRegex: /\b(?:message (?:the )?patient|ask (?:the )?patient|talk to (?:the )?patient)\b\s*(.*)/i,
     // Interim classification hint — does it LOOK like an order so far?
     _orderHintRegex: /\b(?:order|put in|i need|let's get|let's order|can we get|start|hold|discontinue|call|page|notify|tell the|ask the)\b/i,
 
@@ -214,6 +217,20 @@ const DictationWidget = {
             this._triggerRefreshAnalysis();
             return;
         }
+        if (this._writeNoteRegex.test(text)) {
+            this._triggerWriteNote(text);
+            return;
+        }
+        const nurseMatch = text.match(this._messageNurseRegex);
+        if (nurseMatch) {
+            this._triggerMessageNurse(nurseMatch[1] || '');
+            return;
+        }
+        const patientMatch = text.match(this._messagePatientRegex);
+        if (patientMatch) {
+            this._triggerMessagePatient(patientMatch[1] || '');
+            return;
+        }
 
         // Classify into bucket
         const bucket = this._classifyText(text);
@@ -274,6 +291,69 @@ const DictationWidget = {
         // Trigger incremental refresh which incorporates dictation context
         if (typeof AICoworker !== 'undefined' && AICoworker.refreshThinking) {
             AICoworker.refreshThinking();
+        }
+    },
+
+    _triggerWriteNote(text) {
+        console.log('🎤 Voice command: write note');
+        if (typeof App !== 'undefined' && App.showToast) {
+            App.showToast('📝 Drafting note...', 'info');
+        }
+
+        // Use draftContextualNote which auto-selects H&P vs Progress Note
+        if (typeof AICoworker !== 'undefined' && AICoworker.draftContextualNote) {
+            AICoworker.draftContextualNote();
+        }
+    },
+
+    _triggerMessageNurse(context) {
+        console.log('🎤 Voice command: message nurse —', context);
+        if (typeof App !== 'undefined' && App.showToast) {
+            App.showToast('💬 Opening nurse chat...', 'info');
+        }
+
+        // Open nurse chat
+        if (typeof FloatingChat !== 'undefined') {
+            FloatingChat.openChat('nurse');
+        }
+
+        // Prefill and send the message after a brief delay for chat to initialize
+        if (context.trim()) {
+            setTimeout(() => {
+                const input = document.getElementById('nurse-input');
+                if (input) {
+                    // Prefix with instruction for AI to professionalize the message
+                    input.value = context.trim();
+                    if (typeof NurseChat !== 'undefined' && NurseChat.sendMessage) {
+                        NurseChat.sendMessage();
+                    }
+                }
+            }, 500);
+        }
+    },
+
+    _triggerMessagePatient(context) {
+        console.log('🎤 Voice command: message patient —', context);
+        if (typeof App !== 'undefined' && App.showToast) {
+            App.showToast('💬 Opening patient chat...', 'info');
+        }
+
+        // Open patient chat
+        if (typeof FloatingChat !== 'undefined') {
+            FloatingChat.openChat('patient');
+        }
+
+        // Prefill and send the message after a brief delay for chat to initialize
+        if (context.trim()) {
+            setTimeout(() => {
+                const input = document.getElementById('patient-input');
+                if (input) {
+                    input.value = context.trim();
+                    if (typeof PatientChat !== 'undefined' && PatientChat.sendMessage) {
+                        PatientChat.sendMessage();
+                    }
+                }
+            }, 500);
         }
     },
 
