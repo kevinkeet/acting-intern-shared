@@ -141,8 +141,9 @@ const AIPanel = {
         this.isCollapsed = false;
         localStorage.setItem('ai-panel-collapsed', 'false');
 
-        // Auto-run initial AI analysis if it hasn't been done yet
-        this._autoAnalyzeIfNeeded();
+        // Auto-analysis disabled — Learn/Analyze are manual-only now.
+        // Memory is restored from localStorage via hydrateFromMemory().
+        // this._autoAnalyzeIfNeeded();
     },
 
     /**

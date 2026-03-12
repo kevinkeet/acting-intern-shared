@@ -11747,6 +11747,30 @@ html, body {
     border-color: rgba(134, 239, 172, 0.4);
 }
 
+/* Clear Memory button — subtle trash icon */
+.clear-memory-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.04);
+    color: rgba(255, 255, 255, 0.35);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    margin-left: auto;
+}
+.clear-memory-btn:hover {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+}
+
 @keyframes learn-pulse {
     0%, 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.3); }
     50% { box-shadow: 0 0 0 6px rgba(99, 102, 241, 0); }

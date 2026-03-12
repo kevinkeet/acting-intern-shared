@@ -454,7 +454,38 @@ const AICoworker = {
             this.state.suggestionOutcomes = mem.suggestionOutcomes;
         }
 
-        if (mem.patientSummary || narrative.trajectoryAssessment) {
+        // Hydrate full panel state from memoryDocument (Learn/Analyze output)
+        const memDoc = mem.memoryDocument;
+        if (memDoc) {
+            // Restore one-liner
+            if (memDoc.clinicalGestalt && !this.state.aiOneLiner) {
+                this.state.aiOneLiner = memDoc.clinicalGestalt;
+            }
+            // Restore summary
+            if (memDoc.patientOverview && !this.state.summary) {
+                this.state.summary = memDoc.patientOverview;
+            }
+            // Restore problem list (same mapping as incremental refresh)
+            if (memDoc.problemAnalysis && Array.isArray(memDoc.problemAnalysis) && this.state.problemList.length === 0) {
+                this.state.problemList = memDoc.problemAnalysis.map(p => ({
+                    name: p.problem,
+                    urgency: p.status === 'acute' ? 'urgent' : (p.status === 'active' ? 'active' : 'monitoring'),
+                    ddx: null,
+                    plan: p.plan || ''
+                }));
+                console.log(`🧠 Restored ${this.state.problemList.length} problems from memoryDocument`);
+            }
+            // Restore suggested actions from pending items
+            if (memDoc.pendingItems && Array.isArray(memDoc.pendingItems) && this.state.suggestedActions.length === 0) {
+                this.state.suggestedActions = memDoc.pendingItems.map((item, idx) => ({
+                    id: 'hydrated_pending_' + idx,
+                    text: item
+                }));
+                console.log(`🧠 Restored ${this.state.suggestedActions.length} suggested actions from memoryDocument`);
+            }
+        }
+
+        if (mem.patientSummary || narrative.trajectoryAssessment || memDoc) {
             console.log('🧠 Panel state hydrated from AI memory');
             this.render();
         }
@@ -1522,6 +1553,13 @@ const AICoworker = {
             html += '<span class="learn-action-icon">&#9989;</span>';
             html += '<span class="learn-action-label">Analyzed</span>';
             if (analyzeTime) html += `<span class="learn-action-time">${analyzeTime}</span>`;
+            html += '</button>';
+        }
+
+        // === Clear Memory Button (only when memory exists) ===
+        if (status.hasMemory || hasAnalysis) {
+            html += '<button class="clear-memory-btn" onclick="AICoworker.clearMemory()" title="Clear AI memory and start fresh">';
+            html += '&#128465;';
             html += '</button>';
         }
 
