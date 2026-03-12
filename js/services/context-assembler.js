@@ -776,6 +776,81 @@ Respond with the COMPLETE updated memory document as JSON (same schema as before
     }
 
     /**
+     * Build prompt for digesting dictation into the memory document.
+     * Takes new dictation text and existing memoryDocument, returns updated
+     * encounterNarrative + any changes to problems/gestalt.
+     * Model: Haiku (fast). Max tokens: 2048.
+     */
+    buildDigestPrompt(newDictation, memoryDocument) {
+        const existingNarrative = memoryDocument?.encounterNarrative || {};
+        const existingProblems = memoryDocument?.problemAnalysis || [];
+        const existingGestalt = memoryDocument?.clinicalGestalt || '';
+
+        const systemPrompt = `You are an AI clinical scribe. The attending physician has been dictating clinical observations, reasoning, and conversation with the patient. Parse this new dictation into a structured encounter narrative.
+
+CRITICAL: The physician's clinical reasoning takes highest priority. Their assessment and thinking should heavily influence your output.
+
+You will receive:
+1. NEW DICTATION — raw text from the physician (may include clinical reasoning, exam findings, patient conversation)
+2. EXISTING ENCOUNTER NARRATIVE — what you've parsed so far (may be empty on first digest)
+3. EXISTING PROBLEMS — the current problem list from the memory document
+4. EXISTING GESTALT — the current one-liner clinical summary
+
+Your job: MERGE the new dictation into the existing encounter narrative. Append new info, don't lose old info.
+
+Respond with JSON only, no preamble or markdown fences:
+{
+    "encounterNarrative": {
+        "hpiComponents": [{"component": "onset|duration|severity|quality|context|modifying|associated", "text": "..."}],
+        "examFindings": [{"system": "cardiac|pulmonary|neuro|abdominal|extremities|general|other", "finding": "..."}],
+        "clinicalReasoning": ["Physician's reasoning point 1", "Physician's reasoning point 2"],
+        "patientReported": ["What the patient said, organized by relevance"],
+        "assessmentPlan": "Running synthesis of the clinical picture and plan"
+    },
+    "problemUpdates": [{"problem": "Problem Name", "status": "acute|active|stable|monitoring", "newInfo": "what changed based on dictation", "plan": "updated plan if any"}],
+    "updatedGestalt": "Updated one-liner clinical summary incorporating new dictation"
+}
+
+RULES:
+- MERGE with existing narrative — append new items, preserve old ones
+- For clinicalReasoning, always add the physician's thoughts verbatim or near-verbatim
+- For examFindings, extract specific findings with their system
+- For patientReported, capture patient statements and concerns
+- For hpiComponents, map to standard HPI components when possible
+- problemUpdates: only include problems that have NEW information from this dictation
+- updatedGestalt: brief, must reflect the physician's current thinking`;
+
+        let userMessage = '## NEW DICTATION\n';
+        userMessage += newDictation + '\n\n';
+
+        userMessage += '## EXISTING ENCOUNTER NARRATIVE\n';
+        if (existingNarrative.clinicalReasoning?.length || existingNarrative.examFindings?.length) {
+            userMessage += JSON.stringify(existingNarrative, null, 2) + '\n\n';
+        } else {
+            userMessage += '(First digest — no existing narrative yet)\n\n';
+        }
+
+        userMessage += '## EXISTING PROBLEMS\n';
+        if (existingProblems.length) {
+            existingProblems.forEach(p => {
+                userMessage += `- ${p.problem} [${p.status}]: ${p.plan || 'no plan yet'}\n`;
+            });
+        } else {
+            userMessage += '(No problems analyzed yet — run Learn Patient first for full context)\n';
+        }
+        userMessage += '\n';
+
+        userMessage += '## EXISTING GESTALT\n';
+        userMessage += existingGestalt || '(none yet)';
+
+        return {
+            systemPrompt,
+            userMessage,
+            maxTokens: 2048
+        };
+    }
+
+    /**
      * Build prompt for order safety checking.
      * Sends memory document safety profile + current meds + the proposed order.
      * Model: Haiku (fast). Max tokens: 512.

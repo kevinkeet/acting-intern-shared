@@ -439,10 +439,11 @@ class LongitudinalClinicalDocument {
             version: 0,                    // Increments on meaningful updates
 
             // Structured memory document — built by "Learn Patient", updated by "Refresh"
-            // Contains: patientOverview, problemAnalysis[], safetyProfile, medicationRationale[], pendingItems[], clinicalGestalt
+            // Contains: patientOverview, problemAnalysis[], safetyProfile, medicationRationale[], pendingItems[], clinicalGestalt, encounterNarrative
             memoryDocument: null,
             lastLearnedAt: null,           // ISO timestamp — when Learn was last run
-            lastRefreshedAt: null          // ISO timestamp — when incremental refresh last ran
+            lastRefreshedAt: null,         // ISO timestamp — when incremental refresh last ran
+            lastDigestedAt: null           // ISO timestamp — when dictation was last digested
         };
 
         // Confidence-scored key findings (replaces plain string array in clinicalNarrative)
@@ -572,7 +573,8 @@ class LongitudinalClinicalDocument {
                 version: this.aiMemory.version,
                 memoryDocument: this.aiMemory.memoryDocument || null,
                 lastLearnedAt: this.aiMemory.lastLearnedAt || null,
-                lastRefreshedAt: this.aiMemory.lastRefreshedAt || null
+                lastRefreshedAt: this.aiMemory.lastRefreshedAt || null,
+                lastDigestedAt: this.aiMemory.lastDigestedAt || null
             },
             scoredFindings: (this.scoredFindings || []).slice(-30),
             options: {
@@ -733,6 +735,7 @@ class LongitudinalClinicalDocument {
             doc.aiMemory.memoryDocument = data.aiMemory.memoryDocument || null;
             doc.aiMemory.lastLearnedAt = data.aiMemory.lastLearnedAt || null;
             doc.aiMemory.lastRefreshedAt = data.aiMemory.lastRefreshedAt || null;
+            doc.aiMemory.lastDigestedAt = data.aiMemory.lastDigestedAt || null;
             // Restore problemInsights Map from array of entries
             doc.aiMemory.problemInsights = new Map();
             if (data.aiMemory.problemInsights && Array.isArray(data.aiMemory.problemInsights)) {

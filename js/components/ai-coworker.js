@@ -4129,6 +4129,48 @@ IMPORTANT:
             prompt += this.state.dictation + '\n\n';
         }
 
+        // Include encounter narrative from memory document (built from dictation digests)
+        const narrative = this.longitudinalDoc?.aiMemory?.memoryDocument?.encounterNarrative;
+        if (narrative) {
+            const hasContent = narrative.clinicalReasoning?.length || narrative.examFindings?.length ||
+                narrative.hpiComponents?.length || narrative.patientReported?.length || narrative.assessmentPlan;
+            if (hasContent) {
+                prompt += '## Encounter Narrative (from dictation)\n';
+                if (narrative.hpiComponents?.length) {
+                    prompt += '### HPI Components\n';
+                    narrative.hpiComponents.forEach(h => {
+                        prompt += `- **${h.component}**: ${h.text}\n`;
+                    });
+                    prompt += '\n';
+                }
+                if (narrative.examFindings?.length) {
+                    prompt += '### Exam Findings\n';
+                    narrative.examFindings.forEach(e => {
+                        prompt += `- [${e.system}] ${e.finding}\n`;
+                    });
+                    prompt += '\n';
+                }
+                if (narrative.clinicalReasoning?.length) {
+                    prompt += '### Physician\'s Clinical Reasoning\n';
+                    narrative.clinicalReasoning.forEach(r => {
+                        prompt += `- ${r}\n`;
+                    });
+                    prompt += '\n';
+                }
+                if (narrative.patientReported?.length) {
+                    prompt += '### Patient-Reported Information\n';
+                    narrative.patientReported.forEach(p => {
+                        prompt += `- ${p}\n`;
+                    });
+                    prompt += '\n';
+                }
+                if (narrative.assessmentPlan) {
+                    prompt += '### Running Assessment & Plan\n';
+                    prompt += narrative.assessmentPlan + '\n\n';
+                }
+            }
+        }
+
         // Add context from AI state
         if (this.state.summary) {
             prompt += '## Case Summary\n' + this.state.summary + '\n\n';
@@ -6641,6 +6683,188 @@ RULES:
             }
         } finally {
             if (learnBtn) learnBtn.classList.remove('learning');
+        }
+    },
+
+    /**
+     * Digest accumulated dictation into the memory document.
+     * Gathers undigested dictation since lastDigestedAt, sends to Haiku
+     * to parse into encounterNarrative and update problems/gestalt.
+     * Triggered by voice command "update thinking".
+     */
+    async digestDictation() {
+        if (!this.contextAssembler || !this.longitudinalDoc) {
+            App.showToast('Load a patient first', 'warning');
+            return;
+        }
+        if (!this.isApiConfigured()) {
+            App.showToast('Configure API key first', 'warning');
+            return;
+        }
+
+        const mem = this.longitudinalDoc.aiMemory;
+        const session = this.longitudinalDoc.sessionContext;
+        const lastDigested = mem.lastDigestedAt ? new Date(mem.lastDigestedAt) : null;
+
+        // Gather undigested dictation
+        const undigested = (session.doctorDictation || []).filter(d => {
+            if (!lastDigested) return true;
+            return new Date(d.timestamp) > lastDigested;
+        });
+
+        if (undigested.length === 0) {
+            App.showToast('No new dictation to digest', 'info');
+            return;
+        }
+
+        // Build the combined dictation text
+        const dictationText = undigested.map(d => d.text).join('\n');
+        console.log(`🧠 Digesting ${undigested.length} dictation entries (${dictationText.length} chars)`);
+
+        // Ensure memoryDocument exists (even if Learn hasn't been run)
+        if (!mem.memoryDocument) {
+            mem.memoryDocument = {
+                patientOverview: mem.patientSummary || '',
+                problemAnalysis: [],
+                safetyProfile: {},
+                medicationRationale: [],
+                pendingItems: [],
+                clinicalGestalt: this.state.aiOneLiner || '',
+                encounterNarrative: {
+                    hpiComponents: [],
+                    examFindings: [],
+                    clinicalReasoning: [],
+                    patientReported: [],
+                    assessmentPlan: ''
+                }
+            };
+        }
+
+        // Ensure encounterNarrative exists on existing memoryDocument
+        if (!mem.memoryDocument.encounterNarrative) {
+            mem.memoryDocument.encounterNarrative = {
+                hpiComponents: [],
+                examFindings: [],
+                clinicalReasoning: [],
+                patientReported: [],
+                assessmentPlan: ''
+            };
+        }
+
+        this.state.status = 'thinking';
+        this.render();
+        App.showToast('🧠 Digesting dictation...', 'info');
+
+        try {
+            const prompt = this.contextAssembler.buildDigestPrompt(dictationText, mem.memoryDocument);
+
+            const response = await ClaudeAPI.sendMessage(
+                [{ role: 'user', content: prompt.userMessage }],
+                {
+                    systemPrompt: prompt.systemPrompt,
+                    maxTokens: prompt.maxTokens,
+                    model: 'claude-haiku-4-5-20251001'
+                }
+            );
+
+            const text = response.content[0].text.trim();
+            const result = JSON.parse(text);
+
+            // Merge encounterNarrative
+            if (result.encounterNarrative) {
+                const en = mem.memoryDocument.encounterNarrative;
+                const rn = result.encounterNarrative;
+
+                // Append arrays (deduplicate by text content)
+                const appendUnique = (existing, incoming, key) => {
+                    if (!incoming || !Array.isArray(incoming)) return;
+                    for (const item of incoming) {
+                        const itemText = typeof item === 'string' ? item : (item[key] || item.text || JSON.stringify(item));
+                        const exists = existing.some(e => {
+                            const eText = typeof e === 'string' ? e : (e[key] || e.text || JSON.stringify(e));
+                            return eText === itemText;
+                        });
+                        if (!exists) existing.push(item);
+                    }
+                };
+
+                appendUnique(en.hpiComponents, rn.hpiComponents, 'text');
+                appendUnique(en.examFindings, rn.examFindings, 'finding');
+                appendUnique(en.clinicalReasoning, rn.clinicalReasoning, null);
+                appendUnique(en.patientReported, rn.patientReported, null);
+
+                if (rn.assessmentPlan) en.assessmentPlan = rn.assessmentPlan;
+            }
+
+            // Apply problem updates
+            if (result.problemUpdates && Array.isArray(result.problemUpdates)) {
+                for (const update of result.problemUpdates) {
+                    const existing = mem.memoryDocument.problemAnalysis.find(
+                        p => p.problem.toLowerCase() === update.problem.toLowerCase()
+                    );
+                    if (existing) {
+                        if (update.status) existing.status = update.status;
+                        if (update.plan) existing.plan = update.plan;
+                        if (update.newInfo) existing.newInfo = update.newInfo;
+                    } else {
+                        // New problem discovered from dictation
+                        mem.memoryDocument.problemAnalysis.push({
+                            problem: update.problem,
+                            status: update.status || 'active',
+                            plan: update.plan || '',
+                            newInfo: update.newInfo || ''
+                        });
+                    }
+                }
+            }
+
+            // Update gestalt
+            if (result.updatedGestalt) {
+                mem.memoryDocument.clinicalGestalt = result.updatedGestalt;
+                this.state.aiOneLiner = result.updatedGestalt;
+            }
+
+            // Update panel state from updated memoryDocument
+            if (mem.memoryDocument.problemAnalysis.length > 0) {
+                this.state.problemList = mem.memoryDocument.problemAnalysis.map(p => ({
+                    name: p.problem,
+                    urgency: p.status === 'acute' ? 'urgent' : (p.status === 'active' ? 'active' : 'monitoring'),
+                    ddx: null,
+                    plan: p.plan || ''
+                }));
+            }
+
+            // Set timestamp
+            mem.lastDigestedAt = new Date().toISOString();
+
+            // Save and render
+            this.saveLongitudinalDoc();
+            this.state.status = 'ready';
+            this.state.lastUpdated = new Date().toISOString();
+            this.saveState();
+            this.render();
+
+            const narrative = mem.memoryDocument.encounterNarrative;
+            console.log('🧠 Digest complete:', {
+                hpiComponents: narrative.hpiComponents?.length || 0,
+                examFindings: narrative.examFindings?.length || 0,
+                reasoning: narrative.clinicalReasoning?.length || 0,
+                patientReported: narrative.patientReported?.length || 0,
+                problemUpdates: result.problemUpdates?.length || 0
+            });
+
+            App.showToast('Thinking updated with dictation', 'success');
+
+            // Update glasses if open
+            if (typeof SmartGlasses !== 'undefined' && SmartGlasses.isOpen) {
+                SmartGlasses.refreshOrdersView();
+            }
+
+        } catch (error) {
+            console.error('Digest dictation error:', error);
+            this.state.status = 'ready';
+            this.render();
+            App.showToast(`Digest failed: ${error.message}`, 'error');
         }
     },
 

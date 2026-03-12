@@ -38,7 +38,8 @@ const DictationWidget = {
     _taskRegex: /\b(?:call|page|notify|tell the nurse|tell nursing|ask the nurse|ask nursing|consult|get (?:a )?consult)\b/i,
     _confirmRegex: /\b(?:confirm|yes confirm|confirm that|go ahead|approve|submit that)\b/i,
     _cancelRegex: /\b(?:cancel|nevermind|never mind|cancel that|scratch that)\b/i,
-    _refreshRegex: /\b(?:refresh analysis|refresh thinking|update analysis|re-analyze|reanalyze|analyze case)\b/i,
+    _refreshRegex: /\b(?:refresh analysis|refresh thinking|re-analyze|reanalyze|analyze case)\b/i,
+    _digestRegex: /\b(?:update thinking|update your thinking|digest|digest that|process that|update analysis)\b/i,
     _writeNoteRegex: /\b(?:write (?:a )?(?:progress )?note|write (?:a )?(?:h\s*(?:and|&)\s*p|hp)|draft (?:a )?note|draft (?:a )?progress note)\b/i,
     _messageNurseRegex: /\b(?:message (?:the )?nurse|text (?:the )?nurse|tell (?:the )?nurse)\b\s*(.*)/i,
     _messagePatientRegex: /\b(?:message (?:the )?patient|ask (?:the )?patient|talk to (?:the )?patient)\b\s*(.*)/i,
@@ -242,6 +243,10 @@ const DictationWidget = {
             this._triggerRefreshAnalysis();
             return;
         }
+        if (this._digestRegex.test(text)) {
+            this._triggerDigestDictation();
+            return;
+        }
         if (this._writeNoteRegex.test(text)) {
             this._triggerWriteNote(text);
             return;
@@ -288,8 +293,10 @@ const DictationWidget = {
     },
 
     _forwardContextToAI(text) {
-        // Feed thinking-out-loud content into the AI's context
-        if (typeof AICoworker !== 'undefined' && AICoworker.state) {
+        if (typeof AICoworker === 'undefined') return;
+
+        // Transient session state
+        if (AICoworker.state) {
             if (!AICoworker.state._dictationContext) {
                 AICoworker.state._dictationContext = [];
             }
@@ -297,6 +304,15 @@ const DictationWidget = {
                 text: text,
                 timestamp: Date.now()
             });
+        }
+
+        // Persist to longitudinal document (survives reload)
+        if (AICoworker.longitudinalDoc && AICoworker.longitudinalDoc.sessionContext) {
+            AICoworker.longitudinalDoc.sessionContext.doctorDictation.push({
+                text: text,
+                timestamp: new Date().toISOString()
+            });
+            AICoworker.saveLongitudinalDoc();
         }
     },
 
@@ -316,6 +332,21 @@ const DictationWidget = {
         // Trigger incremental refresh which incorporates dictation context
         if (typeof AICoworker !== 'undefined' && AICoworker.refreshThinking) {
             AICoworker.refreshThinking();
+        }
+    },
+
+    _triggerDigestDictation() {
+        console.log('🎤 Voice command: update thinking (digest dictation)');
+        if (typeof App !== 'undefined' && App.showToast) {
+            App.showToast('🧠 Updating thinking...', 'info');
+        }
+
+        if (typeof SmartGlasses !== 'undefined' && SmartGlasses.isOpen) {
+            SmartGlasses.pushContextToLeftLens('⟳ Digesting dictation...');
+        }
+
+        if (typeof AICoworker !== 'undefined' && AICoworker.digestDictation) {
+            AICoworker.digestDictation();
         }
     },
 
