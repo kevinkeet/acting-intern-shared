@@ -628,16 +628,8 @@ const OrderEntry = {
             Orders.render();
         }
 
-        // Notify AI assistant that an order was placed so it can update recommendations
-        if (typeof AICoworker !== 'undefined' && AICoworker.state?.status === 'ready') {
-            // Short delay so the order is fully processed first
-            setTimeout(() => {
-                if (typeof AICoworker.refreshThinking === 'function') {
-                    console.log('Triggering AI refresh after order submission:', order.name);
-                    AICoworker.refreshThinking();
-                }
-            }, 2000);
-        }
+        // Auto-analysis disabled — user clicks Analyze Case manually.
+        // Order is recorded in memory via recordExecutedOrder() if available.
     },
 
     /**

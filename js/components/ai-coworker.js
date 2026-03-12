@@ -164,19 +164,8 @@ const AICoworker = {
         // Re-render now that longitudinal data is fully loaded
         this.render();
 
-        // If user already entered an API key (e.g. during the About modal/tour)
-        // before the context assembler was ready, run the queued analysis now.
-        if (this._pendingAutoAnalysis && this.isApiConfigured()) {
-            this._pendingAutoAnalysis = false;
-            console.log('🚀 Running queued AI analysis (API key was entered before context was ready)');
-            setTimeout(() => this.refreshThinking(), 300);
-            return; // Skip the panel-expand check — analysis is already triggered
-        }
-
-        // Auto-analyze if the panel is already expanded from a previous session
-        if (typeof AIPanel !== 'undefined' && !AIPanel.isCollapsed) {
-            AIPanel._autoAnalyzeIfNeeded();
-        }
+        // Auto-analysis disabled — user clicks Learn/Analyze manually.
+        // Memory is restored from localStorage via hydrateFromMemory().
     },
 
     /**
@@ -1307,12 +1296,7 @@ const AICoworker = {
         // Re-render first (shows current state while we load)
         this.render();
 
-        // Auto-analyze for the new mode if panel is open and API is ready
-        if (typeof AIPanel !== 'undefined' && !AIPanel.isCollapsed && this.isApiConfigured()) {
-            setTimeout(() => {
-                this.refreshThinking();
-            }, 200);
-        }
+        // Auto-analysis disabled — user clicks Learn/Analyze manually.
     },
 
     /**
@@ -4651,8 +4635,8 @@ Format your response as JSON:
         if (key) {
             this.saveApiKey(key);
             this.closeApiKeyModal();
-            App.showToast('API key saved — running initial analysis...', 'success');
-            this._triggerBackgroundAnalysis();
+            App.showToast('API key saved', 'success');
+            // Auto-analysis disabled — user clicks Learn/Analyze manually.
         }
     },
 

@@ -44,14 +44,14 @@ const SmartGlasses = {
         const state = (typeof AICoworker !== 'undefined') ? AICoworker.state : null;
         const glassesData = state ? state.glassesDisplay : null;
 
-        if (glassesData && glassesData.leftLens && glassesData.rightLens) {
+        // Left lens: paged screens (patient context)
+        if (glassesData && glassesData.leftLens) {
             this.leftScreens = this._parseLLMScreens(glassesData.leftLens, 'PATIENT');
-            this.rightScreens = this._parseLLMScreens(glassesData.rightLens, 'ORDERS');
         } else {
             const data = this._getGlassesData();
             this.leftScreens = this._buildLeftScreensFallback(data);
-            this.rightScreens = this._buildRightScreensFallback(data);
         }
+        // Right lens: unified scrollable orders view (built in _createOverlay via _buildOrdersViewHTML)
 
         this._createOverlay();
 

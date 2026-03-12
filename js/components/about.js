@@ -193,11 +193,10 @@ const About = {
                 btn.innerHTML = '&#10003; Saved';
                 btn.classList.add('saved');
             }
-            if (typeof App !== 'undefined') App.showToast('API key saved — running initial analysis...', 'success');
+            if (typeof App !== 'undefined') App.showToast('API key saved', 'success');
 
-            // Trigger background AI analysis so results are ready
-            // by the time the user finishes the tour and opens the AI panel
-            AICoworker._triggerBackgroundAnalysis();
+            // Auto-analysis disabled — user clicks Learn/Analyze manually.
+            // AICoworker._triggerBackgroundAnalysis();
         }
     },
 
