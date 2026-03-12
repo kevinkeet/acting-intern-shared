@@ -1,15 +1,19 @@
 /**
  * Claude API Service
- * Handles communication with the Anthropic Claude API
+ * Handles communication with the Anthropic Claude API via server proxy
+ * (falls back to direct browser access if no backend detected)
  */
 
 const ClaudeAPI = {
-    apiKey: null,
     model: 'claude-sonnet-4-6',
     maxTokens: 1024,
 
+    // Set by AICoworker.detectBackend()
+    useProxy: true,
+    apiKey: null, // Only used in fallback (no backend) mode
+
     /**
-     * Set the API key
+     * Set the API key (fallback mode only)
      */
     setApiKey(key) {
         this.apiKey = key;
@@ -17,31 +21,50 @@ const ClaudeAPI = {
 
     /**
      * Check if API is configured
+     * In proxy mode: always true (server handles auth)
+     * In fallback mode: needs localStorage API key
      */
     isConfigured() {
+        if (this.useProxy) return true;
         return !!this.apiKey;
     },
 
     /**
+     * Build headers based on mode
+     */
+    _getHeaders() {
+        if (this.useProxy) {
+            return { 'Content-Type': 'application/json' };
+        }
+        // Fallback: direct browser access
+        return {
+            'Content-Type': 'application/json',
+            'x-api-key': this.apiKey,
+            'anthropic-version': '2023-06-01',
+            'anthropic-dangerous-direct-browser-access': 'true'
+        };
+    },
+
+    /**
+     * Get the API endpoint URL
+     */
+    _getEndpoint() {
+        if (this.useProxy) return '/api/claude';
+        return 'https://api.anthropic.com/v1/messages';
+    },
+
+    /**
      * Send a message to Claude and get a response
-     * @param {string} systemPrompt - The system prompt for context
-     * @param {Array} messages - Array of message objects {role: 'user'|'assistant', content: string}
-     * @returns {Promise<Object>} - The API response
      */
     async sendMessage(systemPrompt, messages) {
-        if (!this.apiKey) {
+        if (!this.isConfigured()) {
             throw new Error('API key not configured. Please add your Anthropic API key in settings.');
         }
 
         try {
-            const response = await fetch('https://api.anthropic.com/v1/messages', {
+            const response = await fetch(this._getEndpoint(), {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-api-key': this.apiKey,
-                    'anthropic-version': '2023-06-01',
-                    'anthropic-dangerous-direct-browser-access': 'true'
-                },
+                headers: this._getHeaders(),
                 body: JSON.stringify({
                     model: this.model,
                     max_tokens: this.maxTokens,
@@ -66,9 +89,6 @@ const ClaudeAPI = {
 
     /**
      * Send a message and get just the text content
-     * @param {string} systemPrompt - The system prompt
-     * @param {Array} messages - Array of messages
-     * @returns {Promise<string>} - The text response
      */
     async chat(systemPrompt, messages) {
         const response = await this.sendMessage(systemPrompt, messages);
@@ -81,20 +101,11 @@ const ClaudeAPI = {
     },
 
     /**
-     * Stream a message response (for longer responses)
-     * Note: Streaming requires server-side implementation in most browsers
-     * This is a simplified version that waits for the full response
-     * @param {string} systemPrompt - The system prompt
-     * @param {Array} messages - Array of messages
-     * @param {Function} onChunk - Callback for each chunk of text
-     * @returns {Promise<string>} - The full text response
+     * Stream a message response (simulated)
      */
     async chatStream(systemPrompt, messages, onChunk) {
-        // For simplicity, we'll use non-streaming and simulate chunks
-        // True streaming would require a proxy server due to browser limitations
         const fullResponse = await this.chat(systemPrompt, messages);
 
-        // Simulate streaming by chunking the response
         const words = fullResponse.split(' ');
         let accumulated = '';
 
@@ -103,23 +114,16 @@ const ClaudeAPI = {
             if (onChunk) {
                 onChunk(accumulated);
             }
-            // Small delay to simulate streaming
             await new Promise(resolve => setTimeout(resolve, 20));
         }
 
         return fullResponse;
     },
 
-    /**
-     * Set the model to use
-     */
     setModel(model) {
         this.model = model;
     },
 
-    /**
-     * Set max tokens for responses
-     */
     setMaxTokens(tokens) {
         this.maxTokens = tokens;
     }

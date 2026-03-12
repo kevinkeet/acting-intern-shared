@@ -26,7 +26,8 @@ const AICoworker = {
 
     // API Configuration
     apiKey: null,
-    apiEndpoint: 'https://api.anthropic.com/v1/messages',
+    apiEndpoint: '/api/claude',
+    backendAvailable: false,
     model: 'claude-sonnet-4-6',
     analysisModel: 'claude-sonnet-4-6', // Default all tasks to Sonnet 4.6
 
@@ -127,7 +128,7 @@ const AICoworker = {
         // Create modals (ask, dictation, note, etc.)
         this.createPanel();
 
-        this.loadApiKey(); // Load saved API key
+        this._backendReady = this.detectBackend(); // Detect backend or fall back to direct API
         this.loadModelPreferences(); // Load saved model choices
         this.setupEventListeners();
 
@@ -4538,17 +4539,45 @@ Format your response as JSON:
     // ==================== LLM API Integration ====================
 
     /**
-     * Load API key from localStorage (unified — checks all legacy keys)
+     * Detect if backend is available; fall back to direct Anthropic mode
      */
-    loadApiKey() {
-        // Canonical key
+    async detectBackend() {
+        try {
+            const r = await fetch('/api/health');
+            if (r.ok) {
+                const data = await r.json();
+                if (data.apiConfigured) {
+                    this.backendAvailable = true;
+                    this.apiEndpoint = '/api/claude';
+                    if (typeof ClaudeAPI !== 'undefined') {
+                        ClaudeAPI.useProxy = true;
+                    }
+                    console.log('✅ Backend detected — API key on server');
+                    return;
+                }
+            }
+        } catch (e) {
+            // No backend available
+        }
+        // Fallback: direct browser access (GitHub Pages mode)
+        this.backendAvailable = false;
+        this.apiEndpoint = 'https://api.anthropic.com/v1/messages';
+        if (typeof ClaudeAPI !== 'undefined') {
+            ClaudeAPI.useProxy = false;
+        }
+        this.loadApiKeyFallback();
+        console.log('⚠️ No backend — using direct Anthropic access');
+    },
+
+    /**
+     * Load API key from localStorage (fallback mode only, no backend)
+     */
+    loadApiKeyFallback() {
         let key = localStorage.getItem('anthropic-api-key');
-        // Migration: check legacy keys
         if (!key) key = localStorage.getItem('anthropicApiKey');
         if (!key) key = localStorage.getItem('claude-api-key');
         if (key) {
             this.apiKey = key;
-            // Migrate to canonical key and sync to ClaudeAPI
             localStorage.setItem('anthropic-api-key', key);
             localStorage.removeItem('anthropicApiKey');
             localStorage.removeItem('claude-api-key');
@@ -4558,14 +4587,12 @@ Format your response as JSON:
     },
 
     /**
-     * Save API key to localStorage (single source of truth)
+     * Save API key to localStorage (fallback mode only)
      */
     saveApiKey(key) {
         this.apiKey = key;
         localStorage.setItem('anthropic-api-key', key);
-        // Sync to ClaudeAPI so patient/nurse chat also work
         if (typeof ClaudeAPI !== 'undefined') ClaudeAPI.setApiKey(key);
-        // Clean up any legacy keys
         localStorage.removeItem('anthropicApiKey');
         localStorage.removeItem('claude-api-key');
     },
@@ -4574,7 +4601,8 @@ Format your response as JSON:
      * Check if API is configured
      */
     isApiConfigured() {
-        return !!(this.apiKey || this.loadApiKey());
+        if (this.backendAvailable) return true;
+        return !!(this.apiKey || this.loadApiKeyFallback());
     },
 
     /**
@@ -4633,6 +4661,7 @@ Format your response as JSON:
 
     /**
      * Open API key configuration modal
+     * Shows server status when backend is available, or key input for fallback mode
      */
     openApiKeyModal() {
         let modal = document.getElementById('ai-apikey-modal');
@@ -4640,6 +4669,26 @@ Format your response as JSON:
             modal = document.createElement('div');
             modal.id = 'ai-apikey-modal';
             modal.className = 'ai-modal';
+            document.body.appendChild(modal);
+        }
+
+        if (this.backendAvailable) {
+            modal.innerHTML = `
+                <div class="ai-modal-content">
+                    <div class="ai-modal-header">
+                        <h3>🔑 API Configuration</h3>
+                        <button onclick="AICoworker.closeApiKeyModal()">×</button>
+                    </div>
+                    <div class="ai-modal-body">
+                        <p style="color: #4caf50; font-weight: 600;">✓ API key configured on server</p>
+                        <p class="ai-modal-hint">The Anthropic API key is securely stored on the backend server. No browser-side key needed.</p>
+                    </div>
+                    <div class="ai-modal-footer">
+                        <button class="btn btn-primary" onclick="AICoworker.closeApiKeyModal()">OK</button>
+                    </div>
+                </div>
+            `;
+        } else {
             modal.innerHTML = `
                 <div class="ai-modal-content">
                     <div class="ai-modal-header">
@@ -4647,7 +4696,7 @@ Format your response as JSON:
                         <button onclick="AICoworker.closeApiKeyModal()">×</button>
                     </div>
                     <div class="ai-modal-body">
-                        <p class="ai-modal-hint">Enter your Anthropic API key to enable AI-powered synthesis. Your key is stored locally in your browser.</p>
+                        <p class="ai-modal-hint">No backend server detected. Enter your Anthropic API key to enable AI features. Your key is stored locally in your browser.</p>
                         <input type="password" id="api-key-input" placeholder="sk-ant-..." style="width: 100%; padding: 10px; font-family: monospace;">
                         <p class="ai-modal-hint" style="margin-top: 10px; font-size: 11px;">
                             <a href="https://console.anthropic.com/settings/keys" target="_blank">Get an API key from Anthropic Console →</a>
@@ -4659,9 +4708,9 @@ Format your response as JSON:
                     </div>
                 </div>
             `;
-            document.body.appendChild(modal);
+            const input = document.getElementById('api-key-input');
+            if (input) input.value = this.apiKey || '';
         }
-        document.getElementById('api-key-input').value = this.apiKey || '';
         modal.classList.add('visible');
     },
 
@@ -4672,12 +4721,11 @@ Format your response as JSON:
 
     submitApiKey() {
         const input = document.getElementById('api-key-input');
-        const key = input.value.trim();
+        const key = input ? input.value.trim() : '';
         if (key) {
             this.saveApiKey(key);
             this.closeApiKeyModal();
             App.showToast('API key saved', 'success');
-            // Auto-analysis disabled — user clicks Learn/Analyze manually.
         }
     },
 
@@ -5329,21 +5377,27 @@ ${ctx.dictationHistory.length > 0
         console.log('📝 System Prompt:', systemPrompt.substring(0, 500) + '...');
         console.log('📝 User Message:', userMessage.substring(0, 500) + '...');
 
+        // Ensure backend detection has completed before checking API config
+        if (this._backendReady) await this._backendReady;
+
         if (!this.isApiConfigured()) {
             this.lastApiCall.error = 'API key not configured';
-            this.openApiKeyModal();
+            if (!this.backendAvailable) this.openApiKeyModal();
             throw new Error('API key not configured');
+        }
+
+        // Build headers: proxy mode only needs Content-Type; fallback needs Anthropic headers
+        const headers = { 'Content-Type': 'application/json' };
+        if (!this.backendAvailable) {
+            headers['x-api-key'] = this.apiKey;
+            headers['anthropic-version'] = '2023-06-01';
+            headers['anthropic-dangerous-direct-browser-access'] = 'true';
         }
 
         try {
             const response = await fetch(this.apiEndpoint, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-api-key': this.apiKey,
-                    'anthropic-version': '2023-06-01',
-                    'anthropic-dangerous-direct-browser-access': 'true'
-                },
+                headers,
                 body: JSON.stringify({
                     model: useModel,
                     max_tokens: maxTokens || 1024,
@@ -6697,6 +6751,7 @@ RULES:
             App.showToast('Load a patient first', 'warning');
             return;
         }
+        if (this._backendReady) await this._backendReady;
         if (!this.isApiConfigured()) {
             App.showToast('Configure API key first', 'warning');
             return;

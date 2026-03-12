@@ -290,14 +290,16 @@ const AmbientScribe = {
                 return;
             }
 
+            // Build headers: proxy mode only needs Content-Type
+            var hdrs = { 'Content-Type': 'application/json' };
+            if (!AICoworker.backendAvailable) {
+                hdrs['x-api-key'] = AICoworker.apiKey;
+                hdrs['anthropic-version'] = '2023-06-01';
+                hdrs['anthropic-dangerous-direct-browser-access'] = 'true';
+            }
             var response = await fetch(AICoworker.apiEndpoint, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-api-key': AICoworker.apiKey,
-                    'anthropic-version': '2023-06-01',
-                    'anthropic-dangerous-direct-browser-access': 'true'
-                },
+                headers: hdrs,
                 body: JSON.stringify({
                     model: AICoworker.analysisModel || 'claude-sonnet-4-6',
                     max_tokens: 2048,

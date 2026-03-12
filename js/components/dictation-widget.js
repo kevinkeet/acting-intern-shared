@@ -462,14 +462,16 @@ Respond with ONLY valid JSON, no markdown fences:
 {"orders": [{"type": "...", "summary": "human-readable one-liner", "details": {...fields...}, "confidence": 0.0-1.0}]}`;
 
         try {
+            // Build headers: proxy mode only needs Content-Type
+            const headers = { 'Content-Type': 'application/json' };
+            if (!AICoworker.backendAvailable) {
+                headers['x-api-key'] = AICoworker.apiKey;
+                headers['anthropic-version'] = '2023-06-01';
+                headers['anthropic-dangerous-direct-browser-access'] = 'true';
+            }
             const response = await fetch(AICoworker.apiEndpoint, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-api-key': AICoworker.apiKey,
-                    'anthropic-version': '2023-06-01',
-                    'anthropic-dangerous-direct-browser-access': 'true'
-                },
+                headers,
                 body: JSON.stringify({
                     model: this.PARSE_MODEL,
                     max_tokens: 1024,

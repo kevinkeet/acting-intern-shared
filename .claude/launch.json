@@ -3,9 +3,9 @@
   "configurations": [
     {
       "name": "ehr-dev",
-      "runtimeExecutable": "npx",
-      "runtimeArgs": ["http-server", "-p", "8080", "-c-1"],
-      "port": 8080
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["--watch", "server.js"],
+      "port": 3000
     }
   ]
 }
