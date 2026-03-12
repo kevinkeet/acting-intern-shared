@@ -387,7 +387,7 @@ const DictationWidget = {
                 SmartGlasses.pushOrderToRightLens(orderPhrase, 'parsing');
             }
         } else {
-            this.contextLines.push({ text, timestamp });
+            this.contextLines.push({ text, timestamp, speaker: this._useDeepgram ? 'doctor' : undefined });
             this._renderContextPane();
 
             // Forward context to AI system
@@ -883,8 +883,12 @@ Respond with ONLY valid JSON, no markdown fences:
 
         container.innerHTML = this.contextLines.map(line => {
             const isPatient = line.speaker === 'patient';
-            const cls = isPatient ? 'dictation-line context-line patient-line' : 'dictation-line context-line';
-            const prefix = isPatient ? '<span class="speaker-tag patient-tag">Patient:</span> ' : '';
+            const isDoctor = line.speaker === 'doctor';
+            const cls = isPatient ? 'dictation-line context-line patient-line' :
+                        isDoctor ? 'dictation-line context-line doctor-line' :
+                        'dictation-line context-line';
+            const prefix = isPatient ? '<span class="speaker-tag patient-tag">Patient:</span> ' :
+                           isDoctor ? '<span class="speaker-tag doctor-tag">Doctor:</span> ' : '';
             return `<div class="${cls}"><span class="dictation-timestamp">${line.timestamp}</span>${prefix}${this._esc(line.text)}</div>`;
         }).join('');
     },
