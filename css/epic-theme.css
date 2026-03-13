@@ -12303,6 +12303,141 @@ html, body {
     color: #ef4444;
 }
 
+/* Learn Patient — partially learned */
+.learn-action-btn.learn-partial {
+    background: rgba(99, 102, 241, 0.15);
+    color: #a5b4fc;
+    border: 1px solid rgba(99, 102, 241, 0.3);
+}
+.learn-action-btn.learn-partial:hover {
+    background: rgba(99, 102, 241, 0.25);
+    border-color: rgba(99, 102, 241, 0.5);
+}
+
+/* Learn Patient — fully complete */
+.learn-action-btn.learn-complete {
+    background: rgba(34, 197, 94, 0.12);
+    color: #4ade80;
+    border: 1px solid rgba(34, 197, 94, 0.25);
+}
+.learn-action-btn.learn-complete:hover {
+    background: rgba(34, 197, 94, 0.2);
+    border-color: rgba(34, 197, 94, 0.4);
+}
+
+/* ===== Deep Learn Progress UI ===== */
+.deep-learn-progress,
+.deep-learn-between {
+    padding: 10px 12px;
+    background: rgba(30, 30, 40, 0.6);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Active progress header */
+.dl-progress-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+.dl-progress-icon {
+    font-size: 16px;
+    animation: dl-brain-pulse 1.5s ease-in-out infinite;
+}
+.dl-progress-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #a5b4fc;
+}
+.dl-progress-level {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.5);
+    margin-left: auto;
+}
+
+/* Progress bar */
+.dl-progress-bar-wrap {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 6px;
+}
+.dl-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #6366f1, #3b82f6, #06b6d4);
+    border-radius: 3px;
+    transition: width 0.5s ease;
+    position: relative;
+}
+.deep-learn-progress .dl-progress-bar {
+    animation: dl-bar-shimmer 2s ease-in-out infinite;
+}
+
+/* Stats row */
+.dl-progress-stats {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.5);
+}
+.dl-progress-breakdown {
+    color: rgba(255, 255, 255, 0.35);
+}
+
+/* Between-levels header */
+.dl-between-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+.dl-between-icon {
+    font-size: 14px;
+    color: #4ade80;
+}
+.dl-between-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #4ade80;
+}
+.dl-between-pct {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.5);
+    margin-left: auto;
+}
+
+/* Remaining info */
+.dl-between-remaining {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.4);
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+/* Between-levels action buttons */
+.dl-between-actions {
+    display: flex;
+    gap: 6px;
+}
+.dl-between-actions .learn-action-btn {
+    flex: 1;
+}
+.dl-next-level {
+    animation: learn-pulse 2s ease-in-out infinite;
+}
+
+@keyframes dl-brain-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.1); }
+}
+@keyframes dl-bar-shimmer {
+    0% { opacity: 0.8; }
+    50% { opacity: 1; }
+    100% { opacity: 0.8; }
+}
+
 @keyframes learn-pulse {
     0%, 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.3); }
     50% { box-shadow: 0 0 0 6px rgba(99, 102, 241, 0); }

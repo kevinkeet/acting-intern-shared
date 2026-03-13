@@ -650,6 +650,106 @@ class WorkingMemoryAssembler {
     }
 
     /**
+     * DEEP LEARN LEVEL 1: Full text of specified items for comprehensive initial read.
+     * Items: array of { type: 'note'|'lab'|'imaging', id, data? }
+     * Returns assembled text with full content for each item.
+     */
+    assembleForDeepLearnLevel1(items) {
+        var sections = [];
+
+        // Patient header from PKB
+        if (this.pkb && this.pkb.demographics) {
+            var d = this.pkb.demographics;
+            sections.push('## PATIENT\n' + [d.name, d.age, d.sex, d.mrn].filter(Boolean).join(' | '));
+        }
+
+        // Allergies
+        if (this.pkb && this.pkb.allergies && this.pkb.allergies.length) {
+            sections.push('## ALLERGIES\n' + this.pkb.allergies.map(function(a) {
+                return '- ' + a.substance + ' (' + (a.reaction || 'unknown reaction') + ')';
+            }).join('\n'));
+        }
+
+        // Active medications
+        if (this.pkb && this.pkb.medications) {
+            var meds = this.pkb.medications.active || this.pkb.medications;
+            if (Array.isArray(meds) && meds.length) {
+                sections.push('## CURRENT MEDICATIONS\n' + meds.map(function(m) {
+                    return '- ' + (m.name || m.medication) + ' ' + (m.dose || '') + ' ' + (m.frequency || '');
+                }).join('\n'));
+            }
+        }
+
+        // Active problems
+        if (this.pkb && this.pkb.problems) {
+            var probs = this.pkb.problems.active || this.pkb.problems;
+            if (Array.isArray(probs) && probs.length) {
+                sections.push('## ACTIVE PROBLEMS\n' + probs.map(function(p) {
+                    return '- ' + (p.name || p.description || p);
+                }).join('\n'));
+            }
+        }
+
+        // Vitals (most recent)
+        if (this.pkb && this.pkb.vitals && this.pkb.vitals.length) {
+            var latest = this.pkb.vitals[0];
+            var vStr = Object.entries(latest).filter(function(e) {
+                return e[0] !== 'date' && e[0] !== 'timestamp' && e[1];
+            }).map(function(e) { return e[0] + ': ' + e[1]; }).join(', ');
+            if (vStr) sections.push('## VITALS (latest)\n' + vStr);
+        }
+
+        // Group items by type
+        var notes = items.filter(function(i) { return i.type === 'note'; });
+        var labs = items.filter(function(i) { return i.type === 'lab'; });
+        var imaging = items.filter(function(i) { return i.type === 'imaging'; });
+
+        // Notes — full text
+        if (notes.length) {
+            sections.push('## NOTES (' + notes.length + ')');
+            notes.forEach(function(item) {
+                var n = item.data;
+                if (!n) return;
+                var header = '### ' + (n.type || 'Note') + ' — ' + (n.date || '') + ' — ' + (n.author || '');
+                var body = n.content || n.text || n.body || n.preview || '[no content]';
+                // Cap individual note at 8000 chars to prevent one massive note from dominating
+                if (body.length > 8000) body = body.substring(0, 8000) + '\n... [truncated]';
+                sections.push(header + '\n' + body);
+            });
+        }
+
+        // Labs — full results
+        if (labs.length) {
+            sections.push('## LAB PANELS (' + labs.length + ')');
+            labs.forEach(function(item) {
+                var panel = item.data;
+                if (!panel) return;
+                var header = '### ' + (panel.name || 'Lab') + ' — ' + (panel.collectedDate || panel.date || '');
+                var results = (panel.results || []).map(function(r) {
+                    var flag = r.flag ? ' [' + r.flag + ']' : '';
+                    var ref = r.referenceRange ? ' (ref: ' + r.referenceRange + ')' : '';
+                    return '- ' + (r.name || r.test) + ': ' + r.value + ' ' + (r.unit || '') + flag + ref;
+                }).join('\n');
+                sections.push(header + '\n' + (results || '[no results]'));
+            });
+        }
+
+        // Imaging — full reports
+        if (imaging.length) {
+            sections.push('## IMAGING REPORTS (' + imaging.length + ')');
+            imaging.forEach(function(item) {
+                var rpt = item.data;
+                if (!rpt) return;
+                var header = '### ' + (rpt.description || rpt.modality || 'Imaging') + ' — ' + (rpt.date || '');
+                var body = rpt.report || rpt.findings || rpt.impression || rpt.text || '[no report]';
+                sections.push(header + '\n' + body);
+            });
+        }
+
+        return sections.join('\n\n');
+    }
+
+    /**
      * INCREMENTAL REFRESH: Existing memory document + delta data.
      * Much cheaper than full learn.
      * Budget: ~4,000-6,000 chars

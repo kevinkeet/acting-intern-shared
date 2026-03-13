@@ -56,6 +56,22 @@ const AICoworker = {
     workingMemory: null,        // WorkingMemoryAssembler — focused context assembly
     contextAssembler: null,     // ContextAssembler — unified prompt building
 
+    // Deep Learn state — multi-pass chart analysis
+    _deepLearn: {
+        phase: 'idle',          // 'idle'|'mapping'|'level1'|'level2+'|'complete'
+        chartMap: null,          // { notes: [], labs: [], imaging: [] }
+        queue: [],               // prioritized list of { type, id, meta }
+        processed: new Set(),    // IDs already analyzed
+        totalItems: 0,
+        processedCount: 0,
+        currentLevel: 0,
+        totalLevels: 0,
+        levelBatches: [],        // pre-computed batch groupings
+        extractedFacts: [],      // accumulated Haiku extractions
+        levelFindings: [],       // findings from the last completed level
+        aborted: false
+    },
+
     // Section collapse state (persisted to localStorage)
     sectionCollapsed: {},
 
@@ -267,6 +283,9 @@ const AICoworker = {
             );
             this.contextAssembler = new ContextAssembler(this.workingMemory);
             console.log('Memory system initialized (SessionContext + WorkingMemory + ContextAssembler)');
+
+            // Restore deep learn state if available
+            this._loadDeepLearnState();
 
             // === MEMORY HYDRATION: Populate panel state from persisted AI memory ===
             this.hydrateFromMemory();
@@ -1493,26 +1512,46 @@ const AICoworker = {
     },
 
     /**
-     * Render Learn Patient bar — shows Learn button or Learned badge + Refresh
+     * Render Learn Patient bar — shows Learn button, deep learn progress, or Learned badge
      */
     renderLearnBar() {
         const status = this.getMemoryStatus();
         const isLearning = this.state.status === 'learning';
         const isThinking = this.state.status === 'thinking';
+        const progress = this._getDeepLearnProgress();
 
-        if (isLearning || isThinking) return ''; // Banners handle these states
+        // During active learning, show progress UI instead of hiding
+        if (progress.isActive) {
+            return this._renderDeepLearnProgress(progress);
+        }
+
+        // Between levels — show progress + next level button
+        if (progress.canAdvance) {
+            return this._renderDeepLearnBetweenLevels(progress);
+        }
+
+        if (isThinking) return ''; // Thinking banner handles this
 
         let html = '<div class="learn-bar">';
 
         // === Learn Patient Button ===
         if (!status.hasMemory) {
             // Not yet learned — prominent
-            html += '<button class="learn-action-btn learn-primary" onclick="AICoworker.learnPatient()" title="Read the full chart and build AI memory">';
+            html += '<button class="learn-action-btn learn-primary" onclick="AICoworker.learnPatient()" title="Deep chart analysis with multi-pass learning">';
             html += '<span class="learn-action-icon">&#129504;</span>';
             html += '<span class="learn-action-label">Learn Patient</span>';
             html += '</button>';
-        } else {
-            // Already learned — subtle with status
+        } else if (progress.isComplete) {
+            // Fully learned
+            const learnedAt = status.lastLearnedAt ? new Date(status.lastLearnedAt) : null;
+            const learnTime = learnedAt ? this._formatTimeAgo(learnedAt) : '';
+            html += '<button class="learn-action-btn learn-complete" onclick="AICoworker.learnPatient()" title="Chart fully analyzed — click to re-learn">';
+            html += '<span class="learn-action-icon">&#9989;</span>';
+            html += '<span class="learn-action-label">Chart Learned (100%)</span>';
+            if (learnTime) html += `<span class="learn-action-time">${learnTime}</span>`;
+            html += '</button>';
+        } else if (progress.phase === 'between_levels' && progress.remainingLevels <= 0) {
+            // Complete but phase not marked
             const learnedAt = status.lastLearnedAt ? new Date(status.lastLearnedAt) : null;
             const learnTime = learnedAt ? this._formatTimeAgo(learnedAt) : '';
             html += '<button class="learn-action-btn learn-done" onclick="AICoworker.learnPatient()" title="Re-read full chart">';
@@ -1520,18 +1559,23 @@ const AICoworker = {
             html += '<span class="learn-action-label">Learned</span>';
             if (learnTime) html += `<span class="learn-action-time">${learnTime}</span>`;
             html += '</button>';
+        } else {
+            // Partially learned (has memory but deep learn not complete)
+            const pct = progress.percentComplete || 0;
+            html += '<button class="learn-action-btn learn-partial" onclick="AICoworker.learnPatient()" title="Continue deep chart analysis">';
+            html += '<span class="learn-action-icon">&#129504;</span>';
+            html += `<span class="learn-action-label">Learned ${pct}%</span>`;
+            html += '</button>';
         }
 
         // === Analyze Case Button ===
         const hasAnalysis = !!(this.state.aiOneLiner || this.state.problemList?.length > 0);
         if (!hasAnalysis) {
-            // Not yet analyzed — prominent
             html += '<button class="learn-action-btn analyze-primary" onclick="AICoworker.refreshThinking()" title="Full case synthesis and analysis">';
             html += '<span class="learn-action-icon">&#128269;</span>';
             html += '<span class="learn-action-label">Analyze Case</span>';
             html += '</button>';
         } else {
-            // Already analyzed — subtle with status
             const analyzedAt = this.state.lastUpdated ? new Date(this.state.lastUpdated) : null;
             const analyzeTime = analyzedAt ? this._formatTimeAgo(analyzedAt) : '';
             html += '<button class="learn-action-btn analyze-done" onclick="AICoworker.refreshThinking()" title="Re-analyze case">';
@@ -1541,13 +1585,98 @@ const AICoworker = {
             html += '</button>';
         }
 
-        // === Clear Memory Button (only when memory exists) ===
+        // === Clear Memory Button ===
         if (status.hasMemory || hasAnalysis) {
             html += '<button class="clear-memory-btn" onclick="AICoworker.clearMemory()" title="Clear AI memory and start fresh">';
             html += '&#128465;';
             html += '</button>';
         }
 
+        html += '</div>';
+        return html;
+    },
+
+    /**
+     * Render deep learn progress during active analysis
+     */
+    _renderDeepLearnProgress(progress) {
+        let html = '<div class="deep-learn-progress">';
+
+        // Header
+        const levelLabel = progress.phase === 'mapping' ? 'Mapping Chart...' :
+                          progress.phase === 'level1' ? 'Level 1 — Critical Foundation' :
+                          `Level ${progress.currentLevel} — Deep Review`;
+
+        html += `<div class="dl-progress-header">`;
+        html += `<span class="dl-progress-icon">&#129504;</span>`;
+        html += `<span class="dl-progress-title">Learning Patient</span>`;
+        html += `<span class="dl-progress-level">${levelLabel}</span>`;
+        html += `</div>`;
+
+        // Progress bar
+        const pct = progress.percentComplete;
+        html += `<div class="dl-progress-bar-wrap">`;
+        html += `<div class="dl-progress-bar" style="width: ${pct}%"></div>`;
+        html += `</div>`;
+
+        // Stats
+        html += `<div class="dl-progress-stats">`;
+        html += `<span>${progress.processedCount}/${progress.totalItems} items</span>`;
+        if (progress.noteCount || progress.labCount || progress.imagingCount) {
+            html += `<span class="dl-progress-breakdown">${progress.noteCount} notes · ${progress.labCount} labs · ${progress.imagingCount} imaging</span>`;
+        }
+        html += `</div>`;
+
+        html += '</div>';
+        return html;
+    },
+
+    /**
+     * Render deep learn between-levels state with Next Level button
+     */
+    _renderDeepLearnBetweenLevels(progress) {
+        let html = '<div class="deep-learn-between">';
+
+        // Completion summary
+        const pct = progress.percentComplete;
+        html += `<div class="dl-between-header">`;
+        html += `<span class="dl-between-icon">&#9989;</span>`;
+        html += `<span class="dl-between-title">Level ${progress.currentLevel} Complete</span>`;
+        html += `<span class="dl-between-pct">${pct}% of chart</span>`;
+        html += `</div>`;
+
+        // Progress bar
+        html += `<div class="dl-progress-bar-wrap">`;
+        html += `<div class="dl-progress-bar" style="width: ${pct}%"></div>`;
+        html += `</div>`;
+
+        // Remaining info
+        html += `<div class="dl-between-remaining">`;
+        html += `${progress.remaining} items remaining · ${progress.remainingLevels} levels left`;
+        html += `</div>`;
+
+        // Action buttons
+        html += `<div class="dl-between-actions">`;
+        html += `<button class="learn-action-btn learn-primary dl-next-level" onclick="AICoworker.learnPatient()" title="Process next batch of chart data">`;
+        html += `<span class="learn-action-icon">&#9654;</span>`;
+        html += `<span class="learn-action-label">Next Level</span>`;
+        html += `</button>`;
+
+        // Analyze Case (can analyze with partial learn)
+        const hasAnalysis = !!(this.state.aiOneLiner || this.state.problemList?.length > 0);
+        if (!hasAnalysis) {
+            html += '<button class="learn-action-btn analyze-primary" onclick="AICoworker.refreshThinking()" title="Analyze with current knowledge">';
+            html += '<span class="learn-action-icon">&#128269;</span>';
+            html += '<span class="learn-action-label">Analyze Case</span>';
+            html += '</button>';
+        } else {
+            html += '<button class="learn-action-btn analyze-done" onclick="AICoworker.refreshThinking()" title="Re-analyze case">';
+            html += '<span class="learn-action-icon">&#9989;</span>';
+            html += '<span class="learn-action-label">Analyzed</span>';
+            html += '</button>';
+        }
+
+        html += `</div>`;
         html += '</div>';
         return html;
     },
@@ -2661,10 +2790,17 @@ const AICoworker = {
             NurseChat.messages = [];
         }
 
-        // 8. Reset in-memory session state
+        // 8. Reset deep learn state
+        this._resetDeepLearn();
+        if (this.longitudinalDoc) {
+            const dlKey = `deepLearn_${this.longitudinalDoc.metadata.patientId}`;
+            localStorage.removeItem(dlKey);
+        }
+
+        // 9. Reset in-memory session state
         this.resetSessionState();
 
-        // 9. Null out the longitudinal doc so it gets rebuilt
+        // 10. Null out the longitudinal doc so it gets rebuilt
         this.longitudinalDoc = null;
         this.longitudinalDocUpdater = null;
         this.longitudinalDocRenderer = null;
@@ -6616,12 +6752,33 @@ RULES:
         return null;
     },
 
-    // ==================== Learn / Refresh / Interact / Order Pipeline ====================
+    // ==================== Deep Learn — Multi-Pass Chart Analysis ====================
 
     /**
-     * Learn about the patient — expensive one-time chart digest.
-     * Builds a comprehensive memoryDocument from the full longitudinal chart.
-     * Uses Sonnet for quality. Stores result in aiMemory.memoryDocument.
+     * Reset deep learn state to initial values
+     */
+    _resetDeepLearn() {
+        this._deepLearn = {
+            phase: 'idle',
+            chartMap: null,
+            queue: [],
+            processed: new Set(),
+            totalItems: 0,
+            processedCount: 0,
+            currentLevel: 0,
+            totalLevels: 0,
+            levelBatches: [],
+            extractedFacts: [],
+            levelFindings: [],
+            aborted: false
+        };
+    },
+
+    /**
+     * Learn about the patient — multi-pass deep chart analysis.
+     * Phase 0: Map chart (instant, no LLM)
+     * Level 1: Critical foundation (Sonnet, full text of recent/critical items)
+     * Level 2+: User-triggered deep review (Haiku extraction + Sonnet synthesis)
      */
     async learnPatient() {
         if (!this.contextAssembler) {
@@ -6629,14 +6786,32 @@ RULES:
             return;
         }
 
+        // If we're between levels, advance to next level
+        if (this._deepLearn.phase === 'between_levels') {
+            // Rebuild chart map if needed (e.g., after page reload)
+            if (!this._deepLearn.levelBatches || this._deepLearn.levelBatches.length === 0) {
+                this.state.status = 'learning';
+                this.render();
+                await this._mapChart();
+                // Remove already-processed items from batches
+                this._deepLearn.levelBatches = this._deepLearn.levelBatches.map(batch =>
+                    batch.filter(item => !this._deepLearn.processed.has(item.id))
+                ).filter(batch => batch.length > 0);
+                this._deepLearn.phase = 'between_levels';
+                this.state.status = 'ready';
+            }
+            return this._runNextLevel();
+        }
+
+        // If already complete, re-learn from scratch
+        if (this._deepLearn.phase === 'complete') {
+            this._resetDeepLearn();
+        }
+
+        // Fresh learn: start with chart mapping
+        this._resetDeepLearn();
         this.state.status = 'learning';
         this.render();
-
-        // Animate learn button
-        const learnBtn = document.querySelector('.learn-patient-btn');
-        if (learnBtn) learnBtn.classList.add('learning');
-
-        App.showToast('Learning patient chart...', 'info');
 
         try {
             // Ensure longitudinal document is up to date
@@ -6645,96 +6820,15 @@ RULES:
             }
             this.syncSessionStateToDocument();
 
-            // Build the learn prompt (full chart → structured memory)
-            const prompt = this.contextAssembler.buildLearnPrompt();
+            // Phase 0: Map the chart
+            await this._mapChart();
 
-            console.log(`🧠 Learn: Sending ${prompt.userMessage.length} chars to Sonnet`);
-
-            // Call LLM with Sonnet for quality
-            const response = await this.callLLM(
-                prompt.systemPrompt,
-                prompt.userMessage,
-                prompt.maxTokens,
-                { model: 'claude-sonnet-4-6' }
-            );
-
-            // Parse the memory document JSON
-            const memoryDoc = this._parseJSONResponse(response);
-            if (!memoryDoc || !memoryDoc.patientOverview) {
-                throw new Error('Could not parse memory document from AI response');
-            }
-
-            // Store in longitudinal doc's aiMemory
-            this.longitudinalDoc.aiMemory.memoryDocument = memoryDoc;
-            this.longitudinalDoc.aiMemory.lastLearnedAt = new Date().toISOString();
-            this.longitudinalDoc.aiMemory.lastRefreshedAt = new Date().toISOString();
-
-            // Backward compat: sync patientSummary from overview
-            this.longitudinalDoc.aiMemory.patientSummary = memoryDoc.patientOverview;
-
-            // Update panel state from memory
-            if (memoryDoc.clinicalGestalt) {
-                this.state.aiOneLiner = memoryDoc.clinicalGestalt;
-            }
-            if (memoryDoc.patientOverview) {
-                this.state.summary = memoryDoc.patientOverview;
-            }
-
-            // Extract safety flags from memory
-            if (memoryDoc.safetyProfile) {
-                const flags = [];
-                if (memoryDoc.safetyProfile.criticalValues) {
-                    memoryDoc.safetyProfile.criticalValues.forEach(cv => {
-                        flags.push({ text: cv, severity: 'critical' });
-                    });
-                }
-                if (memoryDoc.safetyProfile.contraindications) {
-                    memoryDoc.safetyProfile.contraindications.forEach(ci => {
-                        flags.push({ text: ci, severity: 'important' });
-                    });
-                }
-                if (flags.length > 0) {
-                    this.state.keyConsiderations = flags;
-                }
-            }
-
-            // Build problem list from memory
-            if (memoryDoc.problemAnalysis && Array.isArray(memoryDoc.problemAnalysis)) {
-                this.state.problemList = memoryDoc.problemAnalysis.map(p => ({
-                    name: p.problem,
-                    urgency: p.status === 'acute' ? 'urgent' : (p.status === 'active' ? 'active' : 'monitoring'),
-                    ddx: null,
-                    plan: p.plan || ''
-                }));
-            }
-
-            // Build pending items as suggested actions
-            if (memoryDoc.pendingItems && Array.isArray(memoryDoc.pendingItems)) {
-                this.state.suggestedActions = memoryDoc.pendingItems.map((item, idx) => ({
-                    id: 'learn_pending_' + idx,
-                    text: item
-                }));
-            }
-
-            // Save everything
-            this.saveLongitudinalDoc();
-            this.state.status = 'ready';
-            this.state.lastUpdated = new Date().toISOString();
-            this.saveState();
-            this._saveModeCache();
-            this.render();
-
-            console.log('🧠 Learn complete:', {
-                problems: memoryDoc.problemAnalysis?.length || 0,
-                meds: memoryDoc.medicationRationale?.length || 0,
-                allergies: memoryDoc.safetyProfile?.allergies?.length || 0,
-                pending: memoryDoc.pendingItems?.length || 0
-            });
-
-            App.showToast('Patient chart learned successfully', 'success');
+            // Auto-start Level 1
+            await this._runLevel1();
 
         } catch (error) {
-            console.error('Learn patient error:', error);
+            console.error('Deep learn error:', error);
+            this._deepLearn.phase = 'idle';
             this.state.status = 'ready';
             this.render();
             if (error.message === 'API key not configured') {
@@ -6742,10 +6836,582 @@ RULES:
             } else {
                 App.showToast(`Learn failed: ${error.message}`, 'error');
             }
-        } finally {
-            if (learnBtn) learnBtn.classList.remove('learning');
         }
     },
+
+    /**
+     * Phase 0: Map the chart — count and categorize all data, build priority queue.
+     * No LLM call, instant.
+     */
+    async _mapChart() {
+        this._deepLearn.phase = 'mapping';
+        this.render();
+        console.log('🧠 Deep Learn: Mapping chart...');
+
+        const dl = window.dataLoader;
+        const pid = dl?.currentPatientId || 'PAT001';
+
+        // Load all indexes in parallel
+        const [notesIndex, labsIndex, imagingIndex] = await Promise.all([
+            dl.loadNotesIndex(pid).catch(() => ({ notes: [] })),
+            dl.loadLabsIndex(pid).catch(() => ({ panels: [] })),
+            dl.loadImaging(pid).catch(() => ({ studies: [] }))
+        ]);
+
+        const notes = (notesIndex.notes || []).map(n => ({
+            type: 'note',
+            id: n.id,
+            meta: { noteType: n.type, date: n.date, author: n.author, department: n.department, title: n.title }
+        }));
+
+        const labs = (labsIndex.panels || []).map(p => ({
+            type: 'lab',
+            id: p.id,
+            meta: { name: p.name, date: p.date }
+        }));
+
+        const imaging = (imagingIndex.studies || []).map(s => ({
+            type: 'imaging',
+            id: s.id,
+            meta: { modality: s.modality, description: s.description, date: s.date }
+        }));
+
+        this._deepLearn.chartMap = { notes, labs, imaging };
+        this._deepLearn.totalItems = notes.length + labs.length + imaging.length;
+
+        // Build prioritized queue
+        const queue = this._buildPriorityQueue(notes, labs, imaging);
+        this._deepLearn.queue = queue;
+
+        // Compute level batches
+        // Level 1: first batch (critical/recent items)
+        // Level 2+: remaining items in batches of ~30 notes or ~50 labs
+        const level1Items = [];
+        const remainingItems = [];
+        const now = new Date();
+        const sevenDaysAgo = new Date(now - 7 * 24 * 60 * 60 * 1000);
+
+        // Critical note types that go into Level 1
+        const criticalTypes = ['H&P', 'Discharge Summary', 'Operative Note', 'ED Note', 'Consult Note'];
+
+        for (const item of queue) {
+            const itemDate = new Date(item.meta.date);
+            const isRecent = itemDate > sevenDaysAgo;
+            const isCriticalType = item.type === 'note' && criticalTypes.includes(item.meta.noteType);
+            const isImaging = item.type === 'imaging';
+
+            if (level1Items.length < 60 && (isRecent || isCriticalType || isImaging)) {
+                level1Items.push(item);
+            } else {
+                remainingItems.push(item);
+            }
+        }
+
+        // If Level 1 is too small, add more recent items
+        if (level1Items.length < 20) {
+            while (level1Items.length < 40 && remainingItems.length > 0) {
+                level1Items.push(remainingItems.shift());
+            }
+        }
+
+        // Build batches for Level 2+
+        const BATCH_SIZE = 30;
+        const batches = [level1Items];
+        for (let i = 0; i < remainingItems.length; i += BATCH_SIZE) {
+            batches.push(remainingItems.slice(i, i + BATCH_SIZE));
+        }
+
+        this._deepLearn.levelBatches = batches;
+        this._deepLearn.totalLevels = batches.length;
+
+        console.log('🧠 Deep Learn: Chart mapped', {
+            notes: notes.length,
+            labs: labs.length,
+            imaging: imaging.length,
+            total: this._deepLearn.totalItems,
+            levels: batches.length,
+            level1Items: level1Items.length
+        });
+    },
+
+    /**
+     * Build a prioritized queue of chart items for processing.
+     * Order: recent > critical types > abnormal labs > progress notes > historical
+     */
+    _buildPriorityQueue(notes, labs, imaging) {
+        const now = new Date();
+        const sevenDaysAgo = new Date(now - 7 * 24 * 60 * 60 * 1000);
+        const thirtyDaysAgo = new Date(now - 30 * 24 * 60 * 60 * 1000);
+
+        const criticalTypes = ['H&P', 'Discharge Summary', 'Operative Note', 'ED Note'];
+        const importantTypes = ['Consult Note', 'Procedure Note'];
+
+        // Score each item for priority sorting (higher = process first)
+        const scored = [...notes, ...labs, ...imaging].map(item => {
+            let score = 0;
+            const itemDate = new Date(item.meta.date);
+
+            // Recency boost
+            if (itemDate > sevenDaysAgo) score += 100;
+            else if (itemDate > thirtyDaysAgo) score += 50;
+            else score += Math.max(0, 25 - Math.floor((now - itemDate) / (30 * 24 * 60 * 60 * 1000)));
+
+            // Type boost
+            if (item.type === 'note') {
+                if (criticalTypes.includes(item.meta.noteType)) score += 80;
+                else if (importantTypes.includes(item.meta.noteType)) score += 60;
+                else if (item.meta.noteType === 'Progress Note') score += 40;
+            } else if (item.type === 'imaging') {
+                score += 70; // Imaging always important
+            } else if (item.type === 'lab') {
+                score += 30; // Labs moderate priority
+            }
+
+            return { ...item, _score: score };
+        });
+
+        // Sort by score descending, then by date descending
+        scored.sort((a, b) => {
+            if (b._score !== a._score) return b._score - a._score;
+            return new Date(b.meta.date) - new Date(a.meta.date);
+        });
+
+        return scored;
+    },
+
+    /**
+     * Level 1: Critical Foundation — read full text of critical/recent items with Sonnet.
+     */
+    async _runLevel1() {
+        this._deepLearn.phase = 'level1';
+        this._deepLearn.currentLevel = 1;
+        this.render();
+
+        const batch = this._deepLearn.levelBatches[0];
+        if (!batch || batch.length === 0) {
+            console.warn('🧠 Deep Learn: No items for Level 1');
+            this._deepLearn.phase = 'complete';
+            this.state.status = 'ready';
+            this.render();
+            return;
+        }
+
+        console.log(`🧠 Deep Learn Level 1: Loading ${batch.length} critical items...`);
+        App.showToast(`Learning chart — Level 1 (${batch.length} items)...`, 'info');
+
+        // Load full content for all Level 1 items in parallel
+        const dl = window.dataLoader;
+        const pid = dl?.currentPatientId || 'PAT001';
+
+        const loadPromises = batch.map(async (item) => {
+            try {
+                if (item.type === 'note') {
+                    item.data = await dl.loadNote(item.id, pid);
+                } else if (item.type === 'lab') {
+                    item.data = await dl.loadLabPanel(item.id, pid);
+                } else if (item.type === 'imaging') {
+                    item.data = await dl.loadImagingReport(item.id, pid);
+                }
+            } catch (e) {
+                console.warn(`Could not load ${item.type} ${item.id}:`, e.message);
+            }
+            return item;
+        });
+
+        const loadedItems = await Promise.all(loadPromises);
+        const itemsWithData = loadedItems.filter(i => i.data);
+
+        // Update progress
+        this._deepLearn.processedCount = itemsWithData.length;
+        this.render();
+
+        // Assemble full text context via working memory
+        const chartContext = this.workingMemory.assembleForDeepLearnLevel1(itemsWithData);
+
+        console.log(`🧠 Deep Learn Level 1: Sending ${chartContext.length} chars to Sonnet`);
+
+        // Call Sonnet with the comprehensive Level 1 prompt
+        const prompt = this.contextAssembler.buildDeepLearnLevel1Prompt(chartContext);
+        const response = await this.callLLM(
+            prompt.systemPrompt,
+            prompt.userMessage,
+            prompt.maxTokens,
+            { model: 'claude-sonnet-4-6' }
+        );
+
+        // Parse and store the memory document
+        const memoryDoc = this._parseJSONResponse(response);
+        if (!memoryDoc || !memoryDoc.patientOverview) {
+            throw new Error('Could not parse memory document from Level 1 response');
+        }
+
+        // Mark items as processed
+        batch.forEach(item => this._deepLearn.processed.add(item.id));
+
+        // Store memory
+        this._applyMemoryDocument(memoryDoc);
+
+        // Transition to between-levels state
+        this._deepLearn.phase = 'between_levels';
+        this.state.status = 'ready';
+
+        const remaining = this._deepLearn.totalItems - this._deepLearn.processedCount;
+        const remainingLevels = this._deepLearn.totalLevels - 1;
+
+        console.log(`🧠 Deep Learn Level 1 complete: ${this._deepLearn.processedCount}/${this._deepLearn.totalItems} items, ${remainingLevels} levels remaining`);
+
+        if (remainingLevels <= 0) {
+            this._deepLearn.phase = 'complete';
+            App.showToast('Chart fully learned!', 'success');
+        } else {
+            App.showToast(`Level 1 complete — ${remaining} items remaining`, 'success');
+        }
+
+        this.saveLongitudinalDoc();
+        this._saveDeepLearnState();
+        this.saveState();
+        this._saveModeCache();
+        this.render();
+    },
+
+    /**
+     * Run the next level of deep chart analysis (Level 2+).
+     * Haiku extracts facts from batch, Sonnet synthesizes into memory.
+     */
+    async _runNextLevel() {
+        const dl = this._deepLearn;
+        const nextLevelIdx = dl.currentLevel; // 0-indexed into levelBatches (level 1 = index 0)
+
+        if (nextLevelIdx >= dl.levelBatches.length) {
+            dl.phase = 'complete';
+            this.state.status = 'ready';
+            App.showToast('Chart fully learned!', 'success');
+            this.render();
+            return;
+        }
+
+        dl.phase = 'level2+';
+        dl.currentLevel = nextLevelIdx + 1;
+        dl.levelFindings = [];
+        this.state.status = 'learning';
+        this.render();
+
+        const batch = dl.levelBatches[nextLevelIdx];
+        console.log(`🧠 Deep Learn Level ${dl.currentLevel}: Processing ${batch.length} items...`);
+        App.showToast(`Deep review — Level ${dl.currentLevel} (${batch.length} items)...`, 'info');
+
+        try {
+            // Step 1: Load full content
+            const loader = window.dataLoader;
+            const pid = loader?.currentPatientId || 'PAT001';
+
+            const loadPromises = batch.map(async (item) => {
+                try {
+                    if (item.type === 'note') {
+                        item.data = await loader.loadNote(item.id, pid);
+                    } else if (item.type === 'lab') {
+                        item.data = await loader.loadLabPanel(item.id, pid);
+                    } else if (item.type === 'imaging') {
+                        item.data = await loader.loadImagingReport(item.id, pid);
+                    }
+                } catch (e) {
+                    console.warn(`Could not load ${item.type} ${item.id}:`, e.message);
+                }
+                return item;
+            });
+
+            const loadedItems = (await Promise.all(loadPromises)).filter(i => i.data);
+
+            // Step 2: Haiku extraction (parallel)
+            const extractions = await this._batchExtract(loadedItems);
+
+            // Step 3: Sonnet synthesis
+            const currentMemory = this.longitudinalDoc.aiMemory.memoryDocument;
+            if (!currentMemory) {
+                throw new Error('No existing memory document — run Level 1 first');
+            }
+
+            const updatedMemory = await this._synthesizeBatch(currentMemory, extractions);
+
+            // Mark processed
+            batch.forEach(item => dl.processed.add(item.id));
+            dl.processedCount += loadedItems.length;
+
+            // Apply updated memory
+            this._applyMemoryDocument(updatedMemory);
+
+            // Check if complete
+            const remainingLevels = dl.totalLevels - dl.currentLevel;
+            if (remainingLevels <= 0) {
+                dl.phase = 'complete';
+                App.showToast('Chart fully learned!', 'success');
+            } else {
+                dl.phase = 'between_levels';
+                const remaining = dl.totalItems - dl.processedCount;
+                App.showToast(`Level ${dl.currentLevel} complete — ${remaining} items remaining`, 'success');
+            }
+
+            this.state.status = 'ready';
+            this.saveLongitudinalDoc();
+            this._saveDeepLearnState();
+            this.saveState();
+            this._saveModeCache();
+            this.render();
+
+            console.log(`🧠 Deep Learn Level ${dl.currentLevel} complete: ${dl.processedCount}/${dl.totalItems} items`);
+
+        } catch (error) {
+            console.error(`Deep Learn Level ${dl.currentLevel} error:`, error);
+            dl.phase = 'between_levels'; // Allow retry
+            this.state.status = 'ready';
+            this.render();
+            App.showToast(`Level ${dl.currentLevel} failed: ${error.message}`, 'error');
+        }
+    },
+
+    /**
+     * Haiku extraction: send items in parallel small groups for fast fact extraction.
+     * Returns array of extraction objects.
+     */
+    async _batchExtract(items) {
+        // Group items into small batches for Haiku (5-8 items each to stay within context)
+        const HAIKU_BATCH = 5;
+        const requests = [];
+
+        for (let i = 0; i < items.length; i += HAIKU_BATCH) {
+            const group = items.slice(i, i + HAIKU_BATCH);
+
+            // Build text for this group
+            let docText = '';
+            let docMeta = '';
+
+            group.forEach((item, idx) => {
+                const d = item.data;
+                if (item.type === 'note') {
+                    const content = d.content || d.text || d.body || d.preview || '';
+                    const truncated = content.length > 6000 ? content.substring(0, 6000) + '\n...[truncated]' : content;
+                    docMeta += `Doc ${idx + 1}: ${item.meta.noteType || 'Note'} | ${item.meta.date || ''} | ${item.meta.author || ''}\n`;
+                    docText += `\n--- DOCUMENT: ${item.id} (${item.meta.noteType}) ---\n${truncated}\n`;
+                } else if (item.type === 'lab') {
+                    const results = (d.results || []).map(r => {
+                        const flag = r.flag ? ` [${r.flag}]` : '';
+                        return `${r.name || r.test}: ${r.value} ${r.unit || ''}${flag}`;
+                    }).join('; ');
+                    docMeta += `Doc ${idx + 1}: Lab Panel "${d.name || item.meta.name}" | ${d.collectedDate || item.meta.date || ''}\n`;
+                    docText += `\n--- LAB PANEL: ${item.id} (${d.name || item.meta.name}) ---\n${results}\n`;
+                } else if (item.type === 'imaging') {
+                    const report = d.report || d.findings || d.impression || '';
+                    docMeta += `Doc ${idx + 1}: ${item.meta.modality || 'Imaging'} "${item.meta.description || ''}" | ${item.meta.date || ''}\n`;
+                    docText += `\n--- IMAGING: ${item.id} (${item.meta.description}) ---\n${report}\n`;
+                }
+            });
+
+            const prompt = this.contextAssembler.buildHaikuExtractionPrompt(docText, docMeta);
+            requests.push({
+                systemPrompt: prompt.systemPrompt,
+                userMessage: prompt.userMessage,
+                model: 'claude-haiku-4-5-20251001',
+                maxTokens: prompt.maxTokens
+            });
+        }
+
+        console.log(`🧠 Haiku extraction: ${requests.length} parallel requests for ${items.length} items`);
+
+        // Run all Haiku calls in parallel (max 5 concurrent)
+        const results = await ClaudeAPI.parallelChat(requests, 5, (done, total) => {
+            // Update progress during extraction
+            const pct = Math.round((done / total) * 100);
+            console.log(`🧠 Haiku extraction: ${done}/${total} batches (${pct}%)`);
+        });
+
+        // Parse extraction results
+        const allExtractions = [];
+        results.forEach((r, idx) => {
+            if (r.success) {
+                try {
+                    const parsed = this._parseJSONResponse(r.result);
+                    if (parsed && parsed.documents) {
+                        allExtractions.push(...parsed.documents);
+                    } else if (parsed) {
+                        allExtractions.push(parsed);
+                    }
+                } catch (e) {
+                    console.warn(`Haiku extraction batch ${idx} parse failed`);
+                }
+            }
+        });
+
+        console.log(`🧠 Haiku extraction complete: ${allExtractions.length} document extractions`);
+        this._deepLearn.extractedFacts.push(...allExtractions);
+        return allExtractions;
+    },
+
+    /**
+     * Sonnet synthesis: merge Haiku extractions into existing memory document.
+     * Returns the updated memory document.
+     */
+    async _synthesizeBatch(currentMemory, extractions) {
+        console.log(`🧠 Sonnet synthesis: Merging ${extractions.length} extractions into memory...`);
+
+        const prompt = this.contextAssembler.buildSynthesisPrompt(
+            currentMemory,
+            extractions,
+            this._deepLearn.processedCount,
+            this._deepLearn.totalItems
+        );
+
+        const response = await this.callLLM(
+            prompt.systemPrompt,
+            prompt.userMessage,
+            prompt.maxTokens,
+            { model: 'claude-sonnet-4-6' }
+        );
+
+        const updatedMemory = this._parseJSONResponse(response);
+        if (!updatedMemory || !updatedMemory.patientOverview) {
+            throw new Error('Could not parse updated memory from synthesis response');
+        }
+
+        return updatedMemory;
+    },
+
+    /**
+     * Apply a memory document to the longitudinal doc and panel state.
+     * Shared by Level 1 and Level 2+ synthesis.
+     */
+    _applyMemoryDocument(memoryDoc) {
+        // Store in longitudinal doc's aiMemory
+        this.longitudinalDoc.aiMemory.memoryDocument = memoryDoc;
+        this.longitudinalDoc.aiMemory.lastLearnedAt = new Date().toISOString();
+        this.longitudinalDoc.aiMemory.lastRefreshedAt = new Date().toISOString();
+
+        // Backward compat
+        this.longitudinalDoc.aiMemory.patientSummary = memoryDoc.patientOverview;
+
+        // Update panel state from memory
+        if (memoryDoc.clinicalGestalt) {
+            this.state.aiOneLiner = memoryDoc.clinicalGestalt;
+        }
+        if (memoryDoc.patientOverview) {
+            this.state.summary = memoryDoc.patientOverview;
+        }
+
+        // Extract safety flags
+        if (memoryDoc.safetyProfile) {
+            const flags = [];
+            if (memoryDoc.safetyProfile.criticalValues) {
+                memoryDoc.safetyProfile.criticalValues.forEach(cv => {
+                    flags.push({ text: cv, severity: 'critical' });
+                });
+            }
+            if (memoryDoc.safetyProfile.contraindications) {
+                memoryDoc.safetyProfile.contraindications.forEach(ci => {
+                    flags.push({ text: ci, severity: 'important' });
+                });
+            }
+            if (flags.length > 0) {
+                this.state.keyConsiderations = flags;
+            }
+        }
+
+        // Build problem list
+        if (memoryDoc.problemAnalysis && Array.isArray(memoryDoc.problemAnalysis)) {
+            this.state.problemList = memoryDoc.problemAnalysis.map(p => ({
+                name: p.problem,
+                urgency: p.status === 'acute' ? 'urgent' : (p.status === 'active' ? 'active' : 'monitoring'),
+                ddx: null,
+                plan: p.plan || ''
+            }));
+        }
+
+        // Build pending items as suggested actions
+        if (memoryDoc.pendingItems && Array.isArray(memoryDoc.pendingItems)) {
+            this.state.suggestedActions = memoryDoc.pendingItems.map((item, idx) => ({
+                id: 'learn_pending_' + idx,
+                text: item
+            }));
+        }
+
+        this.state.lastUpdated = new Date().toISOString();
+    },
+
+    /**
+     * Save deep learn state to localStorage for resume on reload.
+     */
+    _saveDeepLearnState() {
+        try {
+            const pid = this.longitudinalDoc?.metadata?.patientId || 'PAT001';
+            const state = {
+                phase: this._deepLearn.phase,
+                processedCount: this._deepLearn.processedCount,
+                totalItems: this._deepLearn.totalItems,
+                currentLevel: this._deepLearn.currentLevel,
+                totalLevels: this._deepLearn.totalLevels,
+                processedIds: Array.from(this._deepLearn.processed),
+                // Don't save queue/batches — they'll be rebuilt from chart map
+            };
+            localStorage.setItem(`deepLearn_${pid}`, JSON.stringify(state));
+        } catch (e) {
+            console.warn('Failed to save deep learn state:', e.message);
+        }
+    },
+
+    /**
+     * Load deep learn state from localStorage.
+     */
+    _loadDeepLearnState() {
+        try {
+            const pid = this.longitudinalDoc?.metadata?.patientId || 'PAT001';
+            const saved = localStorage.getItem(`deepLearn_${pid}`);
+            if (!saved) return false;
+
+            const state = JSON.parse(saved);
+            if (state.phase === 'idle') return false;
+
+            this._deepLearn.phase = state.phase;
+            this._deepLearn.processedCount = state.processedCount || 0;
+            this._deepLearn.totalItems = state.totalItems || 0;
+            this._deepLearn.currentLevel = state.currentLevel || 0;
+            this._deepLearn.totalLevels = state.totalLevels || 0;
+            this._deepLearn.processed = new Set(state.processedIds || []);
+
+            console.log(`🧠 Restored deep learn state: Level ${state.currentLevel}, ${state.processedCount}/${state.totalItems} items, phase: ${state.phase}`);
+            return true;
+        } catch (e) {
+            console.warn('Failed to load deep learn state:', e);
+            return false;
+        }
+    },
+
+    /**
+     * Get deep learn progress info for UI rendering.
+     */
+    _getDeepLearnProgress() {
+        const dl = this._deepLearn;
+        const pct = dl.totalItems > 0 ? Math.round((dl.processedCount / dl.totalItems) * 100) : 0;
+        const remaining = dl.totalItems - dl.processedCount;
+        const remainingLevels = Math.max(0, dl.totalLevels - dl.currentLevel);
+        const map = dl.chartMap || { notes: [], labs: [], imaging: [] };
+
+        return {
+            phase: dl.phase,
+            currentLevel: dl.currentLevel,
+            totalLevels: dl.totalLevels,
+            processedCount: dl.processedCount,
+            totalItems: dl.totalItems,
+            percentComplete: pct,
+            remaining,
+            remainingLevels,
+            noteCount: map.notes.length,
+            labCount: map.labs.length,
+            imagingCount: map.imaging.length,
+            isActive: dl.phase === 'level1' || dl.phase === 'level2+' || dl.phase === 'mapping',
+            isComplete: dl.phase === 'complete',
+            canAdvance: dl.phase === 'between_levels' && remainingLevels > 0
+        };
+    },
+
+    // ==================== Learn / Refresh / Interact / Order Pipeline ====================
 
     /**
      * Digest accumulated dictation into the memory document.

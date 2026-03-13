@@ -785,6 +785,158 @@ Respond with the COMPLETE updated memory document as JSON (same schema as before
         };
     }
 
+    // =====================================================
+    // DEEP LEARN PROMPTS (multi-pass chart analysis)
+    // =====================================================
+
+    /**
+     * Build prompt for Deep Learn Level 1 — comprehensive initial chart read.
+     * Receives full text of critical/recent items assembled by working memory.
+     * Model: Sonnet. Max tokens: 8192.
+     */
+    buildDeepLearnLevel1Prompt(chartContext) {
+        const systemPrompt = `You are an AI clinical co-pilot performing a COMPREHENSIVE chart review for the first time. You are reading the most critical and recent portions of a patient's medical record.
+
+Your task: Build a thorough, structured MEMORY DOCUMENT that will serve as your persistent clinical knowledge of this patient for ALL future interactions. This must be detailed enough to answer clinical questions, suggest orders, and catch safety issues WITHOUT re-reading the chart.
+
+Read every note, lab, and imaging report carefully. Produce this EXACT JSON structure:
+
+{
+    "patientOverview": "4-6 paragraph comprehensive mental model. Include: demographics, chief complaint, full HPI, PMH with clinical qualifiers (EF%, baseline Cr, A1c, NYHA class, MELD, etc.), surgical history, social/functional status, and current clinical trajectory. Write as a clinician would present this patient on rounds.",
+    "problemAnalysis": [
+        {
+            "problem": "Problem name",
+            "status": "active|stable|acute|chronic|resolving",
+            "trajectory": "improving|worsening|stable|fluctuating",
+            "keyData": ["Every relevant lab value, imaging finding, exam finding, procedure result for this problem"],
+            "plan": "Current management plan with specific medications, doses, and monitoring",
+            "medRationale": "Why the patient is on specific meds for this problem, including dose rationale",
+            "timeline": "Key dates and events in the history of this problem"
+        }
+    ],
+    "safetyProfile": {
+        "allergies": [{"substance": "...", "reaction": "...", "severity": "mild|moderate|severe|anaphylaxis", "implications": "What to avoid, cross-reactivity concerns"}],
+        "contraindications": ["Specific drugs/classes contraindicated and why — be exhaustive"],
+        "criticalValues": ["Any critical lab values or vital signs with clinical context"],
+        "interactions": ["Drug-drug or drug-disease interactions to watch"],
+        "renalDosing": ["Medications that need renal dose adjustment given current GFR"]
+    },
+    "medicationRationale": [
+        {"name": "Med name + dose + route + frequency", "indication": "What it's for", "rationale": "Why this specific med/dose — clinical reasoning", "monitoring": "What to monitor"}
+    ],
+    "labTrends": {
+        "key_values": [
+            {"test": "Test name", "values": [{"date": "...", "value": "...", "flag": "H|L|normal"}], "trend": "stable|rising|falling|fluctuating", "significance": "Clinical meaning"}
+        ]
+    },
+    "pendingItems": ["Pending results, decisions, follow-ups, unresolved questions — be comprehensive"],
+    "clinicalGestalt": "2-3 sentence clinical gestalt — the story of this patient, their trajectory, and what matters most right now."
+}
+
+RULES:
+- problemAnalysis: Include ALL active AND significant chronic problems, ordered by acuity. Include every clinical qualifier you find (EF%, GFR, A1c, INR target, etc.)
+- safetyProfile: Be EXHAUSTIVE — this is safety-critical. Lives depend on this section.
+- medicationRationale: Include EVERY current medication. If reason is unclear from chart, note "indication unclear from chart"
+- labTrends: Track the 10-15 most clinically significant lab values across time
+- pendingItems: Everything unresolved, awaited, or needing follow-up
+- clinicalGestalt: What would you tell an incoming covering physician in 30 seconds?
+
+Respond with ONLY the JSON, no preamble or markdown fences.`;
+
+        return {
+            systemPrompt,
+            userMessage: `Here is the patient chart data for your comprehensive review:\n\n${chartContext}`,
+            maxTokens: 8192
+        };
+    }
+
+    /**
+     * Build prompt for Haiku extraction — fast structured extraction from individual documents.
+     * Model: Haiku. Max tokens: 1024.
+     * @param {string} documentText — full text of the document(s) to extract from
+     * @param {string} documentMeta — "Type: X | Date: Y | Author: Z"
+     */
+    buildHaikuExtractionPrompt(documentText, documentMeta) {
+        const systemPrompt = `You are a clinical data extractor. Read the following medical document(s) and extract ALL clinically relevant facts into structured JSON. Be thorough — do not skip any findings, values, changes, or action items.
+
+Return this EXACT JSON structure:
+{
+    "documents": [
+        {
+            "documentId": "from metadata",
+            "documentType": "note type",
+            "date": "document date",
+            "author": "author name",
+            "key_findings": ["Every significant clinical finding, assessment, or conclusion"],
+            "problems_mentioned": ["Every problem/diagnosis discussed"],
+            "medication_changes": [{"drug": "name", "action": "started|stopped|changed|continued", "dose": "if mentioned", "reason": "if mentioned"}],
+            "lab_values": [{"test": "name", "value": "value", "unit": "unit", "flag": "H|L|C|normal"}],
+            "vital_signs": [{"type": "BP|HR|etc", "value": "value"}],
+            "action_items": ["Orders placed, referrals made, follow-up plans, pending items"],
+            "safety_concerns": ["Allergic reactions, adverse events, contraindications noted, critical values"]
+        }
+    ]
+}
+
+RULES:
+- Extract EVERYTHING — completeness is more important than brevity
+- Include exact values (don't round or summarize numbers)
+- Preserve temporal context (dates, durations, "since last visit")
+- If multiple documents, return one entry per document in the array
+
+Respond with ONLY the JSON, no preamble.`;
+
+        return {
+            systemPrompt,
+            userMessage: `DOCUMENT METADATA: ${documentMeta}\n\nDOCUMENT CONTENT:\n${documentText}`,
+            maxTokens: 1024
+        };
+    }
+
+    /**
+     * Build prompt for Sonnet synthesis — merge Haiku extractions into existing memory.
+     * Model: Sonnet. Max tokens: 8192.
+     * @param {object} currentMemory — existing memoryDocument
+     * @param {Array} extractions — array of Haiku extraction results
+     * @param {number} processedCount — items processed so far
+     * @param {number} totalItems — total items in chart
+     */
+    buildSynthesisPrompt(currentMemory, extractions, processedCount, totalItems) {
+        const systemPrompt = `You are an AI clinical co-pilot updating your patient memory document with newly extracted data. You have read ${processedCount}/${totalItems} items from the chart so far.
+
+You will receive:
+1. YOUR CURRENT MEMORY DOCUMENT — your existing knowledge
+2. NEW EXTRACTIONS — structured data extracted from chart documents you haven't seen before
+
+Your task: MERGE the new information into your memory document. Return the COMPLETE updated memory document.
+
+MERGE RULES:
+- ADD new problems, findings, medications, or events not in your current memory
+- UPDATE values, statuses, or trajectories where new data provides more recent or complete information
+- EXTEND timelines and lab trends with historical data points
+- RESOLVE contradictions by trusting the more specific/recent source and noting the discrepancy
+- PRESERVE everything from current memory that isn't contradicted
+- NEVER remove information unless it's clearly superseded (e.g., old med dose replaced by new dose)
+
+The output must use the same JSON schema as your current memory document. Respond with ONLY the complete updated JSON, no preamble or markdown fences.`;
+
+        const userMessage = `## YOUR CURRENT MEMORY DOCUMENT
+${JSON.stringify(currentMemory, null, 2)}
+
+## NEW EXTRACTIONS (${extractions.length} documents)
+${JSON.stringify(extractions, null, 2)}`;
+
+        return {
+            systemPrompt,
+            userMessage,
+            maxTokens: 8192
+        };
+    }
+
+    // =====================================================
+    // DICTATION DIGEST PROMPTS
+    // =====================================================
+
     /**
      * Build prompt for digesting dictation into the memory document.
      * Takes new dictation text and existing memoryDocument, returns updated

@@ -120,6 +120,83 @@ const ClaudeAPI = {
         return fullResponse;
     },
 
+    /**
+     * Run multiple LLM calls in parallel with concurrency control.
+     * Each request: { systemPrompt, userMessage, model, maxTokens }
+     * Returns array of { success, result?, error? } in same order as requests.
+     * @param {Array} requests — array of request objects
+     * @param {number} concurrency — max simultaneous calls (default 5)
+     * @param {Function} onProgress — optional callback(completedCount, totalCount)
+     */
+    async parallelChat(requests, concurrency = 5, onProgress = null) {
+        const results = new Array(requests.length);
+        let completedCount = 0;
+        let runningCount = 0;
+        let nextIndex = 0;
+
+        return new Promise((resolve) => {
+            const startNext = () => {
+                while (runningCount < concurrency && nextIndex < requests.length) {
+                    const idx = nextIndex++;
+                    const req = requests[idx];
+                    runningCount++;
+
+                    this._singleChat(req)
+                        .then(result => {
+                            results[idx] = { success: true, result };
+                        })
+                        .catch(error => {
+                            console.warn(`parallelChat: request ${idx} failed:`, error.message);
+                            results[idx] = { success: false, error: error.message };
+                        })
+                        .finally(() => {
+                            runningCount--;
+                            completedCount++;
+                            if (onProgress) onProgress(completedCount, requests.length);
+                            if (completedCount === requests.length) {
+                                resolve(results);
+                            } else {
+                                startNext();
+                            }
+                        });
+                }
+            };
+            if (requests.length === 0) resolve(results);
+            else startNext();
+        });
+    },
+
+    /**
+     * Internal: single chat call with custom model/maxTokens (does not mutate this.model)
+     */
+    async _singleChat(req) {
+        if (!this.isConfigured()) {
+            throw new Error('API key not configured');
+        }
+
+        const response = await fetch(this._getEndpoint(), {
+            method: 'POST',
+            headers: this._getHeaders(),
+            body: JSON.stringify({
+                model: req.model || this.model,
+                max_tokens: req.maxTokens || 1024,
+                system: req.systemPrompt,
+                messages: [{ role: 'user', content: req.userMessage }]
+            })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.error?.message || `HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+        if (data.content && data.content.length > 0) {
+            return data.content[0].text;
+        }
+        throw new Error('Invalid response format');
+    },
+
     setModel(model) {
         this.model = model;
     },
