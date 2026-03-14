@@ -7188,7 +7188,40 @@ RULES:
             group.forEach((item, idx) => {
                 const d = item.data;
                 if (item.type === 'note') {
-                    const content = d.content || d.text || d.body || d.preview || '';
+                    let content = '';
+                    // Format 1: sections field (dict or array)
+                    if (d.sections && typeof d.sections === 'object') {
+                        if (Array.isArray(d.sections)) {
+                            content = d.sections.map(sec => `${sec.title || 'Section'}: ${sec.content || sec.text || ''}`).join('\n');
+                        } else {
+                            content = Object.entries(d.sections).map(([key, val]) => {
+                                const label = key.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase()).trim();
+                                if (typeof val === 'string') return `${label}: ${val}`;
+                                if (Array.isArray(val)) return `${label}: ${val.map(v => typeof v === 'string' ? v : JSON.stringify(v)).join('; ')}`;
+                                if (typeof val === 'object' && val !== null) {
+                                    return `${label}: ${Object.entries(val).map(([k,v]) => `${k}: ${typeof v === 'string' ? v : JSON.stringify(v)}`).join('; ')}`;
+                                }
+                                return '';
+                            }).filter(Boolean).join('\n');
+                        }
+                    }
+                    // Format 2: clinical fields directly on the note object
+                    if (!content) {
+                        const clinicalFields = ['chiefComplaint', 'hpi', 'historyOfPresentIllness', 'reviewOfSystems',
+                            'vitals', 'physicalExam', 'assessment', 'plan', 'impression', 'recommendations',
+                            'hospitalCourse', 'dischargeMedications', 'dischargeInstructions', 'followUp'];
+                        const found = clinicalFields.filter(f => d[f]).map(f => {
+                            const label = f.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase()).trim();
+                            const val = d[f];
+                            if (typeof val === 'string') return `${label}: ${val}`;
+                            if (Array.isArray(val)) return `${label}: ${val.map(v => typeof v === 'string' ? v : JSON.stringify(v)).join('; ')}`;
+                            if (typeof val === 'object') return `${label}: ${Object.entries(val).map(([k,v]) => `${k}: ${typeof v === 'string' ? v : JSON.stringify(v)}`).join('; ')}`;
+                            return '';
+                        });
+                        if (found.length > 0) content = found.join('\n');
+                    }
+                    // Format 3: flat content string
+                    if (!content) content = d.content || d.text || d.body || d.preview || '';
                     const truncated = content.length > 6000 ? content.substring(0, 6000) + '\n...[truncated]' : content;
                     docMeta += `Doc ${idx + 1}: ${item.meta.noteType || 'Note'} | ${item.meta.date || ''} | ${item.meta.author || ''}\n`;
                     docText += `\n--- DOCUMENT: ${item.id} (${item.meta.noteType}) ---\n${truncated}\n`;
@@ -7200,7 +7233,18 @@ RULES:
                     docMeta += `Doc ${idx + 1}: Lab Panel "${d.name || item.meta.name}" | ${d.collectedDate || item.meta.date || ''}\n`;
                     docText += `\n--- LAB PANEL: ${item.id} (${d.name || item.meta.name}) ---\n${results}\n`;
                 } else if (item.type === 'imaging') {
-                    const report = d.report || d.findings || d.impression || '';
+                    let report = '';
+                    if (d.findings && typeof d.findings === 'object') {
+                        report += 'Findings: ' + Object.entries(d.findings).map(([k,v]) => `${k}: ${typeof v === 'string' ? v : JSON.stringify(v)}`).join('; ') + '\n';
+                    } else if (d.findings) {
+                        report += 'Findings: ' + d.findings + '\n';
+                    }
+                    if (Array.isArray(d.impression)) {
+                        report += 'Impression: ' + d.impression.join('; ');
+                    } else if (d.impression) {
+                        report += 'Impression: ' + d.impression;
+                    }
+                    if (!report) report = d.report || d.text || '';
                     docMeta += `Doc ${idx + 1}: ${item.meta.modality || 'Imaging'} "${item.meta.description || ''}" | ${item.meta.date || ''}\n`;
                     docText += `\n--- IMAGING: ${item.id} (${item.meta.description}) ---\n${report}\n`;
                 }

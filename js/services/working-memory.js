@@ -711,7 +711,63 @@ class WorkingMemoryAssembler {
                 var n = item.data;
                 if (!n) return;
                 var header = '### ' + (n.type || 'Note') + ' — ' + (n.date || '') + ' — ' + (n.author || '');
-                var body = n.content || n.text || n.body || n.preview || '[no content]';
+                var body = '';
+                // Helper to render a value (string, array, or dict) into readable text
+                function renderVal(label, val) {
+                    if (typeof val === 'string') {
+                        return '**' + label + ':** ' + val;
+                    } else if (Array.isArray(val)) {
+                        return '**' + label + ':**\n' + val.map(function(v) {
+                            return '- ' + (typeof v === 'string' ? v : JSON.stringify(v));
+                        }).join('\n');
+                    } else if (typeof val === 'object' && val !== null) {
+                        var sub = Object.entries(val).map(function(e) {
+                            return '  ' + e[0] + ': ' + (typeof e[1] === 'string' ? e[1] : JSON.stringify(e[1]));
+                        }).join('\n');
+                        return '**' + label + ':**\n' + sub;
+                    }
+                    return '';
+                }
+                function camelToLabel(key) {
+                    return key.replace(/([A-Z])/g, ' $1').replace(/^./, function(s) { return s.toUpperCase(); }).trim();
+                }
+
+                // Format 1: notes with a "sections" field (H&P, Discharge Summary with dict/array sections)
+                if (n.sections && typeof n.sections === 'object') {
+                    if (Array.isArray(n.sections)) {
+                        // Array of {title, content} objects
+                        body = n.sections.map(function(sec) {
+                            var title = sec.title || sec.heading || 'Section';
+                            var content = sec.content || sec.text || '';
+                            if (typeof content !== 'string') content = JSON.stringify(content);
+                            return '**' + title + ':** ' + content;
+                        }).join('\n\n');
+                    } else {
+                        body = Object.entries(n.sections).map(function(entry) {
+                            return renderVal(camelToLabel(entry[0]), entry[1]);
+                        }).filter(Boolean).join('\n\n');
+                    }
+                }
+
+                // Format 2: structured notes with clinical fields directly on the note object
+                // (chiefComplaint, hpi, assessment, plan, physicalExam, etc.)
+                if (!body) {
+                    var clinicalFields = ['chiefComplaint', 'hpi', 'historyOfPresentIllness', 'reviewOfSystems',
+                        'vitals', 'physicalExam', 'assessment', 'plan', 'impression', 'recommendations',
+                        'hospitalCourse', 'dischargeMedications', 'dischargeInstructions', 'followUp'];
+                    var found = [];
+                    clinicalFields.forEach(function(field) {
+                        if (n[field]) {
+                            found.push(renderVal(camelToLabel(field), n[field]));
+                        }
+                    });
+                    if (found.length > 0) body = found.join('\n\n');
+                }
+
+                // Format 3: flat content string
+                if (!body) {
+                    body = n.content || n.text || n.body || n.preview || '[no content]';
+                }
                 // Cap individual note at 8000 chars to prevent one massive note from dominating
                 if (body.length > 8000) body = body.substring(0, 8000) + '\n... [truncated]';
                 sections.push(header + '\n' + body);
@@ -741,7 +797,33 @@ class WorkingMemoryAssembler {
                 var rpt = item.data;
                 if (!rpt) return;
                 var header = '### ' + (rpt.description || rpt.modality || 'Imaging') + ' — ' + (rpt.date || '');
-                var body = rpt.report || rpt.findings || rpt.impression || rpt.text || '[no report]';
+                var parts = [];
+                if (rpt.indication) parts.push('**Indication:** ' + rpt.indication);
+                if (rpt.technique && typeof rpt.technique === 'string') parts.push('**Technique:** ' + rpt.technique);
+                if (rpt.comparison) parts.push('**Comparison:** ' + rpt.comparison);
+                // findings can be a string, dict, or missing
+                if (rpt.findings) {
+                    if (typeof rpt.findings === 'string') {
+                        parts.push('**Findings:** ' + rpt.findings);
+                    } else if (typeof rpt.findings === 'object') {
+                        var findingsText = Object.entries(rpt.findings).map(function(e) {
+                            return '  ' + e[0] + ': ' + (typeof e[1] === 'string' ? e[1] : JSON.stringify(e[1]));
+                        }).join('\n');
+                        parts.push('**Findings:**\n' + findingsText);
+                    }
+                }
+                // impression can be a string, array, or missing
+                if (rpt.impression) {
+                    if (typeof rpt.impression === 'string') {
+                        parts.push('**Impression:** ' + rpt.impression);
+                    } else if (Array.isArray(rpt.impression)) {
+                        parts.push('**Impression:**\n' + rpt.impression.map(function(i) {
+                            return '- ' + (typeof i === 'string' ? i : JSON.stringify(i));
+                        }).join('\n'));
+                    }
+                }
+                if (rpt.report) parts.push(typeof rpt.report === 'string' ? rpt.report : JSON.stringify(rpt.report));
+                var body = parts.length > 0 ? parts.join('\n') : (rpt.text || '[no report]');
                 sections.push(header + '\n' + body);
             });
         }
