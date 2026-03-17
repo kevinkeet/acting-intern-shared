@@ -1657,6 +1657,10 @@ const AICoworker = {
 
         // Action buttons
         html += `<div class="dl-between-actions">`;
+        html += `<button class="learn-action-btn learn-secondary dl-redo-level" onclick="AICoworker.redoCurrentLevel()" title="Re-run this level's analysis">`;
+        html += `<span class="learn-action-icon">&#8635;</span>`;
+        html += `<span class="learn-action-label">Redo Level ${progress.currentLevel}</span>`;
+        html += `</button>`;
         html += `<button class="learn-action-btn learn-primary dl-next-level" onclick="AICoworker.learnPatient()" title="Process next batch of chart data">`;
         html += `<span class="learn-action-icon">&#9654;</span>`;
         html += `<span class="learn-action-label">Next Level</span>`;
@@ -6836,6 +6840,70 @@ RULES:
             } else {
                 App.showToast(`Learn failed: ${error.message}`, 'error');
             }
+        }
+    },
+
+    /**
+     * Redo the current (or last completed) level of deep learn.
+     * Un-marks items from that level's batch and re-runs the analysis.
+     */
+    async redoCurrentLevel() {
+        const dl = this._deepLearn;
+        const levelToRedo = dl.currentLevel;
+
+        if (!levelToRedo || levelToRedo < 1) {
+            App.showToast('No level to redo — start a fresh Learn', 'warning');
+            return;
+        }
+
+        console.log(`🧠 Deep Learn: Redoing Level ${levelToRedo}`);
+        App.showToast(`Redoing Level ${levelToRedo}...`, 'info');
+
+        // Rebuild chart map if needed (e.g., after page reload)
+        if (!dl.levelBatches || dl.levelBatches.length === 0) {
+            this.state.status = 'learning';
+            this.render();
+            await this._mapChart();
+            // Remove already-processed items from batches, except the level we're redoing
+            const batchIdx = levelToRedo - 1;
+            dl.levelBatches = dl.levelBatches.map((batch, idx) => {
+                if (idx === batchIdx) return batch; // Keep the redo batch intact
+                return batch.filter(item => !dl.processed.has(item.id));
+            }).filter(batch => batch.length > 0);
+        }
+
+        // Find the batch for this level
+        const batchIdx = levelToRedo - 1;
+        const batch = dl.levelBatches[batchIdx];
+
+        if (!batch || batch.length === 0) {
+            App.showToast('Could not find items for this level — try a fresh Learn', 'warning');
+            return;
+        }
+
+        // Un-mark items from this batch as processed
+        batch.forEach(item => dl.processed.delete(item.id));
+        dl.processedCount = dl.processed.size;
+
+        // Re-run the appropriate level
+        this.state.status = 'learning';
+        this.render();
+
+        try {
+            if (levelToRedo === 1) {
+                await this._runLevel1();
+            } else {
+                // For Level 2+, set state so _runNextLevel processes the right batch
+                dl.currentLevel = levelToRedo - 1; // Will be incremented by _runNextLevel
+                dl.phase = 'between_levels';
+                await this._runNextLevel();
+            }
+        } catch (error) {
+            console.error(`Redo Level ${levelToRedo} failed:`, error);
+            dl.phase = 'between_levels';
+            this.state.status = 'ready';
+            this.render();
+            App.showToast(`Redo failed: ${error.message}`, 'error');
         }
     },
 

@@ -12303,6 +12303,18 @@ html, body {
     color: #ef4444;
 }
 
+/* Redo Level — secondary action */
+.learn-action-btn.learn-secondary {
+    background: rgba(148, 163, 184, 0.12);
+    color: #94a3b8;
+    border: 1px solid rgba(148, 163, 184, 0.25);
+}
+.learn-action-btn.learn-secondary:hover {
+    background: rgba(148, 163, 184, 0.22);
+    border-color: rgba(148, 163, 184, 0.4);
+    color: #cbd5e1;
+}
+
 /* Learn Patient — partially learned */
 .learn-action-btn.learn-partial {
     background: rgba(99, 102, 241, 0.15);
