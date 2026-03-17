@@ -3,72 +3,77 @@
   "type": "Progress Note",
   "date": "2025-09-11T15:22:18.416Z",
   "author": "Dr. Sarah Chen",
-  "department": "Primary Care",
+  "department": "Internal Medicine — Inpatient",
   "encounter": "ENC008",
-  "chiefComplaint": "Routine follow-up",
-  "hpi": "Patient presents for routine follow-up. Presents with mild worsening of baseline symptoms. Reports increased fatigue over the past week.",
+  "chiefComplaint": "Hospital Day 6 — post-discharge follow-up, day 1",
+  "hpi": "Mr. Morrison is a 73-year-old male with HFrEF (EF 30-35%), CKD 3b, T2DM, persistent A-fib (off anticoagulation), and multiple comorbidities who was discharged yesterday (9/10/2025) after a 5-day hospitalization for acute decompensated HFrEF precipitated by dietary sodium excess. He presents today for his first post-discharge follow-up visit, scheduled intentionally within 24 hours given his high-risk status for readmission.\n\nPatient reports feeling 'much better than when I went in.' He slept in bed last night for the first time in a week (had been sleeping in recliner due to orthopnea during exacerbation). He was able to lie flat with 2 pillows, his baseline. He reports no dyspnea at rest, though he remains more fatigued than his usual baseline. His appetite has improved. He ambulated to the car and from the parking lot to the clinic without significant dyspnea, though he needed to rest briefly at the clinic entrance.\n\nHis wife weighed him this morning: 97.3 kg, consistent with discharge weight. She has reorganized the kitchen to remove high-sodium items and prepared a low-sodium meal plan for the week. She reports he took all his evening medications correctly last night and all morning medications today, including the increased furosemide dose of 60mg BID.\n\nHe denies chest pain, palpitations, new-onset cough, fever, or worsening edema. His blood sugar this morning fasting was 154 mg/dL.",
   "reviewOfSystems": {
-    "Constitutional": "Weight stable",
-    "Cardiovascular": "No chest pain or palpitations",
-    "Respiratory": "No hemoptysis",
-    "GI": "Regular bowel movements",
-    "GU": "No hematuria",
-    "Neurologic": "No new weakness"
+    "Constitutional": "Fatigue moderate, improved from hospitalization. Weight 97.3 kg (stable from discharge). Appetite improved. No fevers, chills, or night sweats.",
+    "Cardiovascular": "No dyspnea at rest. Mild exertional dyspnea with walking (improved from admission). No orthopnea (able to sleep flat with 2 pillows). No PND. No chest pain or palpitations.",
+    "Respiratory": "No cough, wheezing, or hemoptysis. Breathing comfortable.",
+    "GI": "Appetite improving. Regular bowel movements. No nausea. No melena or hematochezia.",
+    "GU": "Nocturia x2 last night (improved from x4-5 during hospital diuresis). Good urine output per patient. No dysuria.",
+    "Musculoskeletal": "General weakness and deconditioning from hospitalization. No joint pain or swelling.",
+    "Neurologic": "Bilateral foot numbness at baseline. No new symptoms. No dizziness.",
+    "Skin": "IV site (left forearm) mildly tender, no erythema or drainage. No new rashes."
   },
   "vitals": {
-    "bp": "140/84 mmHg",
-    "hr": "72 bpm",
+    "bp": "122/72 mmHg",
+    "hr": "64 bpm (irregularly irregular)",
     "rr": "18/min",
     "temp": "97.5°F",
-    "spo2": "95% RA",
-    "weight": "97.3 kg"
+    "spo2": "96% RA",
+    "weight": "97.3 kg",
+    "bmi": "32.4"
   },
   "physicalExam": {
-    "General": "Comfortable, well-appearing",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "S1/S2 normal, mild peripheral edema",
-    "Respiratory": "No wheezes or rhonchi",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "1+ pedal edema bilaterally",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Obese male, appears improved from last inpatient assessment. More alert and engaged. Mildly deconditioned. No acute distress.",
+    "HEENT": "Normocephalic. PERRL. Conjunctivae slightly pale. Oropharynx clear, moist.",
+    "Cardiovascular": "Irregularly irregular at 64 bpm. Normal S1, S2. Grade 2/6 systolic murmur at apex (known MR). No S3 gallop (was present on admission — now resolved). JVP 6-7 cm H2O (normal — was 12 cm on admission). PMI laterally displaced (chronic).",
+    "Respiratory": "Lungs clear to auscultation bilaterally in all fields. No crackles (were bibasilar on admission, resolved during hospitalization). No wheezes or rhonchi. Good air movement.",
+    "Abdomen": "Soft, non-tender, non-distended. No hepatomegaly (was mildly enlarged by percussion on admission, now resolved). Normal bowel sounds.",
+    "Extremities": "Trace bilateral ankle edema only (was 2+ to mid-calf on admission). Skin warm, intact. DP pulses 1+ bilaterally. IV site left forearm — mild tenderness, no erythema, induration, or drainage.",
+    "Neurologic": "Alert, oriented x3. Decreased sensation bilateral feet, chronic. No focal deficits.",
+    "Skin": "No rashes. Bilateral lower extremity skin intact. No stasis changes."
   },
   "assessment": [
     {
+      "diagnosis": "Acute Decompensated HFrEF — post-discharge day 1",
+      "icd10": "I50.22",
+      "notes": "Excellent clinical improvement. Euvolemic by examination: JVP 6-7 cm (normalized), lungs clear (crackles resolved), S3 gallop resolved, edema trace only, weight stable at 97.3 kg (near dry weight). The hospitalization achieved ~3.3 kg of diuresis (100.6 to 97.3 kg) with improvement in all congestive symptoms. Precipitant was dietary sodium excess — wife has taken corrective action with meal planning. All GDMT medications resumed successfully including Entresto, carvedilol, spironolactone, and empagliflozin. Furosemide increased to 60mg BID. This is his second HF hospitalization (first was 8/2022, similar precipitant — dietary indiscretion during wife's absence). Both episodes had identifiable, potentially preventable precipitants."
+    },
+    {
+      "diagnosis": "AKI on CKD 3b — resolved",
+      "icd10": "N17.9",
+      "notes": "Cr peaked at 2.4 during hospitalization (baseline 2.0), consistent with pre-renal/cardiorenal etiology. Improved to 2.0 at discharge. Recheck labs ordered for 9/13 — expect continued stability."
+    },
+    {
       "diagnosis": "Type 2 Diabetes Mellitus",
       "icd10": "E11.65",
-      "notes": "HbA1c 7.6%. On insulin and metformin."
+      "notes": "Fasting glucose 154 today — reasonable in post-hospitalization period. Metformin and empagliflozin resumed. Insulin regimen at home doses."
     },
     {
-      "diagnosis": "Chronic Kidney Disease Stage 3b",
-      "icd10": "N18.32",
-      "notes": "eGFR 38. Stable."
-    },
-    {
-      "diagnosis": "Heart Failure with Reduced EF",
-      "icd10": "I50.22",
-      "notes": "NYHA Class II. On GDMT."
+      "diagnosis": "Atrial Fibrillation",
+      "icd10": "I48.1",
+      "notes": "Rate controlled at 64 bpm. No anticoagulation. On aspirin 81mg and pantoprazole."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "problem": "HF Post-Discharge Management",
+      "action": "Patient clinically euvolemic — excellent post-discharge status. Continue furosemide 60mg BID (increased dose from hospitalization). Continue all GDMT at home doses. Daily weights — strict logging, call if >3 lb gain. Sodium <2g/day — wife managing meals. Fluid restriction 1.5-2L/day. Reviewed HF self-management education packet with patient and wife. Discussed importance of calling office early for weight trends rather than waiting until symptoms are severe. Provided 'HF Zone' card: Green (dry weight +/- 2 lbs), Yellow (weight up 3-5 lbs — call office), Red (weight up >5 lbs or severe SOB — go to ED)."
     },
     {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "problem": "Post-AKI Monitoring",
+      "action": "Cr back to baseline. Labs ordered for 9/13: BMP, BNP, CBC. Will verify Cr stability and potassium level on current medication regimen."
     },
     {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
-    },
-    {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "problem": "30-Day Readmission Prevention",
+      "action": "High risk for readmission (history of 2 HF admissions, CKD, multiple comorbidities). Interventions: (1) Early post-discharge visit today, (2) Labs in 3 days, (3) PCP follow-up in 1 week, (4) Cardiology in 2 weeks, (5) Wife engaged as primary medication manager and dietary overseer, (6) HF education packet provided, (7) HF Zone card provided, (8) Direct clinic phone number given for questions/concerns."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 4 weeks or sooner if needed."
+      "action": "Labs 9/13. PCP visit in 1 week (Dr. Adams). Cardiology in 2 weeks (Dr. Wilson). Nephrology in 4 weeks (Dr. Torres). Call office immediately for weight gain, worsening SOB, or any concerning symptoms."
     }
   ],
   "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Sarah Chen\nDate: 9/11/2025"

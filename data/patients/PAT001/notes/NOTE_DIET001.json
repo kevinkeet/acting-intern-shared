@@ -1,0 +1,111 @@
+{
+  "id": "NOTE_DIET001",
+  "type": "Consult Note",
+  "title": "Nutrition/Dietitian Consultation - CKD Dietary Counseling",
+  "date": "2024-03-25T11:00:00.000Z",
+  "author": "Amanda Rodriguez, RD, CSR",
+  "department": "Nutrition Services",
+  "encounter": "ENC_DIET001",
+  "signedDate": "2024-03-25T14:00:00.000Z",
+  "sections": {
+    "reasonForConsultation": "CKD stage 3b dietary counseling. Referred by Dr. Michael Torres, Nephrology, following nephrology consultation on 3/20/2024.",
+    "historyOfPresentIllness": "Mr. Morrison is a 72-year-old gentleman with CKD stage 3b (eGFR 35-38), type 2 diabetes, heart failure with reduced ejection fraction, and hypertension, referred for comprehensive dietary assessment and counseling by nephrology. His renal function has been gradually declining (eGFR ~50 five years ago, now 35-38) and he has multiple dietary requirements that need to be harmonized: low-sodium (cardiac/renal/HTN), diabetic (carbohydrate-controlled), and now CKD-specific modifications for potassium, phosphorus, and protein.\n\nPatient reports that his wife Patricia prepares the majority of meals. She is present today and actively involved in the discussion. They have been following a low-sodium diet (<2g/day) for approximately 2 years per cardiology recommendation and a diabetic diet per their primary care physician. They report difficulty knowing which foods to prioritize or avoid given the multiple dietary restrictions.",
+    "currentDietReview": {
+      "typicalIntake": {
+        "breakfast": "Oatmeal with banana, whole wheat toast with margarine, coffee with creamer (2 cups)",
+        "lunch": "Turkey sandwich on whole wheat, side salad with tomatoes and ranch dressing, unsweetened iced tea",
+        "dinner": "Baked chicken or fish, rice or potato, steamed vegetables (often broccoli, green beans), water",
+        "snacks": "Crackers, orange, occasionally cookies or ice cream",
+        "fluids": "Approximately 1.5 liters daily (self-restricted per cardiology)"
+      },
+      "dietaryHabits": "Wife cooks most meals from scratch — low-sodium cooking confirmed. Uses herbs and spices instead of salt. Reads nutrition labels. Eats out approximately 1x/week (usually Cracker Barrel or church potluck). No alcohol. No tobacco.",
+      "concerns": [
+        "Banana with breakfast daily — high potassium source, serum K already 4.9",
+        "Orange as afternoon snack — high potassium",
+        "Tomatoes in salad — moderate-high potassium",
+        "Ranch dressing — phosphorus additives",
+        "Processed turkey deli meat — sodium and phosphorus additives",
+        "Coffee creamer — phosphorus additives depending on brand"
+      ]
+    },
+    "nutritionalAssessment": {
+      "anthropometrics": {
+        "height": "172 cm (5'8\")",
+        "weight": "94.8 kg (209 lbs)",
+        "bmi": "32.0 (obese class I)",
+        "idealBodyWeight": "72 kg",
+        "adjustedBodyWeight": "79 kg (used for protein calculations)"
+      },
+      "laboratoryReview": {
+        "albumin": "3.6 g/dL (low-normal — goal >3.5 for CKD)",
+        "prealbumin": "Not checked — recommend ordering as more sensitive marker of nutritional status",
+        "potassium": "4.9 mEq/L (upper limit — dietary potassium modification needed)",
+        "phosphorus": "4.1 mg/dL (normal range but trending up — monitor)",
+        "pth": "89 pg/mL (mildly elevated — secondary hyperparathyroidism beginning)",
+        "bicarbonate": "22 mEq/L (mildly low — metabolic acidosis contributes to muscle wasting)",
+        "a1c": "7.6% (January 2024)",
+        "calcium": "9.2 mg/dL (normal)"
+      },
+      "estimatedNeeds": {
+        "calories": "25-30 kcal/kg adjusted body weight/day = 1975-2370 kcal/day (to maintain weight; mild caloric deficit acceptable given obesity but must prevent muscle wasting)",
+        "protein": "0.8 g/kg adjusted body weight/day = 63 g/day (CKD recommendation to slow progression; not yet on dialysis)",
+        "sodium": "<2000 mg/day (cardiac, renal, HTN)",
+        "potassium": "Individualized — aim <2500 mg/day given elevated serum K",
+        "phosphorus": "800-1000 mg/day (limit high-phosphorus foods and phosphorus additives)",
+        "fluid": "1.5 liters/day (per cardiology for volume management)"
+      }
+    },
+    "assessment": "Mr. Morrison has complex overlapping dietary needs from CKD, diabetes, heart failure, and hypertension. His wife has done an excellent job implementing a low-sodium and carbohydrate-aware diet. However, several modifications are needed:\n\n1. Potassium: Serum K 4.9 on multiple potassium-elevating medications (ACE inhibitor, spironolactone, SGLT2 inhibitor). Daily banana and frequent orange/tomato consumption are contributing significant dietary potassium. These are the highest-priority food swaps.\n\n2. Phosphorus: PTH beginning to rise (89), suggesting early phosphorus-calcium dysregulation. While serum phosphorus is still normal (4.1), dietary phosphorus restriction and avoidance of phosphorus additives should begin now.\n\n3. Protein: Current intake estimated at approximately 80-90 g/day based on diet history (above the 63 g/day recommendation for CKD). Moderate reduction recommended to 0.8 g/kg/day without becoming protein-malnourished.\n\n4. Calories: Adequate caloric intake is essential to prevent muscle wasting, especially with protein restriction and metabolic acidosis. Despite obesity, aggressive caloric restriction is not recommended.\n\n5. Albumin 3.6 is acceptable but warrants monitoring. Prealbumin should be checked.",
+    "recommendations": [
+      {
+        "category": "Potassium Modifications (Priority)",
+        "items": [
+          "Replace daily banana with lower-potassium fruit: apple, berries (blueberries, strawberries), grapes, or pineapple",
+          "Replace orange snack with apple slices, pear, or unsweetened applesauce",
+          "Limit tomato intake — use in small amounts as garnish rather than as salad base. Substitute cucumber, bell pepper, or lettuce-based salads",
+          "Avoid: bananas, oranges/orange juice, potatoes (unless leached), tomato sauce, dried fruits, avocado, chocolate, nuts in large quantities",
+          "Vegetable preparation: Leaching technique taught for potatoes (peel, dice, soak in water 2+ hours, drain and boil in fresh water) to reduce potassium content by 50-75%"
+        ]
+      },
+      {
+        "category": "Phosphorus Awareness",
+        "items": [
+          "Avoid processed meats with phosphorus additives (deli turkey, hot dogs, sausage) — switch to freshly roasted turkey breast for sandwiches",
+          "Check ingredient labels for 'PHOS' in ingredient list — sodium phosphate, phosphoric acid, calcium phosphate are common additives",
+          "Choose non-dairy coffee creamer without phosphorus additives or use small amount of half-and-half",
+          "Limit cola and dark sodas (phosphoric acid) — not currently an issue for this patient",
+          "Limit dairy to 1 serving/day (cheese, milk, yogurt) — natural phosphorus is less bioavailable than additive phosphorus but still contributes"
+        ]
+      },
+      {
+        "category": "Protein Management",
+        "items": [
+          "Target 60-65 g protein daily (0.8 g/kg adjusted body weight)",
+          "Moderate portion sizes: 3-4 oz cooked meat/fish per meal (palm-sized), not 6-8 oz",
+          "Emphasize high biological value proteins: eggs, fish, poultry, small amounts of dairy",
+          "Avoid large protein loads in a single meal — distribute evenly across meals",
+          "If appetite decreases or weight drops unexpectedly, increase protein to 1.0 g/kg and reassess"
+        ]
+      },
+      {
+        "category": "Sodium (Reinforcement)",
+        "items": [
+          "Continue <2000 mg/day — wife doing well with home-prepared meals",
+          "Restaurant dining tips: request no added salt, choose grilled over fried, ask for sauces on the side, avoid soups and bread baskets",
+          "Church potluck strategy: bring a dish they know is low-sodium, eat small portions of others' dishes"
+        ]
+      },
+      {
+        "category": "Diabetes (Continued)",
+        "items": [
+          "Continue carbohydrate-conscious eating — consistent carbohydrate intake at each meal (45-60g per meal)",
+          "Oatmeal at breakfast is good choice — use measured portion (1/2 cup dry) and pair with protein",
+          "Limit ice cream to small portions (1/2 cup), consider sugar-free options"
+        ]
+      }
+    ],
+    "patientEducation": "Spent 45 minutes with Mr. Morrison and his wife Patricia. Provided the following educational materials:\n1. 'Eating Right for Kidney Health' booklet (NKF publication)\n2. Low-potassium fruit and vegetable reference chart (posted on refrigerator)\n3. Sample 7-day meal plan incorporating all dietary restrictions (CKD, DM, cardiac, low-sodium)\n4. Phosphorus additive identification guide for label reading\n5. Potassium leaching instructions for potatoes\n\nMrs. Morrison was highly engaged, took notes, and asked specific questions about substitutions for favorite recipes. She expressed some overwhelm at the number of restrictions but was reassured that the core changes are relatively straightforward (swap banana/orange for apple/berries, avoid deli meats, moderate portion sizes). Patient was receptive and expressed willingness to make dietary changes.",
+    "plan": "1. Implement potassium dietary modifications immediately — banana and orange swaps are highest priority\n2. Transition from processed deli meats to freshly prepared proteins\n3. Check phosphorus additive labels on frequently purchased items\n4. Recommend ordering prealbumin at next lab draw for nutritional monitoring\n5. Follow-up nutrition visit in 3 months (June 2024) or sooner if labs change significantly\n6. Coordinate with nephrology on lab trends — if potassium normalizes with dietary changes, may have more flexibility; if phosphorus rises, may need phosphate binder discussion\n7. Available by phone for diet questions — gave direct office number to wife"
+  },
+  "attestation": "I personally evaluated this patient, conducted a comprehensive nutritional assessment, and provided medical nutrition therapy. Education was provided to the patient and his wife/caregiver.\n\nElectronically signed by: Amanda Rodriguez, RD, CSR (Certified Specialist in Renal Nutrition)\nDate/Time: 3/25/2024 2:00 PM"
+}

@@ -9,17 +9,21 @@
   "signedDate": "2023-11-15T14:00:00.000Z",
   "sections": {
     "reasonForConsultation": "Heart failure management, optimization of guideline-directed medical therapy",
-    "historyOfPresentIllness": "Mr. Morrison is a 72-year-old gentleman with long-standing heart failure with reduced ejection fraction, last documented EF 30-35% in August 2023, who is referred for outpatient cardiology follow-up and optimization of heart failure therapy.\n\nPatient reports overall stability since his last hospitalization in August 2022 for CHF exacerbation. He has had no further hospitalizations. He denies significant dyspnea at rest, though he does experience exertional dyspnea after walking 1-2 blocks. He has been compliant with his medications and has not missed any doses of his diuretic. He weighs himself daily and has maintained his weight at approximately 94-95 kg. He follows a low-sodium diet and limits his fluid intake to 1.5 liters daily.\n\nHe does report intermittent bilateral lower extremity edema, typically worse at the end of the day, which improves overnight and with leg elevation. He denies orthopnea or paroxysmal nocturnal dyspnea. He has occasional palpitations consistent with his known atrial fibrillation but denies sustained palpitations, lightheadedness, or syncope.\n\nHis last echocardiogram from August 2023 showed EF 30-35% with regional wall motion abnormalities (inferior and inferolateral akinesis), moderate mitral regurgitation, and severely dilated left atrium.",
+    "historyOfPresentIllness": "Mr. Morrison is a 72-year-old gentleman with long-standing heart failure with reduced ejection fraction, last documented EF 30-35% in August 2023, who is referred for outpatient cardiology follow-up and optimization of heart failure therapy.\n\nPatient reports overall stability since his last hospitalization in September 2023 for upper GI hemorrhage, which was complicated by hemorrhagic shock requiring ICU admission and 4 units of packed red blood cells. EGD revealed a large gastric ulcer with visible vessel, treated with epinephrine injection, bipolar cautery, and hemoclip. H. pylori was positive and has been treated. Notably, warfarin was permanently discontinued during that admission after multidisciplinary discussion (GI, Cardiology, PCP) given the severity of the bleed and high rebleed risk. He is now on aspirin 81 mg daily only for stroke risk reduction, with an accepted increase in thromboembolic risk (CHA2DS2-VASc score 5).\n\nPrior to the GI bleed, his last CHF hospitalization was August 2022 for acute decompensated heart failure triggered by diuretic non-compliance. Since discharge from the September GI bleed admission, he has been doing well from a cardiac standpoint. He denies significant dyspnea at rest, though he does experience exertional dyspnea after walking 1-2 blocks. He has been compliant with all medications and has not missed any doses of his diuretic. He weighs himself daily and has maintained his weight at approximately 97-98 kg. He follows a low-sodium diet and limits his fluid intake to 1.5 liters daily.\n\nHe does report intermittent bilateral lower extremity edema, typically worse at the end of the day, which improves overnight and with leg elevation. He denies orthopnea or paroxysmal nocturnal dyspnea. He has occasional palpitations consistent with his known atrial fibrillation but denies sustained palpitations, lightheadedness, or syncope.\n\nHe was transitioned from losartan to sacubitril/valsartan (Entresto) in February 2020 and has been on the target dose of 97/103 mg BID since July 2020. He tolerated this well until the August 2022 CHF admission, when it was temporarily reduced, but has been back on target dose since September 2022.\n\nHis last echocardiogram from August 2023 showed EF 30-35% with regional wall motion abnormalities (inferior and inferolateral akinesis), moderate mitral regurgitation, and severely dilated left atrium.",
     "currentMedications": [
-      "Furosemide 60 mg PO twice daily",
+      "Sacubitril/Valsartan (Entresto) 97/103 mg PO twice daily",
       "Carvedilol 12.5 mg PO twice daily",
-      "Lisinopril 10 mg PO daily",
+      "Furosemide 60 mg PO twice daily",
       "Spironolactone 25 mg PO daily",
-      "Warfarin 5 mg PO daily",
+      "Aspirin 81 mg PO daily (for A-fib stroke prevention; warfarin discontinued 9/2023 post-GI bleed)",
       "Metformin 500 mg PO twice daily",
-      "Glipizide 5 mg PO daily",
-      "Atorvastatin 40 mg PO daily",
-      "Aspirin 81 mg PO daily"
+      "Insulin Glargine (Lantus) 24 units subcutaneous at bedtime",
+      "Insulin Lispro (Humalog) sliding scale with meals",
+      "Atorvastatin 80 mg PO at bedtime",
+      "Gabapentin 300 mg PO three times daily",
+      "Pantoprazole 40 mg PO daily (indefinite, post-GI bleed)",
+      "Tamsulosin 0.4 mg PO at bedtime",
+      "Vitamin D3 2000 IU PO daily"
     ],
     "physicalExamination": {
       "vitals": {
@@ -49,15 +53,15 @@
       },
       "recentEkg": "Atrial fibrillation with controlled ventricular response at 68 bpm, left axis deviation, old inferior Q waves, non-specific ST-T changes"
     },
-    "assessment": "72-year-old male with ischemic cardiomyopathy (HFrEF, EF 30-35%), currently NYHA Class II. He is on guideline-directed medical therapy including beta-blocker, ACE inhibitor, aldosterone antagonist, and diuretic. He is euvolemic to mildly volume overloaded today.\n\nHis therapy is currently submaximal. Specifically:\n1. Carvedilol dose is 12.5 mg BID (target dose 25 mg BID)\n2. Lisinopril 10 mg daily (could consider switch to sacubitril/valsartan)\n3. Not on SGLT2 inhibitor",
+    "assessment": "72-year-old male with ischemic cardiomyopathy (HFrEF, EF 30-35%), currently NYHA Class II. He is on guideline-directed medical therapy including beta-blocker (carvedilol), ARNI (Entresto at target dose), aldosterone antagonist (spironolactone), and loop diuretic (furosemide). He is euvolemic to mildly volume overloaded today.\n\nSignificant recent events:\n- GI hemorrhage (September 2023) resulting in permanent warfarin discontinuation. Now on aspirin 81 mg only for A-fib stroke prevention. CHA2DS2-VASc score of 5 confers annual stroke risk of approximately 6.7%. This was a carefully considered multidisciplinary decision that I participated in and continue to support given the severity of the index bleed.\n\nHis HF therapy is currently submaximal. Specifically:\n1. Carvedilol dose is 12.5 mg BID (target dose 25 mg BID) — has been at this dose since prior to the GI bleed; was not uptitrated during the acute recovery period\n2. Not on SGLT2 inhibitor — empagliflozin would provide mortality benefit (EMPEROR-Reduced) and has additional renal protective benefits given his CKD 3b\n3. ARNI (Entresto) is at target dose — this is appropriate\n4. Spironolactone at 25 mg daily — appropriate, monitoring potassium",
     "recommendations": [
       {
         "category": "Medication Optimization",
         "items": [
-          "Increase carvedilol to 18.75 mg BID in 2 weeks if BP and HR tolerate",
-          "Consider transitioning from lisinopril to sacubitril/valsartan (Entresto) if BP tolerates - start at 24/26 mg BID after 36-hour washout from ACEi",
-          "Add empagliflozin 10 mg daily (SGLT2i has mortality benefit in HFrEF regardless of diabetes status)",
-          "Continue current diuretic regimen - patient is near euvolemic"
+          "Increase carvedilol to 18.75 mg BID in 2 weeks if BP and HR tolerate — patient has been at 12.5 mg BID for over a year; uptitration was deferred during GI bleed recovery but should proceed now",
+          "Continue Entresto 97/103 mg BID — already at target dose, well tolerated",
+          "Add empagliflozin 10 mg daily (SGLT2i has mortality benefit in HFrEF per EMPEROR-Reduced, additional CKD benefit per EMPA-KIDNEY, and glycemic benefit given his DM)",
+          "Continue current diuretic regimen - patient is near euvolemic; weight stable at 97-98 kg"
         ]
       },
       {
@@ -85,7 +89,7 @@
       }
     ],
     "patientEducation": "Discussed heart failure management including importance of medication compliance, daily weights, sodium restriction, and symptom monitoring. Discussed SGLT2 inhibitor benefits and side effects (UTI risk, genital yeast infections, euglycemic DKA). Discussed ICD for primary prevention of sudden cardiac death. Patient and wife present, both verbalized understanding.",
-    "plan": "1. Start empagliflozin 10 mg daily\n2. Increase carvedilol to 18.75 mg BID in 2 weeks (will call patient)\n3. Consider Entresto transition at next visit pending BP response to carvedilol up-titration\n4. Refer to cardiac rehab\n5. Follow-up in 4-6 weeks\n6. Schedule separate visit to discuss ICD"
+    "plan": "1. Increase carvedilol to 18.75 mg BID in 2 weeks (will call patient to confirm tolerating)\n2. Recommend empagliflozin 10 mg daily — discussed with patient, he is interested but wants to 'think about it' before adding another medication. Will revisit at follow-up.\n3. Continue Entresto 97/103 mg BID (at target)\n4. Refer to cardiac rehab\n5. Follow-up in 4-6 weeks\n6. Schedule separate visit to discuss ICD with patient and family\n7. Note: Anticoagulation remains permanently held per multidisciplinary decision (9/2023). Will continue to monitor for signs/symptoms of stroke at each visit."
   },
   "attestation": "I personally evaluated this patient, reviewed the available data, and formulated the assessment and recommendations. I have discussed the findings and plan with the patient and his wife.\n\nElectronically signed by: James Wilson, MD, FACC\nDate/Time: 11/15/2023 2:00 PM"
 }

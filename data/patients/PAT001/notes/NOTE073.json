@@ -5,15 +5,19 @@
   "author": "Dr. David Park",
   "department": "Pulmonology",
   "encounter": "ENC050",
-  "chiefComplaint": "Routine follow-up",
-  "hpi": "Patient presents for routine follow-up. Weight stable. Following low-sodium diet. Monitoring blood pressure at home.",
+  "chiefComplaint": "Dyspnea evaluation",
+  "hpi": "Mr. Morrison is a 70-year-old male with HFrEF (EF 30-35%), persistent atrial fibrillation on warfarin, CKD Stage 3b, Type 2 DM, and a 20-pack-year smoking history (quit 1995) who is referred to pulmonology for evaluation of chronic dyspnea. His primary concern is progressive exercise intolerance — he reports being unable to walk more than 1-1.5 blocks without significant dyspnea, which has been gradually worsening over the past year. He also reports a chronic dry cough that occurs intermittently, particularly when lying down or after exertion, which he has had for approximately 6 months. He denies hemoptysis, pleuritic chest pain, or wheezing. He does not use supplemental oxygen at home. He sleeps on two pillows at baseline and has not noticed worsening orthopnea. He denies paroxysmal nocturnal dyspnea. His cardiology team has been evaluating his dyspnea and recently ordered a stress echocardiogram (completed 1/2023) which showed limited exercise tolerance at 4.2 METs. A V/Q scan is being considered to rule out chronic thromboembolic disease, given his atrial fibrillation and history of possible subtherapeutic anticoagulation periods. He has never been diagnosed with COPD despite his smoking history. He reports his home environment is clean, with no pets, no mold exposure, and no occupational dust exposure during his career as an accountant.",
   "reviewOfSystems": {
-    "Constitutional": "Reports fatigue",
-    "Cardiovascular": "Dyspnea on exertion at baseline",
-    "Respiratory": "Mild dyspnea",
-    "GI": "Appetite fair",
-    "GU": "Nocturia x2",
-    "Neurologic": "Baseline neuropathy"
+    "Constitutional": "Chronic fatigue, no fevers, no chills, no night sweats, weight stable at 98-100 kg",
+    "Cardiovascular": "Dyspnea on exertion as detailed in HPI, no chest pain at rest, no palpitations, no lower extremity swelling currently",
+    "Respiratory": "Chronic dry cough as above, no hemoptysis, no wheezing, no pleuritic pain, no sputum production",
+    "GI": "Appetite fair, no dysphagia, no GERD symptoms, regular bowel movements",
+    "GU": "Nocturia x2, no dysuria, no hematuria",
+    "Musculoskeletal": "Chronic bilateral knee pain limiting mobility, no myalgias",
+    "Neurologic": "Baseline bilateral foot neuropathy, no new deficits",
+    "Endocrine": "No thyroid symptoms, no polydipsia",
+    "Hematologic": "No easy bruising (despite anticoagulation), no recurrent infections",
+    "Psychiatric": "Low energy, mildly decreased motivation"
   },
   "vitals": {
     "bp": "139/87 mmHg",
@@ -24,46 +28,52 @@
     "weight": "100.2 kg"
   },
   "physicalExam": {
-    "General": "Mildly fatigued-appearing",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "Regular rate and rhythm, no murmurs",
-    "Respiratory": "No wheezes or rhonchi",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "1+ pedal edema bilaterally",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Obese male, appears stated age, mildly fatigued-appearing but cooperative and pleasant. BMI approximately 33. No respiratory distress at rest",
+    "HEENT": "Normocephalic, atraumatic. Oropharynx clear. No nasal polyps. Mallampati class III. Neck circumference approximately 44 cm. No cervical lymphadenopathy",
+    "Cardiovascular": "Irregularly irregular rhythm, rate 74 bpm. Normal S1/S2. 2/6 holosystolic murmur at apex (known MR). No S3. JVP approximately 8 cm H2O. No peripheral cyanosis",
+    "Respiratory": "Chest wall symmetric with adequate excursion. No accessory muscle use. Percussion resonant bilaterally. Clear to auscultation in upper lung fields bilaterally. Trace fine crackles at bilateral bases posteriorly, not clearing with cough. No wheezes or rhonchi. No prolonged expiratory phase. Diaphragmatic excursion appears symmetric",
+    "Abdomen": "Obese, soft, non-tender. No hepatomegaly. No ascites by exam",
+    "Extremities": "1+ pitting edema bilateral ankles. No clubbing. No cyanosis. Capillary refill <3 seconds distally",
+    "Neurologic": "Alert and oriented x3. Decreased sensation bilateral feet in stocking distribution. Gait mildly unsteady, wide-based. No focal motor deficits"
   },
   "assessment": [
     {
+      "diagnosis": "Chronic dyspnea, multifactorial",
+      "icd10": "R06.00",
+      "notes": "Dyspnea is most likely primarily cardiac in etiology given known HFrEF with EF 30-35%, NYHA Class II symptoms, and deconditioning. Contribution from CKD-associated anemia (recent Hgb 10.8) is probable. Smoking history of 20 pack-years with cessation in 1995 makes obstructive lung disease less likely given >25 years of abstinence, but spirometry has never been formally performed. Obesity (BMI ~33) contributes to restrictive physiology and deconditioning. Chronic thromboembolic disease is low on differential but worth excluding with V/Q scan given A-fib and potential subtherapeutic INR periods."
+    },
+    {
+      "diagnosis": "Chronic cough",
+      "icd10": "R05.9",
+      "notes": "Dry cough, positional component — most likely related to HF (pulmonary congestion) or possibly early GERD effect. Less likely ACE-inhibitor cough as patient is on ARNI (Entresto), not ACE inhibitor. No features suggesting infection or malignancy."
+    },
+    {
       "diagnosis": "Type 2 Diabetes Mellitus",
       "icd10": "E11.65",
-      "notes": "HbA1c 7.4%. On insulin and metformin."
+      "notes": "HbA1c recently 8.2%. Managed by PCP and endocrinology."
     },
     {
       "diagnosis": "Chronic Kidney Disease Stage 3b",
       "icd10": "N18.32",
-      "notes": "eGFR 35. Stable."
+      "notes": "eGFR approximately 36. Stable. Contributing to anemia and likely to fatigue and dyspnea."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "problem": "Dyspnea evaluation",
+      "action": "Order pulmonary function tests (full PFTs with spirometry, lung volumes, and DLCO) to evaluate for obstructive or restrictive lung disease and gas exchange abnormalities. Given 20-pack-year history, low-dose CT chest screening is not indicated as patient quit >15 years ago (outside USPSTF screening window). V/Q scan to be ordered in coordination with cardiology to exclude chronic thromboembolic disease — will defer to Dr. Wilson's team on timing. Six-minute walk test to objectively quantify functional capacity and desaturation with exertion. If PFTs show obstruction, consider bronchodilator trial. If PFTs are normal/restrictive only, dyspnea is likely entirely cardiac and deconditioning-related."
     },
     {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "problem": "Chronic cough",
+      "action": "Most likely cardiac congestion or mild GERD-related given positional component. Patient is not on ACE inhibitor. Recommend empiric PPI trial if not already on one. If cough persists after PFTs and cardiac optimization, consider high-resolution CT to evaluate for interstitial process. No indication for bronchoscopy at this time."
     },
     {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
-    },
-    {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "problem": "Obesity and deconditioning",
+      "action": "Cardiac rehabilitation has been discussed but not yet initiated. Would strongly support cardiac rehab enrollment to improve functional capacity and potentially reduce dyspnea independent of cardiac function. Weight management counseling reinforced — even modest weight loss of 5-10% could meaningfully improve respiratory mechanics and insulin sensitivity."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 9 weeks or sooner if needed."
+      "action": "Return to pulmonology after PFTs completed, approximately 4-6 weeks. Will review PFT results and V/Q scan when available. If studies unremarkable, primary management of dyspnea remains with cardiology for HF optimization. Patient and wife counseled on warning signs requiring urgent evaluation: acute worsening dyspnea, hemoptysis, pleuritic chest pain, or oxygen desaturation on home pulse oximeter below 90%."
     }
   ],
   "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. David Park\nDate: 1/10/2023"

@@ -5,15 +5,19 @@
   "author": "Dr. William Thompson",
   "department": "Gastroenterology",
   "encounter": "ENC048",
-  "chiefComplaint": "Leg swelling",
-  "hpi": "Patient presents for leg swelling. Weight stable. Following low-sodium diet. Monitoring blood pressure at home.",
+  "chiefComplaint": "GI surveillance and leg swelling",
+  "hpi": "Mr. Morrison is a 70-year-old male with HFrEF (EF 30-35%), persistent atrial fibrillation on warfarin, CKD Stage 3b, Type 2 DM, hyperlipidemia, and BPH who presents for routine gastroenterology follow-up. He was seen in GI approximately 4 months ago and reported mild epigastric discomfort at that time. Today he states the epigastric symptoms have largely resolved. He denies any melena, hematochezia, hematemesis, or coffee-ground emesis. He has had no dysphagia, odynophagia, or food impaction. His appetite is fair though he notes he eats smaller portions than he used to. He has regular daily bowel movements, normal in color and consistency. He reports some increased bilateral leg swelling over the past week which he attributes to standing more while helping his wife with spring cleaning projects. He has been taking his furosemide as prescribed and checking daily weights. His weight has been trending up slightly from 97 to 99 kg over the past 10 days. He is on warfarin for atrial fibrillation and his most recent INR was 2.7 three days ago per anticoagulation clinic. He continues to be counseled about NSAID avoidance given his anticoagulation and renal disease. He confirms he has not taken any ibuprofen or similar medications since his last GI visit.",
   "reviewOfSystems": {
-    "Constitutional": "Weight stable",
-    "Cardiovascular": "No chest pain or palpitations",
-    "Respiratory": "No cough or wheezing",
-    "GI": "No nausea or vomiting",
-    "GU": "No dysuria",
-    "Neurologic": "No new weakness"
+    "Constitutional": "Mild fatigue, no fever, no chills, weight up as noted in HPI",
+    "Cardiovascular": "Baseline dyspnea on exertion, no chest pain, no palpitations, bilateral leg swelling as above",
+    "Respiratory": "No cough, no wheezing, no hemoptysis",
+    "GI": "No abdominal pain currently, no nausea/vomiting, no dysphagia, no melena/hematochezia, regular bowel movements",
+    "GU": "Nocturia x2-3, no dysuria, no hematuria",
+    "Musculoskeletal": "Bilateral knee discomfort, no joint swelling",
+    "Neurologic": "Baseline bilateral foot numbness, no new weakness, no falls",
+    "Endocrine": "Blood sugars variable per home log, no hypoglycemic episodes",
+    "Skin": "No rashes, no jaundice, no new lesions",
+    "Hematologic": "No easy bruising despite anticoagulation, no petechiae"
   },
   "vitals": {
     "bp": "136/89 mmHg",
@@ -24,56 +28,52 @@
     "weight": "99.1 kg"
   },
   "physicalExam": {
-    "General": "Comfortable, well-appearing",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "Regular rate and rhythm, no murmurs",
-    "Respiratory": "No wheezes or rhonchi",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "No edema, warm and well-perfused",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Well-appearing obese male in no acute distress. Alert and oriented. BMI approximately 33",
+    "HEENT": "Normocephalic, atraumatic. Sclera anicteric, no conjunctival pallor. Oropharynx clear, no oral ulcers or thrush. Moist mucous membranes",
+    "Cardiovascular": "Irregularly irregular rhythm at 78 bpm. Normal S1/S2. 2/6 holosystolic murmur at apex (stable). JVP estimated at 9 cm H2O — mildly elevated. No hepatojugular reflux",
+    "Respiratory": "Clear to auscultation in upper lung fields bilaterally. Trace bibasilar crackles posteriorly. No wheezes or rhonchi",
+    "Abdomen": "Obese, soft, non-distended. No tenderness to palpation in all four quadrants including epigastrium. Normal active bowel sounds. No hepatosplenomegaly appreciated. Small reducible umbilical hernia unchanged from prior exam. No peritoneal signs. Rectal exam deferred today — last performed 11/2022 with guaiac negative stool",
+    "Extremities": "1+ bilateral pitting edema to mid-shin, non-tender. Bilateral lower extremities warm. No skin breakdown. No erythema, warmth, or calf tenderness to suggest DVT",
+    "Neurologic": "Alert and oriented x3. Decreased sensation bilateral feet. Steady gait with slight wide base"
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
-      "icd10": "E11.65",
-      "notes": "HbA1c 7.2%. On insulin and metformin."
-    },
-    {
-      "diagnosis": "Chronic Kidney Disease Stage 3b",
-      "icd10": "N18.32",
-      "notes": "eGFR 37. Stable."
+      "diagnosis": "GI surveillance in anticoagulated patient",
+      "icd10": "Z12.10",
+      "notes": "Patient on warfarin for atrial fibrillation with therapeutic INR. No current GI symptoms. Prior mild epigastric discomfort has resolved. High-risk for GI bleeding given anticoagulation, CKD, and age. No H. pylori testing has been performed. Colonoscopy history reviewed — last colonoscopy was 2018 per outside records, with one tubular adenoma removed. Due for surveillance colonoscopy."
     },
     {
       "diagnosis": "Heart Failure with Reduced EF",
       "icd10": "I50.22",
-      "notes": "NYHA Class II. On GDMT."
+      "notes": "NYHA Class II. Leg edema and slight weight gain likely early volume overload — may need diuretic adjustment by cardiology/PCP."
     },
     {
-      "diagnosis": "Atrial Fibrillation",
+      "diagnosis": "Type 2 Diabetes Mellitus",
+      "icd10": "E11.65",
+      "notes": "A1c per recent labs approximately 7.6%. Managed by PCP."
+    },
+    {
+      "diagnosis": "Atrial Fibrillation on warfarin",
       "icd10": "I48.1",
-      "notes": "Rate controlled. On anticoagulation."
+      "notes": "INR 2.7, therapeutic. Increases GI bleeding risk — important consideration for surveillance planning."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "problem": "GI Surveillance",
+      "action": "No active GI complaints. Epigastric symptoms resolved. Given anticoagulation status and age >70, important to maintain low threshold for endoscopic evaluation if any new symptoms arise. Patient is due for surveillance colonoscopy (last 2018 with adenoma). Will schedule colonoscopy — anticipate needing warfarin bridging protocol given CHA2DS2-VASc score of 5. Will coordinate with cardiology regarding periprocedural anticoagulation management. Recommend H. pylori testing (stool antigen) as screening given risk factors — results to be reviewed at pre-procedure visit."
     },
     {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "problem": "NSAID Counseling",
+      "action": "Reiterated importance of strict NSAID avoidance. Patient on warfarin with CKD — triple risk for GI complications with NSAIDs (bleeding, renal injury, HF exacerbation). Patient confirms understanding. Recommended acetaminophen 500mg q6h PRN for knee pain, maximum 2g daily given liver considerations. Topical agents (capsaicin cream, lidocaine patches) also discussed as alternatives."
     },
     {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
-    },
-    {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "problem": "Volume Overload",
+      "action": "Mild volume overload per exam (1+ edema, mildly elevated JVP, trace bibasilar crackles) with weight trending up. Recommend patient contact PCP or cardiology for potential diuretic dose adjustment if weight continues to increase. Sent message to Dr. Chen via chart regarding today's findings."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 9 weeks or sooner if needed."
+      "action": "Pre-colonoscopy visit in approximately 6 weeks. Colonoscopy to be scheduled thereafter. If any GI alarm symptoms in interim — melena, hematochezia, hematemesis, unintentional weight loss, dysphagia, persistent abdominal pain — patient to call GI directly or present to ED. Patient and wife verbalize understanding."
     }
   ],
   "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. William Thompson\nDate: 3/12/2023"

@@ -5,15 +5,19 @@
   "author": "Dr. Sarah Chen",
   "department": "Primary Care",
   "encounter": "ENC042",
-  "chiefComplaint": "Urinary symptoms",
-  "hpi": "Patient presents for urinary symptoms. Reports some shortness of breath with exertion, at baseline. No chest pain or palpitations.",
+  "chiefComplaint": "Comprehensive chronic disease management",
+  "hpi": "Mr. Morrison is a 71-year-old male with HFrEF (EF 30-35%), persistent atrial fibrillation on warfarin, CKD Stage 3b, Type 2 DM on insulin and metformin, diabetic peripheral neuropathy, HTN, hyperlipidemia, BPH, and a history of UTI (April 2023, resolved) who presents for comprehensive primary care follow-up. He has not been seen in our office since May and has had several subspecialty visits in the interim. This is the first of a series of focused visits this week to address his multiple chronic conditions comprehensively.\n\nHe reports that overall he is feeling about the same as his last visit. His exercise tolerance remains stable at approximately 1-1.5 blocks before he becomes dyspneic. He denies any acute symptoms — no chest pain, no worsening dyspnea, no fevers, no falls. He states his blood sugars have improved since his insulin was increased to 26 units. He had a UTI in April that resolved with nitrofurantoin, and he has had no recurrence of urinary symptoms. He notes some baseline dyspnea with exertion and bilateral knee pain that is managed with acetaminophen and topical diclofenac.\n\nHe had a V/Q scan in May that was low probability for PE per pulmonology. His dyspnea is attributed to his heart failure and deconditioning. Cardiology has been uptitrating his carvedilol — he is currently on 18.75mg BID (up from 12.5mg earlier this year), tolerating well with no symptomatic bradycardia or hypotension. He brings a home blood pressure log showing readings generally 125-145/72-88.\n\nSocially, he and his wife Patricia are doing well. They recently celebrated their 48th wedding anniversary. He is still active in his church community though attending less frequently due to fatigue. He denies depression but acknowledges he has less energy and motivation than he used to.",
   "reviewOfSystems": {
-    "Constitutional": "No fever, chills, or weight loss",
-    "Cardiovascular": "Dyspnea on exertion at baseline",
-    "Respiratory": "No hemoptysis",
-    "GI": "Appetite fair",
-    "GU": "No dysuria",
-    "Neurologic": "No new weakness"
+    "Constitutional": "Chronic fatigue as above, no fevers, no chills, no unintentional weight loss. Sleep quality fair — disrupted by nocturia and nocturnal neuropathy",
+    "Cardiovascular": "DOE at baseline (1-1.5 blocks), no orthopnea, no PND, no chest pain, no palpitations, no syncope",
+    "Respiratory": "No cough, no wheezing, no hemoptysis. Dyspnea exertional only",
+    "GI": "Appetite fair, no abdominal pain, no nausea/vomiting, no melena, no hematochezia, regular bowel movements",
+    "GU": "Nocturia x2-3 (BPH), no dysuria, no hematuria. UTI resolved",
+    "Musculoskeletal": "Bilateral knee OA pain 3-4/10, managed with acetaminophen and topical diclofenac. No acute joint swelling",
+    "Neurologic": "Bilateral foot numbness and tingling, worse at night. No new weakness. No falls. Occasional clumsiness",
+    "Endocrine": "Blood sugars improved, no hypoglycemia, no polyuria beyond baseline nocturia",
+    "Skin": "Dry skin lower extremities, no foot ulcers, no new rashes",
+    "Psychiatric": "Low energy and decreased motivation but denies frank depression. Enjoys time with grandchildren when they visit"
   },
   "vitals": {
     "bp": "139/78 mmHg",
@@ -21,49 +25,69 @@
     "rr": "14/min",
     "temp": "98.2°F",
     "spo2": "97% RA",
-    "weight": "100.0 kg"
+    "weight": "97.6 kg"
   },
   "physicalExam": {
-    "General": "Comfortable, well-appearing",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "Regular rate and rhythm, no murmurs",
-    "Respiratory": "Mild crackles at bases",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "1+ pedal edema bilaterally",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Well-appearing obese male, alert and oriented, no acute distress. Affect pleasant but subdued. BMI approximately 33",
+    "HEENT": "Normocephalic, atraumatic. PERRL. Sclera anicteric. Conjunctivae with mild pallor (chronic). Oropharynx clear. Mild gingivitis. No thyromegaly. No cervical lymphadenopathy",
+    "Cardiovascular": "Irregularly irregular at 69 bpm. S1/S2 normal. 2/6 holosystolic murmur at apex (stable). No S3 or S4. JVP approximately 7 cm H2O — normal. PMI laterally displaced. No carotid bruits",
+    "Respiratory": "Trace fine crackles bilateral bases posteriorly, clearing with deep cough. No wheezes or rhonchi. Good air entry bilaterally",
+    "Abdomen": "Obese, soft, non-tender, non-distended. Normal active bowel sounds. No hepatosplenomegaly. Small reducible umbilical hernia, stable",
+    "Extremities": "1+ bilateral pitting edema at ankles. Warm, well-perfused. Dry skin bilateral lower legs with mild scaling. No ulcers. No venous stasis changes. Dorsalis pedis pulses 1+ bilaterally",
+    "Neurologic": "Alert and oriented x3. Cranial nerves II-XII grossly intact. Decreased sensation bilateral feet in stocking distribution. Ankle reflexes absent. Romberg mildly positive. Gait slightly wide-based but ambulatory without assistive device",
+    "Psychiatric": "Flat affect noted. Makes eye contact. Speech normal rate and rhythm. Thought process linear. No suicidal ideation expressed"
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
-      "icd10": "E11.65",
-      "notes": "HbA1c 8.3%. On insulin and metformin."
+      "diagnosis": "Multiple chronic disease management",
+      "icd10": "Z87.39",
+      "notes": "Complex patient with 10+ active diagnoses requiring coordinated management across 5+ subspecialties. Current disease state summary: HFrEF NYHA II (stable), A-fib (rate controlled on warfarin), CKD 3b (eGFR ~37, stable decline), DM2 (improving on increased insulin), neuropathy (moderate, progressing), HTN (near goal), hyperlipidemia (at goal), BPH (moderate symptoms on tamsulosin). No acute issues today. Focus this week on comprehensive optimization."
     },
     {
-      "diagnosis": "Chronic Kidney Disease Stage 3b",
-      "icd10": "N18.32",
-      "notes": "eGFR 42. Stable."
+      "diagnosis": "Heart Failure with Reduced EF",
+      "icd10": "I50.22",
+      "notes": "NYHA Class II, stable. On Entresto (target), carvedilol (uptitrating, now 18.75mg BID), spironolactone, furosemide. No SGLT2 inhibitor yet. Volume status: trace overload (1+ edema, minimal crackles) but clinically acceptable."
+    },
+    {
+      "diagnosis": "Type 2 Diabetes Mellitus with complications",
+      "icd10": "E11.65",
+      "notes": "Glycemic control improving on glargine 26 units + metformin 250mg BID. A1c to be rechecked. Complications: neuropathy (progressing), nephropathy (CKD 3b), retinopathy (mild NPDR)."
+    },
+    {
+      "diagnosis": "Possible depression / adjustment disorder",
+      "icd10": "F43.20",
+      "notes": "Flat affect, decreased energy and motivation, reduced social engagement. Not meeting full criteria for major depression per screening today (PHQ-2: 2/6 — subthreshold). However, chronic disease burden and functional decline are significant psychosocial stressors. Worth monitoring closely."
+    },
+    {
+      "diagnosis": "Preventive care due",
+      "icd10": "Z00.00",
+      "notes": "Several preventive care items are due or overdue: annual flu shot (due fall 2023), pneumococcal vaccination (Prevnar 20 given 9/2022 — complete), COVID booster (last 10/2022 — may need update), colon cancer screening (colonoscopy pending scheduling via GI), annual diabetic eye exam (completed, mild NPDR), annual podiatry exam (scheduled next month)."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
-    },
-    {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "problem": "Comprehensive Care Coordination",
+      "action": "Plan multi-day visit series this week to address each chronic condition in dedicated time:\n- Day 2 (7/6): UTI follow-up and medication reconciliation\n- Day 3 (7/7): Diabetes management focused visit\n- Day 4 (7/8): Dyspnea/SOB evaluation and cardiac rehab planning\n- Day 5 (7/9): CKD management and lab review\n\nActive subspecialty teams: Cardiology (Dr. Wilson), GI (Dr. Thompson), Pulmonology (Dr. Park), Urology (Dr. Kim), Internal Medicine (Dr. Adams), Nephrology (established). Communication sent to all teams via chart update regarding this comprehensive reassessment."
     },
     {
       "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
+      "action": "Continue current GDMT. Cardiology managing carvedilol uptitration. Will address in detail at SOB-focused visit (7/8). Cardiac rehab referral to be facilitated. Volume status acceptable — no change to diuretics today."
     },
     {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "problem": "Diabetes",
+      "action": "Will address in detail at diabetes-focused visit (7/7). Labs ordered today: A1c, BMP, CBC with differential, lipid panel, LFTs, phosphorus, PTH, vitamin D, UACR, urinalysis, uric acid, iron studies, ferritin, TIBC, TSH."
+    },
+    {
+      "problem": "Mood/Depression Screening",
+      "action": "PHQ-2 score 2/6 today — subthreshold but concerning given flat affect and decreased social engagement. Will administer full PHQ-9 at next comprehensive visit. Discussed with patient — he attributes his low energy to his heart condition and multiple medications. Discussed that depression is common in patients with chronic HF and can worsen outcomes. He is open to counseling if recommended but skeptical about 'needing it.' Will continue to monitor. If PHQ-9 elevated, will discuss counseling and/or SSRI options (sertraline preferred in cardiac patients)."
+    },
+    {
+      "problem": "Preventive Care",
+      "action": "Influenza vaccine — to be given at fall visit. COVID booster — will discuss updated formulation when available. Colonoscopy — being scheduled by GI. Podiatry — appointment confirmed for August. Ophthalmology — completed, follow-up per their schedule."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 8 weeks or sooner if needed."
+      "action": "Continue visit series this week. Next comprehensive PCP visit in 6-8 weeks after all subspecialty inputs integrated. Emergency precautions reviewed with patient and wife."
     }
   ],
   "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Sarah Chen\nDate: 7/5/2023"

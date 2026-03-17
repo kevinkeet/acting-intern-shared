@@ -1,0 +1,110 @@
+{
+  "id": "NOTE_POD001",
+  "type": "Consult Note",
+  "title": "Podiatry - Annual Diabetic Foot Examination",
+  "date": "2024-12-15T10:00:00.000Z",
+  "author": "Dr. Michael Chen, DPM",
+  "department": "Podiatry",
+  "encounter": "ENC_POD001",
+  "signedDate": "2024-12-15T11:30:00.000Z",
+  "sections": {
+    "reasonForVisit": "Annual comprehensive diabetic foot examination. Referred by PCP Dr. Sarah Chen for routine diabetic foot surveillance and nail care.",
+    "historyOfPresentIllness": "Mr. Morrison is a 72-year-old gentleman with a 14-year history of type 2 diabetes mellitus complicated by diabetic peripheral neuropathy (diagnosed 2020, on gabapentin 300mg TID), chronic kidney disease stage 3b, and heart failure with reduced ejection fraction. He presents for his annual diabetic foot examination.\n\nThe patient reports persistent bilateral foot numbness and tingling, described as 'walking on cotton,' which has been stable over the past year. He rates his neuropathic pain at 4/10 on gabapentin. He denies any new foot wounds, ulcers, blisters, or drainage. He notes his toenails have become thickened and discolored over the past 1-2 years, particularly on the great toes. His wife Patricia assists with visual inspection of his feet as he has difficulty reaching them due to body habitus.\n\nHe reports occasional sharp pains in his feet at night. He wears diabetic shoes obtained from a prior podiatry visit but they are now 2 years old and showing significant wear. He denies any history of foot ulceration, amputation, or Charcot arthropathy. He had a fall in September 2025 attributed to nocturia and neuropathy-related balance issues.\n\nMost recent HbA1c 8.0% (December 2024). Currently on empagliflozin 10mg, metformin 500mg BID, and insulin glargine 24 units QHS.",
+    "relevantHistory": {
+      "diabeticComplications": [
+        "Diabetic peripheral neuropathy — diagnosed 2020, sensorimotor axonal type on EMG/NCS",
+        "Mild nonproliferative diabetic retinopathy — stable per ophthalmology 12/2024",
+        "Diabetic nephropathy — CKD stage 3b, eGFR ~36"
+      ],
+      "vascularHistory": [
+        "Coronary artery disease — 3-vessel disease, medically managed",
+        "Atrial fibrillation — on aspirin only (warfarin discontinued 9/2023 after GI hemorrhage)",
+        "Heart failure with reduced ejection fraction — EF 30-35%",
+        "Former smoker — quit 1995, 20 pack-year history"
+      ],
+      "priorFootHistory": "No prior foot ulcers, no amputations, no Charcot arthropathy, no prior vascular surgery"
+    },
+    "examination": {
+      "dermatologic": {
+        "skinCondition": "Dry skin bilateral feet with fissuring at bilateral heel margins, more prominent on the right. No maceration between toes. No erythema, warmth, or signs of cellulitis.",
+        "calluses": "Moderate callus formation at bilateral 1st and 5th metatarsal heads and lateral aspect of bilateral 5th toes. No pre-ulcerative lesions beneath calluses.",
+        "ulcers": "None identified. No open wounds, blisters, or drainage.",
+        "nails": "Bilateral great toenails with onychomycosis — thickened, yellow-brown discoloration, subungual debris. Mild dystrophy of 2nd and 3rd toenails bilaterally. No ingrown toenails. No periungual erythema or purulence."
+      },
+      "musculoskeletal": {
+        "deformities": "Mild hallux valgus bilateral (right > left). Hammertoe deformity bilateral 2nd toes, flexible. No Charcot changes. No prominent metatarsal heads.",
+        "footStructure": "Pes planus bilateral. Mild pronation with weight-bearing.",
+        "rangeOfMotion": "Ankle dorsiflexion mildly limited bilateral (~5 degrees past neutral). 1st MTP ROM preserved."
+      },
+      "neurological": {
+        "monofilament": {
+          "rightFoot": "Absent 4 of 10 sites (absent at 1st, 3rd, and 5th metatarsal heads and great toe pulp). Present at heel, midfoot, and proximal sites.",
+          "leftFoot": "Absent 3 of 10 sites (absent at 1st and 5th metatarsal heads and great toe pulp). Present at heel, midfoot, and proximal sites.",
+          "interpretation": "Severe loss of protective sensation bilateral feet, right worse than left. Consistent with known diabetic peripheral neuropathy."
+        },
+        "vibration": "Diminished at bilateral great toes and medial malleoli. Present at bilateral tibial tuberosities.",
+        "reflexes": "Ankle reflexes absent bilaterally. Knee reflexes 1+ bilaterally."
+      },
+      "vascular": {
+        "dorsalisPedis": "1+ bilaterally (diminished but palpable)",
+        "posteriorTibial": "1+ right, trace left",
+        "capillaryRefill": "4 seconds bilateral great toes (mildly delayed)",
+        "skinTemperature": "Cool bilateral feet, symmetric",
+        "abi": "Not performed — unreliable in setting of atrial fibrillation (irregular R-R intervals affect measurement accuracy). Clinical vascular assessment performed instead.",
+        "hairGrowth": "Absent distal to mid-calf bilaterally"
+      }
+    },
+    "riskClassification": {
+      "category": "Category 3 — High Risk",
+      "criteria": [
+        "Loss of protective sensation (monofilament testing abnormal)",
+        "Peripheral neuropathy confirmed on EMG/NCS",
+        "Peripheral vascular disease (diminished pulses, delayed cap refill, absent hair growth)",
+        "Structural deformity (hallux valgus, hammertoes, pes planus)"
+      ],
+      "annualUlcerRisk": "Estimated 5-10% per year based on risk category",
+      "note": "Multiple compounding risk factors: diabetes, CKD, HF (peripheral edema), neuropathy, PAD, and patient resistance to assistive devices for ambulation."
+    },
+    "assessment": "72-year-old male with type 2 diabetes mellitus x 14 years presenting for annual diabetic foot examination. Examination reveals high-risk diabetic feet with severe loss of protective sensation on monofilament testing (right 4/10, left 3/10 sites absent), diminished peripheral pulses, structural deformities, onychomycosis of bilateral great toenails, callus formation at pressure points, and dry fissuring skin at heels. No active ulceration. Classification: IWGDF Risk Category 3 (high risk).\n\nThe combination of severe neuropathy, diminished vascular supply, structural deformities, and systemic comorbidities (CKD, HF, A-fib without anticoagulation) places this patient at significant risk for foot ulceration, infection, and potential amputation. Aggressive preventive care is essential.",
+    "procedures": [
+      "Debridement of onychomycotic bilateral great toenails using rotary burr — nails reduced to appropriate thickness. No bleeding or pain during procedure (consistent with neuropathy).",
+      "Callus reduction at bilateral 1st and 5th metatarsal heads and lateral 5th toes using scalpel debridement. No pre-ulcerative tissue identified beneath calluses."
+    ],
+    "plan": [
+      {
+        "category": "Skin and Nail Care",
+        "items": [
+          "Urea 40% cream — apply to heels and dry areas of feet twice daily. Avoid application between toes (maceration risk).",
+          "Continue daily foot inspection — patient and wife to inspect all surfaces including between toes and soles",
+          "Onychomycosis — topical antifungal (ciclopirox 8% nail lacquer) was considered but deferred given CKD limiting oral terbinafine use and low likelihood of topical efficacy with this degree of involvement. Mechanical debridement q3 months preferred approach."
+        ]
+      },
+      {
+        "category": "Offloading and Footwear",
+        "items": [
+          "Custom molded diabetic orthotics ordered — will redistribute pressure away from metatarsal heads and provide arch support for pes planus",
+          "Prescription for new diabetic shoes (Medicare therapeutic shoe program) — current shoes worn beyond useful life",
+          "Patient counseled to never walk barefoot, even indoors"
+        ]
+      },
+      {
+        "category": "Preventive Monitoring",
+        "items": [
+          "Return to podiatry every 3 months (q3 month schedule per IWGDF Category 3 guidelines)",
+          "Next visit: March 2025 for nail debridement, callus care, and re-examination",
+          "Urgent evaluation for any new wound, blister, color change, warmth, or drainage — do not wait for scheduled appointment",
+          "Coordinate with PCP regarding glycemic optimization and neuropathy management"
+        ]
+      },
+      {
+        "category": "Vascular Referral Consideration",
+        "items": [
+          "Diminished pulses and absent hair growth suggest peripheral arterial disease. However, given patient's multiple comorbidities and absence of critical limb ischemia symptoms (no rest pain, no non-healing wounds), vascular surgery referral deferred at this time.",
+          "If any wound develops that fails to heal within 2-4 weeks, vascular referral will be indicated"
+        ]
+      }
+    ],
+    "patientEducation": "Discussed findings with Mr. Morrison and his wife Patricia. Explained that his feet are at high risk for ulcers and wounds due to the combination of nerve damage (he cannot feel injuries) and reduced blood flow (wounds heal slowly). Emphasized daily foot checks, proper footwear at all times, moisturizing dry skin (but not between toes), avoiding extreme temperatures, and cutting nails straight across or having them professionally trimmed. Reviewed warning signs requiring immediate medical attention: any new wound or blister, redness, warmth, swelling, drainage, or color changes. Patient and wife verbalized understanding."
+  },
+  "attestation": "I personally examined this patient, performed nail debridement and callus reduction, and formulated the assessment and plan.\n\nElectronically signed by: Michael Chen, DPM\nDate/Time: 12/15/2024 11:30 AM"
+}

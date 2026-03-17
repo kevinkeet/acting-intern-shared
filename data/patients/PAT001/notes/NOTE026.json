@@ -5,15 +5,19 @@
   "author": "Dr. William Thompson",
   "department": "Gastroenterology",
   "encounter": "ENC019",
-  "chiefComplaint": "Urinary symptoms",
-  "hpi": "Patient presents for urinary symptoms. Presents with mild worsening of baseline symptoms. Reports increased fatigue over the past week.",
+  "chiefComplaint": "GI surveillance follow-up and urinary symptoms",
+  "hpi": "Mr. Morrison is a 72-year-old male with history of upper GI hemorrhage from gastric ulcer (September 2023, Forrest IIa, treated with epinephrine injection, bipolar cautery, and hemoclip), H. pylori eradication (confirmed negative October 2023), HFrEF (EF 30-35%), CKD 3b, persistent atrial fibrillation (off anticoagulation since GI bleed), and Type 2 DM who presents for routine GI surveillance. His last EGD in April 2024 showed complete ulcer healing with no dysplasia. He denies any recurrence of melena, hematemesis, hematochezia, or epigastric pain. He reports occasional mild dyspepsia after heavy meals, which resolves with his standing pantoprazole. He also mentions increasing nocturia to 3 times per night over the past 2 months, which he attributes to his diuretic regimen but notes it is disrupting his sleep and contributing to fatigue. He had a fall in September 2025 related to nighttime bathroom trips. Appetite has been fair but reports holiday dietary indiscretions with higher sodium intake. Denies dysphagia, odynophagia, nausea, vomiting, early satiety, or unintentional weight loss.",
   "reviewOfSystems": {
-    "Constitutional": "Reports fatigue",
-    "Cardiovascular": "No orthopnea",
-    "Respiratory": "Mild dyspnea",
-    "GI": "No nausea or vomiting",
-    "GU": "Nocturia x2",
-    "Neurologic": "No new weakness"
+    "Constitutional": "Reports fatigue and low energy over the past several weeks. Weight up slightly. Denies fever, chills, or night sweats.",
+    "Cardiovascular": "Baseline dyspnea on exertion walking 1-2 blocks. No orthopnea or PND. No chest pain or palpitations.",
+    "Respiratory": "Mild exertional dyspnea at baseline. No cough, wheezing, or hemoptysis.",
+    "GI": "Occasional mild postprandial dyspepsia. No melena, hematochezia, hematemesis, abdominal pain, nausea, vomiting, dysphagia, or change in bowel habits. Regular bowel movements.",
+    "GU": "Nocturia x3 (increased from baseline x2). Weak stream and hesitancy consistent with known BPH. No dysuria, hematuria, or urgency.",
+    "Musculoskeletal": "Mild low back discomfort, chronic. No joint swelling or acute pain.",
+    "Neurologic": "Chronic bilateral foot numbness and tingling, stable. No new weakness, dizziness, or falls since September.",
+    "Psychiatric": "Reports feeling somewhat down, less interested in usual activities. Sleep disturbed by nocturia.",
+    "Endocrine": "No polydipsia or polyuria beyond BPH symptoms. No heat or cold intolerance.",
+    "Skin": "No rashes, bruising, or skin changes."
   },
   "vitals": {
     "bp": "144/75 mmHg",
@@ -24,52 +28,76 @@
     "weight": "100.8 kg"
   },
   "physicalExam": {
-    "General": "Comfortable, well-appearing",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "Regular rate and rhythm, no murmurs",
-    "Respiratory": "Mild crackles at bases",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "Trace bilateral ankle edema",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Well-developed, overweight male appearing stated age, comfortable at rest, in no acute distress. BMI approximately 33.",
+    "HEENT": "Normocephalic, atraumatic. Sclerae anicteric, conjunctivae pink. Oropharynx clear without lesions or erythema. Mucous membranes moist. No cervical or supraclavicular lymphadenopathy.",
+    "Cardiovascular": "Irregularly irregular rhythm consistent with atrial fibrillation, rate controlled. Normal S1, physiologically split S2. No S3 or S4 gallop appreciated today. Soft 2/6 systolic murmur at apex consistent with known mitral regurgitation. JVP estimated at 8 cm H2O, not elevated. No carotid bruits.",
+    "Respiratory": "Mild bibasilar crackles, right greater than left, consistent with mild volume overload. No wheezes or rhonchi. Good air movement bilaterally. No accessory muscle use.",
+    "Abdomen": "Soft, non-distended, non-tender to palpation in all quadrants. No epigastric tenderness (improved from prior). No hepatomegaly or splenomegaly. Bowel sounds normoactive in all four quadrants. No rebound or guarding. Small umbilical hernia, reducible, non-tender (known finding from CT September 2024).",
+    "Extremities": "Trace bilateral ankle edema, symmetric. No calf tenderness or erythema. Distal pulses 1+ bilaterally. Skin warm, no cyanosis.",
+    "Neurologic": "Alert and oriented x3. Cranial nerves II-XII grossly intact. Decreased sensation to light touch and monofilament testing bilateral feet to mid-ankle level, consistent with known diabetic peripheral neuropathy. Motor strength 5/5 in upper and lower extremities.",
+    "Skin": "No pallor, jaundice, or petechiae. No spider angiomata. No signs of GI bleeding."
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
+      "diagnosis": "History of gastric ulcer with upper GI hemorrhage, healed",
+      "icd10": "K25.9",
+      "notes": "Status post EGD with hemostasis September 2023. H. pylori eradicated, confirmed negative. Surveillance EGD April 2024 showed complete healing. Currently on indefinite pantoprazole 40mg daily for gastroprotection given history of major GI hemorrhage and concurrent aspirin use. No symptoms suggestive of recurrent ulceration or bleeding. Next surveillance EGD can be deferred unless new symptoms develop."
+    },
+    {
+      "diagnosis": "Type 2 Diabetes Mellitus with diabetic neuropathy",
       "icd10": "E11.65",
-      "notes": "HbA1c 8.0%. On insulin and metformin."
+      "notes": "HbA1c 8.0%, trending up from 7.8% in October likely due to holiday dietary indiscretions. On metformin 500mg BID (renally dosed), insulin glargine 24 units QHS, empagliflozin 10mg daily (started May 2025). Neuropathy symptoms stable on gabapentin 300mg TID."
     },
     {
       "diagnosis": "Chronic Kidney Disease Stage 3b",
       "icd10": "N18.32",
-      "notes": "eGFR 42. Stable."
+      "notes": "eGFR 35.8, Cr 1.96. Stable trajectory with slow decline (~2-3 mL/min/year). UACR 180 last checked March 2024. On ARNI and SGLT2i which provide renal protection. Metabolic acidosis managed with sodium bicarbonate."
     },
     {
       "diagnosis": "Heart Failure with Reduced EF",
       "icd10": "I50.22",
-      "notes": "NYHA Class II. On GDMT."
+      "notes": "NYHA Class II, stable. On optimized quadruple therapy: carvedilol 25mg BID, sacubitril/valsartan 97/103mg BID, spironolactone 25mg daily, empagliflozin 10mg daily. Weight slightly above target, likely related to dietary indiscretion."
+    },
+    {
+      "diagnosis": "Persistent Atrial Fibrillation",
+      "icd10": "I48.1",
+      "notes": "Rate controlled on carvedilol. NOT on anticoagulation — permanently discontinued after GI hemorrhage September 2023 per multidisciplinary decision (GI, Cardiology, PCP). CHA2DS2-VASc 5, accepting stroke risk with aspirin 81mg only. No LAA thrombus on TEE September 2024."
+    },
+    {
+      "diagnosis": "Benign Prostatic Hyperplasia",
+      "icd10": "N40.0",
+      "notes": "Worsening nocturia x3 (baseline x2), contributing to sleep disruption, fatigue, and fall risk. On tamsulosin 0.4mg QHS. Consider urology referral for symptom optimization."
     }
   ],
   "plan": [
     {
+      "problem": "GI Surveillance",
+      "action": "No evidence of recurrent ulcer disease or GI bleeding. Continue pantoprazole 40mg daily indefinitely. No need for repeat EGD at this time given complete healing on last scope and absence of alarm symptoms. Patient counseled to report any black stools, abdominal pain, or vomiting immediately. Reinforced importance of avoiding NSAIDs — patient confirms understanding."
+    },
+    {
       "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "action": "HbA1c 8.0%, above goal. Holiday dietary indiscretion likely contributing. Reinforce carbohydrate counting and portion control. Continue metformin 500mg BID, insulin glargine 24 units QHS, empagliflozin 10mg daily. Consider increasing glargine to 26 units if A1c does not improve by next check in 3 months. Encourage home glucose monitoring; target fasting 80-130 mg/dL."
     },
     {
       "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "action": "eGFR stable at 35.8. Continue current renal protective regimen (ARNI + SGLT2i). Continue sodium bicarbonate 650mg BID. Recheck BMP and UACR at next nephrology visit. Avoid nephrotoxic agents including NSAIDs and IV contrast when possible."
     },
     {
       "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
+      "action": "Weight 100.8 kg, up from 99.2 in October. Likely dietary sodium indiscretion contributing to mild volume overload. Reinforced 2g sodium restriction and 1.5L fluid restriction. Continue quadruple GDMT. If weight continues to trend up, may need to increase furosemide from current 60mg AM/40mg PM dosing. Daily home weight monitoring."
     },
     {
       "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "action": "Rate controlled, HR 68. Continue aspirin 81mg daily. No anticoagulation per multidisciplinary decision post-GI bleed. Stroke warning signs reviewed with patient and wife."
+    },
+    {
+      "problem": "BPH / Nocturia",
+      "action": "Nocturia worsening to 3x nightly. Contributing to sleep disruption, fatigue, and fall risk. Recommend urology referral for tamsulosin optimization or consideration of additional therapy. In interim, reinforce nighttime safety measures (nightlights, clear path to bathroom, no throw rugs)."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 4 weeks or sooner if needed."
+      "action": "Return in 6 months for GI surveillance or sooner if any GI symptoms. Coordinate with PCP regarding depression screening follow-up and BPH management."
     }
   ],
-  "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. William Thompson\nDate: 12/13/2024"
+  "attestation": "I personally saw and examined the patient. I reviewed the relevant medical history, laboratory data, and imaging. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. William Thompson, MD\nDate: 12/13/2024"
 }

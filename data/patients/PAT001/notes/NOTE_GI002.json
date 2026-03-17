@@ -1,0 +1,72 @@
+{
+  "id": "NOTE_GI002",
+  "type": "Consult Note",
+  "title": "Gastroenterology Follow-up - Surveillance EGD",
+  "date": "2023-10-11T09:00:00.000Z",
+  "author": "Dr. William Thompson",
+  "department": "Gastroenterology",
+  "encounter": "ENC_GI002",
+  "signedDate": "2023-10-11T12:30:00.000Z",
+  "sections": {
+    "reasonForVisit": "Surveillance EGD follow-up, status post upper GI bleed September 2023",
+    "historyOfPresentIllness": "Mr. Morrison is a 71-year-old gentleman presenting for follow-up after his recent hospitalization for acute upper GI bleeding in September 2023. He was found to have a 1.5 cm gastric antral ulcer with a visible vessel that was successfully treated endoscopically with epinephrine injection and bipolar cautery. He was started on high-dose PPI (pantoprazole 40 mg BID) and H. pylori triple therapy (clarithromycin, amoxicillin, pantoprazole x 14 days). His anticoagulation (warfarin) was held at that time.\n\nSince discharge, the patient reports no recurrent melena, hematemesis, hematochezia, or abdominal pain. His appetite has returned to baseline. He has been tolerating oral intake well and has regained the 3 lbs he lost during hospitalization. He completed his H. pylori treatment course without significant side effects. He is currently taking pantoprazole 40 mg BID.\n\nOf note, a multidisciplinary team discussion was held on 9/28/2023 involving cardiology (Dr. Wilson), gastroenterology, and his primary care physician (Dr. Chen) regarding anticoagulation. Given his CHA2DS2-VASc score of 5 (HTN, age >75, DM, HF, vascular disease) vs. HAS-BLED score considerations with recent major GI bleed, the consensus was to hold anticoagulation for at least 3-6 months pending confirmation of ulcer healing and to re-evaluate at that time.",
+    "procedureNote": {
+      "procedure": "Esophagogastroduodenoscopy (EGD)",
+      "date": "2023-10-11",
+      "indication": "Surveillance of gastric ulcer status post GI bleed (September 2023)",
+      "sedation": "Moderate sedation with midazolam 3 mg IV and fentanyl 75 mcg IV",
+      "findings": {
+        "esophagus": "Normal esophageal mucosa throughout. No varices, strictures, or Barrett's changes. GE junction at 40 cm.",
+        "stomach": "Prior antral ulcer site identified: healing ulcer base approximately 8 mm, clean base with surrounding erythema and regenerating epithelium. No visible vessel, no adherent clot, no active bleeding. Forrest classification IIc (flat pigmented spot). Remainder of gastric mucosa normal. No masses or polyps.",
+        "duodenum": "Normal duodenal bulb and second portion. No ulceration or erosions."
+      },
+      "biopsies": "Biopsies taken from ulcer margin (x4) for histology and dysplasia evaluation. Separate biopsies from antrum (x2) and body (x2) for H. pylori assessment.",
+      "complications": "None. Patient tolerated procedure well."
+    },
+    "laboratoryResults": {
+      "hPyloriStoolAntigen": {
+        "date": "2023-10-05",
+        "result": "Negative",
+        "interpretation": "Confirms successful eradication of H. pylori following triple therapy"
+      },
+      "recentCBC": {
+        "date": "2023-10-09",
+        "hemoglobin": "11.2 g/dL (improved from 8.9 at discharge)",
+        "hematocrit": "33.8%",
+        "mcv": "86 fL",
+        "platelets": "198 K/uL"
+      }
+    },
+    "assessment": "71-year-old male with history of acute upper GI bleed from gastric antral ulcer (September 2023), now with evidence of ulcer healing on surveillance EGD. The ulcer has decreased in size from 1.5 cm to approximately 8 mm with clean base and no visible vessel (Forrest IIc). H. pylori eradication confirmed by negative stool antigen. Hemoglobin has improved from 8.9 to 11.2 g/dL.\n\nKey considerations:\n1. Ulcer is healing well but not yet completely resolved — continued PPI therapy warranted\n2. H. pylori successfully eradicated — no further antibiotic therapy needed\n3. Anticoagulation remains held per MDT decision — will re-evaluate after next surveillance EGD confirming complete healing\n4. Biopsy results pending for dysplasia evaluation",
+    "recommendations": [
+      {
+        "category": "Medications",
+        "items": [
+          "Continue pantoprazole 40 mg PO twice daily until next surveillance EGD",
+          "Step down to pantoprazole 40 mg daily once ulcer confirmed fully healed",
+          "Plan for indefinite PPI therapy given history of significant GI bleed and multiple risk factors (age, concomitant aspirin use, history of H. pylori)"
+        ]
+      },
+      {
+        "category": "Anticoagulation",
+        "items": [
+          "Continue to hold warfarin per prior MDT decision (9/28/2023)",
+          "No anticoagulation until ulcer is confirmed completely healed on repeat EGD",
+          "When anticoagulation is reconsidered, recommend DOAC over warfarin for more predictable pharmacokinetics and lower GI bleed risk (apixaban preferred)",
+          "Any anticoagulation restart should be in close coordination with cardiology"
+        ]
+      },
+      {
+        "category": "Follow-up",
+        "items": [
+          "Repeat surveillance EGD in approximately 6 months (target April 2024) to confirm complete ulcer healing",
+          "Will review biopsy pathology results and contact patient — if any dysplasia, will expedite follow-up",
+          "Return sooner if any alarm symptoms: melena, hematemesis, abdominal pain, unexplained weight loss, early satiety"
+        ]
+      }
+    ],
+    "patientEducation": "Discussed EGD findings with patient and wife Patricia. The ulcer is healing well which is very encouraging. Emphasized importance of continuing PPI medication without interruption. Reviewed alarm symptoms that should prompt immediate evaluation. Patient understands that anticoagulation remains on hold and that the decision will be revisited after the next endoscopy in 6 months. Patient had no questions.",
+    "plan": "1. Continue pantoprazole 40 mg BID\n2. H. pylori eradication confirmed — no further antibiotics\n3. Surveillance EGD in 6 months (April 2024)\n4. Anticoagulation remains held — coordinate with cardiology at next evaluation\n5. Review biopsy pathology when available\n6. Call clinic if alarm symptoms develop"
+  },
+  "attestation": "I personally performed the endoscopic procedure, evaluated this patient, reviewed all available data, and formulated the assessment and recommendations. Findings and plan discussed with the patient and his wife.\n\nElectronically signed by: William Thompson, MD, FACG\nDate/Time: 10/11/2023 12:30 PM"
+}

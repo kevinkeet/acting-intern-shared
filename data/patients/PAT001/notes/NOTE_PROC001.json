@@ -1,0 +1,47 @@
+{
+  "id": "NOTE_PROC001",
+  "type": "Procedure Note",
+  "title": "EGD Procedure Note - Upper GI Hemorrhage",
+  "date": "2023-09-13T08:30:00.000Z",
+  "author": "Dr. William Thompson",
+  "department": "Gastroenterology",
+  "encounter": "ENC_ADM002",
+  "signedDate": "2023-09-13T10:15:00.000Z",
+  "sections": {
+    "procedureType": "Esophagogastroduodenoscopy (EGD) with therapeutic intervention",
+    "dateOfProcedure": "2023-09-13",
+    "indication": "Acute upper gastrointestinal hemorrhage in a 72-year-old male with melena, coffee-ground emesis, hemorrhagic shock, hemoglobin 7.2 g/dL (now 8.4 post-transfusion), and supratherapeutic INR (3.8, now corrected to 1.4 post-reversal). Suspected peptic ulcer disease in setting of NSAID use (ibuprofen) while on warfarin anticoagulation.",
+    "informedConsent": "Risks, benefits, and alternatives of the procedure were discussed in detail with the patient and his wife Patricia. Risks discussed include bleeding, perforation, aspiration, adverse reaction to sedation, missed lesion, and need for repeat procedure or surgical intervention. The patient understands and provides informed consent. Written consent on file.",
+    "preProceduralAssessment": "Patient hemodynamically stable this morning after resuscitation. Current vitals: BP 108/66, HR 88 irregular, SpO2 96% on 2L NC. Hemoglobin 8.4 g/dL (post 2 units pRBC). INR 1.4 (post Vitamin K and 4F-PCC). Creatinine 2.6 (improving from 2.8). NPO since midnight. Erythromycin 250 mg IV administered 45 minutes prior to procedure for gastric motility.\n\nAnesthesia: Monitored anesthesia care (MAC) with propofol administered by Dr. Lisa Park, Anesthesiology. Given the patient's cardiac history (HFrEF, CAD) and hemodynamic instability from hemorrhage, MAC was chosen over moderate sedation for tighter hemodynamic control.\n\nASA Classification: IV (severe systemic disease that is a constant threat to life).",
+    "procedure": "The patient was positioned in the left lateral decubitus position. Continuous monitoring of blood pressure, heart rate, oxygen saturation, and end-tidal CO2 was maintained throughout the procedure. Time out was performed confirming patient identity, procedure, and site.\n\nThe Olympus GIF-HQ190 upper endoscope was introduced through the mouth and advanced under direct visualization.\n\nESPHAGUS: The esophageal mucosa was normal throughout. No varices, strictures, rings, or ulcerations were identified. The gastroesophageal junction was located at 40 cm from the incisors. A small, non-obstructing Schatzki ring was noted. The squamocolumnar junction was regular. No Barrett's esophagus.\n\nSTOMACH: Upon entering the stomach, a moderate amount of dark, hemolyzed blood and coffee-ground material was present in the gastric fundus and body. This was thoroughly suctioned and lavaged with 500 mL of water to achieve adequate visualization.\n\nOn the lesser curvature of the gastric body, approximately 5 cm proximal to the incisura, a LARGE ULCER was identified. The ulcer measured approximately 1.5 cm in diameter with sharply defined, erythematous, and mildly edematous margins. The base of the ulcer contained a visible vessel (non-bleeding at time of examination) with an overlying adherent clot. This was classified as Forrest IIa (visible vessel without active bleeding), which carries a 40-50% risk of rebleeding without intervention.\n\nNo other gastric ulcers, masses, or polyps were identified. The gastric antrum and body mucosa showed diffuse erythema and mild erosive gastropathy consistent with NSAID-induced mucosal injury. The pylorus was normal.\n\nDUODENUM: The duodenal bulb and second portion of the duodenum (D2) were examined and appeared normal. No duodenal ulcers, erosions, or masses. The ampulla of Vater appeared normal.\n\nRETROFLEX VIEW: Retroflex examination in the gastric fundus and cardia showed no additional lesions. The gastric cardia was normal.",
+    "therapeuticIntervention": "Given the Forrest IIa classification (visible vessel) with high rebleeding risk, endoscopic hemostasis was performed using a combined approach:\n\n1. EPINEPHRINE INJECTION: Using a 23-gauge sclerotherapy needle, dilute epinephrine (1:10,000) was injected in four quadrants around the ulcer base, totaling 8 mL. This achieved initial tamponade and vasoconstriction.\n\n2. BIPOLAR CAUTERY: The Gold Probe (10 French) was applied to the visible vessel at the ulcer base using multipolar electrocoagulation at 15 watts for 8 seconds x 4 applications. The visible vessel was successfully coagulated.\n\n3. HEMOCLIP PLACEMENT: Two Resolution hemoclips (Boston Scientific) were deployed across the visible vessel site to provide mechanical hemostasis. Both clips were well-positioned with good apposition to the ulcer base, effectively sealing the vessel.\n\nPost-intervention, the ulcer base was inspected carefully for 3 minutes with no evidence of ongoing oozing or bleeding. Hemostasis was deemed complete and successful.",
+    "biopsies": "1. CLO (Campylobacter-like organism) rapid urease test: Two biopsies were obtained from the gastric antrum (at least 2 cm from the ulcer margin) for CLO testing. RESULT: POSITIVE for Helicobacter pylori (color change within 1 hour).\n\n2. Ulcer margin biopsies: Four quadrant biopsies were obtained from the ulcer margins to rule out gastric malignancy. Results pending — will follow up in 7-10 days.\n\n3. Gastric antrum biopsies: Two additional biopsies from the antral mucosa for histological assessment of H. pylori and intestinal metaplasia.",
+    "findings": [
+      "1. Large gastric ulcer (1.5 cm) on the lesser curvature of the gastric body — Forrest IIa (visible vessel without active bleeding)",
+      "2. Successful endoscopic hemostasis with combination therapy (epinephrine injection + bipolar cautery + hemoclip placement x2)",
+      "3. Diffuse erosive gastropathy of the gastric antrum and body consistent with NSAID-induced mucosal injury",
+      "4. Positive CLO test for Helicobacter pylori",
+      "5. Small Schatzki ring at the GE junction (incidental, non-obstructing)",
+      "6. Normal esophagus, duodenal bulb, and second portion of duodenum"
+    ],
+    "complications": "None. The patient tolerated the procedure well. No immediate post-procedural bleeding, perforation, or adverse reaction to sedation. Hemodynamics remained stable throughout (BP range 100-115/60-70, HR 82-94).",
+    "estimatedBloodLoss": "Minimal (from biopsies). No active hemorrhage during or after the procedure.",
+    "postProcedureAssessment": "Patient recovered in the endoscopy recovery area under monitored care. Vitals stable. No hematemesis or recurrent melena. Abdomen soft, non-tender. Patient alert and oriented after recovery from anesthesia.",
+    "recommendations": [
+      "1. Continue IV pantoprazole infusion at 8 mg/hr for 72 hours following endoscopic hemostasis. This has been shown to significantly reduce rebleeding risk in high-risk ulcers (Forrest I-IIa). After 72 hours, transition to oral pantoprazole 40 mg twice daily.",
+      "2. NPO for 12 hours post-procedure, then advance to clear liquids, then full liquids, then soft diet as tolerated over 24-48 hours.",
+      "3. Serial hemoglobin monitoring q6h x 24 hours, then q12h. Transfuse to maintain Hgb >7 (>8 given active CAD).",
+      "4. H. PYLORI ERADICATION — CLO test is POSITIVE. Must initiate triple therapy once the patient is tolerating oral medications. IMPORTANT: Patient has penicillin allergy (rash), so amoxicillin-based regimens are CONTRAINDICATED. Recommend clarithromycin-based regimen: PPI + clarithromycin 500 mg BID + metronidazole 500 mg BID x 14 days. Pharmacy to review for drug interactions.",
+      "5. PERMANENT DISCONTINUATION of all NSAIDs (ibuprofen, naproxen, etc.). This must be clearly communicated to the patient, family, and all future providers. The combination of NSAIDs + anticoagulation is what caused this life-threatening event.",
+      "6. Indefinite PPI therapy — given the history of major GI hemorrhage, H. pylori infection, and the need for ongoing cardiovascular medications, this patient should remain on a PPI indefinitely.",
+      "7. Anticoagulation decisions: I recommend a multidisciplinary discussion involving Cardiology and the primary team regarding the risks and benefits of restarting anticoagulation. The risk of rebleeding must be weighed against stroke risk from atrial fibrillation. This discussion should occur during this hospitalization once the acute bleeding has resolved.",
+      "8. Repeat EGD in 4-6 weeks to confirm ulcer healing and to repeat biopsies to definitively rule out malignancy. Also to confirm H. pylori eradication (urea breath test can be used as alternative).",
+      "9. Ulcer margin biopsy results pending — will follow up and communicate to the primary team."
+    ],
+    "procedureDuration": "38 minutes (scope insertion to removal)",
+    "endoscopist": "William Thompson, MD, FACG",
+    "anesthesia": "Lisa Park, MD — Monitored Anesthesia Care (propofol)",
+    "assistants": "Sandra Lee, RN (Endoscopy nurse), Michael Tran, GI Tech"
+  },
+  "attestation": "I personally performed this procedure. This note reflects my independent assessment and documentation. All findings, therapeutic interventions, and recommendations are based on my direct observations during the procedure.\n\nElectronically signed by: William Thompson, MD, FACG\nDate/Time: 9/13/2023 10:15 AM"
+}

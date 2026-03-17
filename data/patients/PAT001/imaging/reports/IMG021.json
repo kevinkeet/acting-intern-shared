@@ -1,0 +1,42 @@
+{
+  "id": "IMG021",
+  "date": "2019-10-07T05:45:05.236Z",
+  "modality": "MRI",
+  "description": "MRA Head and Neck",
+  "facility": "Springfield Medical Center",
+  "status": "Final",
+  "radiologist": "Dr. Susan Miller",
+  "orderingProvider": "Dr. Sarah Chen",
+  "indication": "New diagnosis of atrial fibrillation, recent initiation of anticoagulation, baseline evaluation of intracranial and extracranial vasculature",
+  "technique": "3D time-of-flight MRA of the circle of Willis and 2D time-of-flight MRA of the neck vessels were performed without contrast administration due to chronic kidney disease.",
+  "findings": {
+    "intracranialArteries": {
+      "ica": "Bilateral intracranial internal carotid arteries are patent with normal caliber and flow signal.",
+      "mca": "Bilateral middle cerebral arteries and their major branches are patent. No stenosis or occlusion.",
+      "aca": "Bilateral anterior cerebral arteries are patent. Normal A1 segments.",
+      "pca": "Bilateral posterior cerebral arteries are patent. Normal caliber.",
+      "vertebrobasilar": "Basilar artery is patent with normal caliber. Bilateral vertebral arteries show normal intracranial flow.",
+      "circleOfWillis": "Complete circle of Willis. No intracranial aneurysm. No arteriovenous malformation."
+    },
+    "extracranialArteries": {
+      "commonCarotid": "Bilateral common carotid arteries are patent with normal flow signal.",
+      "internalCarotid": "Mild signal heterogeneity at the right carotid bifurcation suggesting mild atherosclerotic disease, without significant stenosis. Left ICA is patent with minimal irregularity.",
+      "externalCarotid": "Bilateral external carotid arteries are patent.",
+      "vertebral": "Bilateral vertebral arteries are patent with normal caliber and antegrade flow. Codominant. No stenosis or dissection."
+    },
+    "incidentalFindings": "Mild periventricular white matter signal changes on localizer images consistent with early chronic microvascular disease."
+  },
+  "impression": [
+    "No significant intracranial arterial stenosis, occlusion, or aneurysm.",
+    "Complete circle of Willis.",
+    "Mild atherosclerotic changes at the right carotid bifurcation without hemodynamically significant stenosis.",
+    "Patent bilateral vertebral arteries without stenosis.",
+    "Early chronic microvascular white matter changes noted incidentally."
+  ],
+  "recommendations": [
+    "Continue anticoagulation for stroke prevention in atrial fibrillation",
+    "Baseline study for future comparison",
+    "Consider follow-up MRA in 1-2 years to assess for progression"
+  ],
+  "comparison": "No prior MRA available for comparison."
+}

@@ -1,0 +1,149 @@
+{
+  "id": "NOTE_BEHAV001",
+  "type": "Consult Note",
+  "title": "Behavioral Health/Social Work Intake Assessment",
+  "date": "2026-01-20T14:00:00.000Z",
+  "author": "Lisa Park, LCSW",
+  "department": "Behavioral Health",
+  "encounter": "ENC_BEHAV001",
+  "signedDate": "2026-01-20T16:00:00.000Z",
+  "sections": {
+    "reasonForReferral": "Referred by Dr. Sarah Chen (PCP) for evaluation of depressive symptoms. PHQ-9 score of 8 (mild depression) on annual wellness screening questionnaire 1/10/2026.",
+    "chiefConcern": "Patient states: \"I've been feeling kind of down for a while now. I just don't enjoy things like I used to. My wife noticed it before I did, honestly.\"",
+    "historyOfPresentIllness": "Mr. Morrison is a 73-year-old gentleman referred by his primary care physician for evaluation of mild depressive symptoms identified on routine screening. He reports a gradual onset of depressed mood over the past approximately 6 months, beginning around mid-2025. He describes feeling \"down,\" \"flat,\" and less interested in activities he previously enjoyed.\n\nSpecific symptoms endorsed:\n- Depressed mood most days (not all day, worse in evenings)\n- Markedly diminished interest/pleasure in previously enjoyed activities: has stopped attending Rotary Club meetings (was a regular for 20+ years), reduced attendance at church (goes 1-2x/month, was weekly), visits from grandchildren feel like \"more effort than they should\"\n- Sleep disturbance — nocturia 3-4x nightly contributing to fragmented sleep, difficulty returning to sleep, daytime fatigue\n- Fatigue/low energy — attributes some to heart failure but feels it has worsened beyond his baseline\n- Feelings of worthlessness — \"I'm a burden to Patricia\" (wife/caregiver), \"I can't do anything for myself anymore\"\n- Mild difficulty with concentration — more trouble following TV shows and reading, which he attributes to fatigue\n\nSymptoms NOT endorsed:\n- No suicidal ideation, plan, or intent\n- No history of suicide attempts\n- No self-harm behaviors\n- No psychomotor agitation or retardation observed\n- No significant appetite or weight changes (weight stable per chart)\n- No psychotic features (no hallucinations, delusions, paranoia)\n- No manic or hypomanic symptoms\n\nContributing factors identified:\n1. Progressive functional decline from HF and CKD — can no longer walk more than 1-2 blocks, cannot drive long distances, relies on wife for transportation\n2. Multiple chronic diseases requiring extensive medical management — 15+ medications, frequent medical appointments (\"my calendar is all doctor visits\")\n3. Loss of independence and social roles — stopped driving to Rotary (30-minute drive he no longer feels safe making), reduced church involvement, feels he cannot contribute to family activities the way he used to\n4. Sleep disruption from nocturia — 3-4x nightly, has been worsening\n5. Caregiver burden awareness — patient is perceptive that his care needs are increasing and worries about the impact on his wife Patricia, age 71\n6. Loss of peer group — several close friends have died or moved to assisted living in the past 2 years",
+    "psychiatricHistory": {
+      "priorDiagnoses": "None. No prior psychiatric or behavioral health treatment.",
+      "priorMedications": "No prior psychotropic medications",
+      "hospitalizations": "No psychiatric hospitalizations",
+      "familyHistory": "Mother had \"nervousness\" (possible anxiety disorder, untreated). Father had no known psychiatric history. No family history of completed suicide. Daughter has been treated for anxiety disorder."
+    },
+    "substanceUseHistory": {
+      "alcohol": "None currently. Social drinker in the past (1-2 beers on weekends), stopped 3 years ago per cardiology recommendation.",
+      "tobacco": "Former smoker — quit 20 years ago. 15 pack-year history.",
+      "illicitSubstances": "Denies any history of illicit substance use",
+      "caffeine": "2 cups coffee daily (morning only)"
+    },
+    "psychosocialHistory": {
+      "livingArrangement": "Lives with wife Patricia (age 71) in single-story ranch home they have owned for 35 years",
+      "maritalStatus": "Married 49 years. Describes marriage as \"the best thing in my life.\" Strong relationship with mutual support.",
+      "family": "One daughter, Jennifer (age 45), lives 20 minutes away. Close relationship. Jennifer visits weekly and calls daily. Three grandchildren ages 8, 12, and 15 who visit regularly.",
+      "socialSupport": "Wife Patricia (primary caregiver and emotional support), daughter Jennifer, church community (though attendance reduced), former Rotary Club colleagues",
+      "spirituality": "Active member of First Methodist Church for 40+ years. Faith is important to him. Pastor has visited when he misses services.",
+      "occupation": "Retired civil engineer (retired at age 65). Retirement was planned and welcomed initially.",
+      "financialStatus": "Stable. Medicare + supplemental insurance. Pension and Social Security. No reported financial stressors.",
+      "legalIssues": "None"
+    },
+    "screeningInstruments": {
+      "phq9": {
+        "date": "2026-01-20",
+        "score": 8,
+        "severity": "Mild depression (5-9)",
+        "itemBreakdown": {
+          "littleInterest": 2,
+          "feelingDown": 1,
+          "sleepProblems": 2,
+          "tiredness": 2,
+          "appetiteChanges": 0,
+          "feelingBad": 1,
+          "concentrationProblems": 0,
+          "movingSlowly": 0,
+          "suicidalThoughts": 0
+        }
+      },
+      "gad7": {
+        "date": "2026-01-20",
+        "score": 4,
+        "severity": "Minimal anxiety (0-4)",
+        "note": "Some worry about being a burden to wife and about health deterioration, but not pervasive or debilitating"
+      },
+      "audit": {
+        "date": "2026-01-20",
+        "score": 0,
+        "interpretation": "No alcohol use"
+      },
+      "columbiaSuicideSeverityRating": {
+        "date": "2026-01-20",
+        "suicidalIdeation": "No",
+        "suicidalBehavior": "No",
+        "selfInjuriousBehavior": "No",
+        "result": "Negative — no active or passive suicidal ideation"
+      }
+    },
+    "mentalStatusExam": {
+      "appearance": "Well-groomed, casually dressed, appears stated age. Overweight. Seated in chair, comfortable.",
+      "behavior": "Cooperative, pleasant, good eye contact. No psychomotor agitation or retardation. Wife present and participated with patient's consent.",
+      "speech": "Normal rate, rhythm, and volume. Spontaneous. No pressured speech.",
+      "mood": "\"A little down\" (patient's words)",
+      "affect": "Mildly constricted range. Appropriate to content. Becomes tearful briefly when discussing feeling like a burden to wife. Smiles when talking about grandchildren.",
+      "thoughtProcess": "Linear, logical, goal-directed. No loose associations or tangentiality.",
+      "thoughtContent": "No suicidal ideation, no homicidal ideation, no delusions, no obsessions. Ruminative thoughts about loss of function and being a burden.",
+      "perceptions": "No auditory or visual hallucinations. No illusions.",
+      "cognition": "Alert and oriented x4. MMSE not formally administered. Conversation suggests intact cognition — no word-finding difficulties, appropriate recall of medical history and recent events.",
+      "insight": "Good — recognizes that his mood has changed and that it is affecting his quality of life. Understands that his wife noticed changes before he did.",
+      "judgment": "Good — agreed to referral, engaged in session, receptive to recommendations"
+    },
+    "assessment": "Mr. Morrison is a 73-year-old male with no prior psychiatric history presenting with a 6-month history of mild depressive symptoms in the context of progressive chronic medical illness, functional decline, and loss of social roles. His PHQ-9 of 8 (mild) and GAD-7 of 4 (minimal) are consistent with clinical presentation.\n\nDSM-5 Diagnosis:\n- Adjustment Disorder with Depressed Mood (F43.21) — depressive symptoms developing in response to identifiable stressors (progressive functional decline from chronic illness, loss of independence, role changes, caregiver burden concerns) within the past 6 months. Symptoms cause clinically significant distress and impairment in social functioning (withdrawal from Rotary, reduced church attendance, reduced engagement with grandchildren).\n\nDifferential considerations:\n- Major Depressive Disorder: Does not currently meet full criteria (PHQ-9 = 8, lacks 5+ symptoms at threshold severity). However, this should be monitored as adjustment disorder can evolve to MDD.\n- Depression secondary to medical condition: HF fatigue, CKD fatigue, beta-blocker effects, and gabapentin sedation all contribute to overlapping somatic symptoms (fatigue, sleep, concentration). These are complicating the diagnostic picture.\n- Grief reaction: Some features of grief related to functional losses, but does not meet criteria for prolonged grief disorder.\n\nProtective factors:\n- Strong, supportive marriage of 49 years\n- Engaged daughter with regular contact\n- Faith and church community\n- No substance use\n- No suicidal ideation — negative Columbia screening\n- Good insight and willingness to engage in treatment\n- No prior psychiatric history\n- Financial stability",
+    "recommendations": [
+      {
+        "category": "Supportive Counseling",
+        "items": [
+          "Biweekly supportive counseling x 4 sessions (approximately 8 weeks total)",
+          "Focus areas: adjusting to functional limitations, grief over lost roles and independence, reframing self-worth beyond physical capability, building identity around what he CAN do",
+          "Cognitive-behavioral framework — identify and challenge automatic negative thoughts ('I'm a burden,' 'I can't do anything')",
+          "Problem-solving approach for practical barriers to social engagement"
+        ]
+      },
+      {
+        "category": "Behavioral Activation",
+        "items": [
+          "Identify 1-2 previously enjoyable activities to resume in modified form",
+          "Rotary Club: Explore whether virtual meetings are available, or whether a member could provide transportation",
+          "Church: Discuss with pastor about a role that doesn't require physical stamina (phone tree coordinator, prayer chain, mentoring younger member)",
+          "Grandchildren: Identify low-energy activities he can lead (card games, storytelling, helping with homework, teaching chess)",
+          "Set small, achievable weekly goals to rebuild sense of purpose and accomplishment"
+        ]
+      },
+      {
+        "category": "Sleep Improvement",
+        "items": [
+          "Nocturia is a major contributor to sleep disruption and daytime fatigue — this is being addressed by urology (Dr. Kim) and cardiology (Dr. Wilson) via diuretic timing adjustments",
+          "Sleep hygiene education: consistent wake time, limit daytime napping to 30 minutes before 2 PM, dim lights in evening, no screens 1 hour before bed",
+          "If sleep does not improve with nocturia management, may consider sleep study to rule out sleep apnea (risk factors: obesity, HF, male, age)"
+        ]
+      },
+      {
+        "category": "Caregiver Support",
+        "items": [
+          "Invite wife Patricia to attend session 3 — address caregiver burden, facilitate open communication about needs and limitations",
+          "Assess Patricia for caregiver burnout/depression at that session",
+          "Provide resources for caregiver support groups if she is interested",
+          "Discuss respite care options if caregiver burden becomes significant"
+        ]
+      },
+      {
+        "category": "Medication Considerations",
+        "items": [
+          "No psychotropic medication recommended at this time — symptoms are mild (PHQ-9 = 8) and there are modifiable contributing factors to address first",
+          "If PHQ-9 ≥10 at session 4 re-assessment, or if symptoms worsen before then, recommend starting SSRI in coordination with PCP",
+          "Preferred SSRI for this patient: sertraline (Zoloft) — cardiac safety data (SADHART trial), fewer drug interactions, renal dosing not typically needed at CKD3b",
+          "Avoid paroxetine (anticholinergic, BPH worsening), avoid TCAs (cardiac risk, anticholinergic), avoid bupropion (seizure threshold in CKD)",
+          "Review gabapentin — could be contributing to fatigue/cognitive dullness; may discuss optimization with PCP if depressive symptoms persist"
+        ]
+      },
+      {
+        "category": "Re-assessment Plan",
+        "items": [
+          "Repeat PHQ-9 and GAD-7 at session 4 (approximately 8 weeks)",
+          "If PHQ-9 improves to <5: Transition to monthly check-ins then discharge from behavioral health",
+          "If PHQ-9 stable (5-9) with functional improvement: Continue counseling for 4 additional sessions",
+          "If PHQ-9 worsens (≥10) or functional decline: Initiate SSRI discussion with PCP, increase session frequency to weekly",
+          "If suicidal ideation emerges at any point: Safety planning, crisis resources, PCP notification, consider psychiatry referral"
+        ]
+      }
+    ],
+    "safetyPlan": "Full safety assessment completed. No suicidal ideation, intent, or plan. Columbia Suicide Severity Rating Scale negative. No history of self-harm. Patient does not have access to firearms (confirmed with wife). Patient identifies wife, daughter, and pastor as support persons. Provided crisis hotline number (988 Suicide & Crisis Lifeline) and local crisis services contact. Patient and wife verbalized understanding. No acute safety concerns.",
+    "patientEducation": "Discussed with Mr. Morrison and his wife Patricia that experiencing sadness and loss of interest in the context of chronic illness and functional decline is both common and understandable — it is not a character weakness. Normalized his experience while explaining that addressing these feelings proactively can improve his quality of life and even his medical outcomes. He was receptive and expressed willingness to 'give it a try.' Patricia was tearful at points, expressing relief that someone was addressing 'what I've been seeing for months.' Discussed the difference between adjustment disorder and major depression. Explained our counseling plan and what to expect in sessions.",
+    "plan": "1. Supportive counseling — biweekly x 4 sessions (next session: 2/3/2026)\n2. Behavioral activation: Patient will identify 1 social activity to re-engage with before session 2 (chose calling a Rotary friend this week)\n3. Sleep hygiene handout provided\n4. Session 3: Invite wife Patricia for joint session — caregiver support\n5. Session 4: Re-assess PHQ-9 and GAD-7 — determine next steps\n6. If PHQ-9 worsens or SI develops, expedite PCP communication for SSRI consideration\n7. Crisis resources provided: 988 Lifeline, local crisis services\n8. Communication sent to Dr. Chen (PCP) summarizing assessment and plan"
+  },
+  "attestation": "I personally evaluated this patient, conducted a comprehensive biopsychosocial assessment, administered and scored all screening instruments, and formulated the treatment plan. Patient and wife were present for the full session.\n\nElectronically signed by: Lisa Park, LCSW\nDate/Time: 1/20/2026 4:00 PM"
+}

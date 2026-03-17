@@ -1,0 +1,87 @@
+{
+  "id": "NOTE_PROG_ADM001",
+  "type": "Progress Note",
+  "title": "Hospital Progress Note - CAP Day 3",
+  "date": "2021-02-12T08:30:00.000Z",
+  "author": "Dr. Emily Brown",
+  "department": "Hospital Medicine",
+  "encounter": "ENC_ADM002",
+  "signedDate": "2021-02-12T10:15:00.000Z",
+  "sections": {
+    "hospitalDay": "Day 3 (admitted 2/10/2021)",
+    "subjective": "Patient reports feeling \"much better.\" Cough is improving — still productive but less frequent, sputum transitioning from green to white. He denies fever, chills, or rigors since yesterday morning. Breathing is easier; he was able to walk to the bathroom without significant dyspnea. He tolerated breakfast this morning with good appetite. Denies chest pain, palpitations, nausea, or diarrhea. Reports his chronic foot numbness is unchanged. Slept well overnight. No complaints of rash, itching, or swelling — no signs of allergic reaction to ceftriaxone (now received 3 doses without issue).",
+    "objective": {
+      "vitals": {
+        "temperature": "98.6°F (37.0°C) — afebrile since yesterday AM (Tmax 99.1°F yesterday)",
+        "bloodPressure": "128/74 mmHg",
+        "heartRate": "82 bpm, irregularly irregular",
+        "respiratoryRate": "18/min",
+        "oxygenSaturation": "95% on 1L NC (weaned from 2L NC yesterday)"
+      },
+      "intakeOutput": "24h intake: 1,850 mL (IV + PO). 24h output: 1,620 mL. Net: +230 mL. Weight: 95.0 kg (stable).",
+      "physicalExam": {
+        "general": "Alert, comfortable, in no acute distress. Appears improved from admission.",
+        "cardiovascular": "Irregularly irregular, rate controlled. S1, S2 present, soft S3. 2/6 systolic murmur at apex. No peripheral edema changes from baseline.",
+        "respiratory": "Right lower lobe crackles persisting but improved from admission. No rhonchi. Left lung clear. No wheezing. Good air movement bilaterally.",
+        "abdomen": "Soft, non-tender, non-distended.",
+        "extremities": "1+ bilateral LE edema (baseline). Warm, well-perfused."
+      },
+      "labs": {
+        "date": "2021-02-12",
+        "wbc": "11.4 (down from 14.2 on admission)",
+        "hemoglobin": "10.3",
+        "creatinine": "2.0 (improved from 2.1 on admission, near baseline)",
+        "potassium": "4.5",
+        "sodium": "137",
+        "glucose": "152 (fasting)",
+        "inr": "2.3 (therapeutic)"
+      },
+      "microResults": {
+        "bloodCultures": "No growth to date (48 hours)",
+        "sputumCulture": "Moderate gram-positive diplococci (preliminary — consistent with S. pneumoniae). Final speciation pending.",
+        "covidPCR": "NEGATIVE (resulted 2/11)",
+        "legionellaAntigen": "Negative",
+        "pneumococcalAntigen": "Positive"
+      }
+    },
+    "assessment": [
+      {
+        "problem": "Community-acquired pneumonia — improving",
+        "details": "Clinical trajectory is favorable. Fever has resolved, WBC trending down (14.2 → 11.4), cough improving, and O2 requirements decreasing (2L → 1L NC). Sputum culture and pneumococcal urine antigen support Streptococcus pneumoniae as the causative organism. COVID-19 PCR negative — droplet precautions discontinued. Blood cultures negative at 48 hours (reassuring against bacteremia). No evidence of complications (empyema, abscess). Currently on day 3 of ceftriaxone + azithromycin."
+      },
+      {
+        "problem": "Ceftriaxone tolerance — no allergic reaction",
+        "details": "Patient has now received 3 doses of ceftriaxone without any signs of allergic reaction. No urticaria, angioedema, pruritus, dyspnea, or hemodynamic instability. This is reassuring and consistent with the <1% cross-reactivity rate for third-generation cephalosporins in patients with penicillin anaphylaxis. Will continue current regimen. Epinephrine still available at bedside per protocol."
+      },
+      {
+        "problem": "Acute on chronic hypoxic respiratory failure — improving",
+        "details": "O2 weaned from 2L to 1L NC with SpO2 95%. Goal to trial room air tomorrow if continues to improve."
+      },
+      {
+        "problem": "CKD 3b — stable",
+        "details": "Cr 2.0, near baseline. Improved from 2.1 on admission with IV fluids and improvement in oral intake. IV fluids discontinued."
+      },
+      {
+        "problem": "Atrial fibrillation — rate controlled",
+        "details": "HR 82, improved from 98 on admission as infection resolves. INR 2.3, therapeutic."
+      },
+      {
+        "problem": "Type 2 DM",
+        "details": "Glucose 152 fasting on sliding scale + glipizide. Adequate control. Metformin remains held."
+      }
+    ],
+    "plan": [
+      "Continue ceftriaxone 1g IV q24h + azithromycin 250 mg PO daily",
+      "Anticipate transition to oral antibiotics and discharge in 1-2 days if continued improvement",
+      "Wean O2 — trial room air tomorrow AM; discharge goal SpO2 ≥93% on RA",
+      "Discontinue IV fluids — patient tolerating PO well",
+      "Resume metformin 500 mg BID if Cr remains ≤2.0 by discharge",
+      "Continue warfarin, carvedilol, lisinopril, spironolactone, furosemide, glipizide, atorvastatin, aspirin, omeprazole, tamsulosin, gabapentin",
+      "Continue incentive spirometry and ambulation",
+      "Remove droplet precautions — COVID negative",
+      "ID team aware, will see patient again tomorrow",
+      "Discuss discharge planning with case management — anticipate discharge 2/14 if clinically stable"
+    ]
+  },
+  "attestation": "I personally examined the patient and reviewed all available data. I agree with the assessment and plan.\n\nElectronically signed by: Emily Brown, MD\nDate/Time: 2/12/2021 10:15 AM"
+}

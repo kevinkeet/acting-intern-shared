@@ -1,0 +1,69 @@
+{
+  "id": "NOTE_ICU002",
+  "type": "Progress Note",
+  "title": "MICU Progress Note - Day 3 (Transfer to Floor)",
+  "date": "2023-09-14T10:00:00.000Z",
+  "author": "Dr. Sarah Mitchell",
+  "department": "Critical Care Medicine",
+  "encounter": "ENC_ADM002",
+  "signedDate": "2023-09-14T11:15:00.000Z",
+  "sections": {
+    "subjective": "Patient reports feeling well this morning. Slept through the night without interruption. No abdominal pain, nausea, or vomiting. No hematemesis or melena. Tolerating full liquid diet without difficulty — had broth, juice, and gelatin for breakfast. Reports mild bilateral knee discomfort but states he understands he cannot take ibuprofen. Asking when he can go home. Wife Patricia visited this morning and is planning to stay for the day.",
+    "hospitalDay": "Day 3 of admission (MICU Day 3, final MICU day). Post-EGD Day 1.",
+    "overnightEvents": "Uneventful night. No hemodynamic instability. No code or rapid response calls. Hemoglobin stable at 9.0 (from 9.1 yesterday — stable within measurement variability). No transfusions required. No further melena reported by nursing — last stool was dark but formed, consistent with old blood clearing. Arterial line removed this morning without complication. Foley catheter removed — patient voided 350 mL clear urine spontaneously.",
+    "vitals": {
+      "bloodPressure": "122/74 mmHg",
+      "heartRate": "78 bpm, irregularly irregular",
+      "respiratoryRate": "14/min",
+      "temperature": "98.4 F",
+      "oxygenSaturation": "97% on room air"
+    },
+    "physicalExam": {
+      "general": "Alert, oriented, in good spirits. Sitting up in chair. Good color. Well-appearing.",
+      "cardiovascular": "Irregularly irregular, rate controlled. S1, S2 normal. 2/6 systolic murmur at apex (baseline). No JVD.",
+      "respiratory": "Clear bilaterally. No accessory muscle use. Room air.",
+      "abdomen": "Soft, non-tender, non-distended. No epigastric tenderness (resolved). Active bowel sounds.",
+      "extremities": "Warm, well-perfused. Trace edema bilaterally (baseline). Ambulatory in room without assistance.",
+      "skin": "Good color. No pallor. Arterial line site (right radial) — clean, hemostatic, dressing intact."
+    },
+    "labs": {
+      "morning": "Na 138, K 4.2, Cl 103, CO2 24, BUN 42 (improving), Cr 2.2 (improving, baseline 1.9), Glucose 148",
+      "cbc": "WBC 8.4, Hgb 9.0 (stable), Hct 27.2%, Plt 190",
+      "coagulation": "INR 1.3",
+      "lactate": "1.2 mmol/L (normal)"
+    },
+    "assessment": [
+      {
+        "problem": "Acute upper GI hemorrhage, post-endoscopic intervention",
+        "status": "Stable, no rebleeding",
+        "details": "Hemoglobin stable at 9.0 (from 9.1) without transfusion for >24 hours. No clinical evidence of rebleeding — no hematemesis, no fresh melena, hemodynamics stable. IV pantoprazole drip continues (hour 32 of 72-hour infusion). CLO test positive — H. pylori eradication therapy to be initiated today."
+      },
+      {
+        "problem": "AKI on CKD stage 3b",
+        "status": "Improving",
+        "details": "Creatinine 2.2, trending toward baseline of 1.9. BUN continuing to fall (42, from 52 yesterday and 68 on admission). Urine output excellent since Foley removal."
+      },
+      {
+        "problem": "Atrial fibrillation — anticoagulation HELD",
+        "status": "Rate controlled, pending anticoagulation decision",
+        "details": "Rate well controlled in 70s-80s. Warfarin remains HELD. Multidisciplinary conference being arranged with GI, Cardiology, and PCP to discuss long-term anticoagulation plan."
+      },
+      {
+        "problem": "H. pylori infection",
+        "status": "New diagnosis",
+        "details": "CLO test positive on EGD. Initiating eradication therapy today per GI recommendation. Patient has penicillin allergy (rash) — amoxicillin contraindicated. Using clarithromycin-based regimen: PPI + clarithromycin 500 mg BID + metronidazole 500 mg BID x 14 days."
+      }
+    ],
+    "plan": [
+      "TRANSFER TO MEDICINE FLOOR: Patient meets criteria for floor transfer — hemodynamically stable >24 hours, no evidence of rebleeding, hemoglobin stable without transfusion, lactate normal, tolerating oral intake, arterial line and Foley removed. Transferring to 6 South, Medicine service, under Dr. Emily Brown.",
+      "GI hemorrhage: Continue IV pantoprazole drip through completion of 72-hour course (will complete evening of 9/15). Advance diet to soft/regular as tolerated. Continue Hgb monitoring q12h on floor for 24 hours, then daily.",
+      "H. pylori eradication: INITIATING TODAY — Clarithromycin 500 mg PO BID + Metronidazole 500 mg PO BID + Pantoprazole 40 mg PO BID x 14 days. No amoxicillin due to penicillin allergy. NOTE: Pharmacy to review drug interactions — clarithromycin is a strong CYP3A4 inhibitor, may interact with atorvastatin (see pharmacy consult).",
+      "AKI: IVF at maintenance rate (75 mL/hr). Continue to hold lisinopril, spironolactone. May restart once Cr at baseline. Trend Cr daily.",
+      "Anticoagulation: Warfarin HELD. Multidisciplinary conference (Dr. Thompson GI, Dr. Wilson Cardiology, Dr. Chen PCP) planned for tomorrow 9/15 to discuss long-term anticoagulation strategy. This is the critical pending issue for this hospitalization.",
+      "Diabetes: Restart glipizide 5 mg daily with meals. Continue to hold metformin until Cr at baseline. Continue sliding scale insulin as backup.",
+      "Pain: Acetaminophen 500 mg PO q6h PRN for knee pain. STRICT NSAID AVOIDANCE.",
+      "Disposition from MICU: Stable for floor. Goal is discharge in 2-3 days depending on bleeding stability, anticoagulation decision, and tolerance of oral medications."
+    ]
+  },
+  "attestation": "I have personally evaluated this patient on my final MICU day of care. I have communicated the transfer plan and all pending issues to the accepting floor team (Dr. Brown, Hospital Medicine). Critical pending item: multidisciplinary anticoagulation conference scheduled for 9/15.\n\nElectronically signed by: Sarah Mitchell, MD, FCCP\nDate/Time: 9/14/2023 11:15 AM"
+}

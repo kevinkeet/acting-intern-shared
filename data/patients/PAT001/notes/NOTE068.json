@@ -5,70 +5,70 @@
   "author": "Dr. William Thompson",
   "department": "Gastroenterology",
   "encounter": "ENC045",
-  "chiefComplaint": "Shortness of breath",
-  "hpi": "Patient presents for shortness of breath. Weight stable. Following low-sodium diet. Monitoring blood pressure at home.",
+  "chiefComplaint": "Pre-colonoscopy evaluation",
+  "hpi": "Mr. Morrison is a 71-year-old male with HFrEF (EF 30-35%), persistent atrial fibrillation on warfarin, CKD Stage 3b, Type 2 DM on insulin, and BPH who presents for pre-colonoscopy evaluation and V/Q scan results discussion. He was last seen in GI in March 2023 where surveillance colonoscopy was recommended given history of tubular adenoma on 2018 colonoscopy. H. pylori stool antigen was sent at that visit and returned negative. His V/Q scan (performed May 2023) was reviewed — result showed low probability for PE, and his dyspnea has been attributed to his heart failure and deconditioning.\n\nRegarding GI symptoms, he reports no current complaints. He denies abdominal pain, melena, hematochezia, hematemesis, dysphagia, or changes in bowel habits. His appetite has been fair. He has lost approximately 1 kg since last visit, which he attributes to being more careful with his diet. He continues on warfarin and his last INR was 2.3 one week ago. He is aware that the colonoscopy will require perioperative anticoagulation management and has already been in contact with cardiology regarding a bridging plan.\n\nHe reports he has been feeling slightly better overall — his dyspnea has not worsened and his leg swelling is improved after a short course of increased diuretics in late April. He denies any new symptoms.",
   "reviewOfSystems": {
-    "Constitutional": "Weight stable",
-    "Cardiovascular": "Dyspnea on exertion at baseline",
-    "Respiratory": "No cough or wheezing",
-    "GI": "No nausea or vomiting",
-    "GU": "Nocturia x2",
-    "Neurologic": "Baseline neuropathy"
+    "Constitutional": "Mild chronic fatigue, slight weight loss as noted, no fevers, no night sweats",
+    "Cardiovascular": "Baseline DOE, stable. No chest pain, no palpitations. Edema improved after diuretic adjustment",
+    "Respiratory": "Occasional dry cough, no hemoptysis, no wheezing. V/Q scan low probability for PE",
+    "GI": "No abdominal pain, no nausea/vomiting, no dysphagia, no melena/hematochezia, regular bowel movements daily, no rectal pain or tenesmus",
+    "GU": "Nocturia x2, improved. No dysuria, no hematuria",
+    "Musculoskeletal": "Bilateral knee discomfort managed with acetaminophen, no new joint symptoms",
+    "Neurologic": "Baseline neuropathy, stable. No falls since last visit",
+    "Skin": "No jaundice, no new lesions, no rashes",
+    "Hematologic": "No easy bruising, no gingival bleeding despite anticoagulation"
   },
   "vitals": {
     "bp": "135/86 mmHg",
     "hr": "68 bpm",
-    "rr": "19/min",
+    "rr": "17/min",
     "temp": "98.7°F",
     "spo2": "97% RA",
     "weight": "98.0 kg"
   },
   "physicalExam": {
-    "General": "Mildly fatigued-appearing",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "Regular rate and rhythm, no murmurs",
-    "Respiratory": "No wheezes or rhonchi",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "Trace bilateral ankle edema",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Well-appearing obese male in no acute distress. Alert, oriented, and pleasant. BMI approximately 33",
+    "HEENT": "Normocephalic. Sclera anicteric. Conjunctivae with very mild pallor. Oropharynx clear, moist mucous membranes",
+    "Cardiovascular": "Irregularly irregular at 68 bpm. S1/S2 normal. Known 2/6 systolic murmur at apex. JVP approximately 7 cm H2O — normal. No peripheral cyanosis",
+    "Respiratory": "Clear to auscultation bilaterally. No crackles or wheezes. No dullness to percussion",
+    "Abdomen": "Obese, soft, non-distended, non-tender throughout. No masses palpated. Normal active bowel sounds in all quadrants. No hepatosplenomegaly. Small reducible umbilical hernia, unchanged. No inguinal hernias",
+    "Extremities": "Trace bilateral ankle edema — improved from 1+ at last visit. Warm, well-perfused. Skin intact",
+    "Neurologic": "Alert and oriented x3. Decreased sensation bilateral feet. Steady gait"
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
-      "icd10": "E11.65",
-      "notes": "HbA1c 7.0%. On insulin and metformin."
-    },
-    {
-      "diagnosis": "Chronic Kidney Disease Stage 3b",
-      "icd10": "N18.32",
-      "notes": "eGFR 37. Stable."
+      "diagnosis": "Surveillance colonoscopy indicated",
+      "icd10": "Z12.11",
+      "notes": "Due for surveillance colonoscopy — last colonoscopy 2018 with one tubular adenoma. Per guidelines, 5-year surveillance interval for low-risk adenoma. Now 5 years out. H. pylori stool antigen negative — no eradication therapy needed. Patient is anticoagulated on warfarin which requires bridging protocol."
     },
     {
       "diagnosis": "Heart Failure with Reduced EF",
       "icd10": "I50.22",
-      "notes": "NYHA Class II. On GDMT."
+      "notes": "NYHA Class II, stable. Volume status improved after recent diuretic adjustment. V/Q scan low probability for PE — dyspnea attributed to HF and deconditioning."
+    },
+    {
+      "diagnosis": "Atrial Fibrillation on warfarin",
+      "icd10": "I48.1",
+      "notes": "INR 2.3, therapeutic. CHA2DS2-VASc 5 — high thromboembolic risk. Perioperative anticoagulation management needed for colonoscopy."
+    },
+    {
+      "diagnosis": "Type 2 Diabetes Mellitus",
+      "icd10": "E11.65",
+      "notes": "Managed by PCP. Insulin and metformin regimen — will need adjustments on day of procedure."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "problem": "Colonoscopy Planning",
+      "action": "Schedule surveillance colonoscopy within next 4-6 weeks. Prep: GoLYTELY (PEG-based prep) preferred over sodium phosphate given CKD Stage 3b — avoid phosphate-containing preps. Split-dose prep protocol for best visualization. Patient to follow clear liquid diet day before procedure. Will provide written prep instructions.\n\nAnticoagulation bridging: Per coordination with Dr. Wilson (Cardiology), given CHA2DS2-VASc 5 (high risk), plan for bridging anticoagulation:\n- Stop warfarin 5 days before procedure\n- Start enoxaparin 1mg/kg q12h when INR <2.0 (approximately 3 days before procedure)\n- Note: CKD with eGFR 36 — use enoxaparin 1mg/kg q24h (renally adjusted) OR consider unfractionated heparin bridge if eGFR declines further\n- Last enoxaparin dose 24h before procedure\n- Check INR morning of procedure — proceed if <1.5\n- Resume warfarin evening of procedure\n- Resume enoxaparin evening of procedure if no polypectomy bleeding concern; if polypectomy performed, resume 48h post-procedure\n- Detailed bridging protocol to be sent to patient with specific dates once colonoscopy scheduled\n\nDiabetes management day of procedure: Hold metformin morning of procedure. Reduce insulin glargine by 50% night before. Resume normal dosing after procedure when eating normally."
     },
     {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
-    },
-    {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
-    },
-    {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "problem": "GI Surveillance",
+      "action": "No active GI symptoms. If colonoscopy reveals additional polyps, biopsy and remove as indicated. If high-risk findings, shorten surveillance interval per guidelines. Continue counseling on NSAID avoidance."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 12 weeks or sooner if needed."
+      "action": "Colonoscopy scheduling to be coordinated by GI scheduling team — patient to receive call within 1 week with date. Pre-procedure labs (BMP, CBC, INR, PT/PTT) to be drawn 1 week before procedure. Post-colonoscopy follow-up in 2-4 weeks to discuss pathology results. If any GI alarm symptoms before procedure, call GI office or present to ED."
     }
   ],
   "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. William Thompson\nDate: 5/7/2023"

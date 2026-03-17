@@ -2,79 +2,82 @@
   "id": "NOTE094",
   "type": "Progress Note",
   "date": "2021-09-24T15:22:18.416Z",
-  "author": "Dr. Emily Brown",
-  "department": "Emergency Medicine",
+  "author": "Dr. Sarah Chen",
+  "department": "Primary Care",
   "encounter": "ENC071",
-  "chiefComplaint": "Urinary symptoms",
-  "hpi": "Patient presents for urinary symptoms. Reports some shortness of breath with exertion, at baseline. No chest pain or palpitations.",
+  "chiefComplaint": "Urinary symptoms and routine follow-up",
+  "hpi": "69-year-old male presents with a 5-day history of urinary frequency, urgency, and mild dysuria. He reports voiding approximately every 1-1.5 hours during the day (increased from his usual every 2-3 hours) with a sense of urgency and mild burning at the end of urination. He had one episode of cloudy urine 2 days ago. No gross hematuria, no fever, no flank pain, no suprapubic pain. He has a history of one prior UTI (not documented in this time frame). He has BPH on tamsulosin and CKD 3b, both of which increase his UTI risk. He is on furosemide 40mg BID for heart failure, which contributes to baseline urinary frequency.\n\nHe is also here for routine follow-up. His heart failure has been stable at NYHA Class II. He had a cardiology visit in August where carvedilol uptitration was discussed — he reports he has not yet started the higher dose because the pharmacy had difficulty filling the 18.75mg equivalent and he has been waiting for Dr. Wilson's office to call with instructions. Weight has been stable at 98-99 kg per wife's log. He continues on all other medications without changes.\n\nNeuropathy symptoms are unchanged. He rates his foot pain at 4/10 on gabapentin 300mg TID. His low back stiffness has mostly resolved with activity modification and occasional acetaminophen.",
   "reviewOfSystems": {
-    "Constitutional": "Reports fatigue",
-    "Cardiovascular": "No chest pain or palpitations",
-    "Respiratory": "Mild dyspnea",
-    "GI": "Appetite fair",
-    "GU": "No hematuria",
-    "Neurologic": "Baseline neuropathy"
+    "Constitutional": "Mild fatigue, at baseline. No fevers, chills, or rigors. No unintentional weight loss.",
+    "Cardiovascular": "DOE at baseline NYHA II. No chest pain, orthopnea, or PND. No palpitations beyond baseline A-fib.",
+    "Respiratory": "No cough, wheezing, or hemoptysis. Mild DOE as above.",
+    "GI": "Appetite fair. Regular bowel movements. Following low-sodium diet.",
+    "GU": "Increased urinary frequency and urgency x 5 days as described. Mild dysuria. One episode cloudy urine. No gross hematuria. No incontinence. No flank pain.",
+    "Musculoskeletal": "Low back stiffness improved. No joint swelling.",
+    "Neurologic": "Bilateral foot numbness and tingling, unchanged. Pain 4/10. No new weakness.",
+    "Endocrine": "Home glucoses 120-160 fasting. No hypoglycemia.",
+    "Skin": "No rashes or foot wounds."
   },
   "vitals": {
     "bp": "146/76 mmHg",
-    "hr": "70 bpm",
+    "hr": "70 bpm (irregular)",
     "rr": "15/min",
-    "temp": "97.8°F",
+    "temp": "97.8°F (no fever)",
     "spo2": "96% RA",
     "weight": "101.0 kg"
   },
   "physicalExam": {
-    "General": "Alert, oriented, no acute distress",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "Regular rate and rhythm, no murmurs",
-    "Respiratory": "Mild crackles at bases",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "Trace bilateral ankle edema",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Alert, oriented, pleasant male in no acute distress. Slightly uncomfortable when discussing urinary symptoms but no systemic toxicity.",
+    "HEENT": "Normocephalic. Oropharynx clear. Moist mucous membranes. JVP approximately 7 cm H2O — not significantly elevated.",
+    "Cardiovascular": "Irregularly irregular rhythm (A-fib). Rate ~70 bpm. Grade 2/6 holosystolic murmur at apex (known MR). No S3.",
+    "Respiratory": "Mild crackles at bilateral bases on deep inspiration. No wheezes. Good air movement.",
+    "Abdomen": "Soft, obese, non-tender. No suprapubic tenderness or fullness. No CVA tenderness bilaterally. Active bowel sounds.",
+    "Extremities": "Trace bilateral ankle edema — slightly increased from last visit. Weight up to 101 kg (3 kg above dry weight). Warm, well-perfused.",
+    "Neurologic": "Alert, oriented x4. Decreased sensation bilateral feet to ankle level. Motor intact."
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
+      "diagnosis": "Urinary tract infection, uncomplicated",
+      "icd10": "N39.0",
+      "notes": "Presenting with classic lower UTI symptoms: frequency, urgency, dysuria, cloudy urine. Afebrile, no flank pain — lower tract infection. Risk factors include BPH with urinary stasis, diabetes (impaired immune function), and CKD. UA obtained in office: positive for leukocyte esterase, trace nitrites, WBC >20/hpf, few bacteria. Urine culture sent. Treatment considerations: CANNOT use TMP-SMX (sulfa allergy — rash/hives). CANNOT use fluoroquinolones as first-line per stewardship guidelines. Will use nitrofurantoin — appropriate for lower UTI, though must consider his CKD (eGFR ~37). Per current guidelines, nitrofurantoin is acceptable for short courses when eGFR >30 mL/min."
+    },
+    {
+      "diagnosis": "Heart Failure with Reduced EF, NYHA Class II",
+      "icd10": "I50.22",
+      "notes": "Weight 101 kg — up 3 kg from dry weight of 98 kg. Trace ankle edema and bibasilar crackles suggest mild volume overload. This may be contributing to his urinary frequency independent of the UTI. Carvedilol uptitration not yet completed due to pharmacy issue. Will address."
+    },
+    {
+      "diagnosis": "Type 2 Diabetes Mellitus with neuropathy",
       "icd10": "E11.65",
-      "notes": "HbA1c 7.9%. On insulin and metformin."
+      "notes": "Glucoses 120-160 fasting. A1c 7.4% per May labs — well controlled. Neuropathy stable on gabapentin 300mg TID."
     },
     {
       "diagnosis": "Chronic Kidney Disease Stage 3b",
       "icd10": "N18.32",
-      "notes": "eGFR 34. Stable."
-    },
-    {
-      "diagnosis": "Heart Failure with Reduced EF",
-      "icd10": "I50.22",
-      "notes": "NYHA Class II. On GDMT."
-    },
-    {
-      "diagnosis": "Atrial Fibrillation",
-      "icd10": "I48.1",
-      "notes": "Rate controlled. On anticoagulation."
+      "notes": "Last Cr 1.92, eGFR 37. Labs to be rechecked today. Relevant to antibiotic selection for UTI."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "problem": "UTI",
+      "action": "Start nitrofurantoin monohydrate 100mg BID x 5 days (macrocrystalline formulation). Acceptable given eGFR >30. Cannot use TMP-SMX (sulfa allergy) or amoxicillin (penicillin allergy). Urine culture pending — will adjust antibiotic if sensitivities warrant. Encourage oral hydration (within his 1.5L fluid restriction). Return or call if symptoms worsen, fever develops, or flank pain occurs. Recheck UA post-treatment only if symptoms persist."
     },
     {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "problem": "Heart Failure — mild volume overload",
+      "action": "Weight 101 kg, up from baseline 98 kg. Increase furosemide to 60mg BID x 5 days, then return to 40mg BID. Strict sodium restriction <2g/day. Elevate legs when seated. Daily weights — call if weight does not decrease or symptoms worsen. The weight gain may also reflect mild fluid retention from the UTI/inflammatory state."
     },
     {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
+      "problem": "Carvedilol Uptitration",
+      "action": "Contacted Dr. Wilson's office regarding pharmacy issue with 18.75mg dosing. Clarified that patient should take carvedilol 12.5mg in the morning and 25mg in the evening (total 37.5mg/day, intermediate step). New prescription sent to pharmacy. Patient to start this dosing in 1 week after UTI resolves — do not want to introduce medication change during acute infection."
     },
     {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "problem": "CKD / Diabetes",
+      "action": "Labs drawn today: CMP, A1c, CBC, INR. Continue current diabetes regimen. Continue all renal-protective measures."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 9 weeks or sooner if needed."
+      "action": "Phone follow-up in 3-5 days to ensure UTI symptoms improving. Return to office in 6-8 weeks. Cardiology follow-up in November."
     }
   ],
-  "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Emily Brown\nDate: 9/24/2021"
+  "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Sarah Chen\nDate: 9/24/2021"
 }

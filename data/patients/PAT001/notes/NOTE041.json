@@ -16,40 +16,44 @@
     },
     {
       "title": "Attending Physician",
-      "content": "Dr. Robert Kim"
+      "content": "Dr. Robert Kim (Hospital Medicine), with consultations from Cardiology (Dr. James Wilson) and Nephrology (Dr. David Park)"
     },
     {
       "title": "Principal Diagnosis",
-      "content": "Community-acquired pneumonia"
+      "content": "Acute decompensated heart failure (HFrEF exacerbation), NYHA Class III"
     },
     {
       "title": "Secondary Diagnoses",
-      "content": "1. Type 2 Diabetes Mellitus\n2. Chronic Kidney Disease Stage 3b\n3. Heart Failure with Reduced EF\n4. Atrial Fibrillation\n5. Hypertension"
+      "content": "1. Acute kidney injury on chronic kidney disease Stage 3b (Cr peak 2.3, baseline 1.95)\n2. Type 2 Diabetes Mellitus with diabetic neuropathy — hyperglycemia during admission\n3. Persistent atrial fibrillation — rate controlled (off anticoagulation since 9/2023 GI bleed)\n4. Hypertension\n5. Hyperlipidemia\n6. Benign prostatic hyperplasia\n7. History of upper GI hemorrhage (9/2023, healed)"
     },
     {
       "title": "Hospital Course",
-      "content": "Patient was admitted for volume overload and treated with IV diuretics. Responded well to treatment with 6 liters of diuresis over 3 days. Symptoms improved, weight decreased from 101 kg to 97 kg. Renal function remained stable. No arrhythmias on telemetry. Patient educated on diet and medication compliance."
+      "content": "Mr. Morrison is a 72-year-old male with HFrEF (EF 30-35%), CKD 3b, Type 2 DM, and persistent A-fib who presented on 2/2/2024 with 5 days of progressive dyspnea on exertion, orthopnea (now sleeping on 3 pillows), and bilateral lower extremity edema. Admission weight was 101.2 kg (up 3.2 kg from baseline dry weight of 98 kg). He admitted to increased sodium intake over the prior 2 weeks and had been less adherent to fluid restriction.\n\nAdmission labs were notable for BNP 890 (elevated from baseline ~480), Cr 2.2 (baseline 1.95, representing AKI on CKD), K 5.0, Na 134, and glucose 210. CXR showed cardiomegaly with bilateral pleural effusions (small-moderate) and vascular congestion. ECG showed atrial fibrillation with controlled ventricular response at 78, LVH, and old inferior Q waves.\n\nThe patient was started on IV furosemide 80mg bolus followed by 40mg IV q12h. Strict I&O and daily weights were monitored. Sodium was restricted to <2g and fluids to 1.5L daily. Metformin was held given AKI, and sliding scale insulin was used in addition to his home glargine. Entresto was temporarily held on admission given AKI and hypotension risk but was restarted at reduced dose (49/51mg BID) on Day 3 as renal function improved.\n\nCardiology was consulted on Day 2 and agreed with the diuresis strategy. They recommended continued GDMT optimization outpatient and revisited ICD discussion (patient continues to defer). Nephrology was consulted given AKI — recommended careful balance of diuresis vs. renal perfusion, monitoring Cr and electrolytes BID.\n\nDiuresis course:\n- Day 1 (2/2): Net -1.2L. Weight 100.5 kg.\n- Day 2 (2/3): Net -1.8L. Weight 99.2 kg. Cr peaked at 2.3.\n- Day 3 (2/4): Net -1.5L. Weight 98.1 kg. Cr 2.15 (improving). Transitioned to oral furosemide 60mg BID.\n- Day 4 (2/5): Net -1.0L. Weight 97.4 kg. Cr 2.05. Lungs clearing.\n- Day 5 (2/6): Euvolemic by exam. Weight 97.0 kg. Cr 2.0. BNP 520 (improving). JVP normal, lungs clear, trace edema.\n\nTotal diuresis: ~6.5L net negative over 5 days. Weight reduction from 101.2 to 97.0 kg (4.2 kg loss).\n\nGlycemic management: Home insulin glargine 24 units QHS continued. Sliding scale lispro used for correction. Average blood glucose during admission 160-190. No hypoglycemia. Metformin was resumed on Day 5 after Cr improved to 2.0.\n\nTelemetry showed persistent atrial fibrillation with controlled ventricular response throughout admission (average rate 68-78). No sustained ventricular arrhythmias. No significant pauses.\n\nPatient ambulated with physical therapy on Days 4-5 with good tolerance. Gait steady with rolling walker (agreed to use walker during acute illness). PT recommended outpatient home PT for reconditioning.\n\nPatient and wife (Patricia) received extensive discharge education on: daily weight monitoring, sodium restriction <2g, fluid restriction 1.5L, medication adherence, recognizing early signs of decompensation (3 lb weight gain, worsening SOB, increasing edema), and when to call the office vs. come to ED."
     },
     {
       "title": "Discharge Medications",
-      "content": "See medication reconciliation."
+      "content": "1. Carvedilol 25mg BID (target dose, unchanged)\n2. Sacubitril/valsartan (Entresto) 49/51mg BID (temporarily reduced from 97/103mg — will uptitrate outpatient once Cr stabilizes)\n3. Spironolactone 25mg daily (unchanged)\n4. Furosemide 60mg BID (increased from 40mg BID — may be adjusted outpatient)\n5. Metformin 500mg BID (resumed Day 5)\n6. Insulin glargine 24 units QHS (unchanged)\n7. Aspirin 81mg daily\n8. Atorvastatin 80mg daily\n9. Gabapentin 300mg TID\n10. Tamsulosin 0.4mg QHS\n11. Pantoprazole 40mg daily\n12. Sodium bicarbonate 650mg BID\n13. Cholecalciferol 2000 IU daily\n\nNOTE: Warfarin is NOT on med list — permanently discontinued 9/2023"
     },
     {
       "title": "Discharge Instructions",
-      "content": "1. Take all medications as prescribed\n2. Weigh yourself daily\n3. Follow low-sodium diet (<2g/day)\n4. Limit fluids to 2 liters daily\n5. Call if weight increases >3 lbs in a day or symptoms worsen\n6. Follow up with appointments as scheduled"
+      "content": "1. Weigh yourself every morning after using the bathroom, before eating or drinking. Record in log.\n2. Call the office if weight increases more than 3 pounds in one day or 5 pounds in one week.\n3. Follow a strict low-sodium diet: less than 2 grams of sodium per day. Your wife has the educational materials.\n4. Limit total fluid intake to 1.5 liters (about 6 cups) per day — includes water, coffee, soup, ice.\n5. Take all medications exactly as prescribed. Your wife will manage the pill organizer.\n6. Do NOT take ibuprofen, naproxen, or any NSAID — these are dangerous with your kidney disease and heart failure, and caused your GI bleed.\n7. Monitor blood sugar twice daily (fasting and one random).\n8. Continue gentle activity — walk short distances as tolerated. Home physical therapy will be arranged.\n9. Return to the Emergency Department immediately if: sudden worsening of shortness of breath, chest pain, cannot lie flat at all, dizziness or fainting, blood in stool, confusion."
     },
     {
       "title": "Follow-Up Appointments",
-      "content": "1. Primary Care: 1 week\n2. Cardiology: 2 weeks\n3. Nephrology: 4 weeks"
+      "content": "1. Primary Care (Dr. Chen): 1 week (2/14/2024) — Cr recheck, weight assessment\n2. Cardiology (Dr. Wilson): 2 weeks (2/21/2024) — Entresto uptitration, ICD discussion\n3. Nephrology (Dr. Park): 4 weeks (3/7/2024) — CKD optimization, AKI resolution\n4. Endocrinology (Dr. Martinez): 4-6 weeks — diabetes management\n5. Lab draw: 3 days post-discharge (2/10/2024) — BMP, CBC"
     },
     {
       "title": "Discharge Condition",
-      "content": "Stable, improved"
+      "content": "Stable, improved. Ambulatory with steady gait. Euvolemic by examination. Oriented and alert. Pain-free."
     },
     {
       "title": "Disposition",
-      "content": "Home with family"
+      "content": "Home with wife (Patricia Morrison). Wife is primary caregiver and medication manager. Home PT ordered. Patient has home scale, blood pressure cuff, pulse oximeter, and glucometer."
+    },
+    {
+      "title": "Code Status",
+      "content": "Full code — confirmed with patient and wife during admission."
     }
   ],
-  "attestation": "Discharge summary reviewed and approved.\n\nElectronically signed by: Dr. Robert Kim\nDate: 2/7/2024"
+  "attestation": "Discharge summary reviewed and approved. I personally managed this patient during the hospitalization and agree with the documented course and discharge plan.\n\nElectronically signed by: Dr. Robert Kim, MD\nDate: 2/7/2024"
 }

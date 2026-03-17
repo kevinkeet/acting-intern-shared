@@ -1,0 +1,54 @@
+{
+  "id": "NOTE_SW001",
+  "type": "Social Work Note",
+  "title": "Social Work Assessment - Acute GI Hemorrhage Hospitalization",
+  "date": "2023-09-14T13:30:00.000Z",
+  "author": "Jennifer Walsh, LCSW",
+  "department": "Social Work",
+  "encounter": "ENC_ADM002",
+  "signedDate": "2023-09-14T14:45:00.000Z",
+  "sections": {
+    "reasonForConsult": "Routine social work assessment for patient transferred from MICU following acute upper GI hemorrhage with hemorrhagic shock. Assessing psychosocial needs, coping, discharge planning, and advance directive status.",
+    "patientBackground": "Robert Morrison is a 72-year-old retired accountant who lives with his wife Patricia (age 70) in a single-story home in the community. They have been married for 48 years. They have two adult children: a son David (age 45) who lives approximately 30 minutes away, and a daughter Karen (age 42) who lives out of state (approximately 3-hour drive). Patient is cognitively intact and functionally independent at baseline. He drives, manages his own finances, and performs all ADLs and most IADLs independently. His wife assists with medication management (filling pill organizer weekly) and accompanies him to medical appointments.",
+    "psychosocialAssessment": "Patient was interviewed at bedside on the medicine floor following transfer from MICU. Wife Patricia was present for the interview with patient's permission.\n\nMOOD AND COPING:\nPatient presents as pleasant and cooperative but expresses frustration about this hospitalization. He stated, \"I can't believe I'm back in the hospital again. I was just here last year for my heart.\" He expressed guilt about taking the ibuprofen, saying \"I should have known better. I'm a numbers guy — I should have read the label more carefully.\" He was reassured that this is a common medication error and that the focus should be on prevention going forward.\n\nPatient's coping style appears task-oriented and pragmatic. He wants to understand what happened, why it happened, and how to prevent it. He asked detailed questions about his medications and interactions. He appears to be processing the severity of the event — stated, \"My wife told me the doctor said I could have died. That's a lot to take in.\"\n\nWIFE/CAREGIVER ASSESSMENT:\nPatricia Morrison appeared visibly anxious throughout the interview. She reported difficulty sleeping since the admission, stating \"I keep replaying that night when I called 911. He was so pale. I thought I was going to lose him.\" She reports feeling responsible for not preventing him from taking the ibuprofen — she stated, \"I should have been watching more carefully what he was taking.\" She was reassured that this was not her fault and that the medical team is implementing safeguards to prevent recurrence.\n\nPatricia reports she is the primary caregiver and medication manager. She has some difficulty keeping track of the multiple medication changes across hospitalizations. She expressed interest in a comprehensive medication review before discharge.\n\nFAMILY SUPPORT:\nSon David has visited daily and is actively involved. He works a flexible schedule and has offered to assist with transportation to follow-up appointments. Daughter Karen has been in contact by phone and plans to visit this weekend. Family dynamics appear supportive and engaged.",
+    "screenings": {
+      "depression": {
+        "tool": "PHQ-2",
+        "score": "1 (Little interest: 0, Feeling down: 1)",
+        "interpretation": "Negative screen (score <3). Patient endorses occasional low mood related to frustration with health issues but denies persistent depressed mood, anhedonia, hopelessness, or suicidal ideation. Does not meet threshold for full PHQ-9 at this time."
+      },
+      "anxiety": {
+        "tool": "GAD-2",
+        "score": "Patient: 1 (below threshold). Wife Patricia: 4 (positive screen — offered resource referral)",
+        "interpretation": "Patient screens negative for anxiety. Wife screens positive — offered outpatient therapy referral and caregiver support group information."
+      },
+      "substanceUse": {
+        "tool": "AUDIT-C",
+        "score": "2 (low risk)",
+        "interpretation": "Social alcohol use (1-2 glasses of wine/week). No concerns for alcohol use disorder."
+      },
+      "fallRisk": "Moderate risk — age >65, recent anemia and orthostatic symptoms, multiple medications. Recommend home safety evaluation if discharged to home.",
+      "elderAbuse": "No indicators of elder abuse or neglect. Patient and wife have a warm, supportive relationship. No financial exploitation concerns."
+    },
+    "advanceDirectives": "ADVANCE CARE PLANNING DISCUSSION:\n\nCurrent code status: FULL CODE.\n\nDiscussion: Patient was asked about his current advance directive status. He reports that he has a basic will (prepared by an attorney approximately 10 years ago) but does NOT have a healthcare power of attorney or living will on file.\n\nGiven the severity of this hospitalization and his multiple comorbidities (heart failure, CKD, CAD, atrial fibrillation), I discussed the importance of advance care planning with both the patient and his wife.\n\nPatient stated: \"I've been meaning to do this for a while. After this scare, I think it's time.\" He identified his wife Patricia as his preferred healthcare proxy, with son David as alternate. He expressed that he would want \"everything done\" in an acute reversible situation but wants to \"think more\" about whether he would want prolonged life support if there were no chance of meaningful recovery.\n\nAction items:\n1. Provided patient and wife with the state advance directive forms and healthcare proxy designation form.\n2. Encouraged them to discuss their wishes as a family, including with their children.\n3. Recommended they complete the forms and bring them to their next PCP visit (Dr. Chen) for witnessing and inclusion in the medical record.\n4. Patient remains FULL CODE for this hospitalization.\n5. Will document in discharge summary that advance care planning is in progress.",
+    "insuranceAndFinancial": "INSURANCE: Medicare Part A (inpatient) and Part B (outpatient). Supplemental Medigap Plan F. No anticipated coverage issues for this admission.\n\nFINANCIAL: Patient is retired with pension income. Wife also receives Social Security. No reported financial distress. Prescription medication costs manageable with current coverage.\n\nMEDICATION COVERAGE: New medications (pantoprazole, clarithromycin, metronidazole) should be covered under Part D plan. Will verify with pharmacy prior to discharge.",
+    "dischargePlanningAssessment": "DISCHARGE DISPOSITION: Home with wife (anticipated)\n\nFUNCTIONAL STATUS: Patient is ambulatory and functionally independent at baseline. Currently ambulating in hospital without assistance. No PT/OT needs identified.\n\nHOME SERVICES ASSESSMENT:\n- Home health nursing: RECOMMENDED for 1-2 weeks post-discharge for medication management education, wound/health assessment, and vital sign monitoring given the complexity of medication changes (warfarin discontinuation, new H. pylori therapy, new PPI, aspirin initiation).\n- Home health aide: Not indicated — patient and wife manage ADLs independently.\n- Physical therapy: Not indicated at this time — patient is ambulatory.\n- Medical equipment: None needed.\n\nBARRIERS TO DISCHARGE:\n1. Medication reconciliation must be completed — multiple changes from baseline regimen.\n2. Patient and wife education on stroke warning signs (warfarin discontinued).\n3. Follow-up appointments must be scheduled before discharge.\n4. Home health nursing referral needs to be processed.\n\nAnticipated discharge: 9/16 or 9/17/2023.",
+    "interventionsProvided": [
+      "Psychosocial assessment and emotional support for patient and wife",
+      "PHQ-2 and GAD-2 screening for patient; GAD-2 screening for wife/caregiver",
+      "Advance care planning discussion with provision of directive forms",
+      "Caregiver support assessment — provided Patricia with Caregiver Support Alliance contact information and local support group schedule",
+      "Discharge planning assessment initiated — home health referral placed",
+      "Insurance/financial assessment — no barriers identified",
+      "Provided wife with written stroke warning signs (BE-FAST card)"
+    ],
+    "followUpRecommendations": [
+      "Home health nursing referral for 1-2 weeks post-discharge (medication management focus)",
+      "Outpatient social work or counseling referral for Patricia Morrison if anxiety symptoms persist (provided Behavioral Health Associates contact)",
+      "Advance care planning completion at next PCP visit",
+      "Consider repeat psychosocial screening at 1-month follow-up — patients can develop adjustment disorder or PTSD symptoms following ICU admissions",
+      "Caregiver burden reassessment in 3-6 months given patient's complex medical regimen"
+    ]
+  },
+  "attestation": "This social work assessment was completed through direct patient and family interview, chart review, and collaboration with the multidisciplinary care team.\n\nElectronically signed by: Jennifer Walsh, LCSW\nDate/Time: 9/14/2023 2:45 PM"
+}

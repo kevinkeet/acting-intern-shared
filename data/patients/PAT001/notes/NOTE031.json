@@ -5,15 +5,16 @@
   "author": "Dr. Emily Brown",
   "department": "Emergency Medicine",
   "encounter": "ENC023",
-  "chiefComplaint": "Blood pressure check",
-  "hpi": "Patient presents for blood pressure check. Reports overall stable condition since last visit. Compliant with medications. No new symptoms.",
+  "chiefComplaint": "Observation Day 2 — abdominal discomfort workup",
+  "hpi": "Mr. Morrison is a 72-year-old male admitted yesterday for evaluation of subacute abdominal discomfort. Overnight he was comfortable with pain rated 2/10, improved from 4/10 on presentation. He tolerated a cardiac diet without difficulty. No nausea, vomiting, or change in bowel habits. He had one normal brown bowel movement this morning, negative for occult blood. He slept reasonably well on telemetry with nocturia x2. Telemetry overnight showed atrial fibrillation with controlled ventricular response, average rate 68, no significant pauses, no ventricular ectopy. CT abdomen/pelvis results now available: hepatic steatosis (fatty liver), bilateral simple renal cysts (largest 2.3 cm right kidney), mild colonic diverticulosis without diverticulitis, no masses, no lymphadenopathy, small asymptomatic umbilical hernia. No bowel obstruction, no free fluid, no abscess. Labs from yesterday: BNP 490 (mildly elevated above his recent baseline of ~450), Hgb 10.9 (stable CKD-related anemia), WBC 7.2 (normal), CMP notable for Cr 1.96 (baseline), K 4.8, Na 135, AST 32, ALT 38, ALP 95, total bilirubin 0.8, albumin 3.4. Lipase 28 (normal). TSH 2.8 (normal). Iron 52, TIBC 310, ferritin 128 — iron studies adequate. B12 420 (normal).",
   "reviewOfSystems": {
-    "Constitutional": "Reports fatigue",
-    "Cardiovascular": "No chest pain or palpitations",
-    "Respiratory": "No cough or wheezing",
-    "GI": "Regular bowel movements",
-    "GU": "Nocturia x2",
-    "Neurologic": "Baseline neuropathy"
+    "Constitutional": "Reports feeling better this morning. Fatigue still present but improved. No fever or chills.",
+    "Cardiovascular": "No chest pain or palpitations. Baseline dyspnea with ambulation to bathroom.",
+    "Respiratory": "No cough or wheezing.",
+    "GI": "Abdominal discomfort improved to 2/10. No nausea or vomiting. One normal BM. Appetite slightly improved.",
+    "GU": "Nocturia x2 overnight. No dysuria or hematuria.",
+    "Neurologic": "Chronic neuropathy unchanged. No new symptoms.",
+    "Psychiatric": "Mood appears slightly brighter today."
   },
   "vitals": {
     "bp": "146/88 mmHg",
@@ -24,52 +25,66 @@
     "weight": "98.8 kg"
   },
   "physicalExam": {
-    "General": "Mildly fatigued-appearing",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "Regular rate and rhythm, no murmurs",
-    "Respiratory": "Mild crackles at bases",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "1+ pedal edema bilaterally",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Mildly fatigued but improved from yesterday. Sitting up in bed, alert and conversant.",
+    "HEENT": "Normocephalic. Sclerae anicteric. Mucous membranes moist.",
+    "Cardiovascular": "Irregularly irregular, rate 81. S1/S2 present. Soft systolic murmur at apex. No S3. JVP 8 cm H2O.",
+    "Respiratory": "Mild bibasilar crackles, unchanged from baseline. No wheezes.",
+    "Abdomen": "Soft, mildly distended. Tenderness significantly improved — minimal tenderness to deep palpation in RUQ, no periumbilical tenderness. Umbilical hernia reducible, non-tender. No guarding or rebound. Bowel sounds normoactive.",
+    "Extremities": "1+ bilateral pedal edema, slightly increased from admission. Warm, well-perfused.",
+    "Neurologic": "Alert and oriented x3. Decreased sensation bilateral feet, unchanged."
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
-      "icd10": "E11.65",
-      "notes": "HbA1c 7.6%. On insulin and metformin."
+      "diagnosis": "Abdominal discomfort — likely multifactorial",
+      "icd10": "R10.9",
+      "notes": "CT abdomen/pelvis showed hepatic steatosis, renal cysts, diverticulosis, and umbilical hernia — all incidental or chronic findings. No acute pathology. Abdominal pain improving spontaneously. Most likely etiology is combination of hepatic steatosis (which can cause RUQ heaviness), mild hepatic congestion from HF (BNP mildly elevated at 490), and possibly functional/nonspecific discomfort. No evidence of recurrent peptic ulcer disease, diverticulitis, or acute surgical abdomen."
     },
     {
-      "diagnosis": "Chronic Kidney Disease Stage 3b",
-      "icd10": "N18.32",
-      "notes": "eGFR 32. Stable."
+      "diagnosis": "Hepatic steatosis (fatty liver)",
+      "icd10": "K76.0",
+      "notes": "New incidental finding on CT. Likely related to metabolic syndrome (DM2, obesity, hyperlipidemia). AST/ALT mildly elevated but within normal limits. Albumin 3.4 (slightly low, possibly from chronic disease). Will need outpatient hepatology evaluation or PCP follow-up with FIB-4 score calculation."
     },
     {
-      "diagnosis": "Heart Failure with Reduced EF",
+      "diagnosis": "Heart Failure with Reduced EF — mild volume overload",
       "icd10": "I50.22",
-      "notes": "NYHA Class II. On GDMT."
+      "notes": "BNP 490, slightly above recent baseline. 1+ pedal edema, bibasilar crackles. May be contributing to hepatic congestion and abdominal discomfort. Not acutely decompensated."
+    },
+    {
+      "diagnosis": "CKD-related anemia, stable",
+      "icd10": "D63.1",
+      "notes": "Hgb 10.9, stable. Iron studies adequate — not iron deficient. B12 normal. Anemia of chronic kidney disease. EPO-stimulating agents not yet indicated (Hgb >10)."
+    },
+    {
+      "diagnosis": "Bilateral simple renal cysts, incidental",
+      "icd10": "N28.1",
+      "notes": "Simple cysts, largest 2.3 cm. Benign. No follow-up imaging needed per Bosniak I classification."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "problem": "Abdominal Pain",
+      "action": "Improving clinically. CT without acute pathology. No surgical consultation needed. Will discharge today if pain continues to improve. Outpatient follow-up for any recurrence. If symptoms recur with alarm features (weight loss, melena, severe pain), will proceed with EGD given ulcer history."
     },
     {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "problem": "Hepatic Steatosis",
+      "action": "New finding. Calculate FIB-4 score outpatient to assess fibrosis risk. With AST 32, ALT 38, platelets 185, age 72: FIB-4 approximately 2.3 (intermediate risk). May warrant hepatology referral or elastography if score remains intermediate. Lifestyle modifications: weight loss, glycemic control, limit alcohol. Communicate to PCP."
     },
     {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
+      "problem": "Heart Failure — Mild Volume Overload",
+      "action": "BNP mildly elevated. Increase furosemide to 60mg BID for 3-5 days to address mild volume overload, then return to 60mg AM/40mg PM. Continue GDMT. Reinforce sodium and fluid restriction."
     },
     {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "problem": "CKD / Contrast Follow-up",
+      "action": "Cr 1.96 (baseline) pre-contrast. Metformin held. Recheck Cr in 48-72 hours. Resume metformin if Cr returns to baseline."
+    },
+    {
+      "problem": "Disposition",
+      "action": "Discharge home this afternoon. Wife available to assist. Diet: low sodium, diabetic. Activity: as tolerated. Resume all home medications except metformin (hold 48 hours, then resume if Cr stable)."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 10 weeks or sooner if needed."
+      "action": "PCP in 1 week for Cr recheck and FIB-4 follow-up. Cardiology for TEE scheduling (comprehensive cardiac assessment — may help evaluate hepatic congestion contribution). GI only if symptoms recur."
     }
   ],
-  "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Emily Brown\nDate: 9/12/2024"
+  "attestation": "I personally saw and examined the patient. I reviewed the CT imaging, laboratory results, and telemetry data. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Emily Brown, MD\nDate: 9/12/2024"
 }

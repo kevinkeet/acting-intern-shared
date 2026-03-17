@@ -1,0 +1,31 @@
+{
+  "id": "IMG025",
+  "date": "2018-05-15T01:09:46.826Z",
+  "modality": "X-Ray",
+  "description": "KUB (Kidney, Ureter, Bladder)",
+  "facility": "Springfield Medical Center",
+  "status": "Final",
+  "radiologist": "Dr. Susan Miller",
+  "orderingProvider": "Dr. Michael Torres",
+  "indication": "Abdominal pain and constipation, evaluate for obstruction",
+  "technique": "Single AP supine radiograph of the abdomen was obtained.",
+  "findings": {
+    "bowelGasPattern": "Mildly distended loops of colon with stool burden throughout the colon, most prominent in the ascending and transverse colon. No dilated loops of small bowel. No air-fluid levels to suggest obstruction.",
+    "calcifications": "Atherosclerotic calcification of the abdominal aorta. Pelvic phleboliths. No radiopaque urinary tract calculi.",
+    "kidneys": "Renal outlines are not well delineated on plain radiograph. No large renal calculi.",
+    "softTissues": "No free intraperitoneal air. Surgical clips in the right upper quadrant consistent with prior cholecystectomy.",
+    "osseous": "Degenerative changes of the lumbar spine with disc space narrowing at L4-L5 and L5-S1. No acute fracture or suspicious lytic lesion."
+  },
+  "impression": [
+    "No evidence of bowel obstruction.",
+    "Significant stool burden throughout the colon consistent with constipation.",
+    "No radiopaque urinary tract calculi.",
+    "Atherosclerotic calcification of the abdominal aorta.",
+    "Degenerative lumbar spine disease.",
+    "Status post cholecystectomy."
+  ],
+  "recommendations": [
+    "Bowel regimen for constipation"
+  ],
+  "comparison": "No prior KUB available for comparison."
+}

@@ -1,0 +1,49 @@
+{
+  "id": "IMG019",
+  "date": "2022-01-11T13:02:10.621Z",
+  "modality": "Nuclear",
+  "description": "Myocardial Perfusion Imaging (SPECT)",
+  "facility": "Springfield Medical Center",
+  "status": "Final",
+  "radiologist": "Dr. Patricia Lee",
+  "orderingProvider": "Dr. James Wilson",
+  "indication": "Coronary artery disease with three-vessel involvement, heart failure with reduced ejection fraction, periodic reassessment of ischemic burden",
+  "technique": "Rest and pharmacologic stress myocardial perfusion SPECT imaging was performed using Tc-99m sestamibi. Regadenoson was administered for pharmacologic stress. Gated SPECT images were obtained at rest.",
+  "protocol": {
+    "stressAgent": "Regadenoson 0.4 mg IV",
+    "stressResponse": "Heart rate increased from 70 to 92 bpm. Blood pressure 146/82 at baseline, 140/74 at peak stress.",
+    "symptoms": "No chest pain. Mild dyspnea noted, resolved within 2 minutes.",
+    "ecg": "Baseline: Atrial fibrillation with controlled ventricular response. Stress: No diagnostic ST changes. Atrial fibrillation with rate to 92 bpm."
+  },
+  "findings": {
+    "perfusion": {
+      "stress": "Moderate fixed perfusion defect involving the inferior and inferolateral walls (approximately 15% of the myocardium). No new reversible defects compared to prior study.",
+      "rest": "Moderate fixed perfusion defect in the inferior and inferolateral walls, unchanged from stress images. No significant reversibility."
+    },
+    "function": {
+      "lvef": "33%",
+      "edv": "180 mL",
+      "esv": "121 mL",
+      "wallMotion": "Akinesis of the inferior wall. Hypokinesis of the inferolateral wall. Remaining segments with mild global hypokinesis."
+    },
+    "lungUptake": "Normal lung-to-heart ratio.",
+    "tid": "Transient ischemic dilation ratio 1.10 (normal <1.22)."
+  },
+  "impression": [
+    "Moderate fixed perfusion defect involving the inferior and inferolateral walls (approximately 15% of the myocardium), consistent with prior infarction in the RCA territory. Stable compared to prior MPI.",
+    "No significant reversible perfusion defects to suggest inducible ischemia.",
+    "Severely reduced left ventricular systolic function (LVEF 33%) with regional wall motion abnormalities, stable.",
+    "Previously noted mild reversible lateral wall defect has resolved, possibly reflecting improved collateral flow or optimized medical therapy.",
+    "No evidence of significant new ischemia to warrant revascularization."
+  ],
+  "summedScores": {
+    "sss": 11,
+    "srs": 10,
+    "sds": 1
+  },
+  "recommendations": [
+    "Continue optimal medical therapy for ischemic cardiomyopathy",
+    "No nuclear evidence of significant new ischemia at this time"
+  ],
+  "comparison": "MPI dated 2021-05-18. Fixed defect is stable. Previously noted mild reversible lateral wall defect has resolved. LVEF stable (32% prior, 33% current)."
+}

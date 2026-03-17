@@ -1,0 +1,55 @@
+{
+  "id": "IMG001",
+  "date": "2019-09-16T04:36:09.365Z",
+  "modality": "Echo",
+  "description": "Stress Echocardiogram",
+  "facility": "Springfield Medical Center",
+  "status": "Final",
+  "radiologist": "Dr. Robert Chang",
+  "orderingProvider": "Dr. James Wilson",
+  "indication": "Exertional dyspnea and fatigue, evaluate for ischemia and wall motion abnormalities in setting of known coronary artery disease",
+  "technique": "Treadmill stress echocardiography using the Bruce protocol. Resting and post-exercise 2D and Doppler echocardiographic images were obtained in standard views.",
+  "protocol": {
+    "type": "Bruce Protocol",
+    "exerciseDuration": "5 minutes 42 seconds (Stage 2)",
+    "peakHeartRate": "102 bpm (69% of age-predicted maximum)",
+    "restingHeartRate": "78 bpm (atrial fibrillation)",
+    "restingBP": "148/82 mmHg",
+    "peakBP": "172/88 mmHg",
+    "reasonForTermination": "Fatigue and dyspnea",
+    "symptoms": "Moderate dyspnea at peak exercise, no chest pain",
+    "ecg": "Baseline: Atrial fibrillation with controlled ventricular response. Stress: No diagnostic ST changes. Atrial fibrillation with rate to 102 bpm."
+  },
+  "findings": {
+    "restingImages": {
+      "leftVentricle": "Mildly dilated (LVIDd 5.8 cm). Mild global hypokinesis. Hypokinesis of the inferior and inferolateral walls.",
+      "ejectionFraction": "35-40% by visual estimation",
+      "valves": "Mild mitral regurgitation. Aortic valve trileaflet with mild sclerosis. Trace tricuspid regurgitation.",
+      "rightVentricle": "Normal size and function.",
+      "pericardium": "No effusion."
+    },
+    "stressImages": {
+      "wallMotion": "Worsening hypokinesis of the inferior and inferolateral walls at peak stress. New hypokinesis of the lateral wall. Anterior and anteroseptal walls augmented normally.",
+      "ejectionFraction": "30-35% at peak stress (decreased from rest)",
+      "newAbnormalities": "Stress-induced wall motion abnormality in the lateral wall, suggesting inducible ischemia in the LCx territory."
+    },
+    "doppler": {
+      "mitralRegurgitation": "Mild-to-moderate at rest, increasing to moderate with stress.",
+      "rvsp": "35 mmHg at rest, 48 mmHg at peak stress."
+    }
+  },
+  "impression": [
+    "Mildly dilated left ventricle with mildly-to-moderately reduced systolic function at rest (EF 35-40%), worsening to 30-35% at peak stress.",
+    "Resting wall motion abnormalities in the inferior and inferolateral walls, consistent with prior infarction in the RCA territory.",
+    "Stress-induced wall motion abnormality in the lateral wall, suggesting inducible ischemia in the left circumflex territory.",
+    "Exercise capacity is reduced (5 minutes 42 seconds, Stage 2, 69% age-predicted maximum heart rate).",
+    "Mild-to-moderate mitral regurgitation worsening with exercise.",
+    "Findings are consistent with ischemic cardiomyopathy with inducible ischemia."
+  ],
+  "recommendations": [
+    "Recommend nuclear myocardial perfusion imaging for further assessment of ischemic burden",
+    "Optimize guideline-directed medical therapy for heart failure",
+    "Consider cardiology consultation regarding coronary revascularization"
+  ],
+  "comparison": "No prior stress echocardiogram available for comparison."
+}

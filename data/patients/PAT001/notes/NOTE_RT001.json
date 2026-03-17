@@ -1,0 +1,67 @@
+{
+  "id": "NOTE_RT001",
+  "type": "Respiratory Therapy Note",
+  "title": "Respiratory Therapy Assessment and Plan",
+  "date": "2021-02-10T11:00:00.000Z",
+  "author": "James Parker, RRT",
+  "department": "Respiratory Therapy",
+  "encounter": "ENC_ADM002",
+  "signedDate": "2021-02-10T11:30:00.000Z",
+  "sections": {
+    "reasonForConsult": "O2 therapy initiation and incentive spirometry for community-acquired pneumonia with hypoxia",
+    "patientBackground": "69-year-old male admitted with community-acquired pneumonia, RLL consolidation on CXR. Significant comorbidities include HFrEF (EF 30-35%), CKD 3b, and 30 pack-year smoking history (quit 15 years ago). Presenting SpO2 89% on room air.",
+    "respiratoryAssessment": {
+      "breathSounds": "Decreased breath sounds RLL with coarse crackles. Scattered rhonchi bilateral lower lobes. No wheezing. Left lung with mild bibasilar fine crackles (attributed to chronic HF changes).",
+      "respiratoryPattern": "Mildly labored at rest, rate 24/min. Using accessory muscles minimally. Speaking in full sentences with occasional pauses.",
+      "cough": "Productive — yellowish-green sputum, moderate volume. Cough effort adequate. Sputum specimen collected and sent to lab.",
+      "chestWallMovement": "Symmetric. Reduced expansion at right base.",
+      "spo2Trend": "89% on RA → 94% on 2L NC within 5 minutes of initiation"
+    },
+    "oxygenTherapy": {
+      "device": "Nasal cannula",
+      "flowRate": "2 L/min",
+      "fiO2Estimate": "~28%",
+      "targetSpO2": "92-96%",
+      "rationale": "Conservative O2 target (not >96%) due to HFrEF — excessive supplemental O2 can increase afterload and is not beneficial in cardiac patients. Avoiding high-flow O2 unless clinically indicated.",
+      "responseToTherapy": "SpO2 improved from 89% to 94% on 2L NC. Patient reports subjective improvement in dyspnea. Respiratory rate decreased from 24 to 20/min within 15 minutes of O2 initiation.",
+      "escalationPlan": "If SpO2 <92% on 2L NC or RR >30: increase to 4L NC. If SpO2 <90% on 4L NC: switch to simple face mask 6-8 L/min and notify physician. If FiO2 requirements exceed 40% or patient shows signs of respiratory distress: evaluate for high-flow nasal cannula or non-invasive ventilation, notify physician immediately."
+    },
+    "incentiveSpirometry": {
+      "ordered": true,
+      "baseline": "750 mL (best of 3 attempts)",
+      "expectedNormal": "2,500-3,000 mL (based on age, height, sex)",
+      "reducedDue": "Acute pneumonia, underlying HFrEF with reduced functional capacity, deconditioning, 30 pack-year smoking history",
+      "goal": "1,000 mL by discharge",
+      "frequency": "10 repetitions every hour while awake",
+      "technique": "Demonstrated proper use: slow deep inspiration, hold at peak for 3-5 seconds, exhale slowly. Patient performed return demonstration — adequate technique. Coached on splinting right side if cough is painful.",
+      "documentation": "IS log placed at bedside. Nursing and RT to document volumes each session."
+    },
+    "nebulizer": {
+      "ordered": "Albuterol 2.5 mg via nebulizer q4h PRN for wheezing or bronchospasm",
+      "currentStatus": "Not administered at this time — no active wheezing on assessment",
+      "note": "Patient has no history of asthma or COPD. Bronchospasm unlikely but nebulizer available PRN given pneumonia and smoking history. Monitor for development of reactive airway symptoms."
+    },
+    "chestPhysiotherapy": {
+      "ordered": true,
+      "technique": "Percussion and postural drainage targeting right lower lobe",
+      "frequency": "BID (morning and evening)",
+      "precautions": "Avoid Trendelenburg positioning given HFrEF (risk of worsening dyspnea). Use modified postural drainage — right side lying with head of bed at 30 degrees. Monitor SpO2 during therapy. Discontinue if SpO2 <90% or patient becomes significantly dyspneic.",
+      "firstSession": "Performed today with good tolerance. Patient coughed productively during and after session. SpO2 maintained 93-94% throughout."
+    },
+    "ventilatorRiskAssessment": {
+      "currentRisk": "Low — patient maintaining adequate oxygenation on low-flow O2, no signs of impending respiratory failure",
+      "riskFactors": "Significant comorbidities (HFrEF, obesity), moderate severity pneumonia",
+      "plan": "Continue to monitor. If clinical deterioration, early escalation preferred — high-flow nasal cannula → non-invasive ventilation (BiPAP) before intubation if possible."
+    },
+    "plan": [
+      "Continue O2 via NC 2L/min, titrate to SpO2 92-96%",
+      "Incentive spirometry q1h while awake, goal 1,000 mL by discharge",
+      "Chest physiotherapy BID with modified positioning for HF",
+      "Albuterol nebulizer PRN for wheezing (not currently needed)",
+      "Will reassess daily — wean O2 as tolerated, advance IS goals",
+      "Monitor for clinical deterioration requiring escalation of respiratory support",
+      "Follow-up RT assessment tomorrow AM"
+    ]
+  },
+  "attestation": "Respiratory therapy assessment completed. O2 therapy initiated and incentive spirometry instructed with return demonstration. Plan of care established.\n\nElectronically signed by: James Parker, RRT\nDate/Time: 2/10/2021 11:30 AM"
+}

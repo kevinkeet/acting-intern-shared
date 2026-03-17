@@ -2,74 +2,91 @@
   "id": "NOTE089",
   "type": "H&P",
   "date": "2021-12-24T16:22:18.416Z",
-  "author": "Dr. Michael Torres",
-  "department": "Nephrology",
+  "author": "Dr. Sarah Chen",
+  "department": "Primary Care",
   "encounter": "ENC066",
-  "chiefComplaint": "Shortness of breath",
-  "hpi": "72-year-old male with history of Type 2 Diabetes Mellitus, CKD Stage 3b, HFrEF (EF 35%), and atrial fibrillation who presents with chest discomfort over the past 5 days.\n\nPatient reports sudden onset of symptoms. Occurs at rest. Reports mild chest pressure. Some dry cough present.\n\nPatient has not been compliant with medications. Reports dietary indiscretion. Last cardiology visit was 2 months ago.",
-  "pastMedicalHistory": "1. Type 2 Diabetes Mellitus with neuropathy (diagnosed 2010)\n2. Chronic Kidney Disease Stage 3b (diagnosed 2018)\n3. Heart Failure with Reduced Ejection Fraction, EF 35% (diagnosed 2019)\n4. Atrial Fibrillation, persistent (diagnosed 2017)\n5. Hypertension (diagnosed 2005)\n6. Hyperlipidemia (diagnosed 2008)\n7. Benign Prostatic Hyperplasia (diagnosed 2016)\n8. History of pneumonia (2021)",
-  "medications": "See medication list in chart.",
+  "chiefComplaint": "Worsening shortness of breath and holiday check-in",
+  "hpi": "69-year-old male with HFrEF (EF 30-35%), persistent A-fib on warfarin, CKD 3b, and Type 2 DM presents with 5 days of gradually worsening shortness of breath and mild chest pressure. He describes the dyspnea as an increase from his usual NYHA II baseline — previously able to walk to the mailbox without stopping, now needs to pause once halfway. He also notes that he was more short of breath climbing the 3 stairs to his front porch yesterday, which is usually manageable. He describes a vague chest tightness, non-radiating, rated 2/10, occurring with exertion and resolving within a few minutes of rest. No rest pain.\n\nHis wife Patricia reports he has been less adherent to his diet over the holiday season. They hosted a family Christmas dinner last weekend and ate leftovers for several days, with likely higher sodium content (ham, canned green beans, gravy). His weight this morning was 99.3 kg, up approximately 1 kg from his usual 98 kg baseline. She also notes a dry cough that started 2 days ago, worse when lying flat.\n\nReviewing his medication compliance: he has been taking all medications as prescribed, including the recently uptitrated carvedilol (now at 25mg BID as of late November per cardiology plan). He reports no dizziness on the higher carvedilol dose, though he feels slightly more fatigued than before. Home BP readings have been 128-136 systolic. His most recent labs from November showed stable renal function and potassium.\n\nHe is also requesting refills for his gabapentin, metformin, and vitamin D.",
+  "pastMedicalHistory": "1. Heart Failure with Reduced EF 30-35% (diagnosed 2019, last echo September 2020)\n2. Type 2 DM with peripheral neuropathy (2010)\n3. CKD Stage 3b (2018)\n4. Atrial Fibrillation, persistent, on warfarin (2017)\n5. CAD, 3-vessel, medically managed (2018)\n6. HTN (2005)\n7. Hyperlipidemia (2008)\n8. BPH (2016)\n9. History of gout (2019)\n10. History of CAP (February 2021)\n11. Vitamin D deficiency\n12. Dyspepsia — under GI evaluation",
+  "medications": "1. Entresto 97/103mg BID\n2. Carvedilol 25mg BID (target dose achieved November 2021)\n3. Spironolactone 25mg daily\n4. Furosemide 40mg BID\n5. Warfarin 5mg daily\n6. Insulin glargine 22 units QHS\n7. Metformin 500mg BID\n8. Atorvastatin 80mg daily\n9. Gabapentin 300mg TID\n10. Tamsulosin 0.4mg daily\n11. Vitamin D3 2000 IU daily\n12. Omeprazole 20mg daily (started by GI November 2021 for dyspepsia)",
   "allergies": "Penicillin (anaphylaxis), Sulfa drugs (rash), Lisinopril (angioedema), Shellfish (hives)",
-  "socialHistory": "Former smoker (quit 1995, 20 pack-year history). Rare alcohol use. Retired accountant. Lives with wife.",
-  "familyHistory": "Father: MI at 62, HTN. Mother: T2DM. Brother: HTN.",
+  "socialHistory": "Former smoker, quit 1995 (20 pack-year). Rare alcohol. Retired accountant. Lives with wife Patricia. Active in church. Two adult children nearby. Family visited for holidays.",
+  "familyHistory": "Father: MI at 62, HTN. Mother: T2DM. Brother: HTN. Sister: T2DM.",
   "reviewOfSystems": {
-    "Constitutional": "Reports fatigue",
-    "Cardiovascular": "Dyspnea on exertion at baseline",
-    "Respiratory": "No cough or wheezing",
-    "GI": "No nausea or vomiting",
-    "GU": "No dysuria",
-    "Neurologic": "No dizziness"
+    "Constitutional": "Mild fatigue, slightly worse over past week — may be related to carvedilol uptitration or volume overload. No fevers, chills, or night sweats. Weight up ~1 kg from baseline.",
+    "Cardiovascular": "Worsening DOE and mild chest tightness with exertion as described. New dry cough, worse supine. No PND. Palpitations at baseline (A-fib). No syncope or presyncope. No peripheral edema worsening per patient (wife disagrees — see exam).",
+    "Respiratory": "Dry cough x 2 days, worse lying flat. No productive sputum, no hemoptysis, no wheezing.",
+    "GI": "Epigastric discomfort improved on omeprazole per GI. Appetite good (perhaps too good over holidays). No nausea, vomiting, or GI bleeding.",
+    "GU": "Nocturia x2-3 (slightly worse than usual). No dysuria or hematuria.",
+    "Neurologic": "Bilateral foot numbness/tingling at baseline. No dizziness despite carvedilol increase. No new weakness.",
+    "Endocrine": "Blood sugars running 130-170 fasting. Higher over holidays with dietary indiscretion.",
+    "Psychiatric": "Mood good — enjoyed family holiday gathering. Sleep disrupted by cough.",
+    "Skin": "No rashes or foot wounds."
   },
   "vitals": {
     "bp": "134/81 mmHg",
-    "hr": "80 bpm",
+    "hr": "80 bpm (irregular)",
     "rr": "20/min",
     "temp": "98.8°F",
-    "spo2": "98% RA",
+    "spo2": "98% RA at rest",
     "weight": "99.3 kg"
   },
   "physicalExam": {
-    "General": "Mildly fatigued-appearing",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "Irregularly irregular, no murmurs, JVP not elevated",
-    "Respiratory": "No wheezes or rhonchi",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "Trace bilateral ankle edema",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Alert, oriented, mildly fatigued-appearing but in no significant respiratory distress at rest. Can speak in full sentences. Obese.",
+    "HEENT": "Normocephalic. PERRL. Oropharynx clear. JVP estimated at 8 cm H2O — mildly elevated, consistent with mild volume overload.",
+    "Cardiovascular": "Irregularly irregular (A-fib), rate ~80 bpm. S1 normal, S2 present. Grade 2/6 holosystolic murmur at apex (known MR). No S3 gallop. No rubs. PMI laterally displaced.",
+    "Respiratory": "Mild bibasilar crackles in lower one-third bilaterally, right = left. No wheezes or rhonchi. No accessory muscle use. Respiratory rate mildly elevated at 20.",
+    "Abdomen": "Soft, non-tender, non-distended. No hepatomegaly. No hepatojugular reflux.",
+    "Extremities": "Trace to 1+ bilateral ankle edema — wife notes this is slightly more than his usual trace. Warm, well-perfused. No calf tenderness. DP pulses 1+ bilaterally.",
+    "Neurologic": "Alert, oriented x4. Decreased sensation bilateral feet to mid-shin (stable). Motor intact. No asterixis."
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
-      "icd10": "E11.65",
-      "notes": "HbA1c 8.1%. On insulin and metformin."
+      "diagnosis": "Heart Failure with Reduced EF — mild volume overload",
+      "icd10": "I50.22",
+      "notes": "Subacute worsening over 5 days in context of holiday dietary sodium indiscretion. Weight up ~1.3 kg from dry weight. Exam with mildly elevated JVP, bibasilar crackles, trace-1+ edema. Not severely decompensated — no hypoxia, no respiratory distress, SpO2 98%. BNP not checked today but clinical picture is mild congestion. This is a recurring pattern — this is the third episode of mild decompensation in 2021 (January, July, December), each triggered by dietary indiscretion. Now at target doses of neurohormonal blockade (Entresto + carvedilol 25mg BID + spironolactone). Furosemide 40mg BID may be chronically insufficient for this patient."
     },
     {
-      "diagnosis": "Chronic Kidney Disease Stage 3b",
+      "diagnosis": "Type 2 Diabetes Mellitus with neuropathy",
+      "icd10": "E11.65",
+      "notes": "A1c 7.8% at last check (September). Holiday dietary indiscretion will likely worsen. Insulin glargine 22 units QHS. Home glucoses 130-170 fasting."
+    },
+    {
+      "diagnosis": "CKD Stage 3b",
       "icd10": "N18.32",
-      "notes": "eGFR 40. Stable."
+      "notes": "Cr 1.88, eGFR 38 per November labs. Stable trajectory. Now that carvedilol is at target, SGLT2i should be the next priority — will discuss with cardiology."
+    },
+    {
+      "diagnosis": "Atrial Fibrillation on warfarin",
+      "icd10": "I48.1",
+      "notes": "Rate 80 — slightly above target on carvedilol 25mg BID. Was 73 on submaximal dose. May be related to volume overload (sympathetic activation). Will see if improves with diuresis."
     }
   ],
   "plan": [
     {
+      "problem": "Heart Failure — volume overload",
+      "action": "Increase furosemide to 60mg BID for 5 days, then return to 40mg BID. Given this is the third episode in 2021, will discuss with cardiology whether a chronic increase to 60mg AM / 40mg PM (asymmetric) is warranted. Strict <2g sodium diet — wife understands holiday season is particularly challenging and will resume strict home cooking. Fluid restriction 1.5L/day. Daily weights — target return to 98 kg within 5 days. Return to ED if worsening dyspnea, orthopnea, SpO2 <92%, or weight increases despite increased diuretic."
+    },
+    {
+      "problem": "Carvedilol Tolerance Assessment",
+      "action": "Patient now at target dose (25mg BID) as of late November. BP 134/81 (well-controlled). HR 80 (slightly elevated — may improve with diuresis). Mild fatigue may be beta-blocker related vs. volume overload. Will reassess fatigue at next visit after euvolemia restored. Continue carvedilol 25mg BID — do not reduce dose."
+    },
+    {
       "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "action": "A1c to be rechecked at next visit. Home glucoses slightly above target. Continue insulin glargine 22 units QHS. If A1c >8% at next check, will increase glargine to 24 units. Reinforce dietary counseling, particularly around the holiday season."
     },
     {
       "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "action": "Labs to be drawn after the holiday — CMP, CBC in 2 weeks. Anticipate stable renal function but want to confirm after furosemide increase."
     },
     {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
-    },
-    {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "problem": "Medication Refills",
+      "action": "Gabapentin 300mg TID — refilled 90 days. Metformin 500mg BID — refilled 90 days. Vitamin D3 2000 IU daily — refilled 90 days. All other medications have adequate supply."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 6 weeks or sooner if needed."
+      "action": "Phone follow-up in 5 days to check weight response to furosemide increase. Office visit in 6-8 weeks (early February). Labs in 2 weeks."
     }
   ],
-  "attestation": "I have personally evaluated this patient and agree with the documentation above.\n\nElectronically signed by: Dr. Michael Torres\nDate: 12/24/2021"
+  "attestation": "I have personally evaluated this patient and agree with the documentation above.\n\nElectronically signed by: Dr. Sarah Chen\nDate: 12/24/2021"
 }

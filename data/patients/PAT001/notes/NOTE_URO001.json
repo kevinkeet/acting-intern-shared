@@ -1,0 +1,121 @@
+{
+  "id": "NOTE_URO001",
+  "type": "Consult Note",
+  "title": "Urology Follow-up - Benign Prostatic Hyperplasia",
+  "date": "2024-07-20T09:30:00.000Z",
+  "author": "Dr. Robert Kim",
+  "department": "Urology",
+  "encounter": "ENC_URO001",
+  "signedDate": "2024-07-20T11:30:00.000Z",
+  "sections": {
+    "reasonForVisit": "Annual BPH follow-up. Established patient on tamsulosin for benign prostatic hyperplasia.",
+    "historyOfPresentIllness": "Mr. Morrison is a 72-year-old gentleman with benign prostatic hyperplasia diagnosed approximately 8 years ago, currently managed with tamsulosin 0.4 mg daily. He presents for annual follow-up.\n\nThe patient reports his urinary symptoms have been gradually worsening over the past year. His primary complaints are:\n1. Nocturia — now 3-4 times per night (previously 2-3x). This is significantly impacting his sleep quality and contributing to daytime fatigue. His wife Patricia reports he is up every 2-3 hours.\n2. Weak stream — takes longer to empty bladder, some terminal dribbling\n3. Urinary frequency — voiding every 2-3 hours during the day\n4. Hesitancy — occasional difficulty initiating stream\n\nHe denies dysuria, gross hematuria, urinary incontinence, or urinary retention symptoms (no suprapubic fullness or overflow dribbling). No history of urinary tract infections.\n\nNotably, his nocturia is multifactorial. He takes furosemide 60 mg twice daily for heart failure, which contributes significantly to urinary volume. He also has diabetes (osmotic diuresis possible if hyperglycemic) and CKD with impaired concentrating ability. The BPH component is the obstructive overlay on top of these volume-related contributors.",
+    "auaSymptomScore": {
+      "score": 14,
+      "severity": "Moderate (8-19)",
+      "previousScore": "12 (July 2023)",
+      "trend": "Gradual increase over past 2 years (10 → 12 → 14)",
+      "qualityOfLifeScore": "4/6 (mostly dissatisfied)",
+      "breakdown": {
+        "incompleteEmptying": 2,
+        "frequency": 3,
+        "intermittency": 1,
+        "urgency": 2,
+        "weakStream": 2,
+        "straining": 1,
+        "nocturia": 3
+      }
+    },
+    "currentMedications": "Tamsulosin 0.4 mg PO daily at bedtime. Also on furosemide 60 mg BID, spironolactone 25 mg daily, empagliflozin 10 mg daily — all contributing to urinary volume.",
+    "laboratoryResults": {
+      "psa": {
+        "current": { "date": "2024-07-15", "value": "2.8 ng/mL" },
+        "history": [
+          { "date": "2023-07-10", "value": "2.5 ng/mL" },
+          { "date": "2022-07-08", "value": "2.3 ng/mL" },
+          { "date": "2020-06-15", "value": "2.1 ng/mL" },
+          { "date": "2016-08-12", "value": "2.1 ng/mL" }
+        ],
+        "interpretation": "PSA 2.8 ng/mL — slow, gradual rise consistent with BPH. PSA velocity approximately 0.1 ng/mL/year over 8 years. No concerning rapid elevation. Age-adjusted PSA normal range for 70-79: 0-6.5 ng/mL."
+      },
+      "urinalysis": {
+        "date": "2024-07-15",
+        "result": "Negative for blood, leukocytes, nitrites. Trace protein (consistent with CKD). No bacteria."
+      },
+      "creatinine": {
+        "date": "2024-07-15",
+        "value": "2.0 mg/dL",
+        "egfr": "34 mL/min/1.73m2"
+      }
+    },
+    "physicalExamination": {
+      "vitals": {
+        "bloodPressure": "130/74 mmHg",
+        "heartRate": "72 bpm"
+      },
+      "abdomen": "Soft, non-tender, no suprapubic fullness or distension",
+      "digitalRectalExam": {
+        "prostate": "Mildly enlarged, estimated 40-45 grams (normal <30g). Smooth, symmetric, no nodules, no induration. Median sulcus palpable. No tenderness.",
+        "rectalTone": "Normal",
+        "stoolGuaiac": "Not performed (on aspirin, recent GI evaluation)"
+      },
+      "postVoidResidual": {
+        "method": "Bladder ultrasound",
+        "volume": "85 mL",
+        "interpretation": "Acceptable (<100 mL suggests adequate bladder emptying; >200 mL would be concerning)"
+      }
+    },
+    "assessment": "72-year-old male with moderate BPH (AUA-SS 14, up from 12), predominantly bothered by nocturia and weak stream. On tamsulosin monotherapy. PSA trending slowly upward (2.1 to 2.8 over 8 years) consistent with benign prostatic growth. DRE shows mildly enlarged prostate without suspicious features. Post-void residual acceptable at 85 mL.\n\nThe nocturia is clearly multifactorial in this patient:\n1. BPH — obstructive component causing frequency and incomplete emptying\n2. Diuretic therapy — furosemide 60 mg BID is the dominant volume contributor\n3. Heart failure — nocturnal fluid redistribution from dependent edema drives nocturnal polyuria\n4. CKD — impaired renal concentrating ability\n5. SGLT2 inhibitor — empagliflozin causes glycosuria and mild osmotic diuresis\n\nAddressing nocturia in this patient requires a multimodal approach that goes beyond BPH management alone.",
+    "recommendations": [
+      {
+        "category": "BPH Management",
+        "items": [
+          "Continue tamsulosin 0.4 mg daily — provides alpha-blockade for obstructive symptoms",
+          "Consider adding 5-alpha reductase inhibitor (finasteride 5 mg or dutasteride 0.5 mg) if symptoms continue to worsen — prostate size 40-45g makes this appropriate per AUA guidelines. Would reduce prostate volume 20-25% over 6-12 months and reduce PSA by approximately 50% (important for future PSA interpretation).",
+          "Not adding 5ARI today as symptoms are moderate and patient prefers to try diuretic timing changes first",
+          "Surgical intervention (TURP, UroLift, Rezum) not indicated at this time — moderate symptoms, acceptable PVR, patient prefers conservative management"
+        ]
+      },
+      {
+        "category": "Nocturia — Diuretic Timing",
+        "items": [
+          "Discussed with patient the concept of asymmetric furosemide dosing — taking both doses earlier in the day to reduce nighttime urine production",
+          "Proposed regimen: Furosemide 60 mg at 8 AM + 60 mg at 2 PM (instead of morning + evening)",
+          "This requires coordination with cardiology (Dr. Wilson) to ensure adequate volume management",
+          "Sent message to Dr. Wilson's office regarding proposed diuretic timing change",
+          "Patient should elevate legs for 1-2 hours in the afternoon to mobilize peripheral edema before diuretic effect wanes"
+        ]
+      },
+      {
+        "category": "Nocturia — Behavioral Strategies",
+        "items": [
+          "Fluid restriction after 6 PM (maintain 1.5L total daily but front-load to daytime)",
+          "Void before bedtime (double-void technique: void, wait 5 minutes, void again)",
+          "Limit caffeine after noon",
+          "Elevate legs 2-3 hours before bed to reduce nocturnal fluid mobilization"
+        ]
+      },
+      {
+        "category": "PSA Monitoring",
+        "items": [
+          "PSA 2.8 ng/mL — benign trend, no biopsy indicated",
+          "Continue annual PSA monitoring",
+          "If 5ARI is started in the future, will need to double the PSA value for accurate screening interpretation",
+          "Prostate cancer screening discussion: Given age 72, life expectancy considerations with HF and CKD, USPSTF recommends shared decision-making. Patient prefers to continue PSA monitoring. Reasonable approach given gradual benign trend."
+        ]
+      },
+      {
+        "category": "Follow-up",
+        "items": [
+          "Return in 12 months for annual follow-up",
+          "Sooner if symptoms worsen significantly (AUA-SS >19, acute retention, gross hematuria, recurrent UTIs)",
+          "Annual PSA",
+          "Will coordinate with cardiology on diuretic timing"
+        ]
+      }
+    ],
+    "patientEducation": "Discussed BPH management with patient. Reviewed that his nocturia has multiple contributing factors beyond prostate enlargement. He was very receptive to the idea of changing his diuretic timing and behavioral strategies before adding another medication. Explained the option of finasteride if symptoms continue to progress — discussed potential side effects including decreased libido, erectile dysfunction (5-8% incidence), and gynecomastia. Patient prefers to hold off for now. Reviewed signs of acute urinary retention that should prompt emergency evaluation.",
+    "plan": "1. Continue tamsulosin 0.4 mg daily\n2. Coordinate with cardiology (Dr. Wilson) regarding AM-weighted furosemide dosing to reduce nocturia\n3. Implement behavioral strategies for nocturia (fluid timing, leg elevation, double-void technique)\n4. Annual PSA monitoring — next due July 2025\n5. Consider finasteride if AUA-SS worsens to >18 or PVR increases\n6. Follow-up in 12 months"
+  },
+  "attestation": "I personally evaluated this patient, performed the digital rectal examination and bladder ultrasound, reviewed all laboratory data, and formulated the assessment and plan.\n\nElectronically signed by: Robert Kim, MD, FACS\nDate/Time: 7/20/2024 11:30 AM"
+}

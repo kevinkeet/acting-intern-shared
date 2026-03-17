@@ -1,0 +1,78 @@
+{
+  "id": "NOTE_DC003",
+  "type": "Discharge Summary",
+  "title": "Discharge Summary - Community-Acquired Pneumonia",
+  "date": "2021-02-14T14:00:00.000Z",
+  "author": "Dr. Emily Brown",
+  "department": "Hospital Medicine",
+  "encounter": "ENC_ADM002",
+  "signedDate": "2021-02-14T16:30:00.000Z",
+  "sections": {
+    "admissionDate": "2021-02-10",
+    "dischargeDate": "2021-02-14",
+    "lengthOfStay": "5 days",
+    "admittingDiagnosis": "Community-acquired pneumonia with hypoxia",
+    "dischargeDiagnoses": [
+      "Community-acquired pneumonia, Streptococcus pneumoniae, resolving (ICD-10: J13)",
+      "Acute hypoxic respiratory failure, resolved (ICD-10: J96.01)",
+      "Chronic kidney disease stage 3b, stable (ICD-10: N18.4)",
+      "Heart failure with reduced ejection fraction, stable (ICD-10: I50.22)",
+      "Atrial fibrillation, rate controlled (ICD-10: I48.91)",
+      "Type 2 Diabetes Mellitus (ICD-10: E11.9)",
+      "Penicillin allergy — tolerated ceftriaxone without reaction (ICD-10: Z88.0)"
+    ],
+    "hospitalCourse": "Mr. Morrison is a 69-year-old male with HFrEF (EF 30-35%), CKD 3b, T2DM, atrial fibrillation on warfarin, and documented penicillin anaphylaxis who was admitted with community-acquired pneumonia.\n\nHOSPITAL COURSE:\n\nDay 1 (2/10): Patient presented with 5 days of productive cough, fever (101.4°F), and worsening dyspnea. SpO2 was 89% on room air, improving to 94% on 2L NC. CXR demonstrated right lower lobe consolidation with chronic cardiomegaly. Labs notable for WBC 14.2, procalcitonin 0.82, and Cr 2.1 (slightly above baseline 1.8-2.0). INR was 2.1 (therapeutic). COVID-19 PCR was sent (later returned negative). Given his documented penicillin anaphylaxis, Infectious Disease was consulted (Dr. Maria Santos) for antibiotic selection. ID recommended proceeding with ceftriaxone given <1% cross-reactivity risk for 3rd-gen cephalosporins, with precautions: epinephrine at bedside and nurse monitoring during first infusion. Initiated ceftriaxone 1g IV q24h + azithromycin. First dose of ceftriaxone administered without incident.\n\nDay 2 (2/11): COVID-19 PCR returned negative — droplet precautions discontinued. Temperature trending down (Tmax 100.2°F). O2 requirement stable at 2L NC. Legionella urine antigen negative. Pneumococcal urine antigen positive. No allergic reaction to ceftriaxone (2nd dose). IV fluids continued for mild Cr elevation.\n\nDay 3 (2/12): Clinical improvement — afebrile, WBC decreased to 11.4, cough improving. O2 weaned from 2L to 1L NC with SpO2 95%. Cr improved to 2.0. Sputum culture preliminary showing gram-positive diplococci consistent with S. pneumoniae. Blood cultures no growth at 48 hours. IV fluids discontinued. Patient ambulating in room.\n\nDay 4 (2/13): Continued improvement. Afebrile x 24h. O2 trialed off — SpO2 94-95% on room air during rest and ambulation. O2 formally discontinued. Patient walked hallway laps without desaturation. Incentive spirometry improved to 1,050 mL (from 750 mL on admission). Sputum culture finalized: Streptococcus pneumoniae, susceptible to ceftriaxone and azithromycin, intermediate penicillin resistance. Discharge planning initiated.\n\nDay 5 (2/14 — Discharge): Afebrile x 48 hours, WBC normalized at 9.8, SpO2 95% on RA, cough minimal, appetite normalized. Cr 1.9 (at baseline). INR 2.2. Met all discharge criteria. Completed 5 days of IV ceftriaxone. Transitioned to oral azithromycin to complete macrolide course. Metformin restarted. No allergic reaction to ceftriaxone throughout hospitalization (5 doses administered).\n\nNOTABLE: Patient tolerated ceftriaxone (a cephalosporin) without allergic reaction despite documented penicillin anaphylaxis. This is consistent with published literature showing <1% cross-reactivity for 3rd-generation cephalosporins and is an important finding for his future antibiotic management.",
+    "procedures": [
+      "None"
+    ],
+    "consultations": [
+      "Infectious Disease (Dr. Maria Santos) - Antibiotic selection given PCN anaphylaxis. Recommended ceftriaxone with precautions. Signed off day 4."
+    ],
+    "significantResults": {
+      "sputumCulture": "Streptococcus pneumoniae — susceptible to ceftriaxone, azithromycin, levofloxacin; intermediate penicillin resistance",
+      "bloodCultures": "No growth (final)",
+      "covid19PCR": "Negative",
+      "pneumococcalUrineAntigen": "Positive",
+      "legionellaUrineAntigen": "Negative"
+    },
+    "dischargeMedications": [
+      { "name": "Azithromycin", "dose": "250 mg", "route": "PO", "frequency": "daily x 2 more days", "instructions": "NEW — to complete antibiotic course for pneumonia. Take 2 more days then stop." },
+      { "name": "Metformin", "dose": "500 mg", "route": "PO", "frequency": "twice daily", "instructions": "RESTARTED — was held during hospitalization due to kidney function" },
+      { "name": "Glipizide", "dose": "5 mg", "route": "PO", "frequency": "daily", "instructions": "Unchanged" },
+      { "name": "Lisinopril", "dose": "10 mg", "route": "PO", "frequency": "daily", "instructions": "Unchanged" },
+      { "name": "Carvedilol", "dose": "12.5 mg", "route": "PO", "frequency": "twice daily", "instructions": "Unchanged" },
+      { "name": "Furosemide", "dose": "40 mg", "route": "PO", "frequency": "twice daily", "instructions": "Unchanged" },
+      { "name": "Spironolactone", "dose": "25 mg", "route": "PO", "frequency": "daily", "instructions": "Unchanged" },
+      { "name": "Warfarin", "dose": "5 mg", "route": "PO", "frequency": "daily", "instructions": "Goal INR 2-3. Check INR in 3-5 days." },
+      { "name": "Atorvastatin", "dose": "40 mg", "route": "PO", "frequency": "at bedtime", "instructions": "Unchanged" },
+      { "name": "Aspirin", "dose": "81 mg", "route": "PO", "frequency": "daily", "instructions": "Unchanged" },
+      { "name": "Omeprazole", "dose": "20 mg", "route": "PO", "frequency": "daily", "instructions": "Unchanged" },
+      { "name": "Tamsulosin", "dose": "0.4 mg", "route": "PO", "frequency": "at bedtime", "instructions": "Unchanged" },
+      { "name": "Gabapentin", "dose": "300 mg", "route": "PO", "frequency": "three times daily", "instructions": "Unchanged — for diabetic neuropathy" }
+    ],
+    "dischargeCondition": "Stable, improved",
+    "dischargeDisposition": "Home with spouse",
+    "followUpAppointments": [
+      { "provider": "Dr. Sarah Chen (Primary Care)", "timing": "1 week", "reason": "Post-hospitalization follow-up, pneumococcal vaccination, repeat exam" },
+      { "provider": "Anticoagulation Clinic", "timing": "3-5 days", "reason": "INR check" },
+      { "provider": "Radiology", "timing": "4-6 weeks", "reason": "Repeat CXR to document radiographic resolution of RLL pneumonia" }
+    ],
+    "dischargeInstructions": [
+      "Complete your azithromycin antibiotic course — take 1 tablet daily for 2 more days, then stop.",
+      "Use the portable pulse oximeter provided to check your oxygen levels twice daily for 1 week. Call your doctor if your oxygen level drops below 92%.",
+      "Monitor for worsening symptoms: return to the ER if you develop recurrent fever >101°F, worsening shortness of breath, chest pain, coughing up blood, or confusion.",
+      "Continue using your incentive spirometer 10 times every hour while awake for the next 1-2 weeks to help your lungs recover.",
+      "Resume all your regular medications. Metformin has been restarted.",
+      "Continue your low-sodium diet and weigh yourself daily for your heart failure.",
+      "Get your pneumonia vaccine (pneumococcal vaccine) at your PCP follow-up appointment — this is very important to help prevent future pneumonia.",
+      "Ask about the COVID-19 vaccine when it becomes available for your age group.",
+      "Get a follow-up chest X-ray in 4-6 weeks — your doctor will order this.",
+      "Keep all follow-up appointments."
+    ],
+    "pendingResults": [
+      "None — all results finalized"
+    ],
+    "codeStatus": "Full Code"
+  },
+  "attestation": "I have reviewed the above discharge summary and confirm its accuracy. The patient and his wife have been provided with discharge instructions and have verbalized understanding. All questions were addressed.\n\nElectronically signed by: Emily Brown, MD\nDate/Time: 2/14/2021 4:30 PM"
+}

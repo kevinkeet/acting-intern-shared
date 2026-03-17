@@ -2,74 +2,89 @@
   "id": "NOTE011",
   "type": "Progress Note",
   "date": "2025-09-18T15:22:18.416Z",
-  "author": "Dr. James Wilson",
-  "department": "Cardiology",
+  "author": "Dr. Lisa Martinez",
+  "department": "Endocrinology",
   "encounter": "ENC007",
-  "chiefComplaint": "Dizziness",
-  "hpi": "Patient presents for dizziness. Reports overall stable condition since last visit. Compliant with medications. No new symptoms.",
+  "chiefComplaint": "Diabetes management, dizziness follow-up",
+  "hpi": "Mr. Morrison is a 73-year-old male with T2DM (diagnosed 2010) with diabetic neuropathy, HFrEF (EF 30-35%), CKD 3b, persistent A-fib, and multiple comorbidities who presents for endocrinology follow-up to review his diabetes management in the context of his recent fall (9/12/2025), new empagliflozin therapy (started May 2025), and improving glycemic control. He also reports that the intermittent lightheadedness noted 2 days ago by Dr. Wilson has resolved since returning to his standing diuretic regimen.\n\nHis diabetes history spans 15 years. He was initially managed with metformin and glipizide, transitioned to insulin in 2018 when CKD was diagnosed, and has been on a regimen of metformin 250mg BID (renally dosed), insulin glargine 24 units QHS, sliding scale lispro with meals, and empagliflozin 10mg daily since May 2025. His A1c trajectory has been encouraging: 8.0% (Dec 2024), 7.4% (Nov 2025 labs), and 7.2% at last check (Aug 2025) — the best in years, attributable to the synergistic effect of empagliflozin on glycemic control.\n\nHome glucose logs reviewed: fasting 125-165 mg/dL, 2-hour post-prandial 160-220 mg/dL. He checks twice daily — fasting and one post-meal reading rotating through meals. No episodes of hypoglycemia since the June 2020 event. His wife manages his insulin injections and uses the sliding scale consistently. He reports no symptoms of hyperglycemia (no polyuria beyond baseline nocturia, no polydipsia, no blurred vision). He has not had any genital yeast infections or UTIs since starting empagliflozin — his wife ensures he maintains good perineal hygiene.\n\nHis diabetic complications include: peripheral neuropathy (diagnosed 2020, on gabapentin, symptoms 4/10), mild NPDR (diagnosed 12/2024, next ophthalmology visit June 2026), and nephropathy (CKD 3b, UACR 180 at last check). He had a hypoglycemia event in June 2020 (glucose 42, ED visit) which prompted insulin dose reduction and more conservative targets.",
   "reviewOfSystems": {
-    "Constitutional": "Weight stable",
-    "Cardiovascular": "Dyspnea on exertion at baseline",
-    "Respiratory": "No cough or wheezing",
-    "GI": "No nausea or vomiting",
-    "GU": "Nocturia x2",
-    "Neurologic": "No new weakness"
+    "Constitutional": "Mild chronic fatigue. Weight 97.5 kg today, stable at near-baseline. Appetite fair — has been eating smaller portions lately, which wife attributes to mild depression symptoms. No fevers, chills, or night sweats.",
+    "Cardiovascular": "Exertional dyspnea stable (NYHA II). Lightheadedness from 2 days ago has resolved. No chest pain or palpitations.",
+    "Respiratory": "No cough, wheezing, or hemoptysis.",
+    "GI": "Mild decreased appetite. No nausea, vomiting, diarrhea. No abdominal pain. Tolerating metformin without GI side effects at current dose. No melena.",
+    "GU": "Nocturia x2-3. No dysuria, urgency, or genital infections. No foamy urine.",
+    "Musculoskeletal": "No joint swelling or gout flares.",
+    "Neurologic": "Bilateral foot burning and tingling at 4/10 on gabapentin. Numbness extending to mid-shin. No new focal deficits.",
+    "Eyes": "No acute vision changes. Mild NPDR on last exam — no macular edema.",
+    "Endocrine": "Blood sugars as described. No symptoms of hypo- or hyperglycemia. No signs of thyroid dysfunction.",
+    "Skin": "Dry skin bilateral lower legs. No foot ulcers. Daily foot inspections by wife — unremarkable."
   },
   "vitals": {
-    "bp": "133/85 mmHg",
-    "hr": "81 bpm",
-    "rr": "20/min",
+    "bp": "122/72 mmHg",
+    "hr": "62 bpm (irregularly irregular)",
+    "rr": "16/min",
     "temp": "97.6°F",
-    "spo2": "98% RA",
-    "weight": "100.6 kg"
+    "spo2": "97% RA",
+    "weight": "97.5 kg",
+    "bmi": "32.5"
   },
   "physicalExam": {
-    "General": "Comfortable, well-appearing",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "S1/S2 normal, mild peripheral edema",
-    "Respiratory": "Clear to auscultation bilaterally",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "No edema, warm and well-perfused",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Obese male, appears well today. Rested and conversational. No acute distress.",
+    "HEENT": "Normocephalic. PERRL. Fundoscopic exam limited by undilated pupils — no hemorrhages or exudates visible; formal dilated exam to be performed by ophthalmology. Oropharynx clear.",
+    "Cardiovascular": "Irregularly irregular at 62 bpm. Grade 2/6 systolic murmur at apex. No S3. JVP 6 cm H2O, normal. DP pulses 1+.",
+    "Respiratory": "Clear bilaterally. No crackles or wheezes.",
+    "Abdomen": "Obese, soft, non-tender. No organomegaly. Normal bowel sounds.",
+    "Extremities": "Trace ankle edema bilaterally. Feet: skin dry but intact, no ulcers, no calluses, no interdigital maceration. Nails slightly thickened, trimmed by podiatry. No Charcot deformity. Temperature normal bilaterally.",
+    "Neurologic": "Alert, oriented x3. Lower extremity sensory exam: absent sensation to 10g monofilament at 4/10 sites bilateral plantar surfaces. Vibration absent at great toes, diminished at ankles. Ankle reflexes absent. No cranial nerve deficits.",
+    "Skin": "Acanthosis nigricans at posterior neck (mild, chronic — insulin resistance marker). Dry, scaly skin bilateral shins. No diabetic dermopathy. No necrobiosis lipoidica."
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
+      "diagnosis": "Type 2 Diabetes Mellitus with multiple complications",
       "icd10": "E11.65",
-      "notes": "HbA1c 7.1%. On insulin and metformin."
+      "notes": "A1c improving: 7.2% (Aug 2025), down from 8.0% (Dec 2024). The addition of empagliflozin in May 2025 has been the primary driver of improvement — SGLT2i provides insulin-independent glucose lowering via glucosuria, with additional weight loss benefit (patient down ~1.5 kg since starting). Current A1c of 7.2% is at or slightly below our individualized target of 7.0-7.5% for this patient, chosen because of: (1) age 73, (2) CKD 3b with impaired counterregulation, (3) history of severe hypoglycemia (June 2020, glucose 42), (4) limited life expectancy from HFrEF. Tightening target further would increase hypoglycemia risk without clear microvascular benefit at this stage. Insulin glargine at 24 units QHS is providing stable basal coverage. Sliding scale lispro is well-managed by wife. Home glucose logs show reasonable control without dangerous lows."
     },
     {
-      "diagnosis": "Chronic Kidney Disease Stage 3b",
-      "icd10": "N18.32",
-      "notes": "eGFR 35. Stable."
+      "diagnosis": "Diabetic Peripheral Neuropathy",
+      "icd10": "G63",
+      "notes": "Progressive despite improving glycemic control — expected, as neuropathy typically does not reverse once established. Symptoms 4/10 on gabapentin 300mg TID. PCP considering uptitration to 400mg TID or transition to pregabalin. Contributing to fall risk (impaired proprioception, Romberg positive). Monofilament loss at 4/10 sites — high-risk feet requiring protective footwear and regular podiatry."
     },
     {
-      "diagnosis": "Heart Failure with Reduced EF",
-      "icd10": "I50.22",
-      "notes": "NYHA Class II. On GDMT."
+      "diagnosis": "Diabetic Nephropathy (CKD 3b)",
+      "icd10": "E11.22",
+      "notes": "eGFR 34.8, UACR 180 (last 3/2024). Empagliflozin expected to provide renal protection per EMPA-KIDNEY trial. Initial eGFR dip was hemodynamic, has stabilized. Continue monitoring."
+    },
+    {
+      "diagnosis": "Mild Nonproliferative Diabetic Retinopathy",
+      "icd10": "E11.319",
+      "notes": "Diagnosed Dec 2024. No macular edema. Next dilated exam due June 2026. Improved glycemic control may slow progression."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "problem": "Diabetes — Glycemic Management",
+      "action": "A1c 7.2% at individualized target. No medication changes warranted. Continue: metformin 250mg BID, insulin glargine 24 units QHS, lispro sliding scale with meals, empagliflozin 10mg daily. If A1c drops below 7.0% at next check, consider reducing glargine by 2 units to avoid hypoglycemia. If A1c rises above 7.5%, may increase glargine by 2 units or adjust sliding scale. Continue BID home glucose monitoring. Reviewed carb-consistent diet with patient and wife — provided updated meal planning guide."
     },
     {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "problem": "Empagliflozin Monitoring",
+      "action": "Empagliflozin well-tolerated since May 2025 (4 months). No genital infections, no UTIs, no euglycemic DKA symptoms. Renal function stable after initial dip. Weight benefit noted (down ~1.5 kg). Continue at 10mg daily. Counsel: maintain hydration (within HF fluid restriction), genital hygiene, report any symptoms of ketoacidosis (nausea, vomiting, abdominal pain, malaise, unusual fatigue) even with normal blood sugars."
     },
     {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
+      "problem": "Diabetic Neuropathy",
+      "action": "Defer to PCP for gabapentin optimization. From endocrine perspective, continued glycemic control is the best modifiable strategy to prevent further progression. Recommend maintaining A1c <7.5%. Annual comprehensive foot exam performed today. Podiatry follow-up in 6 months."
     },
     {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "problem": "Diabetic Retinopathy",
+      "action": "Mild NPDR — next dilated fundoscopic exam due June 2026 with ophthalmology. No intervention needed currently."
+    },
+    {
+      "problem": "Hypoglycemia Prevention",
+      "action": "No episodes since June 2020. Current regimen balances glycemic control with safety. Wife manages insulin administration — reliable. Glucagon emergency kit prescribed and in home (verified with wife — not expired). Patient and wife know signs and management of hypoglycemia. Continue current conservative insulin dosing."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 4 weeks or sooner if needed."
+      "action": "Recheck A1c in 3 months (December 2025). Return to endocrinology in 4-6 months. Coordinate with PCP and nephrology regarding empagliflozin monitoring and CKD-related diabetes adjustments."
     }
   ],
-  "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. James Wilson\nDate: 9/18/2025"
+  "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Lisa Martinez\nDate: 9/18/2025"
 }

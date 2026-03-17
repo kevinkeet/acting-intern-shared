@@ -5,70 +5,72 @@
   "author": "Dr. David Park",
   "department": "Pulmonology",
   "encounter": "ENC074",
-  "chiefComplaint": "Lab review",
-  "hpi": "Patient presents for lab review. Weight stable. Following low-sodium diet. Monitoring blood pressure at home.",
+  "chiefComplaint": "Post-pneumonia pulmonary follow-up and dyspnea evaluation",
+  "hpi": "69-year-old male referred from primary care for pulmonology evaluation following community-acquired pneumonia in February 2021, with ongoing question of whether his baseline dyspnea is entirely attributable to heart failure or whether there may be a pulmonary component. Patient was hospitalized 2/10-2/14/2021 for right lower lobe pneumonia treated with ceftriaxone and azithromycin with complete clinical and radiographic resolution by 3/1/2021.\n\nPatient reports that his breathing has returned to its pre-pneumonia baseline. He experiences dyspnea on exertion with activities such as walking more than half a block or climbing a full flight of stairs, which has been his pattern for the past 1-2 years since his heart failure diagnosis. He denies any cough since the pneumonia resolved. No wheezing. No hemoptysis. He sleeps with one pillow and has no orthopnea or PND currently. He has a remote smoking history of 20 pack-years (quit 1995, over 25 years ago).\n\nOf note, he had a V/Q scan in May 2019 (low probability for PE) for dyspnea workup, and his dyspnea has been primarily attributed to his HFrEF (EF 30-35%). Cardiology has been optimizing his GDMT. He has never been formally evaluated with pulmonary function testing.",
   "reviewOfSystems": {
-    "Constitutional": "Weight stable",
-    "Cardiovascular": "No orthopnea",
-    "Respiratory": "No cough or wheezing",
-    "GI": "Regular bowel movements",
-    "GU": "Nocturia x2",
-    "Neurologic": "No dizziness"
+    "Constitutional": "Chronic fatigue, attributed to heart failure and anemia. Weight stable at 98.8 kg. No fevers or night sweats.",
+    "Cardiovascular": "DOE at baseline (NYHA II). No orthopnea or PND. No chest pain. Irregular heartbeat (known A-fib) at baseline.",
+    "Respiratory": "Dyspnea on exertion as described. No cough, wheezing, hemoptysis, or pleuritic chest pain. No oxygen use at home.",
+    "GI": "No issues. Following low-sodium diet.",
+    "GU": "Nocturia x2, stable on tamsulosin.",
+    "Musculoskeletal": "Mild low back stiffness, intermittent.",
+    "Neurologic": "Bilateral foot numbness (diabetic neuropathy), stable.",
+    "Hematologic": "Known mild anemia (Hgb ~11), attributed to CKD."
   },
   "vitals": {
     "bp": "150/77 mmHg",
-    "hr": "85 bpm",
+    "hr": "85 bpm (irregular)",
     "rr": "18/min",
     "temp": "97.6°F",
-    "spo2": "97% RA",
+    "spo2": "97% RA at rest, 93% after 6-minute walk test",
     "weight": "98.8 kg"
   },
   "physicalExam": {
-    "General": "Comfortable, well-appearing",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "Regular rate and rhythm, no murmurs",
-    "Respiratory": "Mild crackles at bases",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "No edema, warm and well-perfused",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Alert, oriented, comfortable, well-appearing obese male. No respiratory distress at rest. Speaking in full sentences.",
+    "HEENT": "Normocephalic. Oropharynx clear. No nasal polyps. No sinus tenderness. Neck supple, no lymphadenopathy. JVP not elevated.",
+    "Cardiovascular": "Irregularly irregular, rate ~85 bpm. S1/S2 present. Systolic murmur at apex (known MR). No S3.",
+    "Respiratory": "Chest symmetric. No use of accessory muscles. Mild crackles at bilateral bases, right greater than left — likely residual dependent atelectasis or mild HF congestion. No wheezes or rhonchi. No prolonged expiratory phase. Good air movement in upper and middle lung fields. No dullness to percussion.",
+    "Abdomen": "Soft, obese, non-tender. No hepatomegaly.",
+    "Extremities": "No edema. Warm, well-perfused. No clubbing or cyanosis.",
+    "Neurologic": "Alert, oriented. Decreased sensation bilateral feet (known)."
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
-      "icd10": "E11.65",
-      "notes": "HbA1c 8.2%. On insulin and metformin."
+      "diagnosis": "Dyspnea on exertion, multifactorial",
+      "icd10": "R06.09",
+      "notes": "Patient's DOE is most likely primarily cardiac in etiology given his HFrEF with EF 30-35%, moderate MR, and volume status dependence. Contributing factors include: CKD-related anemia (Hgb ~11), obesity (BMI ~32), and deconditioning. No clinical evidence of COPD or obstructive lung disease despite 20 pack-year smoking history (quit >25 years ago). No wheezing, no prolonged expiratory phase, no hyperinflation on prior imaging. Post-pneumonia recovery appears complete. SpO2 drops from 97% to 93% with exertion — this is mildly low and warrants PFT for completeness, though most likely reflects cardiac output limitation and/or mild V/Q mismatch."
     },
     {
-      "diagnosis": "Chronic Kidney Disease Stage 3b",
-      "icd10": "N18.32",
-      "notes": "eGFR 34. Stable."
+      "diagnosis": "History of community-acquired pneumonia, resolved",
+      "icd10": "Z87.01",
+      "notes": "February 2021 RLL pneumonia, treated with ceftriaxone and azithromycin, complete resolution confirmed on CXR 3/1/2021. No evidence of post-infectious bronchospasm or organizing pneumonia."
     },
     {
-      "diagnosis": "Heart Failure with Reduced EF",
+      "diagnosis": "Heart Failure with Reduced Ejection Fraction",
       "icd10": "I50.22",
-      "notes": "NYHA Class II. On GDMT."
+      "notes": "NYHA Class II. On GDMT. Primary driver of dyspnea symptoms. Exam with mild bibasilar crackles suggesting trace congestion."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "problem": "Dyspnea Evaluation",
+      "action": "Order complete pulmonary function testing (spirometry, lung volumes, DLCO) to formally evaluate for occult obstructive or restrictive lung disease given smoking history and multifactorial dyspnea. Anticipate PFTs will be near normal or show mild restriction from obesity/CHF. If significant obstruction found, would consider bronchodilator trial. 6-minute walk test today showed SpO2 nadir of 93% and distance of 280 meters — limited primarily by dyspnea and fatigue. Will not pursue CT chest at this time given recent imaging (CXR clear 3/1, CTA 5/2022 — actually future) and low clinical suspicion for parenchymal disease."
     },
     {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "problem": "Post-Pneumonia Recovery",
+      "action": "Recovery complete. No further pulmonology follow-up needed for this indication. Reinforced importance of annual influenza vaccination and pneumococcal vaccination (Prevnar 20 recommended). Discussed COVID-19 vaccination — patient has completed primary series."
     },
     {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
+      "problem": "Smoking History",
+      "action": "Quit 1995 (>25 years). Per USPSTF guidelines, no longer meets criteria for lung cancer screening with low-dose CT (must have quit <15 years ago). No screening indicated."
     },
     {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "problem": "Heart Failure — from pulmonology perspective",
+      "action": "Mild bibasilar crackles noted — may benefit from slight diuretic optimization. Will communicate findings to cardiology (Dr. Wilson) and PCP (Dr. Chen). Exertional desaturation to 93% is at the lower end of acceptable — if PFTs are normal, this is likely cardiac output limitation."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 7 weeks or sooner if needed."
+      "action": "PFT results to be reviewed and communicated to patient and PCP. If PFTs normal, no further pulmonology follow-up needed — dyspnea management to continue with cardiology. If abnormal, return for pulmonology visit to discuss results and management."
     }
   ],
   "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. David Park\nDate: 6/1/2021"

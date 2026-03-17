@@ -1,0 +1,73 @@
+{
+  "id": "NOTE_ID001",
+  "type": "Consult Note",
+  "title": "Infectious Disease Consultation - CAP Antibiotic Selection with PCN Anaphylaxis",
+  "date": "2021-02-10T14:00:00.000Z",
+  "author": "Dr. Maria Santos",
+  "department": "Infectious Disease",
+  "encounter": "ENC_ADM002",
+  "signedDate": "2021-02-10T16:30:00.000Z",
+  "sections": {
+    "reasonForConsultation": "Antibiotic selection for community-acquired pneumonia in a patient with documented penicillin anaphylaxis",
+    "historyOfPresentIllness": "Thank you for this consultation. Mr. Morrison is a 69-year-old male with HFrEF (EF 30-35%), CKD 3b, T2DM, and atrial fibrillation on warfarin who presents with 5 days of productive cough, fever to 101.4°F, and hypoxia (SpO2 89% on RA). Chest X-ray demonstrates a right lower lobe consolidation consistent with community-acquired pneumonia. He is hemodynamically stable and does not meet sepsis criteria.\n\nThe primary reason for this consultation is his documented history of penicillin anaphylaxis. In 1985, the patient received penicillin V for pharyngitis and within 30 minutes developed diffuse urticaria, angioedema, laryngeal edema, and hypotension requiring epinephrine administration and emergency department evaluation. This is a well-documented IgE-mediated type I hypersensitivity reaction.\n\nStandard empiric therapy for moderate-severity CAP requiring hospitalization includes a beta-lactam (ceftriaxone or ampicillin/sulbactam) plus a macrolide, or a respiratory fluoroquinolone alone. The referring team appropriately seeks guidance on safe antibiotic selection.",
+    "allergyDiscussion": {
+      "penicillinAllergyHistory": "Anaphylaxis in 1985 — urticaria, angioedema, laryngeal edema, hypotension requiring epinephrine. This is a confirmed severe IgE-mediated reaction.",
+      "crossReactivityData": "The cross-reactivity between penicillins and cephalosporins has been historically overstated. Earlier literature cited rates of 10%, but this was based on flawed studies with contaminated cephalosporin preparations. Modern data demonstrates: (1) First-generation cephalosporins (cefazolin, cephalexin): ~1-2% cross-reactivity, primarily due to shared R1 side chain with aminopenicillins. (2) Third-generation cephalosporins (ceftriaxone, ceftazidime): <1% cross-reactivity with penicillin. The R1 side chain of ceftriaxone is structurally dissimilar to penicillin. (3) The shared beta-lactam ring alone is unlikely to trigger cross-reactivity; side chain similarity is the primary determinant.",
+      "riskBenefitAnalysis": "In this patient, the risk of ceftriaxone-induced cross-reactive anaphylaxis is estimated at <1%. However, given the severity of his prior reaction (true anaphylaxis with laryngeal edema), even a small risk warrants precautions. The benefit of ceftriaxone is substantial: it provides excellent gram-negative and gram-positive coverage essential for CAP, achieves good lung tissue penetration, is dosed once daily, and is well-established in the IDSA/ATS CAP guidelines. Alternative regimens without beta-lactams (e.g., respiratory fluoroquinolone alone) carry their own risks, particularly in this patient with cardiac disease (QT prolongation risk), CKD (reduced clearance), and concurrent warfarin use (INR elevation)."
+    },
+    "microbiologicConsiderations": "Most likely pathogens for CAP in a 69-year-old with significant comorbidities: Streptococcus pneumoniae (most common), Haemophilus influenzae, Moraxella catarrhalis, atypical organisms (Mycoplasma pneumoniae, Chlamydophila pneumoniae, Legionella pneumophila). Given his age, comorbidities, and moderate severity, gram-negative enteric coverage is also prudent. Ceftriaxone + azithromycin provides coverage for all of these. COVID-19 PCR is pending; however, the focal lobar consolidation pattern is more consistent with typical bacterial pneumonia than the bilateral ground-glass opacities characteristic of SARS-CoV-2.",
+    "recommendations": [
+      {
+        "category": "Antibiotic Regimen",
+        "items": [
+          "PROCEED with ceftriaxone 1g IV q24h — the cross-reactivity risk with penicillin anaphylaxis is <1% for third-generation cephalosporins based on current evidence",
+          "Add azithromycin 500 mg IV/PO day 1, then 250 mg PO daily for atypical coverage",
+          "Total anticipated antibiotic course: 5 days (may extend to 7 days if slow clinical response)",
+          "Plan transition to oral therapy when: afebrile x 48 hours, improving WBC, tolerating PO, and O2 requirements decreasing"
+        ]
+      },
+      {
+        "category": "Allergy Precautions for Ceftriaxone Administration",
+        "items": [
+          "Administer first dose of ceftriaxone with nurse at bedside for full 30-minute infusion and 30 minutes post-infusion observation",
+          "Epinephrine 0.3 mg IM auto-injector at bedside",
+          "Diphenhydramine 50 mg IV and methylprednisolone 125 mg IV available for immediate use if needed",
+          "Ensure IV access is patent and functional",
+          "Anaphylaxis protocol readily available",
+          "If any signs of allergic reaction (urticaria, pruritus, throat tightness, wheezing, hypotension): STOP infusion immediately, administer epinephrine, and contact this service"
+        ]
+      },
+      {
+        "category": "Alternative Regimen if Cephalosporin Reaction Occurs",
+        "items": [
+          "If allergic reaction to ceftriaxone: switch to levofloxacin 750 mg IV/PO q48h (renally adjusted for CKD, eGFR ~35)",
+          "Note levofloxacin concerns in this patient: (1) QT prolongation risk — obtain baseline QTc and monitor, especially given concurrent rate-controlled A-fib; (2) Enhanced warfarin effect — monitor INR closely, may need warfarin dose reduction; (3) Tendinopathy risk — counsel patient, though short course minimizes risk; (4) Dysglycemia risk with concurrent glipizide",
+          "Another alternative: aztreonam 2g IV q8h (a monobactam with NO cross-reactivity to penicillin) + azithromycin — however, aztreonam has limited gram-positive coverage and is not preferred for CAP"
+        ]
+      },
+      {
+        "category": "Additional Workup",
+        "items": [
+          "Legionella urine antigen",
+          "Streptococcus pneumoniae urine antigen",
+          "Blood cultures x2 (confirm drawn prior to antibiotics)",
+          "Sputum gram stain and culture (if adequate specimen obtainable)",
+          "COVID-19 PCR — await results, maintain appropriate isolation precautions",
+          "Procalcitonin already obtained (0.82) — supports bacterial etiology"
+        ]
+      },
+      {
+        "category": "Follow-Up",
+        "items": [
+          "Will follow along during hospitalization",
+          "Reassess clinical response at 48-72 hours",
+          "If no improvement by 72 hours, consider CT chest to evaluate for empyema, abscess, or alternative diagnoses",
+          "Penicillin skin testing could be considered in the outpatient setting in the future to definitively determine if patient remains allergic — approximately 80% of patients with reported penicillin allergy lose sensitivity over 10 years"
+        ]
+      }
+    ],
+    "note": "I spoke with Dr. Brown regarding these recommendations prior to signing this note. She is in agreement with the plan to proceed with ceftriaxone with appropriate precautions. The first dose will be administered this afternoon with bedside monitoring.",
+    "references": "1. Shenoy ES, et al. Evaluation and Management of Penicillin Allergy: A Review. JAMA. 2019;321(2):188-199.\n2. Campagna JD, et al. The Use of Cephalosporins in Penicillin-Allergic Patients. J Emerg Med. 2012;42(5):612-620.\n3. Metlay JP, et al. Diagnosis and Treatment of Adults with Community-acquired Pneumonia: ATS/IDSA 2019 Guidelines."
+  },
+  "attestation": "I personally evaluated this patient, reviewed the medical record and relevant allergy history, and formulated the above assessment and recommendations. I have discussed the plan with the admitting team.\n\nElectronically signed by: Maria Santos, MD, FIDSA\nDate/Time: 2/10/2021 4:30 PM"
+}

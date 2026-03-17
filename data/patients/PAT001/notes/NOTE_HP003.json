@@ -1,0 +1,222 @@
+{
+  "id": "NOTE_HP003",
+  "type": "H&P",
+  "title": "Hospital Admission H&P - Community-Acquired Pneumonia",
+  "date": "2021-02-10T09:15:00.000Z",
+  "author": "Dr. Emily Brown",
+  "department": "Hospital Medicine",
+  "encounter": "ENC_ADM002",
+  "signedDate": "2021-02-10T11:30:00.000Z",
+  "sections": {
+    "chiefComplaint": "Productive cough, fever, and worsening shortness of breath for 5 days",
+    "historyOfPresentIllness": "Mr. Morrison is a 69-year-old male with a history of heart failure with reduced ejection fraction (HFrEF, EF 30-35%), chronic kidney disease stage 3b, Type 2 diabetes mellitus, atrial fibrillation on warfarin, and hypertension who presents with 5 days of worsening productive cough, subjective fevers, and dyspnea worse than his baseline.\n\nPatient reports he was in his usual state of health until approximately 5 days ago when he developed a dry cough that has since become productive of yellowish-green sputum. He noticed subjective fevers and chills starting 3 days ago, with a measured temperature at home of 101.2°F yesterday. Over the past 2-3 days, his dyspnea has worsened significantly beyond his baseline exertional limitation. He normally can walk 1-2 blocks before needing to rest, but now becomes breathless walking from his bedroom to the bathroom. He denies hemoptysis.\n\nHe denies recent travel or known sick contacts. His wife Patricia has been well. He has not received a COVID-19 vaccine (not yet available to his age group at this time). He denies loss of taste or smell but given the ongoing COVID-19 pandemic, testing has been sent.\n\nHe reports decreased appetite over the past 3 days and has been drinking less fluid than usual. He denies chest pain, palpitations, nausea, vomiting, diarrhea, or abdominal pain. He denies worsening lower extremity edema, orthopnea, or PND beyond his baseline (sleeps on 2 pillows). His weight has been stable per home scale.\n\nHe has been compliant with all medications including his warfarin, furosemide, carvedilol, and diabetes medications. No recent antibiotic use.",
+    "reviewOfSystems": {
+      "constitutional": "Positive for fever, chills, fatigue, and decreased appetite. Denies night sweats or unintentional weight loss.",
+      "cardiovascular": "Denies chest pain, palpitations. Baseline exertional dyspnea has worsened (see HPI). No new orthopnea or PND. No worsening LE edema.",
+      "respiratory": "Positive for productive cough with yellowish-green sputum, worsening dyspnea. Denies hemoptysis, pleuritic chest pain, wheezing.",
+      "gastrointestinal": "Positive for decreased appetite. Denies nausea, vomiting, diarrhea, abdominal pain.",
+      "genitourinary": "Denies dysuria, hematuria. Baseline nocturia 2x/night unchanged.",
+      "musculoskeletal": "Positive for mild generalized myalgias. Denies joint pain or swelling.",
+      "neurological": "Denies headache, dizziness, confusion, focal weakness or numbness. Baseline diabetic neuropathy in feet unchanged.",
+      "psychiatric": "Denies depression, anxiety."
+    },
+    "pastMedicalHistory": [
+      "Heart failure with reduced ejection fraction (HFrEF) - diagnosed 2019, EF 30-35% on most recent echo (2020)",
+      "Type 2 Diabetes Mellitus - diagnosed 2010, on metformin and glipizide",
+      "Chronic Kidney Disease Stage 3b - baseline Cr 1.8-2.0, eGFR 35-40",
+      "Atrial Fibrillation - permanent, rate-controlled, on warfarin",
+      "Hypertension",
+      "Hyperlipidemia",
+      "Coronary Artery Disease - 3-vessel disease on cath 2019, medically managed",
+      "Diabetic peripheral neuropathy",
+      "Benign Prostatic Hyperplasia",
+      "GERD"
+    ],
+    "pastSurgicalHistory": [
+      "Appendectomy - 1975",
+      "Cholecystectomy - 2008",
+      "Cardiac catheterization - 2019"
+    ],
+    "medications": [
+      "Metformin 500 mg twice daily",
+      "Glipizide 5 mg daily",
+      "Lisinopril 10 mg daily",
+      "Carvedilol 12.5 mg twice daily",
+      "Furosemide 40 mg twice daily",
+      "Spironolactone 25 mg daily",
+      "Warfarin 5 mg daily (goal INR 2-3)",
+      "Atorvastatin 40 mg daily",
+      "Aspirin 81 mg daily",
+      "Omeprazole 20 mg daily",
+      "Tamsulosin 0.4 mg at bedtime",
+      "Gabapentin 300 mg three times daily (for diabetic neuropathy)"
+    ],
+    "allergies": [
+      { "allergen": "Penicillin", "reaction": "Anaphylaxis (1985, required epinephrine)" },
+      { "allergen": "Sulfa drugs", "reaction": "Rash, hives" }
+    ],
+    "socialHistory": {
+      "tobacco": "Former smoker, quit 15 years ago, 30 pack-year history",
+      "alcohol": "Social drinker, 1-2 glasses of wine per week",
+      "drugs": "Denies illicit drug use",
+      "occupation": "Retired accountant",
+      "livingsituation": "Lives with wife Patricia in single-story home",
+      "exercise": "Previously walked 1 mile daily, limited recently by HF symptoms",
+      "covid19": "No known COVID-19 exposures. Not yet vaccinated (vaccine not yet available for his age group). Wearing masks in public."
+    },
+    "familyHistory": {
+      "father": "Died at age 68 from MI",
+      "mother": "Died at age 82 from stroke, had HTN and DM2",
+      "siblings": "Brother with CAD, sister with DM2"
+    },
+    "physicalExam": {
+      "vitals": {
+        "bloodPressure": "132/78 mmHg",
+        "heartRate": "98 bpm, irregularly irregular",
+        "respiratoryRate": "24/min",
+        "temperature": "101.4°F (38.6°C)",
+        "oxygenSaturation": "89% on room air → 94% on 2L nasal cannula",
+        "weight": "95.2 kg"
+      },
+      "general": "Alert, oriented, appears ill, mildly diaphoretic, speaking in full sentences but with intermittent pauses to catch breath",
+      "heent": "Normocephalic, atraumatic. Mucous membranes dry. JVP approximately 8 cm H2O at 45 degrees (near baseline for his HF).",
+      "cardiovascular": "Irregularly irregular rhythm, tachycardic, S1 and S2 present, soft S3 gallop (chronic), 2/6 systolic murmur at apex, no rubs",
+      "respiratory": "Decreased breath sounds at right base with dullness to percussion. Coarse crackles in right lower lung field. Scattered rhonchi bilaterally. Left lung with bibasilar fine crackles (chronic). No wheezing. Egophony positive at right base.",
+      "abdomen": "Soft, non-tender, non-distended, no hepatomegaly, normoactive bowel sounds",
+      "extremities": "1+ pitting edema bilateral lower extremities (at baseline), warm, no cyanosis. Capillary refill <3 seconds.",
+      "skin": "Warm, diaphoretic. No rashes or lesions.",
+      "neurological": "Alert and oriented x3, cranial nerves II-XII intact, strength 5/5 in all extremities. Decreased sensation to light touch bilateral feet (chronic diabetic neuropathy)."
+    },
+    "diagnostics": {
+      "labs": {
+        "bmp": "Na 136, K 4.6, Cl 101, CO2 23, BUN 38, Cr 2.1 (baseline 1.8-2.0), Glucose 178",
+        "cbc": "WBC 14.2, Hgb 10.5, Hct 32%, Plt 210",
+        "procalcitonin": "0.82 ng/mL (elevated, suggestive of bacterial infection)",
+        "lactate": "1.4 mmol/L (normal)",
+        "bnp": "620 pg/mL (mildly elevated above baseline, likely related to acute illness)",
+        "inr": "2.1 (therapeutic, goal 2-3)",
+        "troponin": "0.04 ng/mL (within normal limits)",
+        "bloodCultures": "2 sets drawn, pending",
+        "sputumCulture": "Sent, pending",
+        "covidPCR": "Sent, pending",
+        "urinalysis": "Negative for infection"
+      },
+      "imaging": {
+        "cxr": "Right lower lobe consolidation consistent with pneumonia. Chronic cardiomegaly. No significant pleural effusion. No pulmonary edema. Comparison to prior films shows new RLL infiltrate."
+      },
+      "ecg": "Atrial fibrillation with controlled ventricular response at 96 bpm, left axis deviation, old inferior Q waves, non-specific ST-T changes. No acute ischemic changes."
+    },
+    "assessment": [
+      {
+        "problem": "Community-acquired pneumonia (CAP)",
+        "details": "Right lower lobe consolidation on CXR in setting of productive cough, fever, and leukocytosis with elevated procalcitonin. CURB-65 score: 2 (age ≥65, BUN >19). Moderate severity — warrants inpatient treatment. Most likely organisms: Streptococcus pneumoniae, Haemophilus influenzae, atypical organisms. Patient has significant comorbidities (HFrEF, CKD, DM) increasing risk of complications."
+      },
+      {
+        "problem": "Acute on chronic hypoxic respiratory failure",
+        "details": "SpO2 89% on room air, improved to 94% on 2L NC. Multifactorial: pneumonia superimposed on baseline reduced functional capacity from HFrEF. No evidence of acute CHF exacerbation (BNP only mildly above baseline, no pulmonary edema on CXR)."
+      },
+      {
+        "problem": "Chronic kidney disease stage 3b — mild acute worsening",
+        "details": "Cr 2.1 from baseline 1.8-2.0. Likely pre-renal component from decreased PO intake and febrile illness. No evidence of significant AKI."
+      },
+      {
+        "problem": "Penicillin allergy — anaphylaxis",
+        "details": "Significant PCN allergy with history of anaphylaxis in 1985 requiring epinephrine. Standard CAP regimen would include beta-lactam. Will consult Infectious Disease for antibiotic guidance given allergy severity. Third-generation cephalosporins have <1% cross-reactivity but decision requires ID input given anaphylaxis history."
+      },
+      {
+        "problem": "COVID-19 rule-out",
+        "details": "Presentation could overlap with COVID-19 pneumonia. PCR testing sent. Implementing droplet precautions pending result. However, focal lobar consolidation more typical of bacterial process."
+      },
+      {
+        "problem": "Atrial fibrillation — rate controlled",
+        "details": "HR 98, slightly above goal, likely driven by fever and infection. INR 2.1, therapeutic. Continue warfarin and rate control."
+      },
+      {
+        "problem": "Type 2 Diabetes Mellitus",
+        "details": "Glucose 178, mildly elevated likely secondary to acute illness. Will hold metformin given borderline Cr elevation and acute illness, use sliding scale."
+      }
+    ],
+    "plan": [
+      {
+        "problem": "Community-Acquired Pneumonia",
+        "interventions": [
+          "ID consult for antibiotic selection given severe PCN allergy (anaphylaxis)",
+          "Initiate ceftriaxone 1g IV q24h + azithromycin 500 mg IV x1 then 250 mg PO daily per ID recommendations (see ID consult note)",
+          "Epinephrine 0.3 mg IM auto-injector at bedside given cephalosporin use with PCN anaphylaxis history",
+          "Monitor closely for allergic reaction during first dose of ceftriaxone — nurse to remain at bedside for first 30 minutes",
+          "Blood cultures x2 drawn prior to antibiotics",
+          "Sputum culture sent",
+          "Legionella and Streptococcus pneumoniae urine antigens sent",
+          "Incentive spirometry q1h while awake",
+          "Chest physiotherapy"
+        ]
+      },
+      {
+        "problem": "Hypoxic Respiratory Failure",
+        "interventions": [
+          "O2 via nasal cannula, titrate to SpO2 92-96% (not >96% given cardiac disease)",
+          "Continuous pulse oximetry",
+          "Respiratory therapy consult for O2 management and incentive spirometry",
+          "Elevate head of bed 30-45 degrees",
+          "Monitor for worsening — if FiO2 requirements increase, obtain ABG and consider CT chest"
+        ]
+      },
+      {
+        "problem": "CKD 3b with mild Cr elevation",
+        "interventions": [
+          "Gentle IV hydration with NS 75 mL/hr (balancing renal perfusion with HF — avoid volume overload)",
+          "Monitor Cr and electrolytes daily",
+          "Hold metformin until Cr stable at baseline",
+          "Renally dose all medications"
+        ]
+      },
+      {
+        "problem": "COVID-19 Rule-Out",
+        "interventions": [
+          "Droplet + contact precautions until COVID PCR results available",
+          "Negative pressure room if available",
+          "Staff to use N95, gown, gloves, eye protection"
+        ]
+      },
+      {
+        "problem": "Atrial Fibrillation",
+        "interventions": [
+          "Continue warfarin 5 mg daily, goal INR 2-3",
+          "Continue carvedilol 12.5 mg BID for rate control",
+          "Expect HR to improve as fever and infection are treated"
+        ]
+      },
+      {
+        "problem": "Diabetes",
+        "interventions": [
+          "Hold metformin given Cr elevation and acute illness",
+          "Continue glipizide 5 mg daily",
+          "Sliding scale insulin for glycemic control",
+          "Diabetic diet"
+        ]
+      },
+      {
+        "problem": "Heart Failure",
+        "interventions": [
+          "Continue home HF medications (carvedilol, lisinopril, spironolactone, furosemide)",
+          "Daily weights, strict I/O",
+          "Low sodium diet",
+          "Monitor BNP trend — if worsening, reassess for volume overload"
+        ]
+      },
+      {
+        "problem": "Prophylaxis and Supportive Care",
+        "interventions": [
+          "DVT prophylaxis: therapeutic anticoagulation with warfarin",
+          "GI prophylaxis: continue omeprazole",
+          "Continue tamsulosin for BPH",
+          "Continue gabapentin for neuropathy (renally dose)",
+          "Fall precautions (neuropathy, anticoagulation, age)",
+          "Early mobilization as tolerated"
+        ]
+      }
+    ],
+    "disposition": "Admit to telemetry for community-acquired pneumonia with hypoxia. Infectious Disease consult requested for antibiotic selection given PCN anaphylaxis history. Will monitor respiratory status closely. Code status: Full code."
+  },
+  "attestation": "I personally obtained the history and performed the physical examination. I have reviewed the test results and assessments. I agree with the plan as documented. Infectious Disease consult placed for antibiotic guidance.\n\nElectronically signed by: Emily Brown, MD\nDate/Time: 2/10/2021 11:30 AM"
+}

@@ -1,0 +1,37 @@
+{
+  "id": "IMG022",
+  "date": "2020-09-10T07:58:43.999Z",
+  "modality": "MRI",
+  "description": "MRI Lumbar Spine",
+  "facility": "Springfield Medical Center",
+  "status": "Final",
+  "radiologist": "Dr. Susan Miller",
+  "orderingProvider": "Dr. Michael Torres",
+  "indication": "Chronic low back pain with bilateral lower extremity numbness and tingling, history of diabetic neuropathy, evaluate for spinal stenosis and nerve root compression",
+  "technique": "Multiplanar MRI of the lumbar spine was performed without contrast administration. Sequences include sagittal T1, T2, and STIR, and axial T1 and T2 at L3-L4, L4-L5, and L5-S1.",
+  "findings": {
+    "vertebralBodies": "Normal marrow signal. Normal vertebral body heights maintained. No compression fracture. No suspicious osseous lesion.",
+    "alignment": "Normal lumbar lordosis. No spondylolisthesis.",
+    "conus": "Conus medullaris terminates at the L1 level, normal in position and signal.",
+    "l1l2": "No disc herniation. Mild disc desiccation. No significant canal or foraminal stenosis.",
+    "l2l3": "Mild disc bulge with mild disc desiccation. No significant canal stenosis. No foraminal stenosis.",
+    "l3l4": "Mild-to-moderate disc bulge with disc desiccation. Mild bilateral facet arthropathy. Mild central canal stenosis (AP diameter 10 mm). No significant foraminal stenosis.",
+    "l4l5": "Moderate broad-based disc bulge with moderate disc desiccation and loss of disc height. Moderate bilateral facet arthropathy with hypertrophy. Moderate central canal stenosis (AP diameter 8 mm). Mild bilateral foraminal stenosis. Mild encroachment on the bilateral L5 nerve roots.",
+    "l5s1": "Moderate disc desiccation with loss of disc height and vacuum phenomenon. Mild-to-moderate broad-based disc bulge. Moderate bilateral facet arthropathy. Mild central canal stenosis (AP diameter 9 mm). Mild right foraminal stenosis with possible contact of the right S1 nerve root.",
+    "paraspinalSoftTissues": "Unremarkable. No paraspinal mass or collection."
+  },
+  "impression": [
+    "Multilevel degenerative disc disease with the most significant findings at L4-L5.",
+    "Moderate central canal stenosis at L4-L5 (AP diameter 8 mm) with bilateral facet arthropathy and mild bilateral foraminal stenosis with encroachment on the L5 nerve roots.",
+    "Mild central canal stenosis at L3-L4 and L5-S1.",
+    "Mild right foraminal stenosis at L5-S1 with possible contact of the right S1 nerve root.",
+    "No compression fracture, spondylolisthesis, or suspicious osseous lesion.",
+    "Note: Patient's lower extremity symptoms may be multifactorial, including contributions from spinal stenosis and known diabetic neuropathy."
+  ],
+  "recommendations": [
+    "Clinical correlation with lower extremity symptoms and neurological examination",
+    "Consider neurosurgery or pain management consultation if symptoms are primarily related to spinal stenosis",
+    "EMG/NCS may help differentiate spinal stenosis from diabetic neuropathy as the primary etiology"
+  ],
+  "comparison": "Lumbar spine X-ray dated 2019-09-14 showed degenerative disc disease at L4-L5 and L5-S1. MRI provides more detailed assessment confirming stenosis."
+}

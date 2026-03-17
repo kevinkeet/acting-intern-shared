@@ -5,15 +5,19 @@
   "author": "Dr. Patricia Lee",
   "department": "Radiology",
   "encounter": "ENC039",
-  "chiefComplaint": "Palpitations",
-  "hpi": "Patient presents for palpitations. Reports overall stable condition since last visit. Compliant with medications. No new symptoms.",
+  "chiefComplaint": "Palpitations and A-fib management",
+  "hpi": "Mr. Morrison is a 71-year-old male with persistent atrial fibrillation on warfarin (CHA2DS2-VASc 5), HFrEF (EF 30-35%), CKD Stage 3b, Type 2 DM on insulin, diabetic peripheral neuropathy, HTN, hyperlipidemia, obesity, and BPH who presents with a complaint of intermittent palpitations over the past two weeks. He describes episodes of a fluttering sensation in his chest lasting 5-15 minutes, occurring 2-3 times per week, usually in the evening while watching television. The episodes are not associated with chest pain, syncope, or presyncope, but he does feel mildly anxious when they occur. He denies any change in his exercise tolerance, which remains at his baseline of approximately one block before needing to rest. His wife Patricia notes that she has felt his pulse during these episodes and it seems fast and irregular — similar to his usual baseline rhythm but perhaps a bit faster. He denies caffeine increase, alcohol use, or any new medications. He has been compliant with his carvedilol 12.5mg BID for rate control. His most recent INR was 2.6 (within target range of 2.0-3.0) checked one week ago. He denies orthopnea, PND, worsening edema, or increased weight. He also mentions he has been taking ibuprofen for the past few days for bilateral knee pain, which is concerning given his CKD and warfarin use.",
   "reviewOfSystems": {
-    "Constitutional": "Weight stable",
-    "Cardiovascular": "No orthopnea",
-    "Respiratory": "No cough or wheezing",
-    "GI": "Regular bowel movements",
-    "GU": "No dysuria",
-    "Neurologic": "No new weakness"
+    "Constitutional": "Weight stable per home scale. No fevers, chills, or night sweats. Mild chronic fatigue",
+    "Cardiovascular": "Palpitations as described in HPI. No chest pain, no syncope, no orthopnea, no PND. Baseline DOE unchanged",
+    "Respiratory": "No cough, no wheezing, no hemoptysis, no dyspnea at rest",
+    "GI": "Regular bowel movements, brown and formed. No melena or blood in stool. Appetite fair. Mild intermittent epigastric discomfort — he attributes this to 'eating too fast.' No nausea or vomiting",
+    "GU": "Nocturia x2-3 (BPH baseline). No dysuria, no hematuria",
+    "Musculoskeletal": "Bilateral knee pain 4-5/10, worse with stairs, reason for ibuprofen use. No joint swelling or redness",
+    "Neurologic": "Baseline bilateral foot neuropathy — numbness and tingling. No new weakness, no dizziness, no falls",
+    "Hematologic": "No bruising, no gum bleeding, no epistaxis",
+    "Endocrine": "Fasting blood sugars 120-150. No hypoglycemic episodes",
+    "Psychiatric": "Anxious about palpitations. Otherwise mood stable"
   },
   "vitals": {
     "bp": "143/88 mmHg",
@@ -24,51 +28,62 @@
     "weight": "97.0 kg"
   },
   "physicalExam": {
-    "General": "Mildly fatigued-appearing",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "Regular rate and rhythm, no murmurs",
-    "Respiratory": "Mild crackles at bases",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "1+ pedal edema bilaterally",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Obese male appearing stated age, mildly fatigued-appearing but alert and cooperative. Mildly anxious about palpitations. No acute distress",
+    "HEENT": "Normocephalic, atraumatic. PERRL. Oropharynx clear. Moist mucous membranes. No thyromegaly. No cervical lymphadenopathy",
+    "Cardiovascular": "Irregularly irregular rhythm at 83 bpm — rate slightly above his usual (typically 65-75). S1/S2 present. 2/6 holosystolic murmur at apex (known MR). No S3 or S4. JVP approximately 7 cm H2O. No carotid bruits",
+    "Respiratory": "Bibasilar crackles on deep inspiration, mild. No wheezes. Good bilateral air movement",
+    "Abdomen": "Obese, soft, mildly tender in epigastrium on deep palpation (patient notes this is where his discomfort is). No guarding or rebound. Normal bowel sounds. No hepatosplenomegaly",
+    "Extremities": "1+ bilateral pedal edema, symmetric, at ankle level. Warm, well-perfused. Bilateral knee crepitus on range of motion. No knee effusion. No erythema or warmth of joints",
+    "Neurologic": "Alert and oriented x3. Decreased sensation bilateral feet. Gait steady, wide-based. Deep tendon reflexes 1+ at ankles",
+    "Skin": "No petechiae, no ecchymoses. No rash"
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
-      "icd10": "E11.65",
-      "notes": "HbA1c 7.2%. On insulin and metformin."
+      "diagnosis": "Atrial Fibrillation with symptomatic rate elevation",
+      "icd10": "I48.1",
+      "notes": "Persistent A-fib with recent intermittent palpitations. HR 83 today, above his usual 65-75 range on carvedilol 12.5mg BID. Possible contributing factors: subclinical volume overload (bibasilar crackles), ibuprofen use (sodium retention, fluid overload), anxiety, or natural rate variability. No evidence of new rapid ventricular response. ECG obtained today shows atrial fibrillation with ventricular rate 82, LVH by voltage criteria, old inferior Q waves, no acute ST-T changes — stable from prior. Anticoagulation: on warfarin, INR 2.6 (therapeutic). CHA2DS2-VASc 5."
     },
     {
-      "diagnosis": "Chronic Kidney Disease Stage 3b",
-      "icd10": "N18.32",
-      "notes": "eGFR 37. Stable."
+      "diagnosis": "NSAID use — unsafe in current clinical context",
+      "icd10": "Z87.89",
+      "notes": "Patient has been taking ibuprofen for bilateral knee pain over the past few days. This is CONTRAINDICATED given: (1) CKD Stage 3b — risk of acute kidney injury and CKD progression, (2) warfarin use — dramatically increases bleeding risk, (3) HFrEF — NSAIDs cause sodium and water retention and can precipitate decompensation, (4) hypertension — NSAIDs elevate blood pressure. Mild epigastric discomfort reported may be early gastric irritation from NSAID + warfarin combination. This is an urgent safety concern."
     },
     {
       "diagnosis": "Heart Failure with Reduced EF",
       "icd10": "I50.22",
-      "notes": "NYHA Class II. On GDMT."
+      "notes": "NYHA Class II. Mild bibasilar crackles today, 1+ edema — may be mildly hypervolemic. NSAID use could be contributing to fluid retention and elevated rate. On Entresto 97/103mg BID, carvedilol 12.5mg BID (below target), spironolactone 25mg, furosemide 60mg BID."
+    },
+    {
+      "diagnosis": "Bilateral knee osteoarthritis",
+      "icd10": "M17.0",
+      "notes": "Chronic. Bilateral crepitus. No effusion. Pain 4-5/10 prompting unsafe NSAID self-medication. Needs safe analgesic alternative."
+    },
+    {
+      "diagnosis": "Epigastric discomfort",
+      "icd10": "R10.13",
+      "notes": "Mild epigastric tenderness on exam. Likely NSAID-induced gastropathy, especially in setting of warfarin. Not currently on a PPI. If symptoms persist after NSAID cessation, will need further workup."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "problem": "Atrial Fibrillation / Palpitations",
+      "action": "ECG obtained — atrial fibrillation, rate 82, no acute changes. Palpitations likely related to mild rate elevation, possibly exacerbated by NSAID-related volume retention. Continue warfarin with INR monitoring (next INR in 1 week). Continue carvedilol 12.5mg BID — may need uptitration if rate remains elevated after NSAID cessation and volume optimization. If palpitations persist or worsen, will order Holter monitor to assess rate control over 24-48 hours. Patient reassured that palpitations in the setting of known A-fib are common and these do not represent a new or dangerous arrhythmia."
     },
     {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "problem": "NSAID Use — STOP IMMEDIATELY",
+      "action": "Ibuprofen discontinued immediately. Patient and wife counseled extensively on the dangers of NSAIDs in his clinical context: acute kidney injury risk on CKD, catastrophic bleeding risk on warfarin, heart failure exacerbation. Written 'medications to avoid' list provided — includes all NSAIDs (ibuprofen, naproxen, aspirin >81mg, celecoxib). Safe alternatives for knee pain: acetaminophen 500mg up to 3 times daily (max 2g/day given liver considerations), topical diclofenac gel to knees (minimal systemic absorption), ice, physical therapy. If pain uncontrolled, consider duloxetine (also helps neuropathy) or orthopedic referral for injection therapy."
+    },
+    {
+      "problem": "Epigastric Discomfort",
+      "action": "Likely NSAID-related. With NSAID cessation, expect resolution within 1-2 weeks. If symptoms persist, will start PPI (pantoprazole) and consider EGD given warfarin use and epigastric symptoms. Patient instructed to call immediately if he develops any dark or tarry stools, vomits blood, or has severe abdominal pain. Check stool guaiac at next visit."
     },
     {
       "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
-    },
-    {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "action": "Mild bibasilar crackles and 1+ edema. NSAID cessation should improve volume status. Monitor weight daily — if no improvement in 3-5 days, may need short-term furosemide increase. Continue Entresto, carvedilol, spironolactone, furosemide at current doses."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 9 weeks or sooner if needed."
+      "action": "Check BMP in 5 days to assess renal function after NSAID cessation — concerned about potential AKI. INR check in 1 week. Return to clinic in 2-3 weeks to reassess palpitations, epigastric symptoms, and volume status. Sooner if any GI bleeding symptoms, worsening palpitations, dyspnea at rest, or chest pain."
     }
   ],
   "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Patricia Lee\nDate: 9/3/2023"

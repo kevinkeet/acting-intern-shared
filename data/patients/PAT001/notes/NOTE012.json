@@ -3,7 +3,7 @@
   "type": "Discharge Summary",
   "date": "2025-09-10T15:22:18.416Z",
   "author": "Dr. Sarah Chen",
-  "department": "Primary Care",
+  "department": "Internal Medicine — Inpatient",
   "encounter": "ENC008",
   "sections": [
     {
@@ -16,40 +16,56 @@
     },
     {
       "title": "Attending Physician",
-      "content": "Dr. Sarah Chen"
+      "content": "Dr. Sarah Chen, Internal Medicine"
+    },
+    {
+      "title": "Consulting Services",
+      "content": "Cardiology (Dr. James Wilson), Nephrology (Dr. Michael Torres)"
     },
     {
       "title": "Principal Diagnosis",
-      "content": "Community-acquired pneumonia"
+      "content": "Acute decompensated heart failure with reduced ejection fraction (HFrEF), NYHA Class III-IV on admission"
     },
     {
       "title": "Secondary Diagnoses",
-      "content": "1. Type 2 Diabetes Mellitus\n2. Chronic Kidney Disease Stage 3b\n3. Heart Failure with Reduced EF\n4. Atrial Fibrillation\n5. Hypertension"
+      "content": "1. Acute kidney injury on chronic kidney disease Stage 3b (Cr peaked at 2.3, baseline 2.0)\n2. Atrial fibrillation, persistent, rate controlled (off anticoagulation since 9/2023)\n3. Type 2 Diabetes Mellitus with diabetic neuropathy\n4. Hypertension\n5. Hyperlipidemia\n6. Mild hyperkalemia (K 5.1 on admission, resolved)\n7. Obesity (BMI 33)\n8. Benign prostatic hyperplasia"
+    },
+    {
+      "title": "History of Present Illness",
+      "content": "73-year-old male with known HFrEF (EF 30-35%), CKD 3b, T2DM, persistent A-fib (off anticoagulation post-GI bleed 9/2023), and multiple comorbidities who presented to the ED on 9/6/2025 with 5 days of progressive dyspnea on exertion, bilateral lower extremity edema, and 3 days of orthopnea requiring sleeping in his recliner. His wife reported he had been more fatigued than usual and had difficulty walking from the bedroom to the kitchen without stopping to rest. His daily home weights showed an increase from 97.5 kg to 100.6 kg over the preceding week.\n\nOn further questioning, the patient admitted to dietary indiscretion over the Labor Day weekend — he attended a family barbecue and consumed grilled foods with heavy seasoning, corn on the cob with butter and salt, and potato salad. His wife estimates he consumed well over his 2g sodium restriction over 3-4 days. He had been compliant with all medications including his diuretics (furosemide 60mg AM + 40mg PM). No missed doses.\n\nNo fever, cough, chest pain, or palpitations. No recent medication changes. Empagliflozin was added in May 2025 and has been well-tolerated."
+    },
+    {
+      "title": "ED Presentation (9/6/2025)",
+      "content": "Vitals: BP 148/88, HR 84 (irregular), RR 22, SpO2 92% on RA, Temp 98.4°F, Weight 100.6 kg\nExam: JVP elevated to 12 cm, bibasilar crackles extending to mid-lung fields, S3 gallop present, 2+ bilateral pitting edema to mid-calf, hepatojugular reflux positive\nECG: Atrial fibrillation with ventricular rate 84, LVH by voltage criteria, old inferior Q waves, no acute ST-T changes\nCXR: Cardiomegaly (stable), bilateral pleural effusions (small-to-moderate), pulmonary vascular congestion, no focal consolidation\nLabs: BNP 1,240 (baseline ~400), Cr 2.3 (baseline 2.0), K 5.1, Na 134, Troponin <0.04 (negative x2), Hgb 10.8, WBC 7.2, Glucose 188, A1c not drawn (recent 7.2%)\nAssessment: Acute on chronic decompensated HFrEF precipitated by dietary sodium excess. Mild AKI (likely pre-renal/cardiorenal). Mild hyperkalemia."
     },
     {
       "title": "Hospital Course",
-      "content": "Patient was admitted for volume overload and treated with IV diuretics. Responded well to treatment with 5 liters of diuresis over 3 days. Symptoms improved, weight decreased from 100 kg to 98 kg. Renal function remained stable. No arrhythmias on telemetry. Patient educated on diet and medication compliance."
+      "content": "Day 1 (9/6): Admitted to telemetry unit. Started IV furosemide 40mg x1, then 40mg IV q12h. 2L O2 via NC to maintain SpO2 >94%. Strict I&O, 1.5L fluid restriction, <2g Na diet. Held empagliflozin (acute illness). Continued Entresto 97/103mg BID, carvedilol 25mg BID, spironolactone held (K 5.1). Insulin sliding scale, held metformin (AKI). Daily weights and BMP ordered.\n\nDay 2 (9/7): Net negative 1.8L overnight. Weight 99.2 kg (-1.4). SpO2 94% on 1L NC. Cr 2.4 (mild worsening — expected with diuresis). K 4.8 (improving). BNP 1,080. Crackles improved to bases only. Edema improved to 1+. Continued IV furosemide. Cardiology consulted — agreed with diuresis plan, recommended continuing GDMT, reassess when euvolemic.\n\nDay 3 (9/8): Net negative 2.0L (cumulative -3.8L). Weight 98.0 kg. SpO2 96% on RA — O2 discontinued. Cr 2.2 (improving). K 4.6. BNP 860. JVP down to 8 cm. Crackles resolving. Edema trace. Switched to oral furosemide 60mg BID. Restarted spironolactone 25mg. Patient feeling significantly better — walked in hallway 200 feet with nursing.\n\nDay 4 (9/9): Weight 97.5 kg (near dry weight). Cr 2.1 (trending toward baseline). K 4.7. BNP 680. Euvolemic by exam — JVP 7 cm, lungs clear, trace edema. Tolerating oral diuretics well. Restarted empagliflozin 10mg. Resumed metformin 250mg BID. Patient and wife educated on dietary triggers, daily weights, when to call. Social work assessed home safety. Nephrology consulted — agreed no acute intervention needed for AKI, trending toward baseline, continue renal-protective medications.\n\nDay 5 (9/10): Discharge day. Weight 97.3 kg. Cr 2.0 (at baseline). K 4.7. BNP 620. Ambulating independently in hallway. Vital signs stable: BP 124/74, HR 62, SpO2 96% RA. Patient and wife verbalize understanding of discharge instructions."
     },
     {
       "title": "Discharge Medications",
-      "content": "See medication reconciliation."
+      "content": "1. Sacubitril/valsartan (Entresto) 97/103mg — 1 tablet by mouth twice daily\n2. Carvedilol 25mg — 1 tablet by mouth twice daily\n3. Spironolactone 25mg — 1 tablet by mouth daily\n4. Empagliflozin 10mg — 1 tablet by mouth daily in the morning\n5. Furosemide 60mg — 1 tablet by mouth twice daily (INCREASED from 60mg AM + 40mg PM)\n6. Metformin 250mg — 1 tablet by mouth twice daily\n7. Insulin glargine — 24 units subcutaneous at bedtime\n8. Insulin lispro — per sliding scale with meals\n9. Gabapentin 300mg — 1 capsule by mouth three times daily\n10. Tamsulosin 0.4mg — 1 capsule by mouth at bedtime\n11. Atorvastatin 80mg — 1 tablet by mouth at bedtime\n12. Aspirin 81mg — 1 tablet by mouth daily\n13. Pantoprazole 40mg — 1 tablet by mouth daily\n14. Sodium bicarbonate 650mg — 1 tablet by mouth twice daily\n15. Vitamin D3 2000 IU — 1 tablet by mouth daily\n\nNote: Furosemide dose INCREASED to 60mg BID (from 60mg AM + 40mg PM). All other medications unchanged."
     },
     {
       "title": "Discharge Instructions",
-      "content": "1. Take all medications as prescribed\n2. Weigh yourself daily\n3. Follow low-sodium diet (<2g/day)\n4. Limit fluids to 2 liters daily\n5. Call if weight increases >3 lbs in a day or symptoms worsen\n6. Follow up with appointments as scheduled"
+      "content": "1. Take all medications exactly as prescribed — your furosemide (water pill) has been INCREASED to 60mg twice daily\n2. Weigh yourself every morning before breakfast, after urinating, wearing similar clothing. Record in your log.\n3. Call your doctor immediately if your weight increases more than 3 pounds in one day or 5 pounds in one week\n4. Follow a strict low-sodium diet — less than 2 grams (2000 mg) of sodium per day. Avoid processed foods, canned soups, deli meats, soy sauce, and adding salt at the table.\n5. Limit fluids to 1.5-2 liters (6-8 cups) per day\n6. Monitor your blood sugar as directed — fasting and one meal daily\n7. Do NOT take any NSAIDs (ibuprofen, naproxen, Advil, Aleve) — these can worsen your kidneys and cause stomach bleeding\n8. Do NOT use salt substitutes (KCl) — these can dangerously raise your potassium\n9. Call 911 or go to the ER for: severe shortness of breath, chest pain, inability to breathe lying down, coughing up pink/frothy sputum, or any signs of stroke (facial drooping, arm weakness, speech difficulty)\n10. Resume normal activity as tolerated. Walk daily — start with short distances and gradually increase."
     },
     {
       "title": "Follow-Up Appointments",
-      "content": "1. Primary Care: 1 week\n2. Cardiology: 2 weeks\n3. Nephrology: 4 weeks"
+      "content": "1. Primary Care (Dr. Adams): 1 week (approximately 9/17/2025) — weight check, vitals, lab review\n2. Cardiology (Dr. Wilson): 2 weeks (approximately 9/20/2025) — post-discharge HF assessment, ICD discussion\n3. Nephrology (Dr. Torres): 4 weeks — CKD follow-up, post-AKI monitoring\n4. Labs: BMP, CBC, BNP — draw in 3 days (9/13/2025) at outpatient lab"
     },
     {
       "title": "Discharge Condition",
-      "content": "Stable, improved"
+      "content": "Stable, improved. Patient euvolemic at time of discharge. Ambulating independently. Vital signs stable. Renal function returned to baseline."
     },
     {
       "title": "Disposition",
-      "content": "Home with family"
+      "content": "Home with wife (Patricia Morrison). Wife is primary caregiver and medication manager. Home safety assessment completed by social work — single-story home, shower chair in place, nightlights installed. No home health services needed at this time."
+    },
+    {
+      "title": "Code Status",
+      "content": "Full code (confirmed with patient during admission)"
     }
   ],
-  "attestation": "Discharge summary reviewed and approved.\n\nElectronically signed by: Dr. Sarah Chen\nDate: 9/10/2025"
+  "attestation": "Discharge summary reviewed and approved. I personally managed this patient during the hospitalization and agree with the documented hospital course and discharge plan.\n\nElectronically signed by: Dr. Sarah Chen\nDate: 9/10/2025"
 }

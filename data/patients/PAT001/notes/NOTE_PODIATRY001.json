@@ -1,0 +1,136 @@
+{
+  "id": "NOTE_PODIATRY001",
+  "type": "Consult Note",
+  "title": "Podiatry - Annual Diabetic Foot Examination",
+  "date": "2024-12-15T10:30:00.000Z",
+  "author": "Dr. Michael Chen, DPM",
+  "department": "Podiatry",
+  "encounter": "ENC_POD001",
+  "signedDate": "2024-12-15T12:30:00.000Z",
+  "sections": {
+    "reasonForVisit": "Annual comprehensive diabetic foot examination. Known diabetic peripheral neuropathy.",
+    "historyOfPresentIllness": "Mr. Morrison is a 72-year-old gentleman with a 15-year history of type 2 diabetes mellitus with known diabetic peripheral neuropathy presenting for his annual comprehensive diabetic foot examination. He has been seen in our office annually for the past 3 years.\n\nPatient reports chronic bilateral foot numbness and tingling that has been stable over the past year. He also reports occasional sharp, shooting pains in his feet at night, partially managed with gabapentin 300 mg TID. He denies any current foot wounds, drainage, or acute pain. He has not noticed any foot injuries but acknowledges that his numbness makes it difficult to detect problems. His wife Patricia assists with daily foot inspections.\n\nHe wears regular athletic shoes (New Balance) and reports they feel comfortable. He has not been wearing custom orthotics or diabetic shoes previously. He walks daily as part of his home exercise program (15 minutes in the morning) and reports his feet tolerate this without difficulty.\n\nRelevant comorbidities impacting foot health: diabetes with neuropathy, peripheral vascular disease (reduced pulses on prior exam), CKD stage 3b, heart failure (pedal edema), atrial fibrillation (currently not anticoagulated — impacts wound healing considerations).",
+    "currentMedications": "Gabapentin 300 mg PO TID for neuropathic pain. See chart for complete medication list. Not on anticoagulation.",
+    "examination": {
+      "dermatologic": {
+        "skinColor": "Bilateral feet with mild erythema over pressure points. No cyanosis or rubor on dependency.",
+        "skinIntegrity": "No ulceration, blistering, or open wounds. Skin dry with fissuring at bilateral heels (moderate severity, no bleeding). Callus formation at bilateral 1st metatarsal heads (moderate, 3-4 mm thickness) and bilateral 5th metatarsal heads (mild-moderate, 2-3 mm thickness).",
+        "nails": "Mild onychomycosis bilateral great toenails — thickened, yellow-brown discoloration, subungual debris. Remaining toenails mildly thickened but without dystrophy. No ingrown toenails. No paronychia.",
+        "interdigital": "No maceration, no tinea pedis. Interdigital spaces clean and dry.",
+        "hairGrowth": "Absent hair growth bilateral feet and lower legs — consistent with peripheral vascular disease"
+      },
+      "vascular": {
+        "dorsalisPedis": {
+          "right": "1+ (diminished, palpable with difficulty)",
+          "left": "1+ (diminished, palpable with difficulty)"
+        },
+        "posteriorTibial": {
+          "right": "1+ (diminished)",
+          "left": "1+ (diminished)"
+        },
+        "capillaryRefillTime": "4 seconds bilateral great toes (delayed, normal <3 seconds)",
+        "skinTemperature": "Bilateral feet cool to touch compared to proximal lower legs",
+        "abi": "Not performed — atrial fibrillation makes ABI measurement unreliable due to irregular pulse pressure. Would need toe-brachial index (TBI) or arterial duplex for formal vascular assessment if needed.",
+        "interpretation": "Clinical findings consistent with mild-moderate peripheral arterial disease. Diminished but palpable pulses bilaterally. Would heal small wounds but major wound healing capacity may be compromised."
+      },
+      "neurological": {
+        "semmeWinsteinMonofilament": {
+          "rightFoot": {
+            "sitesTested": 10,
+            "sitesDetected": 4,
+            "missedSites": ["1st toe plantar", "3rd toe plantar", "1st metatarsal head", "3rd metatarsal head", "5th metatarsal head", "medial arch"],
+            "interpretation": "Severe loss of protective sensation (6/10 sites absent)"
+          },
+          "leftFoot": {
+            "sitesTested": 10,
+            "sitesDetected": 3,
+            "missedSites": ["1st toe plantar", "3rd toe plantar", "5th toe plantar", "1st metatarsal head", "3rd metatarsal head", "5th metatarsal head", "medial arch"],
+            "interpretation": "Severe loss of protective sensation (7/10 sites absent)"
+          }
+        },
+        "vibrationSense": {
+          "rightAnkle": "Absent (128 Hz tuning fork)",
+          "leftAnkle": "Absent",
+          "rightGreatToe": "Absent",
+          "leftGreatToe": "Absent"
+        },
+        "deepTendonReflexes": {
+          "ankleJerks": "Absent bilaterally (0/4)",
+          "kneeJerks": "1+ bilaterally (diminished)"
+        },
+        "proprioception": "Impaired at bilateral great toes (50% accuracy on position testing)",
+        "interpretation": "Severe bilateral diabetic peripheral neuropathy with complete loss of protective sensation over plantar surfaces. This places patient in the highest risk category for diabetic foot ulceration."
+      },
+      "musculoskeletal": {
+        "footStructure": "Mild pes planus bilateral (flat feet). No Charcot deformity. No prominent metatarsal heads beyond callus sites. No hammertoes or claw toes. Hallux valgus mild bilateral (bunions, non-painful).",
+        "ankleROM": "Dorsiflexion limited to neutral bilaterally (equinus — contributes to forefoot pressure during gait)",
+        "footType": "Pronated foot type bilateral"
+      }
+    },
+    "riskClassification": {
+      "category": "Category 3 — High Risk (IWGDF Classification)",
+      "riskFactors": [
+        "Loss of protective sensation (severe bilateral neuropathy)",
+        "Peripheral arterial disease (diminished pulses, delayed cap refill)",
+        "Callus formation at pressure points",
+        "History of foot deformity (pes planus, mild hallux valgus, equinus)",
+        "CKD stage 3b (impairs wound healing)",
+        "Not anticoagulated (A-fib — though this is a separate consideration)"
+      ],
+      "estimatedAnnualUlcerRisk": ">25% (based on IWGDF Category 3 classification)"
+    },
+    "assessment": "72-year-old male with type 2 diabetes and severe bilateral diabetic peripheral neuropathy, peripheral vascular disease, and multiple risk factors for diabetic foot ulceration. He is classified as IWGDF Category 3 (high-risk) with an estimated annual ulcer risk >25%.\n\nKey findings today:\n1. Severe neuropathy — absent protective sensation at majority of plantar test sites bilaterally, absent vibration sense, absent ankle reflexes. This means he cannot feel injury to his feet.\n2. Peripheral vascular disease — diminished pulses, delayed capillary refill, absent hair growth. Wounds would be slow to heal.\n3. Calluses at 1st and 5th metatarsal heads — these are pre-ulcerative lesions in the setting of neuropathy and represent areas of abnormal pressure\n4. Heel fissuring — potential portal of entry for infection\n5. Mild onychomycosis — cosmetic concern primarily, but thickened nails increase risk of subungual injury\n\nNo active wounds or infections today, which is the positive finding. Prevention is the priority for this patient.",
+    "procedures": {
+      "performed": [
+        "Nail debridement bilateral great toenails — mycotic nails thinned with dremel to reduce subungual pressure and improve topical antifungal penetration",
+        "Routine toenail trimming all remaining nails — cut straight across to prevent ingrown nails",
+        "Callus reduction bilateral 1st and 5th metatarsal heads — pared with #15 blade to reduce pressure. No bleeding, no pain (neuropathy). Calluses reduced to <1 mm thickness."
+      ]
+    },
+    "recommendations": [
+      {
+        "category": "Skin and Nail Care",
+        "items": [
+          "Prescribed urea 40% cream for heel fissuring — apply to heels nightly, cover with socks. Do NOT apply between toes.",
+          "Apply moisturizing cream (Eucerin or CeraVe) to feet daily after bathing — avoid interdigital spaces",
+          "Tolnaftate or ciclopirox topical for onychomycosis — apply to nails daily. Oral antifungals (terbinafine) not recommended given CKD and polypharmacy.",
+          "Never use over-the-counter corn/callus removers (chemical burns risk with neuropathy)"
+        ]
+      },
+      {
+        "category": "Footwear — Medicare Therapeutic Footwear",
+        "items": [
+          "Custom molded orthotics ordered — will offload pressure from 1st and 5th metatarsal heads where calluses form. Accommodative orthotic with metatarsal pad.",
+          "Diabetic shoes authorization submitted to Medicare — patient qualifies under Therapeutic Shoe Bill (diabetes + peripheral neuropathy + callus formation). Coverage includes 1 pair of depth shoes + 3 pairs of inserts per calendar year.",
+          "Shoe fitting appointment scheduled for 1/15/2025 when orthotics arrive",
+          "Until custom shoes arrive: continue current New Balance shoes, ensure proper fit (1/2 inch clearance at toe), check inside shoes before wearing for foreign objects"
+        ]
+      },
+      {
+        "category": "Patient Education — Daily Foot Care",
+        "items": [
+          "Inspect feet daily — top, bottom, between toes. Use mirror for bottom of feet or have wife assist.",
+          "Never walk barefoot — even in the house. Always wear shoes or hard-soled slippers.",
+          "Wash feet daily in lukewarm water — test water temperature with elbow or thermometer, NOT feet (cannot feel temperature).",
+          "Dry feet thoroughly, especially between toes",
+          "Do not use heating pads or hot water bottles on feet",
+          "Cut toenails straight across — or have professional nail care at podiatry visits",
+          "Report ANY foot wound, blister, redness, swelling, warmth, or drainage immediately — do not wait for scheduled appointment"
+        ]
+      },
+      {
+        "category": "Follow-up Schedule",
+        "items": [
+          "Return in 3 months (March 2025) for high-risk foot check — nail care, callus management, skin assessment",
+          "IWGDF Category 3 patients should be seen every 1-3 months",
+          "Shoe fitting appointment January 2025",
+          "Annual comprehensive exam December 2025",
+          "Urgent visit for any new wound, infection signs, or foot color change"
+        ]
+      }
+    ],
+    "patientEducation": "Spent 20 minutes with patient and wife Patricia on diabetic foot care education. Provided printed foot care guide. Emphasized that because he cannot feel his feet, he MUST rely on visual inspection daily — this is the single most important thing he can do to prevent amputation. Wife is committed to assisting with daily inspections. Demonstrated mirror technique for examining soles. Discussed that calluses are warning signs of abnormal pressure and that the custom shoes/orthotics will help redistribute pressure. Patient was attentive and asked about whether his foot numbness would get worse — explained that neuropathy from diabetes typically progresses slowly but that tight glucose and blood pressure control are the best strategies to slow progression.",
+    "plan": "1. Nail debridement and callus reduction performed today\n2. Urea 40% cream prescribed for heel fissuring — apply nightly\n3. Daily moisturizing cream to feet (not between toes)\n4. Custom orthotics ordered — fitting in January 2025\n5. Medicare diabetic shoe authorization submitted\n6. Daily foot inspection education provided to patient and wife\n7. Return in 3 months (March 2025) for nail care and foot assessment\n8. Urgent evaluation if any wound, infection, or foot color changes"
+  },
+  "attestation": "I personally examined this patient, performed nail debridement and callus reduction, and provided foot care education. Findings and plan discussed with patient and his wife.\n\nElectronically signed by: Michael Chen, DPM, FACFAS\nDate/Time: 12/15/2024 12:30 PM"
+}

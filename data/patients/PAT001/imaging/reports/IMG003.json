@@ -1,0 +1,50 @@
+{
+  "id": "IMG003",
+  "date": "2018-11-12T08:21:18.585Z",
+  "modality": "Nuclear",
+  "description": "Myocardial Perfusion Imaging (SPECT)",
+  "facility": "Springfield Medical Center",
+  "status": "Final",
+  "radiologist": "Dr. Patricia Lee",
+  "orderingProvider": "Dr. James Wilson",
+  "indication": "New onset heart failure, chest discomfort, evaluate for coronary artery disease and myocardial ischemia",
+  "technique": "Rest and pharmacologic stress myocardial perfusion SPECT imaging was performed using Tc-99m sestamibi. Regadenoson was administered for pharmacologic stress due to inability to achieve adequate exercise capacity. Gated SPECT images were obtained at rest.",
+  "protocol": {
+    "stressAgent": "Regadenoson 0.4 mg IV",
+    "stressResponse": "Heart rate increased from 72 to 98 bpm. Blood pressure 152/84 at baseline, 144/76 at peak stress.",
+    "symptoms": "Patient reported mild dyspnea during stress, no chest pain. Resolved within 3 minutes.",
+    "ecg": "Baseline: Atrial fibrillation with controlled ventricular response. Stress: Non-specific ST-T wave changes, not meeting criteria for ischemia."
+  },
+  "findings": {
+    "perfusion": {
+      "stress": "Moderate fixed perfusion defect involving the inferior wall (approximately 10% of the myocardium). Mild reversible perfusion defect in the inferolateral wall and lateral wall.",
+      "rest": "Moderate fixed perfusion defect in the inferior wall persists at rest. The inferolateral and lateral wall defects show partial fill-in at rest, consistent with ischemia."
+    },
+    "function": {
+      "lvef": "36%",
+      "edv": "168 mL",
+      "esv": "108 mL",
+      "wallMotion": "Hypokinesis of the inferior wall. Mild hypokinesis of the inferolateral wall."
+    },
+    "lungUptake": "Normal lung-to-heart ratio.",
+    "tid": "Transient ischemic dilation ratio 1.05 (normal <1.22)."
+  },
+  "impression": [
+    "Moderate fixed perfusion defect in the inferior wall (approximately 10% of the myocardium), consistent with prior infarction in the RCA territory.",
+    "Mild reversible perfusion defect in the inferolateral and lateral walls, suggesting inducible ischemia in the RCA/LCx watershed territory.",
+    "Moderately reduced left ventricular systolic function (LVEF 36%) with regional wall motion abnormalities.",
+    "Findings suggest ischemic cardiomyopathy with a combination of fixed (scar) and reversible (ischemic) defects.",
+    "Total perfusion defect is moderate in severity."
+  ],
+  "summedScores": {
+    "sss": 10,
+    "srs": 7,
+    "sds": 3
+  },
+  "recommendations": [
+    "Coronary angiography recommended to define coronary anatomy",
+    "Initiate guideline-directed medical therapy for heart failure with reduced ejection fraction",
+    "Risk factor modification including diabetes and hypertension management"
+  ],
+  "comparison": "No prior myocardial perfusion study available for comparison."
+}

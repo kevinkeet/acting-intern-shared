@@ -5,15 +5,18 @@
   "author": "Dr. Robert Kim",
   "department": "Urology",
   "encounter": "ENC020",
-  "chiefComplaint": "Lab review",
-  "hpi": "Patient presents for lab review. Presents with mild worsening of baseline symptoms. Reports increased fatigue over the past week.",
+  "chiefComplaint": "BPH follow-up, worsening LUTS",
+  "hpi": "Mr. Morrison is a 72-year-old male with known benign prostatic hyperplasia (diagnosed 2016, on tamsulosin 0.4mg QHS) who presents for urology follow-up with worsening lower urinary tract symptoms. He reports nocturia has increased from 2 to 3 times per night over the past 3-4 months, and he now describes increased hesitancy and a weaker urinary stream compared to prior visits. He notes that it takes longer to initiate voiding, especially in the morning, and he has a sensation of incomplete emptying. He had a fall in September related to nighttime bathroom trips (tripped on a bathroom rug), evaluated in the ED with negative CT head and no injuries, but this event has made him more concerned about his urinary frequency at night. He denies gross hematuria, dysuria, urinary incontinence, or suprapubic pain. No fevers or urinary tract infections recently. His PSA was 2.1 in 2016; he has not had a recent check. His wife notes he seems more fatigued and less engaged in daily activities, which she attributes partly to disrupted sleep from nocturia. Relevant comorbidities include HFrEF on diuretic therapy (furosemide 60mg AM/40mg PM) which contributes to urinary frequency, and CKD 3b.",
   "reviewOfSystems": {
-    "Constitutional": "Reports fatigue",
-    "Cardiovascular": "No orthopnea",
-    "Respiratory": "Mild dyspnea",
-    "GI": "No nausea or vomiting",
-    "GU": "No dysuria",
-    "Neurologic": "No dizziness"
+    "Constitutional": "Reports fatigue, likely multifactorial (disrupted sleep from nocturia, chronic disease burden). No fever, chills, or unintentional weight loss.",
+    "Cardiovascular": "Baseline dyspnea on exertion. No orthopnea, PND, chest pain, or palpitations.",
+    "Respiratory": "Mild exertional dyspnea at baseline. No cough, hemoptysis, or wheezing.",
+    "GI": "No nausea, vomiting, abdominal pain, constipation, melena, or hematochezia.",
+    "GU": "Nocturia x3 (worsened). Increased hesitancy, weak stream, sensation of incomplete emptying. No dysuria, hematuria, incontinence, or urgency episodes.",
+    "Musculoskeletal": "Chronic low back discomfort, no new joint complaints.",
+    "Neurologic": "Chronic bilateral foot numbness from diabetic neuropathy. No new weakness or dizziness. One fall in September (mechanical, nighttime).",
+    "Psychiatric": "Wife reports patient seems down, less interested in usual activities. Sleep disrupted by nocturia.",
+    "Skin": "No rashes or skin changes."
   },
   "vitals": {
     "bp": "145/86 mmHg",
@@ -24,52 +27,59 @@
     "weight": "100.5 kg"
   },
   "physicalExam": {
-    "General": "Comfortable, well-appearing",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "S1/S2 normal, mild peripheral edema",
-    "Respiratory": "Mild crackles at bases",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "No edema, warm and well-perfused",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Well-developed, overweight male in no acute distress. Appears mildly fatigued but cooperative and conversant.",
+    "HEENT": "Normocephalic, atraumatic. PERRL. Oropharynx clear. Mucous membranes moist.",
+    "Cardiovascular": "Irregularly irregular rhythm (atrial fibrillation). S1/S2 present. Soft systolic murmur at apex. Mild bilateral pedal edema. No JVD appreciated.",
+    "Respiratory": "Mild bibasilar crackles. No wheezes or rhonchi. Comfortable breathing at rest.",
+    "Abdomen": "Soft, non-tender, non-distended. No suprapubic tenderness or fullness. No costovertebral angle tenderness. Bowel sounds normoactive. Small umbilical hernia, reducible.",
+    "GU": "Digital rectal exam: Prostate moderately enlarged, approximately 45-50 grams estimated, smooth, symmetric, no nodules, no tenderness. Rectal tone normal. No masses. Stool guaiac negative.",
+    "Extremities": "1+ bilateral pedal edema. Warm, no cyanosis. Distal pulses palpable.",
+    "Neurologic": "Alert and oriented x3. Decreased sensation bilateral feet to light touch. Gait steady but cautious."
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
-      "icd10": "E11.65",
-      "notes": "HbA1c 7.9%. On insulin and metformin."
-    },
-    {
-      "diagnosis": "Chronic Kidney Disease Stage 3b",
-      "icd10": "N18.32",
-      "notes": "eGFR 38. Stable."
+      "diagnosis": "Benign Prostatic Hyperplasia with worsening LUTS",
+      "icd10": "N40.1",
+      "notes": "AUA Symptom Index score 18 (moderate-severe, up from 12 at diagnosis in 2016). Nocturia x3, hesitancy, weak stream, incomplete emptying. On tamsulosin 0.4mg with suboptimal symptom control. Prostate moderately enlarged on DRE (~45-50g). Contributing to sleep disruption, fatigue, and fall risk. Diuretic therapy for HF exacerbates urinary frequency. Need to differentiate BPH-related nocturia from diuretic-related and HF-related nocturia."
     },
     {
       "diagnosis": "Heart Failure with Reduced EF",
       "icd10": "I50.22",
-      "notes": "NYHA Class II. On GDMT."
+      "notes": "NYHA Class II. On optimized GDMT including furosemide 60mg AM/40mg PM. Diuretic timing is asymmetric to reduce nocturia but patient still symptomatic. Weight slightly above target."
+    },
+    {
+      "diagnosis": "Type 2 Diabetes Mellitus",
+      "icd10": "E11.65",
+      "notes": "HbA1c 7.9%. On metformin, insulin glargine, empagliflozin. SGLT2i can contribute to increased urination — discussed with patient."
+    },
+    {
+      "diagnosis": "Chronic Kidney Disease Stage 3b",
+      "icd10": "N18.32",
+      "notes": "eGFR 38, Cr stable. Relevant to medication dosing and contrast avoidance."
+    },
+    {
+      "diagnosis": "Fall risk",
+      "icd10": "R29.6",
+      "notes": "Recent fall September 2025 related to nocturia. Multiple contributing factors: nocturia, diabetic neuropathy, balance issues. Declines assistive devices."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "problem": "BPH / Worsening LUTS",
+      "action": "AUA-SI 18, moderate-severe symptoms with inadequate response to tamsulosin monotherapy. Options discussed with patient: (1) Add 5-alpha reductase inhibitor (finasteride 5mg daily) for prostate volume reduction — appropriate given estimated prostate >40g, but inform patient of 6-month onset and sexual side effects; (2) Consider switching to combination alpha-blocker + 5-ARI; (3) If medical therapy fails, discuss minimally invasive procedures (UroLift, TURP). Patient agrees to trial of finasteride 5mg daily. Will check PSA before starting (must double PSA value for cancer screening while on finasteride). Ordered post-void residual ultrasound and urinalysis. Coordinate with cardiology regarding diuretic timing optimization."
     },
     {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "problem": "Nocturia / Fall Risk",
+      "action": "Nocturia is multifactorial: BPH, loop diuretic, HF volume status, SGLT2i effect. Recommend taking furosemide doses no later than 4 PM. Limit evening fluid intake after 6 PM. Reinforce nighttime safety: nightlights in hallway and bathroom, remove throw rugs, keep path clear. Continue to decline cane but strongly encouraged to reconsider given fall history. Physical therapy referral for balance and gait training."
     },
     {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
-    },
-    {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "problem": "Labs",
+      "action": "Order PSA, urinalysis with culture, BMP, post-void residual bladder scan."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 7 weeks or sooner if needed."
+      "action": "Return in 8 weeks to reassess LUTS symptoms on combination therapy. If PSA elevated or nodule develops, discuss prostate biopsy. Communicated plan to PCP Dr. Chen and cardiologist Dr. Wilson regarding diuretic timing."
     }
   ],
-  "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Robert Kim\nDate: 11/25/2024"
+  "attestation": "I personally saw and examined the patient including digital rectal examination. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Robert Kim, MD\nDate: 11/25/2024"
 }

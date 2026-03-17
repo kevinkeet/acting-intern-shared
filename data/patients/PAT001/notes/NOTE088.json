@@ -5,65 +5,82 @@
   "author": "Dr. Michael Torres",
   "department": "Nephrology",
   "encounter": "ENC065",
-  "chiefComplaint": "Joint pain",
-  "hpi": "Patient presents for joint pain. Weight stable. Following low-sodium diet. Monitoring blood pressure at home.",
+  "chiefComplaint": "Nephrology follow-up — joint pain and CKD labs review",
+  "hpi": "69-year-old male with CKD Stage 3b presents for nephrology follow-up and to discuss new bilateral knee joint stiffness that has developed over the past 3 weeks. He describes the stiffness as worse in both knees in the morning, lasting approximately 30-45 minutes before loosening up with activity. He rates the discomfort at 3-4/10. There is no warmth, redness, or acute swelling of the joints. He has a history of one gout flare in July 2019 (left 1st MTP), and allopurinol was started then discontinued in January 2020 due to CKD concerns. He has not had a recurrent gout attack since. He is aware he cannot take NSAIDs and has been using acetaminophen 500mg PRN with modest relief.\n\nHe also presents for CKD lab review. Labs drawn 1/3/2022 show: Cr 1.88, eGFR 38, K 4.7, Na 137, HCO3 22, Ca 9.0, Phos 4.3, PTH 78 (mildly elevated), Hgb 11.2, A1c 7.8%. UACR 145 mg/g (A2). Iron studies: ferritin 85, TSAT 19% (borderline low). Uric acid 8.8 (elevated).\n\nHis weight has stabilized at 99.4 kg after the holiday decompensation episode managed by PCP in late December. He reports his breathing is back to baseline. Heart failure medications are at target doses — carvedilol 25mg BID achieved in November.",
   "reviewOfSystems": {
-    "Constitutional": "Weight stable",
-    "Cardiovascular": "Dyspnea on exertion at baseline",
-    "Respiratory": "No hemoptysis",
-    "GI": "No nausea or vomiting",
-    "GU": "No dysuria",
-    "Neurologic": "No dizziness"
+    "Constitutional": "Weight stable at 99.4 kg after recent fluctuation. Chronic fatigue at baseline. No fevers.",
+    "Cardiovascular": "DOE at baseline NYHA II — back to his usual level after holiday decompensation. No chest pain, orthopnea, or PND.",
+    "Respiratory": "No cough. Cough from December resolved with diuresis. No hemoptysis.",
+    "GI": "Dyspepsia improved on omeprazole. No GI bleeding.",
+    "GU": "Nocturia x2. No dysuria. Urine output adequate.",
+    "Musculoskeletal": "Bilateral knee stiffness x 3 weeks as described. No acute joint swelling, warmth, or erythema. No gout flare features.",
+    "Neurologic": "Bilateral foot numbness stable. No dizziness.",
+    "Skin": "No pruritus. No rashes.",
+    "Hematologic": "No bleeding. No easy bruising."
   },
   "vitals": {
     "bp": "150/84 mmHg",
-    "hr": "67 bpm",
+    "hr": "67 bpm (irregular)",
     "rr": "19/min",
     "temp": "98.6°F",
     "spo2": "94% RA",
     "weight": "99.4 kg"
   },
   "physicalExam": {
-    "General": "Comfortable, well-appearing",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "Regular rate and rhythm, no murmurs",
-    "Respiratory": "No wheezes or rhonchi",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "No edema, warm and well-perfused",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Alert, oriented, comfortable. Mildly overweight/obese. No acute distress.",
+    "HEENT": "Sclera anicteric. Conjunctivae mildly pale (anemia). Oropharynx clear. JVP approximately 7 cm H2O.",
+    "Cardiovascular": "Irregularly irregular (A-fib). Rate ~67 bpm. S1/S2 present. Systolic murmur at apex (known). No rub or gallop.",
+    "Respiratory": "Clear to auscultation bilaterally. No crackles or wheezes.",
+    "Abdomen": "Soft, non-tender. No renal bruits. No CVA tenderness. No hepatomegaly.",
+    "Extremities": "No peripheral edema bilaterally — improved from recent decompensation. Bilateral knees examined: no effusion, no warmth, no erythema, full range of motion with mild crepitus bilaterally. No tophi noted at first MTP joints, ears, or elbows. DP pulses 1+ bilaterally.",
+    "Neurologic": "Alert, oriented. Decreased sensation bilateral feet (known). No asterixis."
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
-      "icd10": "E11.65",
-      "notes": "HbA1c 7.3%. On insulin and metformin."
-    },
-    {
       "diagnosis": "Chronic Kidney Disease Stage 3b",
       "icd10": "N18.32",
-      "notes": "eGFR 36. Stable."
+      "notes": "eGFR 38, stable. Albuminuria A2 (UACR 145). Rate of decline ~2-3 mL/min/year, unchanged. CKD complications: (1) Mild metabolic acidosis — HCO3 22 (low normal, borderline). (2) Mild secondary hyperparathyroidism — PTH 78 (mildly elevated), calcium and phosphorus normal. (3) Anemia — Hgb 11.2 with borderline iron deficiency (ferritin 85, TSAT 19%). (4) Hyperuricemia — uric acid 8.8, contributing to joint symptoms."
+    },
+    {
+      "diagnosis": "CKD-related anemia with borderline iron deficiency",
+      "icd10": "D63.1",
+      "notes": "Hgb 11.2 — stable but below normal. Ferritin 85 (below target of 100-500 for CKD) and TSAT 19% (below target of 20-30%). Iron repletion may improve Hgb without need for ESA."
+    },
+    {
+      "diagnosis": "Bilateral knee osteoarthritis vs. polyarticular gout",
+      "icd10": "M17.0",
+      "notes": "Bilateral knee stiffness without acute inflammatory features. Uric acid 8.8 — elevated, but presentation is not consistent with acute gout (no warmth, no erythema, no effusion, bilateral and symmetrical). More consistent with osteoarthritis in this age group with obesity and deconditioning. However, chronic tophaceous or polyarticular gout remains in differential given elevated uric acid and CKD."
+    },
+    {
+      "diagnosis": "Secondary hyperparathyroidism, early",
+      "icd10": "E21.1",
+      "notes": "PTH 78 (mildly elevated). Calcium 9.0 and phosphorus 4.3 both normal. Vitamin D3 2000 IU daily. May need calcitriol if PTH continues to rise. Bone density not recently assessed — fracture risk elevated in this patient (CKD, age, deconditioning)."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "problem": "CKD Stage 3b — monitoring",
+      "action": "eGFR stable at 38. Continue current renal-protective regimen (Entresto, avoidance of nephrotoxins). Labs q3 months: CMP, CBC, phosphorus. UACR q6 months. SGLT2 inhibitor discussion ongoing with cardiology — strongly recommended from nephrology standpoint per EMPA-KIDNEY evidence."
     },
     {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "problem": "Iron deficiency — anemia management",
+      "action": "Ferritin 85 and TSAT 19% — borderline iron deficiency contributing to CKD anemia. Start IV iron sucrose 200mg x 5 infusions (total 1g) over the next 2-3 weeks. Oral iron poorly absorbed in CKD and would cause GI distress on top of his existing dyspepsia. Recheck CBC and iron studies 4 weeks after completion. If Hgb improves to >11.5, continue monitoring. If remains <11 despite iron repletion, will consider ESA."
     },
     {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
+      "problem": "Joint stiffness / Hyperuricemia",
+      "action": "Clinical presentation more consistent with osteoarthritis than acute gout. However, uric acid 8.8 warrants attention. Cannot use NSAIDs (CKD, HF). Cannot use allopurinol long-term (prior concern in CKD, though actually can be used with dose adjustment). Options: (1) Continue acetaminophen PRN for OA symptoms. (2) If gout flare occurs, colchicine 0.6mg BID x 7 days is the safest option (dose-adjusted for CKD). (3) Urate-lowering therapy: febuxostat 40mg daily could be considered if recurrent gout — does not require renal dose adjustment. Hold for now as no acute gout flare. (4) Bilateral knee X-rays ordered to evaluate for OA changes."
     },
     {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "problem": "Secondary hyperparathyroidism",
+      "action": "PTH 78, mild. Calcium and phosphorus normal. Continue vitamin D3 2000 IU daily. If PTH rises above 100 on next check, will add calcitriol 0.25mcg daily. Monitor q6 months."
+    },
+    {
+      "problem": "Metabolic acidosis — monitoring",
+      "action": "HCO3 22 — at the threshold. Per KDIGO, consider sodium bicarbonate when HCO3 <22. Currently at exactly 22 — will recheck. If drops below 22 on repeat, start sodium bicarbonate 650mg BID."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 9 weeks or sooner if needed."
+      "action": "IV iron infusion series starting next week. Repeat labs in 6 weeks. Return to nephrology in 4 months. Knee X-rays to be done at convenience."
     }
   ],
   "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Michael Torres\nDate: 1/15/2022"

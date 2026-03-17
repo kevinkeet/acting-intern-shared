@@ -5,15 +5,19 @@
   "author": "Dr. Jennifer Adams",
   "department": "Internal Medicine",
   "encounter": "ENC044",
-  "chiefComplaint": "Weight gain",
-  "hpi": "Patient presents for weight gain. Reports some shortness of breath with exertion, at baseline. No chest pain or palpitations.",
+  "chiefComplaint": "Weight gain and diabetes management",
+  "hpi": "Mr. Morrison is a 71-year-old male with Type 2 DM on insulin and metformin, HFrEF (EF 30-35%), persistent atrial fibrillation on warfarin, CKD Stage 3b, diabetic peripheral neuropathy, HTN, hyperlipidemia, and BPH who presents for internal medicine follow-up regarding weight gain and diabetes management. He reports his weight has increased from approximately 97 kg to 99 kg over the past 2 months. He is unsure whether this represents fluid retention or actual weight gain. His diet has been inconsistent — he reports increased consumption of convenience foods while his wife has been busy with a church fundraising project and cooking less frequently. He has been checking fingerstick blood sugars intermittently, showing fasting values of 150-190 mg/dL and postprandial values of 200-280 mg/dL. He has had no hypoglycemic episodes. His last A1c was 7.8% three months ago.\n\nHis heart failure symptoms remain at baseline NYHA Class II — dyspnea on exertion walking 1-1.5 blocks. He had a brief episode of increased edema in late April that responded to a short course of increased diuretics per cardiology. Currently his edema is minimal. He denies orthopnea, PND, or chest pain. He continues to take all medications as prescribed. His neuropathy symptoms are stable — bilateral foot numbness and tingling rated 4-5/10 on gabapentin 300mg TID. He has noticed the neuropathy seems slightly worse at night, interfering with sleep in addition to his nocturia.",
   "reviewOfSystems": {
-    "Constitutional": "No fever, chills, or weight loss",
-    "Cardiovascular": "No chest pain or palpitations",
-    "Respiratory": "Mild dyspnea",
-    "GI": "Appetite fair",
-    "GU": "No dysuria",
-    "Neurologic": "Baseline neuropathy"
+    "Constitutional": "Weight gain as above, chronic fatigue, no fevers, no chills, poor sleep quality due to nocturia and neuropathy discomfort",
+    "Cardiovascular": "Baseline DOE, no chest pain, no palpitations, no orthopnea, no PND",
+    "Respiratory": "No cough, no wheezing, no hemoptysis, dyspnea only with exertion",
+    "GI": "Increased appetite recently, no abdominal pain, no nausea/vomiting, no melena, regular bowel movements",
+    "GU": "Nocturia x2-3, weak stream, no dysuria, no hematuria",
+    "Musculoskeletal": "Bilateral knee pain 3-4/10, using acetaminophen PRN. No acute joint swelling",
+    "Neurologic": "Bilateral foot numbness and tingling worsening at night as above, no new weakness, no falls. Occasional clumsiness with fine motor tasks (buttoning)",
+    "Endocrine": "Blood sugars elevated as above, no polydipsia, no polyuria beyond baseline nocturia",
+    "Skin": "No new rashes, no foot wounds on self-inspection. Dry skin on bilateral lower extremities",
+    "Psychiatric": "Low energy, some frustration with chronic disease burden but denies depressed mood"
   },
   "vitals": {
     "bp": "136/82 mmHg",
@@ -21,54 +25,64 @@
     "rr": "17/min",
     "temp": "97.6°F",
     "spo2": "94% RA",
-    "weight": "97.2 kg"
+    "weight": "99.2 kg"
   },
   "physicalExam": {
-    "General": "Alert, oriented, no acute distress",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "Regular rate and rhythm, no murmurs",
-    "Respiratory": "Mild crackles at bases",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "No edema, warm and well-perfused",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Obese male in no acute distress. Alert and oriented, cooperative but mildly fatigued-appearing. BMI approximately 33.4",
+    "HEENT": "Normocephalic, atraumatic. PERRL. Sclera anicteric. Oropharynx clear. No thyromegaly. No carotid bruits",
+    "Cardiovascular": "Irregularly irregular at 67 bpm. S1/S2 normal. 2/6 holosystolic murmur at apex (known MR). No S3. JVP approximately 7 cm H2O — not elevated. No hepatojugular reflux",
+    "Respiratory": "Bibasilar fine crackles on deep inspiration, clearing with cough. No wheezes or rhonchi. Good air entry bilaterally",
+    "Abdomen": "Obese, soft, non-tender, non-distended. Normal bowel sounds. No hepatosplenomegaly. Mild central adiposity. Small reducible umbilical hernia",
+    "Extremities": "Trace bilateral ankle edema. Skin intact. Dry, scaly skin bilateral lower legs. No ulcers. Dorsalis pedis pulses 1+ bilaterally. No erythema or warmth",
+    "Neurologic": "Alert and oriented x3. Cranial nerves II-XII grossly intact. Decreased sensation to light touch, pinprick, and 10g monofilament bilateral feet in stocking distribution extending to mid-calf. Vibration sense absent at bilateral great toes, reduced at bilateral medial malleoli. Ankle reflexes absent bilaterally. Knee reflexes 1+. Finger-to-nose intact bilaterally"
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
+      "diagnosis": "Type 2 Diabetes Mellitus with diabetic neuropathy, suboptimal control",
       "icd10": "E11.65",
-      "notes": "HbA1c 7.8%. On insulin and metformin."
-    },
-    {
-      "diagnosis": "Chronic Kidney Disease Stage 3b",
-      "icd10": "N18.32",
-      "notes": "eGFR 41. Stable."
+      "notes": "Weight gain of 2 kg over 2 months with fasting blood sugars 150-190 and postprandial 200-280. A1c likely above 7.8% given trends. On insulin glargine 24 units QHS and metformin 250mg BID (renally dosed). Neuropathy progressing — now with nocturnal worsening and some upper extremity fine motor involvement suggesting length-dependent pattern advancing. Gabapentin 300mg TID providing moderate relief (pain 4-5/10). May be approaching gabapentin ceiling."
     },
     {
       "diagnosis": "Heart Failure with Reduced EF",
       "icd10": "I50.22",
-      "notes": "NYHA Class II. On GDMT."
+      "notes": "NYHA Class II, stable. Weight gain may have cardiac contribution but volume exam reassuring today — trace edema, no elevated JVP, minimal crackles. Recent diuretic adjustment appears effective."
+    },
+    {
+      "diagnosis": "Chronic Kidney Disease Stage 3b",
+      "icd10": "N18.32",
+      "notes": "eGFR approximately 37 per recent labs. Constrains diabetes treatment options — limits metformin dosing, SGLT2 inhibitor being discussed by cardiology/nephrology."
+    },
+    {
+      "diagnosis": "Obesity",
+      "icd10": "E66.01",
+      "notes": "BMI approximately 33.4. Contributing to insulin resistance, deconditioning, and HF symptom burden. Weight management is essential but challenging given limited exercise tolerance and multiple dietary restrictions."
+    },
+    {
+      "diagnosis": "Diabetic peripheral neuropathy, progressing",
+      "icd10": "G63",
+      "notes": "Now with nocturnal worsening and subtle upper extremity involvement. Vibration sense absent at toes. May need neuropathy medication adjustment."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "problem": "Diabetes Management",
+      "action": "A1c likely above goal. Increase insulin glargine from 24 to 26 units QHS. Consider adding mealtime rapid-acting insulin (lispro) at largest meal if fasting glucose improves but postprandial remains elevated — will reassess at next visit. Continue metformin 250mg BID. Dietary counseling reinforced — reviewed carb counting basics with patient and wife. Provided handout on low-sodium, carb-controlled meal planning. Recommended patient resume regular home blood sugar monitoring: fasting daily and 2-hour postprandial at least 3 times per week. Diabetes educator visit scheduled for June. Recheck A1c in 8-10 weeks."
+    },
+    {
+      "problem": "Weight Management",
+      "action": "Weight gain appears to be combination of dietary indiscretion and possible mild fluid retention. Target weight should return to 97-98 kg range. Counseled on portion control, avoiding processed/packaged foods, and importance of even modest activity. Recommended daily 15-minute walk if tolerated — start with 5 minutes and increase gradually. Cardiac rehab referral has been discussed by cardiology — would support enrollment. If weight continues to trend up despite dietary changes, would reassess for occult volume overload."
+    },
+    {
+      "problem": "Diabetic Neuropathy",
+      "action": "Gabapentin 300mg TID providing moderate relief but symptoms worsening at night. Options: (1) Increase gabapentin to 400mg at bedtime (keep 300mg for AM and midday doses) — renal dosing consideration with eGFR 36 but this modest increase should be tolerated. (2) If insufficient, consider transitioning to pregabalin (better nocturnal coverage, linear pharmacokinetics). (3) Add topical capsaicin 0.075% cream to bilateral feet for localized relief. Chose option 1 today — increase gabapentin to 300-300-400mg (morning-midday-bedtime). Patient to monitor for sedation or dizziness. Foot care counseling reinforced: daily inspection, appropriate footwear, no walking barefoot. Annual podiatry exam coming due."
     },
     {
       "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
-    },
-    {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
-    },
-    {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "action": "Stable at 3b. Labs ordered: BMP, CBC, A1c, lipid panel, urinalysis. Continue avoiding nephrotoxins. SGLT2 inhibitor discussion ongoing with cardiology and nephrology — would benefit all three of diabetes, CKD, and HF."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 6 weeks or sooner if needed."
+      "action": "Return in 8 weeks for reassessment of diabetes control, weight trend, and neuropathy symptom response to gabapentin dose increase. If blood sugars remain poorly controlled, will consider mealtime insulin addition. Patient and wife understand plan. Emergency precautions reviewed."
     }
   ],
   "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Jennifer Adams\nDate: 5/30/2023"

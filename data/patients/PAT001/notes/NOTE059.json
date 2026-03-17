@@ -5,70 +5,78 @@
   "author": "Dr. Jennifer Adams",
   "department": "Internal Medicine",
   "encounter": "ENC040",
-  "chiefComplaint": "Blood pressure check",
-  "hpi": "Patient presents for blood pressure check. Weight stable. Following low-sodium diet. Monitoring blood pressure at home.",
+  "chiefComplaint": "Blood pressure management and chronic disease follow-up",
+  "hpi": "Mr. Morrison is a 71-year-old male with HTN, HFrEF (EF 30-35%), persistent atrial fibrillation on warfarin, CKD Stage 3b, Type 2 DM on insulin and metformin, diabetic neuropathy, hyperlipidemia, and BPH who presents for internal medicine follow-up focused on blood pressure management and chronic disease review. His home blood pressure log shows readings of 135-148/78-90 over the past month, with occasional spikes to 150s systolic. He brings the log today — most readings are in the 135-145/80-88 range. He checks his BP twice daily (morning and evening) as instructed.\n\nHis current antihypertensive medications include Entresto 97/103mg BID, carvedilol 18.75mg BID, furosemide 60mg BID, and spironolactone 25mg daily. His most recent labs show K 4.8 — at the upper end of normal on Entresto and spironolactone. His heart rate has been in the 60-70s range on carvedilol. He denies symptomatic hypotension, dizziness with standing, or presyncope.\n\nHe reports stable exercise tolerance at baseline — walking 1-1.5 blocks with dyspnea. He has started cardiac rehabilitation per the referral from Dr. Chen and has attended 3 sessions so far. He reports it is 'harder than expected' but he feels slightly better afterward. His wife drives him to the sessions. He denies any chest pain or palpitations during rehab.\n\nHis colonoscopy is scheduled for September 8th and he has received the prep instructions and bridging anticoagulation protocol. He has the enoxaparin at home. His wife is reviewing the timeline for stopping warfarin.",
   "reviewOfSystems": {
-    "Constitutional": "Weight stable",
-    "Cardiovascular": "Dyspnea on exertion at baseline",
-    "Respiratory": "Mild dyspnea",
-    "GI": "No nausea or vomiting",
-    "GU": "No hematuria",
-    "Neurologic": "No new weakness"
+    "Constitutional": "Mild fatigue, improved slightly with cardiac rehab. No fevers, weight stable at 97-99 kg",
+    "Cardiovascular": "Baseline DOE, no chest pain, no palpitations, no orthopnea, no syncope or presyncope. No dizziness with position changes",
+    "Respiratory": "Mild dyspnea with exertion only, no cough, no wheezing",
+    "GI": "No abdominal pain, no nausea/vomiting, no melena, appetite fair, regular bowel movements. Colonoscopy prep review requested",
+    "GU": "Nocturia x2, no dysuria, no hematuria",
+    "Musculoskeletal": "Bilateral knee OA pain 4/10, using acetaminophen and topical diclofenac. Struggling with knee pain during cardiac rehab exercises",
+    "Neurologic": "Baseline neuropathy, stable. No falls. Has been wearing proper footwear as advised",
+    "Endocrine": "Blood sugars fasting 120-155, improved. A1c 7.6% per recent labs",
+    "Skin": "No rashes, no skin changes"
   },
   "vitals": {
     "bp": "144/85 mmHg",
-    "hr": "83 bpm",
-    "rr": "20/min",
+    "hr": "68 bpm",
+    "rr": "16/min",
     "temp": "98.2°F",
-    "spo2": "94% RA",
+    "spo2": "95% RA",
     "weight": "99.1 kg"
   },
   "physicalExam": {
-    "General": "Mildly fatigued-appearing",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "S1/S2 normal, mild peripheral edema",
-    "Respiratory": "Mild crackles at bases",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "Trace bilateral ankle edema",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Obese male in no acute distress. Alert, oriented, mildly fatigued-appearing but more engaged than prior visits. BMI approximately 33.4",
+    "HEENT": "Normocephalic. PERRL. Oropharynx clear. No thyromegaly. No carotid bruits",
+    "Cardiovascular": "Irregularly irregular at 68 bpm. S1/S2 normal. Known 2/6 systolic murmur at apex. JVP estimated at 8 cm H2O — borderline. No hepatojugular reflux. Orthostatic vital signs: lying BP 144/85, HR 68 → standing BP 136/78, HR 74 — no orthostatic hypotension, no symptoms with standing",
+    "Respiratory": "Trace fine crackles bilateral bases. No wheezes or rhonchi. Good air entry",
+    "Abdomen": "Soft, non-tender, non-distended. Normal bowel sounds. No hepatomegaly",
+    "Extremities": "Trace bilateral ankle edema. Warm, well-perfused. No skin breakdown. Bilateral knees: no effusion, crepitus with ROM, mild tenderness medial joint lines bilaterally",
+    "Neurologic": "Alert and oriented x3. Decreased sensation bilateral feet in stocking distribution. Gait slightly improved from prior — less wide-based, possibly from cardiac rehab"
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
-      "icd10": "E11.65",
-      "notes": "HbA1c 7.1%. On insulin and metformin."
-    },
-    {
-      "diagnosis": "Chronic Kidney Disease Stage 3b",
-      "icd10": "N18.32",
-      "notes": "eGFR 38. Stable."
+      "diagnosis": "Hypertension, not at goal",
+      "icd10": "I10",
+      "notes": "BP 144/85 today, home readings averaging 135-145/80-88. Goal <130/80 per ACC/AHA for patient with HFrEF, CKD, and DM. Currently on Entresto, carvedilol (being uptitrated), furosemide, spironolactone — four agents with antihypertensive properties. Not at goal despite quadruple therapy. Limiting factors: (1) Cannot add ACE inhibitor (angioedema history). (2) Amlodipine previously discontinued (edema worsening in HF). (3) HCTZ previously replaced by furosemide for HF. Options are limited. Carvedilol uptitration to target (25mg BID) may provide additional BP reduction. K 4.8 limits ability to increase Entresto."
     },
     {
       "diagnosis": "Heart Failure with Reduced EF",
       "icd10": "I50.22",
-      "notes": "NYHA Class II. On GDMT."
+      "notes": "NYHA Class II. Cardiac rehab initiated — patient tolerating well. Weight slightly above dry weight at 99.1 kg (dry weight approximately 97-98 kg). Mild volume overload by exam."
+    },
+    {
+      "diagnosis": "Type 2 Diabetes Mellitus",
+      "icd10": "E11.65",
+      "notes": "A1c 7.6% — improved from 7.8%. Fasting glucose 120-155, acceptable. Postprandial control still could improve."
+    },
+    {
+      "diagnosis": "Bilateral knee osteoarthritis",
+      "icd10": "M17.0",
+      "notes": "Pain 4/10, interfering with cardiac rehab participation. NSAID contraindicated. Current regimen: acetaminophen + topical diclofenac."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "problem": "Hypertension",
+      "action": "BP not at goal <130/80. Strategy: (1) Support carvedilol uptitration to 25mg BID per cardiology — expect additional 5-10 mmHg systolic reduction. (2) Ensure adequate diuresis — weight 99.1 today is ~1 kg above dry weight. Consider short-term increase in furosemide (add 20mg midday for 5-7 days) to return to dry weight, which should improve BP. (3) Dietary sodium review — at cardiac rehab, reinforce <2g sodium daily with dietitian. (4) If BP remains above goal after carvedilol at target dose and euvolemia achieved, consider adding hydralazine 25mg TID (safe in HFrEF, used as vasodilator when ACE/ARB alternatives exhausted). (5) Continue home BP monitoring log — bring to next visit."
     },
     {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "problem": "Heart Failure / Volume Management",
+      "action": "Mildly volume overloaded (weight 99.1, trace edema, borderline JVP). Add furosemide 20mg at noon for 5-7 days, then reassess weight. If weight returns to <98 kg, discontinue extra dose. Continue daily weights — if weight >99.5 kg or acute SOB worsening, call clinic. Continue cardiac rehab — encouraging patient to attend all sessions. Cardiac rehab team will be updated on volume management plan."
     },
     {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
+      "problem": "Knee OA and Cardiac Rehab",
+      "action": "Knee pain is limiting cardiac rehab participation. Coordinate with rehab team to modify exercises — emphasize upper body ergometry, recumbent cycling, and aquatic therapy options if available. Continue acetaminophen and topical diclofenac. If pain continues to limit rehab, consider orthopedic referral for corticosteroid injection to right knee (worse side) — safe with warfarin if INR therapeutic. Would need to time with anticoagulation status."
     },
     {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "problem": "Colonoscopy Preparation",
+      "action": "Colonoscopy scheduled 9/8. Reviewed prep timeline with patient and wife: (1) Stop warfarin 5 days before (9/3). (2) Start enoxaparin 80mg daily (renally adjusted for eGFR 37) when INR <2.0. (3) Last enoxaparin 24h before procedure. (4) Hold metformin morning of. (5) Reduce insulin glargine by 50% night before. (6) Clear liquids day before, GoLYTELY split dose. (7) Resume warfarin evening of procedure. Wife confirms she has all instructions from GI office. Questions addressed."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 4 weeks or sooner if needed."
+      "action": "Return in 6 weeks. Labs in 4 weeks: BMP (K monitoring), INR. Bring home BP log. If BP not improved or symptoms develop (headache, visual changes, chest pain), call clinic or present to ED."
     }
   ],
   "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Jennifer Adams\nDate: 8/30/2023"

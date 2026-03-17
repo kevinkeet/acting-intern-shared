@@ -5,70 +5,78 @@
   "author": "Dr. Jennifer Adams",
   "department": "Internal Medicine",
   "encounter": "ENC069",
-  "chiefComplaint": "Palpitations",
-  "hpi": "Patient presents for palpitations. Doing well on current regimen. Blood sugars well-controlled. No hypoglycemic episodes.",
+  "chiefComplaint": "Follow-up for volume overload and A1c management",
+  "hpi": "69-year-old male presents for follow-up 2 weeks after telephone encounter on 10/30/2021 for mild volume overload. At that time, he was advised to increase furosemide to 60mg BID for 5 days, which he completed. His wife Patricia reports that his weight came down from 100.8 kg to 98.8 kg within 4 days and has stabilized at 100.5 kg currently — slightly above his dry weight of 98 kg but improved from the acute episode. The leg swelling has improved but not completely resolved. He has been strictly adherent to the low-sodium diet since the phone call, with all meals prepared at home.\n\nHe also reports occasional palpitations over the past 2 weeks — brief episodes lasting seconds to minutes of awareness of his heart beating fast, occurring 2-3 times per week, usually at rest. These are associated with mild lightheadedness but no syncope, no chest pain, and no worsening dyspnea. He has had persistent A-fib since 2017 and has had similar episodes previously, which he attributes to his usual rhythm. However, wife notes that these seem more frequent than before.\n\nCarvedilol uptitration is ongoing — he has been on 12.5mg AM / 25mg PM for approximately 6 weeks now. He reports no dizziness, no exercise intolerance beyond baseline, and no worsening fatigue. Heart rate at home has been running 68-76 bpm per home monitoring.\n\nHis A1c was 7.8% on 9/24 labs — up from 7.4% in May. He admits that he has been less careful with his diet over the summer and early fall. Blood sugars per home monitor have been running 140-180 fasting, up from 120-160.",
   "reviewOfSystems": {
-    "Constitutional": "Weight stable",
-    "Cardiovascular": "No chest pain or palpitations",
-    "Respiratory": "No hemoptysis",
-    "GI": "Regular bowel movements",
-    "GU": "Nocturia x2",
-    "Neurologic": "Baseline neuropathy"
+    "Constitutional": "Weight 100.5 kg, slightly above baseline. Chronic fatigue, stable. No fevers, chills, or night sweats.",
+    "Cardiovascular": "Palpitations 2-3 times/week as described. Brief episodes of rapid heart awareness. No chest pain, no syncope. Baseline DOE at NYHA II — possibly slightly worse with the fluid retention but improving.",
+    "Respiratory": "No cough. No hemoptysis. No wheezing.",
+    "GI": "Appetite fair. Regular bowel movements. Following strict low-sodium diet now.",
+    "GU": "Nocturia x2, stable. No dysuria — UTI symptoms fully resolved since September treatment.",
+    "Musculoskeletal": "No joint pain. Back stiffness minimal.",
+    "Neurologic": "Bilateral foot numbness/tingling, stable. Pain 4/10 on gabapentin.",
+    "Endocrine": "Fasting glucoses 140-180, higher than goal. No hypoglycemia.",
+    "Psychiatric": "Mood stable. Sleeping well."
   },
   "vitals": {
     "bp": "147/75 mmHg",
-    "hr": "73 bpm",
+    "hr": "73 bpm (irregular)",
     "rr": "14/min",
     "temp": "97.7°F",
     "spo2": "96% RA",
     "weight": "100.5 kg"
   },
   "physicalExam": {
-    "General": "Alert, oriented, no acute distress",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "S1/S2 normal, mild peripheral edema",
-    "Respiratory": "Clear to auscultation bilaterally",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "Trace bilateral ankle edema",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Alert, oriented, pleasant male in no acute distress. Mildly overweight/obese appearance (BMI ~32.3).",
+    "HEENT": "Normocephalic. Oropharynx clear. JVP approximately 7-8 cm H2O at 45 degrees — mildly elevated, consistent with mild residual volume overload.",
+    "Cardiovascular": "Irregularly irregular rhythm, rate ~73 bpm. S1 and S2 present. Grade 2/6 holosystolic murmur at apex (known MR). No S3 or S4. Mild peripheral edema as noted below.",
+    "Respiratory": "Clear to auscultation in upper and middle fields. Faint crackles at bilateral bases on deep inspiration. No wheezes.",
+    "Abdomen": "Soft, non-tender, non-distended. No hepatomegaly. Negative hepatojugular reflux.",
+    "Extremities": "Trace to 1+ bilateral ankle edema, pitting. Improved from prior (wife notes socks no longer leaving deep indentations). Warm, well-perfused. DP pulses 1+ bilaterally.",
+    "Neurologic": "Alert, oriented x4. Decreased light touch sensation bilateral feet (stable). Motor grossly intact."
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
+      "diagnosis": "Heart Failure with Reduced EF, NYHA Class II",
+      "icd10": "I50.22",
+      "notes": "Residual mild volume overload — weight 100.5 kg (1.5-2.5 kg above dry weight). Improved from 100.8 kg after furosemide increase. JVP borderline elevated, trace-1+ edema, faint bibasilar crackles. Not meeting criteria for hospitalization or IV diuresis. May need chronic diuretic dose increase if unable to maintain dry weight on 40mg BID. Carvedilol uptitration to intermediate dose (37.5mg/day) has been well tolerated."
+    },
+    {
+      "diagnosis": "Atrial Fibrillation, persistent",
+      "icd10": "I48.1",
+      "notes": "Patient reporting increased palpitation frequency. Rate on exam 73 (controlled). Episodes may represent paroxysms of more rapid ventricular response within his persistent A-fib. No hemodynamic compromise reported. Carvedilol providing adequate rate control at rest. Will monitor — if episodes worsen, may need Holter."
+    },
+    {
+      "diagnosis": "Type 2 Diabetes Mellitus with neuropathy",
       "icd10": "E11.65",
-      "notes": "HbA1c 8.0%. On insulin and metformin."
+      "notes": "A1c rising: 7.4% (May) to 7.8% (September). Fasting glucoses 140-180 (above target 80-130). Diet has been less controlled over summer/fall. Insulin glargine 20 units QHS may need increase. Postprandial sugars not being checked — may need lispro dose adjustment."
     },
     {
       "diagnosis": "Chronic Kidney Disease Stage 3b",
       "icd10": "N18.32",
-      "notes": "eGFR 42. Stable."
-    },
-    {
-      "diagnosis": "Heart Failure with Reduced EF",
-      "icd10": "I50.22",
-      "notes": "NYHA Class II. On GDMT."
+      "notes": "Cr 1.88, eGFR 38 on last labs — stable. A1c drift may accelerate nephropathy if not corrected."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "problem": "Heart Failure — volume management",
+      "action": "Increase furosemide from 40mg BID to 40mg AM and 60mg PM (asymmetric dosing to reduce nocturia while providing greater diuretic effect). If weight does not come down to <99 kg within 1 week, increase to 60mg BID chronically. Strict <2g sodium diet. 1.5L fluid restriction. Daily weights. Wife to continue weight log."
     },
     {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "problem": "Carvedilol Uptitration",
+      "action": "Tolerating 12.5mg AM / 25mg PM well. BP 147/75 and HR 73 — room for further titration. Increase to 25mg BID (target dose) starting in 2 weeks if volume status improves. Will coordinate with Dr. Wilson. Prescription for carvedilol 25mg BID sent to pharmacy with start date 11/26."
     },
     {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
+      "problem": "Diabetes — A1c management",
+      "action": "Increase insulin glargine from 20 units to 22 units QHS. Continue metformin 500mg BID. Reinforce dietary adherence and carbohydrate awareness. Home glucose monitoring: check fasting daily and post-dinner 3x/week. Goal fasting <130, post-meal <180. Recheck A1c in 3 months. If A1c does not improve, will add mealtime lispro or consider SGLT2i (which also benefits HF and CKD)."
     },
     {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "problem": "Palpitations",
+      "action": "Likely related to baseline A-fib with variable ventricular response. Not associated with hemodynamic compromise. Expect improvement with carvedilol uptitration to target dose. If palpitations worsen or become more symptomatic (presyncope, sustained rapid rate), will order 48-hour Holter monitor. Patient instructed to check pulse when symptomatic and record rate."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 11 weeks or sooner if needed."
+      "action": "Return in 6-8 weeks for weight/volume reassessment, carvedilol tolerance check, and diabetes management review. Labs in 3 months (CMP, A1c, BNP). Annual flu vaccine given today."
     }
   ],
   "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Jennifer Adams\nDate: 11/12/2021"

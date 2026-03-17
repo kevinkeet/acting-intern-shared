@@ -2,8 +2,8 @@
   "id": "NOTE087",
   "type": "Discharge Summary",
   "date": "2022-01-16T16:22:18.416Z",
-  "author": "Dr. Patricia Lee",
-  "department": "Radiology",
+  "author": "Dr. Jennifer Adams",
+  "department": "Internal Medicine",
   "encounter": "ENC064",
   "sections": [
     {
@@ -16,40 +16,48 @@
     },
     {
       "title": "Attending Physician",
-      "content": "Dr. Patricia Lee"
+      "content": "Dr. Jennifer Adams, Internal Medicine"
     },
     {
       "title": "Principal Diagnosis",
-      "content": "Hyperglycemia"
+      "content": "Acute decompensated heart failure with reduced ejection fraction (I50.22)"
     },
     {
       "title": "Secondary Diagnoses",
-      "content": "1. Type 2 Diabetes Mellitus\n2. Chronic Kidney Disease Stage 3b\n3. Heart Failure with Reduced EF\n4. Atrial Fibrillation\n5. Hypertension"
+      "content": "1. Hyperglycemia with blood glucose 298 mg/dL on admission (R73.9)\n2. Type 2 Diabetes Mellitus with peripheral neuropathy (E11.65)\n3. Chronic Kidney Disease Stage 3b with AKI on CKD (N18.32, N17.9)\n4. Atrial Fibrillation, persistent, on warfarin (I48.1)\n5. Hypertension (I10)\n6. Coronary Artery Disease, 3-vessel (I25.10)\n7. Moderate mitral regurgitation (I34.0)\n8. Obesity (E66.01)\n9. BPH (N40.0)\n10. Diabetic peripheral neuropathy (E11.42)"
+    },
+    {
+      "title": "History of Present Illness",
+      "content": "69-year-old male with known HFrEF (EF 30-35%), CKD 3b, persistent A-fib on warfarin, and T2DM who presented to the ED on 1/9/2022 with 4 days of progressive dyspnea, orthopnea (sleeping in recliner for 3 nights), bilateral leg swelling, and a 6 kg weight gain over the preceding 2 weeks. Wife reports that despite being on target doses of GDMT (Entresto, carvedilol 25mg BID, spironolactone) since November 2021, he has had three episodes of mild decompensation in 2021 managed outpatient with furosemide increases. This admission represents a more significant decompensation. On arrival, weight was 104 kg (baseline ~98 kg), BP 158/94, HR 92 (A-fib with RVR), SpO2 90% on RA. Also noted to have blood glucose 298 mg/dL — patient reports he ran out of insulin glargine 3 days prior and did not refill.\n\nED workup: BNP 1420, Cr 2.3 (baseline 1.88-1.92), K 5.0, Na 132, troponin <0.04, INR 2.8. CXR showed cardiomegaly, bilateral pleural effusions (moderate), and pulmonary vascular congestion. ECG: A-fib with ventricular rate 92, LVH, old inferior Q waves, no acute ischemic changes."
     },
     {
       "title": "Hospital Course",
-      "content": "Patient was admitted for volume overload and treated with IV diuretics. Responded well to treatment with 3 liters of diuresis over 5 days. Symptoms improved, weight decreased from 104 kg to 99 kg. Renal function remained stable. No arrhythmias on telemetry. Patient educated on diet and medication compliance."
+      "content": "Day 1 (1/9): Admitted to telemetry. Started IV furosemide 80mg bolus then 40mg IV q12h. 2L NC for SpO2 <92% on RA. Strict I&O, 1.5L fluid restriction, <2g sodium diet. Held metformin (AKI). Started insulin drip for glucose 298 then transitioned to subcutaneous insulin correction scale. Held Entresto temporarily due to AKI (Cr 2.3). Continued carvedilol 25mg BID, spironolactone 25mg, warfarin 5mg.\n\nDay 2 (1/10): Net negative 2.1L. Weight 102.2 kg (down 1.8 kg). SpO2 93% on 1L NC. Cr peaked at 2.5 (expected with aggressive diuresis). K 4.8 (improved). BNP 1180. Blood glucose improved to 180-220 on correction scale. Crackles improved — bibasilar only. Edema improved from 3+ to 2+.\n\nDay 3 (1/11): Net negative 1.8L (cumulative -3.9L). Weight 100.6 kg. SpO2 95% on RA — O2 discontinued. Cr 2.3 (improving). K 4.6. Resumed insulin glargine 22 units QHS with correction scale. Continued IV furosemide.\n\nDay 4 (1/12): Net negative 1.5L (cumulative -5.4L). Weight 99.1 kg. Cr 2.1. JVP normalizing. Crackles cleared. Edema 1+. Transitioned to oral furosemide 60mg BID. Restarted Entresto at reduced dose 49/51mg BID (will retitrate outpatient).\n\nDay 5 (1/13): Weight 98.5 kg. Tolerating oral diuretics. Cr 2.0. Euvolemic by exam. Physical therapy evaluation: ambulates with rolling walker, mildly deconditioned but safe for discharge. Blood glucose 140-180 on glargine + correction.\n\nDays 6-7 (1/14-15): Continued to diurese gently. Weight stabilized at 98.8-99.0 kg. Cr 1.95 (nearing baseline). Patient and wife educated extensively on: daily weights, weight-based action plan, sodium restriction, fluid restriction, medication adherence, insulin management. Insulin adjusted: glargine 22 units QHS with lispro correction at meals. Pharmacy delivery set up for insulin to prevent future lapses.\n\nDay 8 (1/16): Discharge day. Weight 99.0 kg. Cr 1.95. K 4.7. Clinically euvolemic — JVP 6 cm, lungs clear, trace edema. Hemodynamically stable."
     },
     {
       "title": "Discharge Medications",
-      "content": "See medication reconciliation."
+      "content": "1. Sacubitril/valsartan (Entresto) 49/51mg BID — temporarily reduced from 97/103mg, to be retitrated outpatient\n2. Carvedilol 25mg BID — at target dose\n3. Spironolactone 25mg daily\n4. Furosemide 60mg BID — increased from 40mg BID\n5. Warfarin 5mg daily\n6. Insulin glargine 22 units QHS — auto-refill set up with pharmacy\n7. Insulin lispro correction scale with meals\n8. Metformin 500mg BID — resumed at discharge (Cr improving)\n9. Atorvastatin 80mg daily\n10. Gabapentin 300mg TID\n11. Tamsulosin 0.4mg daily\n12. Vitamin D3 2000 IU daily\n13. Omeprazole 20mg daily\n14. Acetaminophen 500mg PRN (max 2g/day)"
     },
     {
       "title": "Discharge Instructions",
-      "content": "1. Take all medications as prescribed\n2. Weigh yourself daily\n3. Follow low-sodium diet (<2g/day)\n4. Limit fluids to 2 liters daily\n5. Call if weight increases >3 lbs in a day or symptoms worsen\n6. Follow up with appointments as scheduled"
+      "content": "1. Weigh yourself every morning before breakfast, after urination, in the same clothing. Record in your weight diary.\n2. ACTION PLAN: If weight increases >2 lbs in 1 day or >5 lbs in 1 week, call Dr. Chen's office immediately.\n3. Follow low-sodium diet strictly: <2g (2000mg) sodium per day. Your wife has the handout with meal planning guide.\n4. Limit fluids to 1.5 liters (about 6 cups) per day — this includes coffee, soup, and ice.\n5. Take ALL medications as prescribed. Do NOT skip insulin doses. Pharmacy auto-delivery has been set up.\n6. Do NOT take any NSAIDs (ibuprofen, naproxen, aspirin other than prescribed). Use acetaminophen only for pain.\n7. Check blood sugar before each meal and at bedtime. Use correction scale as instructed by diabetes educator.\n8. Activity: walk around the house regularly. Gradually increase activity. Rest when short of breath.\n9. Go to the Emergency Department if: severe shortness of breath, inability to lie flat, chest pain, passing out, blood sugar >350 or <60.\n10. Keep all follow-up appointments as listed below."
     },
     {
       "title": "Follow-Up Appointments",
-      "content": "1. Primary Care: 1 week\n2. Cardiology: 2 weeks\n3. Nephrology: 4 weeks"
+      "content": "1. Primary Care (Dr. Sarah Chen): 1/23/2022 — 1 week post-discharge. Labs (CMP, BNP) 2 days before.\n2. Cardiology (Dr. James Wilson): 1/30/2022 — 2 weeks post-discharge. Discuss Entresto retitration and chronic diuretic management.\n3. Nephrology (Dr. Michael Torres): 2/14/2022 — 4 weeks post-discharge. CKD monitoring post-AKI.\n4. Endocrinology (Dr. Lisa Martinez): 2/28/2022 — insulin management and A1c follow-up.\n5. Home health nursing: 3 visits/week x 2 weeks for vitals, weight, medication reconciliation.\n6. VNA for home PT evaluation."
     },
     {
       "title": "Discharge Condition",
-      "content": "Stable, improved"
+      "content": "Stable, improved. Euvolemic. Ambulatory with rolling walker (baseline uses no assistive device — walker recommended temporarily for deconditioning). Alert, oriented. Tolerating oral diet and medications."
     },
     {
       "title": "Disposition",
-      "content": "Home with family"
+      "content": "Home with wife (primary caregiver). Home health nursing and physical therapy ordered. Pharmacy auto-delivery for insulin set up. 24-hour discharge hotline number provided."
+    },
+    {
+      "title": "Code Status",
+      "content": "Full code (confirmed with patient and wife during admission)."
     }
   ],
-  "attestation": "Discharge summary reviewed and approved.\n\nElectronically signed by: Dr. Patricia Lee\nDate: 1/16/2022"
+  "attestation": "Discharge summary reviewed and approved. I personally managed this patient during his hospitalization and agree with the above documentation.\n\nElectronically signed by: Dr. Jennifer Adams\nDate: 1/16/2022"
 }

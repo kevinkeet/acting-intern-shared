@@ -5,15 +5,19 @@
   "author": "Dr. Robert Kim",
   "department": "Urology",
   "encounter": "ENC036",
-  "chiefComplaint": "Diabetes follow-up",
-  "hpi": "Patient presents for diabetes follow-up. Doing well on current regimen. Blood sugars well-controlled. No hypoglycemic episodes.",
+  "chiefComplaint": "BPH and urinary symptoms follow-up",
+  "hpi": "Mr. Morrison is a 71-year-old male with BPH (diagnosed 2016), HFrEF (EF 30-35%), CKD Stage 3b, Type 2 DM with neuropathy, persistent atrial fibrillation (anticoagulation permanently discontinued September 2023 after upper GI hemorrhage), and multiple other comorbidities who presents for urology follow-up regarding his lower urinary tract symptoms. He was last seen in urology in March 2023 at which time combination therapy with finasteride was discussed. He deferred at that time and then was hospitalized in September 2023 for a major upper GI bleed requiring ICU stay, transfusion of 4 units pRBC, and EGD with hemostasis. His warfarin has been permanently discontinued. He reports that since his hospitalization, his urinary symptoms have been relatively stable. His nocturia remains 2-3 times nightly, which is confounded by his furosemide use for heart failure. He describes a weak urinary stream and occasional hesitancy, particularly first thing in the morning. He denies gross hematuria, dysuria, urinary incontinence, or episodes of acute urinary retention. He notes that the nocturia combined with his bilateral foot neuropathy makes nighttime bathroom trips hazardous, and his wife has placed nightlights throughout the hallway. His PSA was checked at 2.4 in October 2023, up slightly from 2.1 in 2016 but well within normal limits.",
   "reviewOfSystems": {
-    "Constitutional": "Reports fatigue",
-    "Cardiovascular": "Dyspnea on exertion at baseline",
-    "Respiratory": "Mild dyspnea",
-    "GI": "Appetite fair",
-    "GU": "Nocturia x2",
-    "Neurologic": "No new weakness"
+    "Constitutional": "Chronic fatigue, somewhat worse since GI bleed hospitalization. Weight stable. No fevers or chills",
+    "Cardiovascular": "Dyspnea on exertion at baseline (1-1.5 blocks), no chest pain, no palpitations, no orthopnea",
+    "Respiratory": "No cough, no wheezing, no hemoptysis",
+    "GI": "No melena or hematemesis since September hospitalization. Appetite fair. Regular brown bowel movements. Taking pantoprazole 40mg daily as prescribed",
+    "GU": "LUTS as detailed in HPI — nocturia x2-3, weak stream, hesitancy. No hematuria, no dysuria, no incontinence, no retention episodes",
+    "Musculoskeletal": "Bilateral knee pain 3/10, chronic. No acute joint swelling",
+    "Neurologic": "Bilateral foot neuropathy at baseline — numbness and tingling. Contributes to balance concerns especially during nighttime bathroom trips. No falls since last visit",
+    "Integumentary": "No rashes, no genital lesions, no skin breakdown",
+    "Endocrine": "Blood sugars variable, fasting 130-160. No hypoglycemic episodes",
+    "Psychiatric": "Mood somewhat low since hospitalization. Less interest in usual activities per wife"
   },
   "vitals": {
     "bp": "147/77 mmHg",
@@ -24,56 +28,53 @@
     "weight": "99.7 kg"
   },
   "physicalExam": {
-    "General": "Alert, oriented, no acute distress",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "Irregularly irregular, no murmurs, JVP not elevated",
-    "Respiratory": "Mild crackles at bases",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "1+ pedal edema bilaterally",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Obese male appearing stated age, mildly fatigued-appearing but alert and cooperative. No acute distress",
+    "HEENT": "Normocephalic, atraumatic. Oropharynx clear. Moist mucous membranes. No cervical lymphadenopathy",
+    "Cardiovascular": "Irregularly irregular rhythm at 78 bpm consistent with atrial fibrillation. S1/S2 present. 2/6 holosystolic murmur at apex. JVP not elevated. No carotid bruits",
+    "Respiratory": "Bibasilar crackles on deep inspiration, mild. No wheezes. Adequate air entry bilaterally",
+    "Abdomen": "Obese, soft, non-tender, non-distended. No suprapubic fullness or tenderness. No CVA tenderness. Normal bowel sounds",
+    "GU/DRE": "Digital rectal exam: Prostate moderately enlarged, estimated 45 grams, smooth, symmetric, no nodules, no tenderness. Median sulcus preserved. No rectal masses. Stool hemoccult negative (important given recent GI bleed history)",
+    "Extremities": "1+ bilateral pedal edema, symmetric. Warm, well-perfused. No skin breakdown on feet",
+    "Neurologic": "Alert and oriented x3. Decreased sensation to light touch bilateral feet in stocking distribution. Gait mildly wide-based, steady with deliberate steps"
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
-      "icd10": "E11.65",
-      "notes": "HbA1c 8.3%. On insulin and metformin."
+      "diagnosis": "Benign Prostatic Hyperplasia",
+      "icd10": "N40.0",
+      "notes": "Moderate LUTS on tamsulosin 0.4mg daily since 2016. AUA Symptom Score today: 16 (moderate, slightly up from 15 in March 2023 and 12 at diagnosis). Prostate estimated at 45g on DRE. PSA 2.4 (October 2023), stable. The combination therapy discussion with finasteride was deferred by the patient pre-hospitalization and remains an option. Given his complex post-GI-bleed medication regimen, adding finasteride is still reasonable as there are no significant drug interactions. Nocturia remains the most bothersome symptom but is confounded by loop diuretic use and HF-related nocturnal fluid redistribution."
     },
     {
-      "diagnosis": "Chronic Kidney Disease Stage 3b",
-      "icd10": "N18.32",
-      "notes": "eGFR 34. Stable."
+      "diagnosis": "Nocturia, multifactorial",
+      "icd10": "R35.1",
+      "notes": "Nocturia 2-3 times nightly. Contributing factors: BPH obstruction, loop diuretic use (furosemide 60mg BID), heart failure with nocturnal fluid redistribution when supine, CKD-associated nocturia, and possible autonomic bladder neuropathy from diabetes. This also represents a significant fall risk given his peripheral neuropathy and wide-based gait — nighttime trips to bathroom are the highest-risk activity."
     },
     {
       "diagnosis": "Heart Failure with Reduced EF",
       "icd10": "I50.22",
-      "notes": "NYHA Class II. On GDMT."
+      "notes": "NYHA Class II. Mild bibasilar crackles and 1+ edema today — mildly hypervolemic. Weight 99.7 kg slightly above baseline. On Entresto, carvedilol (being uptitrated), spironolactone, furosemide. Not yet on SGLT2 inhibitor."
     },
     {
-      "diagnosis": "Atrial Fibrillation",
+      "diagnosis": "Atrial Fibrillation, no anticoagulation",
       "icd10": "I48.1",
-      "notes": "Rate controlled. On anticoagulation."
+      "notes": "Rate 78 on carvedilol. Warfarin permanently discontinued post-GI bleed (September 2023). On aspirin 81mg and pantoprazole 40mg daily. Stool guaiac negative today — reassuring."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "problem": "BPH",
+      "action": "Continue tamsulosin 0.4mg daily. AUA-SS 16 (moderate). Given prostate size 45g and persistent moderate symptoms despite alpha-blocker monotherapy, again discussed adding finasteride 5mg daily for combination therapy (MTOPS trial evidence supports additive benefit for prostates >40g). Patient is now more receptive since his medication regimen has stabilized post-hospitalization. Reviewed side effects: decreased libido, ejaculatory dysfunction, small risk of depression (monitoring for this given wife's report of low mood). Patient agrees to start finasteride — prescription sent to pharmacy. Will recheck PSA in 6 months (finasteride will reduce PSA by ~50%, so must multiply measured value by 2 for screening purposes). Post-void residual ultrasound ordered — to be completed before next visit."
     },
     {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "problem": "Nocturia",
+      "action": "Behavioral measures reinforced: (1) Take morning furosemide by 8 AM, second dose no later than 2 PM. (2) Fluid restriction after 6 PM. (3) Elevate legs 1-2 hours in the afternoon to promote daytime fluid mobilization. (4) Avoid caffeine after noon. (5) Double-voiding technique before bed. Safety measures: nightlights in place (confirmed), clear path to bathroom, non-slip mats. Given significant fall risk (neuropathy + nocturia + wide-based gait), reiterated importance of wearing supportive shoes even for nighttime trips, not just socks."
     },
     {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
-    },
-    {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "problem": "Post-GI bleed monitoring",
+      "action": "Stool guaiac negative today. No signs of recurrent bleeding. If any urologic procedures needed in the future (cystoscopy, prostate biopsy), anticoagulation bridging is NOT required as warfarin has been permanently discontinued. Aspirin 81mg will need to be held 7 days prior to any elective procedure — coordinate with PCP and cardiology."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 11 weeks or sooner if needed."
+      "action": "Return to urology in 4 months with PVR results. Sooner if urinary retention, gross hematuria, worsening symptoms, or concerns about finasteride side effects. Will coordinate with PCP regarding ongoing mood monitoring."
     }
   ],
   "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Robert Kim\nDate: 11/5/2023"

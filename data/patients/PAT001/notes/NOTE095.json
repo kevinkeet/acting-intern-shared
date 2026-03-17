@@ -2,69 +2,90 @@
   "id": "NOTE095",
   "type": "Progress Note",
   "date": "2021-08-20T15:22:18.416Z",
-  "author": "Dr. Robert Kim",
-  "department": "Urology",
+  "author": "Dr. James Wilson",
+  "department": "Cardiology",
   "encounter": "ENC072",
-  "chiefComplaint": "Lab review",
-  "hpi": "Patient presents for lab review. Doing well on current regimen. Blood sugars well-controlled. No hypoglycemic episodes.",
+  "chiefComplaint": "Annual cardiology follow-up",
+  "hpi": "69-year-old male with HFrEF (EF 30-35% on September 2020 echo), persistent atrial fibrillation on warfarin, CKD 3b, and Type 2 DM presents for his annual cardiology evaluation. Overall, he reports a stable clinical course since the mild HF decompensation in January 2021 (ED visit, managed with temporary diuretic increase) and pneumonia hospitalization in February 2021. He has returned to his baseline NYHA Class II functional status — able to walk around the house, to the mailbox, and do light activities of daily living without difficulty. He becomes dyspneic with sustained walking beyond half a block or climbing a full flight of stairs, which is unchanged from his pattern over the past year.\n\nHis wife Patricia continues to log daily weights, which have been stable at 98-99 kg. He had a brief episode of leg swelling in mid-July (weight up to 100.2 kg after dietary indiscretion at a family event), managed with a 3-day furosemide increase per nephrology, which resolved promptly. He denies orthopnea, PND, chest pain, or syncope. Palpitations are at baseline — he is aware of his irregular rhythm but it does not cause symptoms. He sleeps with one pillow comfortably.\n\nHe asks about whether a repeat echocardiogram is needed. Last TTE was September 2020 (11 months ago). He also asks about the ICD discussion from prior visits — he has been thinking about it but remains uncertain.",
   "reviewOfSystems": {
-    "Constitutional": "Reports fatigue",
-    "Cardiovascular": "No orthopnea",
-    "Respiratory": "No hemoptysis",
-    "GI": "Appetite fair",
-    "GU": "No hematuria",
-    "Neurologic": "No dizziness"
+    "Constitutional": "Chronic fatigue, stable. Energy level adequate for his usual routine. No fevers, chills, or weight loss.",
+    "Cardiovascular": "DOE at NYHA II baseline, stable. No orthopnea, PND, chest pain, or syncope. Baseline palpitations (A-fib) unchanged.",
+    "Respiratory": "No cough, wheezing, or hemoptysis. Pulmonology evaluation 6/2021 — dyspnea attributed primarily to cardiac etiology.",
+    "GI": "Following low-sodium diet. Appetite fair. No GI complaints.",
+    "GU": "Nocturia x2 (stable on tamsulosin). No other urinary symptoms.",
+    "Neurologic": "Bilateral foot numbness (diabetic neuropathy), stable on gabapentin.",
+    "Musculoskeletal": "Mild intermittent low back stiffness, managed with acetaminophen.",
+    "Psychiatric": "Mood stable. Active in church community.",
+    "Hematologic": "Known mild anemia (Hgb ~11). No bleeding symptoms."
   },
   "vitals": {
-    "bp": "137/90 mmHg",
-    "hr": "79 bpm",
+    "bp": "137/78 mmHg",
+    "hr": "79 bpm (irregular)",
     "rr": "18/min",
     "temp": "97.6°F",
     "spo2": "94% RA",
     "weight": "98.9 kg"
   },
   "physicalExam": {
-    "General": "Alert, oriented, no acute distress",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "Regular rate and rhythm, no murmurs",
-    "Respiratory": "Clear to auscultation bilaterally",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "No edema, warm and well-perfused",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Alert, oriented, pleasant obese male in no acute distress. Appears at his baseline functional state.",
+    "HEENT": "JVP estimated at 7 cm H2O at 45 degrees — borderline, not significantly elevated. No carotid bruits.",
+    "Cardiovascular": "Irregularly irregular rhythm consistent with A-fib, ventricular rate ~79 bpm. S1 normal. S2 physiologically split. Grade 2/6 holosystolic murmur at apex radiating to left axilla (known moderate MR, unchanged from prior exams). No S3 gallop — notable, as S3 would suggest worsening decompensation. No S4. No rubs. PMI laterally displaced to anterior axillary line (known LV dilation). No heaves or thrills.",
+    "Respiratory": "Clear to auscultation bilaterally in upper and middle fields. Very faint crackles at bases bilaterally on deep inspiration — minimal, likely dependent atelectasis. No wheezes.",
+    "Abdomen": "Soft, obese, non-tender. No hepatomegaly. Negative hepatojugular reflux.",
+    "Extremities": "No peripheral edema bilaterally. Warm, well-perfused. DP pulses 1+ bilaterally. No varicosities.",
+    "Neurologic": "Alert, oriented. Decreased sensation bilateral feet (known neuropathy). Gait steady but slightly wide-based."
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
-      "icd10": "E11.65",
-      "notes": "HbA1c 7.9%. On insulin and metformin."
+      "diagnosis": "Heart Failure with Reduced Ejection Fraction, NYHA Class II",
+      "icd10": "I50.22",
+      "notes": "Clinically stable at NYHA II baseline. Last echo September 2020 showed EF 30-35%, moderate MR, severely dilated LA. Currently on guideline-directed medical therapy: Entresto 97/103mg BID (target dose), carvedilol 12.5mg BID (SUBMAXIMAL — target 25mg BID), spironolactone 25mg daily, furosemide 40mg BID. BNP from January was 510 (mild decompensation), likely improved. Not yet on SGLT2 inhibitor. Repeat echo deferred — last echo 11 months ago, clinical status unchanged, unlikely to change management at this point. Will reassess echo timing at next visit or if clinical change."
     },
     {
-      "diagnosis": "Chronic Kidney Disease Stage 3b",
-      "icd10": "N18.32",
-      "notes": "eGFR 32. Stable."
+      "diagnosis": "Atrial Fibrillation, persistent",
+      "icd10": "I48.1",
+      "notes": "Rate controlled on carvedilol, HR 79 — at the upper end of rate control target. May improve with carvedilol uptitration. On warfarin, CHA2DS2-VASc 4. INR management per PCP/anticoag clinic."
+    },
+    {
+      "diagnosis": "Coronary Artery Disease, 3-vessel, medically managed",
+      "icd10": "I25.10",
+      "notes": "Known from 2018 catheterization: LAD 60% proximal, LCx 50% mid, RCA 70% proximal. Medically managed — no anginal symptoms. On atorvastatin 80mg, aspirin held while on warfarin."
+    },
+    {
+      "diagnosis": "ICD evaluation — primary prevention",
+      "icd10": "Z45.02",
+      "notes": "Patient meets Class I indication for ICD: EF <=35% on optimal GDMT >3 months, NYHA II-III, expected survival >1 year. However, GDMT is not fully optimized (carvedilol submaximal, no SGLT2i). Guidelines recommend optimizing GDMT before ICD implantation. Patient also remains ambivalent."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "problem": "Heart Failure — GDMT optimization",
+      "action": "Carvedilol remains at 12.5mg BID (50% of target dose of 25mg BID). Plan to uptitrate: increase to 18.75mg BID (split 25mg + 12.5mg) starting in 2 weeks if BP tolerates (current SBP 137, can tolerate reduction). Patient to monitor for dizziness, bradycardia, or worsening fatigue. Goal HR 55-70 at rest. If tolerated, will further uptitrate to 25mg BID at next visit. Continue Entresto 97/103mg BID, spironolactone 25mg, furosemide 40mg BID. Daily weights, <2g sodium, 1.5L fluid restriction."
     },
     {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "problem": "SGLT2 Inhibitor Discussion",
+      "action": "Discussed adding empagliflozin 10mg daily per EMPEROR-Reduced and DAPA-HF trial evidence. Triple benefit for this patient: HFrEF mortality/hospitalization reduction, CKD progression slowing, and improved glycemic control. Patient interested but wants to focus on carvedilol uptitration first before adding another new medication. Revisit SGLT2i discussion at next visit."
     },
     {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
+      "problem": "ICD — Primary Prevention",
+      "action": "Patient meets criteria but GDMT not yet fully optimized. Per guidelines, should achieve target doses of neurohormonal blockade before ICD assessment. Plan: optimize carvedilol to target, add SGLT2i, then reassess EF with repeat echo. If EF remains <=35% after 3-6 months of fully optimized GDMT, will proceed with formal ICD candidacy discussion. Patient to discuss with family in the interim."
     },
     {
       "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "action": "HR 79 — somewhat above target. Expect improvement with carvedilol uptitration. Continue warfarin with INR monitoring."
+    },
+    {
+      "problem": "Echocardiogram",
+      "action": "Defer repeat TTE at this time — last echo 11 months ago, clinical status stable. Will order repeat echo after carvedilol reaches target dose (anticipate 3-6 months) to reassess EF and inform ICD decision."
+    },
+    {
+      "problem": "Cardiac Rehabilitation",
+      "action": "Referral placed for outpatient cardiac rehab. Would benefit from supervised exercise program given deconditioning and HFrEF. Patient agreeable."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 7 weeks or sooner if needed."
+      "action": "Return to cardiology in 3 months. Sooner if symptoms worsen or carvedilol not tolerated. Labs (BMP, BNP) 2 weeks after carvedilol increase."
     }
   ],
-  "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Robert Kim\nDate: 8/20/2021"
+  "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. James Wilson\nDate: 8/20/2021"
 }

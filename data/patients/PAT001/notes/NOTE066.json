@@ -5,15 +5,17 @@
   "author": "Dr. Robert Kim",
   "department": "Urology",
   "encounter": "ENC043",
-  "chiefComplaint": "Joint pain",
-  "hpi": "Patient presents for joint pain. Reports some shortness of breath with exertion, at baseline. No chest pain or palpitations.",
+  "chiefComplaint": "BPH follow-up and joint pain",
+  "hpi": "Mr. Morrison is a 71-year-old male with BPH on tamsulosin, HFrEF (EF 30-35%), persistent atrial fibrillation on warfarin, CKD Stage 3b, Type 2 DM with neuropathy, and a history of acute gout (2019) who presents for urology follow-up. He also reports bilateral knee pain that has been bothering him for the past 2-3 weeks, rated 5/10, worse with prolonged standing and stair climbing.\n\nRegarding his BPH: He has been on tamsulosin 0.4mg daily and reports his LUTS are at a stable moderate level. Nocturia remains 2-3 times per night. His stream is weak but he can initiate voiding without significant hesitancy. He denies urinary retention episodes, gross hematuria, or incontinence. He decided against starting finasteride after discussing with his wife — concerned about potential side effects. His post-void residual ultrasound from April showed PVR of 85 cc, which is reassuring. His PSA result came back at 2.8 (up from 2.1 in 2016) — this represents a gradual rise consistent with prostate growth but below threshold for biopsy consideration.\n\nRegarding joint pain: He reports bilateral knee pain that is chronic but has worsened recently, particularly the right knee. The pain is described as a deep aching sensation, worse with weight-bearing and at the end of the day. He denies any acute onset, erythema, warmth, or swelling suggestive of gout flare. He had an episode of gout in July 2019 affecting the left first MTP joint. He is not on allopurinol (discontinued January 2020 due to CKD concerns). He is using acetaminophen 500mg 2-3 times daily with partial relief. He specifically asked about ibuprofen and was told it is contraindicated given his CKD and warfarin use.",
   "reviewOfSystems": {
-    "Constitutional": "Reports fatigue",
-    "Cardiovascular": "Dyspnea on exertion at baseline",
-    "Respiratory": "No hemoptysis",
-    "GI": "No nausea or vomiting",
-    "GU": "No hematuria",
-    "Neurologic": "No dizziness"
+    "Constitutional": "Chronic fatigue, no fevers, no weight loss",
+    "Cardiovascular": "Baseline dyspnea on exertion, no chest pain, no palpitations",
+    "Respiratory": "No cough, no hemoptysis",
+    "GI": "Appetite fair, no abdominal pain, no nausea/vomiting, no melena or hematochezia",
+    "GU": "LUTS as above — nocturia x2-3, weak stream, no hematuria, no dysuria, no incontinence, no retention",
+    "Musculoskeletal": "Bilateral knee pain as in HPI, right worse than left. No joint swelling, warmth, or erythema. No foot or toe pain (no gout flare symptoms)",
+    "Neurologic": "Baseline bilateral foot neuropathy, no dizziness, no falls",
+    "Endocrine": "Blood sugars variable, no hypoglycemic episodes"
   },
   "vitals": {
     "bp": "136/86 mmHg",
@@ -24,51 +26,49 @@
     "weight": "99.4 kg"
   },
   "physicalExam": {
-    "General": "Mildly fatigued-appearing",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "S1/S2 normal, mild peripheral edema",
-    "Respiratory": "No wheezes or rhonchi",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "No edema, warm and well-perfused",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Obese male, mildly fatigued-appearing, alert and oriented, no acute distress. BMI approximately 33.5",
+    "HEENT": "Normocephalic, atraumatic. Oropharynx clear. No cervical lymphadenopathy",
+    "Cardiovascular": "Irregularly irregular at 76 bpm. S1/S2 normal. Known systolic murmur at apex. No peripheral cyanosis",
+    "Respiratory": "Clear to auscultation bilaterally. No crackles or wheezes",
+    "Abdomen": "Obese, soft, non-tender. No suprapubic tenderness or fullness. Normal bowel sounds",
+    "GU/DRE": "Deferred today — performed 3 months ago with stable findings (prostate 40-50g, smooth, no nodules)",
+    "Musculoskeletal": "Bilateral knees: No effusion, no erythema, no warmth. Crepitus with passive range of motion bilaterally, right greater than left. Full extension bilaterally. Flexion to 110 degrees bilaterally. Mild medial joint line tenderness right knee. No ligamentous laxity. No joint instability. First MTP joints bilaterally: no erythema, swelling, or tenderness (no gout)",
+    "Extremities": "Trace bilateral ankle edema. Warm, well-perfused. No skin breakdown. No cyanosis",
+    "Neurologic": "Decreased sensation bilateral feet. Gait antalgic, favoring right leg"
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
-      "icd10": "E11.65",
-      "notes": "HbA1c 7.1%. On insulin and metformin."
+      "diagnosis": "Benign Prostatic Hyperplasia, stable",
+      "icd10": "N40.0",
+      "notes": "LUTS moderate and stable on tamsulosin monotherapy. PVR 85cc — adequate emptying. PSA 2.8 (up from 2.1 in 2016 — 0.1/year rise, consistent with age-related prostate growth, not suspicious). Patient declined finasteride. Will continue conservative management with alpha-blocker alone."
     },
     {
-      "diagnosis": "Chronic Kidney Disease Stage 3b",
-      "icd10": "N18.32",
-      "notes": "eGFR 37. Stable."
+      "diagnosis": "Bilateral knee osteoarthritis",
+      "icd10": "M17.0",
+      "notes": "Clinical presentation consistent with bilateral knee OA — chronic aching pain, worse with activity, mechanical crepitus, medial joint line tenderness, no inflammatory features. Right worse than left. No features of gout flare. Prior gout history (2019) raises consideration for crystalline arthropathy but clinical picture more consistent with degenerative disease. Obesity and deconditioning are significant contributing factors. NSAID use is strictly contraindicated given CKD 3b and warfarin anticoagulation."
     },
     {
-      "diagnosis": "Heart Failure with Reduced EF",
-      "icd10": "I50.22",
-      "notes": "NYHA Class II. On GDMT."
+      "diagnosis": "History of Gout",
+      "icd10": "M10.9",
+      "notes": "Prior gout flare 2019, treated with colchicine. Not on prophylactic therapy (allopurinol discontinued 1/2020). Last uric acid 9.2 in 2019. Should recheck uric acid. Risk factors for gout flare include CKD, furosemide use, and obesity."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "problem": "BPH",
+      "action": "Continue tamsulosin 0.4mg daily. LUTS stable and PVR reassuring at 85cc. PSA 2.8 — will recheck in 1 year. No indication for finasteride if patient declines (absolute indication would be if PVR worsens or acute retention occurs). Continue advising timed voiding, double voiding technique, and limiting evening fluids. Nocturia management as previously discussed — coordinate furosemide timing with PCP."
     },
     {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "problem": "Bilateral Knee Pain / OA",
+      "action": "Clinical presentation consistent with bilateral knee OA. Management is challenging given NSAID contraindication. Current plan: (1) Continue acetaminophen 500mg q6h PRN, max 2g/day. (2) Add topical diclofenac gel 1% to bilateral knees BID — minimal systemic absorption, safer than oral NSAIDs in CKD though still use with caution and monitor renal function. (3) Consider physical therapy referral for quadriceps strengthening and range of motion — will coordinate with PCP. (4) Weight management — even 5 kg weight loss could meaningfully reduce knee joint stress. (5) If symptoms persist or worsen, consider intra-articular corticosteroid injection (right knee) — safe with warfarin if INR therapeutic and technique appropriate. Refer to orthopedics or rheumatology if warranted."
     },
     {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
-    },
-    {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "problem": "Gout Risk",
+      "action": "Patient at ongoing risk for gout flare given CKD, furosemide, obesity, and history. Check uric acid level at next lab draw. If elevated, would discuss prophylactic therapy with PCP — febuxostat may be preferred over allopurinol in CKD though cardiovascular safety data (CARES trial) needs to be considered given his cardiac history. If acute flare occurs, colchicine 0.6mg daily (renally adjusted) would be first-line treatment; avoid NSAIDs."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 11 weeks or sooner if needed."
+      "action": "Return to urology in 6 months for BPH reassessment. PSA recheck in 1 year. Knee pain management to be coordinated with PCP/internal medicine. If urinary symptoms worsen significantly, retention occurs, or hematuria develops, return sooner."
     }
   ],
   "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Robert Kim\nDate: 7/1/2023"

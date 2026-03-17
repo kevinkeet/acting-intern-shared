@@ -5,15 +5,19 @@
   "author": "Dr. Patricia Lee",
   "department": "Radiology",
   "encounter": "ENC037",
-  "chiefComplaint": "Blood pressure check",
-  "hpi": "Patient presents for blood pressure check. Reports overall stable condition since last visit. Compliant with medications. No new symptoms.",
+  "chiefComplaint": "Post-GI bleed follow-up and blood pressure check",
+  "hpi": "Mr. Morrison is a 71-year-old male with HFrEF (EF 30-35%), CKD Stage 3b, Type 2 DM on insulin, persistent atrial fibrillation (warfarin permanently discontinued September 2023), diabetic peripheral neuropathy, HTN, hyperlipidemia, obesity, and BPH who presents for follow-up approximately five weeks after discharge from his hospitalization for upper GI hemorrhage. He completed his 14-day course of H. pylori triple therapy (pantoprazole, clarithromycin, metronidazole) without significant side effects other than mild metallic taste. His repeat EGD on October 11 showed healing of the gastric ulcer with no visible vessel, and biopsies confirmed successful H. pylori eradication. He has had no further episodes of melena, hematemesis, or dark stools. He reports his overall condition is stable, though he feels somewhat deconditioned from the hospitalization. His blood pressure at home has been running 135-145/80-88, slightly above his usual range, and he is concerned about this. He denies chest pain, worsening dyspnea, orthopnea, or PND. He states his appetite is improving gradually and he has been compliant with all medications, including the new pantoprazole 40mg daily and aspirin 81mg daily which replaced his warfarin. His wife Patricia has been vigilant about monitoring his stools and reports they have been consistently brown and formed.",
   "reviewOfSystems": {
-    "Constitutional": "No fever, chills, or weight loss",
-    "Cardiovascular": "Dyspnea on exertion at baseline",
-    "Respiratory": "Mild dyspnea",
-    "GI": "No nausea or vomiting",
-    "GU": "No hematuria",
-    "Neurologic": "Baseline neuropathy"
+    "Constitutional": "Mild persistent fatigue and deconditioning since hospitalization. No fevers, chills, or night sweats. Weight stable around 100 kg, slightly above pre-hospitalization baseline",
+    "Cardiovascular": "Dyspnea on exertion slightly worse than pre-hospitalization baseline, attributed to deconditioning. No chest pain, no palpitations, no orthopnea, no PND",
+    "Respiratory": "No cough, no wheezing, no hemoptysis",
+    "GI": "No melena, no hematemesis, no abdominal pain. Appetite improving. Bowel movements regular and brown. Mild heartburn controlled by pantoprazole. No nausea or vomiting",
+    "GU": "Nocturia x2-3 (baseline), no hematuria, no dysuria",
+    "Musculoskeletal": "Bilateral knee stiffness, deconditioned, slower gait. No acute joint pain",
+    "Neurologic": "Baseline bilateral foot neuropathy, unchanged. No falls. No dizziness",
+    "Hematologic": "No bruising, no petechiae, no continued bleeding from any source",
+    "Endocrine": "Blood sugars variable 120-180, slightly higher during hospitalization recovery. No hypoglycemia",
+    "Psychiatric": "Mood somewhat low, attributes to feeling 'beat up' from hospitalization. Sleeping fair"
   },
   "vitals": {
     "bp": "143/84 mmHg",
@@ -24,46 +28,62 @@
     "weight": "100.3 kg"
   },
   "physicalExam": {
-    "General": "Mildly fatigued-appearing",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "Irregularly irregular, no murmurs, JVP not elevated",
-    "Respiratory": "Clear to auscultation bilaterally",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "1+ pedal edema bilaterally",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Obese male appearing stated age, mildly fatigued-appearing but alert and conversant. Appears deconditioned compared to visits prior to hospitalization. No acute distress",
+    "HEENT": "Normocephalic, atraumatic. PERRL, EOMI. Oropharynx clear with moist mucous membranes. Conjunctivae slightly pale (expected given recent anemia). No scleral icterus. No cervical lymphadenopathy",
+    "Cardiovascular": "Irregularly irregular rhythm at 74 bpm. S1/S2 present. 2/6 holosystolic murmur at apex (known MR). No S3 appreciated. JVP estimated at 8 cm H2O, borderline. No peripheral cyanosis",
+    "Respiratory": "Clear to auscultation bilaterally with good air entry. No crackles, wheezes, or rhonchi",
+    "Abdomen": "Obese, soft, non-tender, non-distended. No epigastric tenderness (improved from post-hospitalization). Normal bowel sounds. No hepatosplenomegaly by palpation. No masses",
+    "Extremities": "1+ bilateral pedal edema, symmetric. Warm and well-perfused. Dorsalis pedis pulses palpable bilaterally. No skin breakdown",
+    "Neurologic": "Alert and oriented x3. Decreased sensation to light touch bilateral feet in stocking distribution. Gait slow and wide-based but stable. No focal deficits",
+    "Skin": "No petechiae, no ecchymoses, no jaundice. Surgical sites from IV access healing well"
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
-      "icd10": "E11.65",
-      "notes": "HbA1c 7.9%. On insulin and metformin."
+      "diagnosis": "Upper GI hemorrhage, recovering",
+      "icd10": "K25.4",
+      "notes": "Status post gastric ulcer with visible vessel (Forrest IIa), status post EGD with epinephrine injection, bipolar cautery, and hemoclip (September 13, 2023). Repeat EGD October 11 showed healing ulcer, no visible vessel, H. pylori eradicated on biopsy. Hemoglobin recovering — was 7.2 at nadir, 9.4 at discharge, checking today. No further bleeding episodes. Anticoagulation with warfarin permanently discontinued per multidisciplinary decision. On indefinite pantoprazole 40mg daily for gastroprotection. Patient counseled extensively on avoiding NSAIDs — prior ibuprofen use contributed to the bleed."
     },
     {
-      "diagnosis": "Chronic Kidney Disease Stage 3b",
+      "diagnosis": "Hypertension, suboptimally controlled",
+      "icd10": "I10",
+      "notes": "BP 143/84 today, above goal of <130/80 for patient with HF, CKD, and DM. Home readings also running 135-145 systolic. Contributing factors may include post-hospitalization stress, reconditioning, and weight up slightly at 100.3 kg (baseline 98). Current antihypertensive regimen: Entresto 97/103mg BID, carvedilol 12.5mg BID (below target), furosemide 60mg BID, spironolactone 25mg. Carvedilol is being uptitrated by cardiology — reaching target dose of 25mg BID should help with BP control."
+    },
+    {
+      "diagnosis": "Heart Failure with Reduced EF",
+      "icd10": "I50.22",
+      "notes": "NYHA Class II, mildly deconditioned post-hospitalization. Weight 100.3 kg, up 2 kg from baseline — possibly early volume overload vs. reconditioning weight gain. JVP borderline elevated. Lungs clear. Will need close monitoring. On Entresto, carvedilol (submaximal dose), spironolactone, furosemide."
+    },
+    {
+      "diagnosis": "CKD Stage 3b",
       "icd10": "N18.32",
-      "notes": "eGFR 37. Stable."
+      "notes": "eGFR 37, stable from pre-hospitalization baseline. Creatinine recovered to 1.92 after peaking at 2.8 during GI bleed. Renal function tolerated the acute insult well."
+    },
+    {
+      "diagnosis": "Anemia, recovering",
+      "icd10": "D64.9",
+      "notes": "Post-GI bleed anemia. Received 4 units pRBC during hospitalization. Hemoglobin 9.4 at discharge. Checking today for recovery trend. Likely multifactorial — acute blood loss + CKD-related chronic anemia component."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "problem": "GI Bleed Recovery",
+      "action": "Repeat EGD showed healing — no further endoscopic intervention needed. Continue pantoprazole 40mg daily indefinitely. H. pylori stool antigen ordered to reconfirm eradication (in addition to biopsy). Patient and wife counseled again to strictly avoid all NSAIDs including OTC ibuprofen, naproxen, and aspirin doses above 81mg. Acetaminophen up to 2g/day is safe for pain. If any dark stools, blood in stool, or lightheadedness, present to ED immediately."
     },
     {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "problem": "Hypertension",
+      "action": "BP 143/84, above goal. Defer additional antihypertensive agents at this time — carvedilol is being uptitrated by cardiology (currently 12.5mg BID, target 25mg BID), which should provide additional BP lowering. Continue home BP monitoring log. If systolic remains >140 after carvedilol optimization, will need to reconsider additional agent. Reinforce low-sodium diet <2g/day."
     },
     {
       "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
+      "action": "Weight 100.3 kg, slightly above baseline. 1+ edema. Consider short-term furosemide increase if weight does not trend down with dietary sodium restriction. Daily weights — action weight >101 kg triggers call to cardiology/PCP. Continue Entresto, carvedilol (uptitrating), spironolactone, furosemide. Cardiac rehab referral discussed — patient agrees in principle, will discuss with cardiology at upcoming appointment."
     },
     {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "problem": "Anemia",
+      "action": "Check CBC today for hemoglobin trend. If Hgb <10, consider iron studies to assess whether iron supplementation would benefit recovery. CKD-related chronic anemia (baseline Hgb ~10.8-11) will be baseline floor — acute bleed component should resolve with time. Erythropoietin-stimulating agents not currently indicated (Hgb was 10.8 pre-bleed, near CKD goal)."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 11 weeks or sooner if needed."
+      "action": "Labs ordered today: CBC, BMP, iron studies. GI follow-up in 3 months (April 2024) for surveillance EGD. Cardiology follow-up in 2 weeks for carvedilol uptitration. PCP follow-up in 4-6 weeks. Return sooner if any signs of recurrent bleeding, worsening edema, or BP symptoms."
     }
   ],
   "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Patricia Lee\nDate: 10/22/2023"

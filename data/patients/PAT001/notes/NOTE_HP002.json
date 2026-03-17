@@ -1,0 +1,228 @@
+{
+  "id": "NOTE_HP002",
+  "type": "H&P",
+  "title": "Hospital Admission H&P - Upper GI Hemorrhage",
+  "date": "2023-09-12T03:15:00.000Z",
+  "author": "Dr. Emily Brown",
+  "department": "Emergency Medicine / Hospital Medicine",
+  "encounter": "ENC_ADM002",
+  "signedDate": "2023-09-12T05:30:00.000Z",
+  "sections": {
+    "chiefComplaint": "Black tarry stools for 2 days, lightheadedness, and near-syncope episode",
+    "historyOfPresentIllness": "Mr. Morrison is a 72-year-old male with a history of heart failure with reduced ejection fraction (HFrEF, EF 30-35%), atrial fibrillation on warfarin, chronic kidney disease stage 3b, type 2 diabetes mellitus, and coronary artery disease who presents to the emergency department via EMS after a near-syncopal episode at home.\n\nPatient reports he first noticed dark, black, tarry-appearing stools approximately 2 days ago. He initially attributed this to dietary changes but became concerned when the stools continued and he began feeling increasingly lightheaded. This evening, while getting up from the toilet after another episode of melena, he felt the room spinning, his vision \"went gray,\" and he had to grab the bathroom counter to prevent himself from falling. His wife Patricia called 911.\n\nOn further questioning, the patient reports progressive fatigue and exertional dyspnea over the past 2-3 days, beyond his usual baseline. He notes approximately 3-4 episodes of melena daily, described as large-volume, jet-black, foul-smelling stools. He denies frank hematemesis but endorses one episode of nausea with \"coffee-ground\" emesis earlier today, which he did not initially report because he thought it was related to something he ate. He denies abdominal pain, though he notes vague epigastric discomfort that has been present intermittently for the past 1-2 weeks.\n\nCritically, the patient reports that he has been taking ibuprofen 400 mg three times daily for the past 3 days for bilateral knee pain that flared up while gardening. He obtained the ibuprofen over the counter and was not aware of the interaction between NSAIDs and warfarin or the increased risk of gastrointestinal bleeding. He states that no one had specifically counseled him to avoid NSAIDs, though he acknowledges his PCP may have mentioned this in the past. He has been compliant with his warfarin 5 mg daily, which he has taken since 2017 for atrial fibrillation.\n\nHe denies hematochezia, hematuria, epistaxis, gingival bleeding, easy bruising, or other sites of bleeding. He denies recent alcohol binge, liver disease, or prior history of GI bleeding. He has had no recent changes to his other medications. He denies fever, chills, chest pain, palpitations, or recent illness.\n\nIn the ED, initial vitals were concerning for hemorrhagic shock with hypotension (BP 88/52) and tachycardia (HR 112). Two large-bore IVs were placed and aggressive fluid resuscitation was initiated with 2 liters of normal saline. A type and crossmatch was sent and 2 units of packed red blood cells were ordered urgently. GI was consulted emergently.",
+    "reviewOfSystems": {
+      "constitutional": "Positive for fatigue, lightheadedness, near-syncope. Positive for weakness and malaise over past 2 days. Denies fever, chills, night sweats, unintentional weight loss.",
+      "cardiovascular": "Positive for lightheadedness and near-syncope. Positive for exertional dyspnea (worsened from baseline). Denies chest pain, palpitations. Denies lower extremity swelling.",
+      "respiratory": "Positive for mild dyspnea on exertion. Denies cough, hemoptysis, wheezing, pleuritic chest pain.",
+      "gastrointestinal": "Positive for melena x 2 days, coffee-ground emesis x 1 episode, vague epigastric discomfort x 1-2 weeks, nausea. Denies frank hematemesis, abdominal pain, diarrhea, constipation, dysphagia.",
+      "genitourinary": "Denies hematuria, dysuria. Reports decreased urine output over past day.",
+      "musculoskeletal": "Positive for bilateral knee pain (reason for NSAID use). Denies joint swelling or redness.",
+      "neurological": "Positive for lightheadedness, near-syncope. Denies headache, focal weakness, numbness, tingling, visual changes, speech difficulty.",
+      "hematologic": "Positive for signs of bleeding (melena, coffee-ground emesis). Denies easy bruising, petechiae, epistaxis, gingival bleeding.",
+      "psychiatric": "Denies depression, anxiety, suicidal ideation."
+    },
+    "pastMedicalHistory": [
+      "Heart failure with reduced ejection fraction (HFrEF) - diagnosed 2019, EF 30-35%",
+      "Type 2 Diabetes Mellitus - diagnosed 2010, on metformin and glipizide",
+      "Chronic Kidney Disease Stage 3b - baseline Cr 1.8-2.0, eGFR 35-40",
+      "Atrial Fibrillation - permanent, rate-controlled, on warfarin since 2017",
+      "Hypertension",
+      "Hyperlipidemia",
+      "Coronary Artery Disease - 3-vessel disease on cath 2019, medically managed",
+      "Benign Prostatic Hyperplasia",
+      "GERD - on omeprazole",
+      "CHF Exacerbation - admitted August 2022, 4-day hospitalization"
+    ],
+    "pastSurgicalHistory": [
+      "Appendectomy - 1975",
+      "Cholecystectomy - 2008",
+      "Cardiac catheterization - 2019"
+    ],
+    "medications": [
+      "Warfarin 5 mg daily (for atrial fibrillation, goal INR 2-3)",
+      "Metformin 500 mg twice daily",
+      "Glipizide 5 mg daily",
+      "Lisinopril 5 mg daily",
+      "Carvedilol 12.5 mg twice daily",
+      "Furosemide 60 mg twice daily",
+      "Spironolactone 25 mg daily",
+      "Atorvastatin 40 mg at bedtime",
+      "Aspirin 81 mg daily",
+      "Omeprazole 20 mg daily",
+      "Tamsulosin 0.4 mg at bedtime",
+      "Ibuprofen 400 mg three times daily (OTC, started 3 days ago - NOT prescribed)"
+    ],
+    "allergies": [
+      { "allergen": "Penicillin", "reaction": "Rash" },
+      { "allergen": "Sulfa drugs", "reaction": "Hives" }
+    ],
+    "socialHistory": {
+      "tobacco": "Former smoker, quit 15 years ago, 30 pack-year history",
+      "alcohol": "Social drinker, 1-2 glasses of wine per week. Denies binge drinking or heavy alcohol use.",
+      "drugs": "Denies illicit drug use",
+      "occupation": "Retired accountant",
+      "livingsituation": "Lives with wife Patricia in single-story home",
+      "exercise": "Walks 0.5-1 mile daily when feeling well, limited by knee pain recently"
+    },
+    "familyHistory": {
+      "father": "Died at age 68 from MI",
+      "mother": "Died at age 82 from stroke, had HTN and DM2",
+      "siblings": "Brother with CAD, sister with DM2",
+      "giHistory": "No family history of GI malignancy, peptic ulcer disease, or inflammatory bowel disease"
+    },
+    "physicalExam": {
+      "vitals": {
+        "bloodPressure": "88/52 mmHg (initial), 96/58 mmHg (after 1L NS)",
+        "heartRate": "112 bpm, irregularly irregular",
+        "respiratoryRate": "24/min",
+        "temperature": "97.8 F",
+        "oxygenSaturation": "94% on room air",
+        "weight": "95.2 kg"
+      },
+      "general": "Alert but appears acutely ill. Pale, diaphoretic. Speaking in full sentences but appears fatigued and uncomfortable. Lying flat on stretcher.",
+      "heent": "Pale conjunctivae bilaterally. Dry mucous membranes. No scleral icterus. No oropharyngeal lesions. No epistaxis or gingival bleeding.",
+      "neck": "JVP flat (consistent with volume depletion). No lymphadenopathy. No thyromegaly.",
+      "cardiovascular": "Tachycardic, irregularly irregular rhythm. S1, S2 present. No S3 or S4 appreciated today. No murmurs appreciated (note: previously documented 2/6 systolic murmur at apex, may be obscured by tachycardia). Peripheral pulses thready but palpable.",
+      "respiratory": "Clear to auscultation bilaterally. No crackles, wheezes, or rhonchi. No signs of pulmonary edema.",
+      "abdomen": "Soft, non-distended. Mild epigastric tenderness to deep palpation without guarding or rebound. No peritoneal signs. No hepatosplenomegaly. Bowel sounds present and normoactive. No pulsatile abdominal mass.",
+      "rectal": "Black, tarry stool in rectal vault. Strongly guaiac positive. No hemorrhoids, masses, or fissures.",
+      "extremities": "Cool extremities with delayed capillary refill (4 seconds). Trace pedal edema bilaterally. No cyanosis or clubbing.",
+      "skin": "Pale. Diaphoretic. No petechiae, purpura, ecchymoses, or spider angiomata. No palmar erythema. No jaundice.",
+      "neurological": "Alert and oriented x3. Cranial nerves II-XII grossly intact. No focal neurological deficits. Moves all extremities."
+    },
+    "diagnostics": {
+      "labs": {
+        "bmp": "Na 138, K 4.8, Cl 104, CO2 18, BUN 68, Cr 2.8 (baseline 1.9), Glucose 142",
+        "cbc": "WBC 11.2, Hgb 7.2 (baseline 11.5 on 7/2023 labs), Hct 21.8%, Plt 198, MCV 84",
+        "coagulation": "INR 3.8 (supratherapeutic, goal 2-3), PT 42.1 sec, PTT 38.2 sec",
+        "lft": "AST 28, ALT 22, Alk Phos 78, Total Bilirubin 0.9, Albumin 3.1",
+        "troponin": "0.12 ng/mL (mildly elevated, likely demand ischemia in setting of acute blood loss anemia)",
+        "lactate": "3.4 mmol/L (elevated, consistent with tissue hypoperfusion)",
+        "lipase": "32 U/L (normal)",
+        "typeAndScreen": "Type O positive, antibody screen negative",
+        "reticulocyteCount": "2.8% (appropriately elevated)"
+      },
+      "imaging": {
+        "cxr": "No acute cardiopulmonary process. Stable cardiomegaly. No free air under diaphragm. No pleural effusions."
+      },
+      "ecg": "Atrial fibrillation with rapid ventricular response at 112 bpm. Left axis deviation. Old inferior Q waves unchanged. ST depressions in V4-V6 (new, likely demand ischemia). No ST elevations."
+    },
+    "assessment": [
+      {
+        "problem": "Acute upper gastrointestinal hemorrhage",
+        "details": "Presenting with melena x 2 days and coffee-ground emesis with hemodynamic instability. Hemoglobin 7.2 g/dL (from baseline 11.5), representing significant acute blood loss. Most likely etiology is peptic ulcer disease given the combination of NSAID use (ibuprofen x 3 days) and supratherapeutic anticoagulation with warfarin. Other considerations include erosive gastritis, Dieulafoy lesion, Mallory-Weiss tear (though no forceful vomiting), or variceal bleeding (though no known liver disease). The combination of NSAIDs and warfarin is a well-established risk factor for life-threatening upper GI hemorrhage."
+      },
+      {
+        "problem": "Hemorrhagic shock (Class III)",
+        "details": "Hypotension (88/52), tachycardia (HR 112), tachypnea (RR 24), delayed capillary refill, cool extremities, elevated lactate (3.4), and altered mental status (near-syncope). Estimated blood loss >30% based on hemodynamic parameters and degree of anemia. Requires aggressive resuscitation with crystalloid and blood products."
+      },
+      {
+        "problem": "Supratherapeutic anticoagulation (INR 3.8)",
+        "details": "Patient on warfarin with goal INR 2-3 for atrial fibrillation. INR supratherapeutic at 3.8, which significantly increases bleeding risk. The NSAID-warfarin interaction likely contributed: ibuprofen inhibits platelet function and displaces warfarin from albumin binding sites, potentiating its anticoagulant effect. Requires urgent reversal of anticoagulation given active life-threatening hemorrhage."
+      },
+      {
+        "problem": "Acute kidney injury on chronic kidney disease stage 3b",
+        "details": "Creatinine 2.8 (baseline 1.9), representing prerenal AKI in setting of hemorrhagic shock and volume depletion. BUN:Cr ratio >20:1 (24:1) consistent with prerenal etiology. Decreased urine output also supports prerenal physiology. Expected to improve with volume resuscitation."
+      },
+      {
+        "problem": "Acute blood loss anemia with demand ischemia",
+        "details": "Hemoglobin 7.2 with troponin elevation to 0.12 and new ST depressions V4-V6. Consistent with type 2 MI (demand ischemia) in setting of acute anemia and tachycardia in a patient with known three-vessel coronary artery disease. Not an acute coronary syndrome — the ischemia is driven by supply-demand mismatch."
+      },
+      {
+        "problem": "Atrial fibrillation with rapid ventricular response",
+        "details": "Heart rate 112 in setting of hemorrhagic shock and volume depletion. Sympathetic drive from hypovolemia is the primary driver. Rate expected to improve with resuscitation. Will hold additional rate control agents to avoid worsening hypotension."
+      },
+      {
+        "problem": "Metabolic acidosis",
+        "details": "CO2 18 with elevated lactate 3.4. Consistent with lactic acidosis from tissue hypoperfusion. Should improve with resuscitation and correction of hemorrhagic shock."
+      }
+    ],
+    "plan": [
+      {
+        "problem": "Upper GI hemorrhage",
+        "interventions": [
+          "NPO for anticipated urgent EGD",
+          "GI consult placed emergently — Dr. Thompson from Gastroenterology accepting",
+          "EGD planned for first available slot tomorrow morning (patient must be hemodynamically stabilized first)",
+          "IV pantoprazole 80 mg bolus, then 8 mg/hr continuous infusion",
+          "Place nasogastric tube — lavage showed coffee-ground material, no active bright red blood",
+          "Serial hemoglobin checks q6h",
+          "Active type and screen — 2 units pRBC ordered emergently, additional 2 units crossmatched and available"
+        ]
+      },
+      {
+        "problem": "Hemorrhagic shock / Resuscitation",
+        "interventions": [
+          "Two large-bore (18G) peripheral IVs placed",
+          "Normal saline 2L bolus, then reassess",
+          "Transfuse 2 units pRBC — target Hgb >7 (>8 given active CAD with demand ischemia)",
+          "Monitor vitals q15 minutes until stable, then q1h",
+          "Foley catheter for strict I/O — target UOP >0.5 mL/kg/hr",
+          "Repeat lactate in 4-6 hours to assess response to resuscitation",
+          "Arterial line placement for continuous blood pressure monitoring in MICU"
+        ]
+      },
+      {
+        "problem": "Supratherapeutic INR / Anticoagulation reversal",
+        "interventions": [
+          "HOLD warfarin immediately",
+          "Administer Vitamin K 10 mg IV x1 (for sustained reversal)",
+          "4-factor prothrombin complex concentrate (4F-PCC) 25 units/kg IV for emergent reversal of warfarin in setting of life-threatening hemorrhage",
+          "Recheck INR 30 minutes after PCC administration and q6h",
+          "HOLD aspirin 81 mg in setting of active GI hemorrhage",
+          "Anticoagulation management to be discussed with Cardiology once patient is stabilized"
+        ]
+      },
+      {
+        "problem": "AKI on CKD",
+        "interventions": [
+          "IV fluid resuscitation as above (will improve renal perfusion)",
+          "Monitor Cr and electrolytes q12h",
+          "HOLD metformin (risk of lactic acidosis in setting of AKI)",
+          "HOLD lisinopril and spironolactone (risk of worsening AKI and hyperkalemia in setting of volume depletion)",
+          "HOLD furosemide (patient is volume depleted, not overloaded)",
+          "Renally dose all medications",
+          "Avoid nephrotoxins (no IV contrast, avoid NSAIDs)"
+        ]
+      },
+      {
+        "problem": "Demand ischemia / Troponin elevation",
+        "interventions": [
+          "Serial troponins q6h",
+          "Continuous telemetry",
+          "Correct anemia with transfusion (target Hgb >8 given CAD)",
+          "Treat underlying cause (hemorrhage) — not an ACS, do not initiate antiplatelet therapy",
+          "Cardiology aware of troponin elevation"
+        ]
+      },
+      {
+        "problem": "Diabetes",
+        "interventions": [
+          "HOLD metformin (AKI)",
+          "HOLD glipizide (patient NPO)",
+          "Sliding scale insulin for glycemic management while NPO",
+          "Dextrose-containing IV fluids if needed for hypoglycemia"
+        ]
+      },
+      {
+        "problem": "NSAID-induced gastropathy prevention",
+        "interventions": [
+          "DISCONTINUE ibuprofen permanently",
+          "Counsel patient extensively about NSAID avoidance while on anticoagulation (once stable)",
+          "Alternative pain management for knee: acetaminophen 500 mg q6h PRN (safe with warfarin)"
+        ]
+      },
+      {
+        "problem": "Prophylaxis and supportive care",
+        "interventions": [
+          "DVT prophylaxis: SCDs only (no pharmacologic anticoagulation in setting of active GI bleed)",
+          "Fall precautions (orthostatic, anemic)",
+          "Aspiration precautions (NPO, NGT in place)",
+          "Blood bank to keep 2 additional units crossmatched at all times"
+        ]
+      }
+    ],
+    "disposition": "Admit to Medical Intensive Care Unit (MICU) for hemorrhagic shock with active GI hemorrhage requiring close hemodynamic monitoring, ongoing resuscitation, and urgent EGD in the morning. GI service (Dr. Thompson) and Critical Care (Dr. Mitchell) accepting. Cardiology (Dr. Wilson) notified for co-management of anticoagulation decisions post-stabilization. Code status: Full code. Wife Patricia Morrison at bedside, updated on plan and critical condition."
+  },
+  "attestation": "I personally evaluated this patient in the Emergency Department, obtained the history, performed the physical examination, reviewed all laboratory and diagnostic results, and formulated the assessment and plan. Patient was seen within 15 minutes of arrival given critical presentation. This documentation reflects my independent medical decision-making.\n\nElectronically signed by: Emily Brown, MD\nDate/Time: 9/12/2023 5:30 AM"
+}

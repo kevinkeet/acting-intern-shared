@@ -1,0 +1,166 @@
+{
+  "id": "NOTE_PHARM001",
+  "type": "Clinical Pharmacy Note",
+  "title": "Clinical Pharmacy Consultation - Medication Reconciliation and Drug Interaction Review",
+  "date": "2023-09-15T10:00:00.000Z",
+  "author": "Dr. Rachel Kim, PharmD, BCPS",
+  "department": "Clinical Pharmacy",
+  "encounter": "ENC_ADM002",
+  "signedDate": "2023-09-15T11:30:00.000Z",
+  "sections": {
+    "reasonForConsult": "Clinical pharmacy consultation for comprehensive medication reconciliation during hospitalization for acute upper GI hemorrhage. Focus areas: (1) Warfarin discontinuation and transition to aspirin, (2) H. pylori eradication regimen selection given penicillin allergy, (3) Drug interaction screening for new medications, (4) Renal dosing review given CKD/AKI, (5) Discharge medication reconciliation.",
+    "medicationReconciliation": {
+      "preadmissionMedications": [
+        { "name": "Warfarin 5 mg PO daily", "status": "DISCONTINUED", "reason": "Permanently discontinued per multidisciplinary conference 9/15 — life-threatening GI hemorrhage" },
+        { "name": "Aspirin 81 mg PO daily", "status": "HELD on admission → RESUMED 9/15", "reason": "Held during active bleeding. Resumed per multidisciplinary decision for modest stroke risk reduction and CAD secondary prevention." },
+        { "name": "Metformin 500 mg PO BID", "status": "HELD", "reason": "Held due to AKI (Cr 2.8 on admission). To be restarted when Cr returns to baseline (≤2.0) and eGFR ≥30." },
+        { "name": "Glipizide 5 mg PO daily", "status": "RESUMED 9/14", "reason": "Held during NPO period. Resumed with oral intake on floor." },
+        { "name": "Lisinopril 5 mg PO daily", "status": "HELD", "reason": "Held due to AKI and initial hypotension. To be restarted when Cr at baseline and hemodynamics stable." },
+        { "name": "Carvedilol 12.5 mg PO BID", "status": "CONTINUED", "reason": "Rate control for atrial fibrillation. Briefly held in ED due to hypotension, resumed MICU day 1." },
+        { "name": "Furosemide 60 mg PO BID", "status": "HELD", "reason": "Held — patient was volume depleted on admission. To be restarted at discharge or when euvolemic." },
+        { "name": "Spironolactone 25 mg PO daily", "status": "HELD", "reason": "Held due to AKI and hyperkalemia risk. To be restarted when Cr at baseline and K stable." },
+        { "name": "Atorvastatin 40 mg PO QHS", "status": "TEMPORARILY HELD", "reason": "Held during clarithromycin course (see drug interaction below). Resume after 14-day H. pylori therapy completed." },
+        { "name": "Omeprazole 20 mg PO daily", "status": "CHANGED", "reason": "Switched to pantoprazole 40 mg BID as part of H. pylori triple therapy. Pantoprazole preferred over omeprazole due to fewer CYP2C19 interactions." },
+        { "name": "Tamsulosin 0.4 mg PO QHS", "status": "CONTINUED", "reason": "No changes." },
+        { "name": "Ibuprofen 400 mg PO TID (OTC)", "status": "PERMANENTLY DISCONTINUED", "reason": "Precipitating cause of GI hemorrhage. ALL NSAIDs permanently contraindicated. Added to allergy/intolerance list as 'NSAID class — GI hemorrhage.'" }
+      ]
+    },
+    "newMedications": [
+      {
+        "name": "Pantoprazole 40 mg PO BID",
+        "indication": "H. pylori eradication (triple therapy component) and gastroprotection following major GI hemorrhage",
+        "duration": "40 mg BID x 14 days (H. pylori therapy), then 40 mg daily indefinitely (gastroprotection)",
+        "notes": "Higher dose (40 mg BID) during H. pylori eradication for optimal acid suppression. Will step down to 40 mg daily after 14-day course. Pantoprazole selected over omeprazole due to fewer CYP2C19-mediated drug interactions, particularly relevant given polypharmacy."
+      },
+      {
+        "name": "Clarithromycin 500 mg PO BID",
+        "indication": "H. pylori eradication (triple therapy)",
+        "duration": "14 days (9/15/2023 through 9/28/2023)",
+        "notes": "Selected for H. pylori regimen because amoxicillin is contraindicated (penicillin allergy — rash). Clarithromycin-based triple therapy (PPI + clarithromycin + metronidazole) is the recommended alternative per ACG guidelines for penicillin-allergic patients. See drug interaction section below regarding CYP3A4 interactions."
+      },
+      {
+        "name": "Metronidazole 500 mg PO BID",
+        "indication": "H. pylori eradication (triple therapy)",
+        "duration": "14 days (9/15/2023 through 9/28/2023)",
+        "notes": "Standard dose. Counsel patient on disulfiram-like reaction with alcohol — STRICT alcohol avoidance during therapy and for 48 hours after completion. Also counsel on metallic taste, nausea (common side effects)."
+      },
+      {
+        "name": "Aspirin 81 mg PO daily",
+        "indication": "Modest stroke risk reduction (CHA₂DS₂-VASc 5) and CAD secondary prevention",
+        "duration": "Indefinite",
+        "notes": "Not a new medication per se (was on aspirin pre-admission) but the clinical indication has shifted. Previously for CAD secondary prevention; now also serving as the sole antithrombotic agent following warfarin discontinuation. Must be taken with PPI gastroprotection indefinitely."
+      }
+    ],
+    "drugInteractionReview": {
+      "criticalInteraction": {
+        "drugs": "Clarithromycin + Atorvastatin",
+        "severity": "HIGH — requires intervention",
+        "mechanism": "Clarithromycin is a potent inhibitor of CYP3A4 and P-glycoprotein. Atorvastatin is a CYP3A4 substrate. Co-administration significantly increases atorvastatin serum concentrations (2-4 fold increase in AUC), dramatically increasing the risk of statin-associated myopathy and rhabdomyolysis.",
+        "recommendation": "HOLD atorvastatin 40 mg for the duration of clarithromycin therapy (14 days). Resume atorvastatin 40 mg on 9/29/2023 (day after clarithromycin completion). A 14-day statin holiday is acceptable given the short duration and the patient's stable lipid profile. Counsel patient to report any unexplained muscle pain, tenderness, or weakness during or immediately after the clarithromycin course.",
+        "action": "Atorvastatin HELD effective 9/15/2023. Restart order placed for 9/29/2023."
+      },
+      "moderateInteractions": [
+        {
+          "drugs": "Clarithromycin + Carvedilol",
+          "severity": "MODERATE",
+          "mechanism": "Clarithromycin inhibits CYP3A4; carvedilol is partially metabolized by CYP3A4 (minor pathway). May modestly increase carvedilol levels.",
+          "recommendation": "Monitor heart rate and blood pressure during clarithromycin course. No dose adjustment required as CYP3A4 is a minor metabolic pathway for carvedilol. Hold carvedilol if HR <55 or SBP <90."
+        },
+        {
+          "drugs": "Metronidazole + Warfarin (interaction no longer applicable)",
+          "severity": "MODERATE (historical — for documentation)",
+          "mechanism": "Metronidazole inhibits warfarin metabolism (CYP2C9). This interaction is NO LONGER CLINICALLY RELEVANT as warfarin has been permanently discontinued.",
+          "recommendation": "No action needed. Documented for completeness."
+        },
+        {
+          "drugs": "Clarithromycin + Glipizide",
+          "severity": "MODERATE",
+          "mechanism": "Clarithromycin may enhance hypoglycemic effects through CYP3A4 and possibly CYP2C9 interactions. Cases of severe hypoglycemia have been reported with macrolides and sulfonylureas.",
+          "recommendation": "Monitor blood glucose more frequently during clarithromycin course. Patient and wife educated on hypoglycemia symptoms (sweating, tremor, confusion, hunger). Reduce glipizide dose if recurrent hypoglycemia occurs."
+        }
+      ],
+      "lowRiskInteractions": [
+        {
+          "drugs": "Pantoprazole + Metformin (when resumed)",
+          "note": "PPIs may modestly increase metformin absorption. No clinical significance at standard doses."
+        },
+        {
+          "drugs": "Metronidazole + alcohol",
+          "note": "Disulfiram-like reaction possible. Patient counseled on strict alcohol avoidance (already minimal drinker)."
+        }
+      ]
+    },
+    "renalDosingReview": {
+      "currentRenalFunction": "Creatinine 2.2 (improving from 2.8, baseline 1.9). Estimated eGFR: ~28-30 mL/min/1.73m² (CKD-EPI). Baseline eGFR approximately 35.",
+      "medications": [
+        {
+          "name": "Metformin 500 mg BID (currently held)",
+          "assessment": "Per FDA labeling, metformin is contraindicated if eGFR <30. Current eGFR borderline at 28-30. HOLD until eGFR confirmed ≥30 (ideally ≥35 given baseline). Recheck Cr at 1-week PCP follow-up. If eGFR remains 30-35, may resume at reduced dose (250 mg BID) per renal guidelines."
+        },
+        {
+          "name": "Clarithromycin 500 mg BID",
+          "assessment": "Dose adjustment recommended when CrCl <30. Current CrCl estimated at ~32 mL/min (Cockcroft-Gault, using current Cr 2.2). This is borderline. Recommend maintaining 500 mg BID dose but monitoring closely for toxicity (hearing changes, QT prolongation). If Cr worsens, reduce to 250 mg BID."
+        },
+        {
+          "name": "Metronidazole 500 mg BID",
+          "assessment": "No dose adjustment required for renal impairment. Standard dose appropriate."
+        },
+        {
+          "name": "Pantoprazole 40 mg BID",
+          "assessment": "No dose adjustment required for renal impairment."
+        },
+        {
+          "name": "Gabapentin (not on current list but frequently prescribed)",
+          "assessment": "Not applicable — patient is not currently on gabapentin. Noted for completeness as it is commonly encountered in pain management as an NSAID alternative."
+        },
+        {
+          "name": "Furosemide 60 mg BID (currently held)",
+          "assessment": "Dose appropriate for CKD. Higher doses often needed in CKD due to reduced tubular secretion. Resume at discharge if volume status requires."
+        },
+        {
+          "name": "Lisinopril 5 mg daily (currently held)",
+          "assessment": "Dose appropriate. Resume when Cr at baseline. Monitor K and Cr 3-5 days after restarting."
+        },
+        {
+          "name": "Spironolactone 25 mg daily (currently held)",
+          "assessment": "Use cautiously in CKD. Monitor K closely after restarting (risk of hyperkalemia in combination with lisinopril and CKD). Consider checking K 3-5 days after resuming."
+        }
+      ]
+    },
+    "dischargeMedicationReconciliation": {
+      "summary": "Complete discharge medication reconciliation has been reviewed and verified. All changes from preadmission medications are documented above. The following represents the planned discharge medication list, pending final attending verification:",
+      "dischargeList": [
+        "Aspirin 81 mg PO daily (RESUMED — now sole antithrombotic)",
+        "Pantoprazole 40 mg PO BID x 14 days, then 40 mg daily indefinitely (CHANGED from omeprazole 20 mg daily)",
+        "Clarithromycin 500 mg PO BID x 14 days (NEW — H. pylori eradication)",
+        "Metronidazole 500 mg PO BID x 14 days (NEW — H. pylori eradication)",
+        "Carvedilol 12.5 mg PO BID (UNCHANGED)",
+        "Furosemide 40 mg PO BID (DECREASED from 60 mg BID — per Dr. Brown, given recent volume depletion and AKI)",
+        "Glipizide 5 mg PO daily (UNCHANGED)",
+        "Tamsulosin 0.4 mg PO QHS (UNCHANGED)",
+        "Acetaminophen 500 mg PO q6h PRN pain (NEW — NSAID alternative for knee pain)"
+      ],
+      "medicationsToRestartAtFollowUp": [
+        "Metformin 500 mg BID — restart when eGFR confirmed ≥30, per PCP at 1-week follow-up",
+        "Lisinopril 5 mg daily — restart when Cr at baseline, per PCP",
+        "Spironolactone 25 mg daily — restart when Cr at baseline and K stable, per PCP",
+        "Atorvastatin 40 mg QHS — restart on 9/29/2023 after clarithromycin course completed"
+      ],
+      "permanentlyDiscontinued": [
+        "Warfarin 5 mg daily — permanently discontinued (life-threatening GI hemorrhage)",
+        "Ibuprofen — permanently discontinued (ALL NSAIDs contraindicated). Added to allergy/intolerance list.",
+        "Omeprazole 20 mg daily — replaced by pantoprazole 40 mg daily"
+      ]
+    },
+    "patientEducation": "Counseling provided to patient and wife Patricia:\n\n1. WARFARIN DISCONTINUED: Explained that the blood thinner warfarin has been permanently stopped because it contributed to the life-threatening stomach bleeding. The aspirin they are taking provides some but not full blood clot protection.\n\n2. NSAID AVOIDANCE: Extensively counseled on the permanent need to avoid ALL NSAIDs. Provided a list of common NSAID brand names to avoid: Advil, Motrin (ibuprofen), Aleve (naproxen), Voltaren (diclofenac), Mobic (meloxicam), Celebrex (celecoxib). Safe alternative: Tylenol (acetaminophen) up to 2000 mg/day.\n\n3. H. PYLORI THERAPY: Counseled on the importance of completing the full 14-day course of clarithromycin and metronidazole. Explained that incomplete treatment leads to antibiotic resistance. Take with food to reduce stomach upset. NO ALCOHOL during treatment (metronidazole interaction). May experience metallic taste and mild nausea.\n\n4. ATORVASTATIN HOLD: Explained that the cholesterol medication is temporarily stopped for 14 days due to a drug interaction with clarithromycin. It will be restarted on 9/29/2023. Report any muscle pain, weakness, or dark urine immediately.\n\n5. MEDICATIONS TO RESTART LATER: Explained that metformin, lisinopril, and spironolactone are temporarily held and will be restarted by their PCP after blood tests confirm kidney function has returned to normal.\n\n6. Wife provided with written medication schedule, color-coded, to manage the multiple medication changes.",
+    "pharmacistRecommendations": [
+      "Add 'NSAID class — GI hemorrhage' to allergy/intolerance list in EHR (completed)",
+      "Add 'Warfarin — discontinued due to major GI hemorrhage, DO NOT RESTART without GI and Cardiology approval' to medication allergy/alert field (completed)",
+      "Ensure clarithromycin-atorvastatin interaction flag is prominently documented with atorvastatin restart date",
+      "Schedule pharmacist-led telephonic medication check at 7 days post-discharge (placed order for outpatient pharmacy follow-up)",
+      "Flag patient for high-risk medication monitoring in PCP clinic (polypharmacy, CKD, complex medication changes)",
+      "Recommend home health nursing include medication reconciliation and pill box setup at first visit"
+    ]
+  },
+  "attestation": "I have independently reviewed all medications, drug interactions, renal dosing, and discharge medication reconciliation for this patient. I have provided direct patient and family education. I have communicated all recommendations to the primary team (Dr. Brown) and attending physicians involved in care.\n\nElectronically signed by: Rachel Kim, PharmD, BCPS\nClinical Pharmacist, Inpatient Services\nDate/Time: 9/15/2023 11:30 AM"
+}

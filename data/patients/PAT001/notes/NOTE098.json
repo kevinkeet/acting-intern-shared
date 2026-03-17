@@ -2,74 +2,92 @@
   "id": "NOTE098",
   "type": "Progress Note",
   "date": "2021-05-16T15:22:18.416Z",
-  "author": "Dr. Patricia Lee",
-  "department": "Radiology",
+  "author": "Dr. Sarah Chen",
+  "department": "Primary Care",
   "encounter": "ENC075",
-  "chiefComplaint": "Medication refills",
-  "hpi": "Patient presents for medication refills. Weight stable. Following low-sodium diet. Monitoring blood pressure at home.",
+  "chiefComplaint": "Routine follow-up and medication management",
+  "hpi": "69-year-old male presents for routine primary care follow-up. He was last seen in the office 1/31/2021 and was hospitalized for community-acquired pneumonia in February 2021, from which he made a complete recovery. Follow-up CXR on 3/1 showed complete resolution. Patient reports he has been doing reasonably well since the pneumonia. His functional status has returned to his pre-illness baseline — he can walk around the house and to the mailbox without difficulty but gets short of breath with prolonged walking (more than half a block) or climbing stairs, consistent with his NYHA Class II heart failure.\n\nWife Patricia reports his daily weights have been stable at 97-98 kg over the past 6 weeks. He has been compliant with his low-sodium diet, though she notes it is sometimes difficult to maintain when they eat at their daughter's house. Blood sugars per home monitor have been running 110-150 fasting, which is improved. No hypoglycemic episodes since the event in June 2020. Neuropathy symptoms are unchanged with bilateral foot numbness and tingling, pain rated 3-4/10 on gabapentin.\n\nPatient also reports mild intermittent low back stiffness, particularly in the mornings, that improves with activity and does not radiate. He attributes this to spending more time in his recliner. No numbness, weakness, or bowel/bladder changes associated with the back pain. He has been using acetaminophen 500mg as needed (1-2 times per week) with some relief. He is aware he cannot take NSAIDs due to his kidney disease and heart failure.",
   "reviewOfSystems": {
-    "Constitutional": "No fever, chills, or weight loss",
-    "Cardiovascular": "Dyspnea on exertion at baseline",
-    "Respiratory": "No cough or wheezing",
-    "GI": "Appetite fair",
-    "GU": "No dysuria",
-    "Neurologic": "No dizziness"
+    "Constitutional": "Energy level at baseline — fatigues easily with moderate activity. No fevers, chills, or night sweats. Weight stable at 97.6 kg.",
+    "Cardiovascular": "Baseline DOE at NYHA II level. No orthopnea, PND, or chest pain. Palpitations at baseline (A-fib), unchanged.",
+    "Respiratory": "No cough (fully resolved since pneumonia). No wheezing or hemoptysis.",
+    "GI": "Appetite fair. Regular bowel movements. Follows low-sodium diet. Occasional mild GERD after large meals — managed with positioning.",
+    "GU": "Nocturia x2, stable. No dysuria or hematuria. BPH symptoms stable on tamsulosin.",
+    "Musculoskeletal": "Intermittent low back stiffness as described. No joint swelling. No gout flares since 2019.",
+    "Neurologic": "Bilateral foot numbness/tingling (diabetic neuropathy), unchanged. No dizziness, headaches, or focal weakness.",
+    "Endocrine": "Fasting glucoses 110-150. No polyuria or polydipsia.",
+    "Psychiatric": "Mood generally good. Enjoying church and grandchildren visits. Sleeping better since HF symptoms improved.",
+    "Skin": "No rashes, wounds, or foot ulcers per wife's daily inspection."
   },
   "vitals": {
     "bp": "142/76 mmHg",
-    "hr": "71 bpm",
+    "hr": "71 bpm (irregular)",
     "rr": "14/min",
     "temp": "98.4°F",
     "spo2": "95% RA",
     "weight": "97.6 kg"
   },
   "physicalExam": {
-    "General": "Mildly fatigued-appearing",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "Regular rate and rhythm, no murmurs",
-    "Respiratory": "Mild crackles at bases",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "No edema, warm and well-perfused",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Alert, oriented, pleasant male in no acute distress. Mildly fatigued-appearing but comfortable. BMI 31.3.",
+    "HEENT": "Normocephalic, atraumatic. PERRL. Oropharynx clear and moist. No cervical lymphadenopathy. JVP approximately 6 cm H2O — not elevated.",
+    "Cardiovascular": "Irregularly irregular rhythm (A-fib). Rate ~71 bpm. S1 and S2 present. Grade 2/6 holosystolic murmur at apex (known MR, unchanged). No S3 or S4. No rubs.",
+    "Respiratory": "Clear to auscultation bilaterally. No crackles, wheezes, or rhonchi. Mild bibasilar crackles at bases only — very faint, possibly dependent atelectasis vs. trace congestion.",
+    "Abdomen": "Soft, obese, non-tender, non-distended. Active bowel sounds. No hepatomegaly or splenomegaly. No ascites.",
+    "Back": "Mild paraspinal muscle tenderness lumbar region bilaterally. No midline spinous process tenderness. Range of motion mildly limited by stiffness. Negative straight leg raise bilaterally. No saddle anesthesia. Normal rectal tone (per recent urology exam).",
+    "Extremities": "No peripheral edema today — improved. Warm, well-perfused. Dorsalis pedis pulses 1+ bilaterally. Skin intact on feet, no calluses or ulcers. Toenails thickened (onychomycosis bilateral great toes).",
+    "Neurologic": "Alert and oriented x4. Decreased light touch sensation bilateral feet to ankle level. Decreased vibratory sense at bilateral malleoli. Monofilament 2/10 sites bilateral plantar surfaces. Motor strength 5/5 upper extremities, 4+/5 lower extremities."
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
+      "diagnosis": "Heart Failure with Reduced Ejection Fraction, NYHA Class II",
+      "icd10": "I50.22",
+      "notes": "Compensated, stable at baseline. Weight 97.6 kg (near dry weight). Lungs essentially clear. No peripheral edema today. Last BNP 510 in January during mild decompensation — likely improved. On appropriate GDMT: Entresto 97/103mg BID (target dose), carvedilol 12.5mg BID (submaximal), spironolactone 25mg, furosemide 40mg BID. Would benefit from carvedilol uptitration but deferring to cardiology."
+    },
+    {
+      "diagnosis": "Type 2 Diabetes Mellitus with peripheral neuropathy",
       "icd10": "E11.65",
-      "notes": "HbA1c 7.9%. On insulin and metformin."
+      "notes": "Home glucoses improved at 110-150 fasting. A1c to be drawn today — anticipate improvement from 7.6%. On insulin glargine 20 units QHS and metformin 500mg BID. Neuropathy stable on gabapentin 300mg TID, pain well-controlled. Annual dilated eye exam pending — referral placed."
     },
     {
       "diagnosis": "Chronic Kidney Disease Stage 3b",
       "icd10": "N18.32",
-      "notes": "eGFR 35. Stable."
+      "notes": "Labs pending today. Last Cr 1.92, eGFR ~37. Trajectory slow decline of ~2-3 mL/min/year. Continuing nephroprotective strategies with ARNI and monitoring electrolytes."
     },
     {
-      "diagnosis": "Heart Failure with Reduced EF",
-      "icd10": "I50.22",
-      "notes": "NYHA Class II. On GDMT."
+      "diagnosis": "Mechanical Low Back Pain",
+      "icd10": "M54.5",
+      "notes": "New complaint — intermittent lumbar stiffness without radiculopathy. Exam consistent with myofascial/degenerative component. No red flags (no weight loss, no night pain, no neurologic deficits, no bowel/bladder changes). Negative SLR bilaterally. Imaging not indicated at this time given mechanical presentation. KUB from January 2023 (future) will later show mild degenerative changes, consistent with this presentation."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
-    },
-    {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
-    },
-    {
       "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
+      "action": "Continue current GDMT regimen unchanged. Daily weights, <2g sodium, 1.5L fluid restriction. Follow up with cardiology — due for August annual visit."
+    },
+    {
+      "problem": "Diabetes / Neuropathy",
+      "action": "Draw HbA1c today. Continue insulin glargine 20 units QHS, metformin 500mg BID, gabapentin 300mg TID. Increase glargine to 22 units QHS if A1c remains >7.5%. Dilated eye exam referral placed. Podiatry referral for onychomycosis and annual foot exam."
+    },
+    {
+      "problem": "CKD Stage 3b",
+      "action": "CMP drawn today. Continue avoiding nephrotoxins (NSAIDs specifically counseled again). Vitamin D3 2000 IU daily. Consider UACR at next visit for proteinuria trending."
+    },
+    {
+      "problem": "Low Back Pain",
+      "action": "Continue acetaminophen 500-1000mg PRN (max 2g/day given hepatic considerations). Avoid NSAIDs strictly. Gentle stretching exercises discussed. Heat application PRN. If symptoms persist beyond 6 weeks or worsen, will consider lumbar spine X-ray. Physical therapy referral if needed."
     },
     {
       "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "action": "Continue warfarin 5mg daily. INR drawn today. Rate control adequate on carvedilol."
+    },
+    {
+      "problem": "Preventive Care",
+      "action": "COVID-19 vaccination — patient received first Pfizer dose 3/20/2021 and second dose 4/10/2021. Flu vaccine due in fall. Prevnar 20 to be administered at next visit."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 6 weeks or sooner if needed."
+      "action": "Return in 8-10 weeks. Labs drawn today (CMP, A1c, CBC, INR). Cardiology August. Ophthalmology referral pending."
     }
   ],
-  "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Patricia Lee\nDate: 5/16/2021"
+  "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Sarah Chen\nDate: 5/16/2021"
 }

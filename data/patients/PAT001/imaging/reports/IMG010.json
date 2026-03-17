@@ -1,0 +1,28 @@
+{
+  "id": "IMG010",
+  "date": "2023-01-23T15:58:02.196Z",
+  "modality": "X-Ray",
+  "description": "KUB (Kidney, Ureter, Bladder)",
+  "facility": "Springfield Medical Center",
+  "status": "Final",
+  "radiologist": "Dr. Robert Chang",
+  "orderingProvider": "Dr. Michael Torres",
+  "indication": "Abdominal discomfort, chronic kidney disease, evaluate for nephrolithiasis and bowel obstruction",
+  "technique": "Single AP supine radiograph of the abdomen was obtained.",
+  "findings": {
+    "bowelGasPattern": "Nonobstructive bowel gas pattern. No dilated loops of small bowel. Normal distribution of colonic gas.",
+    "calcifications": "Atherosclerotic calcification of the abdominal aorta and bilateral iliac arteries. No radiopaque urinary tract calculi identified.",
+    "kidneys": "Renal outlines are poorly visualized on plain radiograph. No large renal calculi.",
+    "softTissues": "Unremarkable. No free intraperitoneal air.",
+    "osseous": "Degenerative changes of the lumbar spine including disc space narrowing at L4-L5 and L5-S1. Mild osteophyte formation. No acute fracture.",
+    "other": "Surgical clips in the right upper quadrant consistent with prior cholecystectomy."
+  },
+  "impression": [
+    "No evidence of bowel obstruction.",
+    "No radiopaque urinary tract calculi identified.",
+    "Atherosclerotic calcification of the abdominal aorta and iliac arteries.",
+    "Degenerative changes of the lumbar spine.",
+    "Status post cholecystectomy."
+  ],
+  "comparison": "No prior KUB available for comparison."
+}

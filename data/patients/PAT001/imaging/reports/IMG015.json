@@ -1,0 +1,56 @@
+{
+  "id": "IMG015",
+  "date": "2023-01-29T20:06:13.967Z",
+  "modality": "Echo",
+  "description": "Stress Echocardiogram",
+  "facility": "Springfield Medical Center",
+  "status": "Final",
+  "radiologist": "Dr. Robert Chang",
+  "orderingProvider": "Dr. James Wilson",
+  "indication": "Heart failure with reduced ejection fraction, coronary artery disease, assess for ischemia and interval change in LV function",
+  "technique": "Pharmacologic stress echocardiography was performed using dobutamine infusion protocol (5-10-20-30-40 mcg/kg/min) with atropine augmentation. Resting and peak stress 2D and Doppler echocardiographic images were obtained.",
+  "protocol": {
+    "type": "Dobutamine Stress Protocol",
+    "peakDobutamineDose": "30 mcg/kg/min",
+    "atropine": "0.5 mg IV x 1",
+    "peakHeartRate": "118 bpm (80% of age-predicted maximum)",
+    "restingHeartRate": "74 bpm (atrial fibrillation)",
+    "restingBP": "138/78 mmHg",
+    "peakBP": "152/72 mmHg",
+    "reasonForTermination": "Target heart rate achieved",
+    "symptoms": "Mild palpitations at peak dose, no chest pain or dyspnea",
+    "ecg": "Baseline: Atrial fibrillation with controlled ventricular response. Stress: Atrial fibrillation with rate to 118 bpm. No ischemic ST changes."
+  },
+  "findings": {
+    "restingImages": {
+      "leftVentricle": "Moderately dilated (LVIDd 6.0 cm). Global hypokinesis. Akinesis of the inferior wall. Hypokinesis of the inferolateral and lateral walls.",
+      "ejectionFraction": "30-35% by Simpson's biplane method",
+      "valves": "Moderate mitral regurgitation (3+). Aortic valve sclerosis without stenosis. Mild tricuspid regurgitation.",
+      "rightVentricle": "Normal size, mildly reduced function (TAPSE 1.7 cm).",
+      "leftAtrium": "Severely dilated (volume index 50 mL/m2)."
+    },
+    "stressImages": {
+      "wallMotion": "Inferior wall remains akinetic. Inferolateral wall remains hypokinetic without significant change. No new wall motion abnormalities. Anterior and anteroseptal walls demonstrate appropriate augmentation.",
+      "ejectionFraction": "33-38% at peak stress (mild improvement from rest)",
+      "contractileReserve": "Mild contractile reserve present in the anterior, anteroseptal, and lateral segments."
+    },
+    "doppler": {
+      "mitralRegurgitation": "Moderate at rest, unchanged with stress.",
+      "rvsp": "40 mmHg at rest."
+    }
+  },
+  "impression": [
+    "Moderately dilated left ventricle with severely reduced systolic function at rest (EF 30-35%).",
+    "Fixed wall motion abnormality of the inferior wall (akinesis), consistent with prior infarction/scar.",
+    "No inducible ischemia. No new wall motion abnormalities at peak stress.",
+    "Mild contractile reserve in the non-infarcted segments, suggesting some viability.",
+    "Moderate mitral regurgitation, stable with stress.",
+    "Severely dilated left atrium. Estimated RVSP 40 mmHg.",
+    "Compared to prior stress echocardiogram (2022-01-20), no significant change in LV function or wall motion."
+  ],
+  "recommendations": [
+    "Continue guideline-directed medical therapy for HFrEF",
+    "No evidence of significant inducible ischemia to warrant revascularization at this time"
+  ],
+  "comparison": "Stress echocardiogram dated 2022-01-20 and TTE dated 2020-09-21. LV function and wall motion abnormalities are stable."
+}

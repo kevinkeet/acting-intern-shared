@@ -5,15 +5,16 @@
   "author": "Dr. Emily Brown",
   "department": "Emergency Medicine",
   "encounter": "ENC023",
-  "chiefComplaint": "Cough",
-  "hpi": "Patient presents for cough. Reports overall stable condition since last visit. Compliant with medications. No new symptoms.",
+  "chiefComplaint": "Post-discharge lab results and cough evaluation",
+  "hpi": "Mr. Morrison is a 72-year-old male seen 3 days ago in the ED observation unit for abdominal discomfort (CT showed hepatic steatosis, renal cysts, diverticulosis — no acute findings). He was discharged on increased furosemide. He called the office today to report the development of a dry, non-productive cough that started yesterday evening. He describes it as an intermittent tickle in the back of his throat, occurring approximately every 30-60 minutes, worse when lying down. No sputum production, no hemoptysis, no fever. No chest pain or worsening dyspnea. He wonders whether it could be related to his heart medications. Of note, his sacubitril/valsartan (Entresto) has been stable for over a year without cough, and he had angioedema with lisinopril in 2018 — this is a different character. His abdominal discomfort has fully resolved. He continues to feel improved overall. Post-contrast Cr recheck resulted today at 1.94 (baseline, unchanged from pre-contrast 1.96) — safe to resume metformin. His weight this morning was 97.8 kg (down 1.0 kg from discharge, responding well to increased diuresis). He reports his appetite has returned to normal and he is eating well, adhering to low-sodium diet.",
   "reviewOfSystems": {
-    "Constitutional": "Reports fatigue",
-    "Cardiovascular": "No orthopnea",
-    "Respiratory": "No hemoptysis",
-    "GI": "Appetite fair",
-    "GU": "Nocturia x2",
-    "Neurologic": "No new weakness"
+    "Constitutional": "Fatigue improving. No fever, chills, or night sweats.",
+    "Cardiovascular": "No chest pain or palpitations. No orthopnea. Dyspnea at baseline only.",
+    "Respiratory": "New dry cough since yesterday, intermittent, non-productive. Worse when supine. No hemoptysis, wheezing, or sputum.",
+    "GI": "Abdominal discomfort resolved. Appetite normal. Regular bowel movements. No melena.",
+    "GU": "Nocturia x2. No dysuria.",
+    "Neurologic": "Stable neuropathy. No new symptoms.",
+    "Skin": "No rash or angioedema."
   },
   "vitals": {
     "bp": "149/86 mmHg",
@@ -24,47 +25,57 @@
     "weight": "98.2 kg"
   },
   "physicalExam": {
-    "General": "Comfortable, well-appearing",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "Irregularly irregular, no murmurs, JVP not elevated",
-    "Respiratory": "Clear to auscultation bilaterally",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "Trace bilateral ankle edema",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Comfortable, improved from prior visit. In no acute distress.",
+    "HEENT": "Normocephalic. Oropharynx clear, no erythema, no postnasal drip visualized. No angioedema of lips, tongue, or uvula. No facial swelling.",
+    "Cardiovascular": "Irregularly irregular (A-fib), rate 84. S1/S2 present. Soft systolic murmur at apex. JVP not elevated. No new murmurs.",
+    "Respiratory": "Clear to auscultation bilaterally. No crackles (improved from prior — diuresis effective). No wheezes or rhonchi. No consolidation.",
+    "Abdomen": "Soft, non-tender, non-distended. Umbilical hernia reducible, non-tender.",
+    "Extremities": "Trace bilateral ankle edema, improved from 1+. Warm, no cyanosis.",
+    "Neurologic": "Alert and oriented x3. Decreased sensation bilateral feet, stable."
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
-      "icd10": "E11.65",
-      "notes": "HbA1c 7.7%. On insulin and metformin."
+      "diagnosis": "New dry cough, likely post-nasal drip or viral URI",
+      "icd10": "R05.9",
+      "notes": "New onset dry cough x1 day. Important to differentiate from ACE inhibitor cough (patient is on ARNI, not ACE inhibitor — lisinopril was stopped in 2018 for angioedema), HF-related cough (lungs now clear with improved diuresis, so unlikely), and lower respiratory infection (afebrile, no sputum, lungs clear). Most likely upper respiratory/post-nasal drip vs. early viral URI. Monitor for progression. If persists >2 weeks, consider CXR."
     },
     {
-      "diagnosis": "Chronic Kidney Disease Stage 3b",
+      "diagnosis": "Abdominal discomfort, resolved",
+      "icd10": "R10.9",
+      "notes": "Symptoms completely resolved. CT showed only chronic/incidental findings. Volume overload likely contributed — now improving with diuresis."
+    },
+    {
+      "diagnosis": "Heart Failure with Reduced EF, improving with diuresis",
+      "icd10": "I50.22",
+      "notes": "Weight down to 97.8 kg at home (98.2 in office). Lungs now clear. Edema trace. BNP likely improving. Good response to temporary furosemide increase."
+    },
+    {
+      "diagnosis": "CKD Stage 3b, stable post-contrast",
       "icd10": "N18.32",
-      "notes": "eGFR 40. Stable."
+      "notes": "Cr 1.94, unchanged from baseline. No contrast-induced nephropathy. Safe to resume metformin."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "problem": "Cough",
+      "action": "Likely viral or post-nasal drip. Supportive care: honey-based throat lozenges, hydration within fluid restriction. NO antihistamines without careful consideration (sedation + fall risk + BPH). Avoid cough suppressants with codeine (CKD dosing concerns). If cough worsens, develops sputum, or persists >2 weeks, return for CXR and further evaluation. Monitor for any signs of angioedema (given ARNI use, though low risk with valsartan component). No ACE inhibitor cough possible as patient is not on ACE inhibitor."
     },
     {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "problem": "Metformin",
+      "action": "Cr 1.94, stable. Resume metformin 500mg BID starting today."
     },
     {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
+      "problem": "Heart Failure / Diuresis",
+      "action": "Excellent response to increased furosemide. Continue 60mg BID through tomorrow (Day 5 of 5). Return to baseline 60mg AM/40mg PM on Sunday. Continue daily weights — call if weight rises above 98.5 kg."
     },
     {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "problem": "Hepatic Steatosis Follow-up",
+      "action": "FIB-4 score calculated: 2.3 (intermediate). Recommend outpatient hepatic elastography (FibroScan) to assess for fibrosis. PCP to coordinate referral. Lifestyle modifications: weight loss, glycemic optimization, limit alcohol (patient already minimal use)."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 5 weeks or sooner if needed."
+      "action": "PCP appointment 9/18 confirmed. Return to ED if cough worsens significantly, develops fever, or any signs of facial swelling or difficulty breathing (angioedema precaution)."
     }
   ],
-  "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Emily Brown\nDate: 9/14/2024"
+  "attestation": "I personally saw and examined the patient. I reviewed the lab results and imaging. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Emily Brown, MD\nDate: 9/14/2024"
 }

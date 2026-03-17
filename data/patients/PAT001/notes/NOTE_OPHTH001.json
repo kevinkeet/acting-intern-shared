@@ -1,0 +1,126 @@
+{
+  "id": "NOTE_OPHTH001",
+  "type": "Consult Note",
+  "title": "Ophthalmology - Annual Diabetic Eye Examination",
+  "date": "2024-12-10T14:00:00.000Z",
+  "author": "Dr. Karen Liu",
+  "department": "Ophthalmology",
+  "encounter": "ENC_OPHTH001",
+  "signedDate": "2024-12-10T16:30:00.000Z",
+  "sections": {
+    "reasonForVisit": "Annual dilated diabetic eye examination. Type 2 diabetes mellitus x 15 years with known mild nonproliferative diabetic retinopathy.",
+    "historyOfPresentIllness": "Mr. Morrison is a 72-year-old gentleman with type 2 diabetes mellitus for 15 years presenting for his annual diabetic eye examination. He was last seen in our office in December 2023, at which time he was noted to have bilateral mild nonproliferative diabetic retinopathy (NPDR) with scattered microaneurysms. No macular edema was present at that time.\n\nThe patient denies any new visual complaints. He reports stable vision bilaterally. No flashing lights, new floaters, curtain-like visual field loss, or eye pain. He wears progressive bifocal lenses for distance and near vision and reports these are adequate. He does not drive at night due to difficulty with glare.\n\nHis most recent A1c was 7.4% (June 2024). Blood pressure has been well-controlled per his cardiologist. He has CKD stage 3b which can accelerate diabetic retinopathy.",
+    "ocularHistory": {
+      "diagnoses": [
+        "Bilateral mild nonproliferative diabetic retinopathy (diagnosed 2021)",
+        "Presbyopia — corrected with progressive lenses",
+        "Early nuclear sclerotic cataracts bilateral (noted 2022) — not visually significant"
+      ],
+      "surgeries": "None",
+      "lastExam": "December 2023 — bilateral mild NPDR, no DME, stable"
+    },
+    "currentMedications": "See comprehensive medication list in chart. No ophthalmic medications. Not on hydroxychloroquine or other medications with ocular toxicity risk.",
+    "examination": {
+      "visualAcuity": {
+        "rightEye": {
+          "uncorrected": "20/60",
+          "bestCorrected": "20/30"
+        },
+        "leftEye": {
+          "uncorrected": "20/50",
+          "bestCorrected": "20/25"
+        },
+        "note": "Corrected acuity stable from prior visit. Right eye slightly worse than left — consistent with slightly more advanced cataract on right."
+      },
+      "intraocularPressure": {
+        "rightEye": "16 mmHg",
+        "leftEye": "15 mmHg",
+        "method": "Goldmann applanation tonometry",
+        "interpretation": "Normal (target <21 mmHg). No concern for glaucoma."
+      },
+      "slitLampExamination": {
+        "rightEye": {
+          "conjunctiva": "White and quiet",
+          "cornea": "Clear, no neovascularization",
+          "anteriorChamber": "Deep, quiet, no cells or flare",
+          "iris": "Normal architecture, round reactive pupil",
+          "lens": "Grade 2+ nuclear sclerosis (mild progression from grade 1-2+ last year)"
+        },
+        "leftEye": {
+          "conjunctiva": "White and quiet",
+          "cornea": "Clear",
+          "anteriorChamber": "Deep, quiet",
+          "iris": "Normal, round reactive pupil",
+          "lens": "Grade 1-2+ nuclear sclerosis (stable)"
+        }
+      },
+      "dilatedFundusExamination": {
+        "dilatingAgents": "Tropicamide 1% and phenylephrine 2.5% bilateral",
+        "rightEye": {
+          "opticDisc": "Pink, sharp margins, cup-to-disc ratio 0.3, no pallor, no neovascularization of the disc (NVD)",
+          "macula": "Flat, no edema, no hard exudates, no hemorrhage within 1 disc diameter of fovea",
+          "vessels": "Mild arteriolar narrowing and AV nicking consistent with hypertensive changes. No venous beading or looping.",
+          "periphery": "Scattered microaneurysms in nasal and temporal retina (approximately 15-20 total). Three small dot-blot hemorrhages in the temporal mid-periphery. No cotton-wool spots. No intraretinal microvascular abnormalities (IRMA). No neovascularization elsewhere (NVE). No vitreous hemorrhage.",
+          "classification": "Mild nonproliferative diabetic retinopathy (ETDRS severity level 35)"
+        },
+        "leftEye": {
+          "opticDisc": "Pink, sharp margins, cup-to-disc ratio 0.3, no NVD",
+          "macula": "Flat, no edema, no exudates",
+          "vessels": "Mild arteriolar narrowing. No venous beading.",
+          "periphery": "Scattered microaneurysms (approximately 10-12 total). Two small dot-blot hemorrhages. No cotton-wool spots, no IRMA, no NVE, no vitreous hemorrhage.",
+          "classification": "Mild nonproliferative diabetic retinopathy (ETDRS severity level 35)"
+        }
+      },
+      "octMacula": {
+        "rightEye": {
+          "centralSubfieldThickness": "268 micrometers (normal <300)",
+          "fovealContour": "Normal, preserved foveal depression",
+          "intraretinalFluid": "None",
+          "subretinalFluid": "None",
+          "epiretinalMembrane": "None",
+          "interpretation": "No diabetic macular edema"
+        },
+        "leftEye": {
+          "centralSubfieldThickness": "261 micrometers (normal <300)",
+          "fovealContour": "Normal, preserved foveal depression",
+          "intraretinalFluid": "None",
+          "subretinalFluid": "None",
+          "epiretinalMembrane": "None",
+          "interpretation": "No diabetic macular edema"
+        }
+      }
+    },
+    "assessment": "72-year-old male with type 2 diabetes mellitus x 15 years with bilateral mild nonproliferative diabetic retinopathy, stable from prior examination. No diabetic macular edema on clinical exam or OCT. Early nuclear sclerotic cataracts bilateral, right greater than left, not visually significant at this time.\n\nRisk factors for progression:\n- Duration of diabetes (15 years)\n- CKD stage 3b (accelerates retinopathy)\n- A1c 7.4% (adequate but not tight)\n- Hypertension (well-controlled)\n\nProtective factors:\n- A1c at reasonable target for his age and comorbidities (<8%)\n- Blood pressure well-controlled\n- On SGLT2 inhibitor (emerging evidence of retinal benefit)\n- No macular edema\n- Stable over past 3 years of observation",
+    "recommendations": [
+      {
+        "category": "Diabetic Retinopathy Management",
+        "items": [
+          "Continue glycemic control — A1c goal <8% per endocrinology, current 7.4% is appropriate",
+          "Blood pressure control remains critical for retinopathy progression prevention — current management adequate",
+          "No ophthalmic treatment needed at this time — mild NPDR does not require laser or intravitreal injections"
+        ]
+      },
+      {
+        "category": "Monitoring Schedule",
+        "items": [
+          "Return in 6 months (June 2025) for repeat dilated examination given CKD as progression risk factor",
+          "Standard interval for mild NPDR is 6-12 months — choosing 6-month interval due to CKD",
+          "Will repeat OCT macula at next visit",
+          "If any sudden visual changes (new floaters, flashing lights, blurry vision, dark spot in vision), patient should be seen urgently — do not wait for scheduled appointment"
+        ]
+      },
+      {
+        "category": "Cataracts",
+        "items": [
+          "Early nuclear sclerotic cataracts bilateral — no surgery indicated at this time",
+          "Corrected acuity 20/30 OD and 20/25 OS is functional",
+          "Night driving difficulty likely related to cataracts — patient has appropriately self-limited night driving",
+          "Will monitor progression — surgery discussion when acuity drops below 20/40 or patient reports significant functional limitation"
+        ]
+      }
+    ],
+    "patientEducation": "Discussed findings with Mr. Morrison. Explained that his diabetic eye disease remains mild and stable, which is very good news. Emphasized that the best things he can do for his eyes are to continue controlling his blood sugar and blood pressure. Explained warning signs that should prompt immediate evaluation: sudden increase in floaters, flashing lights, a curtain or shadow in his vision, or sudden blurry vision in either eye. Patient verbalized understanding. Reviewed that he is due back in 6 months rather than 12 months because his kidney disease puts him at slightly higher risk for progression.",
+    "plan": "1. Bilateral mild NPDR — stable, no treatment needed\n2. No diabetic macular edema\n3. Continue systemic management per PCP, endocrinology, and nephrology (A1c <8%, BP <130/80)\n4. Return in 6 months (June 2025) for dilated exam and OCT\n5. Urgent evaluation if sudden visual symptoms\n6. Updated spectacle prescription provided — minor change in right eye"
+  },
+  "attestation": "I personally examined this patient, performed dilated funduscopy, reviewed OCT imaging, and formulated the assessment and plan.\n\nElectronically signed by: Karen Liu, MD, FACS\nDate/Time: 12/10/2024 4:30 PM"
+}

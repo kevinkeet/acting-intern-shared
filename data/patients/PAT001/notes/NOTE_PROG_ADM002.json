@@ -1,0 +1,87 @@
+{
+  "id": "NOTE_PROG_ADM002",
+  "type": "Progress Note",
+  "title": "Hospital Progress Note - CAP Day 5 / Discharge Day",
+  "date": "2021-02-14T08:00:00.000Z",
+  "author": "Dr. Emily Brown",
+  "department": "Hospital Medicine",
+  "encounter": "ENC_ADM002",
+  "signedDate": "2021-02-14T09:45:00.000Z",
+  "sections": {
+    "hospitalDay": "Day 5 (admitted 2/10/2021) — Discharge day",
+    "subjective": "Patient reports feeling \"back to his normal self\" aside from some residual mild cough, which he describes as occasional and mostly dry. He denies fever, chills, dyspnea at rest, or dyspnea with his usual level of activity (walking to bathroom, around the room). He walked two laps of the hallway yesterday without supplemental O2 and without significant shortness of breath. Appetite is back to normal. He is eager to go home. Wife Patricia is here and ready to assist with discharge.\n\nDenies chest pain, palpitations, worsening LE edema, nausea, diarrhea, or any new symptoms. No rash or allergic symptoms throughout hospitalization. Chronic neuropathy symptoms unchanged.",
+    "objective": {
+      "vitals": {
+        "temperature": "98.2°F (36.8°C) — afebrile x 48 hours",
+        "bloodPressure": "124/72 mmHg",
+        "heartRate": "76 bpm, irregularly irregular",
+        "respiratoryRate": "16/min",
+        "oxygenSaturation": "95% on room air"
+      },
+      "intakeOutput": "24h intake: 1,600 mL (all PO). 24h output: 1,450 mL. Weight: 94.8 kg.",
+      "physicalExam": {
+        "general": "Alert, comfortable, well-appearing. Sitting in chair, dressed in own clothes.",
+        "cardiovascular": "Irregularly irregular, rate well-controlled. S1, S2. Soft S3. 2/6 systolic murmur at apex. 1+ bilateral LE edema (baseline).",
+        "respiratory": "Mild residual crackles at right base, significantly improved. Left lung clear. No wheezing or rhonchi. Good inspiratory effort.",
+        "abdomen": "Soft, non-tender, non-distended.",
+        "extremities": "Warm, well-perfused. No new edema."
+      },
+      "labs": {
+        "date": "2021-02-14",
+        "wbc": "9.8 (normalized, down from 14.2 on admission)",
+        "hemoglobin": "10.4",
+        "creatinine": "1.9 (at baseline)",
+        "potassium": "4.4",
+        "sodium": "138",
+        "glucose": "145 (fasting)",
+        "inr": "2.2 (therapeutic)"
+      },
+      "microResults": {
+        "bloodCultures": "No growth (final, 5 days)",
+        "sputumCulture": "Streptococcus pneumoniae — susceptible to ceftriaxone, azithromycin, levofloxacin. Resistant to penicillin (intermediate MIC)."
+      },
+      "incentiveSpirometry": "1,100 mL (improved from 750 mL on admission, approaching target of 1,000 mL — exceeded)"
+    },
+    "assessment": [
+      {
+        "problem": "Community-acquired pneumonia — resolving",
+        "details": "Streptococcus pneumoniae CAP, confirmed by sputum culture and urine antigen. Excellent clinical response to ceftriaxone + azithromycin. Afebrile x 48 hours, WBC normalized (9.8), O2 discontinued — SpO2 95% on RA. Cough nearly resolved. Blood cultures negative. Completing day 5 of antibiotics. Per IDSA/ATS guidelines, minimum 5 days of therapy is sufficient if patient is afebrile x 48h, hemodynamically stable, and tolerating PO. Will transition to oral azithromycin to complete the course."
+      },
+      {
+        "problem": "Hypoxic respiratory failure — resolved",
+        "details": "SpO2 95% on room air. Supplemental O2 discontinued yesterday. Ambulatory SpO2 maintained above 93% during hallway walks."
+      },
+      {
+        "problem": "CKD 3b — at baseline",
+        "details": "Cr 1.9, back to baseline. Metformin can be restarted."
+      },
+      {
+        "problem": "Ceftriaxone tolerance",
+        "details": "Completed 5 days of IV ceftriaxone without any allergic reaction. This is an important clinical data point for his medical record — he has tolerated a third-generation cephalosporin despite documented penicillin anaphylaxis."
+      },
+      {
+        "problem": "Atrial fibrillation — stable",
+        "details": "Rate controlled at 76 bpm. INR 2.2, therapeutic."
+      },
+      {
+        "problem": "Type 2 DM — stable",
+        "details": "Glucose 145 fasting. Restarting metformin at discharge."
+      }
+    ],
+    "plan": [
+      "DISCHARGE TODAY — patient meets all discharge criteria (afebrile ≥48h, WBC normal, SpO2 ≥93% on RA, tolerating PO, clinically improved)",
+      "Transition to oral azithromycin 250 mg PO daily x 2 more days to complete a 5-day total macrolide course",
+      "Restart metformin 500 mg BID at home",
+      "Resume all home medications at pre-admission doses",
+      "Discharge with portable pulse oximeter for home monitoring x 1 week — call PCP if SpO2 <92%",
+      "Follow-up: PCP Dr. Sarah Chen in 1 week for post-hospitalization visit",
+      "Repeat CXR in 4-6 weeks to document radiographic resolution (important given age and smoking history to exclude underlying malignancy)",
+      "Pneumococcal vaccination: Patient has NOT received PCV13 or PPSV23 — strongly recommend at PCP follow-up visit once fully recovered from acute infection (defer 2-4 weeks post-illness)",
+      "COVID-19 vaccination: Encourage when available for his age group",
+      "INR check in 3-5 days at anticoagulation clinic",
+      "Update allergy record: Patient tolerated ceftriaxone without reaction despite PCN anaphylaxis — document for future reference",
+      "ID team signed off — no further follow-up needed unless new concerns arise"
+    ]
+  },
+  "attestation": "I personally examined the patient and reviewed all available data. The patient is clinically stable and meets criteria for safe discharge. Discharge instructions reviewed with patient and wife.\n\nElectronically signed by: Emily Brown, MD\nDate/Time: 2/14/2021 9:45 AM"
+}

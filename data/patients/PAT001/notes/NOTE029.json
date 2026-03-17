@@ -5,15 +5,18 @@
   "author": "Dr. Robert Kim",
   "department": "Urology",
   "encounter": "ENC022",
-  "chiefComplaint": "Medication refills",
-  "hpi": "Patient presents for medication refills. Reports overall stable condition since last visit. Compliant with medications. No new symptoms.",
+  "chiefComplaint": "BPH management, medication refills, post-fall follow-up",
+  "hpi": "Mr. Morrison is a 72-year-old male with BPH (on tamsulosin 0.4mg), HFrEF, CKD 3b, persistent A-fib, and Type 2 DM who presents for urology follow-up and medication refills. He had a fall at home 5 days ago (September 15) when he tripped on a bathroom rug while getting up for his second nighttime void. He was evaluated in the ED with negative CT head, no fractures, and stable vitals. He did not lose consciousness and denies any preceding dizziness, chest pain, or palpitations. He attributes the fall to poor lighting, the rug, and numbness in his feet from neuropathy. His nocturia remains at 2 times nightly, stable from prior visit. Urinary stream is somewhat weak but he reports adequate voiding without sensation of significant residual. No dysuria, hematuria, or incontinence. He is requesting refills on tamsulosin and gabapentin. He reports compliance with all medications. His wife removed the bathroom rug after the fall and installed a nightlight. He continues to decline use of a cane or walker, stating he does not feel that unsteady during the day.",
   "reviewOfSystems": {
-    "Constitutional": "No fever, chills, or weight loss",
-    "Cardiovascular": "No orthopnea",
-    "Respiratory": "No cough or wheezing",
-    "GI": "No nausea or vomiting",
-    "GU": "Nocturia x2",
-    "Neurologic": "Baseline neuropathy"
+    "Constitutional": "No fever, chills, or unintentional weight loss. Reports mild fatigue, chronic.",
+    "Cardiovascular": "No orthopnea, PND, chest pain, or new palpitations.",
+    "Respiratory": "No cough, wheezing, or hemoptysis.",
+    "GI": "No nausea, vomiting, abdominal pain, melena, or hematochezia.",
+    "GU": "Nocturia x2. Weak stream. No dysuria, hematuria, urgency, or incontinence.",
+    "Musculoskeletal": "Mild soreness in right hip from fall, improving. No joint swelling.",
+    "Neurologic": "Chronic bilateral foot numbness (diabetic neuropathy). No new weakness, vision changes, or headache. No LOC with fall.",
+    "Psychiatric": "Reports stable mood. Sleep adequate despite nocturia.",
+    "Skin": "Small bruise on right hip from fall, resolving."
   },
   "vitals": {
     "bp": "146/83 mmHg",
@@ -24,57 +27,64 @@
     "weight": "100.4 kg"
   },
   "physicalExam": {
-    "General": "Alert, oriented, no acute distress",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "Regular rate and rhythm, no murmurs",
-    "Respiratory": "Mild crackles at bases",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "No edema, warm and well-perfused",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Alert, oriented, well-developed overweight male in no acute distress. Ambulatory without assistive device.",
+    "HEENT": "Normocephalic, atraumatic. No scalp hematoma or tenderness. PERRL. Oropharynx clear.",
+    "Cardiovascular": "Irregularly irregular (A-fib). Soft systolic murmur at apex. No JVD.",
+    "Respiratory": "Mild bibasilar crackles. No wheezes. Comfortable at rest.",
+    "Abdomen": "Soft, non-tender, non-distended. No suprapubic fullness or tenderness.",
+    "GU": "DRE deferred today (performed at last visit). No inguinal hernias.",
+    "Extremities": "No significant edema today. Small ecchymosis over right greater trochanter, 4x3 cm, non-tender, resolving (greenish-yellow discoloration). No calf tenderness.",
+    "Neurologic": "Alert and oriented x3. Gait observed: steady but slow, narrow base, slightly shuffling. No Trendelenburg sign. Decreased sensation bilateral feet. Romberg: mildly positive with sway. Tandem gait: unable to perform without stepping out.",
+    "Musculoskeletal": "Right hip: Full range of motion. No crepitus. Log roll test negative. No point tenderness over greater trochanter. Left hip: unremarkable."
   },
   "assessment": [
     {
+      "diagnosis": "Benign Prostatic Hyperplasia",
+      "icd10": "N40.0",
+      "notes": "LUTS stable with tamsulosin 0.4mg QHS. Nocturia x2, acceptable. Weak stream present but no significant obstructive symptoms. AUA-SI approximately 14 (moderate). Fall related to nighttime voiding and environmental hazards, not orthostatic or syncopal."
+    },
+    {
+      "diagnosis": "Fall, mechanical",
+      "icd10": "W01.0",
+      "notes": "Fall 9/15/2024 related to nocturia + bathroom rug + neuropathy. No LOC, no fracture, no head injury. Multiple risk factors: diabetic neuropathy, nocturia, impaired proprioception, declining balance. Patient resistant to assistive devices."
+    },
+    {
+      "diagnosis": "Diabetic Peripheral Neuropathy",
+      "icd10": "E11.42",
+      "notes": "Contributing significantly to fall risk. Reduced sensation bilateral feet, impaired proprioception, mildly positive Romberg, unable to tandem walk. On gabapentin 300mg TID."
+    },
+    {
       "diagnosis": "Type 2 Diabetes Mellitus",
       "icd10": "E11.65",
-      "notes": "HbA1c 7.5%. On insulin and metformin."
+      "notes": "HbA1c 7.8% last check. On metformin, insulin glargine, empagliflozin. Neuropathy progressing as a complication."
     },
     {
       "diagnosis": "Chronic Kidney Disease Stage 3b",
       "icd10": "N18.32",
-      "notes": "eGFR 32. Stable."
-    },
-    {
-      "diagnosis": "Heart Failure with Reduced EF",
-      "icd10": "I50.22",
-      "notes": "NYHA Class II. On GDMT."
-    },
-    {
-      "diagnosis": "Atrial Fibrillation",
-      "icd10": "I48.1",
-      "notes": "Rate controlled. On anticoagulation."
+      "notes": "eGFR 36, stable. Relevant to medication dosing."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "problem": "BPH",
+      "action": "Continue tamsulosin 0.4mg QHS. Symptoms stable and tolerable. Refill provided for 90-day supply. Will reassess if symptoms worsen. PSA due — ordered today."
     },
     {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "problem": "Fall Prevention",
+      "action": "Fall risk assessment: MODERATE-HIGH. Risk factors: neuropathy, nocturia, balance impairment, age. Environmental modifications implemented (rug removed, nightlight installed — confirmed with wife). Strongly recommended physical therapy for balance and strength training — patient agrees to a PT evaluation. Discussed assistive devices again — patient declines cane/walker but agrees to use grab bars (already installed in bathroom). Recommended shoes with non-slip soles and good support. Will communicate fall risk status to PCP and cardiology."
     },
     {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
+      "problem": "Neuropathy / Balance",
+      "action": "Neuropathy contributing to impaired balance and proprioception. Continue gabapentin 300mg TID. If pain worsens, consider pregabalin (would need cardiology input given fluid retention risk). PT referral for balance-specific exercises."
     },
     {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "problem": "Medication Refills",
+      "action": "Refilled: tamsulosin 0.4mg QHS (90 days), gabapentin 300mg TID (90 days). All other medications managed by PCP and specialists."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 10 weeks or sooner if needed."
+      "action": "Return in 3 months or sooner if LUTS worsen, recurrent falls, or new symptoms. PSA results to be communicated by phone/portal. PT evaluation within 2 weeks."
     }
   ],
-  "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Robert Kim\nDate: 9/20/2024"
+  "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Robert Kim, MD\nDate: 9/20/2024"
 }

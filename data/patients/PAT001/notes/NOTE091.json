@@ -5,80 +5,78 @@
   "author": "Dr. William Thompson",
   "department": "Gastroenterology",
   "encounter": "ENC068",
-  "chiefComplaint": "Weakness",
-  "hpi": "72-year-old male with history of Type 2 Diabetes Mellitus, CKD Stage 3b, HFrEF (EF 35%), and atrial fibrillation who presents with fatigue over the past 4 days.\n\nPatient reports gradual onset of symptoms. Associated with mild exertion. Denies chest pain. Some dry cough present.\n\nPatient has been compliant with medications. Reports dietary indiscretion. Last cardiology visit was 3 months ago.",
-  "pastMedicalHistory": "1. Type 2 Diabetes Mellitus with neuropathy (diagnosed 2010)\n2. Chronic Kidney Disease Stage 3b (diagnosed 2018)\n3. Heart Failure with Reduced Ejection Fraction, EF 35% (diagnosed 2019)\n4. Atrial Fibrillation, persistent (diagnosed 2017)\n5. Hypertension (diagnosed 2005)\n6. Hyperlipidemia (diagnosed 2008)\n7. Benign Prostatic Hyperplasia (diagnosed 2016)\n8. History of pneumonia (2021)",
-  "medications": "See medication list in chart.",
+  "chiefComplaint": "GI evaluation for intermittent epigastric discomfort",
+  "hpi": "69-year-old male with history of HFrEF (EF 30-35%), persistent atrial fibrillation on warfarin, CKD 3b, and Type 2 DM referred by PCP for evaluation of intermittent epigastric discomfort and early satiety. Patient reports 6-8 weeks of mild, intermittent burning sensation in the upper abdomen, occurring primarily after meals, rated 2-3/10. The discomfort is worse after eating larger meals or spicy foods and occasionally associated with mild nausea but no vomiting. He describes early satiety with meals, feeling full after eating only half of his usual portion. No dysphagia, no odynophagia, no hematemesis, no melena, no hematochezia. Bowel movements remain regular, brown, formed, once daily.\n\nPatient has been on warfarin since 2017 for atrial fibrillation, which is relevant given the risk of GI bleeding with anticoagulation. He denies NSAID use — aware of contraindication with his CKD and heart failure. He does not use alcohol. He has been under some dietary stress trying to manage both a low-sodium and diabetic diet simultaneously, which has led to reliance on some processed foods that are low-sodium but may be higher in acidity and preservatives.\n\nNo family history of GI malignancy. No prior history of peptic ulcer disease, GERD requiring medication, or GI procedures. No H. pylori testing previously performed.",
+  "pastMedicalHistory": "1. Heart Failure with Reduced EF, 30-35% (diagnosed 2019)\n2. Type 2 Diabetes Mellitus with peripheral neuropathy (diagnosed 2010)\n3. Chronic Kidney Disease Stage 3b (diagnosed 2018)\n4. Atrial Fibrillation, persistent, on warfarin (diagnosed 2017)\n5. Coronary Artery Disease, 3-vessel, medically managed (2018)\n6. Hypertension (diagnosed 2005)\n7. Hyperlipidemia (diagnosed 2008)\n8. BPH (diagnosed 2016)\n9. History of gout (2019)\n10. History of CAP (February 2021)",
+  "medications": "See medication list in chart. Of note for GI relevance: Warfarin 5mg daily (bleeding risk), Aspirin 81mg held (on warfarin), Atorvastatin 80mg (monitor for hepatotoxicity), Metformin 500mg BID (GI side effects).",
   "allergies": "Penicillin (anaphylaxis), Sulfa drugs (rash), Lisinopril (angioedema), Shellfish (hives)",
-  "socialHistory": "Former smoker (quit 1995, 20 pack-year history). Rare alcohol use. Retired accountant. Lives with wife.",
-  "familyHistory": "Father: MI at 62, HTN. Mother: T2DM. Brother: HTN.",
+  "socialHistory": "Former smoker (quit 1995, 20 pack-year). Rare alcohol — approximately 1 glass wine/month. No illicit drugs. Retired accountant. Lives with wife Patricia. Active in church.",
+  "familyHistory": "Father: MI at 62, HTN, deceased 74. Mother: T2DM, deceased 82. Brother: HTN. Sister: T2DM. No family history of GI malignancy, IBD, or celiac disease.",
   "reviewOfSystems": {
-    "Constitutional": "Reports fatigue",
-    "Cardiovascular": "No orthopnea",
-    "Respiratory": "Mild dyspnea",
-    "GI": "No nausea or vomiting",
-    "GU": "No hematuria",
-    "Neurologic": "No dizziness"
+    "Constitutional": "Mild fatigue, chronic (attributed to HF and CKD-related anemia). No unintentional weight loss — weight stable ~100.5 kg. No fevers.",
+    "Cardiovascular": "No chest pain. Baseline DOE (NYHA II). Some palpitations (known A-fib). No orthopnea currently.",
+    "Respiratory": "Mild DOE at baseline. No cough or hemoptysis.",
+    "GI": "Epigastric burning and early satiety as described in HPI. No dysphagia, odynophagia, hematemesis, melena, hematochezia, diarrhea, or constipation. No jaundice. Mild intermittent nausea without vomiting.",
+    "GU": "Nocturia x2. No hematuria. BPH symptoms stable.",
+    "Neurologic": "Bilateral foot numbness (diabetic neuropathy). No dizziness.",
+    "Musculoskeletal": "No joint pain or gout flares.",
+    "Skin": "No rashes, jaundice, or spider angiomata."
   },
   "vitals": {
     "bp": "140/87 mmHg",
-    "hr": "69 bpm",
+    "hr": "69 bpm (irregular)",
     "rr": "17/min",
     "temp": "97.9°F",
     "spo2": "96% RA",
     "weight": "100.5 kg"
   },
   "physicalExam": {
-    "General": "Mildly fatigued-appearing",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "Regular rate and rhythm, no murmurs",
-    "Respiratory": "No wheezes or rhonchi",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "Trace bilateral ankle edema",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Alert, oriented, mildly fatigued-appearing obese male in no acute distress. BMI ~32.3.",
+    "HEENT": "Normocephalic. Sclera anicteric. Oropharynx clear, no pharyngeal erythema or exudates. Moist mucous membranes. No oral ulcers.",
+    "Cardiovascular": "Irregularly irregular (A-fib). Rate ~69 bpm. Systolic murmur at apex (known MR). No S3.",
+    "Respiratory": "Clear to auscultation bilaterally. No wheezes or crackles appreciated.",
+    "Abdomen": "Obese, soft. Mild tenderness to deep palpation in the epigastrium. No rebound, no guarding. No Murphy's sign. No hepatomegaly by percussion — liver span approximately 10 cm in the right midclavicular line. Spleen not palpable. No masses. Active bowel sounds in all quadrants. No abdominal bruit. No ascites by shifting dullness.",
+    "Rectal": "Deferred today — will perform if EGD is indicated.",
+    "Extremities": "Trace bilateral ankle edema. No spider angiomata. No palmar erythema.",
+    "Neurologic": "Alert, oriented. Decreased sensation bilateral feet (known)."
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
-      "icd10": "E11.65",
-      "notes": "HbA1c 7.1%. On insulin and metformin."
+      "diagnosis": "Dyspepsia, unspecified",
+      "icd10": "K30",
+      "notes": "Intermittent epigastric burning and early satiety for 6-8 weeks without alarm features (no weight loss, no dysphagia, no GI bleeding, no anemia worsening). Differential includes functional dyspepsia, gastritis (possibly NSAID-independent), early peptic ulcer disease, and gastroparesis (given diabetes). Given his age (>60) and anticoagulation with warfarin, threshold for EGD should be lower. However, symptoms are mild and without red flags."
     },
     {
-      "diagnosis": "Chronic Kidney Disease Stage 3b",
-      "icd10": "N18.32",
-      "notes": "eGFR 38. Stable."
-    },
-    {
-      "diagnosis": "Heart Failure with Reduced EF",
-      "icd10": "I50.22",
-      "notes": "NYHA Class II. On GDMT."
-    },
-    {
-      "diagnosis": "Atrial Fibrillation",
+      "diagnosis": "Atrial Fibrillation on warfarin — GI bleeding risk",
       "icd10": "I48.1",
-      "notes": "Rate controlled. On anticoagulation."
+      "notes": "Patient on chronic warfarin for A-fib. Any GI pathology found increases bleeding risk. HAS-BLED score elevated (age, labile INR in past, alcohol minimal but multiple medications). Important to evaluate and treat any mucosal pathology before a potential complication."
+    },
+    {
+      "diagnosis": "Type 2 Diabetes — gastroparesis consideration",
+      "icd10": "E11.65",
+      "notes": "Early satiety in a diabetic patient raises concern for gastroparesis. However, he has regular bowel movements, no vomiting, and no bloating. Gastroparesis is less likely but should be considered if symptoms persist after empiric treatment."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "problem": "Dyspepsia",
+      "action": "Start empiric trial of omeprazole 20mg daily for 4 weeks. If symptoms resolve, continue for 8 weeks total and then attempt to wean. Dietary modifications: avoid spicy, acidic, and fatty foods. Eat smaller, more frequent meals. Avoid lying flat within 2 hours of eating. Review medication list for GI irritants — metformin can cause dyspepsia; patient should take with food."
     },
     {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "problem": "H. pylori testing",
+      "action": "Order H. pylori stool antigen test. If positive, will treat with eradication therapy (note: penicillin allergy limits amoxicillin use — would need clarithromycin-based triple therapy with metronidazole). If H. pylori positive, would strongly consider EGD even with mild symptoms given anticoagulation status."
     },
     {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
+      "problem": "EGD consideration",
+      "action": "Not indicated urgently given absence of alarm features. However, if symptoms persist after 4-week PPI trial or if H. pylori testing is positive, will proceed with EGD. Given his age >60 and chronic anticoagulation, a screening EGD would be reasonable regardless. Patient to consider and we will discuss at follow-up."
     },
     {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "problem": "Gastroparesis screening",
+      "action": "If dyspepsia persists after PPI trial and EGD is unrevealing, will order gastric emptying study to evaluate for diabetic gastroparesis."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 12 weeks or sooner if needed."
+      "action": "Return to GI in 4-6 weeks to reassess symptom response to PPI trial and review H. pylori results. Call sooner if hematemesis, melena, worsening pain, vomiting, or dysphagia develops."
     }
   ],
   "attestation": "I have personally evaluated this patient and agree with the documentation above.\n\nElectronically signed by: Dr. William Thompson\nDate: 11/14/2021"

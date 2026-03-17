@@ -5,70 +5,88 @@
   "author": "Dr. James Wilson",
   "department": "Cardiology",
   "encounter": "ENC007",
-  "chiefComplaint": "Leg swelling",
-  "hpi": "72-year-old male with history of Type 2 Diabetes Mellitus, CKD Stage 3b, HFrEF (EF 35%), and atrial fibrillation who presents with increased leg swelling over the past 6 days.\n\nPatient reports sudden onset of symptoms. Worse when lying flat. Denies chest pain. Some dry cough present.\n\nPatient has been compliant with medications. Following low-sodium diet. Last cardiology visit was 2 months ago.",
-  "pastMedicalHistory": "1. Type 2 Diabetes Mellitus with neuropathy (diagnosed 2010)\n2. Chronic Kidney Disease Stage 3b (diagnosed 2018)\n3. Heart Failure with Reduced Ejection Fraction, EF 35% (diagnosed 2019)\n4. Atrial Fibrillation, persistent (diagnosed 2017)\n5. Hypertension (diagnosed 2005)\n6. Hyperlipidemia (diagnosed 2008)\n7. Benign Prostatic Hyperplasia (diagnosed 2016)\n8. History of pneumonia (2021)",
-  "medications": "See medication list in chart.",
-  "allergies": "Penicillin (anaphylaxis), Sulfa drugs (rash), Lisinopril (angioedema), Shellfish (hives)",
-  "socialHistory": "Former smoker (quit 1995, 20 pack-year history). Rare alcohol use. Retired accountant. Lives with wife.",
-  "familyHistory": "Father: MI at 62, HTN. Mother: T2DM. Brother: HTN.",
+  "chiefComplaint": "Post-fall evaluation, heart failure follow-up",
+  "hpi": "73-year-old male with history of HFrEF (EF 30-35%), CKD Stage 3b, Type 2 DM on insulin with diabetic neuropathy, persistent atrial fibrillation (off anticoagulation since GI hemorrhage 9/2023), HTN, hyperlipidemia, obesity, and BPH who presents to cardiology clinic for urgent evaluation following a mechanical fall at home on 9/12/2025. Patient tripped over a bathroom rug at approximately 2:30 AM while getting up to urinate (nocturia). He fell forward, catching himself on the vanity with his right hand and landing on his right knee. He denies loss of consciousness, pre-syncopal symptoms, chest pain, or palpitations preceding the fall. His wife heard the fall and assisted him. He was able to stand independently. He was seen in the ED on 9/12/2025: CT head negative for acute intracranial pathology, right knee X-ray negative for fracture, vitals stable with no orthostatic hypotension. He was discharged home with fall precaution counseling.\n\nThe patient was already due for his semi-annual cardiology visit, which was moved up in light of the fall. He reports his baseline functional status is NYHA Class II — he can walk approximately 2 blocks on flat ground and climb one flight of stairs with pausing. This has been stable since his last visit. He reports his daily weights have been 97-97.5 kg, within his target range. He denies orthopnea (uses 2 pillows, unchanged), PND, or new-onset peripheral edema beyond his usual trace ankle swelling. He reports taking all medications as prescribed, including his quadruple GDMT. His wife confirms medication compliance.\n\nRegarding the fall, I am concerned about contributing factors: diabetic neuropathy causing impaired proprioception and balance, nocturia (2-3 times nightly from combined BPH, diuretic, and empagliflozin effects), and an unsecured bathroom rug. Patient has been advised to remove throw rugs but has not fully complied. He declines use of a cane or walker, stating 'I'm not that old.' He has nightlights in the hallway but not in the bathroom.\n\nHe also asks about the ICD discussion that has been deferred since late 2022. His wife has been researching it and is increasingly supportive. Patient remains ambivalent but is 'thinking about it more seriously.'",
+  "pastMedicalHistory": "1. Heart Failure with Reduced Ejection Fraction, EF 30-35% (diagnosed January 2019, last TTE 9/2020, last TEE 9/2024)\n2. Type 2 Diabetes Mellitus with diabetic peripheral neuropathy (DM diagnosed 2010, neuropathy 2020)\n3. Chronic Kidney Disease Stage 3b (diagnosed 2018, likely diabetic nephropathy + hypertensive nephrosclerosis)\n4. Atrial Fibrillation, persistent (diagnosed 2017, off anticoagulation since 9/2023 GI hemorrhage)\n5. Coronary Artery Disease, 3-vessel (cath 10/2018: LAD 60%, LCx 50%, RCA 70% — medical management)\n6. Hypertension (diagnosed 2005)\n7. Hyperlipidemia (diagnosed 2008)\n8. Obesity (BMI ~33)\n9. Benign Prostatic Hyperplasia (diagnosed 2016)\n10. History of upper GI hemorrhage — gastric ulcer with visible vessel, 9/2023 (treated with EGD, epinephrine, cautery, hemoclip; H. pylori eradicated)\n11. History of ACE inhibitor angioedema (lisinopril, 8/2018)\n12. History of community-acquired pneumonia (2/2021)\n13. History of acute gout (7/2019, left 1st MTP)\n14. History of hypoglycemia requiring ED visit (6/2020)\n15. Mild nonproliferative diabetic retinopathy (diagnosed 12/2024)\n16. Hepatic steatosis (incidental finding on CT 9/2024)\n17. Bilateral simple renal cysts (incidental, CT 9/2024)\n18. Small umbilical hernia (incidental, asymptomatic, CT 9/2024)",
+  "medications": "1. Sacubitril/valsartan (Entresto) 97/103mg BID\n2. Carvedilol 25mg BID\n3. Spironolactone 25mg daily\n4. Empagliflozin 10mg daily (started May 2025)\n5. Furosemide 60mg AM + 40mg PM\n6. Metformin 250mg BID\n7. Insulin glargine 24 units QHS\n8. Insulin lispro sliding scale with meals\n9. Gabapentin 300mg TID\n10. Tamsulosin 0.4mg QHS\n11. Atorvastatin 80mg QHS\n12. Aspirin 81mg daily\n13. Pantoprazole 40mg daily\n14. Sodium bicarbonate 650mg BID\n15. Vitamin D3 2000 IU daily",
+  "allergies": "1. Penicillin — anaphylaxis (1985, verified)\n2. Sulfa drugs (TMP-SMX) — rash and hives (1992, verified)\n3. Lisinopril — angioedema (2018, verified; all ACE inhibitors contraindicated)\n4. Shellfish — hives (patient-reported, unverified)",
+  "socialHistory": "Retired accountant (Springfield Financial Services, 35 years). Lives with wife Patricia in single-story home with 2 steps at entrance. Former smoker — quit 1995, 20 pack-year history. Rare alcohol use (1-2 glasses of wine per month, none currently). No illicit drugs. Adult son and daughter-in-law live nearby, visit weekly. Two grandchildren (ages 12 and 15). Active in church community but attendance has declined recently. Wife manages all medications using a weekly pill organizer. Patient drives locally for short trips.",
+  "familyHistory": "Father: MI at age 62, HTN — deceased at 78 from stroke. Mother: Type 2 DM onset age 55 — deceased at 84 from complications of diabetes. Sister: Type 2 DM onset age 58, alive. Brother: HTN, alive. Son: Hyperlipidemia diagnosed at age 40, otherwise healthy.",
   "reviewOfSystems": {
-    "Constitutional": "Reports fatigue",
-    "Cardiovascular": "Dyspnea on exertion at baseline",
-    "Respiratory": "No cough or wheezing",
-    "GI": "Regular bowel movements",
-    "GU": "Nocturia x2",
-    "Neurologic": "Baseline neuropathy"
+    "Constitutional": "Reports moderate fatigue, worse in afternoons. Weight stable at 97-97.5 kg. Appetite adequate. No fevers, chills, or night sweats.",
+    "Cardiovascular": "Exertional dyspnea stable at baseline (NYHA II). No orthopnea or PND. No chest pain or anginal symptoms. Occasional irregular heartbeat sensation (chronic, consistent with A-fib). No syncope — fall was mechanical, not syncopal.",
+    "Respiratory": "No cough, wheezing, or hemoptysis. No change in exercise tolerance.",
+    "GI": "No abdominal pain. Regular bowel movements. No melena or BRBPR (monitored closely). Tolerating pantoprazole.",
+    "GU": "Nocturia x2-3. Weak stream occasionally. No dysuria or hematuria.",
+    "Musculoskeletal": "Right knee mildly sore from fall (improving). Bilateral knee stiffness chronic. No acute joint swelling.",
+    "Neurologic": "Bilateral foot numbness and tingling at baseline (4/10). Balance impaired — contributed to fall. No new focal weakness, speech changes, or vision changes.",
+    "Skin": "No ulcers, wounds, or new lesions. Small bruise right knee from fall, resolving."
   },
   "vitals": {
-    "bp": "138/77 mmHg",
-    "hr": "84 bpm",
-    "rr": "19/min",
+    "bp": "124/72 mmHg (seated), 118/68 mmHg (standing — no significant orthostasis)",
+    "hr": "62 bpm (irregularly irregular)",
+    "rr": "16/min",
     "temp": "97.9°F",
-    "spo2": "94% RA",
-    "weight": "97.5 kg"
+    "spo2": "96% RA",
+    "weight": "97.5 kg",
+    "bmi": "32.5"
   },
   "physicalExam": {
-    "General": "Comfortable, well-appearing",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "Regular rate and rhythm, no murmurs",
-    "Respiratory": "Clear to auscultation bilaterally",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "No edema, warm and well-perfused",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Obese male, well-appearing, comfortable at rest. Alert and conversant. No acute distress.",
+    "HEENT": "Normocephalic, atraumatic (no visible head injury from fall). PERRL. Oropharynx clear. No cervical LAD.",
+    "Cardiovascular": "Irregularly irregular rhythm at 62 bpm. Normal S1. Physiologically split S2. Grade 2/6 holosystolic murmur at apex radiating to left axilla (known moderate MR, stable). No S3 gallop. JVP estimated at 7 cm H2O, not elevated. PMI laterally displaced to anterior axillary line, consistent with cardiomegaly. No heaves or thrills. Carotid upstrokes brisk bilaterally without bruits (carotid US 8/2025: bilateral mild atherosclerosis, <50%).",
+    "Respiratory": "Lungs clear to auscultation bilaterally. No crackles, wheezes, or rhonchi. Symmetric expansion. No dullness to percussion at bases (no pleural effusions).",
+    "Abdomen": "Obese, soft, non-tender, non-distended. No organomegaly. Normoactive bowel sounds.",
+    "Extremities": "Trace bilateral ankle edema, pitting, symmetric. Right knee with small ecchymosis (2 x 3 cm) on anterior surface, non-tender to palpation today, full ROM. No warmth or effusion. Bilateral DP/PT pulses 1+. No cyanosis or clubbing.",
+    "Neurologic": "Alert, oriented x3. CN II-XII intact. Motor 5/5 upper, 4+/5 lower (chronic). Sensory: markedly diminished light touch and pinprick bilateral feet to ankles. Vibration absent at great toes. Ankle reflexes absent bilaterally. Romberg positive with sway. Tandem gait impaired (unable to complete more than 3 steps). Standard gait steady but cautious, narrow-based."
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
+      "diagnosis": "Heart Failure with Reduced Ejection Fraction",
+      "icd10": "I50.22",
+      "notes": "NYHA Class II, clinically stable. Euvolemic by examination — lungs clear, JVP not elevated, trace edema at baseline. Weight at target (97.5 kg). BNP trending down (380 in August on quadruple GDMT). Currently on optimized GDMT: Entresto 97/103 BID, carvedilol 25mg BID, spironolactone 25mg, empagliflozin 10mg — all at target doses. This represents ideal quadruple therapy per current guidelines. Functional status stable. Fall was mechanical (neuropathy + nocturia + environmental hazard), NOT cardiac in etiology — no syncope, no presyncope, no orthostasis on exam. ICD discussion: Patient meets criteria for primary prevention ICD (EF <=35%, NYHA II-III, on optimal GDMT >3 months). Has been deferring since 2022. Today appears more receptive — wife researching independently. Will have detailed shared decision-making discussion at next visit with EP cardiology referral if agreeable."
+    },
+    {
+      "diagnosis": "Atrial Fibrillation, persistent",
+      "icd10": "I48.1",
+      "notes": "Rate well controlled on carvedilol 25mg BID (resting HR 62). CHA2DS2-VASc score 5. No anticoagulation — permanently discontinued after upper GI hemorrhage (Sept 2023) per GI/Cardiology/PCP consensus. On aspirin 81mg daily. TEE (9/2024) showed no LAA thrombus — reassuring. Continue monitoring. Fall was not related to A-fib with RVR — rate controlled."
+    },
+    {
+      "diagnosis": "Mechanical Fall",
+      "icd10": "W01.0",
+      "notes": "Fall at home 9/12/2025 — tripped on bathroom rug during nighttime trip to urinate. Contributing factors: (1) Diabetic neuropathy with impaired proprioception and balance (Romberg positive, tandem gait impaired), (2) Nocturia x2-3 from BPH + diuretics + empagliflozin, (3) Environmental hazard (unsecured bathroom rug), (4) No nightlight in bathroom. NOT cardiac syncope — no prodrome, no LOC, no orthostasis, ED workup negative. Fall risk: MODERATE. Patient declines assistive devices."
+    },
+    {
+      "diagnosis": "Type 2 Diabetes Mellitus with diabetic neuropathy",
       "icd10": "E11.65",
-      "notes": "HbA1c 7.3%. On insulin and metformin."
+      "notes": "A1c 7.2% per August labs — best in years, attributed to empagliflozin addition. Neuropathy at baseline."
     },
     {
       "diagnosis": "Chronic Kidney Disease Stage 3b",
       "icd10": "N18.32",
-      "notes": "eGFR 35. Stable."
+      "notes": "eGFR 34.8, Cr 2.00 per August labs. Stable trajectory."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
-    },
-    {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
-    },
-    {
       "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
+      "action": "Continue optimized quadruple GDMT at current doses — no changes needed, patient stable. Continue furosemide 60mg AM + 40mg PM. Daily weights, sodium restriction <2g, fluid restriction 1.5-2L. Repeat echocardiogram ordered — last TTE was September 2020 (5 years ago); TEE done 9/2024 for LAA evaluation but formal TTE for serial EF assessment is overdue. Will schedule within 4-6 weeks."
+    },
+    {
+      "problem": "ICD Discussion",
+      "action": "Patient has met criteria for primary prevention ICD since 2022 (EF <=35%, NYHA II, on optimal GDMT >90 days). He has deferred multiple times. Today he appears more open — wife has been researching. Provided patient education pamphlet on ICD. Will schedule dedicated 30-minute appointment to discuss risks/benefits, procedure, lifestyle implications, device management. Will refer to EP cardiology (Dr. Patel) for formal evaluation if patient agrees. Follow-up in 4 weeks for decision."
+    },
+    {
+      "problem": "Fall Prevention",
+      "action": "Fall risk assessment: MODERATE. Environmental modifications: (1) Remove ALL throw rugs — instructed wife to complete this today, (2) Install nightlight in bathroom (have them in hallway only), (3) Shower chair already in place. Physical therapy referral for balance and strength training — 6 sessions authorized. Gently recommended cane for nighttime bathroom trips — patient again declines but will reconsider. Ensured clear path from bedroom to bathroom. Fall alert device discussed — patient resistant. Will reassess at next visit."
     },
     {
       "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "action": "Rate well controlled — no medication changes. Continue aspirin 81mg and pantoprazole 40mg daily. Stroke symptom education reinforced with patient and wife."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 4 weeks or sooner if needed."
+      "action": "Return to cardiology in 4 weeks for ICD discussion and echo results review. Sooner if symptoms change. Labs: BMP, BNP prior to next visit. PCP follow-up in October for comprehensive management."
     }
   ],
   "attestation": "I have personally evaluated this patient and agree with the documentation above.\n\nElectronically signed by: Dr. James Wilson\nDate: 9/14/2025"

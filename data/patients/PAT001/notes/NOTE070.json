@@ -5,15 +5,18 @@
   "author": "Dr. Robert Kim",
   "department": "Urology",
   "encounter": "ENC047",
-  "chiefComplaint": "Annual wellness visit",
-  "hpi": "Patient presents for annual wellness visit. Reports overall stable condition since last visit. Compliant with medications. No new symptoms.",
+  "chiefComplaint": "BPH follow-up",
+  "hpi": "Mr. Morrison is a 70-year-old male with BPH (diagnosed 2016), persistent atrial fibrillation on warfarin, HFrEF (EF 30-35%), CKD Stage 3b, Type 2 DM with neuropathy, and multiple other comorbidities who presents for urology follow-up regarding his benign prostatic hyperplasia. He has been on tamsulosin 0.4mg daily since 2016 with moderate symptom improvement. He reports his current LUTS include nocturia 2-3 times per night (improved from 4-5 times before tamsulosin), a weak urinary stream, occasional hesitancy at initiation, and a sensation of incomplete bladder emptying approximately 2-3 times per week. He denies gross hematuria, dysuria, urinary incontinence, or frank urinary retention. He notes that his nocturia is particularly problematic as it disrupts his sleep and contributes to his overall fatigue. He had a UTI in April 2023 that was treated with nitrofurantoin and resolved completely. His last PSA was 2.1 in 2016 — overdue for screening. He has not had any prior urologic procedures. He is aware that his furosemide contributes to urinary frequency and that this is a difficult balance given his heart failure requiring diuresis. He is interested in discussing whether any additional treatments could help with his nocturia specifically.",
   "reviewOfSystems": {
-    "Constitutional": "Reports fatigue",
-    "Cardiovascular": "No orthopnea",
-    "Respiratory": "Mild dyspnea",
-    "GI": "No nausea or vomiting",
-    "GU": "No dysuria",
-    "Neurologic": "No dizziness"
+    "Constitutional": "Chronic fatigue, disrupted sleep from nocturia, no fevers, no weight loss",
+    "Cardiovascular": "Baseline dyspnea on exertion, no chest pain, no orthopnea",
+    "Respiratory": "No cough, no dyspnea at rest",
+    "GI": "Regular bowel movements, no abdominal pain, appetite fair",
+    "GU": "LUTS as detailed in HPI — nocturia x2-3, weak stream, hesitancy, incomplete emptying. No hematuria, no dysuria, no incontinence",
+    "Musculoskeletal": "Chronic bilateral knee discomfort, no acute joint issues",
+    "Neurologic": "Baseline bilateral foot neuropathy — numbness and tingling. This contributes to balance issues especially during nighttime trips to bathroom",
+    "Sexual": "Reports decreased libido, attributes to fatigue and medications. No erectile dysfunction complaints volunteered",
+    "Endocrine": "Blood sugars variable, no hypoglycemic episodes"
   },
   "vitals": {
     "bp": "136/87 mmHg",
@@ -24,46 +27,52 @@
     "weight": "98.5 kg"
   },
   "physicalExam": {
-    "General": "Mildly fatigued-appearing",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "S1/S2 normal, mild peripheral edema",
-    "Respiratory": "Clear to auscultation bilaterally",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "1+ pedal edema bilaterally",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Obese male appearing stated age, mildly fatigued-appearing but alert and cooperative. No acute distress",
+    "HEENT": "Normocephalic, atraumatic. Oropharynx clear. No cervical lymphadenopathy",
+    "Cardiovascular": "Irregularly irregular rhythm at 66 bpm. S1/S2 normal. 2/6 systolic murmur at apex. No peripheral cyanosis",
+    "Respiratory": "Clear to auscultation bilaterally, no crackles or wheezes",
+    "Abdomen": "Obese, soft, non-tender. No suprapubic fullness or tenderness. No CVA tenderness. Bowel sounds present",
+    "GU/DRE": "Digital rectal exam performed: Prostate moderately enlarged, estimated 40-50 grams, smooth, symmetric, no nodules, no tenderness. Median sulcus palpable. No rectal masses. Stool guaiac negative",
+    "Extremities": "1+ bilateral pedal edema. Warm, well-perfused. No skin breakdown",
+    "Neurologic": "Alert and oriented x3. Decreased sensation bilateral feet as noted previously. Gait slightly wide-based"
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
-      "icd10": "E11.65",
-      "notes": "HbA1c 7.6%. On insulin and metformin."
+      "diagnosis": "Benign Prostatic Hyperplasia",
+      "icd10": "N40.0",
+      "notes": "Moderate LUTS on tamsulosin 0.4mg daily. AUA Symptom Score today: 15 (moderate, up from 12 at diagnosis in 2016). Prostate moderately enlarged on DRE at approximately 40-50g. Primary bothersome symptom is nocturia which is confounded by diuretic use (furosemide 60mg BID) and likely also related to HF-associated fluid redistribution when supine. Adding a 5-alpha reductase inhibitor could provide additional benefit for prostatic obstruction and may be appropriate given prostate size >40g. However, must consider drug interactions and his complex medication regimen."
     },
     {
-      "diagnosis": "Chronic Kidney Disease Stage 3b",
-      "icd10": "N18.32",
-      "notes": "eGFR 33. Stable."
+      "diagnosis": "Nocturia, multifactorial",
+      "icd10": "R35.1",
+      "notes": "Nocturia 2-3 times nightly — contributing factors include BPH obstruction, loop diuretic use (furosemide BID), heart failure with nocturnal fluid redistribution, CKD-associated nocturia, and diabetic autonomic neuropathy affecting bladder sensation. Addressing all contributing factors important for meaningful improvement."
+    },
+    {
+      "diagnosis": "PSA screening overdue",
+      "icd10": "Z12.5",
+      "notes": "Last PSA 2.1 in 2016 (7 years ago). Given age 70 and moderate LUTS, shared decision-making about PSA screening warranted. Life expectancy considerations important given his multiple comorbidities."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "problem": "BPH",
+      "action": "Continue tamsulosin 0.4mg daily. AUA-SS 15 (moderate) — symptoms have mildly progressed since diagnosis. Given prostate estimated at 40-50g on DRE and persistent moderate symptoms despite alpha-blocker, consider adding finasteride 5mg daily for combination therapy. This may provide incremental benefit over tamsulosin alone, particularly for larger prostates (MTOPS trial data). Discussed potential side effects: decreased libido (already present), ejaculatory dysfunction, and rare cases of depression. Patient interested but wants to discuss with wife. Will make decision at next visit. Order post-void residual ultrasound to assess bladder emptying. If PVR elevated (>200cc), may need further workup including uroflow/cystometry."
     },
     {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "problem": "Nocturia",
+      "action": "Nocturia is multifactorial. Recommend timing furosemide doses to minimize nighttime diuresis — take morning dose early (by 8 AM) and second dose no later than 2 PM (will coordinate with PCP/cardiology, as this may already be in place). Fluid restriction after 6 PM. Elevate legs for 1-2 hours in afternoon to promote daytime fluid mobilization. Avoid caffeine after noon. These behavioral measures may reduce nocturia by 1-2 episodes. Given fall risk (neuropathy, nocturia, balance issues), reiterated importance of nightlights and clear path to bathroom."
     },
     {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
+      "problem": "PSA Screening",
+      "action": "Discussed shared decision-making regarding PSA screening. At age 70 with multiple comorbidities and estimated life expectancy potentially limited by cardiac disease, the benefit of PSA screening is uncertain. However, given his ongoing LUTS requiring management, a PSA level may be informative for disease monitoring rather than screening per se. Patient agrees to PSA check. Ordered PSA with next lab draw. If significantly elevated (>4.0 or significant rise from baseline 2.1), will discuss prostate biopsy considerations."
     },
     {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "problem": "Anticoagulation consideration",
+      "action": "Patient on warfarin. If finasteride started, no known interaction. However, if any urologic procedures needed (e.g., cystoscopy, biopsy), will need anticoagulation bridging protocol — coordinate with cardiology given high thromboembolic risk (CHA2DS2-VASc 5)."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 6 weeks or sooner if needed."
+      "action": "Return to urology in 3 months with PVR and PSA results. Sooner if urinary retention, gross hematuria, or worsening symptoms. Patient and wife verbalize understanding."
     }
   ],
   "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Robert Kim\nDate: 3/31/2023"

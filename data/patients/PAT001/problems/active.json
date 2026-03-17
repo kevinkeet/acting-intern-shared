@@ -100,7 +100,37 @@
       "priority": "Low",
       "notes": "On supplementation. Last level 28 ng/mL."
     }
+    {
+      "id": "PRB011",
+      "name": "Coronary Artery Disease, 3-Vessel",
+      "icd10": "I25.10",
+      "snomed": "53741008",
+      "onsetDate": "2018-10-15",
+      "diagnosedBy": "Dr. James Wilson",
+      "priority": "High",
+      "notes": "Documented on cardiac catheterization 10/2018: LAD 60% proximal, LCx 50% mid, RCA 70% proximal. Medically managed — no intervention. On high-intensity statin and aspirin."
+    },
+    {
+      "id": "PRB012",
+      "name": "Nonproliferative Diabetic Retinopathy, Mild, Bilateral",
+      "icd10": "E11.319",
+      "snomed": "390834004",
+      "onsetDate": "2024-12-10",
+      "diagnosedBy": "Dr. Karen Liu",
+      "priority": "Medium",
+      "notes": "Scattered microaneurysms and dot-blot hemorrhages. No macular edema on OCT. Follow-up dilated exam in 6 months."
+    },
+    {
+      "id": "PRB013",
+      "name": "Adjustment Disorder with Depressed Mood",
+      "icd10": "F43.21",
+      "snomed": "26929004",
+      "onsetDate": "2026-01-20",
+      "diagnosedBy": "Dr. Jennifer Adams",
+      "priority": "Medium",
+      "notes": "PHQ-9: 8 (mild). Related to functional decline and chronic illness burden. Referred to behavioral health for counseling. Patient prefers counseling over medication initially."
+    }
   ],
-  "lastReviewed": "2024-01-10",
-  "reviewedBy": "Dr. Sarah Chen"
+  "lastReviewed": "2026-02-05",
+  "reviewedBy": "Dr. Jennifer Adams"
 }

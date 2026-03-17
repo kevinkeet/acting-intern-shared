@@ -2,74 +2,91 @@
   "id": "NOTE090",
   "type": "H&P",
   "date": "2021-11-19T16:22:18.416Z",
-  "author": "Dr. Patricia Lee",
-  "department": "Radiology",
+  "author": "Dr. Michael Torres",
+  "department": "Nephrology",
   "encounter": "ENC067",
-  "chiefComplaint": "Leg swelling",
-  "hpi": "72-year-old male with history of Type 2 Diabetes Mellitus, CKD Stage 3b, HFrEF (EF 35%), and atrial fibrillation who presents with chest discomfort over the past 4 days.\n\nPatient reports sudden onset of symptoms. Occurs at rest. Denies chest pain. Some dry cough present.\n\nPatient has not been compliant with medications. Reports dietary indiscretion. Last cardiology visit was 2 months ago.",
-  "pastMedicalHistory": "1. Type 2 Diabetes Mellitus with neuropathy (diagnosed 2010)\n2. Chronic Kidney Disease Stage 3b (diagnosed 2018)\n3. Heart Failure with Reduced Ejection Fraction, EF 35% (diagnosed 2019)\n4. Atrial Fibrillation, persistent (diagnosed 2017)\n5. Hypertension (diagnosed 2005)\n6. Hyperlipidemia (diagnosed 2008)\n7. Benign Prostatic Hyperplasia (diagnosed 2016)\n8. History of pneumonia (2021)",
-  "medications": "See medication list in chart.",
+  "chiefComplaint": "Nephrology follow-up for CKD Stage 3b management",
+  "hpi": "69-year-old male with CKD Stage 3b (likely diabetic nephropathy and hypertensive nephrosclerosis), HFrEF (EF 30-35%), persistent A-fib on warfarin, and Type 2 DM presents for routine nephrology evaluation. Last nephrology visit was approximately 6 months ago. Since then, his renal function has remained relatively stable. Most recent labs (9/24/2021) showed Cr 1.88, eGFR 38, K 4.7, Na 137. UACR from July was 150 mg/g (A2 stage, moderately increased albuminuria).\n\nPatient has had a moderately eventful past year including a pneumonia hospitalization in February 2021, a UTI in September treated with nitrofurantoin, and recurrent mild heart failure volume overload episodes managed with temporary furosemide increases. His heart failure team has been uptitrating carvedilol — he is now on 12.5mg AM / 25mg PM and plans to reach target dose of 25mg BID. He remains on Entresto 97/103mg BID and spironolactone 25mg daily.\n\nFrom a renal standpoint, he has tolerated the neurohormonal blockade (Entresto + spironolactone) without hyperkalemia or significant Cr elevation. His eGFR has been slowly declining at approximately 2-3 mL/min/year over the past 3 years (eGFR 42 in early 2018, now 38). He denies any new edema-related symptoms beyond his usual heart failure fluctuations. He follows a low-sodium diet. His wife manages his medications and monitors daily weights. He was counseled on NSAID avoidance previously and confirms he has avoided them.",
+  "pastMedicalHistory": "1. Chronic Kidney Disease Stage 3b, eGFR 38 (diagnosed 2018)\n2. Type 2 Diabetes Mellitus with peripheral neuropathy (diagnosed 2010)\n3. Heart Failure with Reduced EF, 30-35% (diagnosed 2019)\n4. Atrial Fibrillation, persistent, on warfarin (diagnosed 2017)\n5. Hypertension (diagnosed 2005)\n6. Hyperlipidemia (diagnosed 2008)\n7. Coronary Artery Disease, 3-vessel (2018)\n8. BPH (diagnosed 2016)\n9. Vitamin D deficiency (2019)\n10. History of gout (2019)\n11. History of CAP (February 2021)\n12. ACE inhibitor angioedema (lisinopril, 2018)",
+  "medications": "1. Sacubitril/valsartan (Entresto) 97/103mg BID\n2. Carvedilol 12.5mg AM / 25mg PM (being uptitrated to 25mg BID)\n3. Spironolactone 25mg daily\n4. Furosemide 40mg BID\n5. Warfarin 5mg daily\n6. Insulin glargine 22 units QHS (recently increased from 20)\n7. Metformin 500mg BID (renal-dosed)\n8. Atorvastatin 80mg daily\n9. Gabapentin 300mg TID\n10. Tamsulosin 0.4mg daily\n11. Vitamin D3 2000 IU daily",
   "allergies": "Penicillin (anaphylaxis), Sulfa drugs (rash), Lisinopril (angioedema), Shellfish (hives)",
-  "socialHistory": "Former smoker (quit 1995, 20 pack-year history). Rare alcohol use. Retired accountant. Lives with wife.",
-  "familyHistory": "Father: MI at 62, HTN. Mother: T2DM. Brother: HTN.",
+  "socialHistory": "Former smoker, quit 1995 (20 pack-year). Rare alcohol. Retired accountant. Lives with wife Patricia who manages medications and daily weights. Two adult children nearby.",
+  "familyHistory": "Father: HTN, MI age 62, deceased 74. Mother: T2DM, deceased 82. Brother: HTN. Sister: T2DM. No family history of polycystic kidney disease or other hereditary renal disease.",
   "reviewOfSystems": {
-    "Constitutional": "No fever, chills, or weight loss",
-    "Cardiovascular": "Dyspnea on exertion at baseline",
-    "Respiratory": "No hemoptysis",
-    "GI": "No nausea or vomiting",
-    "GU": "No hematuria",
-    "Neurologic": "Baseline neuropathy"
+    "Constitutional": "Chronic fatigue (multifactorial: HF, CKD-related anemia, deconditioning). No fevers. Weight 98.2 kg today — near baseline.",
+    "Cardiovascular": "Baseline DOE (NYHA II), stable. No orthopnea currently. Some palpitations (known A-fib). Leg swelling at baseline trace level.",
+    "Respiratory": "No cough. No hemoptysis.",
+    "GI": "Mild intermittent epigastric discomfort — being evaluated by GI (Dr. Thompson). Appetite fair. No nausea or vomiting.",
+    "GU": "Nocturia x2. Urine output adequate per patient. No hematuria. No foamy urine noted by patient. UTI in September resolved.",
+    "Musculoskeletal": "No bone pain. No muscle cramps — sometimes a concern with electrolyte abnormalities in CKD.",
+    "Neurologic": "Bilateral foot numbness (diabetic neuropathy), stable. No new weakness or cognitive changes.",
+    "Skin": "No pruritus (can be a uremic symptom). No easy bruising. No skin changes.",
+    "Hematologic": "No bleeding. Known mild anemia (Hgb ~11)."
   },
   "vitals": {
     "bp": "150/83 mmHg",
-    "hr": "84 bpm",
+    "hr": "84 bpm (irregular)",
     "rr": "17/min",
     "temp": "98.8°F",
     "spo2": "94% RA",
     "weight": "98.2 kg"
   },
   "physicalExam": {
-    "General": "Alert, oriented, no acute distress",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "Irregularly irregular, no murmurs, JVP not elevated",
-    "Respiratory": "No wheezes or rhonchi",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "Trace bilateral ankle edema",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Alert, oriented, pleasant obese male. Slightly fatigued appearance (chronic). No acute distress. BMI ~31.6.",
+    "HEENT": "Normocephalic. Sclera anicteric. Conjunctivae mildly pale (consistent with anemia). Oropharynx clear. No uremic fetor. JVP 7 cm H2O — not elevated.",
+    "Cardiovascular": "Irregularly irregular (A-fib). Rate ~84 bpm. S1/S2 present. Systolic murmur at apex (known MR). No pericardial rub.",
+    "Respiratory": "Clear to auscultation bilaterally. No crackles or wheezes.",
+    "Abdomen": "Soft, obese, non-tender. No renal bruits bilaterally (auscultated specifically). No hepatomegaly. No CVA tenderness.",
+    "Extremities": "Trace bilateral ankle edema — at his baseline. No asterixis (assessed). Skin intact, no excoriations. Toenails thickened bilaterally (onychomycosis).",
+    "Neurologic": "Alert, oriented x4. Decreased sensation bilateral feet (known neuropathy). No asterixis. No myoclonus."
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
-      "icd10": "E11.65",
-      "notes": "HbA1c 7.5%. On insulin and metformin."
+      "diagnosis": "Chronic Kidney Disease Stage 3b, likely diabetic nephropathy and hypertensive nephrosclerosis",
+      "icd10": "N18.32",
+      "notes": "eGFR 38 (Cr 1.88), stable over past 6 months. Rate of decline approximately 2-3 mL/min/year over past 3 years. UACR 150 mg/g (A2 — moderately increased albuminuria, stable). Currently on ARNI (Entresto) which provides some renal protection. No evidence of acute kidney injury or accelerated decline. CKD complications developing but manageable: mild anemia (Hgb 11.0), potassium trending at upper normal range (4.7-4.8), bicarbonate at low normal (22). Vitamin D being supplemented. No overt secondary hyperparathyroidism symptoms — PTH not recently checked."
     },
     {
-      "diagnosis": "Chronic Kidney Disease Stage 3b",
-      "icd10": "N18.32",
-      "notes": "eGFR 39. Stable."
+      "diagnosis": "Hyperkalemia risk — on ARNI + MRA",
+      "icd10": "E87.5",
+      "notes": "K 4.7 — acceptable but at the higher end. Patient on Entresto (ARNI) and spironolactone (MRA), both of which raise potassium. With carvedilol being uptitrated, must monitor closely. Threshold for concern: K >5.5. Current level safe but trending warrants continued surveillance."
+    },
+    {
+      "diagnosis": "CKD-related anemia",
+      "icd10": "D63.1",
+      "notes": "Hgb 11.0 — stable mild anemia. Iron studies not recently checked. Per KDIGO guidelines, ESA therapy generally considered when Hgb consistently <10 after iron stores optimized. Not yet at that threshold. Iron studies should be obtained."
+    },
+    {
+      "diagnosis": "Type 2 Diabetes Mellitus — renal implications",
+      "icd10": "E11.65",
+      "notes": "A1c 7.8%, trending up. Glycemic control directly impacts CKD progression. SGLT2 inhibitor (empagliflozin) would provide dual benefit for CKD and HFrEF — will discuss with cardiology."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "problem": "CKD Stage 3b — monitoring",
+      "action": "Recheck CMP, phosphorus, intact PTH, and UACR today. eGFR stable at current trajectory — at this rate, will reach CKD Stage 4 (eGFR <30) in approximately 3-4 years. No imminent dialysis concerns (dialysis planning typically begins eGFR <20). Continue all current renal-protective medications. Continue avoiding nephrotoxins — counsel patient again to avoid NSAIDs, limit contrast exposure."
     },
     {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "problem": "CKD-related anemia",
+      "action": "Order iron studies (ferritin, TSAT). If iron deficient (ferritin <100 or TSAT <20%), will start IV iron supplementation. If iron replete and Hgb drops below 10, will consider erythropoietin-stimulating agent. Target Hgb 10-11.5 g/dL per KDIGO."
     },
     {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
+      "problem": "Electrolyte monitoring — hyperkalemia risk",
+      "action": "K 4.7 currently acceptable. With carvedilol uptitration ongoing and Entresto + spironolactone on board, risk of hyperkalemia increases. Monitor BMP q3 months or sooner if medications change. If K >5.5, would consider reducing spironolactone first. Dietary potassium counseling — limit high-K foods (bananas, oranges, potatoes, tomatoes). Patient to be given potassium-limited diet handout."
     },
     {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "problem": "Metabolic acidosis screening",
+      "action": "Bicarbonate 22 — low normal. If drops below 22 on repeat testing, will start sodium bicarbonate 650mg BID per KDIGO guidelines to slow CKD progression. Recheck with today's labs."
+    },
+    {
+      "problem": "SGLT2 inhibitor discussion",
+      "action": "Empagliflozin 10mg would provide triple benefit: slows CKD progression (EMPA-KIDNEY), reduces HF hospitalization (EMPEROR-Reduced), and improves glycemic control. Will coordinate with cardiology (Dr. Wilson) and PCP (Dr. Chen) regarding initiation. Appropriate to start given eGFR >20. Discussed with patient — he is receptive but prefers to complete carvedilol uptitration first before adding another medication."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 5 weeks or sooner if needed."
+      "action": "Return to nephrology in 6 months. Labs q3 months (CMP, CBC). UACR q6 months. Call if decreased urine output, new edema not responsive to diuretics, muscle cramps, or pruritus."
     }
   ],
-  "attestation": "I have personally evaluated this patient and agree with the documentation above.\n\nElectronically signed by: Dr. Patricia Lee\nDate: 11/19/2021"
+  "attestation": "I have personally evaluated this patient and agree with the documentation above.\n\nElectronically signed by: Dr. Michael Torres\nDate: 11/19/2021"
 }

@@ -6,14 +6,18 @@
   "department": "Gastroenterology",
   "encounter": "ENC052",
   "chiefComplaint": "Fatigue",
-  "hpi": "Patient presents for fatigue. Doing well on current regimen. Blood sugars well-controlled. No hypoglycemic episodes.",
+  "hpi": "Mr. Morrison is a 70-year-old male with a history of HFrEF (EF 30-35%), persistent atrial fibrillation on warfarin, CKD Stage 3b, Type 2 DM on insulin and metformin, hyperlipidemia, HTN, BPH, and diabetic peripheral neuropathy who presents for gastroenterology follow-up with a chief complaint of fatigue over the past several weeks. He reports that the fatigue has been gradually worsening, noting decreased energy particularly in the late afternoon and evening. He denies any melena, hematochezia, hematemesis, or changes in stool caliber. He reports occasional mild epigastric discomfort after large meals but denies frank abdominal pain. Appetite has been fair but he notes some early satiety at times. He has not had any nausea, vomiting, or dysphagia. His wife Patricia notes he has been less interested in going to church and spending time with their grandchildren, though he attributes this to being tired rather than depressed. He reports compliance with his medication regimen. His weight has been stable per home scale. He continues on warfarin for atrial fibrillation with his most recent INR 2.4 one week ago at his anticoagulation clinic visit.",
   "reviewOfSystems": {
-    "Constitutional": "No fever, chills, or weight loss",
-    "Cardiovascular": "No orthopnea",
-    "Respiratory": "No cough or wheezing",
-    "GI": "Appetite fair",
-    "GU": "No dysuria",
-    "Neurologic": "Baseline neuropathy"
+    "Constitutional": "Fatigue as noted in HPI, no fevers, chills, or unintentional weight loss. Sleep disrupted by nocturia 2-3 times nightly",
+    "Cardiovascular": "Baseline dyspnea on exertion walking approximately 1.5 blocks, no orthopnea, no PND, no chest pain, no palpitations",
+    "Respiratory": "No cough, no wheezing, no hemoptysis",
+    "GI": "Mild intermittent epigastric discomfort as above, no dysphagia, no nausea/vomiting, no melena or hematochezia, bowel movements regular",
+    "GU": "Nocturia x2-3, weak stream, no dysuria, no hematuria",
+    "Musculoskeletal": "Chronic bilateral knee discomfort, no acute joint swelling",
+    "Neurologic": "Baseline bilateral foot numbness and tingling, no new weakness, no dizziness, no syncope",
+    "Endocrine": "No polyuria or polydipsia beyond baseline, no heat/cold intolerance",
+    "Psychiatric": "Some low energy and decreased motivation, denies depressed mood or suicidal ideation",
+    "Skin": "No rashes, no jaundice"
   },
   "vitals": {
     "bp": "137/82 mmHg",
@@ -24,46 +28,61 @@
     "weight": "97.5 kg"
   },
   "physicalExam": {
-    "General": "Comfortable, well-appearing",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "S1/S2 normal, mild peripheral edema",
-    "Respiratory": "Clear to auscultation bilaterally",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "No edema, warm and well-perfused",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Well-developed, obese male appearing stated age, comfortable at rest, mildly fatigued-appearing but in no acute distress",
+    "HEENT": "Normocephalic, atraumatic. Sclera anicteric, conjunctivae with mild pallor. Oropharynx clear, moist mucous membranes, no oral lesions. No cervical or supraclavicular lymphadenopathy",
+    "Cardiovascular": "Irregularly irregular rhythm consistent with atrial fibrillation, rate approximately 80 bpm. Normal S1, S2. No S3 or S4 appreciated. 2/6 holosystolic murmur at apex radiating to axilla (known MR). JVP estimated at 8 cm H2O. No hepatojugular reflux",
+    "Respiratory": "Clear to auscultation bilaterally, no crackles, wheezes, or rhonchi. No dullness to percussion. Good air movement in all lung fields",
+    "Abdomen": "Soft, non-distended. Mild epigastric tenderness to deep palpation without guarding or rebound. No hepatosplenomegaly. Normal bowel sounds in all four quadrants. No masses. Small umbilical hernia, easily reducible, non-tender",
+    "Extremities": "No peripheral edema today. Bilateral lower extremities warm, well-perfused. Distal pulses 1+ bilaterally. Skin intact without ulceration",
+    "Neurologic": "Alert and oriented x3. Cranial nerves grossly intact. Decreased sensation to light touch and monofilament testing bilateral feet in stocking distribution to mid-calf. Ankle reflexes absent bilaterally, knee reflexes 1+ bilaterally"
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
+      "diagnosis": "Fatigue, likely multifactorial",
+      "icd10": "R53.83",
+      "notes": "Fatigue in the setting of multiple chronic conditions including HFrEF (NYHA II), CKD 3b with mild anemia (Hgb 10.8 per recent labs), poorly controlled diabetes (A1c 8.2%), and chronic disease burden. Differential includes anemia of CKD, hypothyroidism (not previously screened recently), or early depression. GI causes including occult blood loss should be considered given anticoagulation status."
+    },
+    {
+      "diagnosis": "Type 2 Diabetes Mellitus with diabetic neuropathy",
       "icd10": "E11.65",
-      "notes": "HbA1c 7.3%. On insulin and metformin."
+      "notes": "HbA1c 8.2% per December labs — suboptimal control. On metformin 250mg BID (renally dosed) and insulin glargine 24 units QHS. Neuropathy symptoms stable on gabapentin 300mg TID."
     },
     {
       "diagnosis": "Chronic Kidney Disease Stage 3b",
       "icd10": "N18.32",
-      "notes": "eGFR 40. Stable."
+      "notes": "eGFR approximately 36, Cr 1.95. Stable trajectory. Contributing to anemia and fatigue. Renal dosing of metformin maintained."
+    },
+    {
+      "diagnosis": "Heart Failure with Reduced EF",
+      "icd10": "I50.22",
+      "notes": "NYHA Class II — back to baseline post-August exacerbation. EF 30-35%. On Entresto 97/103mg BID, carvedilol 12.5mg BID, spironolactone 25mg daily, furosemide 60mg BID. ICD discussion ongoing — patient still considering."
+    },
+    {
+      "diagnosis": "Atrial Fibrillation, persistent",
+      "icd10": "I48.1",
+      "notes": "Rate controlled on carvedilol. On warfarin with recent INR 2.4, therapeutic. CHA2DS2-VASc 5."
     }
   ],
   "plan": [
     {
+      "problem": "Fatigue",
+      "action": "Fatigue is likely multifactorial — anemia of CKD, suboptimal glycemic control, HF-related deconditioning, and possible subclinical depression all contributing. Check TSH, iron studies, B12, folate, and CBC at next lab draw to rule out correctable causes. Continue to monitor. If iron deficiency confirmed, would consider IV iron given GI intolerance risks and CKD. Recommend regular light activity as tolerated — walking program with wife. Screen for depression at next PCP visit."
+    },
+    {
+      "problem": "GI surveillance",
+      "action": "No GI alarm symptoms at this time. Mild epigastric discomfort likely functional/dyspeptic. Patient is on warfarin which increases GI bleed risk. Counseled patient extensively about avoiding NSAIDs — he reports understanding but reiterated importance given anticoagulation. No indication for endoscopy at this time. If epigastric symptoms worsen or he develops any signs of GI bleeding (dark stools, blood in stool, vomiting blood), instruct to come to ED immediately. Return to GI in 6 months or sooner if symptoms change."
+    },
+    {
       "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "action": "A1c 8.2% — above goal. Defer to endocrinology/PCP for insulin titration. Continue metformin 250mg BID. Reinforce dietary counseling — holiday season approaching, advise moderation with carbohydrate-rich foods."
     },
     {
       "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
-    },
-    {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
-    },
-    {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "action": "Stable at 3b. Continue avoiding nephrotoxins. Ensure all providers aware of CKD for medication dosing."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 5 weeks or sooner if needed."
+      "action": "Return to gastroenterology in 6 months. Sooner if any GI symptoms develop, particularly melena, hematochezia, worsening epigastric pain, or dysphagia. Patient and wife verbalize understanding of return precautions."
     }
   ],
   "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. William Thompson\nDate: 11/25/2022"

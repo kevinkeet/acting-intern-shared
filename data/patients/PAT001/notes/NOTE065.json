@@ -6,64 +6,78 @@
   "department": "Primary Care",
   "encounter": "ENC042",
   "chiefComplaint": "CKD management",
-  "hpi": "Patient presents for ckd management. Weight stable. Following low-sodium diet. Monitoring blood pressure at home.",
+  "hpi": "Mr. Morrison is a 71-year-old male with CKD Stage 3b (eGFR 37, Cr approximately 1.92), Type 2 DM on insulin and metformin, HFrEF (EF 30-35%), persistent A-fib on warfarin, diabetic neuropathy, HTN, and BPH who presents for focused CKD management follow-up as part of his ongoing primary care visits this week. He was seen earlier this week for UTI follow-up (resolved) and diabetes management. Today's focus is his renal function monitoring and medication review in the context of CKD.\n\nHis most recent labs (obtained this week) show Cr 1.92, eGFR 37, K 4.7, Na 137, HCO3 22, and phosphorus 4.2. His UACR was 150 mg/g — stable at A2 category (moderately increased albuminuria). He has been on Entresto (ARNI) at target dose which provides nephroprotection. He is not yet on an SGLT2 inhibitor, which has been discussed by both cardiology and this office but the patient has been deferring.\n\nHe reports no uremic symptoms — no nausea, no metallic taste, no confusion, no pruritus. He denies foamy urine or decreased urine output. His appetite is fair. He has been following the dietary recommendations for CKD including limiting high-potassium foods, though he admits this is difficult to balance with his low-sodium diet for heart failure. He has been taking sodium bicarbonate 650mg BID as started by nephrology in March — he says it does not cause any GI upset.",
   "reviewOfSystems": {
-    "Constitutional": "No fever, chills, or weight loss",
-    "Cardiovascular": "Dyspnea on exertion at baseline",
-    "Respiratory": "Mild dyspnea",
-    "GI": "Appetite fair",
-    "GU": "No dysuria",
-    "Neurologic": "No new weakness"
+    "Constitutional": "Chronic fatigue, no fever, no chills, no unintentional weight loss. Weight stable at 97-98 kg",
+    "Cardiovascular": "Baseline DOE, stable. No orthopnea, no PND, no chest pain",
+    "Respiratory": "No dyspnea at rest, baseline mild dyspnea with exertion, no cough",
+    "GI": "Appetite fair, no nausea/vomiting, no abdominal pain, regular bowel movements, no melena",
+    "GU": "Nocturia x2, no dysuria (UTI resolved), no hematuria, no foamy urine, no decreased output, weak stream (BPH)",
+    "Musculoskeletal": "Bilateral knee OA discomfort, chronic. No muscle cramps or bone pain",
+    "Neurologic": "Baseline bilateral foot neuropathy, no confusion, no asterixis symptoms",
+    "Endocrine": "Blood sugars improved on increased insulin dose, no hypoglycemic episodes",
+    "Skin": "No pruritus, no easy bruising, dry skin on lower extremities",
+    "Hematologic": "No recurrent infections, no unusual bleeding"
   },
   "vitals": {
     "bp": "135/79 mmHg",
     "hr": "80 bpm",
-    "rr": "20/min",
+    "rr": "18/min",
     "temp": "98.5°F",
     "spo2": "95% RA",
     "weight": "97.9 kg"
   },
   "physicalExam": {
-    "General": "Comfortable, well-appearing",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "Regular rate and rhythm, no murmurs",
-    "Respiratory": "Mild crackles at bases",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "1+ pedal edema bilaterally",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Well-appearing obese male in no acute distress. Alert, oriented, pleasant. BMI approximately 33",
+    "HEENT": "Normocephalic, atraumatic. Sclera anicteric. Conjunctivae with very mild pallor (chronic). Oropharynx clear, moist. No uremic fetor",
+    "Cardiovascular": "Irregularly irregular at 80 bpm. S1/S2 normal. Known 2/6 systolic murmur at apex. JVP approximately 8 cm H2O. No hepatojugular reflux",
+    "Respiratory": "Trace bibasilar crackles. No wheezes or rhonchi. Good air entry",
+    "Abdomen": "Obese, soft, non-tender, non-distended. No CVA tenderness bilaterally. Normal bowel sounds. No masses",
+    "Extremities": "1+ bilateral pitting edema at ankles. Warm, well-perfused. Dry scaly skin bilateral lower legs. No ulcers or skin breakdown. No asterixis",
+    "Neurologic": "Alert and oriented x3. Decreased sensation bilateral feet in stocking distribution. No confusion or cognitive impairment noted"
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
-      "icd10": "E11.65",
-      "notes": "HbA1c 7.0%. On insulin and metformin."
+      "diagnosis": "Chronic Kidney Disease Stage 3b, diabetic and hypertensive etiology",
+      "icd10": "N18.32",
+      "notes": "eGFR 37, Cr 1.92. Stable over past year with rate of decline approximately 2-3 mL/min/year over 5 years. UACR 150 mg/g (A2 — moderately increased, stable). Current CKD complications: (1) Metabolic acidosis — HCO3 22, improving on sodium bicarbonate 650mg BID. (2) Anemia — Hgb approximately 10.8, CKD-related, not yet requiring ESA. (3) Secondary hyperparathyroidism — PTH mildly elevated per nephrology. (4) Hyperkalemia risk — K 4.7 on Entresto + spironolactone, needs close monitoring. At current trajectory, estimated to reach Stage 4 (eGFR <30) in approximately 2-3 years. Dialysis planning should be discussed when eGFR approaches 20."
     },
     {
-      "diagnosis": "Chronic Kidney Disease Stage 3b",
-      "icd10": "N18.32",
-      "notes": "eGFR 35. Stable."
+      "diagnosis": "Type 2 Diabetes Mellitus with nephropathy",
+      "icd10": "E11.22",
+      "notes": "Diabetic nephropathy is primary driver of CKD. On renally-dosed metformin and insulin. SGLT2 inhibitor (empagliflozin) has strong evidence for renal protection — patient continues to defer."
+    },
+    {
+      "diagnosis": "Heart Failure with Reduced EF",
+      "icd10": "I50.22",
+      "notes": "NYHA Class II. On optimal GDMT minus SGLT2 inhibitor. Volume slightly above baseline with 1+ edema and mildly elevated JVP."
+    },
+    {
+      "diagnosis": "Anemia of CKD",
+      "icd10": "D63.1",
+      "notes": "Hgb approximately 10.8 — mild anemia. Multifactorial: CKD (EPO deficiency), chronic disease. Iron studies pending from earlier this week. If iron deficient, would consider IV iron given CKD and oral intolerance risk."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "problem": "CKD Management",
+      "action": "Continue current CKD management: (1) Entresto 97/103mg BID for nephroprotection (ARNI). (2) Sodium bicarbonate 650mg BID — HCO3 improved from 20 to 22, goal >22. Continue current dose. (3) Vitamin D3 2000 IU daily. (4) Continue BP goal <130/80 — today 135/79, close to target. (5) Avoid nephrotoxins — reinforced NSAID avoidance, contrast with caution (if needed, use low-osmolar with pre/post hydration). Labs to repeat in 3 months: BMP, CBC, phosphorus, PTH, UACR, vitamin D 25-OH. Continue coordinating with nephrology — next nephrology appointment in 6 months."
     },
     {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "problem": "SGLT2 Inhibitor Discussion",
+      "action": "Revisited empagliflozin 10mg daily with patient. Reviewed triple benefit: (1) HFrEF — EMPEROR-Reduced showed 25% reduction in CV death/HF hospitalization. (2) CKD — EMPA-KIDNEY showed slowed GFR decline. (3) Diabetes — modest A1c reduction of 0.3-0.5%. Discussed concerns: UTI risk (patient recently had UTI — acknowledged this concern), genital mycotic infection risk, euglycemic ketoacidosis risk. Patient says he understands the benefits but wants to 'get through summer' before starting another medication. Will continue to revisit. Documented shared decision-making."
     },
     {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
+      "problem": "Anemia",
+      "action": "Hgb 10.8 — mild anemia, not yet at threshold for ESA (typically Hgb <10 in CKD). Reviewing iron studies from this week. If iron deficient (ferritin <100 or TSAT <20%), will recommend IV iron infusion (ferric carboxymaltose or iron sucrose). If iron replete, continue monitoring — recheck CBC in 3 months. If Hgb drops below 10, discuss ESA initiation with nephrology."
     },
     {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "problem": "Hyperkalemia Risk",
+      "action": "K 4.7 today — acceptable but close to concerning range given Entresto + spironolactone combination. If K rises above 5.5, would need to reduce spironolactone or Entresto dose, which would compromise HF management. Dietary counseling on potassium restriction — limit high-K foods (bananas, oranges, potatoes, tomatoes). Patiromer or SZC could be considered as potassium binders if needed to maintain GDMT doses. Continue monitoring K with each lab draw."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 6 weeks or sooner if needed."
+      "action": "CKD labs in 3 months (BMP, CBC, phosphorus, PTH, UACR, vitamin D). Return to PCP in 6-8 weeks for comprehensive chronic disease management. Nephrology follow-up in 6 months. If any uremic symptoms develop, significant change in urine output, or if K >5.5 on home labs, contact clinic urgently."
     }
   ],
   "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Sarah Chen\nDate: 7/9/2023"

@@ -2,79 +2,89 @@
   "id": "NOTE008",
   "type": "Progress Note",
   "date": "2025-09-15T15:22:18.416Z",
-  "author": "Dr. James Wilson",
-  "department": "Cardiology",
+  "author": "Dr. Jennifer Adams",
+  "department": "Internal Medicine",
   "encounter": "ENC007",
-  "chiefComplaint": "Shortness of breath",
-  "hpi": "Patient presents for shortness of breath. Doing well on current regimen. Blood sugars well-controlled. No hypoglycemic episodes.",
+  "chiefComplaint": "Post-fall follow-up, shortness of breath evaluation",
+  "hpi": "Mr. Morrison is a 73-year-old male with HFrEF (EF 30-35%), CKD 3b, T2DM with neuropathy, persistent A-fib (off anticoagulation post-GI bleed 9/2023), HTN, hyperlipidemia, and BPH who presents 3 days after a mechanical fall at home for PCP follow-up. He was seen in the ED on 9/12/2025 and by cardiology (Dr. Wilson) yesterday 9/14/2025. CT head and knee X-ray in the ED were negative. He reports the right knee bruise is resolving and he is ambulating without difficulty. He has minimal residual soreness at the right knee, controlled without analgesics — he was specifically counseled to avoid NSAIDs given his CKD and GI bleed history.\n\nHe also reports a mild increase in his baseline dyspnea on exertion over the past week, noting that he feels slightly more winded walking to the mailbox (approximately half a block) than usual. He attributes this partly to general deconditioning — he has been less active since the fall due to anxiety about falling again, particularly at night. His daily weights have been 97.3-97.8 kg this week, slightly above his baseline of 97 kg. He denies orthopnea, PND, chest pain, or new cough. His blood sugars have been running 140-180 fasting per home monitoring. He has been compliant with all medications.\n\nHis wife reports she removed the bathroom rug yesterday per Dr. Wilson's instructions. She also installed a nightlight in the bathroom. Patient is still reluctant to use a cane but did agree to hold onto the wall when walking to the bathroom at night.",
   "reviewOfSystems": {
-    "Constitutional": "Reports fatigue",
-    "Cardiovascular": "No chest pain or palpitations",
-    "Respiratory": "Mild dyspnea",
-    "GI": "No nausea or vomiting",
-    "GU": "No dysuria",
-    "Neurologic": "No dizziness"
+    "Constitutional": "Moderate fatigue, worse since the fall. Weight slightly up from 97 to 97.8 kg over the past week. Appetite fair. No fevers or chills.",
+    "Cardiovascular": "Mild increase in exertional dyspnea over the past week as described. No orthopnea, PND, chest pain, or palpitations. No presyncope or syncope. No recurrent falls.",
+    "Respiratory": "Slightly more dyspneic with exertion. No cough, wheezing, or hemoptysis.",
+    "GI": "No abdominal pain, nausea, or vomiting. Regular bowel movements. No melena or hematochezia.",
+    "GU": "Nocturia x2-3, stable on tamsulosin. No dysuria or hematuria.",
+    "Musculoskeletal": "Mild right knee soreness from fall, improving. No joint swelling or warmth. Refuses NSAIDs — using ice intermittently.",
+    "Neurologic": "Bilateral foot numbness and tingling at baseline (4/10). Feels slightly more unsteady since fall — may be anxiety-related. No new focal deficits.",
+    "Psychiatric": "Mild anxiety about falling. Sleep somewhat worse — waking earlier than usual (5 AM). Reports feeling frustrated with his limitations.",
+    "Skin": "Right knee ecchymosis fading (yellow-green). No other wounds or lesions. Feet examined — no ulcers."
   },
   "vitals": {
-    "bp": "135/89 mmHg",
-    "hr": "78 bpm",
+    "bp": "135/78 mmHg",
+    "hr": "66 bpm (irregularly irregular)",
     "rr": "17/min",
     "temp": "98.2°F",
     "spo2": "95% RA",
-    "weight": "99.0 kg"
+    "weight": "97.8 kg",
+    "bmi": "32.6"
   },
   "physicalExam": {
-    "General": "Alert, oriented, no acute distress",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "Irregularly irregular, no murmurs, JVP not elevated",
-    "Respiratory": "No wheezes or rhonchi",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "Trace bilateral ankle edema",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Obese male, mildly anxious-appearing, no acute distress. Alert and cooperative.",
+    "HEENT": "Normocephalic, atraumatic. No periorbital ecchymosis. PERRL. Oropharynx clear.",
+    "Cardiovascular": "Irregularly irregular at 66 bpm. Normal S1, S2. Grade 2/6 systolic murmur at apex (known MR). No S3 or S4. JVP approximately 8 cm H2O — borderline. PMI laterally displaced.",
+    "Respiratory": "Faint bibasilar crackles heard on forced inspiration, clearing with cough. No wheezes or rhonchi. Good air movement throughout.",
+    "Abdomen": "Soft, non-tender, non-distended. Normoactive bowel sounds.",
+    "Extremities": "Trace-to-1+ bilateral ankle edema, slightly more than his recent baseline. Right knee with fading ecchymosis (3 x 4 cm), non-tender, full ROM, no effusion, stable to varus/valgus stress. DP pulses 1+ bilaterally.",
+    "Neurologic": "Alert, oriented x3. Decreased sensation bilateral feet to ankles. Romberg positive. Gait cautious but steady with furniture support.",
+    "Skin": "Right knee ecchymosis resolving. No other bruises or injuries. Bilateral lower leg skin dry, intact."
   },
   "assessment": [
     {
+      "diagnosis": "Heart Failure with Reduced Ejection Fraction",
+      "icd10": "I50.22",
+      "notes": "NYHA Class II with mild worsening of exertional dyspnea this week. Exam shows borderline JVP at 8 cm, faint bibasilar crackles, and trace-to-1+ ankle edema with 0.8 kg weight gain above baseline. This represents early, subclinical volume overload — likely related to reduced activity post-fall (less walking = less venous return efficiency) plus possibly a small degree of dietary relaxation. Not meeting criteria for acute decompensation. On optimized quadruple GDMT. BNP was 380 in August — will recheck. Consider mild diuretic augmentation."
+    },
+    {
+      "diagnosis": "Mechanical Fall, recent (9/12/2025)",
+      "icd10": "W01.0",
+      "notes": "Recovering well. Environmental modifications completed (rug removed, nightlight installed). Fall risk remains moderate. PT referral placed by Dr. Wilson — will reinforce. No cardiac etiology identified. Patient's post-fall anxiety is contributing to reduced activity, which is paradoxically worsening his functional deconditioning and HF symptoms."
+    },
+    {
       "diagnosis": "Type 2 Diabetes Mellitus",
       "icd10": "E11.65",
-      "notes": "HbA1c 8.4%. On insulin and metformin."
+      "notes": "A1c 7.2% per August labs. Blood sugars 140-180 fasting — slight uptick, will continue monitoring. On current regimen (metformin, glargine, lispro, empagliflozin)."
     },
     {
       "diagnosis": "Chronic Kidney Disease Stage 3b",
       "icd10": "N18.32",
-      "notes": "eGFR 33. Stable."
+      "notes": "eGFR 34.8 per August labs. Cr 2.00. Stable."
     },
     {
-      "diagnosis": "Heart Failure with Reduced EF",
-      "icd10": "I50.22",
-      "notes": "NYHA Class II. On GDMT."
-    },
-    {
-      "diagnosis": "Atrial Fibrillation",
+      "diagnosis": "Atrial Fibrillation, persistent",
       "icd10": "I48.1",
-      "notes": "Rate controlled. On anticoagulation."
+      "notes": "Rate controlled (HR 66). No anticoagulation — aspirin 81mg continues. Pantoprazole for GI protection."
     }
   ],
   "plan": [
     {
+      "problem": "Heart Failure — mild volume overload",
+      "action": "Mild subclinical congestion on exam. Add one extra furosemide dose of 20mg today (early afternoon). If weight does not return to <97.5 kg within 48 hours, increase standing furosemide to 60mg BID (from current 60mg AM + 40mg PM). Continue all GDMT medications unchanged. Strict sodium <2g/day. Daily weights — call if >99 kg. Check BMP and BNP within 1 week."
+    },
+    {
+      "problem": "Fall Recovery and Prevention",
+      "action": "Fall was mechanical, not cardiac. Recovering well — knee bruise resolving. Environmental modifications completed. PT referral in process — will start within 2 weeks for balance and strengthening. Encouraged patient to gradually resume walking despite anxiety — start with short supervised walks inside the house, then progress to outdoors with wife present. Will not push assistive device at this time but documented risk discussion."
+    },
+    {
       "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "action": "Continue current regimen unchanged. Blood sugars slightly elevated — likely stress/inactivity related. Will recheck A1c with October labs."
     },
     {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
-    },
-    {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
-    },
-    {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "problem": "CKD / Potassium Monitoring",
+      "action": "Recheck BMP this week to assess K and Cr given mild diuretic augmentation. If Cr rises >2.2 or K >5.3, will adjust spironolactone dose."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 6 weeks or sooner if needed."
+      "action": "Labs: BMP, BNP in 1 week. Return to PCP in 3-4 weeks for comprehensive visit. Cardiology follow-up in 4 weeks per Dr. Wilson for ICD discussion and echo. PT to start within 2 weeks."
     }
   ],
-  "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. James Wilson\nDate: 9/15/2025"
+  "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Jennifer Adams\nDate: 9/15/2025"
 }

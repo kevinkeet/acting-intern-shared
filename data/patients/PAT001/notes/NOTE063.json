@@ -5,65 +5,70 @@
   "author": "Dr. Sarah Chen",
   "department": "Primary Care",
   "encounter": "ENC042",
-  "chiefComplaint": "Urinary symptoms",
-  "hpi": "Patient presents for urinary symptoms. Doing well on current regimen. Blood sugars well-controlled. No hypoglycemic episodes.",
+  "chiefComplaint": "Diabetes management",
+  "hpi": "Mr. Morrison is a 71-year-old male with Type 2 DM on insulin and metformin, CKD Stage 3b, HFrEF, persistent A-fib on warfarin, and diabetic neuropathy who is being seen as part of his multi-day primary care visit series. Today's focus is diabetes management. His insulin glargine was recently increased from 24 to 26 units QHS by Dr. Adams (Internal Medicine) at his May visit. He reports his fasting blood sugars have improved from the 150-190 range down to 120-160 most mornings. Postprandial blood sugars remain somewhat elevated at 180-240, down from 200-280 previously. He has had no hypoglycemic episodes since the dose increase. He checks his blood sugars 4-5 times per week — fasting daily and postprandial 2-3 times. His most recent A1c was 7.8% three months ago and is being rechecked today.\n\nHe met with the diabetes educator in June and found the session helpful. He has been more consistent with carb counting, aiming for 45-60g per meal. He still struggles with evening snacking, particularly when watching television. He reports his wife has been preparing lower-carbohydrate meals. He denies polydipsia, polyuria beyond his baseline nocturia, or blurred vision changes. His neuropathy is managed on gabapentin 300-300-400mg with adequate control during the day but continued nighttime discomfort (rated 5/10 at night vs 3/10 during daytime).\n\nHis annual diabetic eye exam showed mild nonproliferative diabetic retinopathy without macular edema at his last ophthalmology visit (exact date per chart). Podiatry visit is scheduled for next month.",
   "reviewOfSystems": {
-    "Constitutional": "Weight stable",
-    "Cardiovascular": "No chest pain or palpitations",
-    "Respiratory": "No hemoptysis",
-    "GI": "Regular bowel movements",
-    "GU": "Nocturia x2",
-    "Neurologic": "No new weakness"
+    "Constitutional": "Mild fatigue, weight stable at 97-98 kg, no fevers",
+    "Cardiovascular": "Baseline DOE, no chest pain, no palpitations",
+    "Respiratory": "No cough, no wheezing",
+    "GI": "Appetite good, regular bowel movements, no nausea, no abdominal pain",
+    "GU": "Nocturia x2, no dysuria, no hematuria, no polyuria beyond baseline",
+    "Musculoskeletal": "Bilateral knee OA pain, managed. No new joint complaints",
+    "Neurologic": "Neuropathy as above — worse at night. No new weakness, no falls",
+    "Endocrine": "Blood sugars as detailed above. No hypoglycemia. No signs of thyroid dysfunction",
+    "Eyes": "No acute vision changes, no floaters. Mild NPDR per ophthalmology",
+    "Skin": "Dry skin bilateral lower extremities. No foot ulcers on self-inspection"
   },
   "vitals": {
-    "bp": "139/77 mmHg",
-    "hr": "85 bpm",
-    "rr": "20/min",
+    "bp": "134/77 mmHg",
+    "hr": "72 bpm",
+    "rr": "16/min",
     "temp": "98.8°F",
     "spo2": "96% RA",
     "weight": "98.0 kg"
   },
   "physicalExam": {
-    "General": "Alert, oriented, no acute distress",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "S1/S2 normal, mild peripheral edema",
-    "Respiratory": "Clear to auscultation bilaterally",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "Trace bilateral ankle edema",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Alert, oriented, obese male in no acute distress. Well-groomed, cooperative. BMI approximately 33",
+    "HEENT": "Normocephalic. PERRL. Fundoscopic exam limited by patient cooperation — deferred to ophthalmology for detailed retinal assessment. Oropharynx clear. Dentition fair with mild gingivitis",
+    "Cardiovascular": "Irregularly irregular at 72 bpm. S1/S2 normal. Known systolic murmur at apex. JVP not elevated",
+    "Respiratory": "Clear to auscultation bilaterally. No adventitious sounds",
+    "Abdomen": "Obese, soft, non-tender. No hepatomegaly. Normal bowel sounds. Insulin injection sites (bilateral abdomen) examined — no lipohypertrophy, no bruising, no induration",
+    "Extremities": "Trace bilateral ankle edema. Feet examined: skin dry, intact without ulceration. Callus formation bilateral 5th metatarsal heads. Toenails mildly thickened bilaterally (onychomycosis). No interdigital maceration. Dorsalis pedis pulses 1+ bilaterally. Posterior tibial pulses barely palpable bilaterally",
+    "Neurologic": "Decreased sensation to 10g monofilament: absent at bilateral great toes, 1st and 5th metatarsal heads; reduced at bilateral medial arches and heels. Vibration sense absent bilateral great toes, present but reduced at medial malleoli. Ankle reflexes absent. Proprioception reduced bilateral great toes"
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
+      "diagnosis": "Type 2 Diabetes Mellitus with diabetic complications",
       "icd10": "E11.65",
-      "notes": "HbA1c 7.2%. On insulin and metformin."
+      "notes": "Glycemic control improving on glargine 26 units QHS and metformin 250mg BID. Fasting glucose improved to 120-160 (was 150-190). Postprandial still elevated at 180-240. A1c pending — if still above 7.5%, will need to consider intensification. Complications: (1) Neuropathy — progressing, with nocturnal worsening; (2) Nephropathy — CKD 3b, UACR 150; (3) Retinopathy — mild NPDR. Comprehensive diabetes management with attention to all microvascular endpoints."
     },
     {
-      "diagnosis": "Chronic Kidney Disease Stage 3b",
-      "icd10": "N18.32",
-      "notes": "eGFR 34. Stable."
+      "diagnosis": "Diabetic peripheral neuropathy",
+      "icd10": "E11.42",
+      "notes": "Neuropathy exam shows progression — now with absent protective sensation at multiple sites bilateral feet (high risk for ulceration). Gabapentin titrated to 300-300-400mg with moderate symptom control. Nocturnal symptoms remain bothersome. Important to maintain close podiatry follow-up and reinforce foot care education given loss of protective sensation."
+    },
+    {
+      "diagnosis": "Diabetic retinopathy, mild NPDR",
+      "icd10": "E11.319",
+      "notes": "Per recent ophthalmology — mild nonproliferative diabetic retinopathy without macular edema. Surveillance in 6-12 months. Glycemic control and BP control are key modifiable factors for progression."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "problem": "Diabetes — Glycemic Management",
+      "action": "A1c pending today. If A1c remains above 7.5% (likely given blood sugar patterns): (1) Continue insulin glargine 26 units QHS — fasting glucose improved, may not need further basal increase yet. (2) Consider adding rapid-acting insulin (lispro) at dinner — the largest meal and the meal most associated with postprandial spikes. Would start at 4 units before dinner, titrate up by 2 units every 3 days if 2-hour postprandial >180. Will discuss at next visit once A1c available. (3) Continue metformin 250mg BID. (4) SGLT2 inhibitor (empagliflozin) would provide modest additional glycemic benefit — ongoing discussion. (5) Dietary counseling — reinforce evening snacking avoidance, recommend protein-based snacks if needed. Diabetes educator follow-up in 2 months."
     },
     {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "problem": "Diabetic Neuropathy",
+      "action": "Loss of protective sensation confirmed on monofilament testing — patient is at high risk for diabetic foot ulcer. (1) Continue gabapentin 300-300-400mg. Nocturnal symptoms remain 5/10 — if not improving in 4 weeks, consider transition to pregabalin 50mg BID with bedtime dose of 75mg (renally adjusted). (2) Foot care education reinforced: inspect feet daily, wear shoes at all times including indoors, moisture cream to avoid cracking (not between toes), properly fitting shoes, no home callus removal. (3) Podiatry appointment confirmed for next month. (4) Custom orthotics discussed — may help redistribute pressure and reduce callus formation."
     },
     {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
-    },
-    {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "problem": "Diabetic Retinopathy",
+      "action": "Mild NPDR — continue ophthalmology surveillance per their schedule (6-12 months). Key interventions: maintain best possible glycemic and BP control. A1c goal <7.5% given age and comorbidities. BP goal <130/80 — currently meeting this."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 4 weeks or sooner if needed."
+      "action": "Will review A1c result when available — if above target, implement mealtime insulin plan. Continue multi-day visit series — SOB evaluation and CKD management visits upcoming. Next PCP comprehensive visit in 6-8 weeks."
     }
   ],
   "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Sarah Chen\nDate: 7/7/2023"

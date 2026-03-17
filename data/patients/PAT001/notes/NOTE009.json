@@ -2,74 +2,88 @@
   "id": "NOTE009",
   "type": "Progress Note",
   "date": "2025-09-16T15:22:18.416Z",
-  "author": "Dr. James Wilson",
-  "department": "Cardiology",
+  "author": "Dr. Michael Torres",
+  "department": "Nephrology",
   "encounter": "ENC007",
-  "chiefComplaint": "Weight gain",
-  "hpi": "Patient presents for weight gain. Reports overall stable condition since last visit. Compliant with medications. No new symptoms.",
+  "chiefComplaint": "CKD follow-up, weight gain assessment",
+  "hpi": "Mr. Morrison is a 73-year-old male with CKD Stage 3b (likely diabetic nephropathy and hypertensive nephrosclerosis), HFrEF (EF 30-35%), T2DM on insulin, persistent A-fib (off anticoagulation), diabetic neuropathy, and BPH, seen in nephrology clinic for routine CKD follow-up. His most recent labs from August 2025 show Cr 2.00, eGFR 34.8, K 4.6, Na 136, HCO3 24, and UACR pending recheck. He was started on empagliflozin 10mg daily in May 2025 — his eGFR initially dipped to 33 (expected hemodynamic effect of SGLT2 inhibitor) but has since stabilized at ~35. His A1c has improved to 7.2% (best in years) and BNP has trended down to 380, suggesting both glycemic and cardiorenal benefit from the SGLT2i addition.\n\nHe reports a mild weight gain over the past week (97 to 97.8 kg) which his PCP is managing with a short-term diuretic boost. He had a mechanical fall on 9/12/2025 related to neuropathy and nocturia — not related to renal issues directly, though his nocturia is partly driven by his diuretic regimen and empagliflozin. He denies any change in urine color, volume, or character. No foamy urine. No flank pain. He has been adherent to his renal diet (low sodium, moderate protein, low potassium) with oversight from his wife and the renal dietitian he saw in March 2024. He reports no symptoms of uremia — no metallic taste, no nausea, no pruritus, no hiccups, no muscle cramps beyond his baseline neuropathy.\n\nHis sodium bicarbonate 650mg BID was started in March 2024 for metabolic acidosis (HCO3 was 22). His last HCO3 was 24 — improved. His vitamin D level was 22 ng/mL in March 2024 — on cholecalciferol 2000 IU daily. PTH was 89 (mildly elevated) suggesting early secondary hyperparathyroidism.",
   "reviewOfSystems": {
-    "Constitutional": "Reports fatigue",
-    "Cardiovascular": "No orthopnea",
-    "Respiratory": "Mild dyspnea",
-    "GI": "No nausea or vomiting",
-    "GU": "No hematuria",
-    "Neurologic": "No new weakness"
+    "Constitutional": "Moderate fatigue, chronic. Weight up ~0.8 kg from baseline this week. Appetite fair. No fevers, chills, or night sweats.",
+    "Cardiovascular": "Mild exertional dyspnea at baseline (NYHA II). No orthopnea, PND, or chest pain. Trace ankle edema.",
+    "Respiratory": "No cough or dyspnea at rest.",
+    "GI": "No nausea, vomiting, or metallic taste. No melena or hematochezia. Bowel movements regular. No abdominal distension.",
+    "GU": "Nocturia x2-3. Urine output adequate per patient. No dysuria, hematuria, or foamy urine. No genital infections since starting empagliflozin.",
+    "Musculoskeletal": "No bone pain. No muscle cramps beyond baseline neuropathy. No gout flares.",
+    "Neurologic": "Bilateral foot numbness and tingling at baseline. No new weakness or cognitive changes.",
+    "Skin": "No pruritus (reassuring against uremia). Dry skin bilateral lower extremities, chronic.",
+    "Hematologic": "No easy bruising or bleeding. On aspirin 81mg (no anticoagulation)."
   },
   "vitals": {
-    "bp": "145/82 mmHg",
-    "hr": "85 bpm",
+    "bp": "128/76 mmHg",
+    "hr": "64 bpm (irregularly irregular)",
     "rr": "16/min",
     "temp": "97.8°F",
     "spo2": "96% RA",
-    "weight": "98.1 kg"
+    "weight": "97.8 kg",
+    "bmi": "32.6"
   },
   "physicalExam": {
-    "General": "Comfortable, well-appearing",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "Irregularly irregular, no murmurs, JVP not elevated",
-    "Respiratory": "No wheezes or rhonchi",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "1+ pedal edema bilaterally",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Obese male, appears chronically ill but in no acute distress. Alert, cooperative.",
+    "HEENT": "No periorbital edema. Conjunctivae slightly pale (consistent with mild anemia). Sclerae anicteric. Oropharynx clear, moist.",
+    "Cardiovascular": "Irregularly irregular at 64 bpm. Grade 2/6 systolic murmur at apex (known MR). No friction rub. JVP approximately 8 cm H2O.",
+    "Respiratory": "Clear to auscultation bilaterally. No crackles or effusion signs.",
+    "Abdomen": "Soft, non-tender, non-distended. No CVA tenderness bilaterally. No palpable kidneys. No ascites.",
+    "Extremities": "Trace-to-1+ bilateral ankle edema. No signs of AV fistula or graft (not yet needed). Skin intact, no excoriations from pruritus.",
+    "Neurologic": "Alert, oriented. Decreased sensation bilateral feet (diabetic neuropathy). No asterixis (reassuring against uremic encephalopathy).",
+    "Skin": "Dry skin bilateral lower extremities. No uremic frost. No excoriations. No purpura."
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
-      "icd10": "E11.65",
-      "notes": "HbA1c 7.4%. On insulin and metformin."
-    },
-    {
-      "diagnosis": "Chronic Kidney Disease Stage 3b",
+      "diagnosis": "Chronic Kidney Disease Stage 3b, stable",
       "icd10": "N18.32",
-      "notes": "eGFR 33. Stable."
+      "notes": "eGFR 34.8 (Cr 2.00) per August labs — stable after initial SGLT2i-related hemodynamic dip. Rate of eGFR decline has been approximately 2-3 mL/min/year over past 5 years (eGFR was 42 in 2018, now 34.8). At current trajectory, will reach Stage 4 (eGFR <30) within approximately 2-3 years. SGLT2i (empagliflozin) may slow this progression per EMPA-KIDNEY and CREDENCE trial data. Proteinuria (UACR 180 mg/g at last check 3/2024) indicates ongoing glomerular injury — due for recheck. Etiology: diabetic nephropathy + hypertensive nephrosclerosis. Renal scan (10/2023) excluded renal artery stenosis. Currently on multiple nephroprotective agents: ARNI (Entresto), SGLT2i (empagliflozin), and aldosterone antagonist (spironolactone). Dialysis planning NOT imminent — estimated 5-8 years at current rate, though progression could accelerate with acute insults."
     },
     {
-      "diagnosis": "Heart Failure with Reduced EF",
+      "diagnosis": "CKD-related metabolic complications",
+      "icd10": "N18.32",
+      "notes": "1. Metabolic acidosis: HCO3 improved from 22 to 24 on sodium bicarbonate 650mg BID — continue. 2. CKD-related anemia: Hgb 11.0, stable. Not meeting criteria for ESA (Hgb <10 threshold). Iron studies last checked 3/2024 — TSAT 22%, ferritin 180. Will recheck with next labs. 3. Secondary hyperparathyroidism: PTH 89 (mildly elevated). On vitamin D3 2000 IU. Will recheck PTH and 25-OH-D with next labs. If PTH >100 or rising, consider calcitriol. 4. Hyperkalemia risk: K 4.6 on triple therapy (Entresto + spironolactone + empagliflozin). Acceptable but needs ongoing surveillance. If K >5.3, will reduce spironolactone first."
+    },
+    {
+      "diagnosis": "Type 2 Diabetes Mellitus contributing to CKD",
+      "icd10": "E11.65",
+      "notes": "A1c 7.2% — glycemic control significantly improved with empagliflozin addition. Better glycemic control may help slow CKD progression. Continue current diabetes regimen."
+    },
+    {
+      "diagnosis": "Heart Failure with Reduced EF, stable",
       "icd10": "I50.22",
-      "notes": "NYHA Class II. On GDMT."
+      "notes": "On optimized GDMT including SGLT2i. BNP trending down (380). Cardiorenal syndrome awareness — renal function and cardiac function are intimately linked in this patient. Diuretic adjustments for HF volume management must be balanced against AKI risk."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "problem": "CKD Stage 3b — Monitoring",
+      "action": "Continue current nephroprotective regimen: Entresto 97/103mg BID, empagliflozin 10mg daily, spironolactone 25mg daily. Continue sodium bicarbonate 650mg BID for metabolic acidosis. Continue vitamin D3 2000 IU daily. Labs to be drawn this month: BMP (Cr, eGFR, K, HCO3), CBC (Hgb for anemia monitoring), UACR (overdue since 3/2024), phosphorus, calcium, PTH, 25-OH vitamin D, iron studies (TSAT, ferritin). Target eGFR decline: <3 mL/min/year. If accelerated decline, will investigate for reversible causes."
     },
     {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "problem": "Hyperkalemia Risk",
+      "action": "K 4.6 — acceptable. Continue dietary potassium restriction (avoid bananas, oranges, potatoes, salt substitutes). If K >5.0, reduce dietary potassium further. If K >5.3, reduce spironolactone 25mg to 12.5mg daily. If K >5.5 persistently, consider discontinuing spironolactone (last resort given HFrEF benefit). Patiromer could be considered as potassium binder if needed to maintain RAAS blockade."
     },
     {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
+      "problem": "CKD-Related Anemia",
+      "action": "Hgb 11.0 — stable, above ESA threshold. Continue monitoring. Recheck iron studies — if TSAT <20% or ferritin <100, will start IV iron supplementation. Target Hgb 10-11.5 per KDIGO guidelines."
     },
     {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "problem": "Bone-Mineral Disease",
+      "action": "Recheck PTH, 25-OH vitamin D, calcium, phosphorus. If PTH rising above 100, will add calcitriol 0.25mcg daily. Ensure adequate calcium intake through diet. Discuss with patient importance of bone health given fall risk."
+    },
+    {
+      "problem": "Dialysis Planning",
+      "action": "Not imminent (eGFR 34.8, estimated 5-8 years). However, when eGFR approaches 20, will initiate dialysis education, AV access planning, and transplant evaluation discussion. Patient should be aware of timeline. Brief overview provided today — patient and wife appreciate advance notice."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 5 weeks or sooner if needed."
+      "action": "Return to nephrology in 3 months. Labs as above to be drawn 1 week prior to next visit. Continue coordination with PCP (Dr. Adams) and Cardiology (Dr. Wilson). Renal dietitian follow-up — schedule within 2 months for updated dietary counseling given progressive CKD."
     }
   ],
-  "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. James Wilson\nDate: 9/16/2025"
+  "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Michael Torres\nDate: 9/16/2025"
 }

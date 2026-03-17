@@ -5,15 +5,19 @@
   "author": "Dr. James Wilson",
   "department": "Cardiology",
   "encounter": "ENC031",
-  "chiefComplaint": "Urinary symptoms",
-  "hpi": "Patient presents for urinary symptoms. Weight stable. Following low-sodium diet. Monitoring blood pressure at home.",
+  "chiefComplaint": "Cardiology follow-up addendum — BPH-related urinary symptoms impacting heart failure management",
+  "hpi": "Mr. Morrison is a 71-year-old male with HFrEF (EF 30-35%), persistent A-fib (off anticoagulation since September 2023), CKD 3b, Type 2 DM, and BPH who was seen yesterday in cardiology clinic and is returning today for a brief follow-up visit to address concerns raised by his wife Patricia who called this morning. She reports that he has been getting up 3 times per night to urinate over the past several weeks, which is an increase from his baseline of twice nightly. She is concerned because his nocturia is disrupting both of their sleep and she has noticed him stumbling in the hallway at night due to his neuropathy-related balance difficulties. She also notes he has gained approximately 2 kg over the past 2 weeks despite following his sodium restriction, and his home blood pressures have been running higher than usual (140s-150s/80s). She brought his home weight log which shows a gradual upward trend from 98.0 kg two weeks ago to 100.1 kg today. From a cardiac perspective, the weight gain and elevated BP raise concern for early volume overload, which may also be contributing to his increased urinary frequency — the distinction between BPH-related nocturia and diuretic/volume-related nocturia is important in this patient.",
   "reviewOfSystems": {
-    "Constitutional": "No fever, chills, or weight loss",
-    "Cardiovascular": "No orthopnea",
-    "Respiratory": "No hemoptysis",
-    "GI": "Appetite fair",
-    "GU": "No dysuria",
-    "Neurologic": "No dizziness"
+    "Constitutional": "Wife reports decreased energy and motivation. Patient admits to feeling more tired than usual. No fever, chills, or appetite change.",
+    "Cardiovascular": "Denies worsening dyspnea, orthopnea, or PND beyond baseline. No chest pain or palpitations. Wife notes he has been less active around the house.",
+    "Respiratory": "No cough, wheezing, or hemoptysis.",
+    "GI": "No abdominal pain. No melena or blood in stool. Appetite fair. Has been eating more prepared/convenience foods (higher sodium) while wife was visiting daughter last week.",
+    "GU": "Nocturia x3, increased. Weak stream and hesitancy unchanged. No dysuria, hematuria, or urgency. No incontinence.",
+    "Musculoskeletal": "Mild low back stiffness, chronic.",
+    "Neurologic": "Bilateral foot numbness stable. Wife reports he seems less steady on his feet at night.",
+    "Endocrine": "Home glucoses running 140-180 fasting. No hypoglycemia.",
+    "Psychiatric": "Wife concerned about mood — less interested in usual activities, watching TV more, less engaged with grandchildren on phone calls.",
+    "Skin": "No new bruising or skin changes."
   },
   "vitals": {
     "bp": "148/75 mmHg",
@@ -24,52 +28,63 @@
     "weight": "100.1 kg"
   },
   "physicalExam": {
-    "General": "Mildly fatigued-appearing",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "Irregularly irregular, no murmurs, JVP not elevated",
-    "Respiratory": "Mild crackles at bases",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "1+ pedal edema bilaterally",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Overweight male, mildly fatigued-appearing, sitting comfortably. Wife present and actively engaged in discussion.",
+    "HEENT": "Normocephalic. Oropharynx clear. No JVD appreciated at 45 degrees, though neck is thick and assessment is limited by body habitus.",
+    "Cardiovascular": "Irregularly irregular at 69 bpm. S1 normal, S2 present. Soft 2/6 systolic murmur at apex (MR, unchanged). Possible S3 — equivocal today. JVP difficult to assess due to body habitus but estimated at 9 cm H2O (mildly elevated compared to yesterday at 8 cm).",
+    "Respiratory": "Mild bibasilar crackles, more prominent than yesterday. No wheezes. Breathing comfortably at rest.",
+    "Abdomen": "Soft, non-tender, non-distended. No hepatomegaly. No hepatojugular reflux elicited.",
+    "Extremities": "1+ bilateral pedal edema (increased from trace yesterday). Warm, well-perfused. Skin intact.",
+    "Neurologic": "Alert and oriented x3. Decreased sensation bilateral feet. Gait observed — mildly unsteady, no assistive device.",
+    "Skin": "No pallor, jaundice, or petechiae."
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
-      "icd10": "E11.65",
-      "notes": "HbA1c 8.3%. On insulin and metformin."
-    },
-    {
-      "diagnosis": "Chronic Kidney Disease Stage 3b",
-      "icd10": "N18.32",
-      "notes": "eGFR 37. Stable."
-    },
-    {
-      "diagnosis": "Heart Failure with Reduced EF",
+      "diagnosis": "Heart Failure with Reduced EF — early volume overload",
       "icd10": "I50.22",
-      "notes": "NYHA Class II. On GDMT."
+      "notes": "Weight up 2 kg over 2 weeks (98.0 → 100.1 kg), with worsening bibasilar crackles, mildly elevated JVP, and 1+ pedal edema (up from trace yesterday). This is consistent with early fluid retention, likely precipitated by dietary sodium indiscretion while wife was away last week. The timing correlates with his increased nocturia — much of this is likely cardiac in origin (supine position redistributing fluid to central circulation causing nocturia) rather than purely BPH-related. This distinction is clinically important: increasing BPH medications will not address cardiac nocturia. Currently on furosemide 60mg AM/40mg PM — may need temporary increase."
+    },
+    {
+      "diagnosis": "Hypertension — suboptimally controlled",
+      "icd10": "I10",
+      "notes": "BP 148/75 today, home readings 140s-150s/80s. Likely volume-mediated given the concurrent weight gain. Expect improvement with diuresis. Carvedilol at target dose 25mg BID. Entresto at target dose. Would not add additional antihypertensives at this time — address volume first."
+    },
+    {
+      "diagnosis": "Persistent Atrial Fibrillation",
+      "icd10": "I48.1",
+      "notes": "Rate well-controlled at 69 on carvedilol 25mg BID. Not on anticoagulation — discontinued September 2023 after GI hemorrhage. Continue aspirin 81mg."
+    },
+    {
+      "diagnosis": "BPH contributing to nocturia",
+      "icd10": "N40.1",
+      "notes": "Component of nocturia is likely BPH-related (weak stream, hesitancy, incomplete emptying). However, the acute worsening correlates with volume overload, suggesting cardiac nocturia is the primary driver of the increase from 2x to 3x. Urology managing BPH separately — Dr. Kim recently started finasteride."
+    },
+    {
+      "diagnosis": "Possible mood disturbance",
+      "icd10": "R45.89",
+      "notes": "Wife raising concerns about decreased energy, motivation, and social engagement. Multiple contributing factors: sleep disruption from nocturia, chronic illness burden, possible early depression. Will recommend PCP screen with PHQ-9."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "problem": "Heart Failure — Volume Management",
+      "action": "Weight up 2 kg with clinical signs of early volume overload. Increase furosemide to 60mg BID (from current 60mg AM/40mg PM) for the next 5 days, then reassess. Target weight return to 98 kg range. Strict 2g sodium diet — reviewed with patient and wife. Wife acknowledges dietary indiscretions while she was away and will resume meal preparation. Fluid restriction 1.5L daily. Daily weights — call if weight does not decrease by 1 kg over next 3 days or if symptoms worsen. Check BMP in 3 days to monitor potassium and creatinine during increased diuresis (hyperkalemia risk on Entresto + spironolactone)."
     },
     {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "problem": "Nocturia — Cardiac vs BPH",
+      "action": "Current nocturia likely has both cardiac and urologic components. Addressing volume overload should reduce the cardiac component. Recommend taking furosemide earlier in the day (both doses before 2 PM) to minimize nighttime diuresis. Continue tamsulosin and finasteride per urology. If nocturia does not improve after achieving euvolemia, the residual component is likely BPH-related and should be addressed by Dr. Kim."
     },
     {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
+      "problem": "Hypertension",
+      "action": "Expect BP improvement with diuresis. No medication changes. If BP remains >140/80 after achieving dry weight, will reassess."
     },
     {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "problem": "Mood and Functional Status",
+      "action": "Recommend PCP evaluate for depression with PHQ-9 at next visit. Sleep disruption from nocturia is a significant contributor — addressing nocturia may improve mood and energy. Encourage social engagement and physical activity as tolerated."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 6 weeks or sooner if needed."
+      "action": "Phone check-in in 3 days to review weight trend and BMP results. If euvolemia achieved, return to standard furosemide dosing. Next in-person cardiology visit as previously scheduled in May 2024. Wife encouraged to call with any concerns."
     }
   ],
-  "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. James Wilson\nDate: 2/8/2024"
+  "attestation": "I personally saw and examined the patient. Wife Patricia Morrison was present and provided collateral history. I reviewed the home weight log and blood pressure records. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. James Wilson, MD\nDate: 2/8/2024"
 }

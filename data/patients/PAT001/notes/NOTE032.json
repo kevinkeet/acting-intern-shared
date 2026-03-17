@@ -5,66 +5,68 @@
   "author": "Dr. Emily Brown",
   "department": "Emergency Medicine",
   "encounter": "ENC023",
-  "chiefComplaint": "Fatigue",
-  "hpi": "Patient presents for fatigue. Weight stable. Following low-sodium diet. Monitoring blood pressure at home.",
+  "chiefComplaint": "Post-discharge follow-up call — Day 1 post-discharge",
+  "hpi": "Post-discharge telephone follow-up with Mr. Morrison, 72-year-old male discharged yesterday after observation admission for abdominal discomfort. CT abdomen showed hepatic steatosis, renal cysts, diverticulosis, and umbilical hernia — all chronic/incidental findings. He was discharged on temporarily increased furosemide (60mg BID x 5 days for mild volume overload). Patient reports feeling better at home. Abdominal discomfort has mostly resolved, rated 1/10 intermittently. He tolerated breakfast and lunch without difficulty. He has been checking his weight — 98.3 kg this morning (down 0.5 kg from discharge, suggesting response to increased diuresis). He voided well overnight with nocturia x2. No swelling in legs that he can see. No chest pain, worsening shortness of breath, or fever. He has been compliant with medications. Metformin remains held pending Cr recheck tomorrow. His wife confirms he is eating a low-sodium diet and drinking approximately 1.5 liters of fluid. She reports his mood seems slightly better with being home.",
   "reviewOfSystems": {
-    "Constitutional": "Reports fatigue",
-    "Cardiovascular": "No chest pain or palpitations",
-    "Respiratory": "No cough or wheezing",
-    "GI": "No nausea or vomiting",
-    "GU": "Nocturia x2",
-    "Neurologic": "No dizziness"
+    "Constitutional": "Fatigue improved. No fever or chills.",
+    "Cardiovascular": "No chest pain, palpitations, or worsening dyspnea. No orthopnea.",
+    "Respiratory": "No cough or wheezing.",
+    "GI": "Abdominal discomfort nearly resolved (1/10). Good appetite. Normal bowel movement. No nausea, vomiting, melena, or hematochezia.",
+    "GU": "Nocturia x2. No dysuria. Good urine output.",
+    "Neurologic": "Chronic neuropathy, stable.",
+    "Psychiatric": "Mood improved per wife."
   },
   "vitals": {
-    "bp": "131/86 mmHg",
-    "hr": "74 bpm",
+    "bp": "131/86 mmHg (home measurement)",
+    "hr": "74 bpm (home measurement)",
     "rr": "16/min",
-    "temp": "99.0°F",
-    "spo2": "97% RA",
-    "weight": "98.8 kg"
+    "temp": "99.0°F (home measurement)",
+    "spo2": "97% (home pulse oximeter)",
+    "weight": "98.3 kg (home scale)"
   },
   "physicalExam": {
-    "General": "Mildly fatigued-appearing",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "S1/S2 normal, mild peripheral edema",
-    "Respiratory": "No wheezes or rhonchi",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "No edema, warm and well-perfused",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Telephone encounter — physical exam not performed. Patient reports feeling well, voice sounds clear and energetic.",
+    "HEENT": "Not assessed (telephone).",
+    "Cardiovascular": "Not assessed (telephone). Patient denies chest pain, palpitations, or worsening edema.",
+    "Respiratory": "Not assessed (telephone). Patient denies cough or worsening dyspnea.",
+    "Abdomen": "Not assessed (telephone). Patient reports significant improvement in abdominal discomfort.",
+    "Extremities": "Not assessed (telephone). Patient denies worsening swelling.",
+    "Neurologic": "Not assessed (telephone). Patient reports stable neuropathy symptoms."
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
-      "icd10": "E11.65",
-      "notes": "HbA1c 7.4%. On insulin and metformin."
+      "diagnosis": "Abdominal discomfort, resolving",
+      "icd10": "R10.9",
+      "notes": "Symptoms nearly resolved at home. CT showed no acute pathology. Most likely related to mild hepatic congestion from HF volume overload and/or hepatic steatosis. Responding to increased diuresis."
     },
     {
-      "diagnosis": "Chronic Kidney Disease Stage 3b",
+      "diagnosis": "Heart Failure with Reduced EF — responding to increased diuresis",
+      "icd10": "I50.22",
+      "notes": "Weight down 0.5 kg from discharge. Symptom improvement. Home vitals stable. Tolerating increased furosemide (60mg BID x 5 days)."
+    },
+    {
+      "diagnosis": "CKD Stage 3b — post-contrast monitoring",
       "icd10": "N18.32",
-      "notes": "eGFR 40. Stable."
+      "notes": "Metformin held. Cr recheck scheduled for tomorrow. No symptoms of contrast nephropathy (urine output adequate, no new edema)."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "problem": "Abdominal Pain",
+      "action": "Resolving. Continue monitoring at home. If pain returns or worsens, or if new symptoms develop (fever, melena, severe pain), return to ED immediately."
     },
     {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "problem": "Heart Failure / Diuresis",
+      "action": "Continue furosemide 60mg BID through Sunday (5-day course). Then return to baseline 60mg AM/40mg PM on Monday. Continue daily weights. If weight drops below 97 kg, reduce to baseline dosing earlier. Call if weight increases >3 lbs in a day."
     },
     {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
-    },
-    {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "problem": "CKD / Metformin",
+      "action": "Cr recheck tomorrow at outpatient lab. If Cr returns to baseline (~1.96), resume metformin 500mg BID. Results will be reviewed by PCP office."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 12 weeks or sooner if needed."
+      "action": "PCP appointment confirmed for 9/18. Lab draw tomorrow AM. Will call patient with Cr results. Cardiology TEE scheduling in progress."
     }
   ],
-  "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Emily Brown\nDate: 9/13/2024"
+  "attestation": "Telephone follow-up encounter documented. Patient assessed by phone. Plan reviewed and agreed upon by patient and wife.\n\nElectronically signed by: Dr. Emily Brown, MD\nDate: 9/13/2024"
 }

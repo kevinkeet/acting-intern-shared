@@ -1,0 +1,69 @@
+{
+  "id": "NOTE_GI003",
+  "type": "Consult Note",
+  "title": "Gastroenterology Follow-up - Second Surveillance EGD",
+  "date": "2024-04-15T09:30:00.000Z",
+  "author": "Dr. William Thompson",
+  "department": "Gastroenterology",
+  "encounter": "ENC_GI003",
+  "signedDate": "2024-04-15T13:00:00.000Z",
+  "sections": {
+    "reasonForVisit": "Second surveillance EGD, follow-up of gastric antral ulcer status post GI bleed September 2023",
+    "historyOfPresentIllness": "Mr. Morrison is a 72-year-old gentleman returning for his second surveillance EGD, 7 months after his initial surveillance scope showed a healing gastric antral ulcer (Forrest IIc, 8 mm). His original presentation was acute upper GI bleeding from a 1.5 cm gastric antral ulcer in September 2023, successfully treated endoscopically. H. pylori was eradicated (confirmed by negative stool antigen October 2023). Prior biopsies from October 2023 showed chronic active gastritis with regenerative changes, no dysplasia, no intestinal metaplasia.\n\nThe patient reports no GI symptoms since his last visit. No melena, hematemesis, abdominal pain, dysphagia, nausea, or vomiting. Appetite and weight have been stable. He has been compliant with pantoprazole 40 mg BID. He remains off anticoagulation.\n\nHe notes that both his cardiologist and primary care doctor have expressed interest in restarting anticoagulation for his atrial fibrillation if the ulcer is confirmed healed.",
+    "procedureNote": {
+      "procedure": "Esophagogastroduodenoscopy (EGD)",
+      "date": "2024-04-15",
+      "indication": "Second surveillance of gastric ulcer, confirmation of complete healing prior to potential anticoagulation restart",
+      "sedation": "Moderate sedation with midazolam 2.5 mg IV and fentanyl 50 mcg IV",
+      "findings": {
+        "esophagus": "Normal esophageal mucosa. No varices or Barrett's changes. GE junction at 40 cm.",
+        "stomach": "Prior antral ulcer site: Complete mucosal healing with small flat scar visible at the prior ulcer location. No residual ulceration, erosion, or mucosal irregularity. No visible vessel. Surrounding mucosa appears normal with no erythema. Remainder of stomach is unremarkable. No polyps or masses.",
+        "duodenum": "Normal duodenal bulb and second portion of duodenum. No ulceration."
+      },
+      "biopsies": "Biopsies taken from prior ulcer scar site (x4) for histology and dysplasia screening. Antral biopsies (x2) for H. pylori surveillance.",
+      "complications": "None. Patient tolerated procedure without difficulty."
+    },
+    "laboratoryResults": {
+      "recentCBC": {
+        "date": "2024-04-10",
+        "hemoglobin": "11.0 g/dL",
+        "hematocrit": "33.2%",
+        "mcv": "87 fL",
+        "platelets": "192 K/uL",
+        "interpretation": "Stable mild anemia, likely multifactorial (CKD, prior bleed). Iron studies adequate."
+      }
+    },
+    "assessment": "72-year-old male with history of acute upper GI bleed from gastric antral ulcer (September 2023), now with complete endoscopic healing of the ulcer on second surveillance EGD. Prior biopsy showed no dysplasia. H. pylori remains eradicated.\n\nThis is an excellent outcome. The ulcer has progressed from a 1.5 cm ulcer with visible vessel (September 2023) to a healing 8 mm ulcer (October 2023) to complete mucosal healing with scar (today).\n\nWith confirmed ulcer healing, the question of anticoagulation can be revisited with cardiology. From a GI standpoint, if anticoagulation is restarted, I would recommend:\n- Continued indefinite PPI therapy\n- Apixaban preferred over warfarin (lower GI bleed risk)\n- Low threshold for repeat endoscopy if any GI symptoms develop",
+    "recommendations": [
+      {
+        "category": "Medications",
+        "items": [
+          "Step down pantoprazole to 40 mg PO daily (from BID) — ulcer is fully healed",
+          "Continue PPI indefinitely given history of major GI bleed, ongoing aspirin use, and advanced age",
+          "Do not add NSAID therapy under any circumstances"
+        ]
+      },
+      {
+        "category": "Anticoagulation Coordination",
+        "items": [
+          "Ulcer is now confirmed completely healed — from GI perspective, anticoagulation can be reconsidered",
+          "Recommend apixaban over warfarin if anticoagulation is restarted (ARISTOTLE trial data showing lower GI bleed rates)",
+          "Continue PPI if anticoagulation restarted",
+          "Defer timing and agent selection to cardiology (Dr. Wilson)"
+        ]
+      },
+      {
+        "category": "Surveillance",
+        "items": [
+          "With complete healing and no dysplasia, can space GI follow-up to annual",
+          "Next routine GI follow-up in 12 months unless symptoms develop sooner",
+          "Biopsy results will be reviewed — if any concerning pathology, patient will be contacted for earlier follow-up",
+          "Age-appropriate colon cancer screening: patient is due for colonoscopy — will schedule separately"
+        ]
+      }
+    ],
+    "patientEducation": "Discussed the excellent news with Mr. Morrison and Patricia — the ulcer is completely healed. Explained that we will step down his PPI to once daily but he should continue it long-term. Reviewed that the decision about blood thinners is now back in cardiology's hands, and from our perspective it is safe to consider restarting. Patient expressed relief about the healing and voiced understanding of the ongoing PPI need. Reminded patient to avoid ibuprofen, naproxen, and other NSAIDs.",
+    "plan": "1. Decrease pantoprazole to 40 mg PO daily (from BID)\n2. Continue PPI indefinitely\n3. Communicate ulcer healing status to cardiology (Dr. Wilson) and PCP (Dr. Chen) for anticoagulation reconsideration\n4. Review biopsy pathology when available\n5. Follow-up in 12 months for routine GI surveillance\n6. Schedule screening colonoscopy"
+  },
+  "attestation": "I personally performed the endoscopic procedure, evaluated this patient, reviewed all available data, and formulated the assessment and plan. Findings discussed with the patient and his wife.\n\nElectronically signed by: William Thompson, MD, FACG\nDate/Time: 4/15/2024 1:00 PM"
+}

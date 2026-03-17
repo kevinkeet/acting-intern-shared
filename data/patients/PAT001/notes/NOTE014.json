@@ -2,69 +2,80 @@
   "id": "NOTE014",
   "type": "Progress Note",
   "date": "2025-09-12T15:22:18.416Z",
-  "author": "Dr. Sarah Chen",
-  "department": "Primary Care",
+  "author": "Dr. Emily Brown",
+  "department": "Emergency Medicine",
   "encounter": "ENC008",
-  "chiefComplaint": "Routine follow-up",
-  "hpi": "Patient presents for routine follow-up. Presents with mild worsening of baseline symptoms. Reports increased fatigue over the past week.",
+  "chiefComplaint": "Fall at home",
+  "hpi": "Mr. Morrison is a 73-year-old male with HFrEF (EF 30-35%), CKD 3b, T2DM with diabetic neuropathy, persistent A-fib (off anticoagulation), HTN, and BPH who presents to the ED after a fall at home. Patient was discharged 2 days ago (9/10/2025) after a 5-day hospitalization for acute decompensated HFrEF. He has been doing well at home per post-discharge visit with Dr. Chen yesterday.\n\nTonight at approximately 2:30 AM, the patient got up to urinate (nocturia, x2-3 nightly) and tripped on a bathroom throw rug. He fell forward, catching himself partially on the bathroom vanity with his right hand before landing on his right knee on the tile floor. His wife heard the fall and came to assist. He was able to get up with her help after about 2 minutes on the ground.\n\nKey history:\n- He denies any preceding lightheadedness, dizziness, chest pain, palpitations, or feeling of his heart racing\n- He did NOT lose consciousness — he was aware throughout the fall and can describe it clearly\n- He did NOT hit his head — his hands and knee took the impact\n- He denies any vision changes, speech difficulty, or focal weakness before or after the fall\n- He felt his foot 'catch' on the bathroom rug — he has significant diabetic neuropathy and cannot fully feel his feet, which impairs his proprioception\n- He was NOT wearing shoes or non-slip socks\n- There is a nightlight in the hallway but NOT in the bathroom\n- He is NOT on anticoagulation (warfarin discontinued 9/2023 after GI bleed; on aspirin 81mg only)\n\nAfter the fall, he reports mild pain at his right knee (the impact site) and soreness in his right wrist. He was able to bear weight and walked back to bed with his wife's assistance. Wife called the nurse line, who recommended ED evaluation given his age, fall risk factors, and recent hospitalization.\n\nHe denies: headache, neck pain, back pain, abdominal pain, hip pain, any numbness or tingling beyond his baseline neuropathy, shortness of breath, or chest pain.",
   "reviewOfSystems": {
-    "Constitutional": "Weight stable",
-    "Cardiovascular": "No chest pain or palpitations",
-    "Respiratory": "Mild dyspnea",
-    "GI": "Regular bowel movements",
-    "GU": "No hematuria",
-    "Neurologic": "No dizziness"
+    "Constitutional": "No fever, chills. Denies fatigue beyond baseline. Weight 97.3 kg this morning per wife.",
+    "Cardiovascular": "No chest pain, palpitations, or presyncope before or after fall. No syncope or LOC. Baseline exertional dyspnea, unchanged.",
+    "Respiratory": "No dyspnea at rest, no cough.",
+    "GI": "No abdominal pain, nausea, vomiting. No melena or hematochezia.",
+    "GU": "Nocturia x2-3 nightly (precipitating factor for fall). No dysuria.",
+    "Musculoskeletal": "Right knee pain from impact. Right wrist soreness. No hip pain (important — no femoral neck tenderness).",
+    "Neurologic": "Bilateral foot numbness at baseline (diabetic neuropathy — contributing factor). No new focal weakness, speech change, or vision change. No LOC. No post-fall confusion.",
+    "Skin": "Mild swelling right knee. No lacerations. No head wounds."
   },
   "vitals": {
-    "bp": "139/80 mmHg",
-    "hr": "82 bpm",
-    "rr": "14/min",
+    "bp": "132/78 mmHg (seated), 126/74 mmHg (standing at 1 min) — no orthostatic hypotension",
+    "hr": "68 bpm (irregularly irregular)",
+    "rr": "16/min",
     "temp": "97.8°F",
-    "spo2": "95% RA",
-    "weight": "97.3 kg"
+    "spo2": "96% RA",
+    "weight": "97.5 kg"
   },
   "physicalExam": {
-    "General": "Alert, oriented, no acute distress",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "Irregularly irregular, no murmurs, JVP not elevated",
-    "Respiratory": "No wheezes or rhonchi",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "No edema, warm and well-perfused",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Alert, oriented x3, in mild discomfort from right knee pain. No acute distress. GCS 15.",
+    "Head": "No external trauma. No scalp laceration, hematoma, or tenderness. No periorbital ecchymosis.",
+    "Neck": "No midline cervical spine tenderness. Full ROM without pain. No meningismus.",
+    "Cardiovascular": "Irregularly irregular at 68 bpm, consistent with known A-fib. Normal S1, S2. Grade 2/6 systolic murmur at apex (known). No S3. JVP not elevated (~7 cm). Distal pulses intact.",
+    "Respiratory": "Clear to auscultation bilaterally. No crackles (recently treated HF exacerbation — lungs clear post-diuresis). Normal effort.",
+    "Abdomen": "Soft, non-tender, non-distended. No guarding or rebound.",
+    "Musculoskeletal - Right Knee": "Small area of swelling and ecchymosis (2 x 3 cm) over anterior tibial tuberosity. Tender to palpation at impact site. Full range of motion preserved (0-120 degrees). Stable to varus and valgus stress testing. Negative anterior and posterior drawer. No effusion. Able to bear weight.",
+    "Musculoskeletal - Right Wrist": "Mild tenderness over dorsal aspect. Full ROM. No deformity. No snuffbox tenderness (scaphoid unlikely). Grip strength intact. No swelling.",
+    "Musculoskeletal - Hips": "No tenderness to palpation bilateral greater trochanters. Full ROM bilateral hips without pain. No leg length discrepancy.",
+    "Neurologic": "Alert, oriented x3. GCS 15 (E4V5M6). CN II-XII intact. Motor 5/5 upper, 4+/5 lower (baseline). Sensory: decreased light touch bilateral feet (known neuropathy). No new focal deficits. Romberg positive with sway (known). Gait: ambulates with caution, slightly antalgic on right from knee pain."
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
-      "icd10": "E11.65",
-      "notes": "HbA1c 7.1%. On insulin and metformin."
+      "diagnosis": "Mechanical fall — tripped on bathroom rug",
+      "icd10": "W01.0",
+      "notes": "Mechanism clearly mechanical: tripping hazard (unsecured bathroom rug) + impaired proprioception (diabetic neuropathy) + dark bathroom (no nightlight) + bare feet + nocturia requiring nighttime ambulation. This was NOT a syncopal or pre-syncopal event — patient was fully alert throughout, no prodrome, no LOC, no orthostasis on exam. Not related to cardiac arrhythmia — no palpitations, no chest pain, rate controlled A-fib at 68. Not related to recent HF exacerbation — patient euvolemic post-discharge, no volume-related dizziness."
     },
     {
-      "diagnosis": "Chronic Kidney Disease Stage 3b",
-      "icd10": "N18.32",
-      "notes": "eGFR 42. Stable."
+      "diagnosis": "Right knee contusion",
+      "icd10": "S80.01",
+      "notes": "Direct impact to right anterior knee. Ecchymosis and tenderness present. XR negative for fracture. Full ROM, stable to stress testing, no effusion. Weight-bearing. Will resolve with conservative management."
+    },
+    {
+      "diagnosis": "Right wrist strain",
+      "icd10": "S63.501",
+      "notes": "Caught himself on vanity. Mild dorsal tenderness, full ROM, no snuffbox tenderness, no deformity. XR shows no fracture. Low concern for significant injury."
+    },
+    {
+      "diagnosis": "Fall risk — moderate to high",
+      "icd10": "Z91.81",
+      "notes": "Multiple contributing risk factors: (1) Diabetic neuropathy with Romberg positivity, (2) Nocturia x2-3 (BPH + diuretics + SGLT2i), (3) Environmental hazards (throw rug, no bathroom nightlight), (4) Age 73, (5) Obesity, (6) Deconditioning from recent hospitalization, (7) Multiple blood pressure-lowering medications (Entresto, carvedilol, furosemide). Patient is NOT on anticoagulation (aspirin only), which mitigates bleeding risk from falls, but fracture risk remains significant."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "problem": "Fall Evaluation",
+      "action": "CT head: NEGATIVE — no acute intracranial hemorrhage, mass, or midline shift. No calvarial fracture. Chronic microvascular ischemic changes noted (expected for age). Right knee XR: NEGATIVE for fracture — soft tissue swelling only. Right wrist XR: NEGATIVE for fracture. ECG: A-fib with ventricular rate 68, no new changes from prior. Labs: BMP unremarkable (Cr 2.0, K 4.7), CBC stable, glucose 162."
     },
     {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "problem": "Fall Prevention Recommendations",
+      "action": "Discussed with patient and wife: (1) REMOVE all throw rugs in the home, especially bathroom — this is the second recommendation, must be done today. (2) Install nightlight in bathroom. (3) Consider wearing non-slip socks or grip slippers for nighttime bathroom trips. (4) Hold onto wall or furniture when walking at night. (5) Keep clear path from bedroom to bathroom. (6) Consider bedside urinal to reduce nighttime trips. (7) PT evaluation for balance and strengthening. (8) Discussed cane/walker — patient declines at this time, 'I'm not that old.' Documented that fall risk was discussed and patient declines assistive device against medical advice."
     },
     {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
+      "problem": "Right Knee",
+      "action": "Ice 20 minutes on/20 minutes off for first 48 hours. Elevate when sitting. Acetaminophen 500mg q6h PRN for pain (NOT NSAIDs — contraindicated due to CKD and GI bleed history). If swelling or pain worsens, or if unable to bear weight, return to ED."
     },
     {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
-    },
-    {
-      "problem": "Follow-up",
-      "action": "Return in 11 weeks or sooner if needed."
+      "problem": "Disposition",
+      "action": "Discharged home to wife. Patient ambulatory. Follow-up with PCP (Dr. Adams) and Cardiology (Dr. Wilson) within 1 week — both already have scheduled appointments from recent hospitalization. PT referral placed. Wife instructed on head injury precautions for 24 hours (wake every 4 hours, check orientation)."
     }
   ],
-  "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Sarah Chen\nDate: 9/12/2025"
+  "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Emily Brown\nDate: 9/12/2025"
 }

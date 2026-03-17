@@ -1,0 +1,117 @@
+{
+  "id": "NOTE_PT002",
+  "type": "Consult Note",
+  "title": "Physical Therapy Discharge Summary",
+  "date": "2022-10-06T10:00:00.000Z",
+  "author": "Sarah Thompson, PT, DPT",
+  "department": "Physical Therapy",
+  "encounter": "ENC_PT002",
+  "signedDate": "2022-10-06T13:00:00.000Z",
+  "sections": {
+    "reasonForNote": "Physical therapy discharge summary following 6 weeks of home health PT services post-CHF exacerbation",
+    "treatmentSummary": {
+      "referralDate": "2022-08-25",
+      "dischargeDate": "2022-10-06",
+      "totalSessions": "11 of 12 planned sessions completed (1 cancelled due to patient illness — URI)",
+      "frequency": "2x/week for 6 weeks",
+      "interventions": [
+        "Progressive walking program (advanced from 5 minutes to 15 minutes continuous walking)",
+        "Lower extremity strengthening: sit-to-stand, mini-squats, heel raises, resistance band exercises, ankle dorsiflexion strengthening",
+        "Balance training: static and dynamic exercises on firm and foam surfaces, tandem stance practice, single-leg stance progression, perturbation training",
+        "Stair training with single handrail",
+        "Fall prevention education and environmental modification",
+        "Home exercise program instruction and progression"
+      ]
+    },
+    "outcomeMeasures": {
+      "sixMinuteWalkTest": {
+        "initial": "180 meters (8/25/2022)",
+        "discharge": "230 meters (10/6/2022)",
+        "change": "+50 meters (28% improvement)",
+        "interpretation": "Clinically meaningful improvement (MCID for HF patients: 30-36 meters). Still below predicted norms but significant functional gain. SpO2 nadir improved from 91% to 93% during test."
+      },
+      "timedUpAndGo": {
+        "initial": "18 seconds (8/25/2022)",
+        "discharge": "14 seconds (10/6/2022)",
+        "change": "-4 seconds (22% improvement)",
+        "interpretation": "Improved from high fall risk to borderline fall risk category. Patient now rises from chair without armrest assistance."
+      },
+      "bergBalanceScale": {
+        "initial": "38/56 (8/25/2022)",
+        "discharge": "44/56 (10/6/2022)",
+        "change": "+6 points",
+        "interpretation": "Moved from moderate to low-moderate fall risk. Improved in tandem stance (3→5), reaching forward (2→3), and turning 360 degrees (2→3)."
+      },
+      "gripStrength": {
+        "initial": "R: 22 kg, L: 20 kg",
+        "discharge": "R: 25 kg, L: 23 kg",
+        "change": "+3 kg bilateral",
+        "interpretation": "Modest improvement, still below age norms"
+      }
+    },
+    "functionalStatus": {
+      "ambulation": "Independent in home without assistive device on level surfaces. Uses single handrail for stairs (3 steps to front porch) — step-over-step pattern ascending, step-to pattern descending. Community ambulation limited by exertional dyspnea — can walk approximately 1 block (150-200 feet) on level ground before needing to rest.",
+      "transfers": "Independent sit-to-stand from standard height chair and bed. Independent toilet and tub transfers with grab bars.",
+      "adls": "Independent with all basic ADLs including bathing (uses shower chair), dressing, grooming, toileting",
+      "iadls": "Independent with light meal preparation, medication management. Requires assistance with heavy housework, laundry (carrying basket), grocery shopping. Wife continues to drive for all errands.",
+      "exerciseProgram": "Patient demonstrated independence with full home exercise program. Performs daily: 15-minute walk (AM), seated leg exercises, standing balance exercises with countertop for safety. Adherence has been excellent — wife provides encouragement and occasionally exercises alongside him."
+    },
+    "gaitAtDischarge": "Improved gait pattern compared to initial evaluation. Base of support narrowed. Stride length improved. Bilateral foot drop persists (neuropathy — not expected to improve with PT) but patient demonstrates improved compensatory strategies with hip flexion clearance. Cadence improved. No longer 'furniture walks.'",
+    "goalAttainment": {
+      "shortTermGoals": [
+        { "goal": "6MWT 180m → 220m", "status": "Exceeded — achieved 230m" },
+        { "goal": "TUG 18s → 15s", "status": "Exceeded — achieved 14s" },
+        { "goal": "Independent with HEP", "status": "Met" },
+        { "goal": "Safe household ambulation without UE support", "status": "Met" }
+      ],
+      "longTermGoals": [
+        { "goal": "6MWT to 250m", "status": "Not met — achieved 230m (within 8%)" },
+        { "goal": "Independent household ambulation", "status": "Met" },
+        { "goal": "Fall prevention strategies consistently", "status": "Met — area rugs removed, shower chair in use, nightlights installed" },
+        { "goal": "Community ambulation", "status": "Partially met — can walk to mailbox and approximately 1 block; church parking lot achievable with rest break" },
+        { "goal": "Independent stair navigation with single handrail", "status": "Met ascending, partially met descending (uses step-to pattern)" }
+      ]
+    },
+    "assessment": "Mr. Morrison has made meaningful functional gains over 6 weeks of home health PT. He has exceeded most short-term goals and met or partially met long-term goals. His 6MWT improved by 50 meters (28%), TUG improved by 4 seconds (22%), and Berg Balance Scale improved by 6 points. He is now independent with household ambulation, transfers, and ADLs. Community ambulation remains limited by exertional dyspnea but has improved from baseline.\n\nPersistent limitations include: bilateral foot drop (neuropathic, will not resolve with PT), exertional dyspnea limiting community distance, and ongoing fall risk (though significantly reduced). Further gains would likely require a supervised cardiac rehabilitation program where exercise intensity can be more precisely monitored and advanced.\n\nPatient has reached a plateau for home-based PT services and is appropriate for discharge.",
+    "dischargeRecommendations": [
+      {
+        "category": "Home Exercise Program",
+        "items": [
+          "Continue daily walking program: 15 minutes AM walk, can gradually advance to 20 minutes if tolerated",
+          "Continue seated and standing strengthening exercises 3x/week (program provided in writing)",
+          "Continue balance exercises daily — tandem stance, single-leg stance with countertop support",
+          "Monitor symptoms during exercise: stop if excessive dyspnea, chest pain, or lightheadedness"
+        ]
+      },
+      {
+        "category": "Cardiac Rehabilitation",
+        "items": [
+          "Strongly recommend outpatient cardiac rehabilitation program — patient qualifies with HFrEF diagnosis",
+          "Would benefit from supervised, progressive exercise with telemetry monitoring",
+          "Discussed with patient — he is willing but concerned about transportation (30-minute drive to nearest cardiac rehab facility). Wife willing to drive but schedule may be challenging.",
+          "Referral placed to Regional Medical Center Cardiac Rehab program"
+        ]
+      },
+      {
+        "category": "Fall Prevention",
+        "items": [
+          "Continue environmental modifications: no throw rugs, adequate lighting, shower chair use",
+          "Wear sturdy, well-fitting shoes at all times (no slippers, no bare feet)",
+          "Use handrail on all stairs",
+          "Consider ankle-foot orthoses (AFOs) if foot drop worsens — discuss with neurology or physiatry",
+          "If functional decline noted, re-refer to PT"
+        ]
+      },
+      {
+        "category": "Communication to Medical Team",
+        "items": [
+          "Patient has not yet started cardiac rehab — recommend follow-up on this referral",
+          "Exertional oxygen desaturation noted (SpO2 nadir 91-93%) — may benefit from formal cardiopulmonary exercise testing or ambulatory O2 assessment",
+          "Foot drop bilateral — may warrant neurology reassessment if progressive"
+        ]
+      }
+    ],
+    "plan": "1. Discharge from home health PT services — goals met, patient at plateau for home-based therapy\n2. Patient independent with home exercise program\n3. Cardiac rehab referral placed — recommend follow-up on enrollment\n4. Re-refer to PT if functional decline or new fall event\n5. Written HEP provided to patient and wife"
+  },
+  "attestation": "I personally evaluated this patient, performed all discharge assessments, and formulated the discharge plan. Home exercise program reviewed and demonstrated with patient and wife.\n\nElectronically signed by: Sarah Thompson, PT, DPT\nDate/Time: 10/6/2022 1:00 PM"
+}

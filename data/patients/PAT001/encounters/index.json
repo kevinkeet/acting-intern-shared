@@ -1,6 +1,192 @@
 {
   "encounters": [
     {
+      "id": "ENC_BEHAV001",
+      "date": "2026-01-20T14:00:00.000Z",
+      "type": "Office Visit",
+      "department": "Behavioral Health",
+      "provider": "Lisa Park, LCSW",
+      "chiefComplaint": "Depression screening, referral from PCP",
+      "diagnoses": ["Adjustment Disorder with Depressed Mood"],
+      "status": "Completed"
+    },
+    {
+      "id": "ENC_OPHTH001",
+      "date": "2024-12-10T10:00:00.000Z",
+      "type": "Office Visit",
+      "department": "Ophthalmology",
+      "provider": "Dr. Karen Liu",
+      "chiefComplaint": "Annual diabetic eye exam",
+      "diagnoses": ["Nonproliferative Diabetic Retinopathy, Mild, Bilateral"],
+      "status": "Completed"
+    },
+    {
+      "id": "ENC_POD001",
+      "date": "2024-12-15T09:00:00.000Z",
+      "type": "Office Visit",
+      "department": "Podiatry",
+      "provider": "Dr. Michael Chen",
+      "chiefComplaint": "Annual diabetic foot exam",
+      "diagnoses": ["Diabetic Peripheral Neuropathy", "Onychomycosis"],
+      "status": "Completed"
+    },
+    {
+      "id": "ENC_TEE001",
+      "date": "2024-09-20T08:00:00.000Z",
+      "type": "Procedure",
+      "department": "Cardiology",
+      "provider": "Dr. James Wilson",
+      "chiefComplaint": "Transesophageal echocardiogram",
+      "diagnoses": ["Heart Failure with Reduced EF", "Atrial Fibrillation"],
+      "status": "Completed"
+    },
+    {
+      "id": "ENC_URO001",
+      "date": "2024-07-20T10:30:00.000Z",
+      "type": "Office Visit",
+      "department": "Urology",
+      "provider": "Dr. Robert Kim",
+      "chiefComplaint": "Annual BPH follow-up",
+      "diagnoses": ["Benign Prostatic Hyperplasia"],
+      "status": "Completed"
+    },
+    {
+      "id": "ENC_ENDO001",
+      "date": "2024-06-15T14:00:00.000Z",
+      "type": "Office Visit",
+      "department": "Endocrinology",
+      "provider": "Dr. Lisa Martinez",
+      "chiefComplaint": "Diabetes management optimization",
+      "diagnoses": ["Type 2 Diabetes Mellitus", "CKD Stage 3b"],
+      "status": "Completed"
+    },
+    {
+      "id": "ENC_GI003",
+      "date": "2024-04-15T10:00:00.000Z",
+      "type": "Office Visit",
+      "department": "Gastroenterology",
+      "provider": "Dr. William Thompson",
+      "chiefComplaint": "Surveillance EGD follow-up",
+      "diagnoses": ["History of Peptic Ulcer, Healed"],
+      "status": "Completed"
+    },
+    {
+      "id": "ENC_DIET001",
+      "date": "2024-03-25T11:00:00.000Z",
+      "type": "Office Visit",
+      "department": "Nutrition Services",
+      "provider": "Amanda Rodriguez, RD, CSR",
+      "chiefComplaint": "CKD dietary counseling",
+      "diagnoses": ["CKD Stage 3b", "Type 2 Diabetes Mellitus", "Heart Failure"],
+      "status": "Completed"
+    },
+    {
+      "id": "ENC_NEPH001",
+      "date": "2024-03-20T14:00:00.000Z",
+      "type": "Office Visit",
+      "department": "Nephrology",
+      "provider": "Dr. Michael Torres",
+      "chiefComplaint": "CKD stage 3b management, proteinuria evaluation",
+      "diagnoses": ["Chronic Kidney Disease Stage 3b", "Proteinuria", "Secondary Hyperparathyroidism"],
+      "status": "Completed"
+    },
+    {
+      "id": "ENC_CARD001",
+      "date": "2023-11-15T10:30:00.000Z",
+      "type": "Office Visit",
+      "department": "Cardiology",
+      "provider": "Dr. James Wilson",
+      "chiefComplaint": "Heart failure management, GDMT optimization",
+      "diagnoses": ["Heart Failure with Reduced EF", "Atrial Fibrillation"],
+      "status": "Completed"
+    },
+    {
+      "id": "ENC_GI002",
+      "date": "2023-10-11T10:00:00.000Z",
+      "type": "Office Visit",
+      "department": "Gastroenterology",
+      "provider": "Dr. William Thompson",
+      "chiefComplaint": "Surveillance EGD, post-GI bleed follow-up",
+      "diagnoses": ["Gastric Ulcer, Healing", "H. pylori, Eradicated"],
+      "status": "Completed"
+    },
+    {
+      "id": "ENC_ADM002",
+      "date": "2023-09-12T18:00:00.000Z",
+      "type": "Inpatient",
+      "department": "Hospital Medicine / MICU",
+      "provider": "Dr. Emily Brown",
+      "chiefComplaint": "Melena, lightheadedness, near-syncope",
+      "diagnoses": [
+        "Upper Gastrointestinal Hemorrhage",
+        "Hemorrhagic Shock",
+        "Gastric Ulcer with Visible Vessel",
+        "H. pylori Infection",
+        "Supratherapeutic INR",
+        "Acute Kidney Injury on CKD 3b",
+        "Atrial Fibrillation"
+      ],
+      "admissionDate": "2023-09-12",
+      "dischargeDate": "2023-09-17",
+      "lengthOfStay": 6,
+      "status": "Completed"
+    },
+    {
+      "id": "ENC_PT002",
+      "date": "2022-10-06T10:00:00.000Z",
+      "type": "Office Visit",
+      "department": "Physical Therapy",
+      "provider": "Sarah Thompson, PT, DPT",
+      "chiefComplaint": "PT discharge, post-CHF exacerbation rehab",
+      "diagnoses": ["Deconditioning", "Heart Failure"],
+      "status": "Completed"
+    },
+    {
+      "id": "ENC_PT001",
+      "date": "2022-08-25T09:00:00.000Z",
+      "type": "Office Visit",
+      "department": "Physical Therapy",
+      "provider": "Sarah Thompson, PT, DPT",
+      "chiefComplaint": "Home health PT evaluation post-CHF exacerbation",
+      "diagnoses": ["Deconditioning", "Heart Failure", "Diabetic Neuropathy"],
+      "status": "Completed"
+    },
+    {
+      "id": "ENC_ADM001",
+      "date": "2022-08-15T14:30:00.000Z",
+      "type": "Inpatient",
+      "department": "Hospital Medicine",
+      "provider": "Dr. Emily Brown",
+      "chiefComplaint": "Shortness of breath and leg swelling",
+      "diagnoses": [
+        "Acute Decompensated Heart Failure",
+        "Acute Kidney Injury on CKD 3b",
+        "Atrial Fibrillation with RVR",
+        "Hyperkalemia"
+      ],
+      "admissionDate": "2022-08-15",
+      "dischargeDate": "2022-08-19",
+      "lengthOfStay": 4,
+      "status": "Completed"
+    },
+    {
+      "id": "ENC_ADM003",
+      "date": "2021-02-10T20:00:00.000Z",
+      "type": "Inpatient",
+      "department": "Hospital Medicine",
+      "provider": "Dr. Emily Brown",
+      "chiefComplaint": "Cough, fever, dyspnea",
+      "diagnoses": [
+        "Community-Acquired Pneumonia",
+        "Acute Hypoxic Respiratory Failure",
+        "CKD Stage 3b"
+      ],
+      "admissionDate": "2021-02-10",
+      "dischargeDate": "2021-02-14",
+      "lengthOfStay": 5,
+      "status": "Completed"
+    },
+    {
       "id": "ENC001",
       "date": "2026-02-05T16:22:18.416Z",
       "type": "Office Visit",

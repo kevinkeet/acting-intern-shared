@@ -5,81 +5,87 @@
   "author": "Dr. Emily Brown",
   "department": "Emergency Medicine",
   "encounter": "ENC079",
-  "chiefComplaint": "Chest pain",
-  "hpi": "72-year-old male with history of Type 2 Diabetes Mellitus, CKD Stage 3b, HFrEF (EF 35%), and atrial fibrillation who presents with increased leg swelling over the past 4 days.\n\nPatient reports gradual onset of symptoms. Occurs at rest. Denies chest pain. Some dry cough present.\n\nPatient has been compliant with medications. Following low-sodium diet. Last cardiology visit was 2 months ago.",
-  "pastMedicalHistory": "1. Type 2 Diabetes Mellitus with neuropathy (diagnosed 2010)\n2. Chronic Kidney Disease Stage 3b (diagnosed 2018)\n3. Heart Failure with Reduced Ejection Fraction, EF 35% (diagnosed 2019)\n4. Atrial Fibrillation, persistent (diagnosed 2017)\n5. Hypertension (diagnosed 2005)\n6. Hyperlipidemia (diagnosed 2008)\n7. Benign Prostatic Hyperplasia (diagnosed 2016)\n8. History of pneumonia (2021)",
-  "medications": "See medication list in chart.",
-  "allergies": "Penicillin (anaphylaxis), Sulfa drugs (rash), Lisinopril (angioedema), Shellfish (hives)",
-  "socialHistory": "Former smoker (quit 1995, 20 pack-year history). Rare alcohol use. Retired accountant. Lives with wife.",
-  "familyHistory": "Father: MI at 62, HTN. Mother: T2DM. Brother: HTN.",
+  "chiefComplaint": "Chest tightness and dyspnea",
+  "hpi": "68-year-old male with history of HFrEF (EF 30-35%), persistent atrial fibrillation on warfarin, CKD Stage 3b, Type 2 DM on insulin, and diabetic neuropathy who presents to the ED with 4 days of progressive chest tightness and worsening dyspnea on exertion. Patient reports that he was in his usual state of health until approximately 4 days ago when he began noticing chest pressure and heaviness, particularly with walking from the bedroom to the kitchen. He describes the sensation as a diffuse tightness across the anterior chest, non-radiating, rated 3-4/10 in severity, lasting 5-10 minutes at a time and relieving with rest. Over the past 2 days, he has also noticed a dry, nonproductive cough that worsens when lying flat, prompting him to sleep with an extra pillow. His wife Patricia notes he has been more short of breath than usual and has been resting in his recliner more frequently.\n\nPatient reports compliance with all medications including carvedilol 12.5mg BID, Entresto 97/103mg BID, spironolactone 25mg, furosemide 40mg BID, warfarin 5mg, and insulin glargine 20 units QHS. He states he has been following his low-sodium diet, though admits to having some canned soup over the holidays. Daily weights have been stable around 99 kg per his wife's log. No fevers, no palpitations beyond his baseline irregular rhythm, no syncope or near-syncope, no leg swelling beyond his usual trace edema. Last cardiology visit was approximately 2 months ago with Dr. Wilson.",
+  "pastMedicalHistory": "1. Heart Failure with Reduced Ejection Fraction, EF 30-35% (diagnosed January 2019, last echo September 2020)\n2. Type 2 Diabetes Mellitus with peripheral neuropathy (diagnosed 2010)\n3. Chronic Kidney Disease Stage 3b, likely diabetic/hypertensive nephrosclerosis (diagnosed 2018)\n4. Atrial Fibrillation, persistent, on warfarin (diagnosed 2017)\n5. Hypertension (diagnosed 2005)\n6. Hyperlipidemia (diagnosed 2008)\n7. Coronary Artery Disease, 3-vessel, medically managed (catheterization October 2018)\n8. Benign Prostatic Hyperplasia (diagnosed 2016)\n9. Vitamin D deficiency (diagnosed 2019)\n10. History of gout flare, July 2019\n11. History of community-acquired pneumonia, February 2021 — NOTE: This hospitalization has not yet occurred as of this note date",
+  "medications": "1. Sacubitril/valsartan (Entresto) 97/103mg BID\n2. Carvedilol 12.5mg BID\n3. Spironolactone 25mg daily\n4. Furosemide 40mg BID\n5. Warfarin 5mg daily\n6. Insulin glargine 20 units QHS\n7. Metformin 500mg BID (renal-dosed)\n8. Atorvastatin 80mg daily\n9. Gabapentin 300mg TID\n10. Tamsulosin 0.4mg daily\n11. Vitamin D3 2000 IU daily\n12. Aspirin 81mg — held while on warfarin",
+  "allergies": "Penicillin (anaphylaxis — lip/tongue swelling, required epinephrine), Sulfa drugs (rash/hives), Lisinopril (angioedema — August 2018), Shellfish (hives)",
+  "socialHistory": "Former smoker — quit 1995, 20 pack-year history (1 PPD x 20 years, age 23-43). Rare alcohol use, approximately 1 glass of wine per month at social gatherings. No illicit drug use. Retired accountant from Springfield Financial Services after 35 years. Lives with wife Patricia in single-story home. Wife manages his medications and daily weight log. Two adult children, one son and one daughter, both live within 30 minutes. Active in local church community. Uses shower chair. Independent in most ADLs though wife assists with medication management.",
+  "familyHistory": "Father: MI at age 62, hypertension, deceased age 74 from stroke. Mother: Type 2 DM onset age 55, deceased age 82 from complications of diabetes. Brother: Hypertension, alive age 70. Sister: Type 2 DM onset age 58, alive age 66.",
   "reviewOfSystems": {
-    "Constitutional": "Reports fatigue",
-    "Cardiovascular": "No orthopnea",
-    "Respiratory": "No hemoptysis",
-    "GI": "Regular bowel movements",
-    "GU": "No dysuria",
-    "Neurologic": "Baseline neuropathy"
+    "Constitutional": "Reports fatigue and generalized weakness over the past week. No fevers, chills, or night sweats. Weight stable per home log at 99-100 kg.",
+    "Cardiovascular": "Chest tightness as described in HPI. Baseline dyspnea on exertion, now occurring at shorter distances. New 2-pillow orthopnea over past 2 days. No PND. No palpitations beyond baseline irregular rhythm. No syncope or presyncope.",
+    "Respiratory": "New dry cough, worse supine. No hemoptysis. No wheezing.",
+    "GI": "Appetite slightly decreased over past few days. Regular bowel movements. No nausea, vomiting, abdominal pain, melena, or hematochezia.",
+    "GU": "Nocturia x2-3 (baseline). No dysuria, hematuria, or urinary retention.",
+    "Musculoskeletal": "No joint pain or swelling. No muscle cramps.",
+    "Neurologic": "Baseline bilateral foot numbness and tingling from diabetic neuropathy. No new weakness, no dizziness, no focal deficits.",
+    "Psychiatric": "Mood stable. Sleeping poorly due to orthopnea and nocturia.",
+    "Endocrine": "No polyuria, polydipsia. Blood sugars per home monitor running 130-180 mg/dL fasting.",
+    "Skin": "No rashes, wounds, or skin breakdown on feet per wife's daily inspection."
   },
   "vitals": {
     "bp": "140/79 mmHg",
-    "hr": "67 bpm",
+    "hr": "67 bpm (irregular)",
     "rr": "16/min",
     "temp": "97.9°F",
     "spo2": "97% RA",
-    "weight": "100.0 kg"
+    "weight": "100.0 kg",
+    "bmi": "32.1 kg/m²"
   },
   "physicalExam": {
-    "General": "Mildly fatigued-appearing",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "Irregularly irregular, no murmurs, JVP not elevated",
-    "Respiratory": "Mild crackles at bases",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "1+ pedal edema bilaterally",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Alert, oriented to person/place/time/situation. Mildly fatigued-appearing but in no acute respiratory distress. Speaking in full sentences. Sitting upright in bed.",
+    "HEENT": "Normocephalic, atraumatic. PERRL, 3mm bilaterally. Conjunctivae pink, sclera anicteric. Oropharynx clear, moist mucous membranes. No JVD appreciated with patient at 45 degrees — JVP estimated at 7-8 cm H2O.",
+    "Cardiovascular": "Irregularly irregular rhythm consistent with atrial fibrillation, rate approximately 67 bpm. Normal S1, physiologically split S2. No S3 or S4 appreciated. Grade 2/6 holosystolic murmur at apex radiating to axilla (known mitral regurgitation). No rubs. PMI displaced laterally to anterior axillary line.",
+    "Respiratory": "Symmetric chest expansion. Mild bibasilar crackles in the lower one-third of lung fields bilaterally, right greater than left. No wheezes, rhonchi, or pleural rub. No accessory muscle use.",
+    "Abdomen": "Soft, non-tender, non-distended. Active bowel sounds in all 4 quadrants. No hepatomegaly or hepatojugular reflux. No ascites by percussion.",
+    "Extremities": "1+ pitting edema bilateral ankles and lower shins, symmetric. No calf tenderness or erythema. Dorsalis pedis pulses 1+ bilaterally. Skin warm, no cyanosis. Monofilament sensation absent bilateral plantar surfaces consistent with known neuropathy.",
+    "Neurologic": "Alert and oriented x4. Cranial nerves II-XII grossly intact. Motor strength 5/5 upper extremities, 4+/5 bilateral lower extremities (baseline deconditioning). Decreased light touch and vibratory sensation bilateral feet to mid-shin level. Gait not assessed in ED."
   },
+  "diagnostics": "ECG: Atrial fibrillation, ventricular rate 68, left axis deviation, LVH by voltage criteria, old inferior Q waves (leads II, III, aVF — known from prior), no acute ST-T wave changes, no new T-wave inversions. QTc 448 ms.\n\nCXR (portable AP): Stable cardiomegaly. Mild pulmonary vascular congestion. No focal consolidation. No pleural effusions. No pneumothorax.\n\nLabs: Troponin I <0.03 (normal), BNP 510 (mildly elevated from baseline ~440), Cr 1.90 (baseline), K 4.7, Na 136, Glucose 172, INR 2.2 (therapeutic), CBC unremarkable, Hgb 11.4.",
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
+      "diagnosis": "Heart Failure with Reduced Ejection Fraction, NYHA Class II",
+      "icd10": "I50.22",
+      "notes": "Presenting with subacute worsening of dyspnea on exertion and new orthopnea over 4 days. BNP mildly elevated at 510 from baseline ~440. Exam shows bibasilar crackles and 1+ peripheral edema. CXR with mild vascular congestion but no effusions. Troponin negative, ruling out acute coronary syndrome as precipitant. Weight up approximately 2 kg from dry weight of 98 kg. Most likely represents mild volume overload, possibly related to holiday dietary indiscretion (sodium). Currently on appropriate GDMT: Entresto at target dose, carvedilol 12.5mg BID (submaximal — target 25mg BID), spironolactone 25mg, furosemide 40mg BID. Not yet meeting criteria for admission — will attempt outpatient diuresis with close follow-up."
+    },
+    {
+      "diagnosis": "Type 2 Diabetes Mellitus with diabetic neuropathy",
       "icd10": "E11.65",
-      "notes": "HbA1c 8.5%. On insulin and metformin."
+      "notes": "Last HbA1c 7.6% (December 2020), improved from prior. On insulin glargine 20 units QHS and metformin 500mg BID (renally dosed). Home glucoses 130-180 fasting — reasonable control. Neuropathy stable on gabapentin 300mg TID."
     },
     {
       "diagnosis": "Chronic Kidney Disease Stage 3b",
       "icd10": "N18.32",
-      "notes": "eGFR 36. Stable."
+      "notes": "Cr 1.90 today, eGFR approximately 37 — at baseline. No acute kidney injury. Monitoring closely given diuretic use and RAAS blockade."
     },
     {
-      "diagnosis": "Heart Failure with Reduced EF",
-      "icd10": "I50.22",
-      "notes": "NYHA Class II. On GDMT."
-    },
-    {
-      "diagnosis": "Atrial Fibrillation",
+      "diagnosis": "Atrial Fibrillation, persistent",
       "icd10": "I48.1",
-      "notes": "Rate controlled. On anticoagulation."
+      "notes": "Rate controlled on carvedilol, ventricular rate 67. On warfarin, INR 2.2 (therapeutic). CHA2DS2-VASc 4. No acute arrhythmia concerns."
     }
   ],
   "plan": [
     {
+      "problem": "Heart Failure — mild decompensation",
+      "action": "Patient not in respiratory distress and SpO2 97% on RA — safe for discharge with outpatient management. Increase furosemide from 40mg BID to 60mg BID for the next 5 days, then reassess. Strict sodium restriction <2g/day reinforced. Fluid restriction 1.5L/day. Daily weights — call PCP or return to ED if weight increases >2 lbs/day or >5 lbs/week. Elevate legs when seated. Continue all other HF medications at current doses. Follow up with PCP Dr. Chen within 5-7 days and Cardiology Dr. Wilson within 2 weeks."
+    },
+    {
       "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "action": "Continue insulin glargine 20 units QHS and metformin 500mg BID. Home glucose monitoring — target fasting 80-130 mg/dL. Recheck HbA1c at next PCP visit."
     },
     {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
-    },
-    {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
+      "problem": "CKD Stage 3b",
+      "action": "Cr stable at baseline. Monitor renal function with BMP in 5-7 days given furosemide increase. Avoid NSAIDs — patient counseled. Avoid IV contrast unless absolutely necessary."
     },
     {
       "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "action": "Continue warfarin 5mg daily. INR therapeutic at 2.2. Next INR check at PCP visit. Rate control adequate on carvedilol."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 9 weeks or sooner if needed."
+      "action": "PCP (Dr. Chen) in 5-7 days with BMP. Cardiology (Dr. Wilson) in 2 weeks. Return to ED if worsening dyspnea, orthopnea, weight gain >3 lbs, chest pain, lightheadedness, or syncopal symptoms."
     }
   ],
-  "attestation": "I have personally evaluated this patient and agree with the documentation above.\n\nElectronically signed by: Dr. Emily Brown\nDate: 1/10/2021"
+  "attestation": "I have personally evaluated this patient, reviewed all diagnostic studies, and agree with the documentation above.\n\nElectronically signed by: Dr. Emily Brown\nDate: 1/10/2021"
 }

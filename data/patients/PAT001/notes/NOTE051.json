@@ -6,14 +6,18 @@
   "department": "Emergency Medicine",
   "encounter": "ENC034",
   "chiefComplaint": "Annual wellness visit",
-  "hpi": "Patient presents for annual wellness visit. Presents with mild worsening of baseline symptoms. Reports increased fatigue over the past week.",
+  "hpi": "Mr. Morrison is a 71-year-old male with HFrEF (EF 30-35%), CKD Stage 3b, Type 2 DM on insulin, persistent atrial fibrillation (anticoagulation discontinued September 2023 after upper GI hemorrhage), diabetic peripheral neuropathy, HTN, hyperlipidemia, obesity, and BPH who presents for his annual wellness visit and chronic disease management. He reports mild worsening of his baseline fatigue over the past week, which he attributes to poor sleep from nocturia and neuropathic pain at night. He denies any recurrence of melena or dark stools since his GI bleed hospitalization in September 2023, and states he has been compliant with his pantoprazole 40mg daily. His wife Patricia notes that he has been less interested in his usual activities, including watching his grandchildren and attending church, though he denies feeling depressed. He reports his dyspnea on exertion is at his usual baseline — he can walk about one to one and a half blocks before needing to rest. He denies orthopnea, PND, chest pain, palpitations, or worsening lower extremity edema. His home blood pressures have been in the 128-136/78-86 range, and his weight has been stable around 97-98 kg on his home scale. He has been adherent to his low-sodium diet over the holidays with his wife's help, though he admits to some dietary indiscretions at a family gathering last weekend.",
   "reviewOfSystems": {
-    "Constitutional": "No fever, chills, or weight loss",
-    "Cardiovascular": "Dyspnea on exertion at baseline",
-    "Respiratory": "No hemoptysis",
-    "GI": "Appetite fair",
-    "GU": "No dysuria",
-    "Neurologic": "No dizziness"
+    "Constitutional": "Increased fatigue over the past week, disrupted sleep from nocturia and neuropathic pain. No fevers, chills, rigors, or unintentional weight loss. Appetite fair but mildly decreased compared to usual",
+    "Cardiovascular": "Dyspnea on exertion at baseline (1-1.5 blocks), no chest pain, no palpitations, no orthopnea, no PND, no syncope or presyncope",
+    "Respiratory": "No cough, no wheezing, no hemoptysis, no dyspnea at rest",
+    "GI": "No melena, no hematemesis, no abdominal pain, no nausea or vomiting. Bowel movements regular and brown. Tolerating pantoprazole without issues. Mild occasional heartburn",
+    "GU": "Nocturia x2-3 (BPH baseline), weak stream, no dysuria, no hematuria, no urinary retention",
+    "Musculoskeletal": "Bilateral knee discomfort 3/10, managed with acetaminophen. No new joint pain or swelling",
+    "Neurologic": "Bilateral foot numbness and tingling at baseline, worse at night. No falls. No new weakness, no dizziness",
+    "Integumentary": "No rashes, no skin breakdown on feet. Wife inspects feet daily",
+    "Endocrine": "Fasting blood sugars 130-170 per home glucometer. No hypoglycemic episodes. Insulin glargine 24 units QHS",
+    "Psychiatric": "Wife notes decreased interest in activities. Patient says mood is 'okay.' Sleep disrupted but denies persistent sadness or hopelessness"
   },
   "vitals": {
     "bp": "131/89 mmHg",
@@ -24,46 +28,66 @@
     "weight": "97.4 kg"
   },
   "physicalExam": {
-    "General": "Comfortable, well-appearing",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "Irregularly irregular, no murmurs, JVP not elevated",
-    "Respiratory": "Clear to auscultation bilaterally",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "1+ pedal edema bilaterally",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Obese male appearing stated age, mildly fatigued-appearing but alert, cooperative, and conversant. No acute distress. Wife present at bedside and participating in visit",
+    "HEENT": "Normocephalic, atraumatic. PERRL, EOMI. Oropharynx clear with moist mucous membranes. No cervical or supraclavicular lymphadenopathy. Fundoscopic exam deferred — patient due for ophthalmology follow-up",
+    "Cardiovascular": "Irregularly irregular rhythm at 72 bpm consistent with atrial fibrillation. S1/S2 present. 2/6 holosystolic murmur best heard at apex radiating to axilla (known mitral regurgitation). No S3 or S4 appreciated today. JVP estimated at 7-8 cm H2O, not elevated. No carotid bruits",
+    "Respiratory": "Clear to auscultation bilaterally. No crackles, wheezes, or rhonchi. Good bilateral air movement. No accessory muscle use",
+    "Abdomen": "Obese, soft, non-tender, non-distended. No hepatomegaly by percussion. Normal active bowel sounds in all quadrants. No epigastric tenderness (reassuring given GI bleed history)",
+    "Extremities": "1+ pitting pedal edema bilaterally, symmetric, at ankle level. Warm and well-perfused. Dorsalis pedis pulses 1+ bilaterally. No skin breakdown, no ulcers on foot exam. Toenails thickened bilaterally",
+    "Neurologic": "Alert and oriented x3. Cranial nerves II-XII grossly intact. Decreased sensation to light touch and monofilament bilaterally in stocking distribution to mid-calf. Vibration sense decreased at bilateral great toes. Deep tendon reflexes 1+ at ankles bilaterally. Gait mildly wide-based but steady",
+    "Psychiatric": "Affect slightly flat but appropriate. Engaged in conversation. No psychomotor retardation. Denies SI"
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
+      "diagnosis": "Type 2 Diabetes Mellitus with diabetic CKD and neuropathy",
       "icd10": "E11.65",
-      "notes": "HbA1c 8.0%. On insulin and metformin."
+      "notes": "HbA1c 8.0%, trending up from 7.6% in December 2023 labs. Suboptimal glycemic control likely multifactorial — holiday dietary indiscretions, possible carvedilol effect on glucose metabolism, and CKD limiting metformin dosing to 250mg BID. On insulin glargine 24 units QHS. Neuropathy symptoms stable on gabapentin 300mg TID. Annual podiatry and ophthalmology visits due. Cardiorenal benefits of SGLT2 inhibitor (empagliflozin) have been discussed by cardiology and nephrology — patient has been deferring but both services recommend starting."
     },
     {
       "diagnosis": "Chronic Kidney Disease Stage 3b",
       "icd10": "N18.32",
-      "notes": "eGFR 33. Stable."
+      "notes": "Cr 1.96, eGFR 35.8. Trending slowly from eGFR 37-38 range two years ago. Rate of decline approximately 2 mL/min/year. On sodium bicarbonate 650mg BID for metabolic acidosis. UACR 180 at last check (A2 category). Nephrology following q6 months. Current medications appropriately renally dosed. Avoiding nephrotoxins — patient reminded to avoid NSAIDs (particularly important given his prior GI bleed was precipitated by ibuprofen use)."
+    },
+    {
+      "diagnosis": "Heart Failure with Reduced EF",
+      "icd10": "I50.22",
+      "notes": "EF 30-35% on most recent echo (September 2020). NYHA Class II, clinically stable today with 1+ edema and no pulmonary congestion. On Entresto 97/103mg BID, carvedilol 18.75mg BID (recently uptitrated from 12.5mg, target 25mg BID), spironolactone 25mg daily, furosemide 60mg BID. Quadruple GDMT not yet complete — lacking SGLT2 inhibitor. ICD discussion has been ongoing since late 2022 — patient continues to defer, wants to discuss further with family."
+    },
+    {
+      "diagnosis": "Atrial Fibrillation without anticoagulation",
+      "icd10": "I48.1",
+      "notes": "Persistent A-fib, rate controlled today at HR 72. CHA2DS2-VASc score 5. Warfarin permanently discontinued September 2023 after upper GI hemorrhage with gastric ulcer (Forrest IIa). Decision made jointly by GI, cardiology, and PCP with documentation by all three services. Currently on aspirin 81mg daily for modest stroke risk reduction and pantoprazole 40mg daily for GI protection. Patient and wife counseled on stroke warning signs at discharge and again today — can verbalize symptoms requiring emergent evaluation (sudden facial droop, arm weakness, speech difficulty)."
+    },
+    {
+      "diagnosis": "Possible early depression",
+      "icd10": "F32.9",
+      "notes": "Wife reports decreased interest in usual activities over past several weeks. PHQ-2 today: 2/6 (subthreshold but concerning in context). Likely related to functional decline, chronic illness burden, and lifestyle limitations. Will monitor closely and screen with PHQ-9 at next visit."
     }
   ],
   "plan": [
     {
       "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "action": "HbA1c 8.0% — above goal of <7.5%. Continue insulin glargine 24 units QHS and metformin 250mg BID. Consider increasing glargine to 26 units QHS if fasting glucoses remain >140 over the next 2 weeks — wife will keep log. Reinforce dietary counseling around the holidays. Recheck HbA1c in 3 months. Annual diabetic foot exam today — decreased monofilament sensation bilateral feet, no ulcers, refer to podiatry for nail care and custom orthotics. Ophthalmology follow-up for mild NPDR surveillance — confirm appointment scheduled."
     },
     {
       "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "action": "eGFR 35.8, stable decline. Continue sodium bicarbonate 650mg BID — last bicarb was 24 (improved from 22). Continue vitamin D3 2000 IU daily. Recheck BMP, phosphorus, PTH, and UACR with next labs. Nephrology follow-up in March 2024. Continue avoiding nephrotoxins — patient counseled again about NSAIDs (precipitated his GI bleed). Renal dietitian referral was placed by nephrology — confirm patient has scheduled this."
     },
     {
       "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
+      "action": "NYHA Class II, euvolemic to mildly hypervolemic today. Continue Entresto 97/103mg BID, carvedilol 18.75mg BID (cardiology plan to uptitrate to 25mg BID at January visit), spironolactone 25mg daily, furosemide 60mg BID. Daily weights — wife monitoring, action weight >100 kg or >1.5 kg gain in 2 days. Low-sodium diet <2g/day. Fluid restriction 1.5L/day. SGLT2 inhibitor (empagliflozin) recommended by cardiology and nephrology — discussed again today. Patient says he wants to 'get through the holidays' before adding another medication. Will revisit at next visit."
     },
     {
       "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "action": "Rate controlled at HR 72 on carvedilol 18.75mg BID. No anticoagulation per multidisciplinary decision (9/2023). Continue aspirin 81mg daily. Continue pantoprazole 40mg daily indefinitely for GI protection. Reviewed stroke warning signs with patient and wife. If stroke symptoms occur, call 911 immediately."
+    },
+    {
+      "problem": "Mood / Depression screening",
+      "action": "PHQ-2 score 2/6 today. Wife's observations concerning for early depressive symptoms. Administer PHQ-9 at next visit. If PHQ-9 >= 10, discuss referral to behavioral health and/or SSRI initiation. In the interim, encourage social engagement, continued church attendance, and time with grandchildren."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 9 weeks or sooner if needed."
+      "action": "Return in 8-10 weeks for comprehensive follow-up. Labs in 4 weeks: BMP, CBC, A1c, lipid panel, UACR, PTH, phosphorus. Cardiology follow-up January 2024 for carvedilol uptitration. Nephrology March 2024. Sooner if worsening symptoms — weight gain >3 lbs, increased SOB, melena, or stroke symptoms."
     }
   ],
   "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Emily Brown\nDate: 12/16/2023"

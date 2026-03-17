@@ -1,0 +1,28 @@
+{
+  "id": "IMG004",
+  "date": "2023-05-26T06:42:05.551Z",
+  "modality": "Nuclear",
+  "description": "V/Q Scan",
+  "facility": "Springfield Medical Center",
+  "status": "Final",
+  "radiologist": "Dr. Patricia Lee",
+  "orderingProvider": "Dr. James Wilson",
+  "indication": "Acute worsening dyspnea in patient with heart failure and atrial fibrillation, evaluate for pulmonary embolism. CT angiography deferred due to CKD Stage 3b (eGFR 38).",
+  "technique": "Ventilation imaging was performed following inhalation of Tc-99m DTPA aerosol. Perfusion imaging was performed following intravenous administration of Tc-99m MAA (4 mCi) in 8 standard projections.",
+  "findings": {
+    "ventilation": "Homogeneous ventilation throughout both lungs. No focal ventilation defects. Mild central airway deposition consistent with turbulent flow.",
+    "perfusion": "Homogeneous perfusion throughout both lungs. No segmental or subsegmental perfusion defects identified. Mild heterogeneity in the bases bilaterally, likely related to dependent atelectasis and elevated hemidiaphragms.",
+    "matching": "No ventilation-perfusion mismatches identified. The mild basilar perfusion heterogeneity is matched on ventilation images.",
+    "chestXray": "Concurrent chest radiograph demonstrates cardiomegaly, mild pulmonary vascular congestion, and small bilateral pleural effusions consistent with heart failure."
+  },
+  "impression": [
+    "Low probability for pulmonary embolism. No segmental or subsegmental ventilation-perfusion mismatches identified.",
+    "Mild bilateral basilar perfusion heterogeneity is matched on ventilation images and likely reflects dependent atelectasis and pleural effusions in the setting of heart failure.",
+    "Cardiomegaly and findings of heart failure on concurrent chest radiograph."
+  ],
+  "recommendations": [
+    "Dyspnea likely related to heart failure exacerbation rather than pulmonary embolism",
+    "Consider diuretic adjustment and optimization of heart failure therapy"
+  ],
+  "comparison": "No prior V/Q scan available for comparison."
+}

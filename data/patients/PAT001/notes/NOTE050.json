@@ -5,15 +5,19 @@
   "author": "Dr. Robert Kim",
   "department": "Urology",
   "encounter": "ENC033",
-  "chiefComplaint": "Back pain",
-  "hpi": "Patient presents for back pain. Weight stable. Following low-sodium diet. Monitoring blood pressure at home.",
+  "chiefComplaint": "BPH follow-up, worsening lower urinary tract symptoms and back pain",
+  "hpi": "Mr. Morrison is a 71-year-old male with benign prostatic hyperplasia (diagnosed 2016, on tamsulosin 0.4mg daily), HFrEF (EF 30-35%), CKD 3b, Type 2 DM on insulin, persistent atrial fibrillation (off anticoagulation since September 2023 GI hemorrhage), and diabetic peripheral neuropathy who presents for urology follow-up. He reports progressive worsening of his lower urinary tract symptoms over the past 2-3 months, with nocturia increasing from baseline of 2 to now 3 times nightly, weak urinary stream, intermittent hesitancy, and a sense of incomplete emptying. He notes that the increased nocturia is particularly troublesome given his neuropathy-related balance impairment, and his wife has expressed concern about nighttime fall risk. He also reports new low back pain over the past 3 weeks, dull and aching in character, localized to the lumbar region without radiation, rated 4/10, worse with prolonged sitting and improved with position changes. He denies any hematuria, dysuria, urinary incontinence, or acute urinary retention episodes. His PSA was 2.8 ng/mL at last check (stable from 2.1 in 2016). He has been taking tamsulosin reliably at bedtime. He denies fever, chills, flank pain, or symptoms suggestive of urinary tract infection. His carvedilol was recently uptitrated to 25mg BID by cardiology, and he reports tolerating this well without orthostatic symptoms.",
   "reviewOfSystems": {
-    "Constitutional": "Reports fatigue",
-    "Cardiovascular": "No orthopnea",
-    "Respiratory": "No hemoptysis",
-    "GI": "Regular bowel movements",
-    "GU": "Nocturia x2",
-    "Neurologic": "No dizziness"
+    "Constitutional": "Reports chronic fatigue, attributed to heart failure and CKD. Weight has been stable around 98-99 kg. No fever, chills, or night sweats.",
+    "Cardiovascular": "Baseline exertional dyspnea walking approximately 1-2 blocks, unchanged. No chest pain or palpitations. No orthopnea or PND. Carvedilol recently uptitrated to 25mg BID — tolerating without dizziness.",
+    "Respiratory": "No cough, wheezing, or hemoptysis. Mild exertional dyspnea at baseline.",
+    "GI": "Regular bowel movements. No melena, hematochezia, or abdominal pain. On indefinite pantoprazole post-GI bleed. Appetite fair.",
+    "GU": "Nocturia x3 (increased from baseline x2). Weak stream and hesitancy. Sense of incomplete emptying. No dysuria, hematuria, urgency incontinence, or gross hematuria. No penile discharge.",
+    "Musculoskeletal": "New lumbar back pain as described. No joint swelling. No history of gout flare since July 2019.",
+    "Neurologic": "Chronic bilateral foot numbness and tingling from diabetic neuropathy, managed with gabapentin 300mg TID. Pain 4/10, stable. No new focal deficits or radiculopathy.",
+    "Psychiatric": "Mood fair. Sleep disrupted by nocturia. No depression screening performed at this visit.",
+    "Endocrine": "Blood sugars reasonably controlled per patient report. No hypoglycemic episodes. A1c 7.6% at last check (December 2023).",
+    "Skin": "No rashes, bruising, or skin breakdown. No scrotal swelling."
   },
   "vitals": {
     "bp": "141/88 mmHg",
@@ -24,57 +28,69 @@
     "weight": "99.8 kg"
   },
   "physicalExam": {
-    "General": "Alert, oriented, no acute distress",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "Regular rate and rhythm, no murmurs",
-    "Respiratory": "Clear to auscultation bilaterally",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "No edema, warm and well-perfused",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Obese male appearing stated age, alert and comfortable at rest, in no acute distress. BMI approximately 33.",
+    "HEENT": "Normocephalic, atraumatic. Pupils equal, round, reactive to light. Oropharynx clear, mucous membranes moist.",
+    "Cardiovascular": "Irregularly irregular rhythm consistent with atrial fibrillation, rate controlled at 68 bpm. S1 normal, S2 physiologically split. Soft 2/6 systolic murmur at apex (known MR). No S3 or S4. JVP estimated at 7 cm H2O.",
+    "Respiratory": "Clear to auscultation bilaterally. No crackles, wheezes, or rhonchi. No accessory muscle use.",
+    "Abdomen": "Soft, obese, non-tender, non-distended. No suprapubic fullness or tenderness. Bowel sounds normoactive. No costovertebral angle tenderness bilaterally.",
+    "GU": "External genitalia normal. No inguinal hernias. Digital rectal exam: prostate moderately enlarged, estimated 40-50 grams, smooth, symmetric, no nodules, no tenderness. Rectal tone normal.",
+    "Extremities": "No lower extremity edema today. Warm, well-perfused. Distal pulses 1+ bilaterally. No calf tenderness.",
+    "Musculoskeletal": "Lumbar spine: mild tenderness to palpation at L4-L5 paraspinal muscles bilaterally. No midline tenderness. Full range of motion with mild discomfort at end-range flexion. Negative straight leg raise bilaterally. No SI joint tenderness.",
+    "Neurologic": "Alert and oriented x3. Motor strength 5/5 upper and lower extremities. Decreased sensation to light touch and 10g monofilament bilateral feet to mid-ankle. Ankle reflexes absent bilaterally. Patellar reflexes 1+ bilaterally. Gait steady but cautious, no assistive device."
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
-      "icd10": "E11.65",
-      "notes": "HbA1c 7.5%. On insulin and metformin."
+      "diagnosis": "Benign Prostatic Hyperplasia with worsening LUTS",
+      "icd10": "N40.1",
+      "notes": "AUA Symptom Score estimated at 16-18 (moderate-severe range, up from 12 at diagnosis in 2016). Progressive worsening on tamsulosin 0.4mg monotherapy over the past 8 years. Prostate moderately enlarged at 40-50g on DRE, smooth without nodularity. PSA 2.8 (stable, age-appropriate). The increasing nocturia is particularly concerning given his diabetic neuropathy and recent September 2025 fall history — nighttime trips to the bathroom represent a significant fall risk. Options include adding a 5-alpha reductase inhibitor (finasteride or dutasteride) for combined therapy, or considering minimally invasive procedures (UroLift, Rezum, TURP). However, procedural options require careful consideration given his anticoagulation status (currently off warfarin, on aspirin only), CKD, and heart failure."
     },
     {
-      "diagnosis": "Chronic Kidney Disease Stage 3b",
-      "icd10": "N18.32",
-      "notes": "eGFR 42. Stable."
+      "diagnosis": "Chronic low back pain, likely mechanical/degenerative",
+      "icd10": "M54.5",
+      "notes": "New complaint of lumbar back pain, 3 weeks duration, non-radiating, without red flags. Exam consistent with musculoskeletal etiology — paraspinal muscle tenderness, no radiculopathy signs, negative SLR. Prior imaging (KUB January 2023) showed mild degenerative changes of lumbar spine. Important to note NSAIDs are contraindicated in this patient due to CKD, HFrEF, and history of GI hemorrhage. Limited analgesic options."
     },
     {
       "diagnosis": "Heart Failure with Reduced EF",
       "icd10": "I50.22",
-      "notes": "NYHA Class II. On GDMT."
+      "notes": "NYHA Class II, stable. Currently on carvedilol 25mg BID (recently achieved target dose), sacubitril/valsartan 97/103mg BID, spironolactone 25mg, furosemide 60mg AM/40mg PM. Cardiology has been discussing adding SGLT2 inhibitor. Volume status appears well-compensated today — no edema, lungs clear."
     },
     {
-      "diagnosis": "Atrial Fibrillation",
+      "diagnosis": "Persistent Atrial Fibrillation — not anticoagulated",
       "icd10": "I48.1",
-      "notes": "Rate controlled. On anticoagulation."
+      "notes": "Rate controlled on carvedilol. Warfarin permanently discontinued September 2023 after upper GI hemorrhage (gastric ulcer, Forrest IIa) per multidisciplinary decision. CHA2DS2-VASc score 5. On aspirin 81mg daily for modest stroke risk reduction. Indefinite PPI for gastroprotection."
+    },
+    {
+      "diagnosis": "Chronic Kidney Disease Stage 3b",
+      "icd10": "N18.32",
+      "notes": "eGFR approximately 36, Cr 1.95 at last check (December 2023). Nephrology consult planned for March 2024. Relevant to urology management — must avoid nephrotoxic contrast if imaging needed, and renal dosing considerations for any new medications."
+    },
+    {
+      "diagnosis": "Type 2 Diabetes Mellitus with neuropathy",
+      "icd10": "E11.65",
+      "notes": "A1c 7.6% (December 2023). On metformin 500mg BID (renally dosed), insulin glargine 24 units QHS, sliding scale lispro. Diabetic neuropathy contributing to fall risk and complicating BPH management (nocturia + impaired balance)."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "problem": "BPH with worsening LUTS",
+      "action": "AUA symptom score progressing on tamsulosin monotherapy. Plan to add finasteride 5mg daily for combination alpha-blocker/5-ARI therapy — prostate size 40-50g makes this appropriate per AUA guidelines. Counseled patient that finasteride takes 6-12 months for maximum benefit, may reduce prostate volume by 20-25%, and has potential side effects including decreased libido and ejaculatory dysfunction. Will reduce PSA by approximately 50% — must double future PSA values for cancer screening interpretation. Continue tamsulosin 0.4mg at bedtime. Advised timed voiding before bed and limiting evening fluid intake (within existing HF fluid restriction). Formal uroflow and post-void residual to be performed at next visit. If symptoms do not improve with combination therapy in 6-12 months, will discuss minimally invasive surgical options."
     },
     {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "problem": "Low back pain",
+      "action": "Mechanical low back pain without red flags. NSAIDs are absolutely contraindicated (CKD 3b, HFrEF, history of GI hemorrhage on prior NSAID use). Recommend acetaminophen 500mg q6h PRN (max 2g/day given liver considerations with hepatic steatosis noted on CT). Heat application, gentle stretching exercises. If not improving in 4-6 weeks, consider physical therapy referral. No imaging indicated at this time given absence of neurological deficits or red flag symptoms."
     },
     {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
+      "problem": "Fall risk from nocturia",
+      "action": "Increasing nocturia combined with diabetic neuropathy creates significant fall risk, especially at night. Patient had a fall in September. Reinforced environmental safety: nightlights along path to bathroom, remove throw rugs, clear obstacles. Recommend bedside urinal for nighttime use to avoid ambulation. Patient receptive to this suggestion. Coordinating with PCP regarding fall prevention strategies."
     },
     {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "problem": "Atrial Fibrillation — not anticoagulated",
+      "action": "Rate controlled. No anticoagulation per multidisciplinary decision post-GI bleed September 2023. Continue aspirin 81mg daily and pantoprazole 40mg daily. No urological procedures planned that would require anticoagulation bridging considerations at this time."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 11 weeks or sooner if needed."
+      "action": "Return in 3 months for reassessment of LUTS on combination therapy. Bring voiding diary (3-day). Will perform uroflow and post-void residual at that visit. PSA to be rechecked in 6 months (note finasteride effect on PSA). Labs: BMP before next visit to monitor renal function. Coordinate with PCP and nephrology."
     }
   ],
-  "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Robert Kim\nDate: 1/12/2024"
+  "attestation": "I personally saw and examined the patient. I performed a digital rectal examination and reviewed the relevant laboratory data and medication list. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Robert Kim, MD\nDate: 1/12/2024"
 }

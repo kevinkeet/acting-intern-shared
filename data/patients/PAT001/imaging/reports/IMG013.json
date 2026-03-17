@@ -1,0 +1,35 @@
+{
+  "id": "IMG013",
+  "date": "2020-10-25T17:08:51.616Z",
+  "modality": "CT",
+  "description": "CT Head without Contrast",
+  "facility": "Springfield Medical Center",
+  "status": "Final",
+  "radiologist": "Dr. Patricia Lee",
+  "orderingProvider": "Dr. Sarah Chen",
+  "indication": "Transient episode of right-sided weakness and word-finding difficulty, evaluate for acute intracranial hemorrhage or mass lesion. Patient on anticoagulation for atrial fibrillation.",
+  "technique": "Non-contrast helical CT of the head was performed with 5 mm axial sections from the skull base to the vertex.",
+  "findings": {
+    "parenchyma": "No acute intracranial hemorrhage. No acute territorial infarct identified. Chronic small vessel ischemic changes with periventricular hypodensities. Small chronic lacunar infarct in the left basal ganglia, measuring approximately 5 mm.",
+    "ventricles": "Lateral ventricles are mildly prominent, likely representing ex vacuo changes related to generalized volume loss. No hydrocephalus. Third and fourth ventricles are normal in size.",
+    "extraAxial": "No epidural or subdural hematoma. No subarachnoid hemorrhage.",
+    "midlineShift": "No midline shift.",
+    "posteriorFossa": "Cerebellum and brainstem appear unremarkable.",
+    "calvarium": "No calvarial fracture.",
+    "sinuses": "Mucosal thickening in the bilateral maxillary sinuses. Remaining paranasal sinuses and mastoid air cells are clear.",
+    "orbits": "Unremarkable."
+  },
+  "impression": [
+    "No acute intracranial hemorrhage or large territorial infarct.",
+    "No midline shift or mass effect.",
+    "Chronic small vessel ischemic disease with periventricular white matter hypodensities.",
+    "Small chronic lacunar infarct in the left basal ganglia.",
+    "Mild generalized cerebral volume loss consistent with age.",
+    "Paranasal sinus disease."
+  ],
+  "recommendations": [
+    "If clinical concern for acute ischemic stroke persists, MRI with diffusion-weighted imaging is recommended for further evaluation",
+    "Continue anticoagulation for atrial fibrillation"
+  ],
+  "comparison": "No prior CT head available for comparison."
+}

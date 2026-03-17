@@ -1,46 +1,6 @@
 {
   "notes": [
     {
-      "id": "NOTE_NEPH001",
-      "type": "Consult Note",
-      "title": "Nephrology Consultation - CKD Stage 3b Management",
-      "date": "2024-03-20T14:00:00.000Z",
-      "author": "Dr. Michael Torres",
-      "department": "Nephrology",
-      "encounter": "ENC_NEPH001",
-      "preview": "Chronic kidney disease stage 3b management, proteinuria evaluation, medication optimization. CKD likely secondary to diabetic nephropathy and hypertensive nephrosclerosis..."
-    },
-    {
-      "id": "NOTE_CARD001",
-      "type": "Consult Note",
-      "title": "Cardiology Consultation - Heart Failure Management",
-      "date": "2023-11-15T10:30:00.000Z",
-      "author": "Dr. James Wilson",
-      "department": "Cardiology",
-      "encounter": "ENC_CARD001",
-      "preview": "Heart failure management, optimization of guideline-directed medical therapy. NYHA Class II. Discussing ICD for primary prevention..."
-    },
-    {
-      "id": "NOTE_DC001",
-      "type": "Discharge Summary",
-      "title": "Discharge Summary - CHF Exacerbation",
-      "date": "2022-08-19T11:30:00.000Z",
-      "author": "Dr. Emily Brown",
-      "department": "Hospital Medicine",
-      "encounter": "ENC_ADM001",
-      "preview": "4-day hospitalization for acute decompensated heart failure triggered by diuretic non-compliance. Discharged on increased furosemide with close follow-up..."
-    },
-    {
-      "id": "NOTE_HP001",
-      "type": "H&P",
-      "title": "Hospital Admission H&P - CHF Exacerbation",
-      "date": "2022-08-15T14:30:00.000Z",
-      "author": "Dr. Emily Brown",
-      "department": "Hospital Medicine",
-      "encounter": "ENC_ADM001",
-      "preview": "72-year-old male with HFrEF, T2DM, CKD3b, atrial fibrillation presenting with acute decompensated heart failure. Dyspnea, orthopnea, bilateral LE edema. Triggered by missed furosemide doses..."
-    },
-    {
       "id": "NOTE001",
       "type": "Telephone Encounter",
       "date": "2026-02-05T16:22:18.416Z",
@@ -57,6 +17,16 @@
       "department": "Endocrinology",
       "encounter": "ENC002",
       "preview": "Patient presents for leg swelling. Reports overall stable condition since last visit. Compliant with..."
+    },
+    {
+      "id": "NOTE_BEHAV001",
+      "type": "Consult Note",
+      "title": "Behavioral Health/Social Work Intake Assessment",
+      "date": "2026-01-20T14:00:00.000Z",
+      "author": "Lisa Park, LCSW",
+      "department": "Behavioral Health",
+      "encounter": "ENC_BEHAV001",
+      "preview": "Referred by Dr. Sarah Chen (PCP) for evaluation of depressive symptoms. PHQ-9 score of 8 (mild depression) on annual wellness screening questionnaire ..."
     },
     {
       "id": "NOTE003",
@@ -95,31 +65,13 @@
       "preview": "Patient called regarding symptom update.\n\nPatient reports mild increase in leg swelling. Advised to ..."
     },
     {
-      "id": "NOTE007",
-      "type": "H&P",
-      "date": "2025-09-14T15:22:18.416Z",
-      "author": "Dr. James Wilson",
-      "department": "Cardiology",
-      "encounter": "ENC007",
-      "preview": "72-year-old male with history of Type 2 Diabetes Mellitus, CKD Stage 3b, HFrEF (EF 35%), and atrial ..."
-    },
-    {
-      "id": "NOTE008",
+      "id": "NOTE011",
       "type": "Progress Note",
-      "date": "2025-09-15T15:22:18.416Z",
+      "date": "2025-09-18T15:22:18.416Z",
       "author": "Dr. James Wilson",
       "department": "Cardiology",
       "encounter": "ENC007",
-      "preview": "Patient presents for shortness of breath. Doing well on current regimen. Blood sugars well-controlle..."
-    },
-    {
-      "id": "NOTE009",
-      "type": "Progress Note",
-      "date": "2025-09-16T15:22:18.416Z",
-      "author": "Dr. James Wilson",
-      "department": "Cardiology",
-      "encounter": "ENC007",
-      "preview": "Patient presents for weight gain. Reports overall stable condition since last visit. Compliant with ..."
+      "preview": "Patient presents for dizziness. Reports overall stable condition since last visit. Compliant with me..."
     },
     {
       "id": "NOTE010",
@@ -131,31 +83,40 @@
       "preview": "Patient presents for dizziness. Reports some shortness of breath with exertion, at baseline. No ches..."
     },
     {
-      "id": "NOTE011",
+      "id": "NOTE009",
       "type": "Progress Note",
-      "date": "2025-09-18T15:22:18.416Z",
+      "date": "2025-09-16T15:22:18.416Z",
       "author": "Dr. James Wilson",
       "department": "Cardiology",
       "encounter": "ENC007",
-      "preview": "Patient presents for dizziness. Reports overall stable condition since last visit. Compliant with me..."
+      "preview": "Patient presents for weight gain. Reports overall stable condition since last visit. Compliant with ..."
     },
     {
-      "id": "NOTE012",
-      "type": "Discharge Summary",
-      "date": "2025-09-10T15:22:18.416Z",
-      "author": "Dr. Sarah Chen",
-      "department": "Primary Care",
-      "encounter": "ENC008",
-      "preview": "Community-acquired pneumonia..."
-    },
-    {
-      "id": "NOTE013",
+      "id": "NOTE008",
       "type": "Progress Note",
-      "date": "2025-09-11T15:22:18.416Z",
+      "date": "2025-09-15T15:22:18.416Z",
+      "author": "Dr. James Wilson",
+      "department": "Cardiology",
+      "encounter": "ENC007",
+      "preview": "Patient presents for shortness of breath. Doing well on current regimen. Blood sugars well-controlle..."
+    },
+    {
+      "id": "NOTE007",
+      "type": "H&P",
+      "date": "2025-09-14T15:22:18.416Z",
+      "author": "Dr. James Wilson",
+      "department": "Cardiology",
+      "encounter": "ENC007",
+      "preview": "72-year-old male with history of Type 2 Diabetes Mellitus, CKD Stage 3b, HFrEF (EF 35%), and atrial ..."
+    },
+    {
+      "id": "NOTE015",
+      "type": "Progress Note",
+      "date": "2025-09-13T15:22:18.416Z",
       "author": "Dr. Sarah Chen",
       "department": "Primary Care",
       "encounter": "ENC008",
-      "preview": "Patient presents for routine follow-up. Presents with mild worsening of baseline symptoms. Reports i..."
+      "preview": "Patient presents for fatigue. Reports overall stable condition since last visit. Compliant with medi..."
     },
     {
       "id": "NOTE014",
@@ -167,13 +128,22 @@
       "preview": "Patient presents for routine follow-up. Presents with mild worsening of baseline symptoms. Reports i..."
     },
     {
-      "id": "NOTE015",
+      "id": "NOTE013",
       "type": "Progress Note",
-      "date": "2025-09-13T15:22:18.416Z",
+      "date": "2025-09-11T15:22:18.416Z",
       "author": "Dr. Sarah Chen",
       "department": "Primary Care",
       "encounter": "ENC008",
-      "preview": "Patient presents for fatigue. Reports overall stable condition since last visit. Compliant with medi..."
+      "preview": "Patient presents for routine follow-up. Presents with mild worsening of baseline symptoms. Reports i..."
+    },
+    {
+      "id": "NOTE012",
+      "type": "Discharge Summary",
+      "date": "2025-09-10T15:22:18.416Z",
+      "author": "Dr. Sarah Chen",
+      "department": "Primary Care",
+      "encounter": "ENC008",
+      "preview": "Community-acquired pneumonia..."
     },
     {
       "id": "NOTE016",
@@ -266,6 +236,26 @@
       "preview": "72-year-old male with history of Type 2 Diabetes Mellitus, CKD Stage 3b, HFrEF (EF 35%), and atrial ..."
     },
     {
+      "id": "NOTE_PODIATRY001",
+      "type": "Consult Note",
+      "title": "Podiatry - Annual Diabetic Foot Examination",
+      "date": "2024-12-15T10:30:00.000Z",
+      "author": "Dr. Michael Chen, DPM",
+      "department": "Podiatry",
+      "encounter": "ENC_POD001",
+      "preview": "Annual comprehensive diabetic foot examination. Known diabetic peripheral neuropathy."
+    },
+    {
+      "id": "NOTE_POD001",
+      "type": "Consult Note",
+      "title": "Podiatry - Annual Diabetic Foot Examination",
+      "date": "2024-12-15T10:00:00.000Z",
+      "author": "Dr. Michael Chen, DPM",
+      "department": "Podiatry",
+      "encounter": "ENC_POD001",
+      "preview": "Annual comprehensive diabetic foot examination. Referred by PCP Dr. Sarah Chen for routine diabetic foot surveillance and nail care."
+    },
+    {
       "id": "NOTE026",
       "type": "Progress Note",
       "date": "2024-12-13T16:22:18.416Z",
@@ -273,6 +263,16 @@
       "department": "Gastroenterology",
       "encounter": "ENC019",
       "preview": "Patient presents for urinary symptoms. Presents with mild worsening of baseline symptoms. Reports in..."
+    },
+    {
+      "id": "NOTE_OPHTH001",
+      "type": "Consult Note",
+      "title": "Ophthalmology - Annual Diabetic Eye Examination",
+      "date": "2024-12-10T14:00:00.000Z",
+      "author": "Dr. Karen Liu",
+      "department": "Ophthalmology",
+      "encounter": "ENC_OPHTH001",
+      "preview": "Annual dilated diabetic eye examination. Type 2 diabetes mellitus x 15 years with known mild nonproliferative diabetic retinopathy."
     },
     {
       "id": "NOTE027",
@@ -302,31 +302,13 @@
       "preview": "Patient presents for medication refills. Reports overall stable condition since last visit. Complian..."
     },
     {
-      "id": "NOTE030",
+      "id": "NOTE034",
       "type": "Progress Note",
-      "date": "2024-09-11T15:22:18.416Z",
+      "date": "2024-09-15T15:22:18.416Z",
       "author": "Dr. Emily Brown",
       "department": "Emergency Medicine",
       "encounter": "ENC023",
-      "preview": "Patient presents for heart failure follow-up. Reports overall stable condition since last visit. Com..."
-    },
-    {
-      "id": "NOTE031",
-      "type": "Progress Note",
-      "date": "2024-09-12T15:22:18.416Z",
-      "author": "Dr. Emily Brown",
-      "department": "Emergency Medicine",
-      "encounter": "ENC023",
-      "preview": "Patient presents for blood pressure check. Reports overall stable condition since last visit. Compli..."
-    },
-    {
-      "id": "NOTE032",
-      "type": "Progress Note",
-      "date": "2024-09-13T15:22:18.416Z",
-      "author": "Dr. Emily Brown",
-      "department": "Emergency Medicine",
-      "encounter": "ENC023",
-      "preview": "Patient presents for fatigue. Weight stable. Following low-sodium diet. Monitoring blood pressure at..."
+      "preview": "Patient presents for back pain. Weight stable. Following low-sodium diet. Monitoring blood pressure ..."
     },
     {
       "id": "NOTE033",
@@ -338,13 +320,31 @@
       "preview": "Patient presents for cough. Reports overall stable condition since last visit. Compliant with medica..."
     },
     {
-      "id": "NOTE034",
+      "id": "NOTE032",
       "type": "Progress Note",
-      "date": "2024-09-15T15:22:18.416Z",
+      "date": "2024-09-13T15:22:18.416Z",
       "author": "Dr. Emily Brown",
       "department": "Emergency Medicine",
       "encounter": "ENC023",
-      "preview": "Patient presents for back pain. Weight stable. Following low-sodium diet. Monitoring blood pressure ..."
+      "preview": "Patient presents for fatigue. Weight stable. Following low-sodium diet. Monitoring blood pressure at..."
+    },
+    {
+      "id": "NOTE031",
+      "type": "Progress Note",
+      "date": "2024-09-12T15:22:18.416Z",
+      "author": "Dr. Emily Brown",
+      "department": "Emergency Medicine",
+      "encounter": "ENC023",
+      "preview": "Patient presents for blood pressure check. Reports overall stable condition since last visit. Compli..."
+    },
+    {
+      "id": "NOTE030",
+      "type": "Progress Note",
+      "date": "2024-09-11T15:22:18.416Z",
+      "author": "Dr. Emily Brown",
+      "department": "Emergency Medicine",
+      "encounter": "ENC023",
+      "preview": "Patient presents for heart failure follow-up. Reports overall stable condition since last visit. Com..."
     },
     {
       "id": "NOTE035",
@@ -365,6 +365,16 @@
       "preview": "Patient presents for ckd management. Doing well on current regimen. Blood sugars well-controlled. No..."
     },
     {
+      "id": "NOTE_URO001",
+      "type": "Consult Note",
+      "title": "Urology Follow-up - Benign Prostatic Hyperplasia",
+      "date": "2024-07-20T09:30:00.000Z",
+      "author": "Dr. Robert Kim",
+      "department": "Urology",
+      "encounter": "ENC_URO001",
+      "preview": "Annual BPH follow-up. Established patient on tamsulosin for benign prostatic hyperplasia."
+    },
+    {
       "id": "NOTE037",
       "type": "Telephone Encounter",
       "date": "2024-06-26T15:22:18.416Z",
@@ -372,6 +382,16 @@
       "department": "Radiology",
       "encounter": "ENC026",
       "preview": "Patient called regarding prescription refill.\n\nPatient asking about lab results. Reviewed recent val..."
+    },
+    {
+      "id": "NOTE_ENDO001",
+      "type": "Consult Note",
+      "title": "Endocrinology Consultation - Diabetes Optimization",
+      "date": "2024-06-15T10:00:00.000Z",
+      "author": "Dr. Lisa Martinez",
+      "department": "Endocrinology",
+      "encounter": "ENC_ENDO001",
+      "preview": "Diabetes optimization in the context of chronic kidney disease stage 3b and heart failure with reduced ejection fraction"
     },
     {
       "id": "NOTE038",
@@ -383,6 +403,16 @@
       "preview": "Patient presents for shortness of breath. Doing well on current regimen. Blood sugars well-controlle..."
     },
     {
+      "id": "NOTE_GI003",
+      "type": "Consult Note",
+      "title": "Gastroenterology Follow-up - Second Surveillance EGD",
+      "date": "2024-04-15T09:30:00.000Z",
+      "author": "Dr. William Thompson",
+      "department": "Gastroenterology",
+      "encounter": "ENC_GI003",
+      "preview": "Second surveillance EGD, follow-up of gastric antral ulcer status post GI bleed September 2023"
+    },
+    {
       "id": "NOTE039",
       "type": "H&P",
       "date": "2024-04-08T15:22:18.416Z",
@@ -390,6 +420,26 @@
       "department": "Cardiology",
       "encounter": "ENC028",
       "preview": "72-year-old male with history of Type 2 Diabetes Mellitus, CKD Stage 3b, HFrEF (EF 35%), and atrial ..."
+    },
+    {
+      "id": "NOTE_DIET001",
+      "type": "Consult Note",
+      "title": "Nutrition/Dietitian Consultation - CKD Dietary Counseling",
+      "date": "2024-03-25T11:00:00.000Z",
+      "author": "Amanda Rodriguez, RD, CSR",
+      "department": "Nutrition Services",
+      "encounter": "ENC_DIET001",
+      "preview": "CKD stage 3b dietary counseling. Referred by Dr. Michael Torres, Nephrology, following nephrology consultation on 3/20/2024."
+    },
+    {
+      "id": "NOTE_NEPH001",
+      "type": "Consult Note",
+      "title": "Nephrology Consultation - CKD Stage 3b Management",
+      "date": "2024-03-20T14:00:00.000Z",
+      "author": "Dr. Michael Torres",
+      "department": "Nephrology",
+      "encounter": "ENC_NEPH001",
+      "preview": "Chronic kidney disease stage 3b management, proteinuria evaluation, medication optimization. CKD likely secondary to diabetic nephropathy and hypertensive nephrosclerosis..."
     },
     {
       "id": "NOTE040",
@@ -401,31 +451,13 @@
       "preview": "Patient presents for cough. Reports some shortness of breath with exertion, at baseline. No chest pa..."
     },
     {
-      "id": "NOTE041",
-      "type": "Discharge Summary",
-      "date": "2024-02-07T16:22:18.416Z",
-      "author": "Dr. Robert Kim",
-      "department": "Urology",
-      "encounter": "ENC030",
-      "preview": "Community-acquired pneumonia..."
-    },
-    {
-      "id": "NOTE042",
+      "id": "NOTE045",
       "type": "Progress Note",
-      "date": "2024-02-08T16:22:18.416Z",
+      "date": "2024-02-11T16:22:18.416Z",
       "author": "Dr. Robert Kim",
       "department": "Urology",
       "encounter": "ENC030",
-      "preview": "Patient presents for leg swelling. Reports some shortness of breath with exertion, at baseline. No c..."
-    },
-    {
-      "id": "NOTE043",
-      "type": "Progress Note",
-      "date": "2024-02-09T16:22:18.416Z",
-      "author": "Dr. Robert Kim",
-      "department": "Urology",
-      "encounter": "ENC030",
-      "preview": "Patient presents for ckd management. Doing well on current regimen. Blood sugars well-controlled. No..."
+      "preview": "Patient presents for leg swelling. Weight stable. Following low-sodium diet. Monitoring blood pressu..."
     },
     {
       "id": "NOTE044",
@@ -437,22 +469,40 @@
       "preview": "Patient presents for weight gain. Presents with mild worsening of baseline symptoms. Reports increas..."
     },
     {
-      "id": "NOTE045",
+      "id": "NOTE043",
       "type": "Progress Note",
-      "date": "2024-02-11T16:22:18.416Z",
+      "date": "2024-02-09T16:22:18.416Z",
       "author": "Dr. Robert Kim",
       "department": "Urology",
       "encounter": "ENC030",
-      "preview": "Patient presents for leg swelling. Weight stable. Following low-sodium diet. Monitoring blood pressu..."
+      "preview": "Patient presents for ckd management. Doing well on current regimen. Blood sugars well-controlled. No..."
     },
     {
-      "id": "NOTE046",
-      "type": "H&P",
-      "date": "2024-02-06T16:22:18.416Z",
+      "id": "NOTE042",
+      "type": "Progress Note",
+      "date": "2024-02-08T16:22:18.416Z",
+      "author": "Dr. Robert Kim",
+      "department": "Urology",
+      "encounter": "ENC030",
+      "preview": "Patient presents for leg swelling. Reports some shortness of breath with exertion, at baseline. No c..."
+    },
+    {
+      "id": "NOTE048",
+      "type": "Progress Note",
+      "date": "2024-02-08T16:22:18.416Z",
       "author": "Dr. James Wilson",
       "department": "Cardiology",
       "encounter": "ENC031",
-      "preview": "72-year-old male with history of Type 2 Diabetes Mellitus, CKD Stage 3b, HFrEF (EF 35%), and atrial ..."
+      "preview": "Patient presents for urinary symptoms. Weight stable. Following low-sodium diet. Monitoring blood pr..."
+    },
+    {
+      "id": "NOTE041",
+      "type": "Discharge Summary",
+      "date": "2024-02-07T16:22:18.416Z",
+      "author": "Dr. Robert Kim",
+      "department": "Urology",
+      "encounter": "ENC030",
+      "preview": "Community-acquired pneumonia..."
     },
     {
       "id": "NOTE047",
@@ -464,13 +514,13 @@
       "preview": "Patient presents for joint pain. Weight stable. Following low-sodium diet. Monitoring blood pressure..."
     },
     {
-      "id": "NOTE048",
-      "type": "Progress Note",
-      "date": "2024-02-08T16:22:18.416Z",
+      "id": "NOTE046",
+      "type": "H&P",
+      "date": "2024-02-06T16:22:18.416Z",
       "author": "Dr. James Wilson",
       "department": "Cardiology",
       "encounter": "ENC031",
-      "preview": "Patient presents for urinary symptoms. Weight stable. Following low-sodium diet. Monitoring blood pr..."
+      "preview": "72-year-old male with history of Type 2 Diabetes Mellitus, CKD Stage 3b, HFrEF (EF 35%), and atrial ..."
     },
     {
       "id": "NOTE049",
@@ -509,6 +559,16 @@
       "preview": "72-year-old male with history of Type 2 Diabetes Mellitus, CKD Stage 3b, HFrEF (EF 35%), and atrial ..."
     },
     {
+      "id": "NOTE_CARD001",
+      "type": "Consult Note",
+      "title": "Cardiology Consultation - Heart Failure Management",
+      "date": "2023-11-15T10:30:00.000Z",
+      "author": "Dr. James Wilson",
+      "department": "Cardiology",
+      "encounter": "ENC_CARD001",
+      "preview": "Heart failure management, optimization of guideline-directed medical therapy. NYHA Class II. Discussing ICD for primary prevention..."
+    },
+    {
       "id": "NOTE053",
       "type": "Progress Note",
       "date": "2023-11-05T16:22:18.416Z",
@@ -527,6 +587,16 @@
       "preview": "Patient presents for blood pressure check. Reports overall stable condition since last visit. Compli..."
     },
     {
+      "id": "NOTE_GI002",
+      "type": "Consult Note",
+      "title": "Gastroenterology Follow-up - Surveillance EGD",
+      "date": "2023-10-11T09:00:00.000Z",
+      "author": "Dr. William Thompson",
+      "department": "Gastroenterology",
+      "encounter": "ENC_GI002",
+      "preview": "Surveillance EGD follow-up, status post upper GI bleed September 2023"
+    },
+    {
       "id": "NOTE055",
       "type": "H&P",
       "date": "2023-09-29T15:22:18.416Z",
@@ -536,13 +606,103 @@
       "preview": "72-year-old male with history of Type 2 Diabetes Mellitus, CKD Stage 3b, HFrEF (EF 35%), and atrial ..."
     },
     {
-      "id": "NOTE056",
+      "id": "NOTE_DC002",
+      "type": "Discharge Summary",
+      "title": "Discharge Summary - Upper GI Hemorrhage",
+      "date": "2023-09-17T14:00:00.000Z",
+      "author": "Dr. Emily Brown",
+      "department": "Hospital Medicine",
+      "encounter": "ENC_ADM002",
+      "preview": "6-day hospitalization for life-threatening upper GI hemorrhage. Gastric ulcer (Forrest IIa) treated with EGD hemostasis. H. pylori positive. WARFARIN PERMANENTLY DISCONTINUED per multidisciplinary conference. Aspirin 81mg and indefinite PPI initiated..."
+    },
+    {
+      "id": "NOTE_MDT001",
+      "type": "Multidisciplinary Conference Note",
+      "title": "Multidisciplinary Conference - Anticoagulation Management Post-GI Hemorrhage",
+      "date": "2023-09-15T14:00:00.000Z",
+      "author": "Dr. William Thompson",
+      "department": "Gastroenterology",
+      "encounter": "ENC_ADM002",
+      "preview": "KEY DECISION: Multidisciplinary conference with GI, Cardiology, and PCP. CHA2DS2-VASc 5, HAS-BLED 5. WARFARIN PERMANENTLY DISCONTINUED. Aspirin 81mg for modest stroke risk reduction. Patient declined LAA occluder. Unanimous decision given severity of hemorrhage..."
+    },
+    {
+      "id": "NOTE_PHARM001",
+      "type": "Clinical Pharmacy Note",
+      "title": "Clinical Pharmacy Consultation - Medication Reconciliation and Drug Interaction Review",
+      "date": "2023-09-15T10:00:00.000Z",
+      "author": "Dr. Rachel Kim, PharmD, BCPS",
+      "department": "Clinical Pharmacy",
+      "encounter": "ENC_ADM002",
+      "preview": "Comprehensive medication reconciliation during GI bleed admission. Warfarin discontinued, H. pylori regimen selected (clarithromycin-based, no amoxicillin due to PCN allergy). Critical interaction: clarithromycin + atorvastatin \u2014 hold statin during 14-day course..."
+    },
+    {
+      "id": "NOTE_SW001",
+      "type": "Social Work Note",
+      "title": "Social Work Assessment - Acute GI Hemorrhage Hospitalization",
+      "date": "2023-09-14T13:30:00.000Z",
+      "author": "Jennifer Walsh, LCSW",
+      "department": "Social Work",
+      "encounter": "ENC_ADM002",
+      "preview": "Psychosocial assessment during GI bleed hospitalization. PHQ-2 negative. Wife Patricia anxious but coping. Advance directive discussion initiated \u2014 patient remains full code. Home health nursing arranged for discharge..."
+    },
+    {
+      "id": "NOTE_ICU002",
+      "type": "Progress Note",
+      "title": "MICU Progress Note - Day 3 (Transfer to Floor)",
+      "date": "2023-09-14T10:00:00.000Z",
+      "author": "Dr. Sarah Mitchell",
+      "department": "Critical Care Medicine",
+      "encounter": "ENC_ADM002",
+      "preview": "MICU Day 3 \u2014 transfer to floor. No rebleeding, Hgb stable 9.0. Cr improving 2.2. Started H. pylori triple therapy. Multidisciplinary anticoagulation conference planned for tomorrow..."
+    },
+    {
+      "id": "NOTE_ICU001",
+      "type": "Progress Note",
+      "title": "MICU Progress Note - Day 2 (Post-EGD)",
+      "date": "2023-09-13T16:00:00.000Z",
+      "author": "Dr. Sarah Mitchell",
+      "department": "Critical Care Medicine",
+      "encounter": "ENC_ADM002",
+      "preview": "Post-EGD day. Hemodynamically stable. Total 4 units pRBC, Hgb now 9.1. INR corrected to 1.4. Cr improving 2.8 to 2.4. Lactate normalizing. Plan transfer to floor if stable overnight..."
+    },
+    {
+      "id": "NOTE_PROC001",
+      "type": "Procedure Note",
+      "title": "EGD Procedure Note - Upper GI Hemorrhage",
+      "date": "2023-09-13T08:30:00.000Z",
+      "author": "Dr. William Thompson",
+      "department": "Gastroenterology",
+      "encounter": "ENC_ADM002",
+      "preview": "EGD findings: 1.5 cm gastric ulcer on lesser curvature with visible vessel (Forrest IIa). Successful hemostasis with epinephrine injection + bipolar cautery + hemoclip x2. CLO test POSITIVE for H. pylori. Ulcer margin biopsies obtained..."
+    },
+    {
+      "id": "NOTE_GI001",
+      "type": "Consult Note",
+      "title": "Gastroenterology Consultation - Acute Upper GI Hemorrhage",
+      "date": "2023-09-12T06:45:00.000Z",
+      "author": "Dr. William Thompson",
+      "department": "Gastroenterology",
+      "encounter": "ENC_ADM002",
+      "preview": "Emergent GI consult for upper GI hemorrhage. Glasgow-Blatchford 15 (high risk). Likely peptic ulcer disease given NSAID + warfarin combination. Urgent EGD planned for morning..."
+    },
+    {
+      "id": "NOTE_HP002",
       "type": "H&P",
-      "date": "2023-09-02T15:22:18.416Z",
+      "title": "Hospital Admission H&P - Upper GI Hemorrhage",
+      "date": "2023-09-12T03:15:00.000Z",
+      "author": "Dr. Emily Brown",
+      "department": "Emergency Medicine / Hospital Medicine",
+      "encounter": "ENC_ADM002",
+      "preview": "72-year-old male on warfarin for A-fib presenting with melena x 2 days, near-syncope, hemorrhagic shock (BP 88/52, HR 112). Hgb 7.2, INR 3.8 (supratherapeutic). Took ibuprofen OTC x 3 days. Gastric ulcer suspected. MICU admission..."
+    },
+    {
+      "id": "NOTE058",
+      "type": "Progress Note",
+      "date": "2023-09-04T15:22:18.416Z",
       "author": "Dr. Patricia Lee",
       "department": "Radiology",
       "encounter": "ENC039",
-      "preview": "72-year-old male with history of Type 2 Diabetes Mellitus, CKD Stage 3b, HFrEF (EF 35%), and atrial ..."
+      "preview": "Patient presents for neuropathy symptoms. Weight stable. Following low-sodium diet. Monitoring blood..."
     },
     {
       "id": "NOTE057",
@@ -554,13 +714,13 @@
       "preview": "Patient presents for palpitations. Reports overall stable condition since last visit. Compliant with..."
     },
     {
-      "id": "NOTE058",
-      "type": "Progress Note",
-      "date": "2023-09-04T15:22:18.416Z",
+      "id": "NOTE056",
+      "type": "H&P",
+      "date": "2023-09-02T15:22:18.416Z",
       "author": "Dr. Patricia Lee",
       "department": "Radiology",
       "encounter": "ENC039",
-      "preview": "Patient presents for neuropathy symptoms. Weight stable. Following low-sodium diet. Monitoring blood..."
+      "preview": "72-year-old male with history of Type 2 Diabetes Mellitus, CKD Stage 3b, HFrEF (EF 35%), and atrial ..."
     },
     {
       "id": "NOTE059",
@@ -581,31 +741,13 @@
       "preview": "Patient called regarding lab results.\n\nPatient requesting refill of maintenance medications. Verifie..."
     },
     {
-      "id": "NOTE061",
+      "id": "NOTE065",
       "type": "Progress Note",
-      "date": "2023-07-05T15:22:18.416Z",
+      "date": "2023-07-09T15:22:18.416Z",
       "author": "Dr. Sarah Chen",
       "department": "Primary Care",
       "encounter": "ENC042",
-      "preview": "Patient presents for urinary symptoms. Reports some shortness of breath with exertion, at baseline. ..."
-    },
-    {
-      "id": "NOTE062",
-      "type": "Progress Note",
-      "date": "2023-07-06T15:22:18.416Z",
-      "author": "Dr. Sarah Chen",
-      "department": "Primary Care",
-      "encounter": "ENC042",
-      "preview": "Patient presents for urinary symptoms. Reports overall stable condition since last visit. Compliant ..."
-    },
-    {
-      "id": "NOTE063",
-      "type": "Progress Note",
-      "date": "2023-07-07T15:22:18.416Z",
-      "author": "Dr. Sarah Chen",
-      "department": "Primary Care",
-      "encounter": "ENC042",
-      "preview": "Patient presents for urinary symptoms. Doing well on current regimen. Blood sugars well-controlled. ..."
+      "preview": "Patient presents for ckd management. Weight stable. Following low-sodium diet. Monitoring blood pres..."
     },
     {
       "id": "NOTE064",
@@ -617,13 +759,31 @@
       "preview": "Patient presents for shortness of breath. Weight stable. Following low-sodium diet. Monitoring blood..."
     },
     {
-      "id": "NOTE065",
+      "id": "NOTE063",
       "type": "Progress Note",
-      "date": "2023-07-09T15:22:18.416Z",
+      "date": "2023-07-07T15:22:18.416Z",
       "author": "Dr. Sarah Chen",
       "department": "Primary Care",
       "encounter": "ENC042",
-      "preview": "Patient presents for ckd management. Weight stable. Following low-sodium diet. Monitoring blood pres..."
+      "preview": "Patient presents for urinary symptoms. Doing well on current regimen. Blood sugars well-controlled. ..."
+    },
+    {
+      "id": "NOTE062",
+      "type": "Progress Note",
+      "date": "2023-07-06T15:22:18.416Z",
+      "author": "Dr. Sarah Chen",
+      "department": "Primary Care",
+      "encounter": "ENC042",
+      "preview": "Patient presents for urinary symptoms. Reports overall stable condition since last visit. Compliant ..."
+    },
+    {
+      "id": "NOTE061",
+      "type": "Progress Note",
+      "date": "2023-07-05T15:22:18.416Z",
+      "author": "Dr. Sarah Chen",
+      "department": "Primary Care",
+      "encounter": "ENC042",
+      "preview": "Patient presents for urinary symptoms. Reports some shortness of breath with exertion, at baseline. ..."
     },
     {
       "id": "NOTE066",
@@ -725,6 +885,16 @@
       "preview": "Patient presents for annual wellness visit. Reports some shortness of breath with exertion, at basel..."
     },
     {
+      "id": "NOTE_PT002",
+      "type": "Consult Note",
+      "title": "Physical Therapy Discharge Summary",
+      "date": "2022-10-06T10:00:00.000Z",
+      "author": "Sarah Thompson, PT, DPT",
+      "department": "Physical Therapy",
+      "encounter": "ENC_PT002",
+      "preview": "Physical therapy discharge summary following 6 weeks of home health PT services post-CHF exacerbation"
+    },
+    {
       "id": "NOTE077",
       "type": "H&P",
       "date": "2022-10-01T15:22:18.416Z",
@@ -741,6 +911,36 @@
       "department": "Nephrology",
       "encounter": "ENC055",
       "preview": "Patient presents for palpitations. Presents with mild worsening of baseline symptoms. Reports increa..."
+    },
+    {
+      "id": "NOTE_PT001",
+      "type": "Consult Note",
+      "title": "Physical Therapy Evaluation - Post-CHF Exacerbation",
+      "date": "2022-08-25T10:00:00.000Z",
+      "author": "Sarah Thompson, PT, DPT",
+      "department": "Physical Therapy",
+      "encounter": "ENC_PT001",
+      "preview": "Home health physical therapy evaluation following hospitalization for acute decompensated heart failure (discharged 8/19/2022). Referred by Dr. Emily ..."
+    },
+    {
+      "id": "NOTE_DC001",
+      "type": "Discharge Summary",
+      "title": "Discharge Summary - CHF Exacerbation",
+      "date": "2022-08-19T11:30:00.000Z",
+      "author": "Dr. Emily Brown",
+      "department": "Hospital Medicine",
+      "encounter": "ENC_ADM001",
+      "preview": "4-day hospitalization for acute decompensated heart failure triggered by diuretic non-compliance. Discharged on increased furosemide with close follow-up..."
+    },
+    {
+      "id": "NOTE_HP001",
+      "type": "H&P",
+      "title": "Hospital Admission H&P - CHF Exacerbation",
+      "date": "2022-08-15T14:30:00.000Z",
+      "author": "Dr. Emily Brown",
+      "department": "Hospital Medicine",
+      "encounter": "ENC_ADM001",
+      "preview": "72-year-old male with HFrEF, T2DM, CKD3b, atrial fibrillation presenting with acute decompensated heart failure. Dyspnea, orthopnea, bilateral LE edema. Triggered by missed furosemide doses..."
     },
     {
       "id": "NOTE079",
@@ -939,6 +1139,76 @@
       "department": "Internal Medicine",
       "encounter": "ENC077",
       "preview": "Patient called regarding appointment scheduling.\n\nPatient reports mild increase in leg swelling. Adv..."
+    },
+    {
+      "id": "NOTE_DC003",
+      "type": "Discharge Summary",
+      "title": "Discharge Summary - Community-Acquired Pneumonia",
+      "date": "2021-02-14T14:00:00.000Z",
+      "author": "Dr. Emily Brown",
+      "department": "Hospital Medicine",
+      "encounter": "ENC_ADM002",
+      "preview": "5-day hospitalization for Streptococcus pneumoniae CAP. Tolerated ceftriaxone without allergic reaction despite PCN anaphylaxis. Discharged on oral azithromycin..."
+    },
+    {
+      "id": "NOTE_PROG_ADM002",
+      "type": "Progress Note",
+      "title": "Hospital Progress Note - CAP Day 5 / Discharge Day",
+      "date": "2021-02-14T08:00:00.000Z",
+      "author": "Dr. Emily Brown",
+      "department": "Hospital Medicine",
+      "encounter": "ENC_ADM002",
+      "preview": "Day 5 \u2014 discharge day. Afebrile x 48h, WBC 9.8, SpO2 95% on RA. Completing ceftriaxone course, transitioning to oral azithromycin..."
+    },
+    {
+      "id": "NOTE_PROG_ADM001",
+      "type": "Progress Note",
+      "title": "Hospital Progress Note - CAP Day 3",
+      "date": "2021-02-12T08:30:00.000Z",
+      "author": "Dr. Emily Brown",
+      "department": "Hospital Medicine",
+      "encounter": "ENC_ADM002",
+      "preview": "Day 3 \u2014 improving. Fever resolved, WBC 11.4, O2 weaned to 1L NC. No allergic reaction to ceftriaxone. COVID PCR negative. Sputum culture growing S. pneumoniae..."
+    },
+    {
+      "id": "NOTE_ID001",
+      "type": "Consult Note",
+      "title": "Infectious Disease Consultation - CAP Antibiotic Selection with PCN Anaphylaxis",
+      "date": "2021-02-10T14:00:00.000Z",
+      "author": "Dr. Maria Santos",
+      "department": "Infectious Disease",
+      "encounter": "ENC_ADM002",
+      "preview": "Consulted for antibiotic selection given PCN anaphylaxis. Recommends ceftriaxone (<1% cross-reactivity for 3rd-gen cephalosporins) with bedside monitoring and epinephrine..."
+    },
+    {
+      "id": "NOTE_RT001",
+      "type": "Respiratory Therapy Note",
+      "title": "Respiratory Therapy Assessment and Plan",
+      "date": "2021-02-10T11:00:00.000Z",
+      "author": "James Parker, RRT",
+      "department": "Respiratory Therapy",
+      "encounter": "ENC_ADM002",
+      "preview": "O2 therapy initiated: 2L NC targeting SpO2 92-96%. Incentive spirometry baseline 750 mL, goal 1000 mL by discharge. Chest physiotherapy BID..."
+    },
+    {
+      "id": "NOTE_NURS001",
+      "type": "Nursing Assessment",
+      "title": "Admission Nursing Assessment - Community-Acquired Pneumonia",
+      "date": "2021-02-10T10:00:00.000Z",
+      "author": "Maria Garcia, RN, BSN",
+      "department": "Medical-Surgical Nursing",
+      "encounter": "ENC_ADM002",
+      "preview": "Admission nursing assessment. Morse Fall Scale 55 (moderate risk). Braden Scale 18 (mild risk). 20G IV right forearm. Droplet precautions pending COVID result..."
+    },
+    {
+      "id": "NOTE_HP003",
+      "type": "H&P",
+      "title": "Hospital Admission H&P - Community-Acquired Pneumonia",
+      "date": "2021-02-10T09:15:00.000Z",
+      "author": "Dr. Emily Brown",
+      "department": "Hospital Medicine",
+      "encounter": "ENC_ADM002",
+      "preview": "69-year-old male with HFrEF, CKD3b, DM2, A-fib presenting with 5 days productive cough, fever 101.4, SpO2 89% on RA. CXR: RLL consolidation. ID consulted for PCN anaphylaxis..."
     },
     {
       "id": "NOTE101",

@@ -6,74 +6,87 @@
   "department": "Primary Care",
   "encounter": "ENC051",
   "chiefComplaint": "Heart failure follow-up",
-  "hpi": "Patient presents for heart failure follow-up. Doing well on current regimen. Blood sugars well-controlled. No hypoglycemic episodes.",
+  "hpi": "Mr. Morrison is a 70-year-old male with HFrEF (EF 30-35%), persistent atrial fibrillation on warfarin, CKD Stage 3b, Type 2 DM on insulin and metformin, hyperlipidemia, HTN, BPH, and diabetic peripheral neuropathy who presents for follow-up of his heart failure and chronic disease management. He was seen in cardiology in October where ICD implantation for primary prevention was discussed; the patient states he wants more time to think about it and plans to discuss with his son and daughter over the holidays. He reports his heart failure symptoms remain at baseline — he can walk about 1-1.5 blocks before becoming short of breath, which is consistent with his functional capacity over the past several months since his August hospitalization for acute decompensated HF. He denies orthopnea, PND, or worsening lower extremity swelling. He has been checking daily weights as instructed and reports they have been in the 97-98 kg range consistently. He is adherent with his 2g sodium-restricted diet, though admits holiday meals may be challenging. His blood sugars have been running 140-200 fasting and 180-260 postprandial per his home log. He has had no hypoglycemic episodes. His neuropathy pain is controlled at 4/10 on gabapentin. He reports nocturia 2-3 times nightly which is disruptive to sleep but improved compared to before tamsulosin was started.",
   "reviewOfSystems": {
-    "Constitutional": "No fever, chills, or weight loss",
-    "Cardiovascular": "Dyspnea on exertion at baseline",
-    "Respiratory": "No cough or wheezing",
-    "GI": "Regular bowel movements",
-    "GU": "No dysuria",
-    "Neurologic": "No new weakness"
+    "Constitutional": "Mild chronic fatigue, no fevers, no chills, no unintentional weight loss",
+    "Cardiovascular": "Dyspnea on exertion at baseline as above, no orthopnea, no PND, no chest pain, no palpitations",
+    "Respiratory": "No cough, no wheezing, no hemoptysis",
+    "GI": "Appetite fair, regular bowel movements, no abdominal pain, no nausea/vomiting, no melena or hematochezia",
+    "GU": "Nocturia x2-3, improved stream on tamsulosin, no dysuria, no hematuria",
+    "Musculoskeletal": "Chronic bilateral knee pain, no acute joint swelling or erythema",
+    "Neurologic": "Stable bilateral foot numbness and tingling, no new weakness, no falls, no dizziness",
+    "Endocrine": "No hypoglycemic episodes, no polyuria beyond baseline nocturia",
+    "Skin": "No new rashes, no wounds on feet per self-inspection",
+    "Psychiatric": "Reports adequate mood, sleeping okay aside from nocturia"
   },
   "vitals": {
-    "bp": "147/85 mmHg",
+    "bp": "132/78 mmHg",
     "hr": "75 bpm",
-    "rr": "20/min",
-    "temp": "98.9°F",
+    "rr": "18/min",
+    "temp": "98.4°F",
     "spo2": "96% RA",
-    "weight": "97.8 kg"
+    "weight": "98.2 kg"
   },
   "physicalExam": {
-    "General": "Alert, oriented, no acute distress",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "S1/S2 normal, mild peripheral edema",
-    "Respiratory": "Mild crackles at bases",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "1+ pedal edema bilaterally",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Alert, oriented, pleasant obese male in no acute distress. Appears mildly fatigued but conversant and engaged",
+    "HEENT": "Normocephalic, atraumatic. PERRL. Oropharynx clear without lesions. Mild AV nicking on fundoscopic exam (hypertensive retinopathy). No thyromegaly",
+    "Cardiovascular": "Irregularly irregular rhythm consistent with atrial fibrillation, rate approximately 75 bpm. Normal S1/S2. Low-grade 2/6 holosystolic murmur at apex (stable, known MR). No S3 gallop today. JVP estimated at 7-8 cm H2O, not significantly elevated. No carotid bruits",
+    "Respiratory": "Bibasilar fine crackles, trace, clear with deep inspiration. No wheezes or rhonchi. Good bilateral air entry",
+    "Abdomen": "Obese, soft, non-tender, non-distended. Normal active bowel sounds. No organomegaly by palpation. Small reducible umbilical hernia, asymptomatic",
+    "Extremities": "1+ bilateral pitting edema at ankles, non-tender. Bilateral lower extremities warm. Dorsalis pedis pulses palpable but diminished bilaterally. No cyanosis. No ulcerations on foot inspection",
+    "Neurologic": "Alert and oriented x3. Decreased sensation to light touch and 10g monofilament bilateral feet in stocking distribution to ankle level. Ankle reflexes absent bilaterally. Gait observed — slightly wide-based, no assistive device used. Romberg mildly positive"
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
+      "diagnosis": "Heart Failure with Reduced EF",
+      "icd10": "I50.22",
+      "notes": "NYHA Class II, stable post-August 2022 exacerbation. EF 30-35% on last echo (Sept 2020). On GDMT: Entresto 97/103mg BID, carvedilol 12.5mg BID (submaximal — uptitration being considered by cardiology), spironolactone 25mg daily, furosemide 60mg BID. Volume status appears near euvolemic with trace edema and minimal crackles. ICD discussion ongoing — patient deferring decision. Weight stable near dry weight."
+    },
+    {
+      "diagnosis": "Type 2 Diabetes Mellitus with diabetic neuropathy",
       "icd10": "E11.65",
-      "notes": "HbA1c 7.0%. On insulin and metformin."
+      "notes": "A1c 8.2% — trending up from 7.8% in November 2021. Blood sugars suboptimally controlled, likely dietary contribution as well as possible need for insulin adjustment. On insulin glargine 24 units QHS (recently increased from 22), metformin 250mg BID. Neuropathy managed with gabapentin 300mg TID, pain controlled at 4/10."
     },
     {
       "diagnosis": "Chronic Kidney Disease Stage 3b",
       "icd10": "N18.32",
-      "notes": "eGFR 38. Stable."
+      "notes": "Cr 1.95, eGFR 36. Stable over past several months. On nephroprotective regimen with ARNI. UACR should be rechecked. Need to ensure vitamin D supplementation maintained."
     },
     {
-      "diagnosis": "Heart Failure with Reduced EF",
-      "icd10": "I50.22",
-      "notes": "NYHA Class II. On GDMT."
-    },
-    {
-      "diagnosis": "Atrial Fibrillation",
+      "diagnosis": "Atrial Fibrillation, persistent",
       "icd10": "I48.1",
-      "notes": "Rate controlled. On anticoagulation."
+      "notes": "Rate controlled on carvedilol. On warfarin, INR therapeutic per anticoagulation clinic. CHA2DS2-VASc 5. No episodes of uncontrolled rate or symptomatic arrhythmia."
+    },
+    {
+      "diagnosis": "Hypertension",
+      "icd10": "I10",
+      "notes": "BP 132/78 today — at goal on current regimen of Entresto, carvedilol, furosemide, spironolactone."
     }
   ],
   "plan": [
     {
+      "problem": "Heart Failure",
+      "action": "Continue current GDMT — Entresto 97/103mg BID, carvedilol 12.5mg BID, spironolactone 25mg, furosemide 60mg BID. Volume status acceptable. Reinforce daily weights — if weight increases >3 lbs over 2 days, patient to call clinic for potential diuretic adjustment. Continue 2g sodium restriction and 1.5L fluid restriction. ICD discussion to continue — patient to discuss with family over holidays. Coordinate with Dr. Wilson in cardiology for carvedilol uptitration plan (current 12.5mg BID, target 25mg BID). Consider adding SGLT2 inhibitor at future visit per recent trial data (EMPEROR-Reduced). Order BNP with next labs."
+    },
+    {
       "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "action": "A1c 8.2% — above goal of <7.5% given his age and comorbidities. Increase insulin glargine 24 to 26 units QHS. Continue metformin 250mg BID (renally dosed). Review carb counting and dietary log at next visit. Holiday dietary counseling provided — wife Patricia present and engaged in discussion. Recheck A1c in 3 months. Annual diabetic eye exam due — ophthalmology referral placed."
     },
     {
       "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
-    },
-    {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
+      "action": "Stable at Stage 3b. Labs ordered: BMP, CBC, UACR, phosphorus, PTH, vitamin D 25-OH level. Continue avoiding nephrotoxins — counseled again about NSAID avoidance. Continue vitamin D3 2000 IU daily. Podiatry follow-up for annual diabetic foot exam — referral placed."
     },
     {
       "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "action": "Rate controlled. Continue warfarin with INR monitoring per anticoagulation clinic. Next INR check in 2 weeks."
+    },
+    {
+      "problem": "BPH",
+      "action": "Nocturia 2-3 times nightly — improved from baseline of 4-5 times prior to tamsulosin. Continue tamsulosin 0.4mg daily. Advised to limit evening fluid intake and void before bed."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 6 weeks or sooner if needed."
+      "action": "Return to PCP in 6-8 weeks. Labs in 2 weeks (BMP, CBC, A1c, UACR, vitamin D, PTH, phosphorus, BNP). If any acute symptoms — weight gain >3 lbs, worsening SOB, chest pain, dark stools — come to office or ED immediately."
     }
   ],
   "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Sarah Chen\nDate: 12/16/2022"

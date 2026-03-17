@@ -1,0 +1,32 @@
+{
+  "id": "IMG016",
+  "date": "2019-09-14T12:45:28.882Z",
+  "modality": "X-Ray",
+  "description": "Lumbar Spine X-Ray",
+  "facility": "Springfield Medical Center",
+  "status": "Final",
+  "radiologist": "Dr. Robert Chang",
+  "orderingProvider": "Dr. Michael Torres",
+  "indication": "Chronic low back pain, numbness and tingling in bilateral lower extremities, evaluate for degenerative disease",
+  "technique": "AP and lateral radiographs of the lumbar spine were obtained.",
+  "findings": {
+    "alignment": "Normal lumbar lordosis. No spondylolisthesis. Vertebral body heights are maintained.",
+    "vertebralBodies": "Mild anterior osteophyte formation at L3-L4, L4-L5, and L5-S1. No compression fracture. No lytic or blastic lesions.",
+    "discSpaces": "Moderate disc space narrowing at L4-L5 and L5-S1. Mild disc space narrowing at L3-L4. Vacuum disc phenomenon at L5-S1.",
+    "facetJoints": "Bilateral facet hypertrophy at L4-L5 and L5-S1.",
+    "sacroiliacJoints": "Unremarkable.",
+    "softTissues": "Atherosclerotic calcification of the abdominal aorta. No paraspinal soft tissue mass.",
+    "pelvis": "Bilateral hip joints demonstrate mild degenerative changes."
+  },
+  "impression": [
+    "Multilevel degenerative disc disease, most pronounced at L4-L5 and L5-S1 with moderate disc space narrowing.",
+    "Facet arthropathy at L4-L5 and L5-S1.",
+    "No compression fracture or spondylolisthesis.",
+    "Abdominal aortic atherosclerotic calcification.",
+    "Mild bilateral hip osteoarthritis."
+  ],
+  "recommendations": [
+    "If symptoms persist or worsen, MRI of the lumbar spine is recommended to evaluate for spinal canal stenosis and nerve root compression"
+  ],
+  "comparison": "No prior lumbar spine radiographs available for comparison."
+}

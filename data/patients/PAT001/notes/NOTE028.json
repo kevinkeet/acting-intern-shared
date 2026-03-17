@@ -5,15 +5,19 @@
   "author": "Dr. Sarah Chen",
   "department": "Primary Care",
   "encounter": "ENC021",
-  "chiefComplaint": "Lab review",
-  "hpi": "Patient presents for lab review. Weight stable. Following low-sodium diet. Monitoring blood pressure at home.",
+  "chiefComplaint": "Routine follow-up, lab review, weight management",
+  "hpi": "Mr. Morrison is a 72-year-old male with HFrEF (EF 30-35%), CKD 3b, Type 2 DM on insulin/metformin/empagliflozin, persistent A-fib (off anticoagulation post-GI bleed), diabetic neuropathy, HTN, hyperlipidemia, and BPH who presents for routine primary care follow-up and lab review. Recent labs from October show Cr 1.94 (eGFR 36), A1c 7.8% (trending up from 7.2% in August), Hgb 10.9. He reports his weight has been edging up over the past month, now 98.5 kg at home, up from 97.1 in August. He admits to dietary indiscretions — increased sodium intake as he has been eating out more frequently with a friend from church. He reports baseline dyspnea on exertion when walking 1-2 blocks, unchanged. He mentions his shoes have been fitting tighter in the evenings. No orthopnea, PND, or chest pain. His neuropathy symptoms are stable with burning and tingling in both feet, rated 4/10. Sleep remains disrupted by nocturia x2-3. His wife Patricia reports he has been less motivated to attend church and seems less interested in visiting with grandchildren over the past few weeks.",
   "reviewOfSystems": {
-    "Constitutional": "Reports fatigue",
-    "Cardiovascular": "Dyspnea on exertion at baseline",
-    "Respiratory": "No hemoptysis",
-    "GI": "Regular bowel movements",
-    "GU": "No dysuria",
-    "Neurologic": "No dizziness"
+    "Constitutional": "Reports fatigue and low energy. Weight up ~1.4 kg from August nadir. No fever, chills, or night sweats.",
+    "Cardiovascular": "Baseline dyspnea on exertion walking 1-2 blocks. Shoes tighter in evenings. No orthopnea, PND, chest pain, or palpitations.",
+    "Respiratory": "No cough, hemoptysis, or wheezing.",
+    "GI": "Regular bowel movements. Appetite fair. No melena, hematochezia, abdominal pain, nausea, or vomiting.",
+    "GU": "Nocturia x2-3. Weak stream. No dysuria or hematuria.",
+    "Musculoskeletal": "Chronic low back stiffness. No acute joint pain or swelling.",
+    "Neurologic": "Chronic bilateral foot numbness and tingling (4/10). No new weakness, dizziness, or falls since September.",
+    "Psychiatric": "Wife reports decreased interest in activities, less motivation. Patient acknowledges feeling somewhat down. Sleep disturbed.",
+    "Endocrine": "No hypoglycemic episodes. Fasting glucoses generally 130-160 per home monitoring.",
+    "Skin": "No new rashes, wounds, or bruising. No foot ulcers."
   },
   "vitals": {
     "bp": "150/79 mmHg",
@@ -24,47 +28,77 @@
     "weight": "97.2 kg"
   },
   "physicalExam": {
-    "General": "Comfortable, well-appearing",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "Irregularly irregular, no murmurs, JVP not elevated",
-    "Respiratory": "Clear to auscultation bilaterally",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "No edema, warm and well-perfused",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Well-developed, obese male in no acute distress. Appears fatigued with flat affect but cooperative and engaged in conversation when prompted.",
+    "HEENT": "Normocephalic, atraumatic. PERRL. Oropharynx clear. Mucous membranes moist. No thyromegaly.",
+    "Cardiovascular": "Irregularly irregular rhythm (atrial fibrillation), rate 83. Normal S1, S2. Soft 2/6 holosystolic murmur at apex. JVP not elevated at 45 degrees. No carotid bruits.",
+    "Respiratory": "Clear to auscultation bilaterally without crackles, wheezes, or rhonchi. Good air movement. No use of accessory muscles.",
+    "Abdomen": "Soft, obese, non-tender, non-distended. Bowel sounds present. No hepatomegaly. Small reducible umbilical hernia.",
+    "Extremities": "Trace bilateral ankle edema. Skin intact. No erythema or warmth. Pedal pulses 1+ bilaterally. No ulcerations on feet.",
+    "Neurologic": "Alert and oriented x3. Decreased monofilament sensation bilateral feet (4/10 sites detected). Vibration sense diminished at great toes bilaterally. Motor strength 5/5 upper and lower extremities. Romberg mildly positive.",
+    "Skin": "No rashes. No bruising or petechiae. Skin dry on bilateral lower extremities with mild stasis changes.",
+    "Psychiatric": "Flat affect noted. Makes minimal eye contact initially but warms up during visit. Denies suicidal ideation."
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
+      "diagnosis": "Type 2 Diabetes Mellitus with diabetic neuropathy",
       "icd10": "E11.65",
-      "notes": "HbA1c 8.4%. On insulin and metformin."
+      "notes": "HbA1c 7.8%, trending up from 7.2% in August. Likely related to increased dining out and reduced adherence to diabetic diet. On metformin 500mg BID (renally dosed), insulin glargine 24 units QHS, empagliflozin 10mg daily. Neuropathy stable on gabapentin 300mg TID. Mild NPDR on last eye exam December 2024 upcoming."
     },
     {
       "diagnosis": "Chronic Kidney Disease Stage 3b",
       "icd10": "N18.32",
-      "notes": "eGFR 35. Stable."
+      "notes": "eGFR 36, Cr 1.94. Stable. On renal protective regimen with ARNI and SGLT2i. Metabolic acidosis managed with sodium bicarbonate. Rate of decline ~2-3 mL/min/year — at current trajectory, may reach Stage 4 within 2-3 years."
+    },
+    {
+      "diagnosis": "Heart Failure with Reduced EF",
+      "icd10": "I50.22",
+      "notes": "NYHA Class II. On optimized quadruple GDMT. Weight edging up, likely from dietary sodium indiscretion. Furosemide adjusted to asymmetric dosing (60mg AM/40mg PM) in October to help with nocturia. No signs of acute decompensation but mild volume overload with trace edema."
+    },
+    {
+      "diagnosis": "Persistent Atrial Fibrillation",
+      "icd10": "I48.1",
+      "notes": "Rate controlled. Off anticoagulation since September 2023 GI bleed — on aspirin 81mg only. CHA2DS2-VASc 5. TEE September 2024 showed no LAA thrombus."
+    },
+    {
+      "diagnosis": "Possible mild depression",
+      "icd10": "F32.0",
+      "notes": "Wife reports decreased interest and motivation. Patient endorses low energy and reduced enjoyment. PHQ-2 today: 3/6 (positive screen). Needs formal PHQ-9 assessment. May be related to chronic disease burden, functional decline, and sleep disruption."
+    },
+    {
+      "diagnosis": "Hypertension",
+      "icd10": "I10",
+      "notes": "BP 150/79 today, above goal <130/80 for his comorbidities. Dietary sodium likely contributing. Already on carvedilol, ARNI — limited room for adjustment without affecting heart rate or renal function."
     }
   ],
   "plan": [
     {
       "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "action": "A1c 7.8%, trending up. Reinforce dietary counseling — referred to diabetic educator for refresher session on carbohydrate counting. Continue metformin 500mg BID, insulin glargine 24 units QHS, empagliflozin 10mg daily. If A1c does not improve in 3 months, will increase glargine. Encourage home glucose log. Annual eye exam due — ophthalmology appointment scheduled for December (diabetic retinopathy surveillance). Podiatry follow-up due for annual foot exam."
     },
     {
       "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "action": "Stable eGFR 36. Continue sodium bicarbonate 650mg BID. Continue ARNI and SGLT2i for renal protection. Recheck BMP in 3 months. UACR due at next nephrology visit. Avoid NSAIDs and nephrotoxins."
     },
     {
       "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
+      "action": "Weight trending up slightly. Reinforce 2g sodium restriction — patient counseled extensively on hidden sodium in restaurant meals. Continue daily weight monitoring. Continue quadruple GDMT at target doses. Furosemide 60mg AM/40mg PM. If weight continues above 98 kg dry weight target, will increase PM furosemide dose. Cardiology follow-up in January."
     },
     {
       "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "action": "Rate controlled, HR 83 today (slightly above target). Continue aspirin 81mg. No anticoagulation. Reviewed stroke warning signs with patient and wife."
+    },
+    {
+      "problem": "Depression Screening",
+      "action": "PHQ-2 positive (3/6). Administer PHQ-9 at next visit in 4-6 weeks. Discussed option of behavioral health referral for counseling vs. starting SSRI. Patient prefers to try counseling first. Social work referral placed. Encourage continued social engagement, church attendance, and physical activity within functional limits."
+    },
+    {
+      "problem": "Hypertension",
+      "action": "BP above goal today. Likely dietary sodium contributing. Reinforce low-sodium diet. Continue current regimen. Recheck BP at next visit."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 12 weeks or sooner if needed."
+      "action": "Return in 6 weeks for PHQ-9 screening, weight check, and BP recheck. Labs: BMP, CBC in 3 months. Annual ophthalmology and podiatry appointments scheduled."
     }
   ],
-  "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Sarah Chen\nDate: 10/29/2024"
+  "attestation": "I personally saw and examined the patient. I reviewed the relevant medical history, laboratory data, and discussed the plan with the patient and his wife.\n\nElectronically signed by: Dr. Sarah Chen, MD\nDate: 10/29/2024"
 }

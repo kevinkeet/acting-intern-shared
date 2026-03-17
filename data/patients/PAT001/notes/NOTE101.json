@@ -5,70 +5,83 @@
   "author": "Dr. Sarah Chen",
   "department": "Primary Care",
   "encounter": "ENC078",
-  "chiefComplaint": "Medication refills",
-  "hpi": "Patient presents for medication refills. Reports some shortness of breath with exertion, at baseline. No chest pain or palpitations.",
+  "chiefComplaint": "Follow-up after ED visit for dyspnea",
+  "hpi": "68-year-old male presents for follow-up 3 weeks after ED visit on 1/10/2021 for worsening dyspnea and mild heart failure decompensation. At that visit, furosemide was increased from 40mg BID to 60mg BID for 5 days, then returned to 40mg BID. Patient reports significant improvement in his breathing since the furosemide adjustment. He is back to his baseline level of dyspnea — able to walk around the house and to the mailbox without significant shortness of breath, though still gets winded with a full flight of stairs. The orthopnea and cough have completely resolved and he is sleeping flat with one pillow again. His wife Patricia has been monitoring daily weights, which have come down from 100 kg at the ED visit to 97.4 kg today, near his dry weight of 98 kg.\n\nHe also presents for routine medication refills. Reports compliance with all medications. Blood sugars have been running 120-160 fasting per home monitor. No hypoglycemic episodes. Neuropathy symptoms unchanged — bilateral foot numbness and tingling, pain about 4/10, manageable on gabapentin. No falls. BPH symptoms stable on tamsulosin. Wife adjusted his PM furosemide timing to 4 PM per Dr. Kim's recommendation, and nocturia has improved from 3-4 to 2 times per night.",
   "reviewOfSystems": {
-    "Constitutional": "Reports fatigue",
-    "Cardiovascular": "Dyspnea on exertion at baseline",
-    "Respiratory": "Mild dyspnea",
-    "GI": "Regular bowel movements",
-    "GU": "No hematuria",
-    "Neurologic": "Baseline neuropathy"
+    "Constitutional": "Energy level improved since ED visit but still fatigued compared to a year ago. No fevers, chills, or unintentional weight loss. Weight down to 97.4 kg from 100 kg three weeks ago.",
+    "Cardiovascular": "Dyspnea on exertion at baseline (NYHA II) — improved from 3 weeks ago. No orthopnea or PND currently. No chest pain. Palpitations at baseline (known A-fib), unchanged.",
+    "Respiratory": "No cough, wheezing, or hemoptysis. Cough from ED visit has resolved.",
+    "GI": "Appetite improved. Regular bowel movements. Following low-sodium diet more carefully since ED visit. No nausea, no abdominal pain.",
+    "GU": "Nocturia x2 (improved from x3-4). No dysuria, hematuria, or retention.",
+    "Musculoskeletal": "Occasional low back stiffness in the morning, resolves with activity. No joint swelling.",
+    "Neurologic": "Baseline bilateral foot numbness and tingling. Pain 4/10, unchanged. No new weakness or focal deficits.",
+    "Endocrine": "Fasting blood sugars 120-160 mg/dL. No polyuria or polydipsia beyond baseline.",
+    "Psychiatric": "Sleep improved since orthopnea resolved. Mood stable. Continues to enjoy church activities and visiting grandchildren.",
+    "Skin": "No wounds, ulcers, or rashes. Wife inspects feet daily — no breakdown."
   },
   "vitals": {
     "bp": "142/85 mmHg",
-    "hr": "67 bpm",
+    "hr": "67 bpm (irregular)",
     "rr": "16/min",
     "temp": "97.7°F",
     "spo2": "95% RA",
     "weight": "97.4 kg"
   },
   "physicalExam": {
-    "General": "Alert, oriented, no acute distress",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "Regular rate and rhythm, no murmurs",
-    "Respiratory": "No wheezes or rhonchi",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "No edema, warm and well-perfused",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Alert, oriented, pleasant, in no acute distress. Appears well-rested, less fatigued than ED visit 3 weeks ago.",
+    "HEENT": "Normocephalic, atraumatic. PERRL 3mm bilaterally. Oropharynx clear. Moist mucous membranes. JVP approximately 6-7 cm H2O at 45 degrees — not elevated.",
+    "Cardiovascular": "Irregularly irregular rhythm consistent with atrial fibrillation. Rate approximately 67 bpm. Normal S1 and S2. Grade 2/6 holosystolic murmur at apex (stable, known MR). No S3 gallop. No rubs. PMI laterally displaced.",
+    "Respiratory": "Clear to auscultation bilaterally. No crackles, wheezes, or rhonchi. Good air movement throughout. Improved from bibasilar crackles noted at ED visit.",
+    "Abdomen": "Soft, non-tender, non-distended. Active bowel sounds. No hepatomegaly. No hepatojugular reflux.",
+    "Extremities": "No peripheral edema bilaterally — improved from 1+ at ED visit. Warm, well-perfused. Dorsalis pedis pulses 1+ bilaterally. Skin intact bilateral feet, no ulcers or calluses.",
+    "Neurologic": "Alert and oriented x4. Decreased light touch and vibratory sensation bilateral feet to mid-shin level (unchanged baseline). Motor strength grossly intact upper and lower extremities."
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
+      "diagnosis": "Heart Failure with Reduced Ejection Fraction, NYHA Class II",
+      "icd10": "I50.22",
+      "notes": "Returned to clinical baseline following mild decompensation in early January. Weight down to 97.4 kg (near dry weight 98 kg). Lungs clear, no edema. BNP from ED was 510, not rechecked today as clinically improved. Continues on GDMT: Entresto 97/103mg BID, carvedilol 12.5mg BID, spironolactone 25mg, furosemide 40mg BID. Carvedilol remains submaximal — will defer uptitration discussion to cardiology."
+    },
+    {
+      "diagnosis": "Type 2 Diabetes Mellitus with peripheral neuropathy",
       "icd10": "E11.65",
-      "notes": "HbA1c 7.5%. On insulin and metformin."
+      "notes": "Last A1c 7.6% (December 2020). Home glucoses 120-160 fasting — reasonable control. Neuropathy stable on gabapentin 300mg TID. No hypoglycemia since the June 2020 event. Annual eye exam due in spring."
     },
     {
       "diagnosis": "Chronic Kidney Disease Stage 3b",
       "icd10": "N18.32",
-      "notes": "eGFR 34. Stable."
+      "notes": "Cr 1.90, eGFR ~37 at last check. Stable. Labs to be repeated today. Continuing renal-dosed metformin 500mg BID."
     },
     {
-      "diagnosis": "Heart Failure with Reduced EF",
-      "icd10": "I50.22",
-      "notes": "NYHA Class II. On GDMT."
+      "diagnosis": "Atrial Fibrillation, persistent",
+      "icd10": "I48.1",
+      "notes": "Rate controlled on carvedilol, HR 67. On warfarin, last INR 2.2 (therapeutic). Will recheck INR today."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
-    },
-    {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
-    },
-    {
       "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
+      "action": "Clinically compensated — back to NYHA II baseline. Continue Entresto 97/103mg BID, carvedilol 12.5mg BID, spironolactone 25mg daily, furosemide 40mg BID. Daily weights with <2g sodium diet and 1.5L fluid restriction. Patient and wife re-educated on weight-based action plan: call office if weight up >2 lbs in a day or >5 lbs in a week. Follow-up with cardiology (Dr. Wilson) scheduled for 2/15."
+    },
+    {
+      "problem": "Diabetes / Neuropathy",
+      "action": "Continue insulin glargine 20 units QHS, metformin 500mg BID, gabapentin 300mg TID. A1c to be rechecked in March. Schedule annual dilated eye exam. Podiatry referral for annual foot exam."
+    },
+    {
+      "problem": "CKD Stage 3b",
+      "action": "Order CMP today for updated Cr and electrolytes. Continue avoiding nephrotoxins. Continue vitamin D3 2000 IU daily."
     },
     {
       "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "action": "Continue warfarin 5mg daily. Recheck INR today — adjust per protocol. Rate control adequate."
+    },
+    {
+      "problem": "Preventive Care / Medication Refills",
+      "action": "All medications refilled for 90 days. Flu vaccine given 11/2020 (current season). COVID-19 vaccine — patient on waitlist per state allocation (Phase 1b, age 65+). Will schedule when available. Pneumovax 23 was given 2018 — Prevnar 20 to be given at next visit."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 11 weeks or sooner if needed."
+      "action": "Return to PCP in 6-8 weeks or sooner if symptoms worsen. Cardiology 2/15. Labs drawn today."
     }
   ],
   "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Sarah Chen\nDate: 1/31/2021"

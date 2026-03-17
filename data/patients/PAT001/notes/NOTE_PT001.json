@@ -1,0 +1,84 @@
+{
+  "id": "NOTE_PT001",
+  "type": "Consult Note",
+  "title": "Physical Therapy Evaluation - Post-CHF Exacerbation",
+  "date": "2022-08-25T10:00:00.000Z",
+  "author": "Sarah Thompson, PT, DPT",
+  "department": "Physical Therapy",
+  "encounter": "ENC_PT001",
+  "signedDate": "2022-08-25T14:30:00.000Z",
+  "sections": {
+    "reasonForReferral": "Home health physical therapy evaluation following hospitalization for acute decompensated heart failure (discharged 8/19/2022). Referred by Dr. Emily Brown, Hospital Medicine.",
+    "historyOfPresentIllness": "Mr. Morrison is a 70-year-old gentleman recently discharged from a 4-day hospitalization for acute decompensated heart failure triggered by diuretic non-compliance. He was treated with IV diuresis and discharged on increased furosemide (60 mg BID, up from 40 mg BID). He reports significant deconditioning during and after hospitalization. Prior to admission, he was ambulatory in the community with some exertional dyspnea but independent with all ADLs and IADLs. Since discharge, he has been mostly confined to his home, requiring assistance from his wife Patricia for some activities.\n\nPatient reports shortness of breath with minimal exertion (walking to the kitchen, climbing 3 stairs to front porch), bilateral lower extremity weakness, unsteady gait, and fear of falling. He has not fallen but has had two near-falls requiring him to grab furniture for support. He also reports bilateral foot numbness from diabetic neuropathy, which has been present for years but he feels is contributing to his balance problems.",
+    "pastMedicalHistory": [
+      "HFrEF (EF 30-35%) — NYHA Class II-III",
+      "Type 2 Diabetes Mellitus with peripheral neuropathy",
+      "CKD Stage 3b",
+      "Atrial fibrillation",
+      "Hypertension",
+      "Coronary artery disease",
+      "BPH",
+      "Obesity (BMI 32)"
+    ],
+    "medications": "See medication list in chart. Notable for this evaluation: furosemide 60 mg BID (orthostatic hypotension risk), carvedilol 12.5 mg BID (exercise HR blunting), gabapentin 300 mg TID (sedation/balance).",
+    "functionalAssessment": {
+      "sixMinuteWalkTest": {
+        "distance": "180 meters",
+        "interpretation": "Severely reduced (predicted for age/sex: ~450-500 meters). Limited by dyspnea (Borg 7/10) and bilateral lower extremity fatigue. Required 2 rest breaks. SpO2 dropped from 96% to 91% during test, recovered to 94% at rest.",
+        "heartRateResponse": "68 bpm resting → 88 bpm peak (blunted response, on beta-blocker)"
+      },
+      "timedUpAndGo": {
+        "time": "18 seconds",
+        "interpretation": "Elevated fall risk (>13.5 seconds indicates fall risk in older adults). Patient required use of armrests to rise from chair, gait slow and cautious."
+      },
+      "gripStrength": {
+        "right": "22 kg",
+        "left": "20 kg",
+        "interpretation": "Below age-normative values (30th percentile for age/sex), suggestive of generalized deconditioning and possible sarcopenia"
+      },
+      "bergBalanceScale": {
+        "score": "38/56",
+        "interpretation": "Moderate fall risk (scores 21-40 indicate moderate fall risk). Deficits noted in: tandem stance, single-leg stance, reaching forward, turning 360 degrees, and standing with eyes closed."
+      }
+    },
+    "gaitAnalysis": {
+      "assistiveDevice": "None currently — patient has been holding onto furniture ('furniture walking')",
+      "gaitPattern": "Antalgic gait with wide base of support, reduced stride length bilaterally, decreased cadence. Bilateral foot drop noted (steppage gait pattern) consistent with peripheral neuropathy. Reduced arm swing. Mild trunk sway. No Trendelenburg.",
+      "stairMobility": "Ascends and descends 3 steps with bilateral handrail — step-to pattern, slow, Borg 6/10 dyspnea at top"
+    },
+    "musculoskeletalExam": {
+      "lowerExtremity": {
+        "hipFlexors": "4/5 bilateral",
+        "quadriceps": "3+/5 bilateral",
+        "hamstrings": "3+/5 bilateral",
+        "ankleDorisflexors": "2+/5 bilateral (neuropathic weakness)",
+        "anklePlantarflexors": "3/5 bilateral",
+        "rom": "Within functional limits at hips and knees. Ankle dorsiflexion limited to neutral bilaterally."
+      },
+      "sensation": "Absent light touch and vibration bilateral feet to mid-calf. Proprioception impaired at bilateral great toes.",
+      "edema": "1+ bilateral pitting edema to mid-shin"
+    },
+    "homeEnvironment": {
+      "description": "Single-story ranch home with 3 steps to front entrance (bilateral handrails present). No steps inside. Hardwood floors in main areas, area rugs in living room (trip hazard identified). Bathroom has grab bars at toilet and tub (previously installed). Shower chair available but not currently in use.",
+      "safetyRecommendations": "Remove area rugs, use shower chair consistently, ensure adequate lighting in hallways, consider bedside commode for nighttime use given nocturia and fall risk"
+    },
+    "assessment": "Mr. Morrison is a 70-year-old male with significant functional decline following CHF exacerbation hospitalization, superimposed on baseline deficits from diabetic peripheral neuropathy, generalized deconditioning, and obesity. He demonstrates severely reduced exercise tolerance (6MWT 180m), elevated fall risk (TUG 18s, Berg 38/56), bilateral foot drop, generalized lower extremity weakness, and impaired balance. He is currently below his prior functional baseline and at high risk for falls, recurrent hospitalization, and further functional decline without intervention.\n\nRehabilitation potential: Good. Patient is motivated, has supportive spouse, and was at a higher functional level prior to hospitalization. Key barriers include cardiac limitations, neuropathy, obesity, and medication effects (beta-blocker, gabapentin).",
+    "goals": {
+      "shortTerm_4weeks": [
+        "Improve 6MWT from 180m to 220m",
+        "Improve TUG from 18s to 15s",
+        "Independent with home exercise program",
+        "Safe household ambulation without upper extremity support"
+      ],
+      "longTerm_6weeks": [
+        "Improve 6MWT to 250m",
+        "Independent household ambulation without assistive device",
+        "Implement fall prevention strategies consistently",
+        "Return to community ambulation (walking to mailbox, church parking lot)",
+        "Independent stair navigation with single handrail"
+      ]
+    },
+    "plan": "1. Home health physical therapy 2x/week for 6 weeks (12 sessions)\n2. Progressive walking program: Start with 5-minute walks 2x daily in home, advance duration by 1-2 minutes per session as tolerated. Monitor HR and SpO2 — stop if SpO2 <90% or Borg >7/10.\n3. Balance training: Static and dynamic balance exercises progressing from bilateral to unilateral stance, firm to foam surface, eyes open to eyes closed. Incorporate perturbation training.\n4. Lower extremity strengthening: Sit-to-stand repetitions, heel raises, mini-squats, ankle dorsiflexion with resistance band (targeting foot drop), seated leg extensions.\n5. Fall prevention education: Environmental modifications discussed with wife (remove rugs, use shower chair, nightlights). Reviewed safe techniques for getting up from floor.\n6. Home exercise program: Written program provided with illustrations. Patient and wife demonstrated correct form for all exercises.\n7. Consider referral to cardiac rehabilitation upon PT discharge if patient has progressed sufficiently.\n8. Vitals monitoring each visit: HR, BP (orthostatic screen), SpO2. Activity within ACSM guidelines for heart failure patients.\n9. Will communicate with Dr. Brown and Dr. Wilson regarding functional status and exercise tolerance."
+  },
+  "attestation": "I personally evaluated this patient in his home, performed all assessments described above, and formulated the treatment plan. Education provided to patient and wife.\n\nElectronically signed by: Sarah Thompson, PT, DPT\nDate/Time: 8/25/2022 2:30 PM"
+}

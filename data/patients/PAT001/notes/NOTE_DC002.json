@@ -1,0 +1,100 @@
+{
+  "id": "NOTE_DC002",
+  "type": "Discharge Summary",
+  "title": "Discharge Summary - Upper GI Hemorrhage",
+  "date": "2023-09-17T14:00:00.000Z",
+  "author": "Dr. Emily Brown",
+  "department": "Hospital Medicine",
+  "encounter": "ENC_ADM002",
+  "signedDate": "2023-09-17T16:30:00.000Z",
+  "sections": {
+    "admissionDate": "2023-09-12",
+    "dischargeDate": "2023-09-17",
+    "lengthOfStay": "6 days (including 2 days in MICU)",
+    "admittingDiagnosis": "Acute upper gastrointestinal hemorrhage with hemorrhagic shock",
+    "dischargeDiagnoses": [
+      "Acute upper gastrointestinal hemorrhage secondary to gastric ulcer, resolved (ICD-10: K25.0)",
+      "Gastric ulcer, lesser curvature, with visible vessel (Forrest IIa), status post endoscopic hemostasis (ICD-10: K25.4)",
+      "Helicobacter pylori infection, newly diagnosed, on eradication therapy (ICD-10: B96.81)",
+      "NSAID-induced gastropathy (ICD-10: K29.60)",
+      "Hemorrhagic shock, Class III, resolved (ICD-10: R57.1)",
+      "Supratherapeutic anticoagulation (INR 3.8), corrected (ICD-10: T45.515A)",
+      "Acute kidney injury on chronic kidney disease stage 3b, improved (ICD-10: N17.9, N18.4)",
+      "Type 2 myocardial infarction (demand ischemia), resolved (ICD-10: I21.A1)",
+      "Atrial fibrillation, permanent — warfarin permanently discontinued (ICD-10: I48.21)",
+      "Heart failure with reduced ejection fraction (ICD-10: I50.22)",
+      "Type 2 Diabetes Mellitus (ICD-10: E11.65)",
+      "Coronary artery disease, three-vessel (ICD-10: I25.10)",
+      "Hypertension (ICD-10: I10)",
+      "Hyperlipidemia (ICD-10: E78.5)"
+    ],
+    "hospitalCourse": "Mr. Morrison is a 72-year-old male with permanent atrial fibrillation on warfarin, HFrEF (EF 30-35%), CKD stage 3b, T2DM, and CAD who presented on 9/12/2023 via EMS with acute upper gastrointestinal hemorrhage and hemorrhagic shock.\n\nPRESENTATION AND EMERGENCY MANAGEMENT (Day 1 — 9/12):\nPatient presented at 0300 with 2 days of melena, one episode of coffee-ground emesis, and a near-syncopal episode at home. On arrival, he was in hemorrhagic shock: BP 88/52, HR 112, pale, diaphoretic, with delayed capillary refill. Initial hemoglobin was critically low at 7.2 g/dL (baseline 11.5). INR was supratherapeutic at 3.8 (goal 2-3). Creatinine was 2.8 (baseline 1.9) consistent with prerenal AKI. Lactate was elevated at 3.4.\n\nThe precipitating cause was identified as concurrent use of ibuprofen 400 mg TID (obtained OTC for knee pain without consulting a physician) while on warfarin anticoagulation. The patient was unaware of the NSAID-warfarin interaction.\n\nEmergent interventions included: two large-bore IV access, 2L normal saline bolus, 2 units pRBC transfused in ED, IV pantoprazole 80 mg bolus followed by continuous infusion (8 mg/hr), NGT placement (coffee-ground aspirate, no active bright red blood), and emergent anticoagulation reversal with Vitamin K 10 mg IV and 4-factor PCC. All anticoagulation and antiplatelet agents were held. The patient was admitted to the MICU under Dr. Sarah Mitchell.\n\nMICU COURSE — DAY 1-2 (9/12-9/13):\nPatient was aggressively resuscitated in the MICU. An additional 2 units pRBC were transfused overnight (total 4 units during hospitalization). Hemoglobin improved to 8.4 post-transfusion. INR corrected to 1.4. Hemodynamics stabilized with MAP >65 after volume resuscitation. Lactate trended down (3.4 → 1.8). Troponin was mildly elevated at 0.12 (demand ischemia) with new ST depressions V4-V6 on ECG, consistent with type 2 MI. Serial troponins trended down and ST changes resolved. Cardiology was notified and agreed with conservative management.\n\nEGD — DAY 2 (9/13):\nDr. William Thompson (Gastroenterology) performed EGD under monitored anesthesia care. Findings: 1.5 cm gastric ulcer on the lesser curvature of the gastric body with a visible vessel (Forrest IIa classification — high rebleed risk without intervention). Successful endoscopic hemostasis was achieved using combination therapy: epinephrine injection (8 mL dilute epi in 4 quadrants), bipolar cautery (Gold Probe, 15W x 4 applications), and hemoclip placement x2 (Resolution clips). Diffuse erosive gastropathy consistent with NSAID injury was also noted. CLO rapid urease test was POSITIVE for Helicobacter pylori. Ulcer margin biopsies were obtained (results pending at time of discharge — see below). IV pantoprazole continuous infusion was continued for 72 hours post-EGD.\n\nPost-EGD, the patient was hemodynamically stable. Hemoglobin stabilized at 9.0-9.1 without further transfusion. Diet was advanced from NPO to clear liquids to soft diet over 48 hours without issue.\n\nMICU TO FLOOR TRANSFER — DAY 3 (9/14):\nPatient was transferred to the medicine floor (6 South) on 9/14 after meeting transfer criteria: hemodynamically stable >24 hours, no evidence of rebleeding, hemoglobin stable, lactate normal, tolerating oral intake, arterial line and Foley removed. Creatinine improving (2.4 → 2.2).\n\nH. PYLORI TREATMENT INITIATED — DAY 3 (9/14):\nTriple therapy was initiated: clarithromycin 500 mg BID + metronidazole 500 mg BID + pantoprazole 40 mg BID x 14 days. Amoxicillin-based regimen was avoided due to penicillin allergy (rash). Clinical pharmacy (Dr. Rachel Kim) identified a significant drug interaction between clarithromycin and atorvastatin (CYP3A4 inhibition, risk of rhabdomyolysis) — atorvastatin was temporarily held for the 14-day clarithromycin course with a scheduled restart date of 9/29/2023.\n\nMULTIDISCIPLINARY ANTICOAGULATION CONFERENCE — DAY 4 (9/15):\nA multidisciplinary conference was held with Dr. Thompson (GI), Dr. Wilson (Cardiology), and Dr. Chen (PCP) to determine the long-term anticoagulation strategy. The patient's CHA₂DS₂-VASc score is 5 (annual stroke risk ~6.7% without anticoagulation). His HAS-BLED score is 5 (high bleeding risk). After extensive discussion of all options — resume warfarin, switch to DOAC, left atrial appendage occluder (WATCHMAN), or discontinue anticoagulation entirely — the UNANIMOUS decision was to PERMANENTLY DISCONTINUE WARFARIN. The LAA occluder was discussed but declined by the patient. Aspirin 81 mg daily was resumed for modest stroke risk reduction and CAD secondary prevention, with indefinite PPI gastroprotection. Patient and wife were counseled extensively on stroke warning signs (BE-FAST). See multidisciplinary conference note (NOTE_MDT001) for full details.\n\nFLOOR COURSE — DAYS 4-6 (9/15-9/17):\nPatient continued to improve on the medicine floor. No evidence of GI rebleeding throughout the remainder of the hospitalization. Hemoglobin remained stable at 9.0-9.2. Creatinine continued to trend down: 2.2 → 2.0 → 1.9 (returned to baseline by discharge). BUN normalized. Diet advanced to regular without difficulty. The patient was ambulatory in the hallways without assistance or dyspnea.\n\nSocial work assessment (Jennifer Walsh, LCSW) was completed on 9/14. Advance care planning was discussed — patient remains full code and was provided with healthcare proxy forms to complete outpatient. Home health nursing was arranged for medication management support post-discharge.\n\nThe 72-hour IV pantoprazole infusion was completed on 9/15. The patient was transitioned to oral pantoprazole 40 mg BID as part of the H. pylori regimen. All oral medications were tolerated without difficulty.\n\nPENDING RESULTS AT DISCHARGE:\nGastric ulcer margin biopsies (x4) — sent for pathology to rule out malignancy. Results expected in 7-10 days. GI (Dr. Thompson's office) will follow up and contact patient/PCP with results.",
+    "procedures": [
+      "Esophagogastroduodenoscopy (EGD) with epinephrine injection, bipolar cautery, and hemoclip placement x2 — 9/13/2023, Dr. William Thompson",
+      "Nasogastric tube placement — 9/12/2023",
+      "Right radial arterial line placement — 9/12/2023, Dr. Mitchell",
+      "Anticoagulation reversal: 4-factor PCC and Vitamin K IV — 9/12/2023"
+    ],
+    "consultations": [
+      "Gastroenterology (Dr. William Thompson) — EGD, H. pylori management, bleeding risk assessment, multidisciplinary conference",
+      "Critical Care Medicine (Dr. Sarah Mitchell) — MICU management days 1-3",
+      "Cardiology (Dr. James Wilson) — troponin elevation / demand ischemia management, anticoagulation decision, multidisciplinary conference",
+      "Primary Care (Dr. Sarah Chen) — participated in multidisciplinary anticoagulation conference via phone",
+      "Clinical Pharmacy (Dr. Rachel Kim, PharmD) — medication reconciliation, drug interaction review, renal dosing, patient education",
+      "Social Work (Jennifer Walsh, LCSW) — psychosocial assessment, advance care planning, discharge planning",
+      "Anesthesiology (Dr. Lisa Park) — MAC anesthesia for EGD"
+    ],
+    "dischargeMedications": [
+      { "name": "Aspirin", "dose": "81 mg", "route": "PO", "frequency": "daily", "instructions": "For stroke risk reduction and heart protection. Take with food. Do NOT stop without talking to your doctor." },
+      { "name": "Pantoprazole", "dose": "40 mg", "route": "PO", "frequency": "twice daily x 14 days, then once daily", "instructions": "NEW — stomach acid reducer. Take 40 mg twice daily until 9/28 (with H. pylori antibiotics), then decrease to 40 mg once daily INDEFINITELY. Take 30-60 minutes before meals." },
+      { "name": "Clarithromycin", "dose": "500 mg", "route": "PO", "frequency": "twice daily x 14 days", "instructions": "NEW — antibiotic for stomach bacteria (H. pylori). Take with food. Complete entire 14-day course through 9/28/2023. Do NOT stop early." },
+      { "name": "Metronidazole", "dose": "500 mg", "route": "PO", "frequency": "twice daily x 14 days", "instructions": "NEW — antibiotic for stomach bacteria (H. pylori). Take with food. NO ALCOHOL during treatment and for 2 days after. May cause metallic taste. Complete entire 14-day course through 9/28/2023." },
+      { "name": "Carvedilol", "dose": "12.5 mg", "route": "PO", "frequency": "twice daily", "instructions": "Unchanged — for heart rate and heart failure." },
+      { "name": "Furosemide", "dose": "40 mg", "route": "PO", "frequency": "twice daily", "instructions": "DECREASED from 60 mg twice daily — water pill decreased due to recent dehydration. Take in the morning and early afternoon." },
+      { "name": "Glipizide", "dose": "5 mg", "route": "PO", "frequency": "daily", "instructions": "Unchanged — for diabetes. Take with breakfast." },
+      { "name": "Tamsulosin", "dose": "0.4 mg", "route": "PO", "frequency": "at bedtime", "instructions": "Unchanged — for prostate." },
+      { "name": "Acetaminophen", "dose": "500 mg", "route": "PO", "frequency": "every 6 hours as needed", "instructions": "NEW — for knee pain or any pain. MAXIMUM 2000 mg per day. Do NOT take ibuprofen, Advil, Aleve, or any NSAID. Tylenol (acetaminophen) is SAFE." }
+    ],
+    "medicationsOnHold": [
+      { "name": "Metformin 500 mg BID", "reason": "Kidney function still recovering. Will restart at PCP visit on 9/24 if kidney labs are normal." },
+      { "name": "Lisinopril 5 mg daily", "reason": "Kidney function still recovering. Will restart at PCP visit on 9/24 if kidney labs are normal." },
+      { "name": "Spironolactone 25 mg daily", "reason": "Kidney function still recovering. Will restart at PCP visit on 9/24 if kidney labs and potassium are normal." },
+      { "name": "Atorvastatin 40 mg at bedtime", "reason": "Temporarily held due to drug interaction with clarithromycin antibiotic. RESTART on September 29, 2023 (the day after finishing clarithromycin)." }
+    ],
+    "permanentlyDiscontinuedMedications": [
+      { "name": "Warfarin 5 mg daily", "reason": "PERMANENTLY DISCONTINUED — caused life-threatening stomach bleeding. Do NOT restart. See multidisciplinary conference note for full rationale." },
+      { "name": "Ibuprofen (and ALL NSAIDs)", "reason": "PERMANENTLY DISCONTINUED — triggered the stomach ulcer and bleeding. ALL anti-inflammatory medications (ibuprofen, Advil, Motrin, Aleve, naproxen, meloxicam, Celebrex, Voltaren, etc.) are PERMANENTLY FORBIDDEN. Use acetaminophen (Tylenol) only." },
+      { "name": "Omeprazole 20 mg daily", "reason": "Replaced by pantoprazole 40 mg daily (different stomach acid medication, fewer drug interactions)." }
+    ],
+    "dischargeCondition": "Stable, improved. Patient is ambulatory, tolerating regular diet, hemoglobin stable at 9.2 without transfusion for 4 days, creatinine returned to baseline (1.9), vital signs normal.",
+    "dischargeDisposition": "Home with spouse. Home health nursing arranged for medication management support x 1-2 weeks.",
+    "followUpAppointments": [
+      { "provider": "Dr. Sarah Chen (Primary Care)", "timing": "1 week (9/24/2023)", "reason": "Post-hospitalization medication reconciliation, recheck kidney function (BMP), restart held medications if appropriate, reinforce NSAID avoidance and stroke warning signs" },
+      { "provider": "Dr. James Wilson (Cardiology)", "timing": "2 weeks (9/26/2023)", "reason": "Atrial fibrillation management off anticoagulation, heart failure status check, discuss Holter monitor, revisit LAA occluder discussion" },
+      { "provider": "Dr. William Thompson (Gastroenterology)", "timing": "4-6 weeks (10/10 or 10/24/2023)", "reason": "Repeat EGD to confirm ulcer healing and rule out malignancy (follow-up biopsies). Confirm H. pylori eradication (may use urea breath test). Long-term GI surveillance plan." },
+      { "provider": "Home Health Nursing", "timing": "Within 48 hours of discharge", "reason": "Medication reconciliation, pill box setup, vital signs, patient/caregiver education reinforcement" }
+    ],
+    "dischargeInstructions": [
+      "TAKE ALL MEDICATIONS AS PRESCRIBED. Your medication list has changed significantly during this hospitalization. Use the medication schedule provided by the pharmacist.",
+      "COMPLETE YOUR ANTIBIOTICS: Take clarithromycin and metronidazole twice daily for the full 14 days (through September 28). Do NOT stop early even if you feel better.",
+      "NO ALCOHOL while taking metronidazole (and for 2 days after finishing). This combination can cause severe nausea and vomiting.",
+      "RESTART YOUR CHOLESTEROL MEDICINE (atorvastatin) on September 29, the day after you finish your antibiotics.",
+      "DO NOT TAKE IBUPROFEN, ADVIL, ALEVE, OR ANY ANTI-INFLAMMATORY PAIN MEDICATION — EVER. These medications caused your stomach bleeding. Use Tylenol (acetaminophen) for pain. If Tylenol is not enough, call your doctor.",
+      "WARFARIN HAS BEEN PERMANENTLY STOPPED. You are no longer on a blood thinner. This means you have a higher risk of stroke. Learn the stroke warning signs: BE-FAST (Balance, Eyes, Face drooping, Arm weakness, Speech difficulty, Time to call 911).",
+      "IF YOU DEVELOP ANY STROKE SYMPTOMS — CALL 911 IMMEDIATELY. Do not wait. Do not drive yourself. Every minute matters.",
+      "Watch for signs of recurrent bleeding: black tarry stools, blood in vomit (may look like coffee grounds), feeling lightheaded or dizzy, feeling your heart racing, or feeling faint. If ANY of these occur, call 911.",
+      "Weigh yourself every morning. Call your doctor if you gain more than 3 pounds in 1 day or 5 pounds in 1 week (may indicate heart failure worsening).",
+      "Continue your low-sodium diet. Fluid restriction 1.5 liters/day.",
+      "Keep ALL follow-up appointments — they are critically important after this hospitalization.",
+      "Complete the healthcare proxy and advance directive forms provided by social work. Bring them to your PCP appointment on 9/24.",
+      "Home health nursing will visit within 2 days of discharge to help with medications."
+    ],
+    "pendingResults": [
+      "Gastric ulcer margin biopsies (x4) — pathology pending, expected 7-10 days. Dr. Thompson's office will call with results. If results show malignancy, urgent follow-up will be arranged.",
+      "Gastric antrum biopsies (x2) — pathology pending for H. pylori histology and intestinal metaplasia assessment."
+    ],
+    "codeStatus": "Full Code. Advance care planning in progress — patient provided with healthcare proxy and living will forms to complete outpatient.",
+    "attendingPhysicianSummary": "This was a critically important hospitalization for Mr. Morrison. He presented with life-threatening upper GI hemorrhage secondary to the combination of NSAID use and supratherapeutic warfarin anticoagulation. The successful management included aggressive resuscitation, emergent anticoagulation reversal, endoscopic hemostasis of a large gastric ulcer, and H. pylori eradication. The most consequential decision of this hospitalization was the permanent discontinuation of warfarin anticoagulation, made in a multidisciplinary conference with Gastroenterology, Cardiology, and Primary Care. This leaves the patient with a significant unmitigated stroke risk (CHA₂DS₂-VASc 5) that is partially but inadequately addressed by aspirin 81 mg. This decision and its implications must be revisited at regular intervals by his outpatient care team."
+  },
+  "attestation": "I have reviewed this discharge summary in its entirety and confirm its accuracy. I was the attending physician of record for this hospitalization. I have personally supervised all aspects of this patient's care, participated in the multidisciplinary anticoagulation conference, and verified the discharge plan. The patient and his wife Patricia have been provided with comprehensive discharge instructions and have verbalized understanding of all medication changes, warning signs, and follow-up requirements.\n\nElectronically signed by: Emily Brown, MD\nDate/Time: 9/17/2023 4:30 PM"
+}

@@ -5,20 +5,23 @@
   "author": "Dr. James Wilson",
   "department": "Cardiology",
   "encounter": "ENC028",
-  "chiefComplaint": "Shortness of breath",
-  "hpi": "72-year-old male with history of Type 2 Diabetes Mellitus, CKD Stage 3b, HFrEF (EF 35%), and atrial fibrillation who presents with fatigue over the past 4 days.\n\nPatient reports gradual onset of symptoms. Worse when lying flat. Reports mild chest pressure. Some dry cough present.\n\nPatient has been compliant with medications. Admits to increased salt intake recently. Last cardiology visit was 3 months ago.",
-  "pastMedicalHistory": "1. Type 2 Diabetes Mellitus with neuropathy (diagnosed 2010)\n2. Chronic Kidney Disease Stage 3b (diagnosed 2018)\n3. Heart Failure with Reduced Ejection Fraction, EF 35% (diagnosed 2019)\n4. Atrial Fibrillation, persistent (diagnosed 2017)\n5. Hypertension (diagnosed 2005)\n6. Hyperlipidemia (diagnosed 2008)\n7. Benign Prostatic Hyperplasia (diagnosed 2016)\n8. History of pneumonia (2021)",
-  "medications": "See medication list in chart.",
-  "allergies": "Penicillin (anaphylaxis), Sulfa drugs (rash), Lisinopril (angioedema), Shellfish (hives)",
-  "socialHistory": "Former smoker (quit 1995, 20 pack-year history). Rare alcohol use. Retired accountant. Lives with wife.",
-  "familyHistory": "Father: MI at 62, HTN. Mother: T2DM. Brother: HTN.",
+  "chiefComplaint": "Annual cardiology evaluation, SGLT2i discussion",
+  "hpi": "72-year-old male with history of HFrEF (EF 30-35%, diagnosed January 2019), 3-vessel CAD (medically managed since 2018 cath), persistent atrial fibrillation (off anticoagulation since September 2023 GI bleed), CKD Stage 3b, Type 2 DM with neuropathy, and hypertension who presents for comprehensive annual cardiology evaluation. He was last seen in cardiology in November 2023 when carvedilol uptitration to target dose (25mg BID) was initiated. He reports that he has tolerated the carvedilol increase well since January 2024 — HR at home averaging 62-68, BP generally 115-125/70-78. He denies new chest pain, palpitations, presyncope, or syncope. His exercise tolerance is unchanged at approximately 1-2 blocks of walking before dyspnea limits him, which has been stable for the past year. He sleeps on 2 pillows (stable), denies PND. He has occasional evening ankle swelling that resolves overnight. He is compliant with his low-sodium diet and fluid restriction, though admits to occasional lapses. His weight has been stable around 97-98 kg per home scale.\n\nPatient had a second surveillance EGD in April 2024 (just completed) showing complete gastric ulcer healing, no dysplasia, H. pylori stool antigen negative — confirmed eradication. GI recommends continuing indefinite PPI and no anticoagulation.\n\nRegarding SGLT2 inhibitor: Discussed at length at November 2023 visit. Both cardiology and nephrology supportive of starting empagliflozin 10mg for triple benefit (HFrEF, CKD, DM). Patient was hesitant, wanting to 'get through the holidays.' He reports he is now ready to consider it but wants one more discussion before committing. His primary concern is adding another pill and potential side effects (UTI, genital infections).",
+  "pastMedicalHistory": "1. Heart Failure with Reduced Ejection Fraction, EF 30-35% (diagnosed 2019, NYHA Class II)\n2. Coronary Artery Disease, 3-vessel (LAD 60%, LCx 50%, RCA 70% — cath 2018, medically managed)\n3. Atrial Fibrillation, persistent (diagnosed 2017, off anticoagulation since 9/2023 GI bleed)\n4. Type 2 Diabetes Mellitus with peripheral neuropathy (diagnosed 2010)\n5. Chronic Kidney Disease Stage 3b (diagnosed 2018, eGFR ~36)\n6. Hypertension (diagnosed 2005)\n7. Hyperlipidemia (diagnosed 2008)\n8. History of upper GI hemorrhage — gastric ulcer, September 2023 (healed)\n9. H. pylori infection — eradicated, confirmed October 2023\n10. ACE inhibitor angioedema (lisinopril, 2018)\n11. Benign Prostatic Hyperplasia (diagnosed 2016)\n12. History of community-acquired pneumonia (2021)\n13. History of acute gout flare (2019)\n14. Vitamin D deficiency (on supplementation)",
+  "medications": "Carvedilol 25mg BID (target dose achieved January 2024)\nSacubitril/valsartan (Entresto) 97/103mg BID (target dose since July 2020)\nSpironolactone 25mg daily (since May 2019)\nFurosemide 40mg BID (since November 2021)\nMetformin 500mg BID (renally dosed since 2018)\nInsulin glargine 24 units QHS\nAspirin 81mg daily (resumed after GI bleed healing, per multidisciplinary decision)\nAtorvastatin 80mg daily\nGabapentin 300mg TID (since June 2020)\nTamsulosin 0.4mg QHS\nPantoprazole 40mg daily (indefinite, since GI bleed September 2023)\nSodium bicarbonate 650mg BID (since March 2024)\nCholecalciferol 2000 IU daily",
+  "allergies": "Penicillin (anaphylaxis — avoid all penicillins, cautious with cephalosporins)\nSulfa drugs (rash/hives)\nLisinopril (angioedema — no ACE inhibitors ever)\nShellfish (hives)",
+  "socialHistory": "Retired accountant (Springfield Financial Services, 35 years). Lives with wife Patricia in single-story home. Former smoker — quit 1995 after 20 pack-year history. Rare alcohol use (1-2 glasses of wine per week, reduced recently). No illicit drugs. Wife is primary medication manager. Previously walked 1 mile daily, now limited to 1-2 blocks by HF symptoms.",
+  "familyHistory": "Father: MI at age 68, died. HTN.\nMother: Stroke at age 82, died. HTN, DM2.\nBrother: CAD.\nSister: DM2.",
   "reviewOfSystems": {
-    "Constitutional": "No fever, chills, or weight loss",
-    "Cardiovascular": "No orthopnea",
-    "Respiratory": "No hemoptysis",
-    "GI": "Regular bowel movements",
-    "GU": "No dysuria",
-    "Neurologic": "Baseline neuropathy"
+    "Constitutional": "Chronic fatigue, stable. No fever, chills, or unintentional weight change.",
+    "Cardiovascular": "Dyspnea on exertion walking 1-2 blocks, stable x 1 year. 2-pillow orthopnea, stable. No PND, chest pain, palpitations, presyncope, or syncope.",
+    "Respiratory": "No cough, hemoptysis, or wheezing.",
+    "GI": "Regular bowel movements. No melena, hematochezia, or dyspepsia. On pantoprazole.",
+    "GU": "Nocturia x2. Weak stream (BPH). No dysuria or hematuria.",
+    "Musculoskeletal": "Chronic low back stiffness. No acute joint pain.",
+    "Neurologic": "Bilateral foot burning/tingling 4/10. No new weakness. No dizziness.",
+    "Endocrine": "No hypoglycemia. Fasting glucoses 130-155 per home monitoring.",
+    "Psychiatric": "Denies depression but wife has mentioned he seems less engaged. Patient attributes to fatigue."
   },
   "vitals": {
     "bp": "136/77 mmHg",
@@ -26,55 +29,68 @@
     "rr": "15/min",
     "temp": "98.7°F",
     "spo2": "98% RA",
-    "weight": "99.5 kg"
+    "weight": "97.5 kg"
   },
   "physicalExam": {
-    "General": "Alert, oriented, no acute distress",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "Irregularly irregular, no murmurs, JVP not elevated",
-    "Respiratory": "Clear to auscultation bilaterally",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "No edema, warm and well-perfused",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Alert, oriented, well-developed overweight male in no acute distress. Appears his stated age.",
+    "HEENT": "Normocephalic. PERRL. JVP estimated 7 cm H2O at 45 degrees (normal). No carotid bruits.",
+    "Cardiovascular": "Irregularly irregular rhythm (A-fib), rate 65. S1 normal. S2 physiologically split. No S3 gallop. Soft 2/6 holosystolic murmur at apex radiating to left axilla, consistent with known moderate mitral regurgitation. No diastolic murmurs. PMI diffusely displaced laterally (consistent with LV dilation).",
+    "Respiratory": "Clear to auscultation bilaterally without crackles, wheezes, or rhonchi. Symmetric chest expansion. No dullness to percussion.",
+    "Abdomen": "Soft, non-tender, non-distended. No hepatojugular reflux. No hepatomegaly. No ascites.",
+    "Extremities": "Trace bilateral ankle edema. Warm, well-perfused. No cyanosis or clubbing. Peripheral pulses 1+ bilaterally.",
+    "Neurologic": "Alert and oriented x3. Decreased sensation bilateral feet (known neuropathy). Motor strength 5/5 all extremities."
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
-      "icd10": "E11.65",
-      "notes": "HbA1c 8.2%. On insulin and metformin."
-    },
-    {
-      "diagnosis": "Chronic Kidney Disease Stage 3b",
-      "icd10": "N18.32",
-      "notes": "eGFR 39. Stable."
-    },
-    {
-      "diagnosis": "Heart Failure with Reduced EF",
+      "diagnosis": "Heart Failure with Reduced EF, NYHA Class II, stable",
       "icd10": "I50.22",
-      "notes": "NYHA Class II. On GDMT."
+      "notes": "EF 30-35% (last echo September 2020 — now >3 years ago, repeat echo should be considered). Clinically stable NYHA II. On near-optimal triple GDMT: carvedilol 25mg BID (target), Entresto 97/103mg BID (target), spironolactone 25mg daily. Missing SGLT2i — the fourth pillar of HFrEF GDMT per 2022 AHA/ACC guidelines. Strongly recommended starting empagliflozin today. Volume status well-compensated. No S3, lungs clear, JVP normal."
+    },
+    {
+      "diagnosis": "Coronary Artery Disease, 3-vessel, medically managed",
+      "icd10": "I25.10",
+      "notes": "Stable. No anginal symptoms. On optimal medical therapy: aspirin, statin (atorvastatin 80mg), beta-blocker. Not a candidate for revascularization per 2018 cath discussion (medical management preferred given diffuse disease and comorbidities)."
+    },
+    {
+      "diagnosis": "Persistent Atrial Fibrillation, rate controlled",
+      "icd10": "I48.1",
+      "notes": "Rate 65 on carvedilol 25mg BID. Well-controlled. Not on anticoagulation — permanent decision post-GI hemorrhage. CHA2DS2-VASc 5. Annual stroke risk ~6.7% without anticoagulation, reduced modestly with aspirin. LAA occluder (Watchman) discussed previously — patient declined additional procedure."
+    },
+    {
+      "diagnosis": "ICD candidacy for primary prevention of SCD",
+      "icd10": "Z45.02",
+      "notes": "Meets Class I indication: ischemic cardiomyopathy, EF ≤35%, NYHA II, on optimal GDMT >3 months, life expectancy >1 year. Patient has been deferring since October 2022. Will discuss again after SGLT2i initiation and repeat echocardiogram — if EF improves above 35% on quadruple therapy, may no longer meet criteria."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
-    },
-    {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "problem": "SGLT2 Inhibitor Initiation",
+      "action": "Strongly recommended starting empagliflozin 10mg daily. Reviewed evidence: EMPEROR-Reduced trial showed 25% reduction in cardiovascular death/HF hospitalization. Also provides renal protection (EMPA-KIDNEY) and glycemic benefit. Counseled on common side effects: genital mycotic infections (counsel good hygiene, loose-fitting underwear), UTI (maintain adequate hydration within fluid restriction), rare euglycemic DKA (sick-day rules — hold if ill, fasting, or pre-surgery). Patient agreed to start at next visit (May 2025) if labs remain stable. Discussed with nephrology (Dr. Park) who is supportive."
     },
     {
       "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
+      "action": "Continue carvedilol 25mg BID, Entresto 97/103mg BID, spironolactone 25mg daily. Furosemide 40mg BID — consider adjusting to asymmetric dosing if nocturia problematic. Daily weights, 2g sodium, 1.5L fluid restriction. Repeat echocardiogram ordered (last one September 2020, now >3 years — will establish new baseline before ICD decision)."
+    },
+    {
+      "problem": "Coronary Artery Disease",
+      "action": "Continue aspirin 81mg and atorvastatin 80mg. LDL goal <70 (last LDL 85 — consider further optimization). No anginal symptoms."
     },
     {
       "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "action": "Rate well-controlled. Continue current regimen. No change in anticoagulation status."
+    },
+    {
+      "problem": "ICD Decision",
+      "action": "Defer final decision pending repeat echo and SGLT2i initiation. If EF improves >35% on quadruple therapy, may no longer meet Class I criteria. Will reassess in 3-6 months after echo results available."
+    },
+    {
+      "problem": "Cardiac Rehabilitation",
+      "action": "Re-referred for outpatient cardiac rehab (initial referral November 2023, patient did not attend). Encouraged participation for functional improvement and quality of life."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 8 weeks or sooner if needed."
+      "action": "Return in 6 weeks to initiate empagliflozin (May 2025). Labs before visit: BMP, CBC, BNP. Echocardiogram scheduling in progress. Cardiac rehab intake to be scheduled."
     }
   ],
-  "attestation": "I have personally evaluated this patient and agree with the documentation above.\n\nElectronically signed by: Dr. James Wilson\nDate: 4/8/2024"
+  "attestation": "I have personally evaluated this patient with comprehensive history and physical examination. I reviewed all relevant medical records, imaging, and laboratory data. I agree with the documentation above.\n\nElectronically signed by: Dr. James Wilson, MD\nDate: 4/8/2024"
 }

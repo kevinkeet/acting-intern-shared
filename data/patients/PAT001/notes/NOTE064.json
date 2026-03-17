@@ -5,75 +5,74 @@
   "author": "Dr. Sarah Chen",
   "department": "Primary Care",
   "encounter": "ENC042",
-  "chiefComplaint": "Shortness of breath",
-  "hpi": "Patient presents for shortness of breath. Weight stable. Following low-sodium diet. Monitoring blood pressure at home.",
+  "chiefComplaint": "Shortness of breath evaluation",
+  "hpi": "Mr. Morrison is a 71-year-old male with HFrEF (EF 30-35%), persistent atrial fibrillation on warfarin, CKD Stage 3b, Type 2 DM, and diabetic neuropathy who is being seen as part of his multi-day primary care visit series this week. Today's focus is his shortness of breath, which he reports has been stable at his baseline NYHA Class II over the past several months. He becomes dyspneic walking approximately 1-1.5 blocks on flat ground or climbing half a flight of stairs. He denies dyspnea at rest. He has been sleeping on two pillows as usual without any change. He denies paroxysmal nocturnal dyspnea. He reports no acute worsening of his exercise tolerance.\n\nHis V/Q scan from May 2023 was negative for pulmonary embolism (low probability), effectively ruling out chronic thromboembolic disease as a contributor to his dyspnea. Pulmonary function tests ordered by Dr. Park (Pulmonology) have been completed — results show mild restrictive pattern likely related to obesity and volume overload, with no significant obstructive component. DLCO was mildly reduced, consistent with his cardiac disease and fluid status. These results are consistent with his dyspnea being primarily cardiac in etiology, compounded by obesity-related restriction and deconditioning.\n\nHe has been encouraged to participate in cardiac rehabilitation but has not yet enrolled. He expresses willingness but notes practical barriers — transportation and the time commitment. His wife Patricia has offered to drive him. He continues to take all his heart failure medications as prescribed.",
   "reviewOfSystems": {
-    "Constitutional": "Weight stable",
-    "Cardiovascular": "No chest pain or palpitations",
-    "Respiratory": "No cough or wheezing",
-    "GI": "No nausea or vomiting",
-    "GU": "Nocturia x2",
-    "Neurologic": "No new weakness"
+    "Constitutional": "Chronic fatigue, no fever, weight stable at 97-98 kg per home scale",
+    "Cardiovascular": "DOE as above at baseline, no chest pain, no palpitations, no orthopnea, no PND, no syncope or presyncope",
+    "Respiratory": "No cough, no wheezing, no hemoptysis. Dyspnea only with exertion as above",
+    "GI": "Appetite improving, no abdominal pain, no nausea, regular bowel movements, no melena",
+    "GU": "Nocturia x2, no dysuria (UTI resolved), no hematuria",
+    "Musculoskeletal": "Bilateral knee OA pain managed with acetaminophen and topical diclofenac, no acute joint issues",
+    "Neurologic": "Baseline neuropathy, no new weakness, no falls recently",
+    "Endocrine": "Blood sugars improved on new insulin dose (glargine 26 units), no hypoglycemia",
+    "Psychiatric": "Mood fair, sleeping better than 2 months ago"
   },
   "vitals": {
-    "bp": "147/81 mmHg",
+    "bp": "132/76 mmHg",
     "hr": "69 bpm",
-    "rr": "20/min",
+    "rr": "16/min",
     "temp": "97.6°F",
-    "spo2": "98% RA",
-    "weight": "97.1 kg"
+    "spo2": "96% RA",
+    "weight": "97.8 kg"
   },
   "physicalExam": {
-    "General": "Alert, oriented, no acute distress",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "Irregularly irregular, no murmurs, JVP not elevated",
-    "Respiratory": "Clear to auscultation bilaterally",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "No edema, warm and well-perfused",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Alert, oriented, obese male in no acute distress. Comfortable at rest. BMI approximately 33",
+    "HEENT": "Normocephalic, atraumatic. PERRL. Oropharynx clear. No JVD visible with patient seated at 45 degrees",
+    "Cardiovascular": "Irregularly irregular at 69 bpm. S1/S2 normal. 2/6 holosystolic murmur at apex (stable, known moderate MR). No S3 or S4. JVP estimated at 7 cm H2O — normal. Point of maximal impulse laterally displaced. No carotid bruits",
+    "Respiratory": "Clear to auscultation bilaterally. No crackles on this exam. No wheezes or rhonchi. Good air movement. No dullness to percussion",
+    "Abdomen": "Soft, non-tender, non-distended. Normal bowel sounds. No hepatomegaly",
+    "Extremities": "No peripheral edema today — improved. Bilateral lower extremities warm, well-perfused. Dorsalis pedis pulses 1+ bilaterally",
+    "Neurologic": "Alert and oriented x3. Decreased sensation bilateral feet in stocking distribution. No focal motor deficits. Gait slightly wide-based but steady"
   },
   "assessment": [
     {
+      "diagnosis": "Heart Failure with Reduced EF — NYHA Class II, stable",
+      "icd10": "I50.22",
+      "notes": "Dyspnea is stable at baseline. V/Q scan negative for PE. PFTs show mild restriction (obesity/volume) without obstruction — dyspnea is primarily cardiac. EF 30-35% on stress echo (1/2023). Currently on submaximal GDMT: Entresto at target, carvedilol being uptitrated (now 18.75mg BID per cardiology), spironolactone at target, no SGLT2 inhibitor yet. Volume status appears euvolemic today — no edema, no crackles, JVP normal, weight at dry weight. Cardiac rehab enrollment should be prioritized."
+    },
+    {
+      "diagnosis": "Atrial Fibrillation, persistent",
+      "icd10": "I48.1",
+      "notes": "Rate controlled. Warfarin therapeutic per anticoagulation clinic. HR 69 today on carvedilol 18.75mg BID."
+    },
+    {
       "diagnosis": "Type 2 Diabetes Mellitus",
       "icd10": "E11.65",
-      "notes": "HbA1c 7.0%. On insulin and metformin."
+      "notes": "Improved glucose control on glargine 26 units QHS per adjustment earlier this week. Will recheck A1c in 2 months."
     },
     {
       "diagnosis": "Chronic Kidney Disease Stage 3b",
       "icd10": "N18.32",
-      "notes": "eGFR 33. Stable."
-    },
-    {
-      "diagnosis": "Heart Failure with Reduced EF",
-      "icd10": "I50.22",
-      "notes": "NYHA Class II. On GDMT."
-    },
-    {
-      "diagnosis": "Atrial Fibrillation",
-      "icd10": "I48.1",
-      "notes": "Rate controlled. On anticoagulation."
+      "notes": "eGFR 37, stable. Labs reviewed this week — comprehensive management plan discussed in separate CKD-focused note."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
-    },
-    {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
-    },
-    {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
+      "problem": "Heart Failure and Dyspnea",
+      "action": "Dyspnea is cardiac in origin, confirmed by negative PE workup and PFTs. Current management: (1) Continue GDMT optimization — Entresto 97/103mg BID, carvedilol 18.75mg BID (per cardiology, target 25mg), spironolactone 25mg, furosemide 60mg BID. (2) Cardiac rehabilitation — strongly encouraged. Facilitating referral to Springfield Cardiac Rehab Center (closest to patient's home, 15-minute drive). Wife willing to provide transportation. Program is 3 times weekly for 12 weeks. Patient agreed to enroll. Referral placed today. (3) Home exercise in interim — daily walking as tolerated starting at 5-10 minutes, gradually increase. (4) SGLT2 inhibitor — continue to discuss at future visits; would benefit dyspnea through volume/cardiorenal effects."
     },
     {
       "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "action": "Rate controlled with HR 69. Continue warfarin. INR monitoring per anticoagulation clinic. No rhythm control strategy indicated."
+    },
+    {
+      "problem": "Weight Management",
+      "action": "Weight 97.8 kg today — near target. BMI 33. Cardiac rehab will include supervised exercise which may facilitate modest weight loss. Dietary counseling reinforced — complex regimen with low-sodium (HF), carb-controlled (DM), low-potassium (CKD/medications), and calorie-appropriate. Nutrition referral already in place through renal dietitian."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 6 weeks or sooner if needed."
+      "action": "CKD-focused visit tomorrow to complete this week's management series. Return to PCP in 6-8 weeks. Cardiology follow-up ongoing for carvedilol uptitration. If acute dyspnea worsening, weight gain >3 lbs in 2 days, or new symptoms, present to ED or call office."
     }
   ],
   "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Sarah Chen\nDate: 7/8/2023"

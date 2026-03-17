@@ -5,15 +5,19 @@
   "author": "Dr. James Wilson",
   "department": "Cardiology",
   "encounter": "ENC031",
-  "chiefComplaint": "Joint pain",
-  "hpi": "Patient presents for joint pain. Weight stable. Following low-sodium diet. Monitoring blood pressure at home.",
+  "chiefComplaint": "Heart failure follow-up, carvedilol optimization, ICD discussion",
+  "hpi": "Mr. Morrison is a 71-year-old male with HFrEF (EF 30-35%, diagnosed January 2019), persistent atrial fibrillation (off anticoagulation since September 2023 GI hemorrhage), CKD 3b, Type 2 DM on insulin, and diabetic neuropathy who presents for routine cardiology follow-up. He was seen last in October 2022 when ICD implantation for primary prevention was first discussed. Since then, he was hospitalized in September 2023 for upper GI hemorrhage from a gastric ulcer requiring EGD with hemostasis, resulting in permanent warfarin discontinuation. He has recovered well from that event. His carvedilol was uptitrated from 18.75mg BID to 25mg BID in January 2024 by his PCP — he reports tolerating the increased dose without symptomatic bradycardia, hypotension, or worsening fatigue. He describes stable exertional dyspnea, able to walk approximately 1-2 blocks on flat ground before needing to rest, consistent with his NYHA Class II baseline. He has occasional 2-pillow orthopnea that has been unchanged for months. He denies PND, lower extremity swelling beyond trace ankle edema, or worsening exercise tolerance. He is compliant with his daily weight monitoring — wife records values, ranging 97.5-98.5 kg over the past month. He continues to follow a low-sodium diet, though he admits to occasional indiscretions. He also reports mild bilateral knee and hip stiffness, which he attributes to deconditioning and arthritis, and has been reluctant to take any analgesics given the NSAID restriction after his GI bleed.",
   "reviewOfSystems": {
-    "Constitutional": "Reports fatigue",
-    "Cardiovascular": "Dyspnea on exertion at baseline",
-    "Respiratory": "No cough or wheezing",
-    "GI": "Regular bowel movements",
-    "GU": "No hematuria",
-    "Neurologic": "No new weakness"
+    "Constitutional": "Chronic fatigue, unchanged. Weight stable at 98 kg range. Appetite fair. No fever, chills, or night sweats.",
+    "Cardiovascular": "Exertional dyspnea at 1-2 blocks, stable NYHA II. Occasional 2-pillow orthopnea. No PND, chest pain, palpitations, or syncope. Tolerating carvedilol 25mg BID.",
+    "Respiratory": "Mild exertional dyspnea as above. No cough, wheezing, or hemoptysis.",
+    "GI": "No abdominal pain, nausea, or vomiting. No melena or hematochezia since September 2023 GI bleed. On pantoprazole indefinitely. Bowel movements regular.",
+    "GU": "Nocturia x2, stable. Weak stream from BPH. No dysuria or hematuria.",
+    "Musculoskeletal": "Mild bilateral knee and hip stiffness with deconditioning. No joint swelling or warmth. No gout flares.",
+    "Neurologic": "Chronic bilateral foot numbness and tingling, stable on gabapentin. No new weakness, dizziness, or falls.",
+    "Endocrine": "Blood sugars reasonably controlled. No hypoglycemic episodes. A1c 7.6% at last check.",
+    "Psychiatric": "Mood fair. Patient somewhat reserved today — wife notes he seems less energetic than usual.",
+    "Skin": "No new rashes, bruising, or skin changes."
   },
   "vitals": {
     "bp": "132/77 mmHg",
@@ -24,47 +28,58 @@
     "weight": "98.2 kg"
   },
   "physicalExam": {
-    "General": "Mildly fatigued-appearing",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "Irregularly irregular, no murmurs, JVP not elevated",
-    "Respiratory": "Mild crackles at bases",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "No edema, warm and well-perfused",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Obese, mildly fatigued-appearing male in no acute distress. Conversational but less animated than at prior cardiology visits.",
+    "HEENT": "Normocephalic, atraumatic. Pupils equal, round, reactive. Oropharynx clear. No JVD at 45 degrees.",
+    "Cardiovascular": "Irregularly irregular rhythm consistent with atrial fibrillation, rate 81. S1 normal, S2 physiologically split. Soft 2/6 holosystolic murmur at apex radiating toward left axilla, consistent with known moderate MR. Intermittent S3 gallop appreciated on careful auscultation. JVP estimated 8 cm H2O (borderline elevated). No carotid bruits. PMI laterally displaced.",
+    "Respiratory": "Mild bibasilar crackles, right greater than left, not clearing with cough — consistent with mild pulmonary congestion. No wheezes or rhonchi.",
+    "Abdomen": "Soft, obese, non-tender. No hepatomegaly or hepatojugular reflux. Bowel sounds normal. Small umbilical hernia noted (previously documented).",
+    "Extremities": "Trace bilateral ankle edema. Warm, well-perfused. Capillary refill <3 seconds. Distal pulses 1+ bilaterally.",
+    "Neurologic": "Alert and oriented x3. Decreased sensation bilateral feet. Motor strength grossly intact. Gait not formally assessed today.",
+    "Skin": "No pallor. No petechiae or purpura."
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
-      "icd10": "E11.65",
-      "notes": "HbA1c 7.1%. On insulin and metformin."
+      "diagnosis": "Heart Failure with Reduced EF, NYHA Class II",
+      "icd10": "I50.22",
+      "notes": "EF 30-35% on most recent echo (September 2020). Clinically stable NYHA II with borderline volume status today — mild bibasilar crackles and intermittent S3, though weight is at baseline. Currently on near-optimal GDMT: carvedilol 25mg BID (target dose now achieved), sacubitril/valsartan 97/103mg BID (target dose), spironolactone 25mg daily, furosemide 60mg AM/40mg PM. Not yet on SGLT2 inhibitor — cardiology and nephrology both support adding empagliflozin, but patient has been hesitant about adding another medication. Would complete quadruple therapy per current ACC/AHA guidelines. ICD for primary prevention continues to be indicated (EF ≤35%, NYHA II, on GDMT >3 months) — patient has been deferring since October 2022."
     },
     {
-      "diagnosis": "Chronic Kidney Disease Stage 3b",
+      "diagnosis": "Persistent Atrial Fibrillation — not anticoagulated",
+      "icd10": "I48.1",
+      "notes": "Rate control borderline today at HR 81 — may be related to mild volume overload increasing sympathetic tone. Warfarin permanently discontinued September 2023 after upper GI hemorrhage. CHA2DS2-VASc score 5, accepting elevated stroke risk with aspirin 81mg only. Watchman LAA occlusion device discussed previously — patient declined. Will need repeat TEE at some point to evaluate for LAA thrombus given no anticoagulation."
+    },
+    {
+      "diagnosis": "CKD Stage 3b",
       "icd10": "N18.32",
-      "notes": "eGFR 33. Stable."
+      "notes": "eGFR approximately 36, stable. Nephrology consult scheduled for March 2024. Relevant to HF management — limits aggressive diuresis, impacts medication choices. SGLT2 inhibitor would provide dual cardiac and renal benefit."
+    },
+    {
+      "diagnosis": "Type 2 Diabetes Mellitus",
+      "icd10": "E11.65",
+      "notes": "A1c 7.6%, at individualized target. On metformin (renally dosed), insulin glargine, sliding scale lispro. Diabetic cardiomyopathy may be a contributing factor to his HFrEF."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "problem": "Heart Failure — GDMT Optimization",
+      "action": "Carvedilol now at target dose of 25mg BID — well-tolerated with HR 81 and BP 132/77. Continue sacubitril/valsartan 97/103mg BID and spironolactone 25mg daily. Strongly encouraged patient to consider starting empagliflozin 10mg daily (SGLT2i) to complete quadruple therapy — reviewed EMPEROR-Reduced and DAPA-HF trial data showing mortality and hospitalization benefit. Patient states he wants to 'get through spring' and will discuss with nephrology at March visit. Will revisit at next cardiology appointment. Mild crackles on exam today — may be slightly volume-overloaded. Continue current furosemide 60mg AM/40mg PM. If weight trends above 99 kg or symptoms worsen, increase PM dose to 60mg and contact office."
     },
     {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "problem": "Atrial Fibrillation — Rate Control",
+      "action": "HR 81 today, borderline. Likely related to mild volume overload. Would expect rate to improve with optimal volume status. If resting HR consistently >80, may need to discuss adjunctive rate control, though options are limited given carvedilol is already at max dose. No anticoagulation change — continue aspirin 81mg daily per multidisciplinary decision."
     },
     {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
+      "problem": "ICD Discussion — Primary Prevention",
+      "action": "Patient continues to meet Class I indication for ICD: EF ≤35%, NYHA II, on optimal GDMT >3 months, life expectancy >1 year. Discussed again today — reviewed that sudden cardiac death accounts for approximately 50% of HF mortality and that ICD reduces this risk by 30%. Patient understands but remains apprehensive about device implantation. Wife supportive of ICD. Patient requests more time to think. Provided updated patient education materials. Will revisit at each subsequent visit. If patient agrees, will refer to electrophysiology."
     },
     {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "problem": "Cardiac Imaging",
+      "action": "Most recent TTE September 2020 — now over 3 years ago. Plan to order repeat TTE to reassess EF, MR severity, and ventricular dimensions now that carvedilol is at target dose. This will also provide updated data for ICD discussion. Additionally, will schedule TEE to evaluate for LAA thrombus given persistent A-fib without anticoagulation."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 12 weeks or sooner if needed."
+      "action": "Cardiology in 3 months (May 2024). Labs before visit: BMP, CBC, BNP, lipid panel. TTE and TEE to be scheduled within the next 2-3 months. Continue daily weight monitoring — call office if >3 lb gain in one day or >5 lbs in one week."
     }
   ],
-  "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. James Wilson\nDate: 2/7/2024"
+  "attestation": "I personally saw and examined the patient. I reviewed the relevant medical history including the September 2023 GI hemorrhage and anticoagulation decision. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. James Wilson, MD\nDate: 2/7/2024"
 }

@@ -1,0 +1,29 @@
+{
+  "id": "IMG023",
+  "date": "2025-04-22T02:17:04.999Z",
+  "modality": "Nuclear",
+  "description": "V/Q Scan",
+  "facility": "Springfield Medical Center",
+  "status": "Final",
+  "radiologist": "Dr. Patricia Lee",
+  "orderingProvider": "Dr. James Wilson",
+  "indication": "Acute worsening dyspnea and pleuritic chest discomfort, heart failure with reduced ejection fraction, atrial fibrillation. CT angiography deferred due to CKD Stage 3b (eGFR 36). Evaluate for pulmonary embolism.",
+  "technique": "Ventilation imaging was performed following inhalation of Tc-99m DTPA aerosol. Perfusion imaging was performed following intravenous administration of Tc-99m MAA (4 mCi) in 8 standard projections.",
+  "findings": {
+    "ventilation": "Homogeneous ventilation throughout both lungs. No focal ventilation defects identified. Mild central deposition of aerosol.",
+    "perfusion": "Homogeneous perfusion throughout both lungs without segmental or subsegmental perfusion defects. Mild heterogeneous perfusion at the bilateral lung bases, likely secondary to dependent atelectasis and small pleural effusions.",
+    "matching": "No ventilation-perfusion mismatches identified. Basilar perfusion heterogeneity is matched on ventilation images.",
+    "chestXray": "Concurrent chest radiograph demonstrates cardiomegaly with four-chamber enlargement, mild pulmonary vascular congestion, small bilateral pleural effusions (right greater than left), and bibasilar atelectasis. Findings consistent with congestive heart failure."
+  },
+  "impression": [
+    "Low probability for pulmonary embolism. No segmental or subsegmental ventilation-perfusion mismatches.",
+    "Bilateral basilar perfusion heterogeneity is matched on ventilation imaging and attributed to atelectasis and pleural effusions in the setting of heart failure.",
+    "Concurrent chest radiograph findings consistent with congestive heart failure exacerbation."
+  ],
+  "recommendations": [
+    "Acute dyspnea most likely related to heart failure exacerbation",
+    "Optimize diuretic therapy and heart failure management",
+    "If clinical suspicion remains high, consider lower extremity venous duplex ultrasound"
+  ],
+  "comparison": "V/Q scan dated 2023-05-26. Similar low-probability findings. Basilar heterogeneity appears mildly more prominent, likely reflecting progression of heart failure."
+}

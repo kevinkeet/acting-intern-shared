@@ -5,70 +5,83 @@
   "author": "Dr. James Wilson",
   "department": "Cardiology",
   "encounter": "ENC007",
-  "chiefComplaint": "Dizziness",
-  "hpi": "Patient presents for dizziness. Reports some shortness of breath with exertion, at baseline. No chest pain or palpitations.",
+  "chiefComplaint": "Dizziness, post-fall cardiology follow-up",
+  "hpi": "Mr. Morrison is a 73-year-old male with HFrEF (EF 30-35%), persistent A-fib (off anticoagulation), CKD 3b, T2DM with neuropathy, and multiple comorbidities who returns to cardiology clinic 5 days after his mechanical fall for continued evaluation. He reports a new symptom of intermittent lightheadedness over the past 2 days, occurring primarily when transitioning from sitting to standing and when bending forward. The episodes last 15-30 seconds and resolve with sitting. He has not had any further falls. He denies true vertigo (no room-spinning sensation), syncope, or near-syncope with loss of awareness. He denies associated chest pain, palpitations, or new shortness of breath at rest. His exertional dyspnea remains at baseline — can walk approximately 2 blocks, unchanged.\n\nI note that his PCP (Dr. Adams) saw him yesterday and identified mild subclinical volume overload with borderline elevated JVP, faint bibasilar crackles, and weight up 0.8 kg. An extra furosemide 20mg dose was given. Today his weight is down to 97.5 kg (from 97.8 yesterday), suggesting the additional diuresis was effective. The dizziness may be related to mild relative hypovolemia from the diuretic boost in the setting of his already narrow hemodynamic window (low EF + rate-controlled A-fib + multiple anti-hypertensives). Alternatively, it could represent a transient drop in ventricular rate with pauses in his A-fib, though he has no history of symptomatic bradycardia.\n\nHe reports he has been somewhat less active since the fall due to fear of falling again. He agrees to physical therapy. He and his wife have discussed the ICD further — she is supportive, and he is 'leaning toward yes' but wants to hear more about the procedure from an electrophysiologist.",
   "reviewOfSystems": {
-    "Constitutional": "No fever, chills, or weight loss",
-    "Cardiovascular": "No chest pain or palpitations",
-    "Respiratory": "No hemoptysis",
-    "GI": "No nausea or vomiting",
-    "GU": "No dysuria",
-    "Neurologic": "No new weakness"
+    "Constitutional": "Mild fatigue, chronic. Weight trending back down after extra diuretic dose. Appetite fair. No fevers or chills.",
+    "Cardiovascular": "Intermittent lightheadedness with positional changes as described. No syncope or true presyncope. Exertional dyspnea stable at NYHA II baseline. No orthopnea or PND. No chest pain, pressure, or palpitations.",
+    "Respiratory": "No cough, wheezing, or hemoptysis. Breathing comfortable at rest.",
+    "GI": "No nausea or vomiting. Regular bowel movements. No melena or hematochezia.",
+    "GU": "Nocturia x2-3. Increased urination yesterday after extra furosemide dose. No dysuria.",
+    "Musculoskeletal": "Right knee bruise resolving. No new joint complaints.",
+    "Neurologic": "Lightheadedness as described. Bilateral foot numbness at baseline. No new weakness, speech changes, or vision changes.",
+    "Skin": "No new bruises or wounds."
   },
   "vitals": {
-    "bp": "134/75 mmHg",
-    "hr": "81 bpm",
+    "bp": "118/68 mmHg (seated), 108/62 mmHg (standing at 1 min) — orthostatic drop of 10/6 mmHg (borderline)",
+    "hr": "60 bpm seated, 68 bpm standing (irregularly irregular)",
     "rr": "15/min",
     "temp": "97.8°F",
-    "spo2": "95% RA",
-    "weight": "99.1 kg"
+    "spo2": "96% RA",
+    "weight": "97.5 kg",
+    "bmi": "32.5"
   },
   "physicalExam": {
-    "General": "Mildly fatigued-appearing",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "Irregularly irregular, no murmurs, JVP not elevated",
-    "Respiratory": "Mild crackles at bases",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "1+ pedal edema bilaterally",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Obese male, alert, comfortable at rest. Mildly fatigued-appearing. No acute distress.",
+    "HEENT": "Normocephalic, atraumatic. PERRL. Oropharynx clear. No cervical LAD.",
+    "Cardiovascular": "Irregularly irregular rhythm at 60 bpm. Normal S1, S2. Grade 2/6 systolic murmur at apex (known MR, unchanged). No S3 gallop today (was questionable previously). JVP 6-7 cm H2O — improved from yesterday's borderline elevation. PMI laterally displaced. No peripheral cyanosis.",
+    "Respiratory": "Lungs clear to auscultation bilaterally. No crackles today (resolved from yesterday's faint bibasilar crackles). No wheezes or rhonchi.",
+    "Abdomen": "Soft, non-tender, non-distended. Normoactive bowel sounds.",
+    "Extremities": "Trace bilateral ankle edema — improved from yesterday. Skin warm. DP pulses 1+ bilaterally. Right knee ecchymosis fading.",
+    "Neurologic": "Alert, oriented x3. No focal deficits. Decreased sensation bilateral feet. No Dix-Hallpike nystagmus (tested — negative bilaterally, arguing against BPPV)."
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
-      "icd10": "E11.65",
-      "notes": "HbA1c 7.0%. On insulin and metformin."
+      "diagnosis": "Heart Failure with Reduced Ejection Fraction",
+      "icd10": "I50.22",
+      "notes": "NYHA Class II. Volume status improving after extra diuretic dose yesterday — JVP normalized, crackles resolved, weight down to 97.5 kg. Responding well. On optimized quadruple GDMT at target doses. BNP was 380 in August — will recheck. TTE ordered on 9/14 for serial EF assessment (last formal TTE was 9/2020). Functional status stable at baseline. ICD discussion progressing — patient leaning toward proceeding; EP referral to be placed."
+    },
+    {
+      "diagnosis": "Dizziness — likely multifactorial",
+      "icd10": "R42",
+      "notes": "New positional lightheadedness over 2 days. Differential: (1) Relative hypovolemia from extra furosemide dose in a patient with narrow hemodynamic window — BP 118/68 seated with borderline orthostatic drop. This is the most likely etiology. (2) Medication-related: carvedilol 25mg BID + Entresto + furosemide all contribute to hypotension. (3) A-fib with pauses — resting HR 60, which is on the lower end; if he has occasional longer pauses in A-fib, this could cause transient dizziness. ECG today shows A-fib with mean ventricular rate 60, no pauses >2 seconds captured on rhythm strip. (4) BPPV — Dix-Hallpike negative bilaterally. (5) Vasovagal — less likely without clear triggers. Recommend holding the extra furosemide doses (return to standing regimen), ensuring adequate hydration, and monitoring."
+    },
+    {
+      "diagnosis": "Atrial Fibrillation, persistent",
+      "icd10": "I48.1",
+      "notes": "Rate controlled (HR 60 at rest). No anticoagulation since 9/2023. On aspirin 81mg. ECG today: A-fib with controlled ventricular response, rate 60, LVH by voltage, old inferior Q waves, no acute ST changes. No significant pauses captured. If dizziness persists, will consider Holter monitor to evaluate for intermittent bradycardia or prolonged pauses."
     },
     {
       "diagnosis": "Chronic Kidney Disease Stage 3b",
       "icd10": "N18.32",
-      "notes": "eGFR 36. Stable."
+      "notes": "eGFR 34.8. Needs BMP recheck this week to assess renal function after diuretic changes — risk of pre-renal AKI with aggressive diuresis in CKD patient."
     },
     {
-      "diagnosis": "Heart Failure with Reduced EF",
-      "icd10": "I50.22",
-      "notes": "NYHA Class II. On GDMT."
+      "diagnosis": "Type 2 Diabetes Mellitus",
+      "icd10": "E11.65",
+      "notes": "A1c 7.2%. Stable. Continue current regimen."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
-    },
-    {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "problem": "Dizziness / Blood Pressure Management",
+      "action": "Dizziness most likely related to relative hypovolemia from extra furosemide in setting of low EF and GDMT-related BP lowering. BP 118/68 with borderline orthostatic drop. Return to standing furosemide regimen: 60mg AM + 40mg PM (do NOT take extra doses). Ensure adequate oral hydration (1.5-2L/day — balance with fluid restriction). Rise slowly from sitting/lying positions. If dizziness persists beyond 48 hours or worsens, will order Holter monitor to assess for A-fib with intermittent bradycardia or prolonged pauses. If Holter shows pauses >3 seconds or symptomatic bradycardia, this would support ICD (with pacing capability) even more strongly."
     },
     {
       "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
+      "action": "Volume status improved today. Return to standing diuretic doses. Continue quadruple GDMT unchanged — do NOT reduce carvedilol or Entresto at this time despite borderline BP, as these are prognostically important. Recheck BMP in 3-5 days to ensure no AKI from diuresis. TTE pending — will schedule within 4 weeks. Daily weights, sodium restriction."
     },
     {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "problem": "ICD Evaluation",
+      "action": "Patient more receptive today. Will place EP cardiology referral to Dr. Patel for formal ICD evaluation and shared decision-making discussion. Provided written information on: procedure risks/benefits, device longevity, driving restrictions (48 hours post-implant for primary prevention), follow-up device checks, MRI-conditional devices. Patient and wife to discuss and come to next EP appointment with questions."
+    },
+    {
+      "problem": "Post-Fall Rehabilitation",
+      "action": "PT referral confirmed — 6 sessions for balance training and lower extremity strengthening. Encourage gradual return to baseline activity. Validate patient's anxiety about falling but emphasize that deconditioning from inactivity increases fall risk further."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 10 weeks or sooner if needed."
+      "action": "BMP in 3-5 days. Return to cardiology in 4 weeks for TTE results review and ICD discussion update. EP referral to be scheduled. If dizziness persists >48 hours, call office for Holter monitor order. PCP follow-up in October."
     }
   ],
   "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. James Wilson\nDate: 9/17/2025"

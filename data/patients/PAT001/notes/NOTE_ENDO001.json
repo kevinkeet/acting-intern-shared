@@ -1,0 +1,117 @@
+{
+  "id": "NOTE_ENDO001",
+  "type": "Consult Note",
+  "title": "Endocrinology Consultation - Diabetes Optimization",
+  "date": "2024-06-15T10:00:00.000Z",
+  "author": "Dr. Lisa Martinez",
+  "department": "Endocrinology",
+  "encounter": "ENC_ENDO001",
+  "signedDate": "2024-06-15T15:00:00.000Z",
+  "sections": {
+    "reasonForConsultation": "Diabetes optimization in the context of chronic kidney disease stage 3b and heart failure with reduced ejection fraction",
+    "historyOfPresentIllness": "Mr. Morrison is a 72-year-old gentleman with a 15-year history of type 2 diabetes mellitus referred by his primary care physician Dr. Chen for endocrinology consultation to optimize glycemic management in the setting of his complex comorbidities including CKD stage 3b (eGFR 35) and HFrEF (EF 30-35%).\n\nHis diabetes was initially managed with metformin alone, then glipizide was added approximately 8 years ago. In 2022, he was transitioned from glipizide to basal-bolus insulin therapy (glargine + lispro sliding scale) due to progressive hyperglycemia and declining renal function. Metformin was dose-reduced to 500 mg BID at that time given eGFR in the 35-40 range.\n\nCurrent regimen:\n- Metformin 500 mg PO twice daily\n- Insulin glargine 24 units subcutaneous at bedtime\n- Insulin lispro sliding scale with meals (rarely uses correction doses per patient report)\n\nPatient reports fasting blood sugars typically 130-160 mg/dL, post-meal readings 180-220 mg/dL. He checks blood sugars 2-3 times daily. He denies episodes of symptomatic hypoglycemia but admits he does not always check when he feels \"a little shaky.\" His wife Patricia helps with insulin administration and blood sugar monitoring.\n\nHe has diabetic complications including peripheral neuropathy (on gabapentin), mild nonproliferative diabetic retinopathy (last eye exam December 2023), and diabetic nephropathy contributing to his CKD.\n\nHe was started on empagliflozin 10 mg daily in November 2023 by cardiology for HFrEF benefit, which also provides glycemic and renal benefits. His most recent A1c was 7.4% (drawn 6/10/2024).",
+    "currentMedications": [
+      "Metformin 500 mg PO twice daily",
+      "Insulin glargine 24 units subcutaneous at bedtime",
+      "Insulin lispro sliding scale with meals",
+      "Empagliflozin 10 mg PO daily",
+      "Carvedilol 18.75 mg PO twice daily",
+      "Lisinopril 10 mg PO daily",
+      "Furosemide 60 mg PO twice daily",
+      "Spironolactone 25 mg PO daily",
+      "Pantoprazole 40 mg PO daily",
+      "Atorvastatin 40 mg PO daily",
+      "Aspirin 81 mg PO daily",
+      "Gabapentin 300 mg PO three times daily",
+      "Tamsulosin 0.4 mg PO daily",
+      "Sodium bicarbonate 650 mg PO twice daily",
+      "Cholecalciferol 2000 IU PO daily"
+    ],
+    "laboratoryReview": {
+      "a1cHistory": [
+        { "date": "2024-06-10", "value": "7.4%" },
+        { "date": "2024-01-15", "value": "7.6%" },
+        { "date": "2023-07-20", "value": "7.8%" },
+        { "date": "2023-01-10", "value": "7.2%" },
+        { "date": "2022-06-15", "value": "8.1%" }
+      ],
+      "recentMetabolicPanel": {
+        "date": "2024-06-10",
+        "glucose": "148 mg/dL (fasting)",
+        "creatinine": "1.98 mg/dL",
+        "egfr": "35 mL/min/1.73m2",
+        "potassium": "4.8 mEq/L",
+        "sodium": "138 mEq/L"
+      },
+      "additionalLabs": {
+        "cPeptide": "2.1 ng/mL (indicates residual beta-cell function)",
+        "insulinAntibodies": "Negative",
+        "tsh": "2.4 mIU/L (normal)"
+      }
+    },
+    "physicalExamination": {
+      "vitals": {
+        "bloodPressure": "126/72 mmHg",
+        "heartRate": "70 bpm, irregularly irregular",
+        "weight": "95.2 kg",
+        "height": "172 cm",
+        "bmi": "32.2"
+      },
+      "general": "Obese male in no acute distress, pleasant and cooperative",
+      "neck": "No thyromegaly, no lymphadenopathy",
+      "cardiovascular": "Irregularly irregular, no murmurs appreciated",
+      "extremities": "Trace bilateral pedal edema, skin changes of venous stasis, decreased sensation to light touch bilateral feet",
+      "skin": "No acanthosis nigricans, injection sites on abdomen without lipohypertrophy"
+    },
+    "assessment": "72-year-old male with type 2 diabetes mellitus of 15 years duration, complicated by peripheral neuropathy, mild NPDR, and diabetic nephropathy (CKD 3b), in the context of HFrEF and atrial fibrillation. Current A1c 7.4% on metformin, basal insulin, and sliding scale lispro, with empagliflozin added 7 months ago.\n\nKey considerations for this patient:\n\n1. A1c target: Given his age (72), CKD stage 3b, HFrEF, risk of hypoglycemia, and limited life expectancy considerations, an A1c target of 7-8% is appropriate per ADA guidelines for older adults with complex medical conditions. His current A1c of 7.4% is within this range.\n\n2. Empagliflozin: Already on this SGLT2 inhibitor, which provides triple benefit — cardiovascular (EMPEROR-Reduced trial), renal (EMPA-KIDNEY trial), and glycemic. This was an excellent addition by cardiology. Both cardiology and nephrology are supportive of continuing.\n\n3. Metformin: Current dose of 500 mg BID is at the maximum recommended for his eGFR (30-45 mL/min). Will need to discontinue if eGFR drops below 30.\n\n4. Insulin regimen: Current basal-bolus approach is reasonable. Sliding scale lispro is suboptimal — would benefit from fixed mealtime doses or a more systematic approach. However, adding complexity may not serve this patient well.\n\n5. Hypoglycemia risk: Significant concern given CKD (impaired gluconeogenesis, prolonged insulin clearance), beta-blocker use (masks symptoms), and age. A continuous glucose monitor (CGM) would be very helpful to identify unrecognized hypoglycemia and optimize insulin dosing.\n\n6. Weight management: BMI 32.2, contributing to insulin resistance. GLP-1 receptor agonist could address weight and glucose but would add injection burden and GI side effects — patient already hesitant about medication complexity.",
+    "recommendations": [
+      {
+        "category": "Glycemic Targets",
+        "items": [
+          "A1c target 7.0-8.0% — current 7.4% is at goal",
+          "Fasting glucose target 100-150 mg/dL",
+          "Pre-meal glucose target 100-150 mg/dL",
+          "Avoid hypoglycemia (<70 mg/dL) — this is the primary safety concern"
+        ]
+      },
+      {
+        "category": "Current Regimen - Continue",
+        "items": [
+          "Continue metformin 500 mg BID — provides cardiovascular benefit and insulin sensitization; monitor eGFR closely, discontinue if <30",
+          "Continue insulin glargine 24 units at bedtime — do not increase at this time given A1c at target",
+          "Continue empagliflozin 10 mg daily — triple benefit for HF, CKD, and diabetes",
+          "Transition from sliding scale lispro to fixed mealtime dosing only if patient willing — discussed but patient prefers current flexibility"
+        ]
+      },
+      {
+        "category": "Continuous Glucose Monitor",
+        "items": [
+          "Strongly recommend CGM (FreeStyle Libre or Dexcom G7) — would allow identification of hypoglycemic episodes (especially nocturnal), time-in-range assessment, and insulin optimization without increasing finger-stick burden",
+          "Medicare covers CGM for insulin-requiring diabetics — patient qualifies",
+          "Patient expressed interest but wants to 'think about it' — will revisit at next appointment",
+          "Wife Patricia is supportive and willing to help with sensor application"
+        ]
+      },
+      {
+        "category": "Medication Considerations - Deferred",
+        "items": [
+          "GLP-1 receptor agonist (semaglutide or dulaglutide): Would help with weight loss, glucose control, and has cardiovascular benefit. However, patient is hesitant about adding more medications and injections. Will revisit if A1c rises above 8% or if patient becomes receptive.",
+          "Patient education provided on empagliflozin benefits — patient was not aware it was helping his diabetes in addition to his heart. This seemed to reassure him about his medication burden."
+        ]
+      },
+      {
+        "category": "Monitoring",
+        "items": [
+          "Recheck A1c in 3 months (September 2024)",
+          "Continue home blood sugar monitoring at minimum 2x daily (fasting + one post-meal)",
+          "Annual dilated eye exam (next due December 2024)",
+          "Annual foot exam with podiatry",
+          "Renal function monitoring per nephrology"
+        ]
+      }
+    ],
+    "patientEducation": "Spent 30 minutes with patient and wife discussing diabetes management goals, the rationale for relaxed A1c targets in his situation, the benefits of empagliflozin across his multiple conditions, and the potential value of a continuous glucose monitor. Patient was initially concerned that his A1c of 7.4% was 'too high' — reassured him that in his case, avoiding low blood sugars is as important as avoiding high ones. Discussed hypoglycemia recognition and treatment (rule of 15). Wife Patricia is very engaged in his care and asked excellent questions about CGM technology. Patient is reluctant to add new medications at this time but open to discussion at future visits. Provided written diabetes self-management handouts.",
+    "plan": "1. Continue current diabetes regimen — metformin 500 mg BID, glargine 24 units QHS, lispro sliding scale with meals, empagliflozin 10 mg daily\n2. A1c target 7-8% — current 7.4% is at goal\n3. Revisit CGM at next visit — patient considering\n4. Recheck A1c in 3 months\n5. Follow-up in 3-4 months or sooner if glycemic concerns\n6. Coordinate with nephrology regarding metformin continuation as eGFR trends"
+  },
+  "attestation": "I personally evaluated this patient, reviewed all available laboratory data and records, and formulated the assessment and recommendations. I spent 30 minutes in direct patient education and counseling, greater than 50% of the 45-minute visit.\n\nElectronically signed by: Lisa Martinez, MD, FACE\nDate/Time: 6/15/2024 3:00 PM"
+}

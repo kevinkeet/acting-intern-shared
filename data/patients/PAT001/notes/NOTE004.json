@@ -2,69 +2,104 @@
   "id": "NOTE004",
   "type": "Progress Note",
   "date": "2025-12-18T16:22:18.416Z",
-  "author": "Dr. David Park",
-  "department": "Pulmonology",
+  "author": "Dr. Jennifer Adams",
+  "department": "Internal Medicine",
   "encounter": "ENC004",
-  "chiefComplaint": "Neuropathy symptoms",
-  "hpi": "Patient presents for neuropathy symptoms. Doing well on current regimen. Blood sugars well-controlled. No hypoglycemic episodes.",
+  "chiefComplaint": "Neuropathy symptoms, annual wellness visit",
+  "hpi": "Mr. Morrison is a 73-year-old male with HFrEF (EF 30-35%), CKD 3b, T2DM on insulin, persistent A-fib (off anticoagulation post-GI bleed 9/2023), diabetic neuropathy, HTN, hyperlipidemia, and BPH who presents for his annual wellness visit with a primary concern of worsening neuropathic pain in his feet. He reports that over the past 6-8 weeks, the burning and tingling sensation in both feet has intensified from his baseline 3/10 to 4-5/10, particularly at night when he is trying to sleep. The discomfort extends from the soles of his feet to approximately mid-shin bilaterally, which he feels is higher than before. He describes the pain as a constant burning with intermittent sharp, electric-like jabs, worse with prolonged standing or walking. He has been taking gabapentin 300mg TID as prescribed but feels it is not providing as much relief as it used to. He denies any new foot wounds, color changes, or temperature changes in his feet. His wife inspects his feet daily and has not noted any ulcers or concerning lesions. He reports his blood sugars have been slightly higher over the past month — fasting readings 150-180 — which he attributes to holiday-related dietary changes and reduced physical activity. His last A1c was 7.4% in November. He denies any recent hypoglycemic episodes. He also reports increased nocturia (now 3 times per night, up from 2) and asks whether his medications could be contributing.",
   "reviewOfSystems": {
-    "Constitutional": "Weight stable",
-    "Cardiovascular": "Dyspnea on exertion at baseline",
-    "Respiratory": "Mild dyspnea",
-    "GI": "No nausea or vomiting",
-    "GU": "No dysuria",
-    "Neurologic": "No dizziness"
+    "Constitutional": "Weight stable at 99.2 kg per home scale. Reports moderate fatigue, worse in evenings. Appetite fair. Denies fevers, chills, or night sweats.",
+    "Cardiovascular": "Exertional dyspnea at baseline (2-block walking tolerance, unchanged). No orthopnea or PND. No chest pain or palpitations. Reports occasional sensation of heart 'skipping' — longstanding, attributed to A-fib.",
+    "Respiratory": "No cough, wheezing, or hemoptysis. No change in baseline dyspnea.",
+    "GI": "No abdominal pain, nausea, or vomiting. Regular bowel movements. No melena or hematochezia. Tolerating pantoprazole without issue.",
+    "GU": "Nocturia x3 (worsened from x2). Hesitancy and weak stream occasionally. No dysuria or hematuria. No genital infections.",
+    "Musculoskeletal": "Bilateral knee stiffness with weather changes. Low back pain intermittent, mild. No acute joint swelling.",
+    "Neurologic": "Worsening bilateral foot burning and tingling as described. Numbness in feet, walking 'on cotton.' No new weakness, no falls since September incident. Balance feels slightly worse.",
+    "Endocrine": "Blood sugars running higher than usual per home monitoring. No polyuria beyond nocturia. No polydipsia.",
+    "Skin": "Dry skin bilateral lower legs. No ulcers, wounds, or new rashes. No infections.",
+    "Eyes": "Last ophthalmology visit December 2024 — mild NPDR, no macular edema. No acute vision changes."
   },
   "vitals": {
     "bp": "131/80 mmHg",
-    "hr": "85 bpm",
+    "hr": "68 bpm (irregularly irregular)",
     "rr": "14/min",
-    "temp": "98.9°F",
-    "spo2": "98% RA",
-    "weight": "98.2 kg"
+    "temp": "98.4°F",
+    "spo2": "96% RA",
+    "weight": "99.2 kg",
+    "bmi": "33.1"
   },
   "physicalExam": {
-    "General": "Mildly fatigued-appearing",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "S1/S2 normal, mild peripheral edema",
-    "Respiratory": "No wheezes or rhonchi",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "Trace bilateral ankle edema",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Obese male, alert and conversant. Appears slightly fatigued but in no acute distress.",
+    "HEENT": "Normocephalic, atraumatic. PERRL, EOMI. TMs clear bilaterally. Oropharynx clear, no exudates. Moist mucous membranes. No thyromegaly. No cervical or supraclavicular lymphadenopathy.",
+    "Cardiovascular": "Irregularly irregular rhythm at 68 bpm. Normal S1, physiologically split S2. Grade 2/6 holosystolic murmur at apex (known MR, stable). No S3 or S4. JVP approximately 7 cm H2O. Bilateral carotid pulses 2+ without bruits.",
+    "Respiratory": "Clear to auscultation bilaterally. No crackles, wheezes, or rhonchi. Normal respiratory effort.",
+    "Abdomen": "Obese, soft, non-tender, non-distended. No hepatosplenomegaly. Normoactive bowel sounds. Umbilical hernia present, reducible, unchanged.",
+    "Extremities": "Trace bilateral ankle edema, symmetric. Skin dry, thin, and hairless on distal lower extremities. No ulcers, calluses, or skin breakdown on feet bilaterally. Nails mildly thickened, trimmed by podiatry. Dorsalis pedis pulses 1+ bilaterally. Posterior tibial pulses 1+ bilaterally. Capillary refill ~3 seconds at toes.",
+    "Neurologic": "Alert, oriented x3. CN II-XII grossly intact. Motor 5/5 upper, 4+/5 bilateral lower (chronic). Sensory: markedly diminished light touch and pinprick bilateral feet to mid-shin (previously to ankle — appears to have progressed). Monofilament: absent at 4/10 sites plantar surfaces bilaterally (worse than 3/10 at last podiatry visit). Vibration absent at great toes and medial malleoli bilaterally. Position sense diminished at great toes. Ankle reflexes absent bilaterally. Knee reflexes 1+ bilaterally. Romberg positive with moderate sway. Tandem gait impaired.",
+    "Skin": "No pressure ulcers. Mild xerosis bilateral lower extremities. No stasis dermatitis. No fungal infection noted on feet.",
+    "Rectal/Prostate": "Deferred — last DRE performed by urology 6 months ago, prostate mildly enlarged, no nodules."
   },
   "assessment": [
     {
+      "diagnosis": "Diabetic Peripheral Neuropathy, progressive",
+      "icd10": "G63",
+      "notes": "Worsening bilateral sensorimotor neuropathy — symptoms progressed from 3/10 to 4-5/10 over the past 2 months and sensory loss now extends to mid-shin (previously ankle level). Monofilament testing deteriorated from 3/10 to 4/10 absent sites. This is expected progression in the setting of longstanding diabetes (16 years) despite improved glycemic control (A1c 7.4%). Gabapentin 300mg TID may be reaching therapeutic ceiling. Consider pregabalin transition with renal dosing adjustment (75mg BID for eGFR 30-60), or gabapentin uptitration to 400mg TID. Fall risk remains moderate — patient declined assistive devices after Sept 2025 fall."
+    },
+    {
       "diagnosis": "Type 2 Diabetes Mellitus",
       "icd10": "E11.65",
-      "notes": "HbA1c 7.4%. On insulin and metformin."
+      "notes": "A1c 7.4% at last check (November). Blood sugars trending upward per home monitoring — likely seasonal dietary changes. Will recheck A1c with next labs. Mild NPDR on last eye exam — surveillance in 6 months."
+    },
+    {
+      "diagnosis": "Heart Failure with Reduced Ejection Fraction",
+      "icd10": "I50.22",
+      "notes": "NYHA Class II, stable. On optimized quadruple GDMT. Weight edging up to 99.2 kg (dry weight ~97 kg). BNP 510 at October labs — mildly elevated from trend. Only trace edema, lungs clear, JVP not elevated. Weight gain may be partially related to holiday diet. Will monitor closely."
     },
     {
       "diagnosis": "Chronic Kidney Disease Stage 3b",
       "icd10": "N18.32",
-      "notes": "eGFR 34. Stable."
+      "notes": "eGFR 35.8, Cr 1.96 per October labs. Stable. K 5.0 — at upper threshold, needs close monitoring. Medication adjustments may be needed if K rises further."
+    },
+    {
+      "diagnosis": "Atrial Fibrillation, persistent",
+      "icd10": "I48.1",
+      "notes": "Rate controlled (HR 68). No anticoagulation per joint decision post-GI bleed Sept 2023. Aspirin 81mg daily continues. Stroke risk counseling provided."
+    },
+    {
+      "diagnosis": "BPH with worsening LUTS",
+      "icd10": "N40.1",
+      "notes": "Nocturia worsened from 2x to 3x nightly. Contributing factors: furosemide (asymmetric dosing PM dose), empagliflozin (glucosuria/osmotic diuresis), and BPH progression. Tamsulosin 0.4mg daily continues. Will discuss timing of empagliflozin (morning dosing may help) and consider urology referral if LUTS worsen further."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "problem": "Diabetic Neuropathy",
+      "action": "Neuropathy progressing despite glycemic control. Current gabapentin 300mg TID — will increase to 400mg TID (renal-adjusted dose appropriate for eGFR 35). If insufficient relief in 4-6 weeks, consider transition to pregabalin 75mg BID. Reinforced daily foot inspections. Protective footwear and custom orthotics (prescribed by podiatry). Podiatry follow-up in 6 months for nail care and monofilament reassessment. Fall prevention counseling: removed throw rugs (done), nightlights installed (done), shower chair in place. Gently revisited use of cane for nighttime bathroom trips — patient again declines but wife will assist."
     },
     {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "problem": "Diabetes",
+      "action": "Continue metformin 250mg BID, glargine 24u QHS, lispro sliding scale, empagliflozin 10mg daily. Reinforce dietary counseling for holiday season — carb-consistent diet. Recheck A1c with January labs. If A1c rises >7.8%, will increase glargine by 2 units."
     },
     {
       "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
+      "action": "Continue quadruple GDMT unchanged. Weight up to 99.2 kg — counsel on strict sodium restriction over holidays. If weight exceeds 100 kg or edema worsens, add extra furosemide 20mg PRN (patient educated on when to take). Continue daily weights. Annual cardiology visit due — will schedule."
     },
     {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "problem": "CKD",
+      "action": "Continue current regimen. K 5.0 — recheck in January with BMP. If K >5.3, will consider reducing spironolactone to 12.5mg daily. Continue sodium bicarbonate 650mg BID."
+    },
+    {
+      "problem": "BPH / Nocturia",
+      "action": "Move empagliflozin dosing to morning (currently taking mid-day). Continue tamsulosin 0.4mg QHS. If nocturia continues to worsen, will refer to urology for reassessment. AUA symptom score not formally administered today — will do at next visit."
+    },
+    {
+      "problem": "Preventive Care",
+      "action": "Annual influenza vaccine: Fluzone High-Dose administered today (left deltoid, Lot #FL2025-8837). Pneumococcal: Prevnar 20 given 9/2022 — complete. COVID booster: last received 10/2023 — discuss updated booster at next visit. Shingrix series complete (2019). Colorectal cancer screening: last colonoscopy 2020, next due 2030. Abdominal aortic aneurysm screening: completed (normal). Annual labs ordered for January."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 11 weeks or sooner if needed."
+      "action": "Labs in January: BMP, CBC, A1c, BNP, lipid panel, UACR, vitamin D, PTH. Return to PCP in 4-5 weeks. Ophthalmology follow-up June 2026 for diabetic retinopathy. Annual cardiology visit to be scheduled."
     }
   ],
-  "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. David Park\nDate: 12/18/2025"
+  "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Jennifer Adams\nDate: 12/18/2025"
 }

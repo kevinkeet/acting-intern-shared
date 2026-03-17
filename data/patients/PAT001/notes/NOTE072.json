@@ -5,80 +5,84 @@
   "author": "Dr. James Wilson",
   "department": "Cardiology",
   "encounter": "ENC049",
-  "chiefComplaint": "Shortness of breath",
-  "hpi": "72-year-old male with history of Type 2 Diabetes Mellitus, CKD Stage 3b, HFrEF (EF 35%), and atrial fibrillation who presents with chest discomfort over the past 6 days.\n\nPatient reports gradual onset of symptoms. Occurs at rest. Reports mild chest pressure. Some dry cough present.\n\nPatient has not been compliant with medications. Following low-sodium diet. Last cardiology visit was 3 months ago.",
-  "pastMedicalHistory": "1. Type 2 Diabetes Mellitus with neuropathy (diagnosed 2010)\n2. Chronic Kidney Disease Stage 3b (diagnosed 2018)\n3. Heart Failure with Reduced Ejection Fraction, EF 35% (diagnosed 2019)\n4. Atrial Fibrillation, persistent (diagnosed 2017)\n5. Hypertension (diagnosed 2005)\n6. Hyperlipidemia (diagnosed 2008)\n7. Benign Prostatic Hyperplasia (diagnosed 2016)\n8. History of pneumonia (2021)",
-  "medications": "See medication list in chart.",
-  "allergies": "Penicillin (anaphylaxis), Sulfa drugs (rash), Lisinopril (angioedema), Shellfish (hives)",
-  "socialHistory": "Former smoker (quit 1995, 20 pack-year history). Rare alcohol use. Retired accountant. Lives with wife.",
-  "familyHistory": "Father: MI at 62, HTN. Mother: T2DM. Brother: HTN.",
+  "chiefComplaint": "Heart failure and atrial fibrillation follow-up",
+  "hpi": "Mr. Morrison is a 70-year-old male with HFrEF (EF 30-35%), persistent atrial fibrillation on warfarin, CKD Stage 3b, Type 2 DM on insulin and metformin, 3-vessel CAD (medically managed), hyperlipidemia, HTN, BPH, and diabetic peripheral neuropathy who presents for comprehensive cardiology follow-up. He was last seen in cardiology in October 2022 where ICD implantation was discussed. He reports he has discussed the ICD with his wife and children over the holidays and remains ambivalent — he understands the mortality benefit but is concerned about the procedure and the device itself. He would like to defer the decision for now but is open to revisiting it.\n\nRegarding his heart failure, his functional capacity remains stable at NYHA Class II. He can walk approximately 1-1.5 blocks on flat ground before dyspnea limits him, which is unchanged from his post-hospitalization baseline. He denies orthopnea, PND, or increasing lower extremity edema. He has been compliant with daily weights and reports they have been stable at 97-98 kg. He is adherent to his sodium-restricted diet, though he reports some dietary lapses during the holiday season. He denies chest pain, syncope, or presyncope.\n\nA stress echocardiogram was performed earlier this month showing EF 30-35% without new wall motion abnormalities, but exercise capacity was limited to 4.2 METs, terminated by dyspnea. No ischemic ECG changes were noted during the study.\n\nHis atrial fibrillation remains persistent and rate-controlled on carvedilol 12.5mg BID. He has had no episodes of rapid heart rate or symptomatic palpitations. His INR has been therapeutic per anticoagulation clinic records (most recent INR 2.5 on 1/24/2023).",
+  "pastMedicalHistory": "1. Heart Failure with Reduced Ejection Fraction, EF 30-35% (diagnosed 2019, last hospitalization August 2022)\n2. Atrial Fibrillation, persistent (diagnosed 2017)\n3. Coronary Artery Disease, 3-vessel (catheterization 2018 — LAD 60%, LCx 50%, RCA 70%, medically managed)\n4. Type 2 Diabetes Mellitus with diabetic neuropathy (diagnosed 2010)\n5. Chronic Kidney Disease Stage 3b (diagnosed 2018)\n6. Hypertension (diagnosed 2005)\n7. Hyperlipidemia (diagnosed 2008)\n8. Benign Prostatic Hyperplasia (diagnosed 2016)\n9. History of acute gout (2019)\n10. History of community-acquired pneumonia (2021)\n11. Lisinopril angioedema (2018) — on ARB/ARNI without issues",
+  "medications": "Sacubitril/valsartan (Entresto) 97/103mg BID, carvedilol 12.5mg BID, spironolactone 25mg daily, furosemide 60mg BID, warfarin 5mg daily, metformin 250mg BID, insulin glargine 24 units QHS, atorvastatin 80mg daily, gabapentin 300mg TID, tamsulosin 0.4mg daily, vitamin D3 2000 IU daily, aspirin 81mg daily (held while on warfarin)",
+  "allergies": "Penicillin (anaphylaxis), Sulfa drugs (rash/hives), Lisinopril (angioedema — no ACE inhibitors), Shellfish (hives)",
+  "socialHistory": "Former smoker — quit 1995, 20-pack-year history. Rare alcohol use (occasional glass of wine at holidays). Retired accountant (Springfield Financial Services, 35 years). Lives with wife Patricia in single-story home. Two adult children — son and daughter, both local. Active in church community though attendance has decreased recently due to fatigue. Does not drive long distances. Independent in ADLs.",
+  "familyHistory": "Father: MI at age 62, HTN, died age 74 of stroke. Mother: Type 2 DM onset age 55, died age 82 of CHF. Brother: HTN, alive. Sister: Type 2 DM onset age 58, alive.",
   "reviewOfSystems": {
-    "Constitutional": "Reports fatigue",
-    "Cardiovascular": "Dyspnea on exertion at baseline",
-    "Respiratory": "Mild dyspnea",
-    "GI": "No nausea or vomiting",
-    "GU": "Nocturia x2",
-    "Neurologic": "Baseline neuropathy"
+    "Constitutional": "Chronic fatigue, no fevers, no chills, weight stable",
+    "Cardiovascular": "Dyspnea on exertion at baseline as above, no orthopnea, no PND, no chest pain, no syncope, no palpitations",
+    "Respiratory": "Occasional dry cough, no hemoptysis, no wheezing",
+    "GI": "Appetite fair, no abdominal pain, no nausea/vomiting, no melena or hematochezia",
+    "GU": "Nocturia x2-3, weak stream, no dysuria, no hematuria",
+    "Musculoskeletal": "Chronic knee discomfort, no acute joint symptoms",
+    "Neurologic": "Baseline bilateral foot numbness, no new weakness, no dizziness",
+    "Endocrine": "No hypoglycemic episodes recently",
+    "Hematologic": "No easy bruising or bleeding",
+    "Psychiatric": "Low energy, slight decrease in motivation — denies depressed mood"
   },
   "vitals": {
-    "bp": "135/90 mmHg",
-    "hr": "78 bpm",
-    "rr": "20/min",
+    "bp": "128/76 mmHg",
+    "hr": "72 bpm",
+    "rr": "18/min",
     "temp": "98.6°F",
-    "spo2": "94% RA",
+    "spo2": "95% RA",
     "weight": "98.0 kg"
   },
   "physicalExam": {
-    "General": "Mildly fatigued-appearing",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "Irregularly irregular, no murmurs, JVP not elevated",
-    "Respiratory": "No wheezes or rhonchi",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "No edema, warm and well-perfused",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Pleasant obese male in no acute distress. Alert, conversational, appears mildly fatigued. BMI approximately 33",
+    "HEENT": "Normocephalic, atraumatic. PERRL. Sclera anicteric. Oral mucosa moist. No carotid bruits bilaterally. Neck supple, no thyromegaly, no lymphadenopathy",
+    "Cardiovascular": "Irregularly irregular rhythm at 72 bpm consistent with atrial fibrillation. PMI laterally displaced to anterior axillary line (consistent with cardiomegaly). Normal S1, physiologically split S2. 2/6 holosystolic murmur at apex radiating to left axilla (known moderate MR, stable). No S3 or S4 today. No rubs. JVP estimated at 7 cm H2O — within normal limits. No hepatojugular reflux. Bilateral radial and dorsalis pedis pulses palpable, 1+ bilaterally",
+    "Respiratory": "Clear to auscultation bilaterally. No crackles, wheezes, or rhonchi. No dullness to percussion at bases. Good bilateral air entry",
+    "Abdomen": "Soft, non-tender, non-distended. No hepatomegaly. No ascites. Normal bowel sounds",
+    "Extremities": "Trace bilateral ankle edema, non-pitting. No cyanosis or clubbing. Skin warm and intact. No venous stasis changes",
+    "Neurologic": "Alert and oriented x3. Decreased sensation bilateral feet — chronic, per neuropathy. Gross motor strength 5/5 upper and lower extremities"
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
-      "icd10": "E11.65",
-      "notes": "HbA1c 7.1%. On insulin and metformin."
+      "diagnosis": "Heart Failure with Reduced EF",
+      "icd10": "I50.22",
+      "notes": "NYHA Class II, stable since September 2022. EF 30-35% on recent stress echo (1/2023), unchanged from prior echo (9/2020). Exercise capacity limited to 4.2 METs. On triple neurohormonal blockade: ARNI (Entresto at target dose), beta-blocker (carvedilol at submaximal dose 12.5mg BID, target 25mg), MRA (spironolactone 25mg). Notably NOT yet on SGLT2 inhibitor — strong indication given HFrEF, CKD, and DM. Carvedilol needs uptitration. ICD indicated for primary prevention (EF ≤35%, NYHA II-III, on GDMT >3 months) but patient deferring."
+    },
+    {
+      "diagnosis": "Atrial Fibrillation, persistent",
+      "icd10": "I48.1",
+      "notes": "Rate controlled — resting HR 72 on carvedilol 12.5mg BID. On warfarin, INR therapeutic (2.5 on 1/24). CHA2DS2-VASc 5 (HTN, DM, age 65-74, vascular disease, HF). Anticoagulation well-managed. No consideration for rhythm control given persistent nature and hemodynamic stability."
+    },
+    {
+      "diagnosis": "Coronary Artery Disease, 3-vessel",
+      "icd10": "I25.10",
+      "notes": "Medically managed since 2018 catheterization. No evidence of ischemia on stress echo. On atorvastatin 80mg, beta-blocker. No anginal symptoms."
     },
     {
       "diagnosis": "Chronic Kidney Disease Stage 3b",
       "icd10": "N18.32",
-      "notes": "eGFR 40. Stable."
-    },
-    {
-      "diagnosis": "Heart Failure with Reduced EF",
-      "icd10": "I50.22",
-      "notes": "NYHA Class II. On GDMT."
-    },
-    {
-      "diagnosis": "Atrial Fibrillation",
-      "icd10": "I48.1",
-      "notes": "Rate controlled. On anticoagulation."
+      "notes": "eGFR approximately 36. Stable trajectory. Important consideration for any medication changes — SGLT2i actually beneficial for CKD progression."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "problem": "Heart Failure — GDMT Optimization",
+      "action": "Current regimen is submaximal. Two key optimizations needed: (1) Uptitrate carvedilol from 12.5mg to 18.75mg BID — will start at next visit in 4 weeks if HR and BP tolerate. Target 25mg BID. Patient counseled on possible increased fatigue during uptitration. (2) Strongly recommend adding empagliflozin 10mg daily (SGLT2 inhibitor) — EMPEROR-Reduced trial showed 25% RR reduction in CV death/HF hospitalization, and additional benefit for CKD and DM. Discussed with patient — he is hesitant about adding another medication. Will revisit at next visit. Continue Entresto 97/103mg BID, spironolactone 25mg daily, furosemide 60mg BID. Continue daily weights, 2g sodium restriction. Consider cardiac rehab referral for supervised exercise program."
     },
     {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
-    },
-    {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
+      "problem": "ICD for Primary Prevention",
+      "action": "Patient meets Class I indication: EF ≤35%, NYHA II, on optimal GDMT >3 months, >1 year expected survival. Patient remains ambivalent. Discussed risks (infection, lead complications, inappropriate shocks) and benefits (mortality reduction of ~30% in primary prevention trials). He understands but wants more time. Will continue to revisit. If he decides to proceed, will refer to EP for evaluation and implantation. No contraindications identified."
     },
     {
       "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "action": "Rate controlled. Continue warfarin with INR goal 2.0-3.0. No indication for rhythm control strategy. If carvedilol uptitrated, will monitor resting HR — goal 60-80 bpm."
+    },
+    {
+      "problem": "Coronary Artery Disease",
+      "action": "Medically managed, no ischemic symptoms, no ischemia on stress testing. Continue atorvastatin 80mg. LDL at recent check was 68 — at goal. Continue secondary prevention measures."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 4 weeks or sooner if needed."
+      "action": "Return to cardiology in 4 weeks for carvedilol uptitration. Labs before next visit: BMP (K monitoring with spironolactone/Entresto), BNP. If any decompensation symptoms — acute dyspnea, weight gain >3 lbs in 2 days, inability to lie flat — present to ED or call clinic urgently."
     }
   ],
   "attestation": "I have personally evaluated this patient and agree with the documentation above.\n\nElectronically signed by: Dr. James Wilson\nDate: 1/31/2023"

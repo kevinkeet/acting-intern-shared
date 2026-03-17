@@ -1,0 +1,160 @@
+{
+  "id": "NOTE_NURS001",
+  "type": "Nursing Assessment",
+  "title": "Admission Nursing Assessment - Community-Acquired Pneumonia",
+  "date": "2021-02-10T10:00:00.000Z",
+  "author": "Maria Garcia, RN, BSN",
+  "department": "Medical-Surgical Nursing",
+  "encounter": "ENC_ADM002",
+  "signedDate": "2021-02-10T10:45:00.000Z",
+  "sections": {
+    "patientIdentification": {
+      "name": "Robert Morrison",
+      "dob": "03/15/1952",
+      "age": "69 years",
+      "mrn": "PAT001",
+      "admittingPhysician": "Dr. Emily Brown",
+      "admissionDate": "2021-02-10",
+      "admissionTime": "09:15",
+      "admissionSource": "Emergency Department",
+      "admittingDiagnosis": "Community-acquired pneumonia with hypoxia"
+    },
+    "allergyVerification": {
+      "allergiesConfirmed": true,
+      "allergies": [
+        { "substance": "Penicillin", "reaction": "Anaphylaxis", "severity": "Severe", "armband": "RED allergy band applied" },
+        { "substance": "Sulfa drugs", "reaction": "Rash, hives", "severity": "Moderate" }
+      ],
+      "note": "CRITICAL ALLERGY: PCN anaphylaxis. Patient being started on ceftriaxone per ID recommendation — epinephrine at bedside. Nurse to remain at bedside during first infusion."
+    },
+    "vitalSigns": {
+      "temperature": "101.4°F (38.6°C) oral",
+      "bloodPressure": "132/78 mmHg (right arm, sitting)",
+      "heartRate": "98 bpm, irregularly irregular",
+      "respiratoryRate": "24/min",
+      "oxygenSaturation": "89% on RA → 94% on 2L NC",
+      "painScore": "4/10 (chronic bilateral foot neuropathy, not acute)",
+      "weight": "95.2 kg",
+      "height": "178 cm",
+      "bmi": "30.1"
+    },
+    "fallRiskAssessment": {
+      "tool": "Morse Fall Scale",
+      "score": 55,
+      "riskLevel": "Moderate",
+      "factors": [
+        "Age ≥65 (+25)",
+        "Secondary diagnosis/comorbidities (+15)",
+        "Ambulatory aid: furniture for support (+15)",
+        "IV access (+0 — peripheral, not heparin lock)",
+        "Gait: normal/bedrest/immobile (+0)",
+        "Mental status: oriented to own ability (+0)"
+      ],
+      "interventions": [
+        "Yellow fall risk wristband applied",
+        "Bed in lowest position with brakes locked",
+        "Call light within reach, instructed on use",
+        "Non-skid footwear provided",
+        "Bathroom assistance offered",
+        "Belongings within reach",
+        "Room clear of clutter",
+        "Notify when ambulating — assist x1 minimum"
+      ]
+    },
+    "pressureInjuryAssessment": {
+      "tool": "Braden Scale",
+      "score": 18,
+      "riskLevel": "Mild risk",
+      "subscores": {
+        "sensoryPerception": "3 — Slightly limited (decreased sensation bilateral feet due to neuropathy)",
+        "moisture": "4 — Rarely moist",
+        "activity": "3 — Walks occasionally (limited by dyspnea and HF)",
+        "mobility": "4 — No limitations",
+        "nutrition": "3 — Adequate (decreased appetite with illness but usually eats well)",
+        "frictionShear": "3 — No apparent problem"
+      },
+      "skinAssessment": "Skin intact on full body assessment. No pressure injuries. Bilateral lower extremities with 1+ pitting edema (chronic). Skin warm and dry on trunk. Bilateral feet with decreased sensation to light touch. No open wounds, rashes, or bruising noted. IV site right forearm clean, dry, intact, no erythema."
+    },
+    "painAssessment": {
+      "currentPain": "4/10",
+      "location": "Bilateral feet — chronic diabetic neuropathy",
+      "quality": "Burning, tingling, numbness",
+      "duration": "Chronic — several years",
+      "aggravatingFactors": "Standing for prolonged periods, end of day",
+      "relievingFactors": "Gabapentin, rest, elevation",
+      "acutePain": "Denies acute chest pain, abdominal pain, or pleuritic pain. Mild myalgias with fever — 2/10.",
+      "painManagementPlan": "Continue gabapentin 300 mg TID for neuropathy. Acetaminophen 650 mg q6h PRN for myalgias and fever. Avoid NSAIDs (CKD)."
+    },
+    "functionalStatus": {
+      "priorToAdmission": "Ambulatory without assistive device. Limited exercise tolerance due to HF — walks 1-2 blocks at baseline. Independent with ADLs. Lives in single-story home with wife.",
+      "currentStatus": "Ambulatory with assistance x1. Dyspneic with minimal exertion. Able to transfer bed to chair independently. Requiring O2 supplementation.",
+      "adlAssessment": {
+        "bathing": "Independent with setup assistance",
+        "dressing": "Independent",
+        "toileting": "Independent — uses bedside commode or bathroom with assistance to ambulate",
+        "feeding": "Independent",
+        "mobility": "Requires assistance for ambulation due to dyspnea and fall risk"
+      }
+    },
+    "nutritionScreening": {
+      "dietOrder": "Diabetic, low-sodium (<2g), cardiac",
+      "fluidRestriction": "None currently (was on 1.5L restriction outpatient for HF — held per physician given decreased PO intake and acute illness)",
+      "appetite": "Decreased x 3 days per illness. Tolerating small meals.",
+      "dentures": "No",
+      "swallowAssessment": "No dysphagia. Passed bedside swallow screen.",
+      "nutritionRisk": "Low — BMI 30.1, albumin within normal limits"
+    },
+    "ivAccess": {
+      "type": "Peripheral IV",
+      "gauge": "20G",
+      "location": "Right forearm",
+      "insertedDate": "2021-02-10",
+      "insertedBy": "ED nursing",
+      "condition": "Patent, no signs of infiltration or phlebitis. Flushed with 10 mL NS.",
+      "currentInfusions": "NS 75 mL/hr, ceftriaxone 1g IV q24h, azithromycin 500 mg IV (first dose)"
+    },
+    "isolationPrecautions": {
+      "type": "Standard + Droplet precautions",
+      "reason": "Pending COVID-19 PCR result",
+      "ppe": "Surgical mask for patient when outside room. Staff: N95, gown, gloves, eye protection per hospital COVID protocol.",
+      "roomType": "Private room, negative pressure if available",
+      "note": "Precautions to remain until COVID-19 PCR results available. Patient educated on hand hygiene and mask use."
+    },
+    "psychosocialAssessment": {
+      "mood": "Mildly anxious about hospitalization, otherwise appropriate affect",
+      "supportSystem": "Wife Patricia Morrison at bedside. Listed as primary contact and healthcare proxy. Son (David Morrison) lives locally — contacted and updated.",
+      "advanceDirectives": "Full code. Healthcare proxy: Patricia Morrison. Living will on file — reviewed, consistent with full code.",
+      "spiritualNeeds": "Catholic. Declined chaplain visit at this time.",
+      "dischargeNeeds": "Anticipate discharge to home with wife. No anticipated need for home health services. Will reassess."
+    },
+    "patientFamilyTeaching": {
+      "topicsDiscussed": [
+        "Orientation to room, call light, nurse call system",
+        "Incentive spirometry: Demonstrated use, goal 10 times per hour while awake. Return demonstration performed by patient — good technique.",
+        "Importance of ambulation: Encouraged to get out of bed to chair for meals and walk in room with assistance as tolerated.",
+        "O2 therapy: Keep nasal cannula in place, call nurse if it falls off. Do not adjust flow rate.",
+        "Cough hygiene: Cover mouth, dispose of tissues, hand hygiene",
+        "Fall prevention: Call for assistance before getting out of bed. Use non-skid socks.",
+        "Medication allergy precautions: Will be receiving ceftriaxone — nurse will stay at bedside during infusion. Report any itching, rash, throat tightness, or difficulty breathing IMMEDIATELY.",
+        "COVID precautions: Wear mask when staff enter room, hand hygiene"
+      ],
+      "patientResponse": "Patient and wife verbalized understanding of all teaching points. Wife actively engaged in care planning.",
+      "barriers": "None identified. Patient is health literate and engaged in his care. Hearing adequate. Vision adequate with glasses."
+    },
+    "planOfCare": [
+      "Monitor vital signs q4h, continuous pulse oximetry",
+      "Strict I/O, daily weights",
+      "Incentive spirometry q1h while awake",
+      "Ambulation with assist x1 TID as tolerated",
+      "Administer ceftriaxone with bedside monitoring (first dose) — epinephrine at bedside",
+      "Blood glucose monitoring AC and HS, sliding scale insulin per orders",
+      "Fall precautions per Morse score",
+      "Diabetic foot check daily",
+      "Mouth care q4h",
+      "Reassess pain q4h",
+      "Assess respiratory status q4h and PRN",
+      "Contact physician for: SpO2 <90%, RR >30, HR >120, SBP <90, temperature >103°F, any signs of allergic reaction"
+    ]
+  },
+  "attestation": "Nursing admission assessment completed. Patient assessed and plan of care initiated. All orders reviewed and implemented.\n\nElectronically signed by: Maria Garcia, RN, BSN\nDate/Time: 2/10/2021 10:45 AM"
+}

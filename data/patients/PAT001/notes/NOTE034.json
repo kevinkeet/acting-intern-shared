@@ -5,76 +5,75 @@
   "author": "Dr. Emily Brown",
   "department": "Emergency Medicine",
   "encounter": "ENC023",
-  "chiefComplaint": "Back pain",
-  "hpi": "Patient presents for back pain. Weight stable. Following low-sodium diet. Monitoring blood pressure at home.",
+  "chiefComplaint": "Telephone follow-up — cough and back pain",
+  "hpi": "Telephone follow-up with Mr. Morrison, 72-year-old male who was evaluated yesterday for new dry cough following an observation admission for abdominal discomfort. He reports the cough has improved somewhat overnight — less frequent, still dry, no sputum. He slept reasonably well with only mild cough when first lying down. No fever, no worsening dyspnea, no chest pain, no facial swelling. However, he now mentions chronic low back pain that has been bothering him more over the past few days, which he attributes to increased time lying in bed during his observation stay. He describes it as a dull ache across the lower lumbar region, rated 4/10, worse with prolonged sitting, better with gentle walking. No radiation down the legs beyond his usual neuropathy tingling. No bowel or bladder changes (beyond his baseline BPH symptoms). No saddle anesthesia. No leg weakness. This is consistent with his known mild degenerative changes seen on prior imaging (KUB January 2023 noted mild degenerative changes lumbar spine). He has been managing with acetaminophen 650mg as needed (2-3 times daily) with good effect. He confirms he is NOT taking any NSAIDs (counseled repeatedly to avoid given CKD, HF, and GI bleed history). Weight this morning: 97.5 kg — excellent diuresis response. Today is his last day of increased furosemide (60mg BID). He will resume 60mg AM/40mg PM tomorrow. His wife reports he seems in better spirits overall.",
   "reviewOfSystems": {
-    "Constitutional": "No fever, chills, or weight loss",
-    "Cardiovascular": "No orthopnea",
-    "Respiratory": "No hemoptysis",
-    "GI": "Regular bowel movements",
-    "GU": "No dysuria",
-    "Neurologic": "No dizziness"
+    "Constitutional": "No fever, chills, or weight loss. Energy improving.",
+    "Cardiovascular": "No chest pain, palpitations, orthopnea.",
+    "Respiratory": "Cough improving, less frequent. No hemoptysis or sputum.",
+    "GI": "No abdominal pain (resolved). Regular bowel movements. Good appetite.",
+    "GU": "No dysuria. Nocturia x2.",
+    "Musculoskeletal": "Low back pain 4/10, chronic, worsened by inactivity. No radiculopathy beyond baseline neuropathy. No leg weakness.",
+    "Neurologic": "Chronic bilateral foot numbness, stable. No dizziness or new weakness. No saddle anesthesia.",
+    "Skin": "No rash or swelling."
   },
   "vitals": {
-    "bp": "145/79 mmHg",
-    "hr": "80 bpm",
+    "bp": "145/79 mmHg (home)",
+    "hr": "80 bpm (home)",
     "rr": "14/min",
-    "temp": "98.9°F",
-    "spo2": "94% RA",
-    "weight": "99.2 kg"
+    "temp": "98.9°F (home)",
+    "spo2": "94% (home pulse oximeter)",
+    "weight": "97.5 kg (home scale)"
   },
   "physicalExam": {
-    "General": "Comfortable, well-appearing",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "S1/S2 normal, mild peripheral edema",
-    "Respiratory": "No wheezes or rhonchi",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "No edema, warm and well-perfused",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Telephone encounter — no physical exam performed. Patient sounds comfortable, speaking in complete sentences without dyspnea.",
+    "HEENT": "Not assessed (telephone).",
+    "Cardiovascular": "Not assessed. Patient denies chest pain, palpitations, or worsening edema.",
+    "Respiratory": "Not assessed. Cough improving per patient report.",
+    "Abdomen": "Not assessed. Patient reports no abdominal pain.",
+    "Extremities": "Not assessed. No new swelling reported.",
+    "Musculoskeletal": "Not assessed. Back pain described as chronic, mechanical, without red flag symptoms.",
+    "Neurologic": "Not assessed. No new neurologic symptoms reported."
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
-      "icd10": "E11.65",
-      "notes": "HbA1c 7.6%. On insulin and metformin."
+      "diagnosis": "Dry cough, improving, likely viral URI",
+      "icd10": "R05.9",
+      "notes": "Cough improving at 2 days. No red flags (afebrile, no sputum, no dyspnea, no angioedema). Self-limited process. If not resolved in 10 days, will need further evaluation."
     },
     {
-      "diagnosis": "Chronic Kidney Disease Stage 3b",
-      "icd10": "N18.32",
-      "notes": "eGFR 36. Stable."
+      "diagnosis": "Chronic low back pain, mechanical",
+      "icd10": "M54.5",
+      "notes": "Flare of chronic mechanical LBP, likely from deconditioning and increased bed rest during observation stay. Known mild degenerative changes lumbar spine on prior imaging. No red flag symptoms (no radiculopathy, no saddle anesthesia, no bowel/bladder dysfunction, no fever, no weight loss). Managing appropriately with acetaminophen. No NSAIDs — absolute contraindication given CKD, HF, and GI bleed history."
     },
     {
-      "diagnosis": "Heart Failure with Reduced EF",
+      "diagnosis": "Heart Failure with Reduced EF, excellent diuretic response",
       "icd10": "I50.22",
-      "notes": "NYHA Class II. On GDMT."
+      "notes": "Weight 97.5 kg, near target dry weight. Excellent response to 5-day increased furosemide course. Will resume baseline dosing tomorrow."
     },
     {
-      "diagnosis": "Atrial Fibrillation",
-      "icd10": "I48.1",
-      "notes": "Rate controlled. On anticoagulation."
+      "diagnosis": "Post-observation follow-up",
+      "icd10": "Z09",
+      "notes": "Abdominal discomfort resolved. Post-contrast Cr stable. Metformin resumed. Overall trajectory positive."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "problem": "Cough",
+      "action": "Continue supportive care. Should be self-limited. Return for evaluation if worsens, develops fever, sputum production, or persists beyond 2 weeks."
     },
     {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "problem": "Low Back Pain",
+      "action": "Continue acetaminophen 650mg q6h PRN (max 3g/day given hepatic steatosis finding). Absolutely no NSAIDs. Encourage gentle activity and walking as tolerated — prolonged bed rest will worsen deconditioning. Consider PT referral for both back pain and general reconditioning at PCP visit. Warm compresses as needed."
     },
     {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
-    },
-    {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "problem": "Heart Failure / Diuresis",
+      "action": "Today is last day of furosemide 60mg BID. Resume baseline 60mg AM/40mg PM tomorrow (9/16). Continue daily weights. Target weight range 97-98 kg. If weight rises above 98.5 kg or symptoms worsen, call the office."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 6 weeks or sooner if needed."
+      "action": "PCP appointment 9/18 (3 days). This completes the ED/observation follow-up series. All further management to be coordinated by PCP and subspecialists."
     }
   ],
-  "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Emily Brown\nDate: 9/15/2024"
+  "attestation": "Telephone follow-up encounter documented. Patient assessed by phone. Plan discussed with patient and wife.\n\nElectronically signed by: Dr. Emily Brown, MD\nDate: 9/15/2024"
 }

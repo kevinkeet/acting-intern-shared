@@ -2,69 +2,89 @@
   "id": "NOTE003",
   "type": "Progress Note",
   "date": "2026-01-18T16:22:18.416Z",
-  "author": "Dr. Patricia Lee",
-  "department": "Radiology",
+  "author": "Dr. Jennifer Adams",
+  "department": "Internal Medicine",
   "encounter": "ENC003",
-  "chiefComplaint": "Shortness of breath",
-  "hpi": "Patient presents for shortness of breath. Doing well on current regimen. Blood sugars well-controlled. No hypoglycemic episodes.",
+  "chiefComplaint": "Shortness of breath, PHQ-9 follow-up",
+  "hpi": "Mr. Morrison is a 73-year-old male with HFrEF (EF 30-35%), CKD 3b, T2DM on insulin, persistent A-fib (off anticoagulation post-GI bleed 9/2023), diabetic neuropathy, HTN, hyperlipidemia, and BPH who presents for evaluation of increased dyspnea on exertion and scheduled PHQ-9 depression screening follow-up. Patient reports that over the past 10 days he has noticed his shortness of breath with walking is slightly worse than his usual baseline. He previously could walk approximately 2 blocks comfortably but now feels winded at about 1.5 blocks. He denies any change in his lower extremity swelling, and his daily home weights have been stable at 97.0-97.3 kg. He denies orthopnea, paroxysmal nocturnal dyspnea, or new-onset cough. He notes that the cooler January weather seems to aggravate his symptoms. He has been compliant with all medications including his diuretics. Blood sugars per home monitoring have been in the 125-165 range fasting without any hypoglycemic episodes. His wife Patricia confirms medication compliance and dietary adherence, though she notes he has been less active over the past several weeks, spending more time watching television and declining invitations to his grandson's basketball games. She is concerned about his mood and requested the depression screening be performed at this visit.",
   "reviewOfSystems": {
-    "Constitutional": "No fever, chills, or weight loss",
-    "Cardiovascular": "No orthopnea",
-    "Respiratory": "No cough or wheezing",
-    "GI": "No nausea or vomiting",
-    "GU": "No dysuria",
-    "Neurologic": "No dizziness"
+    "Constitutional": "Reports persistent fatigue and low energy for the past month. Reduced appetite — eating smaller portions. No fever, chills, or night sweats. Weight stable per home monitoring.",
+    "Cardiovascular": "Mildly worsened exertional dyspnea as described in HPI. No orthopnea (still uses 2 pillows, unchanged). No PND. No chest pain, pressure, or tightness. No palpitations or syncope.",
+    "Respiratory": "No productive cough or hemoptysis. No wheezing. Slightly more dyspneic with stairs than usual.",
+    "GI": "Appetite decreased. No nausea, vomiting, diarrhea, or constipation. No melena or bright red blood per rectum. Taking pantoprazole daily without issue.",
+    "GU": "Nocturia x2-3, stable. No dysuria, hematuria, or urgency. No genital infections.",
+    "Musculoskeletal": "General deconditioning. Bilateral knee stiffness. No acute joint swelling or erythema.",
+    "Neurologic": "Bilateral foot numbness and tingling at baseline (4/10 on gabapentin). No new focal deficits, vision changes, or speech difficulty.",
+    "Psychiatric": "Low mood, anhedonia, reduced interest in previously enjoyed activities (church choir, grandchildren visits, reading). Sleep difficulty — early morning awakening plus nocturia interruptions. Denies hopelessness or suicidal ideation. Agrees to formal PHQ-9 today.",
+    "Skin": "No new rashes, wounds, or skin breakdown. Wife inspects feet daily — no ulcers."
   },
   "vitals": {
-    "bp": "130/89 mmHg",
-    "hr": "82 bpm",
+    "bp": "130/78 mmHg",
+    "hr": "66 bpm (irregularly irregular)",
     "rr": "19/min",
     "temp": "97.8°F",
     "spo2": "95% RA",
-    "weight": "97.2 kg"
+    "weight": "97.2 kg",
+    "bmi": "32.4"
   },
   "physicalExam": {
-    "General": "Mildly fatigued-appearing",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "S1/S2 normal, mild peripheral edema",
-    "Respiratory": "Clear to auscultation bilaterally",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "Trace bilateral ankle edema",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Obese male, appears fatigued and somewhat withdrawn. Makes appropriate eye contact but offers minimal spontaneous conversation. No acute distress.",
+    "HEENT": "Normocephalic, atraumatic. PERRL. Conjunctivae pink, sclerae anicteric. Oropharynx clear without lesions. Moist mucous membranes. No cervical lymphadenopathy.",
+    "Cardiovascular": "Irregularly irregular rate at 66 bpm. Normal S1, S2. Grade 2/6 systolic murmur at apex (known MR). No S3, no S4. JVP 6-7 cm H2O, not elevated. PMI laterally displaced. Bilateral dorsalis pedis pulses 1+.",
+    "Respiratory": "Clear to auscultation in all lung fields bilaterally. No crackles, wheezes, or rhonchi. Normal respiratory effort. No use of accessory muscles.",
+    "Abdomen": "Obese, soft, non-tender. No organomegaly. Bowel sounds present. Known small umbilical hernia, reducible, non-tender.",
+    "Extremities": "Trace bilateral ankle edema, symmetric. No calf tenderness. Skin warm and dry. No cyanosis. Bilateral DP/PT pulses present but diminished.",
+    "Neurologic": "Alert and oriented x3. Decreased sensation to light touch bilateral feet and distal lower legs to mid-shin. Monofilament testing: absent sensation at 3/10 sites bilateral plantar surfaces. Vibration sense absent at great toes. Gait steady, slightly slow.",
+    "Psychiatric": "Flat affect. Psychomotor slowing noted. Speech normal rate and volume but lacks spontaneity. Thought process linear and goal-directed. Denies SI, HI, AVH."
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
+      "diagnosis": "Mild Major Depressive Episode",
+      "icd10": "F32.0",
+      "notes": "PHQ-9 administered today: score 8/27 (mild depression). Items endorsed: sleep difficulty (2), fatigue/low energy (2), poor appetite (1), anhedonia/reduced interest (2), feeling down (1). Denies SI. Onset gradual over past 2-3 months, likely related to progressive functional decline, chronic illness burden, and reduced social engagement. Wife corroborates significant behavioral change. Patient was previously active in church choir and attended all grandchildren's events. Now frequently declines invitations. Social work referral placed — patient agrees to trial of counseling before considering medication."
+    },
+    {
+      "diagnosis": "Heart Failure with Reduced Ejection Fraction",
+      "icd10": "I50.22",
+      "notes": "NYHA Class II. Slight worsening of exertional dyspnea possibly related to deconditioning and reduced activity (depression-related) rather than volume overload. Weight stable, JVP not elevated, lungs clear, only trace edema. BNP 410 at last check, stable. On optimized quadruple GDMT. No diuretic adjustment needed — will encourage activity and reassess."
+    },
+    {
+      "diagnosis": "Type 2 Diabetes Mellitus with diabetic neuropathy",
       "icd10": "E11.65",
-      "notes": "HbA1c 7.6%. On insulin and metformin."
+      "notes": "A1c 7.4% at last check (1/2026) — at goal. Blood sugars well-controlled on current regimen without hypoglycemia. Neuropathy stable at baseline."
     },
     {
       "diagnosis": "Chronic Kidney Disease Stage 3b",
       "icd10": "N18.32",
-      "notes": "eGFR 36. Stable."
+      "notes": "eGFR 35.6, Cr 1.95 at last labs. Stable. K 4.7 — monitoring closely."
+    },
+    {
+      "diagnosis": "Atrial Fibrillation, persistent",
+      "icd10": "I48.1",
+      "notes": "Rate controlled (HR 66 on carvedilol). No anticoagulation per multidisciplinary decision post-GI bleed. On aspirin 81mg. Reviewed stroke symptoms with patient and wife."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
-    },
-    {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "problem": "Depression",
+      "action": "PHQ-9 score 8/27 — mild depression confirmed. Referred to behavioral health (social worker) for structured counseling — 4 sessions planned starting this month. Patient prefers to try counseling before considering pharmacotherapy. If PHQ-9 worsens to >10 at follow-up or patient requests, will initiate sertraline 25mg daily (cardiac-safe SSRI). Encouraged increased physical activity as tolerated — even 10-minute walks can help. Encouraged continued engagement with family and church community. Wife Patricia engaged as support person. Follow-up PHQ-9 in 4-6 weeks."
     },
     {
       "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
+      "action": "Continue quadruple GDMT unchanged (Entresto, carvedilol, spironolactone, empagliflozin). Continue furosemide 60mg AM + 40mg PM. Mild worsening of dyspnea likely multifactorial — deconditioning from reduced activity and cold weather exposure. No evidence of volume overload today. Continue daily weights, low-sodium diet (<2g), fluid restriction. Encouraged graded exercise program. Will address ICD discussion at upcoming cardiology visit."
     },
     {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "problem": "Diabetes",
+      "action": "Continue current regimen: metformin 250mg BID, glargine 24u QHS, lispro sliding scale, empagliflozin 10mg. A1c at goal. Continue home glucose monitoring BID."
+    },
+    {
+      "problem": "CKD",
+      "action": "Continue nephroprotective regimen and sodium bicarbonate. Continue monitoring K closely. Avoid nephrotoxins."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 5 weeks or sooner if needed."
+      "action": "Return in 2 weeks for focused visit to reassess mood and dyspnea. Labs (BMP, CBC, BNP) to be drawn prior to next PCP visit at end of January. Annual cardiology visit to be scheduled."
     }
   ],
-  "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Patricia Lee\nDate: 1/18/2026"
+  "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Jennifer Adams\nDate: 1/18/2026"
 }

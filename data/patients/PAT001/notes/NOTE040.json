@@ -5,15 +5,18 @@
   "author": "Dr. Lisa Martinez",
   "department": "Endocrinology",
   "encounter": "ENC029",
-  "chiefComplaint": "Cough",
-  "hpi": "Patient presents for cough. Reports some shortness of breath with exertion, at baseline. No chest pain or palpitations.",
+  "chiefComplaint": "Diabetes management, cough, and neuropathy follow-up",
+  "hpi": "Mr. Morrison is a 72-year-old male with Type 2 DM (A1c 7.6% last check December 2023), diabetic peripheral neuropathy on gabapentin, CKD 3b, HFrEF, and persistent A-fib who presents for endocrinology follow-up. He reports a mild dry cough that has been present intermittently for the past week, non-productive, worse at night. He denies fever, sputum production, hemoptysis, or worsening dyspnea. He is not on an ACE inhibitor (discontinued lisinopril in 2018 for angioedema, now on sacubitril/valsartan). His carvedilol was recently uptitrated to 25mg BID in January 2024 and he has tolerated the increase well. The cough is likely viral/upper respiratory. His diabetes management has been stable — he reports fasting glucoses 120-140 mg/dL and no hypoglycemic episodes. He checks his glucose twice daily. His insulin glargine was maintained at 24 units QHS at his last visit in December 2023. He reports his neuropathy is stable with burning and tingling in both feet, rated 3-4/10 on gabapentin 300mg TID. The burning is most bothersome in the evenings. He denies any foot ulcers or injuries. He saw podiatry in December 2023 — reduced monofilament sensation confirmed, custom orthotics recommended. He reports adherence to a reduced-carbohydrate diet and his wife continues to manage portion sizes. He had a nephrology consult scheduled for March 2024 to evaluate CKD progression and optimize metabolic management.",
   "reviewOfSystems": {
-    "Constitutional": "Weight stable",
-    "Cardiovascular": "No chest pain or palpitations",
-    "Respiratory": "No hemoptysis",
-    "GI": "Appetite fair",
-    "GU": "No dysuria",
-    "Neurologic": "Baseline neuropathy"
+    "Constitutional": "Weight stable at 97-98 kg. No fever, chills, or night sweats. Reports baseline fatigue.",
+    "Cardiovascular": "Baseline exertional dyspnea walking 1-2 blocks. No chest pain, palpitations, orthopnea worsening, or PND.",
+    "Respiratory": "Mild dry cough x 1 week, intermittent, non-productive, worse at night. No hemoptysis, wheezing, or sputum.",
+    "GI": "Appetite fair. Regular bowel movements. No dyspepsia, nausea, melena, or abdominal pain.",
+    "GU": "Nocturia x2. Weak stream (BPH). No dysuria or hematuria.",
+    "Musculoskeletal": "Chronic low back stiffness.",
+    "Neurologic": "Bilateral foot burning/tingling 3-4/10, stable. No new numbness above ankles. No weakness.",
+    "Endocrine": "No hypoglycemia. No polydipsia or polyuria. No heat/cold intolerance.",
+    "Skin": "No foot ulcers or skin breakdown."
   },
   "vitals": {
     "bp": "135/89 mmHg",
@@ -24,57 +27,57 @@
     "weight": "97.5 kg"
   },
   "physicalExam": {
-    "General": "Alert, oriented, no acute distress",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "Irregularly irregular, no murmurs, JVP not elevated",
-    "Respiratory": "Clear to auscultation bilaterally",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "Trace bilateral ankle edema",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Alert, oriented, well-developed overweight male in no acute distress.",
+    "HEENT": "Normocephalic. PERRL. Oropharynx with mild posterior pharyngeal erythema. No tonsillar exudate. No cervical lymphadenopathy. No thyromegaly.",
+    "Cardiovascular": "Irregularly irregular (A-fib), rate 68. S1/S2 present. Soft systolic murmur at apex. JVP not elevated.",
+    "Respiratory": "Clear to auscultation bilaterally. No crackles, wheezes, or rhonchi. No consolidation. Occasional dry cough during examination.",
+    "Abdomen": "Soft, non-tender, non-distended. No hepatomegaly.",
+    "Extremities": "Trace bilateral ankle edema. Feet: skin intact, no ulcerations, mild xerosis. Dorsalis pedis pulses 1+ bilaterally. Monofilament: 4/10 right, 4/10 left (stable from December).",
+    "Neurologic": "Alert and oriented x3. Decreased sensation bilateral feet as noted. Vibration sense diminished at toes bilaterally. Ankle reflexes absent bilaterally (stable). Motor 5/5 all extremities."
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
+      "diagnosis": "Type 2 Diabetes Mellitus with diabetic neuropathy",
       "icd10": "E11.65",
-      "notes": "HbA1c 7.1%. On insulin and metformin."
+      "notes": "A1c 7.6% (December 2023), improved from 8.2% a year ago. Good trajectory. On metformin 500mg BID and insulin glargine 24 units QHS. Considering SGLT2i (empagliflozin) — under discussion with cardiology and nephrology for combined HF/CKD/DM benefit. Patient has been deferring — 'wants to get through the holidays.' Neuropathy stable on gabapentin."
+    },
+    {
+      "diagnosis": "Acute upper respiratory tract infection, likely viral",
+      "icd10": "J06.9",
+      "notes": "Mild dry cough x 1 week. Mild posterior pharyngeal erythema. Afebrile. Lungs clear. Not on ACE inhibitor (on ARNI). Self-limited course expected. Important to monitor given HF — any pulmonary congestion from viral URI could trigger HF decompensation."
+    },
+    {
+      "diagnosis": "Diabetic peripheral neuropathy",
+      "icd10": "E11.42",
+      "notes": "Stable pain 3-4/10 on gabapentin 300mg TID. Monofilament testing stable at 4/10 sites bilaterally. Absent ankle reflexes. Significant fall risk factor. If neuropathy pain worsens, options include pregabalin (fluid retention risk with HF) or duloxetine."
     },
     {
       "diagnosis": "Chronic Kidney Disease Stage 3b",
       "icd10": "N18.32",
-      "notes": "eGFR 40. Stable."
-    },
-    {
-      "diagnosis": "Heart Failure with Reduced EF",
-      "icd10": "I50.22",
-      "notes": "NYHA Class II. On GDMT."
-    },
-    {
-      "diagnosis": "Atrial Fibrillation",
-      "icd10": "I48.1",
-      "notes": "Rate controlled. On anticoagulation."
+      "notes": "eGFR ~36 at last check. Nephrology consult scheduled March 2024 for comprehensive CKD management including metabolic acidosis, secondary hyperparathyroidism, and anemia evaluation."
     }
   ],
   "plan": [
     {
       "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "action": "A1c trending favorably at 7.6%. Continue metformin 500mg BID and insulin glargine 24 units QHS. Hold off on dose changes — trajectory is good. SGLT2i (empagliflozin) strongly recommended but patient deferring. Will revisit after nephrology consult in March. Recheck A1c in 3 months (May-June 2024). Continue home glucose monitoring 2x daily."
+    },
+    {
+      "problem": "Cough / URI",
+      "action": "Likely viral. Supportive care: warm fluids (within restriction), honey-based lozenges. Avoid antihistamines (sedation, BPH exacerbation, fall risk). Avoid codeine-containing suppressants (CKD). If cough persists >2 weeks, develops fever, purulent sputum, or worsening dyspnea, return for CXR and further evaluation. Hold threshold low given HF — any sign of decompensation warrants urgent evaluation."
+    },
+    {
+      "problem": "Neuropathy",
+      "action": "Continue gabapentin 300mg TID. Pain acceptably controlled. Continue daily foot inspections. Podiatry follow-up in 3-4 months. Custom orthotics — patient to follow up on fitting."
     },
     {
       "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
-    },
-    {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
-    },
-    {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "action": "Nephrology consult March 2024 confirmed. Labs ordered pre-visit: BMP, CBC, phosphorus, PTH, 25-OH vitamin D, UACR, iron studies."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 10 weeks or sooner if needed."
+      "action": "Endocrinology in 3 months for A1c review. If patient agrees to empagliflozin at nephrology/cardiology visits, will coordinate medication monitoring."
     }
   ],
-  "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Lisa Martinez\nDate: 2/24/2024"
+  "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Lisa Martinez, MD\nDate: 2/24/2024"
 }

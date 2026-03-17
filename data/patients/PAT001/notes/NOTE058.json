@@ -5,15 +5,19 @@
   "author": "Dr. Patricia Lee",
   "department": "Radiology",
   "encounter": "ENC039",
-  "chiefComplaint": "Neuropathy symptoms",
-  "hpi": "Patient presents for neuropathy symptoms. Weight stable. Following low-sodium diet. Monitoring blood pressure at home.",
+  "chiefComplaint": "Neuropathy symptoms follow-up",
+  "hpi": "Mr. Morrison is a 71-year-old male with diabetic peripheral neuropathy (diagnosed March 2020), Type 2 DM on insulin and metformin, HFrEF (EF 30-35%), CKD Stage 3b, persistent atrial fibrillation on warfarin, HTN, hyperlipidemia, obesity, and BPH who returns for follow-up focused on his neuropathy symptoms. He was seen yesterday for palpitations and was found to have been taking ibuprofen for knee pain — this has been stopped. Today he specifically wants to discuss his worsening neuropathic symptoms. He reports that his bilateral foot numbness and tingling have been gradually worsening over the past 3-4 months, now extending to his mid-calves. He describes the sensation as 'walking on cotton balls' and notes burning pain in his feet that is worst at night, often waking him from sleep. His current gabapentin regimen is 300mg TID which provides partial relief — he estimates his pain is 5/10 during the day and 6-7/10 at night. He is concerned about his balance, noting that he feels unsteady when standing on uneven surfaces or in the dark. He has not had any falls but has had several 'near misses' when getting up at night for the bathroom. His wife Patricia is present and corroborates his account, adding that she has noticed him shuffling more when walking and grabbing furniture for stability. His last HbA1c was 7.8% and fasting sugars run 130-160, suggesting ongoing glycemic contribution to neuropathy progression.",
   "reviewOfSystems": {
-    "Constitutional": "No fever, chills, or weight loss",
-    "Cardiovascular": "No orthopnea",
-    "Respiratory": "No hemoptysis",
-    "GI": "Appetite fair",
-    "GU": "Nocturia x2",
-    "Neurologic": "Baseline neuropathy"
+    "Constitutional": "Chronic fatigue. Sleep disrupted by neuropathic pain and nocturia. No fevers, chills, or unintentional weight loss",
+    "Cardiovascular": "Baseline DOE. No chest pain. Palpitations discussed yesterday — resolved. No orthopnea",
+    "Respiratory": "No cough, no hemoptysis, no dyspnea at rest",
+    "GI": "Appetite fair. No abdominal pain today (mild epigastric tenderness yesterday, attributed to ibuprofen). No melena. Regular bowel movements",
+    "GU": "Nocturia x2-3 (baseline). No dysuria, no hematuria",
+    "Musculoskeletal": "Bilateral knee OA pain 3/10 today (improved since stopping ibuprofen, using acetaminophen). No joint swelling",
+    "Neurologic": "Bilateral foot and lower leg numbness, tingling, and burning as detailed in HPI. Balance concerns. No falls. No new upper extremity symptoms. No bowel or bladder incontinence suggestive of autonomic neuropathy (though nocturia could have autonomic component)",
+    "Integumentary": "No foot ulcers. Wife inspects feet daily. Skin intact. Toenails thickened bilaterally",
+    "Endocrine": "Blood sugars 130-160 fasting. No hypoglycemic episodes. Insulin glargine 24 units QHS",
+    "Psychiatric": "Frustrated with progressive neuropathy. Mood otherwise stable. Sleep quality poor due to pain"
   },
   "vitals": {
     "bp": "141/90 mmHg",
@@ -24,46 +28,59 @@
     "weight": "98.3 kg"
   },
   "physicalExam": {
-    "General": "Alert, oriented, no acute distress",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "Irregularly irregular, no murmurs, JVP not elevated",
-    "Respiratory": "No wheezes or rhonchi",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "Trace bilateral ankle edema",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Obese male appearing stated age, alert and oriented. Appears mildly fatigued. No acute distress. Wife present and participating",
+    "HEENT": "Normocephalic, atraumatic. PERRL. Oropharynx clear. Moist mucous membranes",
+    "Cardiovascular": "Irregularly irregular rhythm at 70 bpm (improved from 83 yesterday after ibuprofen cessation). S1/S2 present. 2/6 holosystolic murmur at apex. JVP not elevated",
+    "Respiratory": "Clear to auscultation bilaterally. No wheezes or rhonchi. Crackles from yesterday have resolved",
+    "Abdomen": "Soft, non-tender (epigastric tenderness from yesterday resolved), non-distended. Normal bowel sounds",
+    "Extremities": "Trace bilateral ankle edema, improved from 1+ yesterday. Feet warm and well-perfused. Dorsalis pedis pulses 1+ bilaterally. No ulcers, calluses, or skin breakdown. Toenails thickened and dystrophic bilaterally. No interdigital maceration",
+    "Neurologic": {
+      "Mental Status": "Alert, oriented x3, appropriate",
+      "Cranial Nerves": "II-XII grossly intact",
+      "Motor": "5/5 strength upper extremities. 5/5 hip flexion and knee extension bilaterally. 4+/5 ankle dorsiflexion bilaterally (mild weakness)",
+      "Sensory": "Decreased light touch bilateral feet to mid-calf in stocking distribution. Absent vibration sense at bilateral great toes, decreased at bilateral malleoli. 10g monofilament: 0/10 sites detected bilateral feet. Pin prick: decreased bilateral feet to ankle level",
+      "Reflexes": "2+ bilateral patella, 0/4 bilateral Achilles (absent ankle reflexes). Plantar response flexor bilaterally",
+      "Coordination": "Finger-to-nose intact bilaterally. Heel-to-shin mildly impaired bilaterally (proprioceptive component)",
+      "Gait": "Wide-based, slow. Positive Romberg. Tandem gait impaired. Requires furniture for balance when turning"
+    }
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
-      "icd10": "E11.65",
-      "notes": "HbA1c 7.8%. On insulin and metformin."
+      "diagnosis": "Diabetic peripheral neuropathy, progressive",
+      "icd10": "E11.42",
+      "notes": "Length-dependent sensorimotor neuropathy with clear progression since initial EMG/NCS diagnosis in March 2020. Sensory loss now extending to mid-calf (previously limited to feet). Monofilament testing 0/10 bilateral feet — high ulceration risk. Absent ankle reflexes. New finding of mild ankle dorsiflexion weakness (4+/5) suggesting motor involvement is progressing. Positive Romberg and impaired tandem gait indicate significant proprioceptive loss. Fall risk is HIGH — nocturia (2-3x nightly) combined with absent foot sensation and impaired balance represents a dangerous combination. Current gabapentin 300mg TID provides incomplete relief (pain 5-7/10). Neuropathy progression driven by: (1) ongoing hyperglycemia (A1c 7.8%), (2) CKD (uremic neuropathy may be contributing), (3) possible vitamin B12 deficiency (not recently checked — metformin associated)."
     },
     {
-      "diagnosis": "Chronic Kidney Disease Stage 3b",
-      "icd10": "N18.32",
-      "notes": "eGFR 32. Stable."
+      "diagnosis": "Type 2 Diabetes Mellitus with complications",
+      "icd10": "E11.65",
+      "notes": "HbA1c 7.8%. Suboptimal control contributing to neuropathy progression. On insulin glargine 24 units QHS and metformin 250mg BID (renally dosed). Tighter glycemic control (goal A1c <7.0%) would slow neuropathy progression but must be balanced against hypoglycemia risk, particularly dangerous in this patient who has absent foot sensation and impaired balance."
+    },
+    {
+      "diagnosis": "Fall risk, high",
+      "icd10": "Z91.81",
+      "notes": "Multiple contributing factors: severe peripheral neuropathy with proprioceptive loss, positive Romberg, nocturia requiring 2-3 nighttime bathroom trips, polypharmacy (gabapentin sedation, carvedilol orthostasis), wide-based gait, obesity, deconditioning. Patient has not yet fallen but reports several near-misses. Wife monitoring closely."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "problem": "Diabetic Neuropathy",
+      "action": "Current gabapentin 300mg TID providing incomplete relief. Options discussed with patient: (1) Increase gabapentin to 300mg AM, 300mg midday, 400mg QHS — will try higher bedtime dose first since nighttime symptoms are worst. Monitor for increased sedation, dizziness (GFR-adjusted max dose). (2) If still inadequate at next visit, consider adding or switching to pregabalin (renally dosed for CKD), or adding duloxetine 30mg daily (also treats depression, which may be emerging). (3) Non-pharmacologic: capsaicin cream 0.075% to feet BID for topical relief, proper footwear with orthotics. (4) Optimize glycemic control — improved A1c will slow but not reverse progression. Check vitamin B12 level — metformin-associated deficiency can worsen neuropathy. If low, supplement B12 1000mcg daily. Patient agrees to try gabapentin 300-300-400mg dosing schedule."
     },
     {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "problem": "Fall Prevention",
+      "action": "Fall risk is HIGH based on today's assessment (positive Romberg, absent foot sensation, impaired tandem gait, nocturia, polypharmacy). Interventions: (1) Home safety: remove all throw rugs, install grab bars in bathroom if not already present, nightlights in all hallways and bathroom, non-slip bath mat, shower chair (already has). (2) Footwear: proper closed-toe shoes with good sole grip, even for nighttime trips — no bare feet or socks on hard floors. (3) Physical therapy referral for balance training and strengthening — will help with proprioceptive compensation strategies. (4) Discussed assistive device — patient resistant ('I'm not that old') but educated that a cane is a preventive measure. Wife will work on this. (5) Review medications for fall risk: gabapentin increase could worsen sedation/balance — will monitor closely."
     },
     {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
+      "problem": "Diabetes Optimization",
+      "action": "A1c 7.8%, above goal. Consider increasing insulin glargine from 24 to 26 units QHS. Wife to keep fasting glucose log for 2 weeks. If fasting sugars consistently >140, will increase. Recheck A1c in 3 months. SGLT2 inhibitor (empagliflozin) has been recommended by cardiology and nephrology — would provide HF, CKD, and DM benefit. Patient continuing to defer."
     },
     {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "problem": "Anticoagulation",
+      "action": "Continue warfarin with INR target 2.0-3.0. Next INR check scheduled in 1 week. Reemphasize no NSAID use. Patient verbalized understanding."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 6 weeks or sooner if needed."
+      "action": "Return in 6 weeks to reassess neuropathy symptoms on new gabapentin dosing. Sooner if falls, worsening weakness, or new symptoms. Labs ordered: vitamin B12, BMP (renal function post-NSAID cessation), fasting glucose. PT referral placed."
     }
   ],
   "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Patricia Lee\nDate: 9/4/2023"

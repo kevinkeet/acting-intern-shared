@@ -5,15 +5,17 @@
   "author": "Dr. Emily Brown",
   "department": "Emergency Medicine",
   "encounter": "ENC023",
-  "chiefComplaint": "Heart failure follow-up",
-  "hpi": "Patient presents for heart failure follow-up. Reports overall stable condition since last visit. Compliant with medications. No new symptoms.",
+  "chiefComplaint": "Abdominal discomfort and fatigue",
+  "hpi": "Mr. Morrison is a 72-year-old male with HFrEF (EF 30-35%), CKD 3b, persistent A-fib (off anticoagulation since September 2023 GI bleed), Type 2 DM, history of gastric ulcer with GI hemorrhage, and known colonic diverticulosis who presents to the ED with 4 days of intermittent dull abdominal discomfort, predominantly in the right upper quadrant and periumbilical region. He describes the pain as a vague heaviness, rated 4/10, not related to meals, without radiation. No acute onset. No association with position changes. He reports mild bloating and decreased appetite over the past week. He denies nausea, vomiting, diarrhea, constipation, melena, hematochezia, hematemesis, or fever. He has been compliant with pantoprazole 40mg daily. Given his history of significant GI hemorrhage from gastric ulcer in September 2023, he was appropriately concerned and called his PCP, who recommended ED evaluation to rule out recurrent ulcer disease or other acute intra-abdominal pathology. He also reports worsening fatigue over the past 2 weeks, beyond his baseline, with reduced exercise tolerance — he can now walk only about 1 block before needing to rest (baseline 1-2 blocks). His weight has been stable per home monitoring. He has been adherent to his low-sodium diet and fluid restriction. His empagliflozin was started in May 2025 and he has tolerated it well.",
   "reviewOfSystems": {
-    "Constitutional": "No fever, chills, or weight loss",
-    "Cardiovascular": "No orthopnea",
-    "Respiratory": "No cough or wheezing",
-    "GI": "No nausea or vomiting",
-    "GU": "No hematuria",
-    "Neurologic": "No new weakness"
+    "Constitutional": "Fatigue worsening over 2 weeks. No fever, chills, rigors, or night sweats. No unintentional weight loss.",
+    "Cardiovascular": "Mildly worsened dyspnea on exertion (1 block vs 1-2 blocks baseline). No orthopnea, PND, chest pain, or palpitations.",
+    "Respiratory": "No cough, hemoptysis, or wheezing.",
+    "GI": "Dull RUQ and periumbilical discomfort x4 days. Mild bloating, decreased appetite. No nausea, vomiting, melena, hematochezia, or change in bowel caliber.",
+    "GU": "No dysuria or hematuria. Nocturia x2 (baseline).",
+    "Musculoskeletal": "No new joint pain. Chronic low back stiffness.",
+    "Neurologic": "Chronic bilateral foot numbness. No new weakness, dizziness, or headache.",
+    "Skin": "No jaundice, rash, or bruising."
   },
   "vitals": {
     "bp": "135/80 mmHg",
@@ -24,57 +26,58 @@
     "weight": "98.8 kg"
   },
   "physicalExam": {
-    "General": "Mildly fatigued-appearing",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "Regular rate and rhythm, no murmurs",
-    "Respiratory": "No wheezes or rhonchi",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "No edema, warm and well-perfused",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Mildly fatigued-appearing elderly male in no acute distress. Alert and cooperative. BMI ~33.",
+    "HEENT": "Normocephalic, atraumatic. Sclerae anicteric. No conjunctival pallor. Oropharynx clear. Mucous membranes moist.",
+    "Cardiovascular": "Irregularly irregular rhythm (known A-fib), rate 74. S1/S2 present. Soft 2/6 systolic murmur at apex (known MR). No S3 gallop. JVP approximately 8 cm H2O. No carotid bruits.",
+    "Respiratory": "Mild bibasilar crackles, chronic and stable. No wheezes or rhonchi. Good bilateral air entry.",
+    "Abdomen": "Soft, mildly distended. Mild tenderness to deep palpation in RUQ and periumbilical region without guarding or rebound. Small umbilical hernia, reducible, mildly tender today. No Murphy sign. No hepatomegaly appreciated but liver edge difficult to palpate given habitus. No splenomegaly. Bowel sounds normoactive. No bruit.",
+    "Extremities": "Trace bilateral pedal edema, stable from prior. Warm, no cyanosis. Pulses 1+ bilateral.",
+    "Neurologic": "Alert and oriented x3. Decreased sensation bilateral feet. Motor strength intact.",
+    "Skin": "No jaundice. No pallor. No rashes or petechiae."
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
-      "icd10": "E11.65",
-      "notes": "HbA1c 7.7%. On insulin and metformin."
+      "diagnosis": "Abdominal pain, subacute, etiology to be determined",
+      "icd10": "R10.9",
+      "notes": "4-day history of vague RUQ and periumbilical discomfort in a patient with significant GI history (gastric ulcer with hemorrhage 2023, diverticulosis). Differential includes: recurrent peptic ulcer disease, hepatic steatosis-related discomfort, incarcerated umbilical hernia, diverticulitis, biliary pathology (though post-cholecystectomy), and functional abdominal pain. No peritoneal signs. No fever. CT abdomen warranted given history."
     },
     {
-      "diagnosis": "Chronic Kidney Disease Stage 3b",
-      "icd10": "N18.32",
-      "notes": "eGFR 40. Stable."
-    },
-    {
-      "diagnosis": "Heart Failure with Reduced EF",
+      "diagnosis": "Heart Failure with Reduced EF, mild worsening symptoms",
       "icd10": "I50.22",
-      "notes": "NYHA Class II. On GDMT."
+      "notes": "Slightly reduced exercise tolerance (1 block from 1-2 baseline). Mild bibasilar crackles, trace edema, JVP borderline. Could represent very mild volume overload contributing to hepatic congestion and abdominal discomfort. BNP ordered."
     },
     {
-      "diagnosis": "Atrial Fibrillation",
+      "diagnosis": "Fatigue, likely multifactorial",
+      "icd10": "R53.83",
+      "notes": "Worsening fatigue beyond baseline x 2 weeks. Differential: mild HF decompensation, anemia (CKD-related), new illness, depression, hypothyroidism."
+    },
+    {
+      "diagnosis": "Persistent Atrial Fibrillation",
       "icd10": "I48.1",
-      "notes": "Rate controlled. On anticoagulation."
+      "notes": "Rate controlled. Off anticoagulation. On aspirin 81mg only."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "problem": "Abdominal Pain Workup",
+      "action": "CT abdomen and pelvis with IV contrast (discussed with nephrology — eGFR 36, borderline for contrast; benefits of diagnostic imaging outweigh risks; pre-hydration with NS 500mL over 2 hours, hold metformin for 48 hours post-contrast, recheck Cr in 72 hours). CBC, CMP, lipase, lactate, urinalysis ordered. If CT unrevealing and symptoms persist, will consider repeat EGD given ulcer history."
     },
     {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "problem": "Heart Failure Assessment",
+      "action": "BNP level ordered. If elevated above baseline (~450), will increase diuresis. Continue current GDMT. Strict I&O monitoring. Consider TEE for comprehensive cardiac evaluation if warranted."
     },
     {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
+      "problem": "Fatigue Workup",
+      "action": "Check CBC (anemia?), TSH (hypothyroidism?), iron studies, B12/folate. BMP for electrolyte derangement."
     },
     {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "problem": "Observation",
+      "action": "Admit to observation for CT imaging, lab workup, and monitoring. Patient placed on telemetry given cardiac history. IV access obtained. Diet: cardiac diet, low sodium. Continue home medications except hold metformin pending contrast."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 12 weeks or sooner if needed."
+      "action": "Will reassess after imaging and labs return. If workup unrevealing, may discharge with outpatient follow-up. If acute pathology found, will adjust plan accordingly."
     }
   ],
-  "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Emily Brown\nDate: 9/11/2024"
+  "attestation": "I personally saw and examined the patient. I reviewed the clinical history and ordered appropriate workup. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Emily Brown, MD\nDate: 9/11/2024"
 }

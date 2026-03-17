@@ -1,0 +1,52 @@
+{
+  "id": "IMG020",
+  "date": "2019-03-29T22:50:18.579Z",
+  "modality": "Echo",
+  "description": "Transesophageal Echocardiogram (TEE)",
+  "facility": "Springfield Medical Center",
+  "status": "Final",
+  "radiologist": "Dr. Susan Miller",
+  "orderingProvider": "Dr. James Wilson",
+  "indication": "New diagnosis of persistent atrial fibrillation, evaluate for left atrial appendage thrombus prior to initiation of anticoagulation and consideration of cardioversion",
+  "technique": "Standard transesophageal echocardiographic examination was performed using a multiplane transesophageal probe after adequate sedation and topical pharyngeal anesthesia. The patient tolerated the procedure well without complications.",
+  "sedation": {
+    "medications": ["Midazolam 2 mg IV", "Fentanyl 50 mcg IV"],
+    "monitoring": "Continuous pulse oximetry, cardiac monitoring, and blood pressure monitoring"
+  },
+  "findings": {
+    "leftAtrium": {
+      "size": "Moderately-to-severely dilated (volume index 44 mL/m2)",
+      "appendage": "Left atrial appendage is dilated. No thrombus identified. LAA emptying velocity 32 cm/s (mildly reduced).",
+      "spontaneousEchoContrast": "Mild spontaneous echo contrast ('smoke') present in the left atrium, indicating low flow and elevated thromboembolic risk."
+    },
+    "interatrialSeptum": "No patent foramen ovale or atrial septal defect identified by color flow Doppler. Agitated saline contrast injection shows no right-to-left shunt.",
+    "leftVentricle": "Mildly dilated. Estimated EF 35-40%. Hypokinesis of the inferior and inferolateral walls.",
+    "rightSide": "Right atrium is mildly dilated. Right ventricle is normal in size with preserved function.",
+    "mitralValve": "Mild-to-moderate mitral regurgitation (2-3+). Leaflets are mildly thickened. No prolapse. No vegetation. No stenosis. Regurgitation is central, consistent with functional etiology.",
+    "aorticValve": "Trileaflet. Mild sclerosis without stenosis. No regurgitation. No vegetation.",
+    "tricuspidValve": "Trace-to-mild tricuspid regurgitation. Estimated RVSP 32 mmHg.",
+    "aorta": {
+      "root": "Normal (3.3 cm)",
+      "ascendingAorta": "Normal (3.1 cm)",
+      "arch": "Normal. No significant atheroma.",
+      "descendingAorta": "Mild atherosclerotic plaque in the descending thoracic aorta. No mobile or protruding atheroma."
+    },
+    "pericardium": "No pericardial effusion."
+  },
+  "impression": [
+    "No left atrial appendage thrombus identified.",
+    "Mild spontaneous echo contrast in the left atrium, indicating low flow state and elevated thromboembolic risk.",
+    "Moderately-to-severely dilated left atrium with reduced LAA emptying velocities.",
+    "Mildly dilated left ventricle with mildly-to-moderately reduced systolic function (EF 35-40%) and inferior/inferolateral wall motion abnormalities.",
+    "Mild-to-moderate functional mitral regurgitation.",
+    "No intracardiac source of embolism aside from the left atrial low flow state.",
+    "Mild descending thoracic aortic atherosclerosis without mobile atheroma.",
+    "From a TEE standpoint, cardioversion may be considered if clinically indicated."
+  ],
+  "recommendations": [
+    "Initiate anticoagulation for stroke prevention given CHA2DS2-VASc score",
+    "If cardioversion attempted, maintain therapeutic anticoagulation for at least 4 weeks post-procedure",
+    "Ongoing monitoring of LV function and mitral regurgitation"
+  ],
+  "comparison": "No prior TEE available for comparison."
+}

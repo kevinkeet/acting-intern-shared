@@ -1,0 +1,87 @@
+{
+  "id": "NOTE_ICU001",
+  "type": "Progress Note",
+  "title": "MICU Progress Note - Day 2 (Post-EGD)",
+  "date": "2023-09-13T16:00:00.000Z",
+  "author": "Dr. Sarah Mitchell",
+  "department": "Critical Care Medicine",
+  "encounter": "ENC_ADM002",
+  "signedDate": "2023-09-13T17:30:00.000Z",
+  "sections": {
+    "subjective": "Patient reports feeling \"much better\" after the procedure. Denies abdominal pain, nausea, or vomiting. No recurrence of lightheadedness or near-syncope. Denies hematemesis. Reports one small formed dark stool (old melena, expected). No bright red blood per rectum. Tolerating clear liquids without difficulty. Wife Patricia at bedside, both relieved by the procedure results. Patient reports understanding that the ibuprofen caused the bleed and states he will never take it again.",
+    "hospitalDay": "Day 2 of admission (MICU Day 2). Post-EGD Day 0.",
+    "eventsSinceLastNote": "Patient underwent EGD this morning by Dr. Thompson (GI) under MAC anesthesia. Found 1.5 cm gastric ulcer on lesser curvature with visible vessel (Forrest IIa). Successful hemostasis with epinephrine injection + bipolar cautery + hemoclip placement x2. CLO test positive for H. pylori. Ulcer margin biopsies obtained, results pending. Patient tolerated procedure well without complications. See separate procedure note for full details.\n\nAnticoagulation reversal: INR corrected from 3.8 to 1.4 with Vitamin K 10 mg IV and 4-factor PCC. No further anticoagulation reversal agents required.\n\nTransfusion: Received total of 4 units packed RBCs (2 in ED, 2 on arrival to MICU). Current hemoglobin 9.1 (up from nadir of 7.2). No transfusion reactions.",
+    "vitals": {
+      "bloodPressure": "118/72 mmHg",
+      "heartRate": "84 bpm, irregularly irregular",
+      "respiratoryRate": "16/min",
+      "temperature": "98.6 F",
+      "oxygenSaturation": "97% on room air (weaned from 2L NC this afternoon)",
+      "uop": "45 mL/hr (adequate, improving from initial oliguria)"
+    },
+    "physicalExam": {
+      "general": "Alert, oriented, comfortable. Much improved from admission. Color improved, no longer diaphoretic.",
+      "cardiovascular": "Irregularly irregular rhythm, rate controlled in 80s. S1, S2 present. No S3. 2/6 systolic murmur at apex (baseline).",
+      "respiratory": "Clear to auscultation bilaterally. No crackles or wheezes. Room air.",
+      "abdomen": "Soft, non-tender, non-distended. Mild epigastric tenderness much improved. Bowel sounds present.",
+      "extremities": "Warm, well-perfused. Capillary refill <2 seconds (improved from 4 seconds on admission). Trace pedal edema bilaterally.",
+      "skin": "Improved color. No pallor. No new petechiae or ecchymoses.",
+      "lines": "Right radial arterial line — functioning, site clean. Two peripheral IVs (18G bilateral antecubital) — patent, no erythema. Foley catheter — clear yellow urine."
+    },
+    "labs": {
+      "morning": "Na 136, K 4.4, Cl 102, CO2 22, BUN 52 (improving), Cr 2.4 (improving from 2.8), Glucose 158",
+      "cbc": "WBC 9.8, Hgb 9.1 (post 4 units pRBC), Hct 27.5%, Plt 182",
+      "coagulation": "INR 1.4, PT 16.8",
+      "lactate": "1.8 mmol/L (improved from 3.4, trending toward normal)",
+      "troponin": "0.08 (trending down from 0.12, consistent with resolving demand ischemia)"
+    },
+    "assessment": [
+      {
+        "problem": "Acute upper GI hemorrhage, post-endoscopic intervention",
+        "status": "Improving",
+        "details": "Status post successful EGD with hemostasis of Forrest IIa gastric ulcer. No clinical evidence of rebleeding — hemoglobin stable at 9.1 post-transfusion, no recurrent hematemesis or fresh melena. Hemodynamically stable. CLO positive for H. pylori — will need eradication therapy once tolerating oral medications."
+      },
+      {
+        "problem": "Hemorrhagic shock, resolved",
+        "status": "Resolved",
+        "details": "Lactate improving (3.4 → 1.8). Vitals normalized. Urine output adequate. Volume resuscitated with 3L crystalloid and 4 units pRBC."
+      },
+      {
+        "problem": "AKI on CKD stage 3b",
+        "status": "Improving",
+        "details": "Creatinine 2.4, down from peak of 2.8. Baseline 1.9. Consistent with prerenal AKI improving with resuscitation. BUN also trending down (68 → 52). Urine output has improved to 45 mL/hr."
+      },
+      {
+        "problem": "Demand ischemia / Type 2 MI",
+        "status": "Resolving",
+        "details": "Troponin trending down (0.12 → 0.08). ST depressions on admission ECG have resolved on repeat ECG today. Anemia corrected to Hgb 9.1. No chest pain or recurrent ischemic symptoms."
+      },
+      {
+        "problem": "Atrial fibrillation — anticoagulation HELD",
+        "status": "Stable",
+        "details": "Rate controlled in 80s on carvedilol. Warfarin HELD and anticoagulation reversed. Long-term anticoagulation strategy will require multidisciplinary discussion — this is a critical decision point for this patient."
+      },
+      {
+        "problem": "Supratherapeutic INR, corrected",
+        "status": "Resolved",
+        "details": "INR corrected from 3.8 to 1.4 with Vitamin K and 4F-PCC. No further reversal agents needed."
+      },
+      {
+        "problem": "Metabolic acidosis, resolving",
+        "status": "Improving",
+        "details": "CO2 normalized to 22 (from 18). Lactate nearly normal at 1.8. Consistent with resolution of shock physiology."
+      }
+    ],
+    "plan": [
+      "GI hemorrhage: Continue IV pantoprazole drip at 8 mg/hr (72-hour continuous infusion per GI recs). Serial Hgb q6h tonight, q12h if stable. Transfuse threshold Hgb <7 (or <8 if symptomatic/hemodynamically unstable). Advance diet: clear liquids tonight, full liquids tomorrow AM, soft diet tomorrow PM if tolerating.",
+      "AKI: Continue IVF at 75 mL/hr (NS). Trend Cr and electrolytes q12h. Continue to hold nephrotoxins (metformin, lisinopril, spironolactone, NSAIDs). Anticipate further renal recovery with continued resuscitation.",
+      "Cardiac: Continue carvedilol 12.5 mg BID for rate control. Continue telemetry. Troponins trending down — will discontinue serial troponins if next value stable/improved.",
+      "Anticoagulation: Warfarin remains HELD. Will defer long-term anticoagulation strategy to multidisciplinary discussion once patient is stabilized and off the ICU. This will need to involve GI (Dr. Thompson), Cardiology (Dr. Wilson), and PCP (Dr. Chen).",
+      "Diabetes: Continue sliding scale insulin. Hold metformin (AKI). Hold glipizide (marginal oral intake). Will restart oral diabetes medications once eating and creatinine at baseline.",
+      "Lines: Plan to remove arterial line tomorrow if hemodynamically stable overnight. Will remove Foley once ambulatory.",
+      "Disposition: If hemoglobin remains stable overnight and no evidence of rebleeding, plan to transfer to medicine floor tomorrow (9/14/2023). Dr. Brown (Hospital Medicine) will assume primary care on transfer.",
+      "Code status: Full code (confirmed with patient and wife today)."
+    ]
+  },
+  "attestation": "I have personally evaluated this patient, reviewed all laboratory and diagnostic data, and formulated the above assessment and plan. I have discussed the plan with the patient, his wife, the GI team (Dr. Thompson), and the primary team (Dr. Brown).\n\nElectronically signed by: Sarah Mitchell, MD, FCCP\nDate/Time: 9/13/2023 5:30 PM"
+}

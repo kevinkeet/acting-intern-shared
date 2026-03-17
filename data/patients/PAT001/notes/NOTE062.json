@@ -5,15 +5,18 @@
   "author": "Dr. Sarah Chen",
   "department": "Primary Care",
   "encounter": "ENC042",
-  "chiefComplaint": "Urinary symptoms",
-  "hpi": "Patient presents for urinary symptoms. Reports overall stable condition since last visit. Compliant with medications. No new symptoms.",
+  "chiefComplaint": "UTI follow-up and medication reconciliation",
+  "hpi": "Mr. Morrison is a 71-year-old male with multiple chronic conditions including HFrEF, A-fib on warfarin, CKD Stage 3b, Type 2 DM, and BPH who presents for follow-up on his recent UTI and comprehensive medication reconciliation. He was treated in April 2023 for a UTI (E. coli, treated with nitrofurantoin 100mg BID x 5 days) and reports complete resolution of symptoms. He denies current dysuria, frequency beyond baseline, urgency, suprapubic pain, fevers, or flank pain. His urinary symptoms are back to his BPH baseline — nocturia 2-3 times nightly, weak stream, occasional hesitancy.\n\nHe brings his medication bottles today for reconciliation. His wife Patricia typically manages his medications using a weekly pill organizer. She reports he takes all medications as prescribed. She has one concern — the gabapentin was recently changed to 300-300-400mg dosing (increased bedtime dose) and she wants to confirm this is correct. Additionally, she notes he sometimes forgets his midday medications if she is not home to remind him.\n\nHe reports overall stable condition since his last PCP visit. His weight has been in the 97-98 kg range on his home scale. He has been following his dietary restrictions reasonably well. Blood sugars are improved since insulin was increased to 26 units. He has not had any falls, hospitalizations, or ED visits since last seen. He denies new symptoms.",
   "reviewOfSystems": {
-    "Constitutional": "Weight stable",
-    "Cardiovascular": "Dyspnea on exertion at baseline",
-    "Respiratory": "No cough or wheezing",
-    "GI": "Appetite fair",
-    "GU": "No hematuria",
-    "Neurologic": "Baseline neuropathy"
+    "Constitutional": "Mild chronic fatigue, no fevers, no chills, weight stable",
+    "Cardiovascular": "Baseline DOE, stable. No chest pain, no palpitations, no orthopnea",
+    "Respiratory": "No cough, no wheezing, no hemoptysis",
+    "GI": "Appetite fair, no abdominal pain, no nausea/vomiting, no melena, regular bowel movements",
+    "GU": "No dysuria (UTI resolved), nocturia x2-3 (BPH baseline), no hematuria, no urgency beyond baseline",
+    "Musculoskeletal": "Bilateral knee OA pain 3/10 on topical diclofenac and acetaminophen",
+    "Neurologic": "Baseline bilateral foot neuropathy, controlled with gabapentin during day, worse at night. No falls, no dizziness",
+    "Endocrine": "Fasting blood sugars 120-160, improved. No hypoglycemia",
+    "Psychiatric": "Mood stable, sleeping fair (interrupted by nocturia and neuropathy)"
   },
   "vitals": {
     "bp": "139/84 mmHg",
@@ -21,54 +24,55 @@
     "rr": "14/min",
     "temp": "98.1°F",
     "spo2": "94% RA",
-    "weight": "100.6 kg"
+    "weight": "97.6 kg"
   },
   "physicalExam": {
-    "General": "Alert, oriented, no acute distress",
-    "HEENT": "Normocephalic, PERRL, oropharynx clear",
-    "Cardiovascular": "Irregularly irregular, no murmurs, JVP not elevated",
-    "Respiratory": "Mild crackles at bases",
-    "Abdomen": "Soft, non-tender, non-distended",
-    "Extremities": "1+ pedal edema bilaterally",
-    "Neurologic": "Alert and oriented, decreased sensation bilateral feet"
+    "General": "Alert, oriented, obese male in no acute distress. Pleasant and engaged. Wife present and participating in visit",
+    "HEENT": "Normocephalic. PERRL. Oropharynx clear. Moist mucous membranes. No cervical lymphadenopathy",
+    "Cardiovascular": "Irregularly irregular at 66 bpm. S1/S2 normal. Known 2/6 systolic murmur at apex. JVP approximately 7 cm H2O",
+    "Respiratory": "Trace bibasilar crackles on deep inspiration. No wheezes. Good bilateral air entry",
+    "Abdomen": "Soft, non-tender, non-distended. No suprapubic tenderness. Normal bowel sounds. No CVA tenderness",
+    "Extremities": "1+ bilateral ankle edema, stable. Warm, well-perfused. Skin intact",
+    "Neurologic": "Alert and oriented x3. Decreased sensation bilateral feet. Steady gait observed walking from waiting room"
   },
   "assessment": [
     {
-      "diagnosis": "Type 2 Diabetes Mellitus",
-      "icd10": "E11.65",
-      "notes": "HbA1c 7.8%. On insulin and metformin."
+      "diagnosis": "Urinary tract infection, resolved",
+      "icd10": "Z87.440",
+      "notes": "E. coli UTI treated with nitrofurantoin in April — complete symptom resolution. No recurrence. Patient has risk factors for recurrent UTI: BPH with residual urine, diabetes (glycosuria), and CKD. Sulfa allergy prevents TMP-SMX use. Fluoroquinolones should be reserved given tendon risk and QT prolongation. Nitrofurantoin may have limited efficacy with eGFR <30 — currently 37 so still acceptable."
     },
     {
-      "diagnosis": "Chronic Kidney Disease Stage 3b",
-      "icd10": "N18.32",
-      "notes": "eGFR 41. Stable."
+      "diagnosis": "Medication management, complex polypharmacy",
+      "icd10": "Z79.899",
+      "notes": "Patient on 11+ medications. Medication reconciliation completed with wife. All medications verified against pharmacy records and match. Gabapentin dose change to 300-300-400mg confirmed correct. Identified adherence gap: midday medications (gabapentin 300mg, metformin 250mg) sometimes missed when wife not available to remind. Fall risk from polypharmacy is a concern — multiple medications with sedating, hypotensive, or balance-affecting properties."
     },
     {
       "diagnosis": "Heart Failure with Reduced EF",
       "icd10": "I50.22",
-      "notes": "NYHA Class II. On GDMT."
+      "notes": "NYHA Class II stable. Volume status acceptable with 1+ ankle edema. Weight at baseline."
+    },
+    {
+      "diagnosis": "Atrial Fibrillation on warfarin",
+      "icd10": "I48.1",
+      "notes": "Rate controlled, HR 66. On warfarin with INR monitoring ongoing."
     }
   ],
   "plan": [
     {
-      "problem": "Diabetes",
-      "action": "Continue current regimen. Recheck HbA1c in 3 months."
+      "problem": "UTI Follow-up",
+      "action": "UTI resolved. No current signs/symptoms of recurrence. Given risk factors, preventive measures discussed: (1) Adequate hydration (balanced with fluid restriction for HF — aim for 1.5L/day including water intake, avoid dehydration). (2) Complete bladder emptying — double voiding technique as recommended by urology. (3) If recurrent UTIs (>2 in 6 months), consider prophylactic antibiotics or urology evaluation for residual urine management. (4) Urinalysis ordered today to confirm resolution and check for persistent bacteriuria."
     },
     {
-      "problem": "CKD",
-      "action": "Monitor renal function. Avoid nephrotoxins."
+      "problem": "Medication Reconciliation",
+      "action": "Complete medication list verified:\n- Sacubitril/valsartan (Entresto) 97/103mg BID\n- Carvedilol 18.75mg BID\n- Spironolactone 25mg daily (AM)\n- Furosemide 60mg BID (8 AM and 2 PM)\n- Warfarin 5mg daily (evening)\n- Metformin 250mg BID\n- Insulin glargine 26 units QHS\n- Atorvastatin 80mg daily (evening)\n- Gabapentin 300mg AM, 300mg midday, 400mg bedtime\n- Tamsulosin 0.4mg daily (bedtime)\n- Vitamin D3 2000 IU daily\n- Sodium bicarbonate 650mg BID\n- Acetaminophen 500mg PRN (max 2g/day)\n- Topical diclofenac gel PRN to knees\n\nFor midday medication adherence: recommended phone alarm at noon as reminder. Also discussed simplifying if possible — evaluated whether any midday doses could be consolidated. Gabapentin midday dose is important for continuous neuropathy coverage; metformin BID is standard. No safe consolidation available. Wife will set alarm on patient's phone."
     },
     {
-      "problem": "Heart Failure",
-      "action": "Continue GDMT. Daily weights. Low sodium diet."
-    },
-    {
-      "problem": "Atrial Fibrillation",
-      "action": "Continue anticoagulation. Rate control adequate."
+      "problem": "Fall Risk Assessment",
+      "action": "Multiple fall risk factors: diabetic neuropathy (impaired proprioception and balance), nocturia (frequent nighttime ambulation), polypharmacy (gabapentin sedation, carvedilol hypotension, furosemide orthostasis), wide-based gait, obesity, deconditioning. Fall risk is MODERATE. Preventive measures: nightlights in hallways and bathroom (already in place), non-slip bathroom mat, remove throw rugs, proper footwear (no slippers without backs), shower chair (already has). Discussed home safety evaluation — patient declined formal PT home assessment at this time."
     },
     {
       "problem": "Follow-up",
-      "action": "Return in 9 weeks or sooner if needed."
+      "action": "Continue multi-day visit series — diabetes management and SOB evaluation visits later this week. UA results to be reviewed. If UA positive for nitrites/bacteria without symptoms, will not treat (asymptomatic bacteriuria in setting of BPH is common and treatment is not beneficial). If symptomatic recurrence, treat empirically with nitrofurantoin and send culture."
     }
   ],
   "attestation": "I personally saw and examined the patient. I agree with the documented findings and plan.\n\nElectronically signed by: Dr. Sarah Chen\nDate: 7/6/2023"
