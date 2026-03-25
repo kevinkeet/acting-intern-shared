@@ -88,6 +88,14 @@ const FloatingChat = {
     openChat(chatType) {
         this.openChats[chatType] = true;
 
+        // Clear unread badge when chat is opened
+        const btn = document.querySelector(`.chat-trigger-btn[data-chat="${chatType}"]`);
+        if (btn) {
+            btn.classList.remove('has-unread');
+            const badge = btn.querySelector('.chat-unread-badge');
+            if (badge) badge.classList.remove('visible');
+        }
+
         // Update trigger button state
         const triggers = document.querySelectorAll(`.${chatType}-trigger`);
         triggers.forEach(t => t.classList.add('active'));
@@ -277,6 +285,27 @@ const FloatingChat = {
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
+    },
+
+    /**
+     * Show unread badge on a chat trigger button (without opening the chat)
+     */
+    showUnreadBadge(chatType) {
+        const btn = document.querySelector(`.chat-trigger-btn[data-chat="${chatType}"]`);
+        if (!btn) return;
+
+        // Add or update badge
+        let badge = btn.querySelector('.chat-unread-badge');
+        if (!badge) {
+            badge = document.createElement('span');
+            badge.className = 'chat-unread-badge';
+            badge.textContent = '!';
+            btn.appendChild(badge);
+        }
+        badge.classList.add('visible');
+
+        // Pulse animation
+        btn.classList.add('has-unread');
     }
 };
 

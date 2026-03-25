@@ -9833,6 +9833,32 @@ html, body {
     transform: translateY(-1px);
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
 }
+.chat-trigger-btn.has-unread {
+    animation: chatUnreadPulse 1.5s ease infinite;
+}
+@keyframes chatUnreadPulse {
+    0%, 100% { box-shadow: 0 2px 10px rgba(0,0,0,0.15); }
+    50% { box-shadow: 0 2px 16px rgba(255, 59, 48, 0.5); }
+}
+.chat-unread-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #ff3b30;
+    color: white;
+    font-size: 9px;
+    font-weight: 700;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+.chat-unread-badge.visible {
+    display: flex;
+}
 .chat-trigger-collapse {
     display: flex;
     align-items: center;

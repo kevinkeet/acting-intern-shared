@@ -243,9 +243,32 @@ const App = {
     /**
      * Show toast notification
      */
+    _recentToasts: new Map(),  // Deduplication: message → timestamp
+
     showToast(message, type = 'info', duration = 3000) {
         const container = document.getElementById('toast-container');
         if (!container) return;
+
+        // Deduplicate: skip if same message shown within last 5 seconds
+        const now = Date.now();
+        const key = type + ':' + message;
+        if (this._recentToasts.has(key) && now - this._recentToasts.get(key) < 5000) {
+            return; // Skip duplicate
+        }
+        this._recentToasts.set(key, now);
+
+        // Clean old entries periodically
+        if (this._recentToasts.size > 50) {
+            for (const [k, t] of this._recentToasts) {
+                if (now - t > 10000) this._recentToasts.delete(k);
+            }
+        }
+
+        // Cap visible toasts at 3 to prevent stack overflow
+        const existing = container.querySelectorAll('.toast');
+        if (existing.length >= 3) {
+            existing[0].remove();
+        }
 
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;

@@ -496,14 +496,14 @@ const SimulationEngine = {
         if (trigger.action === 'nurseAlert') {
             this.emit('nurseAlert', { message: trigger.message, priority: trigger.priority });
 
-            // Add to nurse chat
+            // Add to nurse chat (don't auto-open — just add message and show badge)
             if (typeof NurseChat !== 'undefined') {
                 NurseChat.messages.push({ role: 'assistant', content: trigger.message });
                 NurseChat.saveHistory();
                 if (typeof FloatingChat !== 'undefined') {
-                    // Ensure AI panel is visible
-                    FloatingChat.openChat('nurse');
                     FloatingChat.addMessage('nurse', 'assistant', trigger.message);
+                    // Show unread badge instead of forcefully opening
+                    FloatingChat.showUnreadBadge('nurse');
                 }
             }
 
@@ -547,14 +547,13 @@ const SimulationEngine = {
                 SimulationScoreTracker.markEmotionalTrigger();
             }
 
-            // Add to patient chat - patient speaks directly
+            // Add to patient chat (don't auto-open — just add message and show badge)
             if (typeof PatientChat !== 'undefined') {
                 PatientChat.messages.push({ role: 'assistant', content: trigger.message });
                 PatientChat.saveHistory();
                 if (typeof FloatingChat !== 'undefined') {
-                    // Ensure patient chat is visible
-                    FloatingChat.openChat('patient');
                     FloatingChat.addMessage('patient', 'assistant', trigger.message);
+                    FloatingChat.showUnreadBadge('patient');
                 }
             }
 
