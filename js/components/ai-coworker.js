@@ -7810,8 +7810,14 @@ RULES:
 
         // Parse and store the memory document
         const memoryDoc = this._parseJSONResponse(response);
-        if (!memoryDoc || !memoryDoc.patientOverview) {
+        if (!memoryDoc) {
+            console.error('Level 1: Could not parse JSON from response. First 500 chars:', response?.substring(0, 500));
             throw new Error('Could not parse memory document from Level 1 response');
+        }
+        if (!memoryDoc.patientOverview) {
+            console.warn('Level 1: patientOverview missing from response, using clinicalGestalt or summary as fallback');
+            // Try fallback fields the LLM might have used instead
+            memoryDoc.patientOverview = memoryDoc.clinicalGestalt || memoryDoc.summary || memoryDoc.patientSummary || 'Patient overview not generated';
         }
 
         // Mark items as processed and sync count
@@ -8089,7 +8095,10 @@ RULES:
         );
 
         const updatedMemory = this._parseJSONResponse(response);
-        if (!updatedMemory || !updatedMemory.patientOverview) {
+        if (updatedMemory && !updatedMemory.patientOverview) {
+            updatedMemory.patientOverview = updatedMemory.clinicalGestalt || updatedMemory.summary || 'Patient overview not generated';
+        }
+        if (!updatedMemory) {
             throw new Error('Could not parse updated memory from synthesis response');
         }
 
