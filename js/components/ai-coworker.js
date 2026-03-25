@@ -7762,8 +7762,13 @@ RULES:
         this._deepLearn.processedCount = itemsWithData.length;
         this.render();
 
-        // Assemble full text context via working memory
-        const chartContext = this.workingMemory.assembleForDeepLearnLevel1(itemsWithData);
+        // Assemble full text context via working memory, cap to prevent API overload
+        let chartContext = this.workingMemory.assembleForDeepLearnLevel1(itemsWithData);
+        const MAX_CONTEXT = 120000; // ~30K tokens — safe for Sonnet/Haiku context windows
+        if (chartContext.length > MAX_CONTEXT) {
+            console.warn(`🧠 Deep Learn: Context too large (${chartContext.length} chars), truncating to ${MAX_CONTEXT}`);
+            chartContext = chartContext.substring(0, MAX_CONTEXT) + '\n\n[... Chart data truncated due to size. Focus on the data above.]';
+        }
 
         console.log(`🧠 Deep Learn Level 1: Sending ${chartContext.length} chars to ${this.dictationModel}`);
 
@@ -7782,7 +7787,8 @@ RULES:
                 { model: this.dictationModel }
             );
         } catch (apiErr) {
-            console.error('Level 1 API call failed:', apiErr);
+            console.error('Level 1 API call failed:', apiErr.message, 'Context size:', chartContext.length, 'chars');
+            App.showToast(`Level 1 failed: ${apiErr.message}`, 'error');
             this._deepLearn.phase = 'between_levels';
             this._deepLearn._stage = null;
             this.state.status = 'ready';
