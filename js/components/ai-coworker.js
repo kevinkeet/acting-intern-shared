@@ -1204,6 +1204,22 @@ const AICoworker = {
                                 <span class="note-type-desc">Consultation Note</span>
                             </span>
                         </label>
+                        <label class="note-type-option">
+                            <input type="radio" name="note-type" value="patient-instructions">
+                            <span class="note-type-card">
+                                <span class="note-type-icon">📄</span>
+                                <span class="note-type-name">Instructions</span>
+                                <span class="note-type-desc">Patient / AVS Instructions</span>
+                            </span>
+                        </label>
+                        <label class="note-type-option">
+                            <input type="radio" name="note-type" value="patient-letter">
+                            <span class="note-type-card">
+                                <span class="note-type-icon">✉️</span>
+                                <span class="note-type-name">Letter</span>
+                                <span class="note-type-desc">Letter to Patient</span>
+                            </span>
+                        </label>
                     </div>
 
                     <div class="note-data-sources">
@@ -1227,7 +1243,7 @@ const AICoworker = {
                 </div>
                 <div class="ai-modal-footer">
                     <button class="btn btn-secondary" onclick="AICoworker.closeNoteModal()">Cancel</button>
-                    <button class="btn btn-primary" onclick="AICoworker.generateNote()">✨ Generate Draft</button>
+                    <button class="btn btn-primary" onclick="AICoworker.generateNoteFromModal()">✨ Generate Draft</button>
                 </div>
             </div>
         `;
@@ -2323,10 +2339,21 @@ const AICoworker = {
             var recentMsgs = this.state.conversationThread.slice(-10);
             recentMsgs.forEach(msg => {
                 const cls = msg.role === 'user' ? 'thread-msg-user' : 'thread-msg-ai';
-                const label = msg.role === 'user' ? (msg.type === 'think' ? '&#127897; You' : '&#128100; You') : '&#10024; AI';
-                html += `<div class="thread-msg ${cls}">`;
+                let label;
+                if (msg.role === 'user') {
+                    label = msg.type === 'think' ? '&#127897; You' : '&#128100; You';
+                } else if (msg.type === 'note-clarify') {
+                    label = '&#128221; AI (Pre-draft)';
+                } else {
+                    label = '&#10024; AI';
+                }
+                html += `<div class="thread-msg ${cls}${msg.type === 'note-clarify' ? ' thread-msg-clarify' : ''}">`;
                 html += `<div class="thread-msg-label">${label}</div>`;
                 html += `<div class="thread-msg-text">${msg.role === 'ai' ? this.formatText(msg.text) : this.escapeHtml(msg.text)}</div>`;
+                // "Just write it" quick-action after AI clarification question
+                if (msg.role === 'ai' && msg.type === 'note-clarify' && this.state.awaitingNoteClarification) {
+                    html += `<button class="clarify-skip-btn" onclick="AICoworker._handleClarificationResponse('just write it')">Just write it &#8594;</button>`;
+                }
                 html += '</div>';
             });
             // Show typing indicator when AI is thinking and last message was from user
@@ -2709,6 +2736,12 @@ const AICoworker = {
 
         textarea.value = '';
         this._autoResizeTextarea(textarea);
+
+        // Intercept: if awaiting note clarification response, route there
+        if (this.state.awaitingNoteClarification) {
+            this._handleClarificationResponse(text);
+            return;
+        }
 
         // Smart routing: detect question vs. clinical thinking
         // In hands-free mode, ALWAYS route as clinical thinking (doctors think out loud,
@@ -4063,42 +4096,191 @@ Respond with ONLY the JSON, no preamble.`;
      * Skips the note type modal — one click to draft.
      */
     draftContextualNote() {
-        // Auto-detect note type
+        // Auto-detect note type based on memory presence
         const hasMemory = this.longitudinalDoc?.aiMemory?.memoryDocument;
         const noteType = hasMemory ? 'progress' : 'hp';
+        this._initiateNoteDraft(noteType);
+    },
+
+    /**
+     * Draft a specific note type (called from voice commands with explicit type)
+     */
+    draftSpecificNote(noteType) {
+        this._initiateNoteDraft(noteType);
+    },
+
+    /**
+     * Common entry point for note drafting — gathers config and routes through clarification
+     */
+    _initiateNoteDraft(noteType) {
         const noteTypeName = this.getNoteTypeName(noteType);
-
-        App.showToast(`Drafting ${noteTypeName}...`, 'info');
-
-        // Gather chart data
+        App.showToast(`Preparing ${noteTypeName}...`, 'info');
         this.gatherChartData();
 
-        // Build all-sources-enabled config by creating temporary DOM elements
-        // (generateNote reads from DOM checkboxes, so we simulate the modal state)
-        const tempDiv = document.createElement('div');
-        tempDiv.style.display = 'none';
-        tempDiv.innerHTML = `
-            <input type="radio" name="note-type" value="${noteType}" checked>
-            <input type="checkbox" id="include-vitals" checked>
-            <input type="checkbox" id="include-labs" checked>
-            <input type="checkbox" id="include-meds" checked>
-            <input type="checkbox" id="include-imaging" checked>
-            <input type="checkbox" id="include-nursing" checked>
-            <input type="checkbox" id="include-dictation" checked>
-            <input type="checkbox" id="include-ambient" checked>
-            <input type="checkbox" id="include-previous" checked>
-            <textarea id="note-instructions"></textarea>
-        `;
-        document.body.appendChild(tempDiv);
+        const includeSources = {
+            vitals: true, labs: true, meds: true, imaging: true,
+            nursing: true, dictation: true, ambient: true, previous: true
+        };
 
-        // Track note writing in session context
         if (this.sessionContext) {
             this.sessionContext.trackNote(noteType);
         }
 
-        // Call generateNote which reads from these DOM elements
+        this.requestNoteClarification(noteType, noteTypeName, includeSources, '');
+    },
+
+    /**
+     * Called from modal "Generate Draft" button — gathers modal config, routes through clarification
+     */
+    generateNoteFromModal() {
+        const selectedType = document.querySelector('input[name="note-type"]:checked');
+        const noteType = selectedType ? selectedType.value : 'progress';
+        const noteTypeName = this.getNoteTypeName(noteType);
+
+        const includeSources = {
+            vitals: document.getElementById('include-vitals')?.checked ?? true,
+            labs: document.getElementById('include-labs')?.checked ?? true,
+            meds: document.getElementById('include-meds')?.checked ?? true,
+            imaging: document.getElementById('include-imaging')?.checked ?? true,
+            nursing: document.getElementById('include-nursing')?.checked ?? true,
+            dictation: document.getElementById('include-dictation')?.checked ?? true,
+            ambient: document.getElementById('include-ambient')?.checked ?? true,
+            previous: document.getElementById('include-previous')?.checked ?? true
+        };
+
+        const instructions = document.getElementById('note-instructions')?.value?.trim() || '';
+
+        this.closeNoteModal();
+        this.gatherChartData();
+
+        if (this.sessionContext) {
+            this.sessionContext.trackNote(noteType);
+        }
+
+        this.requestNoteClarification(noteType, noteTypeName, includeSources, instructions);
+    },
+
+    /**
+     * Pre-generation clarification — asks AI to review context and ask 1-3 questions before writing
+     */
+    async requestNoteClarification(noteType, noteTypeName, includeSources, instructions) {
+        // Store pending config for after clarification
+        this.state.pendingNoteConfig = { noteType, noteTypeName, includeSources, instructions };
+        this.state.awaitingNoteClarification = true;
+
+        // Build a short context summary for the clarification call
+        let contextSummary = '';
+        if (this.contextAssembler) {
+            try {
+                contextSummary = this.contextAssembler.workingMemory.assemble('writeNote');
+                // Truncate for the fast clarification call
+                if (contextSummary.length > 2500) {
+                    contextSummary = contextSummary.substring(0, 2500) + '\n[...truncated...]';
+                }
+            } catch (e) {
+                contextSummary = this.state.summary || 'No context available';
+            }
+        } else {
+            contextSummary = this.state.summary || 'No context available';
+        }
+
+        const systemPrompt = `You are an AI clinical assistant about to write a ${noteTypeName} for a patient. Before writing, review the clinical context and ask 1-3 brief, targeted clarification questions to ensure the note meets the physician's needs.
+
+Good clarification questions:
+- Which problems to focus on vs. address briefly
+- Whether to include specific consult recommendations or pending results
+- Tone/detail level preferences (brief vs. comprehensive)
+- Any specific clinical decisions to emphasize or document
+
+If the clinical context is straightforward and you have everything you need, respond with exactly: READY_TO_WRITE
+
+Keep questions concise (1 sentence each). Number them.`;
+
+        const userMessage = `Note type: ${noteTypeName}
+${instructions ? `Additional instructions: "${instructions}"\n` : ''}
+Clinical context:
+${contextSummary}
+
+What clarifying questions do you have before writing this ${noteTypeName}?`;
+
+        try {
+            // Fast LLM call with small token budget (use Haiku for speed)
+            const response = await this.callLLM(systemPrompt, userMessage, 512, { model: 'claude-haiku-4-5-20251001' });
+
+            if (!response || response.trim() === 'READY_TO_WRITE') {
+                // No clarification needed — proceed directly
+                this.proceedWithNoteGeneration();
+                return;
+            }
+
+            // Show clarification questions in conversation thread
+            this._pushToThread('ai', 'note-clarify', `📝 Before I draft this ${noteTypeName}:\n\n${response.trim()}`);
+            this.render();
+
+        } catch (err) {
+            console.warn('Clarification call failed, proceeding directly:', err);
+            // Fall back to generating without clarification
+            this.proceedWithNoteGeneration();
+        }
+    },
+
+    /**
+     * Handle user's response to note clarification questions
+     */
+    _handleClarificationResponse(text) {
+        this._pushToThread('user', 'note-clarify', text);
+        this.state.awaitingNoteClarification = false;
+
+        // Check for skip phrases
+        if (/^(just write it|skip|go ahead|write it|no questions|looks good|no|nope)/i.test(text.trim())) {
+            this.proceedWithNoteGeneration();
+        } else {
+            // Append user's answer to instructions so it's included in the note prompt
+            const config = this.state.pendingNoteConfig;
+            if (config) {
+                config.instructions = (config.instructions ? config.instructions + '\n' : '') +
+                    'Physician clarification: ' + text;
+            }
+            this.proceedWithNoteGeneration();
+        }
+    },
+
+    /**
+     * Proceed with note generation using stored pendingNoteConfig
+     */
+    proceedWithNoteGeneration() {
+        const config = this.state.pendingNoteConfig;
+        if (!config) {
+            console.warn('No pending note config');
+            return;
+        }
+
+        this.state.awaitingNoteClarification = false;
+        const { noteType, noteTypeName, includeSources, instructions } = config;
+
+        App.showToast(`Drafting ${noteTypeName}...`, 'info');
+
+        // Create temp DOM so generateNote() can read from it
+        const tempDiv = document.createElement('div');
+        tempDiv.style.display = 'none';
+        tempDiv.innerHTML = `
+            <input type="radio" name="note-type" value="${noteType}" checked>
+            <input type="checkbox" id="include-vitals" ${includeSources.vitals ? 'checked' : ''}>
+            <input type="checkbox" id="include-labs" ${includeSources.labs ? 'checked' : ''}>
+            <input type="checkbox" id="include-meds" ${includeSources.meds ? 'checked' : ''}>
+            <input type="checkbox" id="include-imaging" ${includeSources.imaging ? 'checked' : ''}>
+            <input type="checkbox" id="include-nursing" ${includeSources.nursing ? 'checked' : ''}>
+            <input type="checkbox" id="include-dictation" ${includeSources.dictation ? 'checked' : ''}>
+            <input type="checkbox" id="include-ambient" ${includeSources.ambient ? 'checked' : ''}>
+            <input type="checkbox" id="include-previous" ${includeSources.previous ? 'checked' : ''}>
+            <textarea id="note-instructions">${this.escapeHtml(instructions || '')}</textarea>
+        `;
+        document.body.appendChild(tempDiv);
+
+        // Clean up pending state
+        this.state.pendingNoteConfig = null;
+
         this.generateNote().finally(() => {
-            // Clean up temp DOM
             document.body.removeChild(tempDiv);
         });
     },
@@ -4292,7 +4474,9 @@ IMPORTANT:
             'hp': 'H&P',
             'progress': 'Progress Note',
             'discharge': 'Discharge Summary',
-            'consult': 'Consult Note'
+            'consult': 'Consult Note',
+            'patient-instructions': 'Patient Instructions',
+            'patient-letter': 'Letter to Patient'
         };
         return names[type] || 'Note';
     },

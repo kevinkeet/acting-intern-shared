@@ -41,7 +41,7 @@ const DictationWidget = {
     _cancelRegex: /\b(?:cancel|nevermind|never mind|cancel that|scratch that)\b/i,
     _refreshRegex: /\b(?:refresh analysis|refresh thinking|re-analyze|reanalyze|analyze case)\b/i,
     _digestRegex: /\b(?:update thinking|update your thinking|digest|digest that|process that|update analysis)\b/i,
-    _writeNoteRegex: /\b(?:write (?:a )?(?:progress )?note|write (?:a )?(?:h\s*(?:and|&)\s*p|hp)|draft (?:a )?note|draft (?:a )?progress note)\b/i,
+    _writeNoteRegex: /\b(?:write (?:a )?(?:progress )?note|write (?:a )?(?:h\s*(?:and|&)\s*p|hp)|draft (?:a )?note|draft (?:a )?progress note|write (?:a )?(?:patient )?(?:instructions?|discharge instructions?)|write (?:a )?letter (?:to (?:the )?patient)?|draft (?:a )?letter (?:to (?:the )?patient)?|write (?:a )?(?:patient )?letter|write (?:a )?consult(?:ation)? note|write (?:a )?discharge (?:summary|note))\b/i,
     _messageNurseRegex: /\b(?:message (?:the )?nurse|text (?:the )?nurse|tell (?:the )?nurse)\b\s*(.*)/i,
     _messagePatientRegex: /\b(?:message (?:the )?patient|ask (?:the )?patient|talk to (?:the )?patient)\b\s*(.*)/i,
     _swapSpeakersRegex: /\b(?:that was the patient|swap speakers|switch speakers|that's the patient|patient speaking)\b/i,
@@ -552,14 +552,24 @@ const DictationWidget = {
     },
 
     _triggerWriteNote(text) {
-        console.log('🎤 Voice command: write note');
-        if (typeof App !== 'undefined' && App.showToast) {
-            App.showToast('📝 Drafting note...', 'info');
-        }
+        console.log('🎤 Voice command: write note —', text);
 
-        // Use draftContextualNote which auto-selects H&P vs Progress Note
-        if (typeof AICoworker !== 'undefined' && AICoworker.draftContextualNote) {
-            AICoworker.draftContextualNote();
+        // Extract specific note type from voice command text
+        let noteType = null;
+        if (/instruction/i.test(text)) noteType = 'patient-instructions';
+        else if (/letter/i.test(text)) noteType = 'patient-letter';
+        else if (/h\s*(?:and|&)\s*p|(?:^|\s)hp\b/i.test(text)) noteType = 'hp';
+        else if (/discharge/i.test(text)) noteType = 'discharge';
+        else if (/consult/i.test(text)) noteType = 'consult';
+        else if (/progress/i.test(text)) noteType = 'progress';
+        // else: null means auto-detect
+
+        if (typeof AICoworker !== 'undefined') {
+            if (noteType && AICoworker.draftSpecificNote) {
+                AICoworker.draftSpecificNote(noteType);
+            } else if (AICoworker.draftContextualNote) {
+                AICoworker.draftContextualNote();
+            }
         }
     },
 

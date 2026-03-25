@@ -6729,6 +6729,35 @@ html, body {
     color: var(--primary-dark);
 }
 
+/* Pre-draft clarification messages */
+.thread-msg-clarify.thread-msg-ai {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+}
+.thread-msg-clarify .thread-msg-label {
+    color: #2563eb;
+}
+
+/* "Just write it" quick-action button */
+.clarify-skip-btn {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 4px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #2563eb;
+    background: white;
+    border: 1px solid #bfdbfe;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.clarify-skip-btn:hover {
+    background: #2563eb;
+    color: white;
+    border-color: #2563eb;
+}
+
 /* ---- AI LIVE STATUS LINE ---- */
 .copilot-status-line {
     display: flex;
@@ -8708,7 +8737,7 @@ html, body {
 
 .note-type-selector {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 10px;
     margin-bottom: 16px;
 }

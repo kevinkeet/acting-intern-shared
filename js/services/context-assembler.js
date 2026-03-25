@@ -442,7 +442,36 @@ Provide a concise case synthesis. Be brief and clinical — no filler. Do NOT re
         const noteTimeStr = noteDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
         const patientName = (typeof window !== 'undefined' && window.PatientHeader?.currentPatient?.name) || 'Robert Morrison';
 
-        const systemPrompt = `You are a physician writing a clinical note in an EHR system. Write a professional, thorough clinical note based on the patient data provided. Use standard medical documentation conventions.
+        // Note-type-specific prompt guidance
+        const noteTypePrompts = {
+            'patient-instructions': `You are writing PATIENT-FACING after-visit / discharge instructions. This is NOT a clinical note — it is for the PATIENT to read at home.
+
+CRITICAL RULES:
+- Write at a 6th-grade reading level. No medical jargon.
+- Address the patient directly ("You", "Your")
+- Use numbered lists and short sentences
+- Include: plain-language diagnosis summary, each medication with its PURPOSE and TIMING in simple words, warning signs to call or return for, follow-up appointments, activity and diet restrictions, and who to call with questions
+- Use UPPERCASE for section headers followed by a colon
+- The current date is ${noteDateStr}
+- The attending physician is Dr. Sarah Chen
+- The patient's name is ${patientName}
+- Do NOT use placeholder brackets — always use actual values`,
+
+            'patient-letter': `You are writing a formal LETTER FROM THE PHYSICIAN TO THE PATIENT. This is a professional but warm letter the patient will receive.
+
+CRITICAL RULES:
+- Use a respectful, warm but professional tone
+- Start with a proper greeting: "Dear Mr./Mrs. [Patient Name],"
+- Include: reason for writing, clinical summary in accessible language, plan of care explained clearly, and a warm closing
+- When medical terms are necessary, explain them in parentheses
+- End with a signature block: "Sincerely, Dr. Sarah Chen"
+- The current date is ${noteDateStr}
+- The patient's name is ${patientName}
+- Do NOT use placeholder brackets — always use actual values
+- Do NOT use UPPERCASE section headers — this is a letter, not a clinical note`
+        };
+
+        const systemPrompt = noteTypePrompts[noteType] || `You are a physician writing a clinical note in an EHR system. Write a professional, thorough clinical note based on the patient data provided. Use standard medical documentation conventions.
 
 Write the note in plain text with clear section headers. Do NOT use markdown formatting like ** or #. Use UPPERCASE for section headers followed by a colon.
 
@@ -458,7 +487,7 @@ IMPORTANT:
 - Do NOT use placeholder brackets like [Current Date], [Physician Name], [Patient Name], or [Date and Time] — always use the actual values provided above`;
 
         // Build the note-specific data section
-        let noteData = `Please write a clinical ${noteTypeName} for this patient.\n\n`;
+        let noteData = `Please write a ${noteTypeName} for this patient.\n\n`;
 
         if (includeSources.vitals && chartData.vitals && chartData.vitals.length > 0) {
             noteData += '## Recent Vitals\n';
