@@ -2717,7 +2717,8 @@ const AICoworker = {
             { key: 'labs', icon: '&#128300;', label: 'Order labs', items: actions?.labs || [] },
             { key: 'imaging', icon: '&#128247;', label: 'Order imaging', items: actions?.imaging || [] },
             { key: 'medications', icon: '&#128138;', label: 'Medication orders', items: actions?.medications || [] },
-            { key: 'other', icon: '&#128203;', label: 'Other orders', items: actions?.other || [] }
+            { key: 'other', icon: '&#128203;', label: 'Other orders', items: actions?.other || [] },
+            { key: 'documentation', icon: '&#128221;', label: 'Documentation', items: [], _static: true }
         ];
 
         let html = '<div class="copilot-section actions-section' + (isThinking && !collapsed ? ' shimmer-loading' : '') + '">';
@@ -2739,6 +2740,20 @@ const AICoworker = {
             html += `<span class="action-cat-icon">${cat.icon}</span>`;
             html += `<span class="action-cat-label">${cat.label}</span>`;
             html += `</div>`;
+
+            // Static documentation category with built-in items
+            if (cat._static && cat.key === 'documentation') {
+                html += '<div class="action-items">';
+                html += '<div class="action-item action-executable" onclick="AICoworker.draftContextualNote()">';
+                html += '<span class="action-text">Draft Note (auto-detect type)</span>';
+                html += '<span class="action-execute-icon" title="Draft note">&#9654;</span>';
+                html += '</div>';
+                html += '<div class="action-item action-executable" onclick="AICoworker.openNoteModal()">';
+                html += '<span class="action-text">Write Note (choose type)</span>';
+                html += '<span class="action-execute-icon" title="Choose note type">&#9654;</span>';
+                html += '</div>';
+                html += '</div>';
+            }
 
             if (cat.items.length > 0) {
                 html += '<div class="action-items">';
@@ -2845,16 +2860,8 @@ const AICoworker = {
         var mode = this.mode_config;
         let html = '<div class="copilot-inline-input">';
 
-        // Ambient scribe panel (shown when scribe is active or has data)
-        html += this.renderAmbientScribePanel();
-
         // Inline prompt editor (shown/hidden by toggle)
         html += this.renderInlinePromptEditor();
-
-        // Quick action chip — Draft Note (context-aware)
-        html += '<div class="inline-chips">';
-        html += '<button class="suggestion-chip" onclick="AICoworker.draftContextualNote()">&#128221; Draft Note</button>';
-        html += '</div>';
 
         // Input row with mode-specific placeholder
         var placeholder = 'Ask a question or share your thinking...';
@@ -2873,16 +2880,6 @@ const AICoworker = {
             var secs = Math.round((this._handsFreeTimeout || 3000) / 1000);
             html += '<div class="hands-free-status" id="hands-free-status"><span class="hf-pulse"></span> Hands-free mode &mdash; auto-submits after ' + secs + 's silence</div>';
         }
-
-        // Action buttons — simplified (Write Note removed, Draft Note chip handles it)
-        html += '<div class="inline-action-bar">';
-        html += '<button class="inline-action-btn inline-more-btn" onclick="AICoworker.toggleMoreMenu()" data-tooltip="More"><span>&#8943;</span></button>';
-        html += '<div class="inline-more-menu" id="inline-more-menu">';
-        html += '<button onclick="AICoworker.openPromptEditor()">&#9999; Edit Prompts</button>';
-        html += '<button onclick="AICoworker.openDebugPanel()">&#128269; Debug</button>';
-        html += '<button onclick="AICoworker.clearMemory()">&#128465; Clear Memory</button>';
-        html += '</div>';
-        html += '</div>';
 
         html += '</div>';
         return html;
@@ -7859,13 +7856,15 @@ RULES:
             chartContext = chartContext.substring(0, MAX_CONTEXT) + '\n\n[... Chart data truncated due to size. Focus on the data above.]';
         }
 
-        console.log(`🧠 Deep Learn Level 1: Sending ${chartContext.length} chars to ${this.dictationModel}`);
+        // Level 1 always uses Sonnet — it's the foundation pass and needs quality
+        const level1Model = 'claude-sonnet-4-6';
+        console.log(`🧠 Deep Learn Level 1: Sending ${chartContext.length} chars to ${level1Model}`);
 
         // Stage: Analyzing
         this._deepLearn._stage = 'analyzing';
         this.render();
 
-        // Call LLM with the comprehensive Level 1 prompt (use dictationModel for quality)
+        // Call LLM with the comprehensive Level 1 prompt (always Sonnet for foundation quality)
         const prompt = this.contextAssembler.buildDeepLearnLevel1Prompt(chartContext);
         let response;
         try {
@@ -7873,7 +7872,7 @@ RULES:
                 prompt.systemPrompt,
                 prompt.userMessage,
                 prompt.maxTokens,
-                { model: this.dictationModel }
+                { model: level1Model }
             );
         } catch (apiErr) {
             console.error('Level 1 API call failed:', apiErr.message, 'Context size:', chartContext.length, 'chars');
