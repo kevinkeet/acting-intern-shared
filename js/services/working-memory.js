@@ -921,7 +921,21 @@ class WorkingMemoryAssembler {
             sections.push(medText);
         }
 
-        // 5. Pending items
+        // 5. Lab trends
+        if (doc.labTrends && doc.labTrends.key_values && doc.labTrends.key_values.length) {
+            var labText = '## KEY LAB TRENDS\n';
+            doc.labTrends.key_values.forEach(function(lt) {
+                var vals = (lt.values || []).map(function(v) {
+                    return v.date + ': ' + v.value + (v.flag && v.flag !== 'normal' ? ' (' + v.flag + ')' : '');
+                }).join(' → ');
+                labText += '- **' + lt.test + '** [' + (lt.trend || 'stable') + ']: ' + vals;
+                if (lt.significance) labText += ' — ' + lt.significance;
+                labText += '\n';
+            });
+            sections.push(labText);
+        }
+
+        // 6. Pending items
         if (doc.pendingItems && doc.pendingItems.length) {
             sections.push('## PENDING\n' + doc.pendingItems.map(function(i) { return '- ' + i; }).join('\n'));
         }

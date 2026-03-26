@@ -831,50 +831,43 @@ Respond with the COMPLETE updated memory document as JSON (same schema as before
      * Model: Sonnet. Max tokens: 8192.
      */
     buildDeepLearnLevel1Prompt(chartContext) {
-        const systemPrompt = `You are an AI clinical co-pilot performing a chart review. Build a structured MEMORY DOCUMENT from the patient data below.
+        const systemPrompt = `You are an AI clinical co-pilot. Build a structured MEMORY DOCUMENT from the chart data.
 
-CRITICAL: You MUST populate ALL 7 top-level fields. Output the fields in this EXACT order. Do NOT skip any field.
+CRITICAL: You MUST populate ALL 7 top-level fields. Even if data is limited, provide your best assessment for EVERY field. A brief entry is always better than a missing field. This is Level 1 — later levels will deepen each section.
 
-Respond with ONLY valid JSON, no preamble or markdown fences:
+Respond with ONLY valid JSON (no markdown fences, no preamble). Fields in this EXACT order:
 
 {
-    "clinicalGestalt": "2-3 sentence clinical gestalt — the 30-second handoff story.",
-    "patientOverview": "2-3 paragraph overview: demographics, PMH with qualifiers (EF%, Cr, A1c, NYHA), social/functional status, current trajectory.",
+    "clinicalGestalt": "One sentence — the 10-second handoff. E.g. '73M HFrEF EF35% CKD3b on GDMT, stable outpatient, recent mood concerns'",
+    "patientOverview": "2-3 paragraphs: demographics + PMH with qualifiers (EF%, Cr baseline, A1c, NYHA class), social/functional, current trajectory",
     "safetyProfile": {
-        "allergies": [{"substance": "X", "reaction": "Y", "severity": "mild|moderate|severe|anaphylaxis"}],
-        "contraindications": ["Drug/class contraindicated and why"],
-        "criticalValues": ["Critical lab or vital with context"],
+        "allergies": [{"substance": "X", "reaction": "Y", "severity": "severe", "implications": "Avoid class X"}],
+        "contraindications": ["ACE-I (angioedema hx)", "NSAIDs (CKD+HF)"],
+        "criticalValues": ["Current critical labs if any"],
         "renalDosing": ["Meds needing renal adjustment"]
     },
     "problemAnalysis": [
-        {
-            "problem": "Problem name",
-            "status": "active|stable|acute|chronic|resolving",
-            "trajectory": "improving|worsening|stable|fluctuating",
-            "keyData": ["Key lab/imaging/exam findings for this problem"],
-            "plan": "Current management with specific meds and doses",
-            "medRationale": "Why these meds at these doses",
-            "timeline": "Key dates in problem history"
-        }
+        {"problem": "HFrEF", "status": "active", "trajectory": "stable", "keyData": ["EF 35%", "BNP 433"], "plan": "Continue GDMT (Entresto, Carvedilol, Spironolactone, Furosemide)", "timeline": "Dx 2019, last admission 9/2025"}
     ],
     "medicationRationale": [
-        {"name": "Med + dose + route + freq", "indication": "What for", "rationale": "Why this med/dose", "monitoring": "What to monitor"}
+        {"name": "Entresto 97/103mg BID", "indication": "HFrEF", "rationale": "PARADIGM-HF: mortality benefit in HFrEF", "monitoring": "K+, Cr, BP"}
     ],
     "labTrends": {
         "key_values": [
-            {"test": "Test name", "values": [{"date": "D", "value": "V", "flag": "H|L|normal"}], "trend": "stable|rising|falling", "significance": "Meaning"}
+            {"test": "Creatinine", "values": [{"date": "1/28/26", "value": "1.96", "flag": "H"}], "trend": "stable", "significance": "CKD3b baseline"}
         ]
     },
     "pendingItems": ["Unresolved items, follow-ups, pending results"]
 }
 
 RULES:
-- clinicalGestalt and safetyProfile go FIRST — they're shortest and most critical
-- patientOverview: 2-3 paragraphs max, concise but include all qualifiers (EF%, baseline Cr, A1c, etc.)
-- problemAnalysis: Top 5-8 problems by acuity. Use abbreviations freely.
-- medicationRationale: All current meds. Brief rationale per med.
-- labTrends: Top 8-10 most significant labs. Only last 2-3 values per trend.
-- Be CONCISE. Abbreviate. This is a working clinical document, not a textbook.`;
+- Be CONCISE. Use abbreviations (HFrEF, CKD3b, T2DM, AFib, GDMT, etc.)
+- problemAnalysis: Top 5-8 active problems. Brief plans with specific meds/doses.
+- medicationRationale: ALL current meds. One line per med.
+- labTrends: Top 8-10 clinically significant labs. Include recent values with flags.
+- safetyProfile: ALWAYS include allergies and major contraindications.
+- pendingItems: Outstanding follow-ups, pending orders, items needing attention.
+- This is a WORKING clinical document that will be used as the AI's knowledge base for answering questions and suggesting actions. Make it useful.`;
 
         return {
             systemPrompt,
@@ -922,7 +915,7 @@ Respond with ONLY the JSON, no preamble.`;
         return {
             systemPrompt,
             userMessage: `DOCUMENT METADATA: ${documentMeta}\n\nDOCUMENT CONTENT:\n${documentText}`,
-            maxTokens: 1024
+            maxTokens: 2048
         };
     }
 
@@ -951,7 +944,31 @@ MERGE RULES:
 - PRESERVE everything from current memory that isn't contradicted
 - NEVER remove information unless it's clearly superseded (e.g., old med dose replaced by new dose)
 
-The output must use the same JSON schema as your current memory document. Respond with ONLY the complete updated JSON, no preamble or markdown fences.`;
+OUTPUT SCHEMA — you MUST return ALL 7 top-level fields:
+{
+    "clinicalGestalt": "One sentence handoff summary",
+    "patientOverview": "2-3 paragraph overview with PMH qualifiers",
+    "safetyProfile": {
+        "allergies": [{"substance": "X", "reaction": "Y", "severity": "...", "implications": "..."}],
+        "contraindications": ["..."],
+        "criticalValues": ["..."],
+        "renalDosing": ["..."]
+    },
+    "problemAnalysis": [
+        {"problem": "Name", "status": "active|stable|acute|chronic|resolving", "trajectory": "improving|worsening|stable|fluctuating", "keyData": ["..."], "plan": "...", "timeline": "..."}
+    ],
+    "medicationRationale": [
+        {"name": "Med+dose", "indication": "...", "rationale": "...", "monitoring": "..."}
+    ],
+    "labTrends": {
+        "key_values": [
+            {"test": "Name", "values": [{"date": "D", "value": "V", "flag": "H|L|normal"}], "trend": "stable|rising|falling", "significance": "..."}
+        ]
+    },
+    "pendingItems": ["..."]
+}
+
+Respond with ONLY the complete updated JSON, no preamble or markdown fences.`;
 
         const userMessage = `## YOUR CURRENT MEMORY DOCUMENT
 ${JSON.stringify(currentMemory, null, 2)}
