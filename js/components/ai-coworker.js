@@ -8049,8 +8049,8 @@ RULES:
         // Store memory
         this._applyMemoryDocument(memoryDoc);
 
-        // Auto-open memory viewer to show what was learned
-        if (!this._memoryViewerOpen) {
+        // Auto-open memory viewer to show what was learned (unless suppressed during onboarding)
+        if (!this._memoryViewerOpen && !this._suppressMemoryViewer) {
             this.openMemoryViewer();
         }
 

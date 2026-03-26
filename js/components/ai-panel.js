@@ -179,9 +179,11 @@ const AIPanel = {
         if (hasLLMData) return;
 
         // Delay slightly to let expand animation finish
+        // Suppress memory viewer popup during auto-learn (not user-initiated)
         setTimeout(async () => {
             if (!AICoworker.contextAssembler || !AICoworker.isApiConfigured()) return;
 
+            AICoworker._suppressMemoryViewer = true;
             try {
                 // If never learned, do Level 1 first
                 if (!AICoworker._deepLearn || AICoworker._deepLearn.phase === 'idle') {
@@ -192,6 +194,8 @@ const AIPanel = {
             } catch (e) {
                 console.warn('Auto-learn/analyze failed, trying analyze only:', e);
                 try { AICoworker.refreshThinking(); } catch (e2) { /* silent */ }
+            } finally {
+                AICoworker._suppressMemoryViewer = false;
             }
         }, 600);
     },

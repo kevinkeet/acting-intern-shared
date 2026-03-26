@@ -226,8 +226,10 @@ const About = {
                     AIPanel.toggle();
                 }
                 // Auto-trigger Learn Patient (Level 1) → then Analyze Case
+                // Suppress memory viewer popup during initial onboarding
                 setTimeout(async () => {
                     if (typeof AICoworker !== 'undefined' && AICoworker.isApiConfigured()) {
+                        AICoworker._suppressMemoryViewer = true;
                         try {
                             await AICoworker.learnPatient();
                             // After Level 1 completes, auto-analyze
@@ -235,6 +237,8 @@ const About = {
                         } catch (e) {
                             console.warn('Auto-learn failed, falling back to analyze:', e);
                             AICoworker.refreshThinking();
+                        } finally {
+                            AICoworker._suppressMemoryViewer = false;
                         }
                     }
                 }, 800);
