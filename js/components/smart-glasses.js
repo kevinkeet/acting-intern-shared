@@ -1309,13 +1309,20 @@ const SmartGlasses = {
 
         const cats = AICoworker.state.categorizedActions || {};
 
+        // Deduplication set — prevents the same action from appearing in multiple categories
+        const seenTexts = new Set();
+
         // Pull from categorizedActions (already grouped)
         for (const key of ['labs', 'imaging', 'medications', 'communication']) {
             const items = cats[key];
             if (!items || !Array.isArray(items)) continue;
             for (const item of items) {
                 const text = typeof item === 'string' ? item : (item.text || '');
-                if (text) groups[key].push({ text, orderType: item.orderType, orderData: item.orderData });
+                const textKey = text.toLowerCase().trim();
+                if (text && !seenTexts.has(textKey)) {
+                    seenTexts.add(textKey);
+                    groups[key].push({ text, orderType: item.orderType, orderData: item.orderData });
+                }
             }
         }
 
@@ -1324,7 +1331,11 @@ const SmartGlasses = {
         if (Array.isArray(noteItems)) {
             for (const item of noteItems) {
                 const text = typeof item === 'string' ? item : (item.text || '');
-                if (text) groups.notes.push({ text });
+                const textKey = text.toLowerCase().trim();
+                if (text && !seenTexts.has(textKey)) {
+                    seenTexts.add(textKey);
+                    groups.notes.push({ text });
+                }
             }
         }
 
@@ -1333,18 +1344,29 @@ const SmartGlasses = {
         if (Array.isArray(otherItems)) {
             for (const item of otherItems) {
                 const text = typeof item === 'string' ? item : (item.text || '');
-                if (text) groups.other.push({ text });
+                const textKey = text.toLowerCase().trim();
+                if (text && !seenTexts.has(textKey)) {
+                    seenTexts.add(textKey);
+                    groups.other.push({ text });
+                }
             }
         }
 
         // Also pull from suggestedActions and classify them into categories
+        // Use fuzzy prefix matching (first 25 chars) since LLM may rephrase slightly
         const actions = AICoworker.state.suggestedActions || [];
-        const existingTexts = new Set(Object.values(groups).flat().map(g => g.text.toLowerCase()));
+        const isSeen = (t) => {
+            const prefix = t.toLowerCase().trim().substring(0, 25);
+            for (const s of seenTexts) {
+                if (s.substring(0, 25) === prefix) return true;
+            }
+            return false;
+        };
 
         for (const a of actions) {
             const text = typeof a === 'string' ? a : (a.text || '');
-            if (!text || existingTexts.has(text.toLowerCase())) continue;
-            existingTexts.add(text.toLowerCase());
+            if (!text || isSeen(text)) continue;
+            seenTexts.add(text.toLowerCase().trim());
 
             // Classify by keywords
             const lower = text.toLowerCase();
