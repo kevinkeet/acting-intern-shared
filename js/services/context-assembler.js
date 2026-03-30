@@ -211,21 +211,50 @@ RULES:
   * This is the MOST IMPORTANT display — a doctor glances at this during patient care. Prioritize: (1) safety-critical info, (2) actionable orders, (3) key clinical values with trends
   * Use ↑↓ for trends, actual values not ranges, bold abbreviations. Every character counts.`;
 
-        // Inject mode personality prefix
-        if (mode && mode.responseStyle.personalityPrefix) {
+        // Inject personality prefix — AIPreferences assertiveness + mode personality
+        if (typeof AIPreferences !== 'undefined') {
+            var personalityPrefix = AIPreferences.buildPersonalityPrefix(
+                mode && mode.responseStyle.personalityPrefix ? mode.responseStyle.personalityPrefix : null
+            );
+            if (personalityPrefix) {
+                systemPrompt = personalityPrefix + '\n\n' + systemPrompt;
+            }
+        } else if (mode && mode.responseStyle.personalityPrefix) {
             systemPrompt = mode.responseStyle.personalityPrefix + '\n\n' + systemPrompt;
         }
 
-        // Inject per-mode section-specific instructions
+        // Inject per-mode section-specific instructions + AIPreferences detail levels
         if (mode && typeof AIModeConfig !== 'undefined') {
             var sectionInstructions = '\nSECTION-SPECIFIC INSTRUCTIONS (follow these for how to format each section):\n' +
                 '- Clinical Summary: ' + AIModeConfig.getModePromptSection(mode.id, 'summary') + '\n' +
                 '- Problem List: ' + AIModeConfig.getModePromptSection(mode.id, 'problemList') + '\n' +
                 '- Suggested Actions / categorizedActions: ' + AIModeConfig.getModePromptSection(mode.id, 'actions') + '\n';
+            if (typeof AIPreferences !== 'undefined') {
+                sectionInstructions += AIPreferences.buildSectionInstructions() + '\n';
+            }
             systemPrompt = systemPrompt.replace(
                 'Respond in this exact JSON format:',
                 sectionInstructions + '\nRespond in this exact JSON format:'
             );
+        }
+
+        // Inject custom clinical summary structure from AIPreferences
+        if (typeof AIPreferences !== 'undefined') {
+            var customSummary = AIPreferences.buildSummaryFormatSpec();
+            if (customSummary) {
+                systemPrompt = systemPrompt.replace(
+                    /"clinicalSummary": \{[^}]+\}/,
+                    customSummary
+                );
+            }
+        }
+
+        // Inject global user instructions from AIPreferences
+        if (typeof AIPreferences !== 'undefined') {
+            var globalInstr = AIPreferences.getGlobalInstruction();
+            if (globalInstr) {
+                systemPrompt += '\n\nUSER INSTRUCTIONS (always follow these):\n' + globalInstr;
+            }
         }
 
         // Inject DDx challenge field into JSON format (Proactive mode)
@@ -376,21 +405,50 @@ RULES:
   * This is the MOST IMPORTANT display — a doctor glances at this during patient care. Prioritize: (1) safety-critical info, (2) actionable orders, (3) key clinical values with trends
   * Use ↑↓ for trends, actual values not ranges, bold abbreviations. Every character counts.`;
 
-        // Inject mode personality prefix
-        if (mode && mode.responseStyle.personalityPrefix) {
+        // Inject personality prefix — AIPreferences assertiveness + mode personality
+        if (typeof AIPreferences !== 'undefined') {
+            var personalityPrefix = AIPreferences.buildPersonalityPrefix(
+                mode && mode.responseStyle.personalityPrefix ? mode.responseStyle.personalityPrefix : null
+            );
+            if (personalityPrefix) {
+                systemPrompt = personalityPrefix + '\n\n' + systemPrompt;
+            }
+        } else if (mode && mode.responseStyle.personalityPrefix) {
             systemPrompt = mode.responseStyle.personalityPrefix + '\n\n' + systemPrompt;
         }
 
-        // Inject per-mode section-specific instructions
+        // Inject per-mode section-specific instructions + AIPreferences detail levels
         if (mode && typeof AIModeConfig !== 'undefined') {
             var sectionInstructions = '\nSECTION-SPECIFIC INSTRUCTIONS (follow these for how to format each section):\n' +
                 '- Clinical Summary: ' + AIModeConfig.getModePromptSection(mode.id, 'summary') + '\n' +
                 '- Problem List: ' + AIModeConfig.getModePromptSection(mode.id, 'problemList') + '\n' +
                 '- Suggested Actions / categorizedActions: ' + AIModeConfig.getModePromptSection(mode.id, 'actions') + '\n';
+            if (typeof AIPreferences !== 'undefined') {
+                sectionInstructions += AIPreferences.buildSectionInstructions() + '\n';
+            }
             systemPrompt = systemPrompt.replace(
                 'Respond in this exact JSON format:',
                 sectionInstructions + '\nRespond in this exact JSON format:'
             );
+        }
+
+        // Inject custom clinical summary structure from AIPreferences
+        if (typeof AIPreferences !== 'undefined') {
+            var customSummary = AIPreferences.buildSummaryFormatSpec();
+            if (customSummary) {
+                systemPrompt = systemPrompt.replace(
+                    /"clinicalSummary": \{[^}]+\}/,
+                    customSummary
+                );
+            }
+        }
+
+        // Inject global user instructions from AIPreferences
+        if (typeof AIPreferences !== 'undefined') {
+            var globalInstr = AIPreferences.getGlobalInstruction();
+            if (globalInstr) {
+                systemPrompt += '\n\nUSER INSTRUCTIONS (always follow these):\n' + globalInstr;
+            }
         }
 
         // Inject DDx challenge field into JSON format (Proactive mode)

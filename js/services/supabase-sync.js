@@ -27,6 +27,7 @@ const SupabaseSync = (() => {
     'tutorial-seen',
     'patient-voice-id',
     'ai-user-instructions',
+    'ai-user-preferences',
   ];
 
   const SYNC_PREFIXES = ['customPrompt_', 'modePrompt_'];

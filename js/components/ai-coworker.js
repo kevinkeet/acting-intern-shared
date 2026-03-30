@@ -2638,15 +2638,20 @@ const AICoworker = {
             if (!collapsed) {
                 html += '<div class="copilot-section-body">';
                 if (summary) {
-                    if (summary.demographics) {
-                        html += `<div class="summary-sentence"><span class="sentence-label">ID</span>${this.formatText(summary.demographics)}</div>`;
-                    }
-                    if (summary.functional) {
-                        html += `<div class="summary-sentence"><span class="sentence-label">USOH</span>${this.formatText(summary.functional)}</div>`;
-                    }
-                    if (summary.presentation) {
-                        html += `<div class="summary-sentence"><span class="sentence-label">Now</span>${this.formatText(summary.presentation)}</div>`;
-                    }
+                    // Use AIPreferences for dynamic section labels, fall back to defaults
+                    const sections = (typeof AIPreferences !== 'undefined')
+                        ? AIPreferences.getSummarySections()
+                        : [
+                            { key: 'demographics', label: 'ID' },
+                            { key: 'functional', label: 'USOH' },
+                            { key: 'presentation', label: 'Now' }
+                        ];
+                    sections.forEach(section => {
+                        const value = summary[section.key];
+                        if (value) {
+                            html += `<div class="summary-sentence"><span class="sentence-label">${this.escapeHtml(section.label)}</span>${this.formatText(value)}</div>`;
+                        }
+                    });
                 } else {
                     html += '<div class="summary-sentence summary-placeholder">Loading patient data...</div>';
                 }
