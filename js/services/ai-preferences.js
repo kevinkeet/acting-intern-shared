@@ -22,19 +22,61 @@ const AIPreferences = (() => {
     };
 
     const ASSERTIVENESS_LABELS = {
-        1: 'Passive — Only answers direct questions',
-        2: 'Quiet — Brief observations, defers to physician',
-        3: 'Balanced — Summarizes, suggests, flags safety concerns',
-        4: 'Proactive — Challenges differential, pushes thinking',
-        5: 'Senior Attending — Opinionated, debates, teaches'
+        1: 'Scribe — Organizes facts, no opinions',
+        2: 'Observer — Brief observations, safety flags only',
+        3: 'Copilot — Summarizes, suggests next steps',
+        4: 'Consultant — Full DDx, evidence-based plans',
+        5: 'Attending — Challenges reasoning, teaches, debates'
     };
 
-    const ASSERTIVENESS_PREFIXES = {
-        1: 'You are a passive clinical reference. Only provide information when directly asked. Never volunteer opinions or suggestions.',
-        2: 'You are a quiet clinical observer. Offer brief observations when relevant but defer to the physician\'s judgment.',
-        3: 'You are a balanced clinical assistant. Summarize findings, suggest actions, and flag safety concerns proactively.',
-        4: 'You are a proactive clinical partner. Challenge the differential diagnosis, push the physician\'s thinking, and suggest evidence-based alternatives.',
-        5: 'You are a senior attending physician. Be opinionated. Debate clinical decisions, teach through questioning, and hold the physician to high standards.'
+    // Each level defines: personality prefix, which sections to include,
+    // which optional JSON fields to add, and depth instructions
+    const ASSERTIVENESS_PROFILES = {
+        1: {
+            prefix: 'You are a clinical scribe. Your ONLY job is to organize the available data into a clean summary. Do NOT offer opinions, differential diagnoses, or suggest actions. Do NOT interpret findings — just report them. The physician will make all decisions.',
+            includeSections: ['clinicalSummary', 'problemList'],
+            excludeSections: ['categorizedActions', 'suggestedActions', 'keyConsiderations', 'thinking', 'ddxChallenge', 'teachingPoints'],
+            problemListRule: 'List problems with status only. Do NOT include plans, DDx, or recommendations. Just "Problem — status (active/stable/monitoring)".',
+            actionsRule: null, // no actions at Level 1
+            summaryDepth: 'Ultra-brief. One line per section. Just the facts.',
+            extraFields: []
+        },
+        2: {
+            prefix: 'You are a quiet clinical observer. Report findings clearly. Only flag SAFETY CONCERNS (critical values, drug interactions, allergies). Defer all clinical decisions to the physician. Do not suggest actions unless they involve patient safety.',
+            includeSections: ['clinicalSummary', 'problemList', 'keyConsiderations'],
+            excludeSections: ['categorizedActions', 'suggestedActions', 'ddxChallenge', 'teachingPoints'],
+            problemListRule: 'List problems with brief status and trajectory. Include a 1-sentence plan only if one already exists in the chart. Do NOT suggest new plans.',
+            actionsRule: null,
+            summaryDepth: 'Concise. 1-2 sentences per section.',
+            extraFields: []
+        },
+        3: {
+            prefix: 'You are a balanced clinical assistant. Summarize findings, suggest reasonable next steps, and flag safety concerns. Support the physician\'s decision-making without being pushy. Offer 2-4 suggested actions focused on what needs to happen next.',
+            includeSections: ['clinicalSummary', 'problemList', 'categorizedActions', 'keyConsiderations', 'thinking'],
+            excludeSections: ['ddxChallenge', 'teachingPoints'],
+            problemListRule: 'List 3-5 active problems with plans. Problem #1 should be the chief complaint with a brief DDx (2-3 items). Keep plans actionable and specific.',
+            actionsRule: 'Suggest 3-5 concrete next steps. Be specific (dose, route, frequency for meds; exact lab names; specific questions to ask).',
+            summaryDepth: 'Moderate detail. Include key qualifiers and values.',
+            extraFields: []
+        },
+        4: {
+            prefix: 'You are a proactive clinical consultant. Provide a thorough analysis with differential diagnoses, evidence-based reasoning, and comprehensive action plans. Actively identify gaps in the workup. Challenge the current differential if it seems incomplete. Cite guidelines when relevant.',
+            includeSections: ['clinicalSummary', 'problemList', 'categorizedActions', 'keyConsiderations', 'thinking'],
+            excludeSections: [],
+            problemListRule: 'List 4-6 problems. Problem #1 MUST have a comprehensive DDx with 3-5 diagnoses and brief reasoning for/against each. All problems need specific, evidence-based plans with guideline references where applicable.',
+            actionsRule: 'Suggest 4-8 specific actions across all categories. Include evidence field citing guidelines (AHA/ACC, KDIGO, ADA, etc.) or landmark trials. Flag any gaps in the current workup.',
+            summaryDepth: 'Detailed. Include all relevant qualifiers, specific values, and clinical context.',
+            extraFields: ['ddxChallenge']
+        },
+        5: {
+            prefix: 'You are a senior attending physician reviewing this case with a trainee. Be OPINIONATED. Question the physician\'s reasoning. Challenge weak differential diagnoses. Point out what they might be missing. Teach through Socratic questioning. Cite specific guidelines and landmark trials. If you disagree with the current plan, say so directly and explain why. Hold them to a high standard.',
+            includeSections: ['clinicalSummary', 'problemList', 'categorizedActions', 'keyConsiderations', 'thinking'],
+            excludeSections: [],
+            problemListRule: 'List 5-8 problems comprehensively. Problem #1 MUST have a rigorous DDx with 4-6 diagnoses, each with specific evidence for/against from this patient\'s data. Challenge the most likely diagnosis — what could be missed? All problems need evidence-based plans with specific guideline citations.',
+            actionsRule: 'Suggest 5-10 specific actions. Every action MUST have an evidence field citing a specific guideline or trial. Flag ANYTHING that seems suboptimal or missing. Include a "What are you missing?" item if the workup has gaps.',
+            summaryDepth: 'Comprehensive. Include all qualifiers, trends, and clinical reasoning. Write like a thorough attending note.',
+            extraFields: ['ddxChallenge', 'teachingPoints']
+        }
     };
 
     const DEFAULT_NOTE_TYPES = ['Progress', 'H&P', 'Discharge', 'Patient Instructions', 'Patient Letter'];
@@ -126,28 +168,66 @@ const AIPreferences = (() => {
 
     // --- Prompt Generation Methods ---
 
-    function buildPersonalityPrefix(modePrefix) {
+    /**
+     * Get the full assertiveness profile for the current level.
+     * This controls which sections exist, how deep each section goes,
+     * and what the AI's personality is.
+     */
+    function getAssertiveProfile() {
         const level = getAssertiveness();
-        const assertPrefix = ASSERTIVENESS_PREFIXES[level] || ASSERTIVENESS_PREFIXES[3];
+        return ASSERTIVENESS_PROFILES[level] || ASSERTIVENESS_PROFILES[3];
+    }
+
+    function buildPersonalityPrefix(modePrefix) {
+        const profile = getAssertiveProfile();
+        const prefix = profile.prefix;
         if (modePrefix) {
-            return assertPrefix + '\n\n' + modePrefix;
+            return prefix + '\n\n' + modePrefix;
         }
-        return assertPrefix;
+        return prefix;
     }
 
     function buildSectionInstructions(modeInstructions) {
-        const levels = get().detailLevels;
+        const profile = getAssertiveProfile();
         const parts = [];
 
+        // Assertiveness-driven depth
+        parts.push('RESPONSE DEPTH: ' + profile.summaryDepth);
+
+        // Problem list behavior changes with assertiveness
+        if (profile.problemListRule) {
+            parts.push('PROBLEM LIST: ' + profile.problemListRule);
+        }
+
+        // Actions behavior changes with assertiveness
+        if (profile.actionsRule) {
+            parts.push('SUGGESTED ACTIONS: ' + profile.actionsRule);
+        } else {
+            parts.push('SUGGESTED ACTIONS: Do NOT include suggested actions or categorizedActions. The physician will decide independently.');
+        }
+
+        // Sections to EXCLUDE
+        if (profile.excludeSections.length > 0) {
+            parts.push('OMIT these fields from your response (set to null or empty): ' + profile.excludeSections.join(', '));
+        }
+
+        // Extra fields to INCLUDE
+        if (profile.extraFields.length > 0) {
+            if (profile.extraFields.includes('ddxChallenge')) {
+                parts.push('INCLUDE ddxChallenge: Challenge the current differential — what else should be considered?');
+            }
+            if (profile.extraFields.includes('teachingPoints')) {
+                parts.push('INCLUDE teachingPoints: 1-2 clinical pearls or evidence-based teaching points relevant to this case.');
+            }
+        }
+
+        // User-set detail level overrides (from the customize panel)
+        const levels = get().detailLevels;
         for (const [section, level] of Object.entries(levels)) {
             if (level === 'brief') {
-                parts.push(`For ${section}: Be extremely concise. 1-2 sentences max. Use abbreviations freely.`);
+                parts.push(`For ${section}: Override to BRIEF. 1-2 sentences max.`);
             } else if (level === 'detailed') {
-                parts.push(`For ${section}: Be comprehensive. Include all relevant details, clinical reasoning, and evidence.`);
-            } else {
-                // moderate — use mode default or generic
-                const modeDefault = modeInstructions && modeInstructions[section];
-                parts.push(modeDefault || `For ${section}: Be concise but thorough.`);
+                parts.push(`For ${section}: Override to DETAILED. Include all relevant details and reasoning.`);
             }
         }
 
@@ -212,13 +292,36 @@ const AIPreferences = (() => {
             if (e.key === 'Escape') { closePanel(); document.removeEventListener('keydown', escHandler); }
         });
 
-        // Assertiveness slider
+        // Assertiveness slider — updates level name, description, and section badges
         const slider = panel.querySelector('#customize-assertiveness');
         const sliderLabel = panel.querySelector('.customize-assertiveness-label');
+        const descEl = panel.querySelector('#assertive-description');
+        const sectionsEl = panel.querySelector('#assertive-sections');
+
+        const levelDescriptions = {
+            1: 'Summary only. No suggestions, no DDx, no actions. Just organized facts.',
+            2: 'Summary + safety flags. No suggested actions. Defers all decisions to you.',
+            3: 'Summary + problems with plans + suggested actions. Balanced support.',
+            4: 'Full DDx with evidence, comprehensive actions with guidelines, challenges gaps.',
+            5: 'Debates your reasoning, teaches through questioning, cites trials, flags what you\'re missing.'
+        };
+        const levelSections = {
+            1: ['Summary'],
+            2: ['Summary', 'Safety Flags'],
+            3: ['Summary', 'Problem List + Plans', 'Suggested Actions', 'AI Thinking'],
+            4: ['Summary', 'Problem List + DDx', 'Actions + Evidence', 'AI Thinking', 'DDx Challenge'],
+            5: ['Summary', 'Problem List + DDx', 'Actions + Evidence', 'AI Thinking', 'DDx Challenge', 'Teaching Points']
+        };
+
         slider.addEventListener('input', () => {
             const val = parseInt(slider.value);
             _draft.assertiveness = val;
-            sliderLabel.textContent = `Level ${val}: ${ASSERTIVENESS_LABELS[val]}`;
+            sliderLabel.textContent = ASSERTIVENESS_LABELS[val];
+            if (descEl) descEl.textContent = levelDescriptions[val];
+            if (sectionsEl) {
+                sectionsEl.innerHTML = '<span class="assertive-sections-label">AI will provide:</span>' +
+                    levelSections[val].map(s => `<span class="assertive-badge">${s}</span>`).join('');
+            }
         });
 
         // Detail level buttons
@@ -266,11 +369,41 @@ const AIPreferences = (() => {
 
     function renderAssertiveness(draft) {
         const val = draft.assertiveness;
+        const profile = ASSERTIVENESS_PROFILES[val];
+
+        // Build "what changes" preview for each level
+        const levelDescriptions = {
+            1: 'Summary only. No suggestions, no DDx, no actions. Just organized facts.',
+            2: 'Summary + safety flags. No suggested actions. Defers all decisions to you.',
+            3: 'Summary + problems with plans + suggested actions. Balanced support.',
+            4: 'Full DDx with evidence, comprehensive actions with guidelines, challenges gaps.',
+            5: 'Debates your reasoning, teaches through questioning, cites trials, flags what you\'re missing.'
+        };
+
+        const levelSections = {
+            1: ['Summary'],
+            2: ['Summary', 'Safety Flags'],
+            3: ['Summary', 'Problem List + Plans', 'Suggested Actions', 'AI Thinking'],
+            4: ['Summary', 'Problem List + DDx', 'Actions + Evidence', 'AI Thinking', 'DDx Challenge'],
+            5: ['Summary', 'Problem List + DDx', 'Actions + Evidence', 'AI Thinking', 'DDx Challenge', 'Teaching Points']
+        };
+
+        const sectionBadges = levelSections[val].map(s => `<span class="assertive-badge">${s}</span>`).join('');
+
         return `
-            <div class="customize-section">
-                <h3>Assertiveness</h3>
-                <input type="range" id="customize-assertiveness" min="1" max="5" step="1" value="${val}" class="customize-slider">
-                <div class="customize-assertiveness-label">Level ${val}: ${ASSERTIVENESS_LABELS[val]}</div>
+            <div class="customize-section customize-assertiveness-section">
+                <h3>AI Cognitive Level</h3>
+                <div class="assertive-slider-row">
+                    <span class="assertive-end-label">Scribe</span>
+                    <input type="range" id="customize-assertiveness" min="1" max="5" step="1" value="${val}" class="customize-slider">
+                    <span class="assertive-end-label">Attending</span>
+                </div>
+                <div class="assertive-level-name customize-assertiveness-label">${ASSERTIVENESS_LABELS[val]}</div>
+                <div class="assertive-description" id="assertive-description">${levelDescriptions[val]}</div>
+                <div class="assertive-sections" id="assertive-sections">
+                    <span class="assertive-sections-label">AI will provide:</span>
+                    ${sectionBadges}
+                </div>
             </div>`;
     }
 
@@ -517,11 +650,38 @@ const AIPreferences = (() => {
                 font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em;
                 color: #718096; margin: 0 0 12px 0; font-weight: 700;
             }
-            .customize-slider {
-                width: 100%; margin: 8px 0; accent-color: #2c5282;
+            .customize-assertiveness-section {
+                background: #f0f4f8; border-radius: 8px; padding: 16px;
             }
-            .customize-assertiveness-label {
-                font-size: 13px; color: #718096; margin-top: 4px;
+            .assertive-slider-row {
+                display: flex; align-items: center; gap: 10px; margin: 8px 0;
+            }
+            .assertive-end-label {
+                font-size: 10px; font-weight: 600; color: #718096;
+                text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap;
+            }
+            .customize-slider {
+                flex: 1; margin: 0; accent-color: #1b3a5c; height: 6px;
+            }
+            .assertive-level-name, .customize-assertiveness-label {
+                font-size: 14px; font-weight: 700; color: #1b3a5c;
+                text-align: center; margin: 4px 0;
+            }
+            .assertive-description {
+                font-size: 12px; color: #4a5568; text-align: center;
+                margin: 4px 0 10px; line-height: 1.4;
+            }
+            .assertive-sections {
+                display: flex; flex-wrap: wrap; gap: 4px; align-items: center;
+                justify-content: center;
+            }
+            .assertive-sections-label {
+                font-size: 10px; color: #718096; font-weight: 600;
+                text-transform: uppercase; margin-right: 4px;
+            }
+            .assertive-badge {
+                font-size: 10px; padding: 2px 8px; border-radius: 10px;
+                background: #dce6f0; color: #1b3a5c; font-weight: 600;
             }
             .customize-detail-row {
                 display: flex; align-items: center; justify-content: space-between;
@@ -631,6 +791,7 @@ const AIPreferences = (() => {
         reset,
         getDefaults,
         getAssertiveness,
+        getAssertiveProfile,
         getDetailLevel,
         getSummarySections,
         getNoteTemplate,
