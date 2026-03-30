@@ -6400,13 +6400,13 @@ RULES:
         this.lastApiCall.clinicalContext = clinicalContext;
 
         try {
-            // Track which sections have been progressively updated
-            let lastProgressiveKeys = new Set();
+            // Progressive streaming: update UI every 400ms with whatever's ready
             let progressiveThrottleTimer = null;
-            const PROGRESSIVE_INTERVAL = 600; // ms between progressive renders
+            let lastProgressiveHash = '';
+            const PROGRESSIVE_INTERVAL = 400;
 
             const onChunk = (accumulatedText) => {
-                // Throttle progressive updates to avoid excessive re-renders
+                // Throttle progressive updates
                 if (progressiveThrottleTimer) return;
                 progressiveThrottleTimer = setTimeout(() => {
                     progressiveThrottleTimer = null;
@@ -6416,22 +6416,18 @@ RULES:
                 const partial = this._parseJSONResponse(accumulatedText);
                 if (!partial) return;
 
-                // Detect which new sections have appeared
-                const newKeys = new Set();
-                if (partial.clinicalSummary) newKeys.add('summary');
-                if (partial.problemList && partial.problemList.length) newKeys.add('problems');
-                if (partial.categorizedActions) newKeys.add('actions');
+                // Build a simple hash of what's populated to detect real changes
+                const hash = [
+                    partial.oneLiner ? 'O' : '',
+                    partial.clinicalSummary ? 'S' : '',
+                    partial.problemList?.length || 0,
+                    partial.categorizedActions ? 'A' : '',
+                    partial.thinking ? 'T' : '',
+                    partial.summary ? 'U' : ''
+                ].join(',');
 
-                // Only re-render if a new section has appeared
-                let hasNewSection = false;
-                for (const k of newKeys) {
-                    if (!lastProgressiveKeys.has(k)) {
-                        hasNewSection = true;
-                        lastProgressiveKeys.add(k);
-                    }
-                }
-
-                if (hasNewSection) {
+                if (hash !== lastProgressiveHash) {
+                    lastProgressiveHash = hash;
                     this._progressiveUpdate(partial);
                 }
             };
@@ -6761,8 +6757,34 @@ RULES:
         this.lastApiCall.clinicalContext = clinicalContext;
 
         try {
-            // Use the faster analysis model for structured chart synthesis
-            const response = await this.callLLM(systemPrompt, userMessage, 4096, { model: this.analysisModel });
+            // Progressive streaming for refresh — same approach as synthesizeWithLLM
+            let refreshThrottleTimer = null;
+            let lastRefreshHash = '';
+
+            const onRefreshChunk = (accumulatedText) => {
+                if (refreshThrottleTimer) return;
+                refreshThrottleTimer = setTimeout(() => { refreshThrottleTimer = null; }, 400);
+                const partial = this._parseJSONResponse(accumulatedText);
+                if (!partial) return;
+                const hash = [
+                    partial.oneLiner ? 'O' : '',
+                    partial.clinicalSummary ? 'S' : '',
+                    partial.problemList?.length || 0,
+                    partial.categorizedActions ? 'A' : '',
+                    partial.summary ? 'U' : ''
+                ].join(',');
+                if (hash !== lastRefreshHash) {
+                    lastRefreshHash = hash;
+                    this._progressiveUpdate(partial);
+                }
+            };
+
+            // Use streaming for progressive display
+            const response = await this.callLLMStreaming(
+                systemPrompt, userMessage, 4096,
+                { model: this.analysisModel }, onRefreshChunk
+            );
+            if (refreshThrottleTimer) { clearTimeout(refreshThrottleTimer); refreshThrottleTimer = null; }
 
             const result = this._parseJSONResponse(response);
             if (!result) {
