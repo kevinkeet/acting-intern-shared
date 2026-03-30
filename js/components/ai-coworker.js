@@ -6625,12 +6625,58 @@ RULES:
                 const prompt = this.contextAssembler.buildRefreshMemoryPrompt();
                 console.log(`🔄 Incremental refresh: ${prompt.userMessage.length} chars (vs full chart)`);
 
-                const response = await this.callLLM(
+                // Progressive streaming for incremental refresh
+                let incThrottle = null;
+                let lastIncHash = '';
+                const onIncChunk = (accText) => {
+                    if (incThrottle) return;
+                    incThrottle = setTimeout(() => { incThrottle = null; }, 400);
+                    const partial = this._parseJSONResponse(accText);
+                    if (!partial) return;
+                    const hash = [
+                        partial.clinicalGestalt ? 'G' : '',
+                        partial.patientOverview ? 'O' : '',
+                        partial.problemAnalysis?.length || 0,
+                        partial.safetyProfile ? 'S' : '',
+                    ].join(',');
+                    if (hash !== lastIncHash) {
+                        lastIncHash = hash;
+                        // Map memory doc fields to panel state for progressive display
+                        let updated = false;
+                        if (partial.clinicalGestalt && partial.clinicalGestalt !== this.state.aiOneLiner) {
+                            this.state.aiOneLiner = partial.clinicalGestalt;
+                            updated = true;
+                        }
+                        if (partial.patientOverview && partial.patientOverview !== this.state.summary) {
+                            this.state.summary = partial.patientOverview;
+                            updated = true;
+                        }
+                        if (partial.problemAnalysis?.length && JSON.stringify(partial.problemAnalysis) !== JSON.stringify(this.state._lastIncProblems)) {
+                            this.state._lastIncProblems = partial.problemAnalysis;
+                            this.state.problemList = partial.problemAnalysis.map(p => ({
+                                name: p.problem,
+                                urgency: p.status === 'acute' ? 'urgent' : (p.status === 'active' ? 'active' : 'monitoring'),
+                                ddx: null,
+                                plan: p.plan || ''
+                            }));
+                            updated = true;
+                        }
+                        if (updated) {
+                            this._streamingPhase = partial.problemAnalysis?.length ? 'problems' : 'summary';
+                            this.render();
+                        }
+                    }
+                };
+
+                const response = await this.callLLMStreaming(
                     prompt.systemPrompt,
                     prompt.userMessage,
                     prompt.maxTokens,
-                    { model: this.analysisModel }
+                    { model: this.analysisModel },
+                    onIncChunk
                 );
+                if (incThrottle) { clearTimeout(incThrottle); }
+                delete this.state._lastIncProblems;
 
                 const memoryDoc = this._parseJSONResponse(response);
                 if (memoryDoc && memoryDoc.patientOverview) {
@@ -6639,7 +6685,7 @@ RULES:
                     this.longitudinalDoc.aiMemory.lastRefreshedAt = new Date().toISOString();
                     this.longitudinalDoc.aiMemory.patientSummary = memoryDoc.patientOverview;
 
-                    // Update panel state
+                    // Update panel state (final)
                     if (memoryDoc.clinicalGestalt) this.state.aiOneLiner = memoryDoc.clinicalGestalt;
                     if (memoryDoc.patientOverview) this.state.summary = memoryDoc.patientOverview;
                     if (memoryDoc.problemAnalysis) {
@@ -6669,7 +6715,7 @@ RULES:
                     this.saveState();
                     this._saveModeCache();
                     this.render();
-                    App.showToast('AI memory refreshed (incremental)', 'success');
+                    App.showToast('Analysis complete', 'success');
                     if (btn) btn.classList.remove('spinning');
                     return;
                 }
