@@ -1,0 +1,17 @@
+{
+  "name": "acting-intern-glasses",
+  "version": "0.1.0",
+  "description": "Even Realities G2 companion app for Acting Intern clinical AI",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@evenrealities/even_hub_sdk": "latest"
+  },
+  "devDependencies": {
+    "vite": "^6.0.0"
+  }
+}

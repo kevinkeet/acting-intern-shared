@@ -135,6 +135,24 @@ wss.on('connection', (browserWs, req) => {
     });
 });
 
+// --- Glasses HUD state endpoint ---
+// The G2 companion app polls this to get the latest clinical display data.
+// The main app POSTs state here; the companion app GETs it.
+let glassesState = null;
+
+app.post('/api/glasses-state', (req, res) => {
+    glassesState = req.body;
+    glassesState._updatedAt = Date.now();
+    res.json({ ok: true });
+});
+
+app.get('/api/glasses-state', (req, res) => {
+    if (!glassesState) {
+        return res.status(404).json({ error: 'No glasses state available' });
+    }
+    res.json(glassesState);
+});
+
 // --- Start server ---
 server.listen(PORT, () => {
     console.log(`Acting Intern server running on http://localhost:${PORT}`);

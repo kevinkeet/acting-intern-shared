@@ -1636,37 +1636,37 @@ const SmartGlasses = {
      * Push the current glasses display data to the real G1 hardware via BLE.
      */
     async pushToGlasses() {
-        if (typeof G1Bluetooth === 'undefined' || !G1Bluetooth.isConnected()) {
-            App.showToast('G1 not connected — connect first', 'warning');
-            return;
-        }
-
-        // Try LLM-generated glassesDisplay first (pre-formatted for G1)
         const state = (typeof AICoworker !== 'undefined') ? AICoworker.state : null;
-        if (state?.glassesDisplay) {
-            console.log('👓 Pushing LLM-generated HUD to G1...');
-            const success = await G1Bluetooth.sendClinicalHUD(state.glassesDisplay);
-            if (success) {
-                App.showToast('Clinical HUD pushed to G1 glasses', 'success');
+        const data = this._getGlassesData();
+
+        // Always push to G2 companion app (via server API + localStorage)
+        this._pushToG2Companion(state, data);
+
+        // G1 BLE path
+        if (typeof G1Bluetooth !== 'undefined' && G1Bluetooth.isConnected()) {
+            if (state?.glassesDisplay) {
+                console.log('👓 Pushing LLM-generated HUD to G1...');
+                const success = await G1Bluetooth.sendClinicalHUD(state.glassesDisplay);
+                if (success) {
+                    App.showToast('Clinical HUD pushed to glasses', 'success');
+                    return;
+                }
+            }
+
+            if (!data) {
+                App.showToast('No clinical data to push — run analysis first', 'warning');
                 return;
             }
-        }
 
-        // Fallback: build screens from current state
-        const data = this._getGlassesData();
-        if (!data) {
-            App.showToast('No clinical data to push — run analysis first', 'warning');
-            return;
-        }
+            const screens = this._buildLeftScreensFallback(data);
+            const rightScreens = this._buildRightScreensFallback(data);
+            const allScreens = [...screens, ...rightScreens];
 
-        const screens = this._buildLeftScreensFallback(data);
-        const rightScreens = this._buildRightScreensFallback(data);
-        const allScreens = [...screens, ...rightScreens];
-
-        console.log(`👓 Pushing ${allScreens.length} fallback screens to G1...`);
-        const success = await G1Bluetooth.sendText(allScreens);
-        if (success) {
-            App.showToast(`Pushed ${allScreens.length} screens to G1 glasses`, 'success');
+            console.log(`👓 Pushing ${allScreens.length} fallback screens to G1...`);
+            const success = await G1Bluetooth.sendText(allScreens);
+            if (success) {
+                App.showToast(`Pushed ${allScreens.length} screens to G1 glasses`, 'success');
+            }
         }
     },
 
@@ -1810,6 +1810,32 @@ const SmartGlasses = {
                 this._dictationPoll = null;
             }
         }
+    },
+
+    /**
+     * Push state to G2 companion app via server API + localStorage bridge
+     */
+    _pushToG2Companion(state, data) {
+        const payload = {
+            oneLiner: state?.aiOneLiner || '',
+            clinicalSummary: state?.clinicalSummary || {},
+            problemList: state?.problemList || [],
+            categorizedActions: state?.categorizedActions || {},
+            keyConsiderations: state?.keyConsiderations || [],
+            glassesDisplay: state?.glassesDisplay || null,
+        };
+
+        // localStorage bridge (for same-origin / PWA testing)
+        try {
+            localStorage.setItem('glasses-hud-data', JSON.stringify(payload));
+        } catch (e) { /* ignore */ }
+
+        // Server API (for cross-origin G2 companion app)
+        fetch('/api/glasses-state', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+        }).catch(() => { /* server may not be running */ });
     },
 
     /**

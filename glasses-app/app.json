@@ -1,0 +1,8 @@
+{
+  "name": "Acting Intern Clinical HUD",
+  "description": "AI-powered clinical heads-up display for Even Realities G2 smart glasses. Shows patient summary, problems, orders, and alerts in real-time during patient encounters.",
+  "version": "0.1.0",
+  "author": "Kevin Keet",
+  "icon": "public/icon.png",
+  "entry": "index.html"
+}
