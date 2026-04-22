@@ -1774,7 +1774,14 @@ const AICoworker = {
         if (sections.contextLine) html += this.renderContextLine();
 
         // ===== SECTION 1.7: ONE-LINER (AI gestalt) =====
-        if (sections.clinicalSummary) html += this.renderStatusLine();
+        // Hide while actively learning or between levels — avoids showing stale
+        // one-liner from a previous analysis while the user is focused on
+        // continuing the learning flow. Will re-appear after re-analysis.
+        const isLearningOrBetween = this.state.status === 'learning' ||
+            (this._deepLearn && this._deepLearn.phase === 'between_levels');
+        if (sections.clinicalSummary && !isLearningOrBetween) {
+            html += this.renderStatusLine();
+        }
 
         // ===== SECTION 2: CLINICAL SUMMARY (3 sentences) =====
         if (sections.clinicalSummary) html += this.renderClinicalSummary(isThinking);

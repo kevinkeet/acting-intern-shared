@@ -12721,11 +12721,12 @@ html, body {
 /* ===== Deep Learn Progress UI ===== */
 .deep-learn-progress,
 .deep-learn-between {
-    padding: 8px 10px;
-    margin: 2px 6px 4px;
+    padding: 10px 12px;
+    margin: 6px 8px 8px;
     background: linear-gradient(135deg, #1e293b, #1a2332);
-    border-radius: 6px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Active progress header */
