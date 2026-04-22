@@ -7657,8 +7657,12 @@ RULES:
     _parseJSONResponse(response) {
         if (!response || typeof response !== 'string') return null;
 
-        // 1. Strip markdown code fences if present
-        let cleaned = response.replace(/```json\s*/gi, '').replace(/```\s*/g, '');
+        // 1. Strip markdown code fences if present (any language, any case)
+        let cleaned = response.replace(/```(?:json|JSON|javascript|js)?\s*/gi, '').replace(/```\s*/g, '');
+
+        // 1b. Strip common LLM prefaces/suffixes that precede/follow JSON
+        // e.g. "Here is the JSON:", "Here's the memory document:", trailing "I hope this helps"
+        cleaned = cleaned.replace(/^[^{]*?(?={)/s, ''); // remove anything before the first {
 
         // 2. Try direct parse first (ideal case: response IS the JSON)
         try {
@@ -8170,10 +8174,27 @@ RULES:
         // Parse and store the memory document
         let memoryDoc = this._parseJSONResponse(response);
         if (!memoryDoc) {
-            console.error('Level 1: Could not parse JSON from response. First 500 chars:', response?.substring(0, 500));
+            const respLen = (response || '').length;
+            const firstBrace = (response || '').indexOf('{');
+            const lastBrace = (response || '').lastIndexOf('}');
+            console.error('Level 1 JSON parse failed.',
+                'Response length:', respLen,
+                'First {:', firstBrace, 'Last }:', lastBrace,
+                'Model:', level1Model,
+                '\nFirst 800 chars:', response?.substring(0, 800),
+                '\nLast 500 chars:', response?.substring(Math.max(0, respLen - 500)));
+
+            // Diagnose likely cause for the user
+            let cause = 'Analysis returned an unparseable response.';
+            if (respLen > 0 && firstBrace === -1) {
+                cause = 'AI returned prose instead of JSON.';
+            } else if (firstBrace >= 0 && lastBrace < firstBrace) {
+                cause = 'JSON was truncated — chart may be too large for one pass.';
+            }
+
             // Fallback: create a minimal memory doc from the raw text
             memoryDoc = {
-                clinicalGestalt: 'Analysis completed — memory document may be incomplete. Try Redo Level 1.',
+                clinicalGestalt: cause + ' Click Redo Level 1 to retry.',
                 patientOverview: response?.substring(0, 2000) || 'Level 1 analysis completed but response was not structured JSON.',
                 safetyProfile: { allergies: [], contraindications: [], criticalValues: [], renalDosing: [] },
                 problemAnalysis: [],
@@ -8181,7 +8202,7 @@ RULES:
                 labTrends: { key_values: [] },
                 pendingItems: []
             };
-            App.showToast('Memory document partially parsed — try Redo Level 1 for better results', 'warning');
+            App.showToast(cause + ' Click Redo Level 1 to retry.', 'warning');
         }
 
         // Validate and fill missing fields — ensure all 7 top-level fields exist
