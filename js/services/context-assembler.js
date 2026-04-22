@@ -837,8 +837,9 @@ Respond with ONLY the JSON, no preamble or markdown fences.`;
         return {
             systemPrompt,
             userMessage,
-            // 8192 = enough for full memory document on complex patients
-            maxTokens: 8192
+            // 16384 = generous headroom for full memory document on complex multi-level
+            // patients. Opus only uses what it needs; extra space costs nothing unless used.
+            maxTokens: 16384
         };
     }
 
@@ -877,9 +878,10 @@ Respond with the COMPLETE updated memory document as JSON. Output fields in this
         return {
             systemPrompt,
             userMessage,
-            // 8192 = enough headroom for complex patients with many problems/meds/labs.
-            // 4096 was too tight and caused truncated JSON → parse failures.
-            maxTokens: 8192
+            // 16384 = generous headroom for the full memory document. Grows as the AI
+            // learns more levels (more problems, deeper history). Extra space costs
+            // nothing unless used; 4096 was too tight and caused truncated JSON.
+            maxTokens: 16384
         };
     }
 
@@ -934,8 +936,9 @@ RULES:
         return {
             systemPrompt,
             userMessage: `Chart data for review:\n\n${chartContext}`,
-            // 8192 = enough for full memory document (was 4096, truncated complex cases)
-            maxTokens: 8192
+            // 16384 = generous headroom for Level 1's full memory document.
+            // Opus only uses what it needs; truncation here breaks the demo.
+            maxTokens: 16384
         };
     }
 
@@ -984,7 +987,7 @@ Respond with ONLY the JSON, no preamble.`;
 
     /**
      * Build prompt for Sonnet synthesis — merge Haiku extractions into existing memory.
-     * Model: Sonnet. Max tokens: 8192.
+     * Model: Sonnet. Max tokens: 16384 (output grows with more levels learned).
      * @param {object} currentMemory — existing memoryDocument
      * @param {Array} extractions — array of Haiku extraction results
      * @param {number} processedCount — items processed so far
@@ -1042,7 +1045,7 @@ ${JSON.stringify(extractions, null, 2)}`;
         return {
             systemPrompt,
             userMessage,
-            maxTokens: 8192
+            maxTokens: 16384
         };
     }
 
