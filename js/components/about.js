@@ -228,39 +228,64 @@ const About = {
         const overlay = document.getElementById('about-modal-overlay');
         if (overlay) overlay.remove();
 
-        // If API key was just saved, auto-expand AI panel and start Learn → Analyze
-        if (this._apiKeyJustSaved) {
-            this._apiKeyJustSaved = false;
-            setTimeout(() => {
-                // Expand the AI panel
-                if (typeof AIPanel !== 'undefined' && !AIPanel.isExpanded) {
-                    AIPanel.toggle();
-                }
-                // Auto-trigger Learn Patient (Level 1) → then Analyze Case
-                // Suppress memory viewer popup during initial onboarding
-                setTimeout(async () => {
-                    if (typeof AICoworker !== 'undefined' && AICoworker.isApiConfigured()) {
-                        AICoworker._suppressMemoryViewer = true;
-                        try {
-                            await AICoworker.learnPatient();
-                            // After Level 1 completes, auto-analyze
-                            AICoworker.refreshThinking();
-                        } catch (e) {
-                            console.warn('Auto-learn failed, falling back to analyze:', e);
-                            AICoworker.refreshThinking();
-                        } finally {
-                            AICoworker._suppressMemoryViewer = false;
-                        }
+        // Always trigger Learn → Analyze on first entry if API is configured
+        // and we haven't already learned/analyzed (prevents re-triggering on subsequent opens)
+        this._apiKeyJustSaved = false;
+        this._triggerInitialLearnAndAnalyze();
+    },
+
+    /**
+     * Auto-expand AI panel and start Learn → Analyze on first entry.
+     * Only fires once per session unless memory is empty.
+     * Called from closeModal() and closeAndStartTour().
+     */
+    _triggerInitialLearnAndAnalyze() {
+        // Skip if already run this session
+        if (this._initialAnalysisTriggered) return;
+
+        // Need an API key configured (either backend or localStorage)
+        if (typeof AICoworker === 'undefined' || !AICoworker.isApiConfigured()) return;
+
+        // Skip if patient has already been learned AND analyzed in a prior session
+        const hasMemory = !!AICoworker.longitudinalDoc?.aiMemory?.memoryDocument;
+        const hasAnalysis = !!(AICoworker.state?.aiOneLiner || AICoworker.state?.problemList?.length);
+        if (hasMemory && hasAnalysis) return; // Already done
+
+        this._initialAnalysisTriggered = true;
+
+        setTimeout(() => {
+            // Expand the AI panel so user can see progress
+            if (typeof AIPanel !== 'undefined' && !AIPanel.isExpanded) {
+                AIPanel.toggle();
+            }
+
+            // Auto-trigger Learn Patient (Level 1) → then Analyze Case
+            // Suppress memory viewer popup during initial onboarding
+            setTimeout(async () => {
+                AICoworker._suppressMemoryViewer = true;
+                try {
+                    if (!hasMemory) {
+                        await AICoworker.learnPatient();
                     }
-                }, 800);
-            }, 400);
-        }
+                    // After Level 1 completes (or if already learned), auto-analyze
+                    if (!hasAnalysis) {
+                        AICoworker.refreshThinking();
+                    }
+                } catch (e) {
+                    console.warn('Auto-learn failed, falling back to analyze:', e);
+                    AICoworker.refreshThinking();
+                } finally {
+                    AICoworker._suppressMemoryViewer = false;
+                }
+            }, 800);
+        }, 400);
     },
 
     /**
      * Close modal and immediately start the tutorial walkthrough
      */
     closeAndStartTour() {
+        // closeModal() already triggers the initial learn → analyze
         this.closeModal();
         if (typeof Tutorial !== 'undefined') {
             // Brief delay so modal animation clears

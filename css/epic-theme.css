@@ -6914,12 +6914,16 @@ html, body {
 /* ---- AI LIVE STATUS LINE ---- */
 .copilot-status-line {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 8px;
-    padding: 6px 12px;
+    padding: 8px 12px;
+    margin: 4px 6px;
     background: linear-gradient(135deg, #f0f7f0, #f5f8f5);
-    border-bottom: 1px solid rgba(76, 175, 80, 0.15);
-    min-height: 28px;
+    border: 1px solid rgba(76, 175, 80, 0.2);
+    border-radius: 6px;
+}
+.copilot-status-line .status-pulse {
+    margin-top: 4px;
 }
 
 .status-pulse {
@@ -6949,8 +6953,12 @@ html, body {
 .status-line-text {
     font-size: 11px;
     color: var(--text-secondary);
-    line-height: 1.35;
+    line-height: 1.4;
     font-style: italic;
+    flex: 1;
+    min-width: 0;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 /* ---- AI THINKING / LOADING STATE ---- */
