@@ -837,7 +837,8 @@ Respond with ONLY the JSON, no preamble or markdown fences.`;
         return {
             systemPrompt,
             userMessage,
-            maxTokens: 4096
+            // 8192 = enough for full memory document on complex patients
+            maxTokens: 8192
         };
     }
 
@@ -876,7 +877,9 @@ Respond with the COMPLETE updated memory document as JSON. Output fields in this
         return {
             systemPrompt,
             userMessage,
-            maxTokens: 4096
+            // 8192 = enough headroom for complex patients with many problems/meds/labs.
+            // 4096 was too tight and caused truncated JSON → parse failures.
+            maxTokens: 8192
         };
     }
 
@@ -931,7 +934,8 @@ RULES:
         return {
             systemPrompt,
             userMessage: `Chart data for review:\n\n${chartContext}`,
-            maxTokens: 4096
+            // 8192 = enough for full memory document (was 4096, truncated complex cases)
+            maxTokens: 8192
         };
     }
 

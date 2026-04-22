@@ -44,9 +44,9 @@ const AIModeConfig = {
                 autoSynthesizeOnDictation: false   // No auto-synthesis
             },
             responseStyle: {
-                maxTokensAsk: 1024,
-                maxTokensDictation: 800,
-                maxTokensRefresh: 1200,
+                maxTokensAsk: 2048,
+                maxTokensDictation: 2048,
+                maxTokensRefresh: 2500,
                 personalityPrefix: 'You are a clinical order entry assistant and scribe. Execute tasks the physician requests. Do not offer clinical opinions, differentials, or analysis unless explicitly asked. Keep responses under 3 sentences. When the doctor dictates clinical thinking, acknowledge it and note any actionable orders — do NOT synthesize a full clinical analysis or generate a problem list.',
                 includeTeachingPoints: false,
                 includeDDxChallenge: false
@@ -82,9 +82,9 @@ const AIModeConfig = {
                 autoSynthesizeOnDictation: true
             },
             responseStyle: {
-                maxTokensAsk: 2048,
-                maxTokensDictation: 2500,
-                maxTokensRefresh: 3000,
+                maxTokensAsk: 4096,
+                maxTokensDictation: 6144,
+                maxTokensRefresh: 6144,
                 personalityPrefix: '',  // empty = existing prompts unchanged
                 includeTeachingPoints: false,
                 includeDDxChallenge: false
@@ -121,9 +121,9 @@ const AIModeConfig = {
                 autoSynthesizeOnDictation: true
             },
             responseStyle: {
-                maxTokensAsk: 4096,
-                maxTokensDictation: 4096,
-                maxTokensRefresh: 4096,
+                maxTokensAsk: 6144,
+                maxTokensDictation: 8192,
+                maxTokensRefresh: 8192,
                 personalityPrefix: `You are a senior attending physician who is brilliant, opinionated, and direct. You:
 - Actively push differential diagnoses and challenge the doctor's thinking
 - Offer your own assessment when you have one, clearly labeled as "My thinking:"
