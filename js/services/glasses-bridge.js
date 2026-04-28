@@ -72,6 +72,7 @@
             anchor = anchor.trim();
             if (anchor === this._lastAnchor) return;
             this._lastAnchor = anchor;
+            console.log('[GlassesBridge] anchor →', anchor);
             this._enqueue({ anchor: anchor });
         },
 
@@ -81,6 +82,7 @@
          */
         pushEvent: function (event) {
             if (!event || !event.kind) return;
+            console.log('[GlassesBridge] event →', event.kind, event.text, event.glyph || '');
             this._enqueue({ event: event });
         },
 
@@ -157,7 +159,7 @@
         },
 
         _patient: function () {
-            if (typeof DataLoader !== 'undefined' && DataLoader.currentPatient) return DataLoader.currentPatient;
+            if (typeof PatientHeader !== 'undefined' && PatientHeader.currentPatient) return PatientHeader.currentPatient;
             if (typeof window !== 'undefined' && window.currentPatient) return window.currentPatient;
             return null;
         },
@@ -165,7 +167,7 @@
         _dominantDx: function () {
             try {
                 if (typeof AICoworker === 'undefined' || !AICoworker.state) return '';
-                var probs = AICoworker.state.problems || (AICoworker.state.problemList || []);
+                var probs = AICoworker.state.problemList || AICoworker.state.problems || [];
                 if (!probs.length) return '';
                 // Skip the chief-complaint placeholder (problem #1 per the prompt schema is the CC)
                 var pick = probs[1] || probs[0];
