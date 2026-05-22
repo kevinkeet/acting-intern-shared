@@ -1,6 +1,16 @@
 {
   "studies": [
     {
+      "id": "IMG002",
+      "date": "2026-04-10T14:30:00.000Z",
+      "modality": "X-Ray",
+      "description": "Hand X-Ray, bilateral (PA and oblique views)",
+      "facility": "Johns Hopkins Outpatient Imaging",
+      "status": "Final",
+      "radiologist": "Dr. Marcus Patel",
+      "indication": "Symmetric inflammatory polyarthritis to evaluate for erosive change"
+    },
+    {
       "id": "IMG001",
       "date": "2018-09-04T14:00:00.000Z",
       "modality": "X-Ray",
@@ -11,5 +21,5 @@
       "indication": "TB screening, post-immigration"
     }
   ],
-  "notes": "Limited imaging history. No advanced imaging on record."
+  "notes": "Imaging record continues to grow as the case progresses. The 2026-04-10 hand X-rays establish that her arthritis is NON-EROSIVE at the time of rheumatology evaluation."
 }

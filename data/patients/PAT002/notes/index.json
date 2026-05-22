@@ -1,14 +1,68 @@
 {
   "notes": [
     {
+      "id": "NOTE007",
+      "type": "ED Visit",
+      "date": "2026-11-04T21:30:00.000Z",
+      "author": "Dr. Priya Shah",
+      "department": "Emergency Department",
+      "encounter": "ENC007",
+      "preview": "23-year-old woman with UCTD/probable early SLE and Hashimoto's thyroiditis presenting with worsening fatigue, joint pain, weight loss, intermittent rash after running out of HCQ for 3 weeks. Weight 43.8 kg (down 7 kg / 13.8% from baseline). Anti-dsDNA now positive, complements low, mild proteinuria, tri-lineage cytopenia. Recommended admission; patient declined. Strong outpatient plan and return precautions."
+    },
+    {
+      "id": "NOTE006",
+      "type": "Primary Care Visit",
+      "date": "2026-09-15T14:45:00.000Z",
+      "author": "Dr. Andre Williams",
+      "department": "Primary Care (Esperanza Health FQHC)",
+      "encounter": "ENC006",
+      "preview": "Just-turned-23-year-old woman with UCTD off HCQ for 5 weeks (PAP denied). Joint pain markedly worse, new photosensitive rash on V-area chest, 4.4 kg weight loss (~8.7%), new mild cytopenia (Hgb 11.1, WBC 3.85), low albumin (3.4), elevated ESR/CRP, PHQ-9 11. Bridged HCQ via low-cost cash pay; restarted with social work re-engagement and urgent rheum re-evaluation requested."
+    },
+    {
+      "id": "NOTE005",
+      "type": "Pharmacy Communication Note",
+      "date": "2026-08-22T09:30:00.000Z",
+      "author": "Walgreens Patterson Park / Esperanza Health staff",
+      "department": "Pharmacy / Care Coordination",
+      "encounter": "ENC005",
+      "preview": "HCQ refill could not be filled — manufacturer PAP renewal denied. Patient out of HCQ since ~8/12/2026. Reports worsening joint pain, fatigue, possible new rash, hair shedding, loose pants. Urgent care coordination and PCP follow-up arranged."
+    },
+    {
+      "id": "NOTE004",
+      "type": "Social Work Note",
+      "date": "2026-06-18T15:00:00.000Z",
+      "author": "Diana Mercado, LCSW",
+      "department": "Social Work",
+      "encounter": "ENC004",
+      "preview": "Medicaid application DENIED 5/29/2026 due to incomplete income documentation; appeal filed today. PAP applications for HCQ submitted. Food insecurity worsening — family stretching food, patient skipping breakfast. Mental health concerns emerging. Comprehensive social support plan activated."
+    },
+    {
+      "id": "NOTE003",
+      "type": "Rheumatology Consult",
+      "date": "2026-04-10T13:30:00.000Z",
+      "author": "Dr. Jessica Tanaka",
+      "department": "Rheumatology",
+      "encounter": "ENC003",
+      "preview": "First specialist evaluation 3 months after symptom onset. Assessment: undifferentiated CTD, possible early SLE; co-existing Hashimoto's. Continue HCQ, add low-dose prednisone 10 mg taper x ~7 weeks for symptomatic control. Hand X-rays show non-erosive synovitis. Social work re-engagement. Follow-up in 3 months pending access."
+    },
+    {
+      "id": "NOTE002",
+      "type": "Urgent Care Follow-up",
+      "date": "2026-01-26T11:00:00.000Z",
+      "author": "Dr. Manuel Reyes",
+      "department": "Urgent Care",
+      "encounter": "ENC002",
+      "preview": "2-week follow-up. Tolerating HCQ and levothyroxine. Persistent symmetric synovitis. Send-out labs from 1/12 returned: anti-Sm, anti-dsDNA, anti-Ro/La, anti-CCP all negative; hep B/C/HIV negative; parvovirus IgM negative (IgG positive — past); TPO antibody positive (Hashimoto's confirmed); UA bland. Continue current treatment pending rheum."
+    },
+    {
       "id": "NOTE001",
       "type": "Urgent Care Visit",
       "date": "2026-01-12T10:45:00.000Z",
       "author": "Dr. Manuel Reyes",
       "department": "Urgent Care",
       "encounter": "ENC001",
-      "preview": "20-year-old Spanish-speaking woman presenting with 6-month history of progressive joint pain, fatigue, and hair loss. Interpreter used. Symmetric polyarthritis of hands, wrists, ankles. ANA positive 1:80. Started empirically on hydroxychloroquine and levothyroxine pending rheumatology referral..."
+      "preview": "22-year-old Spanish-speaking woman presenting with 6-month history of progressive joint pain, fatigue, and hair loss. Interpreter used. Symmetric polyarthritis of hands, wrists, ankles. ANA positive 1:80. Started empirically on hydroxychloroquine and levothyroxine pending rheumatology referral."
     }
   ],
-  "lastUpdated": "2026-01-12"
+  "lastUpdated": "2026-11-04"
 }

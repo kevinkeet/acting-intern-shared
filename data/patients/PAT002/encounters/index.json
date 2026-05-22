@@ -1,6 +1,97 @@
 {
   "encounters": [
     {
+      "id": "ENC007",
+      "date": "2026-11-04T21:30:00.000Z",
+      "type": "ED Visit",
+      "department": "Emergency Department",
+      "provider": "Dr. Priya Shah",
+      "chiefComplaint": "Worsening fatigue, joint pain, intermittent rash, weight loss",
+      "diagnoses": [
+        "Active systemic lupus erythematosus flare (newly meeting more criteria)",
+        "Cytopenia (leukopenia, anemia, mild thrombocytopenia)",
+        "Mild proteinuria — concern for renal involvement",
+        "Photosensitive rash, V-area distribution",
+        "Unintentional weight loss (~14% over 10 months)",
+        "Hydroxychloroquine non-adherence — financial barriers",
+        "Subclinical hypothyroidism on levothyroxine"
+      ],
+      "status": "Completed — discharged against rec for admission",
+      "interpreterUsed": "Spanish (Language Line)"
+    },
+    {
+      "id": "ENC006",
+      "date": "2026-09-15T14:45:00.000Z",
+      "type": "Primary Care Visit",
+      "department": "Primary Care (Esperanza Health FQHC)",
+      "provider": "Dr. Andre Williams",
+      "chiefComplaint": "Worsening symptoms after HCQ ran out",
+      "diagnoses": [
+        "Undifferentiated CTD / probable early SLE — disease worsening",
+        "Photosensitive rash",
+        "Unintentional weight loss",
+        "Moderate depression (PHQ-9 11)"
+      ],
+      "status": "Completed",
+      "interpreterUsed": "In-person Spanish-speaking MA"
+    },
+    {
+      "id": "ENC005",
+      "date": "2026-08-22T09:30:00.000Z",
+      "type": "Care Coordination",
+      "department": "Pharmacy / Care Coordination",
+      "provider": "Carolina Vasquez, MA (Esperanza)",
+      "chiefComplaint": "HCQ refill denial",
+      "diagnoses": ["Medication non-adherence due to financial barriers"],
+      "status": "Completed",
+      "interpreterUsed": "Bilingual coordinator"
+    },
+    {
+      "id": "ENC004",
+      "date": "2026-06-18T15:00:00.000Z",
+      "type": "Social Work",
+      "department": "Social Work",
+      "provider": "Diana Mercado, LCSW",
+      "chiefComplaint": "Medicaid denial / coverage appeal",
+      "diagnoses": [
+        "Loss of health insurance coverage",
+        "Food insecurity",
+        "Adjustment-related distress"
+      ],
+      "status": "Completed",
+      "interpreterUsed": "In-person Spanish-speaking MA"
+    },
+    {
+      "id": "ENC003",
+      "date": "2026-04-10T13:30:00.000Z",
+      "type": "Rheumatology Consult",
+      "department": "Rheumatology",
+      "provider": "Dr. Jessica Tanaka",
+      "chiefComplaint": "New patient evaluation for inflammatory polyarthritis with positive ANA",
+      "diagnoses": [
+        "Undifferentiated connective tissue disease (UCTD), probable early SLE",
+        "Hashimoto's thyroiditis (TPO Ab positive)",
+        "Vitamin D insufficiency"
+      ],
+      "status": "Completed",
+      "interpreterUsed": "Spanish (Language Line)"
+    },
+    {
+      "id": "ENC002",
+      "date": "2026-01-26T11:00:00.000Z",
+      "type": "Urgent Care Follow-up",
+      "department": "Urgent Care",
+      "provider": "Dr. Manuel Reyes",
+      "chiefComplaint": "2-week follow-up on empiric HCQ and levothyroxine",
+      "diagnoses": [
+        "Polyarthritis, undifferentiated",
+        "Autoimmune thyroiditis (Hashimoto's) — newly confirmed (TPO Ab positive)",
+        "Alopecia, diffuse"
+      ],
+      "status": "Completed",
+      "interpreterUsed": "Spanish (Language Line)"
+    },
+    {
       "id": "ENC001",
       "date": "2026-01-12T10:45:00.000Z",
       "type": "Urgent Care Visit",
@@ -17,5 +108,5 @@
       "interpreterUsed": "Spanish (Language Line)"
     }
   ],
-  "lastUpdated": "2026-01-12"
+  "lastUpdated": "2026-11-04"
 }

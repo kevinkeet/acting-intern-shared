@@ -2,33 +2,33 @@
   "problems": [
     {
       "id": "PRB001",
-      "name": "Polyarthritis, undifferentiated",
-      "icd10": "M13.0",
-      "snomed": "239805007",
+      "name": "Systemic lupus erythematosus, evolving (UCTD with progression)",
+      "icd10": "M32.9",
+      "snomed": "55464009",
       "onsetDate": "2025-08-15",
-      "diagnosedBy": "Urgent care clinician (Dr. Reyes)",
-      "priority": "Medium",
-      "notes": "Symmetric small-joint involvement (hands, wrists, ankles) with morning stiffness >1 hour. ANA positive at 1:80 at initial workup. Started on hydroxychloroquine empirically at urgent care 1/12/2026 pending rheumatology evaluation."
+      "diagnosedBy": "Dr. Jessica Tanaka (Rheumatology, 4/10/2026); evolving phenotype per Dr. Andre Williams (PCP, 9/15/2026) and ED 11/4/2026",
+      "priority": "High",
+      "notes": "Initial presentation 1/12/2026 with symmetric inflammatory polyarthritis, alopecia, low-titer ANA. Rheumatology working dx 4/10/2026 was undifferentiated CTD / probable early SLE. Phenotype evolving: by 9/15/2026 had mild cytopenias and low albumin; by 11/4/2026 with new-onset anti-dsDNA positive (24), low complements (C3 76, C4 8), mild proteinuria (UPC 0.35), tri-lineage cytopenia, photosensitive rash. Now meeting more 2019 EULAR/ACR classification criteria for SLE. Highly impacted by access barriers and medication non-adherence cycles."
     },
     {
       "id": "PRB002",
-      "name": "Alopecia, diffuse",
+      "name": "Alopecia, diffuse non-scarring",
       "icd10": "L65.9",
       "snomed": "56317004",
       "onsetDate": "2025-08-15",
       "diagnosedBy": "Urgent care clinician (Dr. Reyes)",
       "priority": "Low",
-      "notes": "Diffuse non-scarring scalp hair thinning. Concurrent with arthritis symptoms."
+      "notes": "Diffuse non-scarring scalp hair thinning. Concurrent with arthritis symptoms. Has progressed since onset."
     },
     {
       "id": "PRB003",
-      "name": "Hypothyroidism, subclinical",
-      "icd10": "E03.8",
-      "snomed": "83664006",
-      "onsetDate": "2026-01-12",
-      "diagnosedBy": "Urgent care clinician (Dr. Reyes)",
-      "priority": "Low",
-      "notes": "TSH 5.32 at urgent care presentation. Started on levothyroxine 25 mcg daily empirically. Free T4 not measured at initial visit."
+      "name": "Hashimoto's thyroiditis (autoimmune thyroiditis)",
+      "icd10": "E06.3",
+      "snomed": "21983002",
+      "onsetDate": "2026-01-26",
+      "diagnosedBy": "Confirmed at urgent care follow-up (Dr. Reyes) based on TPO antibody positivity (312, ref <34)",
+      "priority": "Medium",
+      "notes": "TSH 5.32 at initial presentation. TPO antibody markedly positive at 312 (ref <34) on send-out lab 1/26/2026. Patient on levothyroxine 25 mcg daily. Adherence intermittent; TSH oscillates 3.18 (4/10) -> 4.21 (9/15) -> 5.04 (11/4)."
     },
     {
       "id": "PRB004",
@@ -37,9 +37,39 @@
       "snomed": "423599006",
       "onsetDate": "2020-06-01",
       "priority": "High",
-      "notes": "Patient lost Medicaid coverage during pandemic redetermination. Has been unable to navigate reinstatement; uses urgent care and ED for episodic needs. Major barrier to specialty follow-up."
+      "notes": "Patient lost Medicaid coverage during pandemic redetermination. Medicaid re-application denied 5/29/2026; appeal hearing 8/12/2026. Major barrier to medication continuity and specialty care. Significantly impacts disease management."
+    },
+    {
+      "id": "PRB005",
+      "name": "Medication non-adherence due to access barriers",
+      "icd10": "Z91.120",
+      "snomed": "266963000",
+      "onsetDate": "2026-08-12",
+      "diagnosedBy": "Pharmacy / Esperanza Health care coordination",
+      "priority": "High",
+      "notes": "Hydroxychloroquine refill could not be completed 8/22/2026 due to PAP renewal denial. Out of HCQ from 8/12/2026 to 9/15/2026, then again from approximately 10/15/2026 to 11/4/2026. Restart via ED-pharmacy charity bridge supply 11/4/2026."
+    },
+    {
+      "id": "PRB006",
+      "name": "Unintentional weight loss",
+      "icd10": "R63.4",
+      "snomed": "89362005",
+      "onsetDate": "2026-04-10",
+      "diagnosedBy": "First documented at rheumatology consult (Dr. Tanaka); progressed substantially",
+      "priority": "High",
+      "notes": "Trajectory: 50.8 kg (1/12) -> 48.8 kg (4/10) -> 46.4 kg (9/15) -> 43.8 kg (11/4). Total loss 7.0 kg / 13.8% over 10 months. Contributing factors: inflammatory disease, food insecurity, decreased appetite, stress. Concerning for systemic illness in addition to caloric insufficiency."
+    },
+    {
+      "id": "PRB007",
+      "name": "Depression, moderate (provisional)",
+      "icd10": "F32.1",
+      "snomed": "35489007",
+      "onsetDate": "2026-09-15",
+      "diagnosedBy": "Dr. Andre Williams (PCP, Esperanza)",
+      "priority": "Medium",
+      "notes": "PHQ-9 11 at 9/15/2026 PCP visit (moderate). PHQ-9 14 at 11/4/2026 ED triage (moderately severe). Declined antidepressant pharmacotherapy; accepted Spanish-speaking therapist referral. No SI/HI."
     }
   ],
-  "lastUpdated": "2026-01-12",
-  "reviewedBy": "Urgent care clinician"
+  "lastUpdated": "2026-11-04",
+  "reviewedBy": "Dr. Priya Shah (ED, 11/4/2026) — updated to reflect evolving SLE phenotype, medication non-adherence, weight loss, and depression."
 }

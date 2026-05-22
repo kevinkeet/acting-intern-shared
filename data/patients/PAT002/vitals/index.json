@@ -1,6 +1,76 @@
 {
   "vitals": [
     {
+      "date": "2026-11-04T20:55:00.000Z",
+      "encounter": "ENC007",
+      "systolic": 96,
+      "diastolic": 58,
+      "heartRate": 108,
+      "respiratoryRate": 18,
+      "temperature": 98.4,
+      "spO2": 96,
+      "weight": 43.8,
+      "weightUnit": "kg",
+      "height": 150,
+      "heightUnit": "cm",
+      "bmi": 19.5,
+      "painScore": 7,
+      "recordedBy": "ED RN — Hopkins",
+      "notes": "Mildly hypotensive, tachycardic. Significant weight loss from January baseline."
+    },
+    {
+      "date": "2026-09-15T14:45:00.000Z",
+      "encounter": "ENC006",
+      "systolic": 102,
+      "diastolic": 64,
+      "heartRate": 96,
+      "respiratoryRate": 16,
+      "temperature": 98.0,
+      "spO2": 99,
+      "weight": 46.4,
+      "weightUnit": "kg",
+      "height": 150,
+      "heightUnit": "cm",
+      "bmi": 20.6,
+      "painScore": 6,
+      "recordedBy": "Med Asst — Esperanza Health",
+      "notes": "Mild interval weight loss; mild relative tachycardia."
+    },
+    {
+      "date": "2026-04-10T13:30:00.000Z",
+      "encounter": "ENC003",
+      "systolic": 110,
+      "diastolic": 68,
+      "heartRate": 84,
+      "respiratoryRate": 14,
+      "temperature": 98.2,
+      "spO2": 100,
+      "weight": 48.8,
+      "weightUnit": "kg",
+      "height": 150,
+      "heightUnit": "cm",
+      "bmi": 21.7,
+      "painScore": 4,
+      "recordedBy": "Med Asst — Hopkins Rheum"
+    },
+    {
+      "date": "2026-01-26T11:00:00.000Z",
+      "encounter": "ENC002",
+      "systolic": 114,
+      "diastolic": 72,
+      "heartRate": 88,
+      "respiratoryRate": 14,
+      "temperature": 98.2,
+      "spO2": 99,
+      "weight": 50.6,
+      "weightUnit": "kg",
+      "height": 150,
+      "heightUnit": "cm",
+      "bmi": 22.5,
+      "painScore": 5,
+      "recordedBy": "Med Asst — Patterson Park Urgent Care"
+    },
+    {
       "date": "2026-01-12T10:45:00.000Z",
       "encounter": "ENC001",
       "systolic": 116,
@@ -36,5 +106,5 @@
       "notes": "Immigration entry visit, age 15."
     }
   ],
-  "notes": "Sparse vitals history reflecting limited care access."
+  "notes": "Weight trajectory shows progressive loss: 50.8 (1/12/26) -> 50.6 (1/26/26) -> 48.8 (4/10/26 rheum) -> 46.4 (9/15/26 PCP) -> 43.8 (11/4/26 ED). Total loss 7.0 kg / 13.8% from January baseline. BP trending down (mild hypotension), HR trending up (relative tachycardia)."
 }

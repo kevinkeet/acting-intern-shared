@@ -1,23 +1,28 @@
 {
   "panels": [
     {
-      "id": "LAB001",
-      "name": "CBC with Differential",
+      "id": "LAB010",
+      "name": "ED Labs — Disease Flare with Constitutional Symptoms",
+      "date": "2026-11-04"
+    },
+    {
+      "id": "LAB009",
+      "name": "PCP Follow-up Labs — Disease Worsening",
+      "date": "2026-09-15"
+    },
+    {
+      "id": "LAB008",
+      "name": "Rheumatology Initial Workup Labs",
+      "date": "2026-04-10"
+    },
+    {
+      "id": "LAB007",
+      "name": "Comprehensive CTD Send-Out Panel + Hashimoto's Workup",
       "date": "2026-01-12"
     },
     {
-      "id": "LAB002",
-      "name": "Basic Metabolic Panel",
-      "date": "2026-01-12"
-    },
-    {
-      "id": "LAB003",
-      "name": "Urinalysis (dipstick)",
-      "date": "2026-01-12"
-    },
-    {
-      "id": "LAB004",
-      "name": "Thyroid Stimulating Hormone",
+      "id": "LAB006",
+      "name": "Rheumatoid Factor",
       "date": "2026-01-12"
     },
     {
@@ -26,10 +31,25 @@
       "date": "2026-01-12"
     },
     {
-      "id": "LAB006",
-      "name": "Rheumatoid Factor",
+      "id": "LAB004",
+      "name": "Thyroid Stimulating Hormone",
+      "date": "2026-01-12"
+    },
+    {
+      "id": "LAB003",
+      "name": "Urinalysis (dipstick)",
+      "date": "2026-01-12"
+    },
+    {
+      "id": "LAB002",
+      "name": "Basic Metabolic Panel",
+      "date": "2026-01-12"
+    },
+    {
+      "id": "LAB001",
+      "name": "CBC with Differential",
       "date": "2026-01-12"
     }
   ],
-  "notes": "Labs from this visit are partial — additional send-out tests pending. More comprehensive lab history will accrue as Maria's case progresses through future encounters."
+  "notes": "Labs grow as Maria's case progresses. LAB007 contains the AP1-era send-out comprehensive workup. LAB008 is the rheumatology consult workup. LAB009 captures the deteriorating phenotype in September. LAB010 is the AP2-era ED labs."
 }

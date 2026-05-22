@@ -1,0 +1,32 @@
+{
+  "id": "LAB007",
+  "name": "Comprehensive CTD Send-Out Panel + Hashimoto's Workup",
+  "collectedDate": "2026-01-12T10:45:00.000Z",
+  "resultedDate": "2026-01-26T09:30:00.000Z",
+  "orderedBy": "Dr. Manuel Reyes",
+  "facility": "Quest Diagnostics / send-out from Patterson Park Urgent Care",
+  "specimen": "Serum + plasma + first-void urine",
+  "status": "Final",
+  "results": [
+    { "name": "Anti-dsDNA", "value": "<10", "unit": "IU/mL", "referenceRange": "<10", "flag": "normal" },
+    { "name": "Anti-Smith", "value": "Negative", "unit": "", "referenceRange": "Negative", "flag": "normal" },
+    { "name": "Anti-Ro (SSA)", "value": "Negative", "unit": "", "referenceRange": "Negative", "flag": "normal" },
+    { "name": "Anti-La (SSB)", "value": "Negative", "unit": "", "referenceRange": "Negative", "flag": "normal" },
+    { "name": "Complement C3", "value": "102", "unit": "mg/dL", "referenceRange": "90-180", "flag": "normal" },
+    { "name": "Complement C4", "value": "24", "unit": "mg/dL", "referenceRange": "10-40", "flag": "normal" },
+    { "name": "Anti-CCP (anti-CCP2)", "value": "<7", "unit": "U/mL", "referenceRange": "<7", "flag": "normal" },
+    { "name": "Hepatitis B surface antigen", "value": "Negative", "unit": "", "referenceRange": "Negative", "flag": "normal" },
+    { "name": "Hepatitis B core antibody (total)", "value": "Negative", "unit": "", "referenceRange": "Negative", "flag": "normal" },
+    { "name": "Hepatitis C antibody", "value": "Negative", "unit": "", "referenceRange": "Negative", "flag": "normal" },
+    { "name": "HIV 1/2 Ag/Ab", "value": "Non-reactive", "unit": "", "referenceRange": "Non-reactive", "flag": "normal" },
+    { "name": "Parvovirus B19 IgM", "value": "Negative", "unit": "", "referenceRange": "Negative", "flag": "normal" },
+    { "name": "Parvovirus B19 IgG", "value": "Positive", "unit": "", "referenceRange": "Negative", "flag": "abnormal", "interpretation": "Past exposure, not active infection." },
+    { "name": "Free T4", "value": "1.0", "unit": "ng/dL", "referenceRange": "0.8-1.8", "flag": "normal" },
+    { "name": "TPO antibody", "value": "312", "unit": "IU/mL", "referenceRange": "<34", "flag": "high", "interpretation": "Consistent with autoimmune (Hashimoto's) thyroiditis." },
+    { "name": "Urinalysis with microscopy — protein", "value": "Negative", "unit": "", "referenceRange": "Negative", "flag": "normal" },
+    { "name": "Urinalysis — blood", "value": "Negative", "unit": "", "referenceRange": "Negative", "flag": "normal" },
+    { "name": "Urinalysis — casts", "value": "None seen", "unit": "", "referenceRange": "None", "flag": "normal" },
+    { "name": "Urine protein:creatinine ratio", "value": "0.04", "unit": "g/g", "referenceRange": "<0.2", "flag": "normal" }
+  ],
+  "interpretation": "Specific lupus, RA, and Sjogren's autoantibodies negative on this panel. Complements normal. Hepatitis B, hepatitis C, and HIV negative. Parvovirus IgM negative; IgG positive consistent with prior exposure, not active. TPO antibody markedly positive supporting autoimmune thyroiditis (Hashimoto's). Urinalysis and protein:creatinine ratio normal — no evidence of renal involvement at this time."
+}

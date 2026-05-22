@@ -1,0 +1,14 @@
+{
+  "id": "IMG002",
+  "date": "2026-04-10T14:30:00.000Z",
+  "modality": "X-Ray",
+  "description": "Hand X-Ray, bilateral (PA and oblique views)",
+  "facility": "Johns Hopkins Outpatient Imaging",
+  "status": "Final",
+  "radiologist": "Dr. Marcus Patel",
+  "indication": "Symmetric inflammatory polyarthritis to evaluate for erosive change",
+  "technique": "Posteroanterior and oblique views of both hands and wrists with adequate exposure and positioning.",
+  "findings": "Bones are normally mineralized for age. There is mild periarticular soft tissue swelling at the second through fifth MCP joints bilaterally and at the wrists. No erosions are identified at the MCP, PIP, DIP, or carpal joints. No joint space narrowing. No subchondral cysts. No subluxations or deformities. No periostitis. No chondrocalcinosis. Soft tissue swelling is symmetric and consistent with synovitis without bony involvement.",
+  "impression": "1. Mild bilateral, symmetric periarticular soft tissue swelling consistent with inflammatory synovitis affecting MCPs and wrists.\n2. NO RADIOGRAPHIC EROSIONS. Bones are normally mineralized for age.\n\nFindings are consistent with non-erosive inflammatory arthritis, supporting a connective tissue disease etiology (e.g., SLE-associated arthropathy, undifferentiated CTD) over erosive rheumatoid arthritis at this stage. Recommend correlation with serologic workup and serial imaging if symptoms persist or progress.",
+  "comparison": "No prior comparable imaging."
+}
