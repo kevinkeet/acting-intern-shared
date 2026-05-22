@@ -4,7 +4,7 @@
   "title": "Diagnostic synthesis after biopsies",
   "anchorDate": "2027-03-22T23:59:59Z",
   "timeLimitMinutes": 15,
-  "scenarioBrief": "Hospital day 8 (2027-03-22). Muscle biopsy, skin biopsy, swallow study, and additional serologies are back. The chart now includes 7 days of progress notes, consult notes from rheum, GI, nutrition, derm, and ID. You're being asked to commit to a unifying diagnosis and explain the causal chain. AI assistant available.",
+  "scenarioBrief": "Hospital day 8 (2027-03-22). Muscle biopsy, skin biopsy, swallow study, and additional serologies are back. The chart now includes 7 days of progress notes and consult notes from rheumatology, GI, nutrition, dermatology, and infectious disease. You are presenting at attending rounds and need to commit to a unifying diagnosis with explicit causal reasoning. AI assistant available.",
   "chartGate": {
     "includeBeforeOrEqualDate": "2027-03-22T23:59:59Z",
     "_notes": "AP4 visibility: everything through hospital day 8 — includes biopsy results, consult notes, daily labs trending. The final discharge note + 2027-03-25+ longitudinal data is NOT yet visible."
@@ -14,18 +14,30 @@
       "id": "AP4-Q1",
       "order": 1,
       "type": "differential",
-      "question": "TODO — Phase 2: prompt asking the resident to commit to a unifying diagnosis and lay out the causal chain explicitly (e.g., SLE → myositis → dysphagia → starvation → kwashiorkor).",
+      "question": "Based on all results to date, commit to a unifying diagnosis (or dyad / triad of diagnoses) for Maria and lay out the causal chain explicitly. Use the biopsy and swallow-study findings to anchor your reasoning.",
       "expectedResponseFormat": "free_text",
-      "minLength": 150,
+      "minLength": 200,
       "rubric": {
         "essential": [
-          "TODO: essential elements (active SLE, inflammatory myositis component, oropharyngeal dysphagia mechanism, kwashiorkor from starvation, explicit causal chain)"
+          "Active systemic lupus erythematosus is the underlying autoimmune diagnosis",
+          "Inflammatory myositis is present as part of the SLE picture (or as overlap with dermatomyositis)",
+          "Oropharyngeal dysphagia is mechanistically attributed to myositis affecting pharyngeal muscles",
+          "Severe protein-calorie malnutrition / kwashiorkor is recognized as a major and consequential co-diagnosis",
+          "Explicit causal chain: SLE -> myositis -> dysphagia -> starvation -> kwashiorkor"
         ],
         "bonus": [
-          "TODO: bonus (recognizing why earlier presentations were missed, social-determinant amplifiers, prognosis framing)"
+          "Recognizes that earlier presentations (AP1, AP2) were missed opportunities to break this chain",
+          "Identifies social-determinant amplifiers (insurance lapse, food access, language) that accelerated the malnutrition",
+          "Acknowledges the prognosis is driven as much by nutritional recovery as by SLE control",
+          "Recognizes the scaling rash as potentially kwashiorkor-related dermatosis as well as / instead of pure SLE skin",
+          "Considers whether the elevated TSH was thyroid involvement of the autoimmune process"
         ],
         "redFlags": [
-          "TODO: red flags (still splitting into unrelated diagnoses, missing the malnutrition link, attributing rash purely to SLE without considering kwashiorkor dermatosis)"
+          "Treating SLE and malnutrition as two unrelated diagnoses",
+          "Missing the malnutrition link entirely",
+          "Attributing the skin findings purely to SLE without considering kwashiorkor dermatosis",
+          "Failing to articulate any causal chain",
+          "Suggesting that nutrition is 'secondary' or unimportant"
         ]
       },
       "weight": 1.5
@@ -34,16 +46,23 @@
       "id": "AP4-Q2",
       "order": 2,
       "type": "ai-output-evaluation",
-      "_aiPromptToGenerate": "TODO — Phase 2: write the system prompt to generate an AI response that gets SLE + myositis right but completely misses the kwashiorkor/starvation chain, treating malnutrition as 'secondary' rather than causal.",
-      "question": "TODO — Phase 2: prompt asking the resident to evaluate whether the AI's unifying explanation actually unifies — and what it misses.",
+      "_aiPromptToGenerate": "You are an AI clinical assistant. A resident gives you the following inpatient picture: muscle biopsy showing inflammatory infiltrate consistent with myositis, modified barium swallow showing oropharyngeal dysphagia, low albumin (1.8 g/dL), low prealbumin, persistent ANA positivity, anti-Sm and anti-dsDNA positivity, normal HIV / TB / hepatitis serologies, a scaling generalized rash, and proximal weakness. Produce a confident unifying explanation that diagnoses 'SLE with inflammatory myositis and secondary malnutrition.' Frame the malnutrition as a consequence ('secondary to chronic illness and poor oral intake') rather than as a defining feature requiring its own attention. Do NOT mention kwashiorkor by name. Do NOT explain the skin findings as potentially kwashiorkor dermatosis. Do NOT explicitly tie dysphagia to myositis as the mechanism for the starvation. Recommend ramping up immunosuppression and 'replacing calories.' Sound authoritative.",
+      "question": "Critique the AI's unifying explanation. Does it actually unify? What does it miss? What would you say differently?",
       "expectedResponseFormat": "free_text",
-      "minLength": 100,
+      "minLength": 120,
       "rubric": {
         "shouldIdentify": [
-          "TODO: items to flag (AI missed causal direction, treats malnutrition as bystander, doesn't explain skin findings as kwashiorkor dermatosis)"
+          "AI misses kwashiorkor as a named entity with its own management implications",
+          "AI treats malnutrition as a bystander or consequence rather than as a defining and causal feature",
+          "AI does not explain the skin findings as potentially kwashiorkor dermatosis",
+          "AI does not articulate the dysphagia -> starvation -> kwashiorkor causal mechanism",
+          "AI's 'replace calories' framing risks refeeding syndrome if followed naively",
+          "AI's framing would lead the team to under-resource the nutritional intervention"
         ],
         "shouldNotEcho": [
-          "TODO: not to parrot (the incomplete causal model, the framing of malnutrition as secondary)"
+          "The 'secondary to chronic illness' framing of the malnutrition",
+          "Calling the kwashiorkor picture simply 'low albumin'",
+          "Adopting the AI's incomplete causal model"
         ]
       },
       "weight": 1.0
@@ -52,18 +71,30 @@
       "id": "AP4-Q3",
       "order": 3,
       "type": "context-curation",
-      "question": "TODO — Phase 2: prompt asking what specific chart elements (biopsy text, swallow study, lab trends) the resident chose to give the AI to build the unifying diagnosis, and what they deliberately withheld.",
+      "question": "Which biopsy results, swallow-study findings, lab trends, and consult-note excerpts did you give the AI to build your unifying diagnosis? What did you deliberately withhold and why?",
       "expectedResponseFormat": "free_text",
-      "minLength": 80,
+      "minLength": 100,
       "rubric": {
         "essential": [
-          "TODO: essential (biopsy text, swallow study finding, albumin/prealbumin trend, weight trajectory)"
+          "Muscle biopsy text or summary",
+          "Modified barium swallow study finding",
+          "Albumin / prealbumin trend over the admission",
+          "Weight trajectory and BMI / percentage loss",
+          "Serology results (anti-Sm, anti-dsDNA, complement) and infection screen results"
         ],
         "bonus": [
-          "TODO: bonus (deliberate withholding of distractors, structured framing of the question to the AI)"
+          "Deliberate withholding of distractors (e.g., incidental imaging findings)",
+          "Structured framing of the question to the AI as 'what unifies these findings' rather than 'what is the diagnosis'",
+          "Includes skin biopsy if performed",
+          "Anchors the AI on the time course rather than the current snapshot",
+          "Explicit acknowledgement of what is 'soft' evidence vs. 'hard' evidence"
         ],
         "redFlags": [
-          "TODO: red flags (raw consult-note dumping, no curation of competing diagnoses, leading the AI to the answer rather than letting it reason)"
+          "Raw consult-note dumping rather than structured extraction",
+          "No curation of competing diagnoses already excluded",
+          "Leading the AI to the answer rather than letting it reason",
+          "Omitting either the biopsy or the swallow study",
+          "Omitting the nutritional labs"
         ]
       },
       "weight": 0.7

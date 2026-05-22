@@ -4,28 +4,40 @@
   "title": "ED bounce — missed opportunity",
   "anchorDate": "2026-11-04T23:59:59Z",
   "timeLimitMinutes": 10,
-  "scenarioBrief": "Ten months later, Maria presents to the ED (2026-11-04) with new symptoms. The intervening chart now includes a rheum referral that never happened (insurance lapse), a brief urgent care revisit, and pharmacy refill gaps for HCQ. You are covering night float and asked to triage. Review the chart and respond. AI assistant available.",
+  "scenarioBrief": "Ten months later, Maria presents to the ED (2026-11-04) with worsening fatigue, ongoing arthralgias, and new weight loss. The intervening chart now shows pharmacy refill gaps for hydroxychloroquine, a missed rheumatology referral after her insurance lapsed, a brief urgent-care revisit, and social-work notes about food insecurity. You are covering night float and asked to triage and decide on disposition. Review the chart and respond. AI assistant available.",
   "chartGate": {
     "includeBeforeOrEqualDate": "2026-11-04T23:59:59Z",
-    "_notes": "AP2 visibility: everything in AP1 + 2026 spring-fall data (refill gaps, urgent care revisit, social work note about insurance loss, weight trend showing early loss). No 2027 data yet."
+    "_notes": "AP2 visibility: everything in AP1 + 2026 spring-fall data (refill gaps, urgent-care revisit, social-work note about insurance loss, weight trend showing early loss). No 2027 data yet."
   },
   "prompts": [
     {
       "id": "AP2-Q1",
       "order": 1,
       "type": "context-curation",
-      "question": "TODO — Phase 2: write the prompt asking which longitudinal trends from the chart the resident chose to surface to the AI, given the volume of intervening data.",
+      "question": "The chart has grown a lot since the January visit. Which longitudinal trends and chart elements did you surface to the AI, and which did you deliberately leave out? Why?",
       "expectedResponseFormat": "free_text",
-      "minLength": 80,
+      "minLength": 120,
       "rubric": {
         "essential": [
-          "TODO: essential trends (HCQ refill gaps, weight loss trajectory, missed rheum referral, persistent alopecia)"
+          "HCQ refill gaps from pharmacy records — adherence history is central to interpreting the current presentation",
+          "Weight trajectory across the year showing early weight loss",
+          "Missed rheumatology referral and the insurance lapse that drove it",
+          "Persistent alopecia and ongoing joint complaints (continuity of symptoms)",
+          "Social-work notes documenting food insecurity and language-access issues"
         ],
         "bonus": [
-          "TODO: bonus context (insurance loss timing, language-barrier notes, subclinical hypothyroid still untreated trend)"
+          "Explicit pattern recognition that adherence dropped at the same time as insurance lapse",
+          "Untreated subclinical hypothyroid noted as a parallel unresolved issue",
+          "Brings forward the original 1:80 ANA and prior labs for trend comparison",
+          "Mentions absence of dysphagia screen / nutritional screen in prior visits as a gap",
+          "Frames context for the AI by time course rather than dumping note text"
         ],
         "redFlags": [
-          "TODO: red flags (pasting raw chart, missing the social determinants thread, ignoring adherence data)"
+          "Pasting raw chart without summary",
+          "Ignoring the adherence data entirely",
+          "Anchoring on 'lupus flare' framing in the curation step",
+          "Missing the social-determinant thread (insurance, food access, language)",
+          "Forgetting the weight loss trend"
         ]
       },
       "weight": 1.0
@@ -34,18 +46,30 @@
       "id": "AP2-Q2",
       "order": 2,
       "type": "management",
-      "question": "TODO — Phase 2: write the prompt asking what the resident's immediate disposition + workup plan is and how AI shaped it.",
+      "question": "Given what you see, what is your immediate disposition and workup plan? How did the AI assistant influence (or fail to influence) your plan?",
       "expectedResponseFormat": "free_text",
-      "minLength": 100,
+      "minLength": 150,
       "rubric": {
         "essential": [
-          "TODO: essential moves (restart HCQ, re-engage rheum, address weight loss workup, social work consult)"
+          "Restart hydroxychloroquine and address the adherence barrier (medication access, refill plan)",
+          "Re-engage rheumatology — concrete plan to get the referral honored despite insurance barriers",
+          "Workup for weight loss separately from the rheum picture (CMP, prealbumin/albumin, infection screen, thyroid recheck)",
+          "Social work consult for insurance navigation and food access",
+          "Language-concordant follow-up scheduling and clear return precautions"
         ],
         "bonus": [
-          "TODO: bonus (recognizing missed opportunity from AP1, proactive nutrition screen, dysphagia screen)"
+          "Explicitly identifies the AP1 visit as a missed opportunity that contributed to this state",
+          "Proactive dysphagia or swallow screen given the constitutional picture",
+          "Nutrition referral / dietary recall",
+          "Depression / mental-health screen given chronic illness + social stress",
+          "TB consideration revisited given progressive constitutional symptoms"
         ],
         "redFlags": [
-          "TODO: red flags (discharge without follow-up, anchoring only on flare, ignoring weight loss)"
+          "Discharge home without scheduled follow-up or a plan to address adherence",
+          "Anchoring only on 'SLE flare' and giving a steroid burst without firm diagnosis",
+          "Ignoring the weight loss as 'expected with chronic illness'",
+          "Starting new immunosuppression without a TB / infection screen",
+          "Not involving social work despite obvious social drivers"
         ]
       },
       "weight": 1.0
@@ -54,16 +78,24 @@
       "id": "AP2-Q3",
       "order": 3,
       "type": "ai-output-evaluation",
-      "_aiPromptToGenerate": "TODO — Phase 2: write the system prompt to generate a flawed AI response that confidently calls this a 'simple SLE flare needing steroid burst' and misses the weight loss / adherence thread.",
-      "question": "TODO — Phase 2: write the prompt asking the resident to critique the AI's suggested plan.",
+      "_aiPromptToGenerate": "You are an AI clinical assistant responding to a resident asking about a 23-year-old woman with known low-titer ANA-positive polyarthritis and presumed SLE who presents to the ED with worsening fatigue, ongoing arthralgias, and several months of weight loss. She has had pharmacy refill gaps for hydroxychloroquine and missed her rheumatology follow-up after losing insurance. Produce a confident response that frames this as a 'classic SLE flare', recommends starting a prednisone burst (e.g., 40-60 mg daily) for symptom control, asks for a basic lab panel (CBC, CMP, complement levels), and recommends outpatient rheum follow-up. Do NOT raise the weight loss as needing its own workup. Do NOT raise nutrition, dysphagia, or alternative diagnoses. Do NOT raise social-determinant interventions. Do NOT mention TB or infection screening prior to steroids. Sound authoritative.",
+      "question": "Critique the AI's suggested plan above. What is reasonable, what is risky, and what important issues did it skip?",
       "expectedResponseFormat": "free_text",
-      "minLength": 80,
+      "minLength": 120,
       "rubric": {
         "shouldIdentify": [
-          "TODO: items resident should flag (AI ignored weight loss, ignored adherence question, jumped to steroids without confirming dx)"
+          "AI treats this as a confirmed SLE flare without acknowledging the diagnosis was never firmly established",
+          "AI ignores the weight loss as a separate issue requiring its own workup",
+          "AI recommends steroids without an infection screen (TB, hepatitis, HIV) in a previously under-served patient",
+          "AI ignores the adherence question entirely — restarting HCQ is the obvious lower-risk first step",
+          "AI ignores all social-determinant interventions (social work, insurance, food access, language)",
+          "AI does not consider alternative or co-existing diagnoses (nutrition, infection, thyroid)"
         ],
         "shouldNotEcho": [
-          "TODO: things resident should not parrot (AI's steroid-first plan, false dx confidence)"
+          "The AI's steroid-burst-first plan",
+          "The AI's 'classic SLE flare' framing",
+          "Reproducing the AI's lab list as if it were complete (no pre-immunosuppression infection screen, no nutritional labs)",
+          "Ignoring social context the same way the AI did"
         ]
       },
       "weight": 1.0
