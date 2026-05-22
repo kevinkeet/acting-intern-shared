@@ -2,13 +2,43 @@
   "problems": [
     {
       "id": "PRB001",
-      "name": "Systemic lupus erythematosus, evolving (UCTD with progression)",
+      "name": "Systemic lupus erythematosus, active with inflammatory myositis",
       "icd10": "M32.9",
       "snomed": "55464009",
       "onsetDate": "2025-08-15",
-      "diagnosedBy": "Dr. Jessica Tanaka (Rheumatology, 4/10/2026); evolving phenotype per Dr. Andre Williams (PCP, 9/15/2026) and ED 11/4/2026",
+      "diagnosedBy": "Initial 1/12/2026 (urgent care); diagnosis evolved through 2026; myositis newly diagnosed at 2/8/2027 ED",
       "priority": "High",
-      "notes": "Initial presentation 1/12/2026 with symmetric inflammatory polyarthritis, alopecia, low-titer ANA. Rheumatology working dx 4/10/2026 was undifferentiated CTD / probable early SLE. Phenotype evolving: by 9/15/2026 had mild cytopenias and low albumin; by 11/4/2026 with new-onset anti-dsDNA positive (24), low complements (C3 76, C4 8), mild proteinuria (UPC 0.35), tri-lineage cytopenia, photosensitive rash. Now meeting more 2019 EULAR/ACR classification criteria for SLE. Highly impacted by access barriers and medication non-adherence cycles."
+      "notes": "Trajectory: presented 1/12/2026 as undifferentiated polyarthritis with 1:80 ANA. Rheum (4/10/2026) called it UCTD / probable early SLE. By 11/4/2026 met more SLE criteria (anti-dsDNA newly positive, low complements, cytopenias, photosensitive rash, weight loss). On MMF + HCQ + prednisone, improved by 12/22/2026 BUT developed new dysphagia (foreshadowing myositis). 2/8/2027 ED admission revealed inflammatory myositis (CK 1840, aldolase 22) with oropharyngeal dysphagia. Discharged AMA 2/11. Returned 3/15/2027 in catastrophic state."
+    },
+    {
+      "id": "PRB008",
+      "name": "Severe oropharyngeal dysphagia (presumed myositis-related)",
+      "icd10": "R13.10",
+      "snomed": "40739000",
+      "onsetDate": "2026-12-10",
+      "diagnosedBy": "First documented 12/22/2026 (Dr. Williams, PCP); MBSS confirmed 2/9/2027",
+      "priority": "High",
+      "notes": "Onset late 2026 as bolus dysphagia with dry foods. Progressed through early 2027 to involve liquids. MBSS 2/9/2027 showed mild oropharyngeal dysphagia with laryngeal penetration of thin liquids — recommended nectar-thick liquids + chin-tuck. By 3/15/2027 admission, patient is unable to manage solids; mostly on Ensure with limited intake. Drives the malnutrition. Workup repeats MBSS this admission."
+    },
+    {
+      "id": "PRB009",
+      "name": "Inflammatory myositis (presumed SLE-related; possible DM overlap)",
+      "icd10": "M60.9",
+      "snomed": "26544005",
+      "onsetDate": "2026-12-15",
+      "diagnosedBy": "CK elevation first noted 12/2026 lab; confirmed at 2/8/2027 ED",
+      "priority": "High",
+      "notes": "CK trajectory: 412 (12/15/2026) -> 638 (1/12/2027) -> 1840 (2/8/2027) -> 1620 (2/11) -> 1490 (2/15) -> 2360 (3/15/2027). Aldolase elevated throughout. Proximal weakness escalating from 4+/5 (2/8) to 2-3/5 (3/15). Dysphagia and dysphonia consistent with pharyngeal/bulbar involvement. EMG and muscle biopsy NOT YET performed (planned this admission). Skin biopsy 2/10 read consistent with interface dermatitis with kwashiorkor features. Myositis-specific antibody panel sent 3/15."
+    },
+    {
+      "id": "PRB010",
+      "name": "Severe protein-calorie malnutrition (kwashiorkor pattern)",
+      "icd10": "E43",
+      "snomed": "70241007",
+      "onsetDate": "2026-04-10",
+      "diagnosedBy": "Recognized cumulatively; kwashiorkor pattern documented 3/15/2027",
+      "priority": "High",
+      "notes": "Severe malnutrition with multi-modal evidence: 30.3% weight loss from baseline (50.8 -> 35.4 kg); albumin 1.6 (today, 3/15); prealbumin 6 (severely low); anasarca; scaling dermatosis with 'flaky paint' pattern; 'flag sign' hair; Beau's lines; low zinc, copper, vitamin D. Refeeding-syndrome risk (low K, Mg, Phos). Initiating slow refeeding protocol per nutrition consult."
     },
     {
       "id": "PRB002",
@@ -18,17 +48,17 @@
       "onsetDate": "2025-08-15",
       "diagnosedBy": "Urgent care clinician (Dr. Reyes)",
       "priority": "Low",
-      "notes": "Diffuse non-scarring scalp hair thinning. Concurrent with arthritis symptoms. Has progressed since onset."
+      "notes": "Diffuse non-scarring scalp hair thinning. Progressed; 'flag sign' visible 3/15/2027 — consistent with nutritional contribution."
     },
     {
       "id": "PRB003",
-      "name": "Hashimoto's thyroiditis (autoimmune thyroiditis)",
+      "name": "Hashimoto's thyroiditis (autoimmune)",
       "icd10": "E06.3",
       "snomed": "21983002",
       "onsetDate": "2026-01-26",
-      "diagnosedBy": "Confirmed at urgent care follow-up (Dr. Reyes) based on TPO antibody positivity (312, ref <34)",
+      "diagnosedBy": "TPO antibody positive (312) at 1/26/2026 send-out",
       "priority": "Medium",
-      "notes": "TSH 5.32 at initial presentation. TPO antibody markedly positive at 312 (ref <34) on send-out lab 1/26/2026. Patient on levothyroxine 25 mcg daily. Adherence intermittent; TSH oscillates 3.18 (4/10) -> 4.21 (9/15) -> 5.04 (11/4)."
+      "notes": "Patient on levothyroxine 25 mcg daily with intermittent adherence. TSH 6.84, free T4 0.6 today (3/15/2027). Overlying non-thyroidal illness pattern. May need dose adjustment once stabilized."
     },
     {
       "id": "PRB004",
@@ -37,7 +67,7 @@
       "snomed": "423599006",
       "onsetDate": "2020-06-01",
       "priority": "High",
-      "notes": "Patient lost Medicaid coverage during pandemic redetermination. Medicaid re-application denied 5/29/2026; appeal hearing 8/12/2026. Major barrier to medication continuity and specialty care. Significantly impacts disease management."
+      "notes": "Medicaid lost in 2020. Re-application denied 5/29/2026 + 11/20/2026. Emergency Medicaid coverage active for 3/15/2027 admission. Persistent driver of care fragmentation."
     },
     {
       "id": "PRB005",
@@ -45,31 +75,49 @@
       "icd10": "Z91.120",
       "snomed": "266963000",
       "onsetDate": "2026-08-12",
-      "diagnosedBy": "Pharmacy / Esperanza Health care coordination",
       "priority": "High",
-      "notes": "Hydroxychloroquine refill could not be completed 8/22/2026 due to PAP renewal denial. Out of HCQ from 8/12/2026 to 9/15/2026, then again from approximately 10/15/2026 to 11/4/2026. Restart via ED-pharmacy charity bridge supply 11/4/2026."
+      "notes": "Recurrent: HCQ gaps 8/12-9/15/2026 and 10/15-11/4/2026. MMF ran out 3/9/2027. TMP/SMX taken intermittently. Repeated medication interruption is a major driver of disease progression."
     },
     {
       "id": "PRB006",
-      "name": "Unintentional weight loss",
-      "icd10": "R63.4",
-      "snomed": "89362005",
+      "name": "Unintentional weight loss / severe cachexia",
+      "icd10": "R63.6",
+      "snomed": "238108007",
       "onsetDate": "2026-04-10",
-      "diagnosedBy": "First documented at rheumatology consult (Dr. Tanaka); progressed substantially",
       "priority": "High",
-      "notes": "Trajectory: 50.8 kg (1/12) -> 48.8 kg (4/10) -> 46.4 kg (9/15) -> 43.8 kg (11/4). Total loss 7.0 kg / 13.8% over 10 months. Contributing factors: inflammatory disease, food insecurity, decreased appetite, stress. Concerning for systemic illness in addition to caloric insufficiency."
+      "notes": "Trajectory: 50.8 kg (1/12/26) -> 35.4 kg (3/15/27). Total loss 15.4 kg / 30.3%. BMI 15.7. Underweight per WHO criteria. Driver of admission. See PRB010."
     },
     {
       "id": "PRB007",
-      "name": "Depression, moderate (provisional)",
+      "name": "Depression, moderate",
       "icd10": "F32.1",
       "snomed": "35489007",
       "onsetDate": "2026-09-15",
-      "diagnosedBy": "Dr. Andre Williams (PCP, Esperanza)",
+      "diagnosedBy": "Dr. Andre Williams (PCP)",
       "priority": "Medium",
-      "notes": "PHQ-9 11 at 9/15/2026 PCP visit (moderate). PHQ-9 14 at 11/4/2026 ED triage (moderately severe). Declined antidepressant pharmacotherapy; accepted Spanish-speaking therapist referral. No SI/HI."
+      "notes": "PHQ-9 11 -> 14 -> 12 -> 7 (improved with treatment response) -> unable to obtain on 3/15/2027 admission due to acuity. Seeing Esperanza Behavioral Health therapist; declined antidepressant. Hopkins psych-CL planned this admission."
+    },
+    {
+      "id": "PRB011",
+      "name": "Pancytopenia (tri-lineage)",
+      "icd10": "D61.818",
+      "snomed": "78378001",
+      "onsetDate": "2026-09-15",
+      "diagnosedBy": "Trajectory: leukopenia from 9/15/2026, anemia + thrombocytopenia worsening through 2026-2027",
+      "priority": "Medium",
+      "notes": "Multifactorial: SLE-related cytopenias, mycophenolate marrow suppression, nutritional deficiency (low B12 borderline, low folate borderline, iron-deficiency component). Hgb 7.8, WBC 2.30, Plt 122 on 3/15/2027 admission. Reticulocyte count low (0.6%)."
+    },
+    {
+      "id": "PRB012",
+      "name": "Lupus nephritis (early — class undetermined)",
+      "icd10": "M32.14",
+      "snomed": "68815009",
+      "onsetDate": "2026-11-04",
+      "diagnosedBy": "Proteinuria progression: UPC 0.07 (4/10) -> 0.19 (9/15) -> 0.35 (11/4) -> 0.42 (2/8) -> 0.58 (3/15)",
+      "priority": "High",
+      "notes": "Progressive proteinuria with normal creatinine (low muscle mass distorts). Renal biopsy deferred pending stabilization; consideration this admission."
     }
   ],
-  "lastUpdated": "2026-11-04",
-  "reviewedBy": "Dr. Priya Shah (ED, 11/4/2026) — updated to reflect evolving SLE phenotype, medication non-adherence, weight loss, and depression."
+  "lastUpdated": "2027-03-15",
+  "reviewedBy": "Dr. Sarah Beckman / Dr. Maria Castro / Dr. David Park — 3/15/2027 admission H&P"
 }

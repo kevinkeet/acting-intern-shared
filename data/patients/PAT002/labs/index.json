@@ -1,6 +1,16 @@
 {
   "panels": [
     {
+      "id": "LAB012",
+      "name": "ED & Admission Comprehensive Labs — Multi-System Crisis",
+      "date": "2027-03-15"
+    },
+    {
+      "id": "LAB011",
+      "name": "ED Admission Labs — Myositis & Dysphagia Presentation",
+      "date": "2027-02-08"
+    },
+    {
       "id": "LAB010",
       "name": "ED Labs — Disease Flare with Constitutional Symptoms",
       "date": "2026-11-04"
@@ -51,5 +61,5 @@
       "date": "2026-01-12"
     }
   ],
-  "notes": "Labs grow as Maria's case progresses. LAB007 contains the AP1-era send-out comprehensive workup. LAB008 is the rheumatology consult workup. LAB009 captures the deteriorating phenotype in September. LAB010 is the AP2-era ED labs."
+  "notes": "Labs grow as Maria's case progresses. LAB012 contains the AP3 admission comprehensive panel (the data-dump for the catastrophic admission). LAB011 is the February AMA admission labs. LAB010 is the AP2 ED labs. LAB009 captures pre-AP2 deterioration. LAB008 is the rheumatology consult workup. LAB007 is the AP1-era send-out comprehensive workup."
 }

@@ -1,0 +1,14 @@
+{
+  "id": "IMG003",
+  "date": "2027-03-15T14:15:00.000Z",
+  "modality": "X-Ray",
+  "description": "Chest X-Ray, single view (AP portable)",
+  "facility": "Johns Hopkins Emergency Department",
+  "status": "Final",
+  "radiologist": "Dr. Jordan Tate",
+  "indication": "Critically ill 23-year-old with multi-system illness, dysphagia, weakness, edema — evaluate cardiopulmonary status",
+  "technique": "Single AP portable view of the chest at moderate inspiration. Patient supine.",
+  "findings": "The cardiomediastinal silhouette is borderline enlarged but may be magnified by portable AP technique. The lungs are low in volume bilaterally but clear of focal consolidation. Small bilateral pleural effusions are noted at the costophrenic angles, blunting both sulci. No pneumothorax. No discrete masses or large infiltrates. Bony thorax demonstrates osteopenia, particularly evident in the ribs and proximal humeri. There is generalized soft tissue prominence consistent with anasarca/body edema seen on chest wall and around the neck. Trace edema in the subcutaneous tissues of the upper chest. No central venous catheter is present.",
+  "impression": "1. Small bilateral pleural effusions, consistent with anasarca / hypoalbuminemia.\n2. Borderline cardiomegaly, likely magnified by AP portable technique but cannot exclude mild pericardial effusion — recommend echocardiogram.\n3. Osteopenia, suggestive of chronic disease and/or nutritional deficiency.\n4. Anasarca-related soft tissue edema of the chest wall.\n5. No focal pneumonia, mass, or pneumothorax. Lung volumes are reduced (likely related to body habitus, splinting, and effort).",
+  "comparison": "Chest X-ray from ED visit 11/4/2026 — at that time clear. Today's study shows new small bilateral effusions and chest wall soft tissue prominence."
+}

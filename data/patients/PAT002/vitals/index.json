@@ -1,6 +1,95 @@
 {
   "vitals": [
     {
+      "date": "2027-03-15T16:15:00.000Z",
+      "encounter": "ENC012",
+      "systolic": 96,
+      "diastolic": 58,
+      "heartRate": 110,
+      "respiratoryRate": 22,
+      "temperature": 97.6,
+      "spO2": 96,
+      "weight": 35.4,
+      "weightUnit": "kg",
+      "height": 150,
+      "heightUnit": "cm",
+      "bmi": 15.7,
+      "painScore": 4,
+      "recordedBy": "ED RN — Hopkins",
+      "notes": "Admission to medicine. CRITICAL DROP — total loss 15.4 kg / 30.3% from January 2026 baseline. On 2L NC after initial RA 94%."
+    },
+    {
+      "date": "2027-02-11T12:15:00.000Z",
+      "encounter": "ENC011",
+      "systolic": 100,
+      "diastolic": 62,
+      "heartRate": 102,
+      "respiratoryRate": 18,
+      "temperature": 98.4,
+      "spO2": 96,
+      "weight": 41.8,
+      "weightUnit": "kg",
+      "height": 150,
+      "heightUnit": "cm",
+      "bmi": 18.6,
+      "painScore": 4,
+      "recordedBy": "Inpatient RN — Hopkins",
+      "notes": "Discharge AMA after 4-day admission."
+    },
+    {
+      "date": "2027-02-08T18:15:00.000Z",
+      "encounter": "ENC010",
+      "systolic": 92,
+      "diastolic": 56,
+      "heartRate": 116,
+      "respiratoryRate": 22,
+      "temperature": 98.0,
+      "spO2": 95,
+      "weight": 41.2,
+      "weightUnit": "kg",
+      "height": 150,
+      "heightUnit": "cm",
+      "bmi": 18.3,
+      "painScore": 5,
+      "recordedBy": "ED RN — Hopkins",
+      "notes": "ED admission for myositis + dysphagia."
+    },
+    {
+      "date": "2026-12-22T11:15:00.000Z",
+      "encounter": "ENC009",
+      "systolic": 108,
+      "diastolic": 66,
+      "heartRate": 88,
+      "respiratoryRate": 14,
+      "temperature": 98.4,
+      "spO2": 99,
+      "weight": 47.2,
+      "weightUnit": "kg",
+      "height": 150,
+      "heightUnit": "cm",
+      "bmi": 21.0,
+      "painScore": 2,
+      "recordedBy": "Med Asst — Esperanza Health",
+      "notes": "Weight RECOVERED after treatment intensification; clinical improvement."
+    },
+    {
+      "date": "2026-11-09T09:00:00.000Z",
+      "encounter": "ENC008",
+      "systolic": 102,
+      "diastolic": 64,
+      "heartRate": 92,
+      "respiratoryRate": 14,
+      "temperature": 98.0,
+      "spO2": 99,
+      "weight": 44.4,
+      "weightUnit": "kg",
+      "height": 150,
+      "heightUnit": "cm",
+      "bmi": 19.7,
+      "painScore": 4,
+      "recordedBy": "Med Asst — Hopkins Rheum"
+    },
+    {
       "date": "2026-11-04T20:55:00.000Z",
       "encounter": "ENC007",
       "systolic": 96,
@@ -106,5 +195,5 @@
       "notes": "Immigration entry visit, age 15."
     }
   ],
-  "notes": "Weight trajectory shows progressive loss: 50.8 (1/12/26) -> 50.6 (1/26/26) -> 48.8 (4/10/26 rheum) -> 46.4 (9/15/26 PCP) -> 43.8 (11/4/26 ED). Total loss 7.0 kg / 13.8% from January baseline. BP trending down (mild hypotension), HR trending up (relative tachycardia)."
+  "notes": "Weight trajectory: 50.8 (1/12/26 baseline) -> 50.6 (1/26/26) -> 48.8 (4/10/26) -> 46.4 (9/15/26) -> 43.8 (11/4/26 ED) -> 44.4 (11/9/26 rheum) -> 47.2 (12/22/26 — recovered on MMF!) -> 41.2 (2/8/27 ED — myositis with dysphagia) -> 41.8 (2/11/27 AMA dc) -> 35.4 (3/15/27 catastrophic admission). Total loss from baseline = 15.4 kg / 30.3%."
 }

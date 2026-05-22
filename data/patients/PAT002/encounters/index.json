@@ -1,6 +1,88 @@
 {
   "encounters": [
     {
+      "id": "ENC012",
+      "date": "2027-03-15T16:30:00.000Z",
+      "type": "Inpatient Admission",
+      "department": "Internal Medicine (Hopkins)",
+      "provider": "Dr. Sarah Beckman (attending), Dr. Maria Castro (PGY-3), Dr. David Park (PGY-1)",
+      "chiefComplaint": "Cannot move, cannot eat — multi-system deterioration",
+      "diagnoses": [
+        "Active SLE flare with inflammatory myositis (presumed)",
+        "Severe oropharyngeal dysphagia with aspiration risk",
+        "Severe protein-calorie malnutrition / kwashiorkor pattern",
+        "Anasarca with hypoalbuminemia (1.6)",
+        "Pancytopenia (tri-lineage)",
+        "Electrolyte derangements with refeeding-syndrome risk",
+        "Hepatocellular pattern enzyme elevation",
+        "Lupus nephritis (early; UPC 0.58)",
+        "Hashimoto's thyroiditis with overlapping non-thyroidal illness"
+      ],
+      "status": "Admitted (active)",
+      "interpreterUsed": "Spanish (Language Line)"
+    },
+    {
+      "id": "ENC011",
+      "date": "2027-02-11T16:30:00.000Z",
+      "type": "Inpatient Discharge AMA",
+      "department": "Internal Medicine (Hopkins inpatient)",
+      "provider": "Dr. Sarah Beckman, Dr. Maria Castro",
+      "chiefComplaint": "Discharge against medical advice — 4-day admission for myositis/dysphagia workup",
+      "diagnoses": [
+        "Active SLE with new inflammatory myositis",
+        "Oropharyngeal dysphagia (MBSS mild)",
+        "Severe protein-calorie malnutrition",
+        "Pancytopenia"
+      ],
+      "status": "Discharged AMA",
+      "interpreterUsed": "Spanish (Language Line)"
+    },
+    {
+      "id": "ENC010",
+      "date": "2027-02-08T18:45:00.000Z",
+      "type": "ED Visit",
+      "department": "Emergency Department",
+      "provider": "Dr. James Tran",
+      "chiefComplaint": "Cannot swallow well, worsening weakness, weight loss",
+      "diagnoses": [
+        "Active SLE flare with new inflammatory myositis",
+        "Oropharyngeal dysphagia",
+        "Severe weight loss (18.9% from baseline)",
+        "Pancytopenia"
+      ],
+      "status": "Admitted",
+      "interpreterUsed": "Spanish (Language Line)"
+    },
+    {
+      "id": "ENC009",
+      "date": "2026-12-22T11:15:00.000Z",
+      "type": "Primary Care Visit",
+      "department": "Primary Care (Esperanza Health FQHC)",
+      "provider": "Dr. Andre Williams",
+      "chiefComplaint": "Improving SLE symptoms; NEW bolus dysphagia",
+      "diagnoses": [
+        "Active SLE — clinical and lab improvement on MMF + HCQ + prednisone",
+        "New bolus dysphagia with dry foods",
+        "Steroid-induced hyperglycemia"
+      ],
+      "status": "Completed",
+      "interpreterUsed": "In-person Spanish-speaking MA"
+    },
+    {
+      "id": "ENC008",
+      "date": "2026-11-09T09:00:00.000Z",
+      "type": "Rheumatology Urgent Follow-up",
+      "department": "Rheumatology",
+      "provider": "Dr. Jessica Tanaka",
+      "chiefComplaint": "Urgent re-evaluation 5 days post ED",
+      "diagnoses": [
+        "Active SLE — adding steroid-sparing agent",
+        "Hashimoto's thyroiditis"
+      ],
+      "status": "Completed",
+      "interpreterUsed": "Spanish (Language Line)"
+    },
+    {
       "id": "ENC007",
       "date": "2026-11-04T21:30:00.000Z",
       "type": "ED Visit",
@@ -108,5 +190,5 @@
       "interpreterUsed": "Spanish (Language Line)"
     }
   ],
-  "lastUpdated": "2026-11-04"
+  "lastUpdated": "2027-03-15"
 }

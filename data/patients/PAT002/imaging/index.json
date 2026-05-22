@@ -1,6 +1,26 @@
 {
   "studies": [
     {
+      "id": "IMG004",
+      "date": "2027-03-15T15:00:00.000Z",
+      "modality": "CT",
+      "description": "CT Chest / Abdomen / Pelvis with IV contrast",
+      "facility": "Johns Hopkins Emergency Department",
+      "status": "Final",
+      "radiologist": "Dr. Jordan Tate",
+      "indication": "Severe weight loss, dysphagia, multi-system illness; rule out malignancy"
+    },
+    {
+      "id": "IMG003",
+      "date": "2027-03-15T14:15:00.000Z",
+      "modality": "X-Ray",
+      "description": "Chest X-Ray, single view (AP portable)",
+      "facility": "Johns Hopkins Emergency Department",
+      "status": "Final",
+      "radiologist": "Dr. Jordan Tate",
+      "indication": "Admission CXR — critically ill with multi-system illness"
+    },
+    {
       "id": "IMG002",
       "date": "2026-04-10T14:30:00.000Z",
       "modality": "X-Ray",
@@ -21,5 +41,5 @@
       "indication": "TB screening, post-immigration"
     }
   ],
-  "notes": "Imaging record continues to grow as the case progresses. The 2026-04-10 hand X-rays establish that her arthritis is NON-EROSIVE at the time of rheumatology evaluation."
+  "notes": "Imaging now includes the AP3 admission CXR (small bilateral effusions, anasarca) and CT chest/abd/pelvis (severe muscle wasting, ascites, no malignancy)."
 }

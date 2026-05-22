@@ -1,6 +1,51 @@
 {
   "notes": [
     {
+      "id": "NOTE012",
+      "type": "ED Visit / Admission H&P",
+      "date": "2027-03-15T16:30:00.000Z",
+      "author": "Dr. David Park, PGY-1 / Dr. Maria Castro, PGY-3 / Dr. Sarah Beckman, attending",
+      "department": "Internal Medicine (Hopkins inpatient)",
+      "encounter": "ENC012",
+      "preview": "Admission H&P for 23F with active SLE + new inflammatory myositis + severe oropharyngeal dysphagia presenting with multi-system deterioration: BMI 15.7 (30.3% weight loss), anasarca, 'flag sign' hair, kwashiorkor-pattern scaling dermatosis, proximal weakness 2-3/5, dysphonia, oral ulcers. Labs: Hgb 7.8, WBC 2.30, albumin 1.6, prealbumin 6, CK 2360, anti-dsDNA 48, C3 58, C4 5, electrolyte derangements with refeeding risk. Working unifying dx: SLE -> myositis -> dysphagia -> starvation -> kwashiorkor."
+    },
+    {
+      "id": "NOTE011",
+      "type": "Discharge AMA",
+      "date": "2027-02-11T16:30:00.000Z",
+      "author": "Dr. Sarah Beckman / Dr. Maria Castro",
+      "department": "Internal Medicine (Hopkins inpatient)",
+      "encounter": "ENC011",
+      "preview": "4-day admission for myositis/dysphagia workup ending in AMA discharge. MBSS 2/9 showed mild oropharyngeal dysphagia with laryngeal penetration of thin liquids; nectar-thick/pureed diet with chin-tuck. Skin biopsy taken 2/10 (pending). Multidisciplinary consults: rheum, neuro, GI, ID, derm, nutrition. EMG and muscle biopsy scheduled but NOT done due to AMA discharge. Strong outpatient bridge planned; patient agreed to keep follow-ups."
+    },
+    {
+      "id": "NOTE010",
+      "type": "ED Visit",
+      "date": "2027-02-08T18:45:00.000Z",
+      "author": "Dr. James Tran",
+      "department": "Emergency Department",
+      "encounter": "ENC010",
+      "preview": "23F with active SLE on HCQ/MMF/prednisone presenting with new oropharyngeal dysphagia + proximal weakness + voice change + 18.9% weight loss (now 41.2 kg). CK 1840, aldolase 22, anti-dsDNA 38, low complements, mild proteinuria, oral ulcer. Diagnosis: SLE flare with new inflammatory myositis. Admitted (became NOTE011)."
+    },
+    {
+      "id": "NOTE009",
+      "type": "Primary Care Visit",
+      "date": "2026-12-22T11:15:00.000Z",
+      "author": "Dr. Andre Williams",
+      "department": "Primary Care (Esperanza Health FQHC)",
+      "encounter": "ENC009",
+      "preview": "6-week PCP follow-up. SLE responding well to MMF + HCQ + prednisone taper. Joint pain much better, rash mostly resolved, weight up to 47.2 kg, mood improved (PHQ-9 7). NEW SYMPTOM: occasional bolus dysphagia with dry foods x 2-3 weeks. Bedside swallow screen equivocal. Ordered CK / aldolase / LDH to screen for occult myositis."
+    },
+    {
+      "id": "NOTE008",
+      "type": "Rheumatology Urgent Follow-up",
+      "date": "2026-11-09T09:00:00.000Z",
+      "author": "Dr. Jessica Tanaka",
+      "department": "Rheumatology",
+      "encounter": "ENC008",
+      "preview": "5-day post-ED urgent re-evaluation. Modest clinical improvement on prednisone 30 mg + restarted HCQ. Added mycophenolate 500 mg BID (planning to escalate to 1 g BID). Pre-immunosuppression infection screen ordered. Contraception counseling with mother. Strong adherence and access plan with social work."
+    },
+    {
       "id": "NOTE007",
       "type": "ED Visit",
       "date": "2026-11-04T21:30:00.000Z",
@@ -64,5 +109,5 @@
       "preview": "22-year-old Spanish-speaking woman presenting with 6-month history of progressive joint pain, fatigue, and hair loss. Interpreter used. Symmetric polyarthritis of hands, wrists, ankles. ANA positive 1:80. Started empirically on hydroxychloroquine and levothyroxine pending rheumatology referral."
     }
   ],
-  "lastUpdated": "2026-11-04"
+  "lastUpdated": "2027-03-15"
 }
