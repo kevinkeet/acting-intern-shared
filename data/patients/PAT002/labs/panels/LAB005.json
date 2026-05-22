@@ -1,0 +1,16 @@
+{
+  "id": "LAB005",
+  "name": "Antinuclear Antibody",
+  "collectedDate": "2026-01-12T10:45:00.000Z",
+  "resultedDate": "2026-01-14T16:42:00.000Z",
+  "orderedBy": "Dr. Manuel Reyes",
+  "facility": "Patterson Park Urgent Care (send-out to LabCorp)",
+  "specimen": "Blood",
+  "status": "Final",
+  "results": [
+    { "name": "ANA Screen", "value": "Positive", "referenceRange": "Negative", "flag": "H" },
+    { "name": "ANA Titer", "value": "1:80", "referenceRange": "<1:40", "flag": "H" },
+    { "name": "ANA Pattern", "value": "Homogeneous", "referenceRange": null, "flag": null }
+  ],
+  "interpretation": "Low-positive ANA at 1:80 with homogeneous pattern. Clinical significance must be interpreted in context — low titers can occur in up to ~10-15% of healthy individuals. Confirmatory specific autoantibodies (dsDNA, anti-Smith, anti-Ro/La) and complement levels recommended in the appropriate clinical setting."
+}

@@ -1,0 +1,15 @@
+{
+  "studies": [
+    {
+      "id": "IMG001",
+      "date": "2018-09-04T14:00:00.000Z",
+      "modality": "X-Ray",
+      "description": "Chest X-Ray, 2 views (PA and lateral)",
+      "facility": "Johns Hopkins Community Health",
+      "status": "Final",
+      "radiologist": "Dr. Andrew Park",
+      "indication": "TB screening, post-immigration"
+    }
+  ],
+  "notes": "Limited imaging history. No advanced imaging on record."
+}

@@ -1,0 +1,73 @@
+{
+  "tobacco": {
+    "status": "Never smoker",
+    "type": null,
+    "amount": null,
+    "packYears": 0,
+    "notes": null
+  },
+  "alcohol": {
+    "status": "Denies",
+    "frequency": null,
+    "amount": null,
+    "lastUse": null,
+    "notes": "Denies any alcohol use."
+  },
+  "drugs": {
+    "status": "Denies",
+    "details": "No history of illicit drug use."
+  },
+  "occupation": {
+    "current": "Housekeeping at a downtown hotel (part-time, ~25-30 hrs/wk, hourly + tips)",
+    "previous": "Restaurant prep cook (2018-2020), childcare for relatives (intermittent)",
+    "status": "Working — minimum-wage service job, no paid sick leave or health benefits",
+    "yearsAtCurrent": 2,
+    "exposures": "Repetitive hand/wrist motion, cleaning chemicals (bleach, ammonia-based products), heavy lifting (linens, mattresses). Long periods of standing."
+  },
+  "education": {
+    "highestLevel": "Some high school (Guatemala). Did not complete US high school after immigrating.",
+    "literacyConcerns": "Reads and writes Spanish at high-school level; limited English literacy."
+  },
+  "housing": {
+    "status": "Stable — two-bedroom apartment in East Baltimore",
+    "livingWith": "Mother (Rosa, age 47, also Spanish-speaking), younger brother (age 14, US-born), and aunt",
+    "ownership": "Rental",
+    "notes": "Patient is the primary English-speaker in the household when at appointments, though prefers Spanish for healthcare conversations. Household income relies on mother's restaurant work and patient's wages."
+  },
+  "diet": {
+    "type": "Traditional Guatemalan diet — tortillas, beans, eggs, rice; limited meat; some vegetables when affordable",
+    "restrictions": "None medical. Reports food insecurity — has skipped meals to stretch groceries in past year.",
+    "supplements": "None"
+  },
+  "exercise": {
+    "frequency": "None structured. Active at work (cleaning, lifting)."
+  },
+  "sexualHistory": {
+    "active": "Not currently",
+    "partners": "Prior monogamous relationship 2022-2023; no current partner",
+    "contraception": "None — not sexually active",
+    "stiScreening": "Not done"
+  },
+  "immigration": {
+    "countryOfOrigin": "Guatemala — rural Huehuetenango department",
+    "yearImmigrated": 2017,
+    "ageAtImmigration": 14,
+    "status": "Notes prior immigration concerns. Patient declines to share immigration status; mother explicitly does not want this documented. Has used the same physical address since 2018.",
+    "lastReturnToCountry": "2019 — 3-week visit to grandmother. No travel since."
+  },
+  "transportation": {
+    "primary": "Mostly walks or takes MTA bus; relies on mother or aunt for rides to medical visits"
+  },
+  "religion": "Catholic; attends Mass with mother periodically",
+  "safety": {
+    "intimatePartnerViolence": "Denies — directly asked using interpreter at 2019 visit",
+    "weaponsInHome": false,
+    "feelsSafeAtHome": true
+  },
+  "mentalHealth": {
+    "depressionScreening": "PHQ-2 negative at 2019 visit; not screened since.",
+    "anxietyScreening": "Not screened",
+    "support": "Mother and aunt are primary supports; small church-based social circle"
+  },
+  "notes": "Cultural context: patient and family are highly motivated to access care but have faced significant barriers — language, transportation, cost, fear related to immigration documentation, and a six-month gap during the 2020 Medicaid redetermination process they were unable to navigate. Patient has missed multiple referrals due to inability to reach specialty clinics that do not accept self-pay or do not have Spanish-language scheduling."
+}

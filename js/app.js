@@ -213,17 +213,52 @@ const App = {
 
     /**
      * Switch to a different patient
+     * Clears per-patient AI state so the new chart starts clean.
      */
     async switchPatient(patientId) {
+        if (!patientId) return;
+
         this.showLoading('Switching patient...');
 
+        // Reset chart data caches
         dataLoader.clearCache();
         this.defaultPatientId = patientId;
+
+        // Reset AI session state so we don't bleed Robert's memory/conversation
+        // into Maria's chart (or vice versa). The longitudinal document is
+        // keyed per-patient inside AICoworker.initializeLongitudinalDocument,
+        // so it will reload fresh in onPatientLoaded.
+        try {
+            if (typeof AICoworker !== 'undefined') {
+                // Drop in-memory references that point at the old patient
+                AICoworker.longitudinalDoc = null;
+                AICoworker.contextAssembler = null;
+                AICoworker.workingMemory = null;
+                AICoworker.sessionContext = null;
+                if (typeof AICoworker.resetSessionState === 'function') {
+                    AICoworker.resetSessionState();
+                }
+                if (AICoworker._deepLearn) {
+                    AICoworker._deepLearn = {
+                        phase: 'idle',
+                        currentLevel: 0,
+                        totalLevels: 0,
+                        levelBatches: [],
+                        processed: new Set(),
+                        processedCount: 0,
+                        totalItems: 0,
+                    };
+                }
+                if (typeof AICoworker.render === 'function') AICoworker.render();
+            }
+        } catch (err) {
+            console.warn('Could not fully reset AI state on patient switch:', err);
+        }
 
         try {
             await this.loadPatient(patientId);
             router.navigate('/chart-review');
-            this.showToast('Patient loaded successfully', 'success');
+            this.showToast('Patient loaded', 'success');
         } catch (error) {
             console.error('Error switching patient:', error);
             this.showToast('Error loading patient', 'error');

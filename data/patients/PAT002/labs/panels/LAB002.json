@@ -1,0 +1,21 @@
+{
+  "id": "LAB002",
+  "name": "Basic Metabolic Panel",
+  "collectedDate": "2026-01-12T10:45:00.000Z",
+  "resultedDate": "2026-01-12T11:30:00.000Z",
+  "orderedBy": "Dr. Manuel Reyes",
+  "facility": "Patterson Park Urgent Care",
+  "specimen": "Blood",
+  "status": "Final",
+  "results": [
+    { "name": "Sodium", "value": "138", "unit": "mmol/L", "referenceRange": "135-145", "flag": "normal" },
+    { "name": "Potassium", "value": "4.0", "unit": "mmol/L", "referenceRange": "3.5-5.0", "flag": "normal" },
+    { "name": "Chloride", "value": "103", "unit": "mmol/L", "referenceRange": "98-108", "flag": "normal" },
+    { "name": "CO2", "value": "24", "unit": "mmol/L", "referenceRange": "23-32", "flag": "normal" },
+    { "name": "BUN", "value": "11", "unit": "mg/dL", "referenceRange": "8-25", "flag": "normal" },
+    { "name": "Creatinine", "value": "0.4", "unit": "mg/dL", "referenceRange": "0.5-1.1", "flag": "L" },
+    { "name": "Glucose", "value": "88", "unit": "mg/dL", "referenceRange": "70-110", "flag": "normal" },
+    { "name": "Calcium", "value": "9.1", "unit": "mg/dL", "referenceRange": "8.5-10.5", "flag": "normal" }
+  ],
+  "interpretation": "BMP within normal limits. Low creatinine (0.4) is in the context of low body mass / low muscle mass — not clinically concerning in isolation but should be noted when interpreting renal function estimates."
+}

@@ -1,0 +1,21 @@
+{
+  "encounters": [
+    {
+      "id": "ENC001",
+      "date": "2026-01-12T10:45:00.000Z",
+      "type": "Urgent Care Visit",
+      "department": "Urgent Care",
+      "provider": "Dr. Manuel Reyes",
+      "chiefComplaint": "Joint pain and hair loss x 6 months",
+      "diagnoses": [
+        "Polyarthritis, undifferentiated",
+        "Alopecia, diffuse",
+        "Subclinical hypothyroidism",
+        "Loss of health insurance coverage"
+      ],
+      "status": "Completed",
+      "interpreterUsed": "Spanish (Language Line)"
+    }
+  ],
+  "lastUpdated": "2026-01-12"
+}

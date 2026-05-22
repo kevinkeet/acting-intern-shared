@@ -1,0 +1,35 @@
+{
+  "panels": [
+    {
+      "id": "LAB001",
+      "name": "CBC with Differential",
+      "date": "2026-01-12"
+    },
+    {
+      "id": "LAB002",
+      "name": "Basic Metabolic Panel",
+      "date": "2026-01-12"
+    },
+    {
+      "id": "LAB003",
+      "name": "Urinalysis (dipstick)",
+      "date": "2026-01-12"
+    },
+    {
+      "id": "LAB004",
+      "name": "Thyroid Stimulating Hormone",
+      "date": "2026-01-12"
+    },
+    {
+      "id": "LAB005",
+      "name": "Antinuclear Antibody",
+      "date": "2026-01-12"
+    },
+    {
+      "id": "LAB006",
+      "name": "Rheumatoid Factor",
+      "date": "2026-01-12"
+    }
+  ],
+  "notes": "Labs from this visit are partial — additional send-out tests pending. More comprehensive lab history will accrue as Maria's case progresses through future encounters."
+}

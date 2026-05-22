@@ -1,0 +1,92 @@
+{
+  "active": [
+    {
+      "id": "ORD001",
+      "orderDate": "2026-01-12T10:45:00.000Z",
+      "category": "Lab",
+      "name": "Comprehensive Metabolic Panel",
+      "details": "To be drawn at sliding-scale lab in next 2 weeks",
+      "priority": "Routine",
+      "orderedBy": "Dr. Manuel Reyes",
+      "status": "Pending",
+      "facility": "Patterson Park Urgent Care"
+    },
+    {
+      "id": "ORD002",
+      "orderDate": "2026-01-12T10:45:00.000Z",
+      "category": "Lab",
+      "name": "anti-dsDNA, anti-Smith, anti-Ro/La",
+      "details": "Connective tissue disease workup",
+      "priority": "Routine",
+      "orderedBy": "Dr. Manuel Reyes",
+      "status": "Pending"
+    },
+    {
+      "id": "ORD003",
+      "orderDate": "2026-01-12T10:45:00.000Z",
+      "category": "Lab",
+      "name": "Complement C3 and C4",
+      "priority": "Routine",
+      "orderedBy": "Dr. Manuel Reyes",
+      "status": "Pending"
+    },
+    {
+      "id": "ORD004",
+      "orderDate": "2026-01-12T10:45:00.000Z",
+      "category": "Lab",
+      "name": "Anti-CCP",
+      "priority": "Routine",
+      "orderedBy": "Dr. Manuel Reyes",
+      "status": "Pending"
+    },
+    {
+      "id": "ORD005",
+      "orderDate": "2026-01-12T10:45:00.000Z",
+      "category": "Lab",
+      "name": "Hepatitis B / Hepatitis C / HIV screening",
+      "details": "Given young immigrant patient with undifferentiated arthropathy",
+      "priority": "Routine",
+      "orderedBy": "Dr. Manuel Reyes",
+      "status": "Pending"
+    },
+    {
+      "id": "ORD006",
+      "orderDate": "2026-01-12T10:45:00.000Z",
+      "category": "Lab",
+      "name": "Urinalysis with microscopy + protein:creatinine ratio",
+      "priority": "Routine",
+      "orderedBy": "Dr. Manuel Reyes",
+      "status": "Pending"
+    },
+    {
+      "id": "ORD007",
+      "orderDate": "2026-01-12T10:45:00.000Z",
+      "category": "Referral",
+      "name": "Rheumatology consult",
+      "details": "Self-pay; provided list of sliding-scale clinics + financial aid info",
+      "priority": "Urgent",
+      "orderedBy": "Dr. Manuel Reyes",
+      "status": "Pending — patient/family to schedule"
+    },
+    {
+      "id": "ORD008",
+      "orderDate": "2026-01-12T10:45:00.000Z",
+      "category": "Referral",
+      "name": "Ophthalmology — HCQ baseline exam",
+      "priority": "Routine",
+      "orderedBy": "Dr. Manuel Reyes",
+      "status": "Pending"
+    },
+    {
+      "id": "ORD009",
+      "orderDate": "2026-01-12T10:45:00.000Z",
+      "category": "Referral",
+      "name": "Primary care establishment — Esperanza Health (FQHC)",
+      "priority": "Routine",
+      "orderedBy": "Dr. Manuel Reyes",
+      "status": "Pending"
+    }
+  ],
+  "completed": [],
+  "lastUpdated": "2026-01-12"
+}

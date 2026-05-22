@@ -1,0 +1,23 @@
+{
+  "problems": [
+    {
+      "id": "PRB_R001",
+      "name": "Iron deficiency anemia",
+      "icd10": "D50.9",
+      "onsetDate": "2018-08-22",
+      "resolvedDate": "2019-04-08",
+      "diagnosedBy": "Community clinic NP (Jennifer Walsh)",
+      "notes": "Found on intake screening, age 15. Hgb 10.4, MCV 74, ferritin 8. Treated with oral ferrous sulfate; iron studies normalized by 4/2019. Resolution likely with improved nutritional access after immigration."
+    },
+    {
+      "id": "PRB_R002",
+      "name": "Latent tuberculosis infection — ruled out",
+      "icd10": "Z11.7",
+      "onsetDate": "2018-08-22",
+      "resolvedDate": "2018-09-15",
+      "diagnosedBy": "Community clinic NP",
+      "notes": "Screening performed at immigration entry visit given father's TB history. QuantiFERON-TB Gold negative. Chest X-ray normal."
+    }
+  ],
+  "lastUpdated": "2019-04-08"
+}

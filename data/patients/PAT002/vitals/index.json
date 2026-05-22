@@ -1,0 +1,40 @@
+{
+  "vitals": [
+    {
+      "date": "2026-01-12T10:45:00.000Z",
+      "encounter": "ENC001",
+      "systolic": 116,
+      "diastolic": 72,
+      "heartRate": 92,
+      "respiratoryRate": 16,
+      "temperature": 98.4,
+      "spO2": 99,
+      "weight": 50.8,
+      "weightUnit": "kg",
+      "height": 150,
+      "heightUnit": "cm",
+      "bmi": 22.6,
+      "painScore": 5,
+      "recordedBy": "Med Asst Olivia Rivera"
+    },
+    {
+      "date": "2018-08-22T10:00:00.000Z",
+      "encounter": "ENC_HX_2018",
+      "systolic": 108,
+      "diastolic": 66,
+      "heartRate": 78,
+      "respiratoryRate": 14,
+      "temperature": 98.2,
+      "spO2": 100,
+      "weight": 49.0,
+      "weightUnit": "kg",
+      "height": 149,
+      "heightUnit": "cm",
+      "bmi": 22.1,
+      "painScore": 0,
+      "recordedBy": "Med Asst (Johns Hopkins Community Health)",
+      "notes": "Immigration entry visit, age 15."
+    }
+  ],
+  "notes": "Sparse vitals history reflecting limited care access."
+}

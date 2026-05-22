@@ -1,0 +1,52 @@
+{
+  "id": "PAT002",
+  "mrn": "MRN-90215734",
+  "firstName": "Maria",
+  "middleName": "Isabel",
+  "lastName": "Sandoval",
+  "dateOfBirth": "2003-08-12",
+  "sex": "Female",
+  "gender": "Female",
+  "race": "American Indian / Alaska Native",
+  "ethnicity": "Hispanic or Latino",
+  "preferredLanguage": "Spanish",
+  "interpreterNeeded": true,
+  "countryOfBirth": "Guatemala",
+  "yearOfImmigration": 2017,
+  "maritalStatus": "Single",
+  "ssn": null,
+  "phone": "(410) 555-2284",
+  "email": null,
+  "address": {
+    "street": "418 Eastern Ave, Apt 2",
+    "city": "Baltimore",
+    "state": "MD",
+    "zip": "21224",
+    "country": "USA"
+  },
+  "emergencyContact": {
+    "name": "Rosa Sandoval",
+    "relationship": "Mother",
+    "phone": "(410) 555-2285",
+    "language": "Spanish (only)"
+  },
+  "primaryCareProvider": {
+    "name": "None established",
+    "npi": null,
+    "phone": null,
+    "notes": "Patient has used urgent care and ED for episodic care; never established with a PCP. Briefly seen at Johns Hopkins Community Health 2019-2020 but lapsed during COVID-19 pandemic."
+  },
+  "insurance": {
+    "name": "Uninsured / Self-pay",
+    "memberId": null,
+    "notes": "Lost Maryland Medicaid coverage 2020 during redetermination; was unable to recertify due to documentation issues during pandemic. Has used hospital financial assistance for prior encounters."
+  },
+  "advanceDirectives": {
+    "livingWill": false,
+    "healthcareProxy": null,
+    "dnr": false,
+    "lastReviewed": null
+  },
+  "createdAt": "2018-07-12T14:30:00Z",
+  "lastUpdated": "2026-04-01T09:00:00Z"
+}

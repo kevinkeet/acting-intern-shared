@@ -1,0 +1,14 @@
+{
+  "id": "LAB006",
+  "name": "Rheumatoid Factor",
+  "collectedDate": "2026-01-12T10:45:00.000Z",
+  "resultedDate": "2026-01-13T08:15:00.000Z",
+  "orderedBy": "Dr. Manuel Reyes",
+  "facility": "Patterson Park Urgent Care (send-out to LabCorp)",
+  "specimen": "Blood",
+  "status": "Final",
+  "results": [
+    { "name": "Rheumatoid Factor", "value": "<10", "unit": "IU/mL", "referenceRange": "<14", "flag": "normal" }
+  ],
+  "interpretation": "Rheumatoid factor negative. Note: a negative RF does not exclude RA, particularly in early disease — anti-CCP would provide additional information."
+}

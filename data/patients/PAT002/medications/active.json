@@ -1,0 +1,58 @@
+{
+  "medications": [
+    {
+      "id": "MED001",
+      "name": "Hydroxychloroquine",
+      "genericName": "Hydroxychloroquine sulfate",
+      "dose": "200 mg",
+      "route": "PO",
+      "frequency": "BID",
+      "startDate": "2026-01-12",
+      "prescriber": "Dr. Manuel Reyes (Urgent Care)",
+      "indication": "Presumed early SLE / undifferentiated polyarthritis",
+      "instructions": "Take with food. 60-day supply provided as samples and discounted cash-pay refill. Patient instructed to follow up with rheumatology — appointment not yet established.",
+      "pharmacy": "Walgreens Patterson Park",
+      "notes": "Prescribed empirically pending specialist evaluation. No baseline ophthalmologic exam performed."
+    },
+    {
+      "id": "MED002",
+      "name": "Levothyroxine",
+      "genericName": "Levothyroxine sodium",
+      "dose": "25 mcg",
+      "route": "PO",
+      "frequency": "Daily, fasting",
+      "startDate": "2026-01-12",
+      "prescriber": "Dr. Manuel Reyes (Urgent Care)",
+      "indication": "Subclinical hypothyroidism (TSH 5.32)",
+      "instructions": "Take 30-60 minutes before breakfast, with water. Avoid taking with food or calcium/iron supplements.",
+      "pharmacy": "Walgreens Patterson Park"
+    },
+    {
+      "id": "MED003",
+      "name": "Ibuprofen",
+      "genericName": "Ibuprofen",
+      "dose": "400 mg",
+      "route": "PO",
+      "frequency": "Q6H PRN pain",
+      "startDate": "2025-09-01",
+      "prescriber": "Self-directed (OTC)",
+      "indication": "Joint pain",
+      "instructions": "Take with food; not to exceed 1600 mg/day",
+      "notes": "Patient using OTC ibuprofen at her own discretion since symptoms began. Reports taking 'a few each day' over the last 4 months for joint pain. No GI complaints currently."
+    },
+    {
+      "id": "MED004",
+      "name": "Multivitamin",
+      "genericName": "Adult multivitamin (generic)",
+      "dose": "1 tablet",
+      "route": "PO",
+      "frequency": "Daily",
+      "startDate": "2018-08-22",
+      "prescriber": "Self-directed (OTC)",
+      "indication": "General nutritional support",
+      "notes": "Patient reports intermittent use; takes when she remembers. Last bottle finished ~3 months ago."
+    }
+  ],
+  "lastReviewed": "2026-01-12",
+  "reviewedBy": "Dr. Manuel Reyes"
+}

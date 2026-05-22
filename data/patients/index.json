@@ -6,8 +6,20 @@
       "mrn": "MRN-78432156",
       "dob": "1952-03-15",
       "sex": "Male",
-      "status": "Active"
+      "status": "Active",
+      "summary": "73 y.o. man with HFrEF (EF ~30%), T2DM on insulin, persistent AFib, CKD3b, CAD; longitudinal outpatient case."
+    },
+    {
+      "id": "PAT002",
+      "name": "Sandoval, Maria I",
+      "mrn": "MRN-90215734",
+      "dob": "2003-08-12",
+      "sex": "Female",
+      "status": "Active",
+      "summary": "22 y.o. woman with 6 months of polyarthritis, alopecia, fatigue; ANA+ 1:80; uninsured. Diagnostic / management assessment case.",
+      "caseType": "assessment",
+      "caseTitle": "Peeling and Plummeting (adapted from NEJM Clinical Problem-Solving, 2024)"
     }
   ],
-  "lastUpdated": "2024-01-15T08:00:00Z"
+  "lastUpdated": "2026-04-01T09:00:00Z"
 }

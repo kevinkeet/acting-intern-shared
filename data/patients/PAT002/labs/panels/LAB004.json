@@ -1,0 +1,14 @@
+{
+  "id": "LAB004",
+  "name": "Thyroid Stimulating Hormone",
+  "collectedDate": "2026-01-12T10:45:00.000Z",
+  "resultedDate": "2026-01-13T08:15:00.000Z",
+  "orderedBy": "Dr. Manuel Reyes",
+  "facility": "Patterson Park Urgent Care (send-out to LabCorp)",
+  "specimen": "Blood",
+  "status": "Final",
+  "results": [
+    { "name": "TSH", "value": "5.32", "unit": "uIU/mL", "referenceRange": "0.30-4.00", "flag": "H" }
+  ],
+  "interpretation": "Mildly elevated TSH consistent with subclinical hypothyroidism. Recommend free T4 and TPO antibodies for further characterization (not ordered at urgent care; deferred for outpatient follow-up)."
+}

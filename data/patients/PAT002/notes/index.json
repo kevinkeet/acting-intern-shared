@@ -1,0 +1,14 @@
+{
+  "notes": [
+    {
+      "id": "NOTE001",
+      "type": "Urgent Care Visit",
+      "date": "2026-01-12T10:45:00.000Z",
+      "author": "Dr. Manuel Reyes",
+      "department": "Urgent Care",
+      "encounter": "ENC001",
+      "preview": "20-year-old Spanish-speaking woman presenting with 6-month history of progressive joint pain, fatigue, and hair loss. Interpreter used. Symmetric polyarthritis of hands, wrists, ankles. ANA positive 1:80. Started empirically on hydroxychloroquine and levothyroxine pending rheumatology referral..."
+    }
+  ],
+  "lastUpdated": "2026-01-12"
+}

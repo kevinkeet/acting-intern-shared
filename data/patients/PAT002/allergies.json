@@ -1,0 +1,17 @@
+{
+  "allergies": [
+    {
+      "id": "ALG001",
+      "substance": "No Known Drug Allergies",
+      "type": "Drug",
+      "category": null,
+      "reaction": null,
+      "severity": null,
+      "source": "Patient reported",
+      "notes": "NKDA per patient at most recent urgent care visit. No prior antibiotic or sulfa exposure reported."
+    }
+  ],
+  "nkda": true,
+  "lastReviewed": "2026-03-12",
+  "reviewedBy": "Urgent care intake"
+}

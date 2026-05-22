@@ -1,0 +1,14 @@
+{
+  "id": "IMG001",
+  "date": "2018-09-04T14:00:00.000Z",
+  "modality": "X-Ray",
+  "description": "Chest X-Ray, 2 views (PA and lateral)",
+  "facility": "Johns Hopkins Community Health",
+  "status": "Final",
+  "radiologist": "Dr. Andrew Park",
+  "indication": "TB screening, post-immigration",
+  "technique": "PA and lateral views of the chest with adequate inspiration and penetration.",
+  "findings": "The cardiomediastinal silhouette is within normal limits. The lungs are clear without focal consolidation, mass, or pleural effusion. No hilar or mediastinal lymphadenopathy is identified. No cavitary lesions, miliary pattern, or upper-lobe scarring suggestive of prior or active tuberculosis. Bony thorax is unremarkable. No free air below the diaphragm.",
+  "impression": "1. No radiographic evidence of active or healed tuberculosis.\n2. No acute cardiopulmonary process.",
+  "comparison": "None available."
+}

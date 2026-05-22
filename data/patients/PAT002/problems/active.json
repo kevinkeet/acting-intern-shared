@@ -1,0 +1,45 @@
+{
+  "problems": [
+    {
+      "id": "PRB001",
+      "name": "Polyarthritis, undifferentiated",
+      "icd10": "M13.0",
+      "snomed": "239805007",
+      "onsetDate": "2025-08-15",
+      "diagnosedBy": "Urgent care clinician (Dr. Reyes)",
+      "priority": "Medium",
+      "notes": "Symmetric small-joint involvement (hands, wrists, ankles) with morning stiffness >1 hour. ANA positive at 1:80 at initial workup. Started on hydroxychloroquine empirically at urgent care 1/12/2026 pending rheumatology evaluation."
+    },
+    {
+      "id": "PRB002",
+      "name": "Alopecia, diffuse",
+      "icd10": "L65.9",
+      "snomed": "56317004",
+      "onsetDate": "2025-08-15",
+      "diagnosedBy": "Urgent care clinician (Dr. Reyes)",
+      "priority": "Low",
+      "notes": "Diffuse non-scarring scalp hair thinning. Concurrent with arthritis symptoms."
+    },
+    {
+      "id": "PRB003",
+      "name": "Hypothyroidism, subclinical",
+      "icd10": "E03.8",
+      "snomed": "83664006",
+      "onsetDate": "2026-01-12",
+      "diagnosedBy": "Urgent care clinician (Dr. Reyes)",
+      "priority": "Low",
+      "notes": "TSH 5.32 at urgent care presentation. Started on levothyroxine 25 mcg daily empirically. Free T4 not measured at initial visit."
+    },
+    {
+      "id": "PRB004",
+      "name": "Loss of health insurance coverage",
+      "icd10": "Z59.7",
+      "snomed": "423599006",
+      "onsetDate": "2020-06-01",
+      "priority": "High",
+      "notes": "Patient lost Medicaid coverage during pandemic redetermination. Has been unable to navigate reinstatement; uses urgent care and ED for episodic needs. Major barrier to specialty follow-up."
+    }
+  ],
+  "lastUpdated": "2026-01-12",
+  "reviewedBy": "Urgent care clinician"
+}

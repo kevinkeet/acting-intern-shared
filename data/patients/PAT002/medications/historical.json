@@ -1,0 +1,17 @@
+{
+  "medications": [
+    {
+      "id": "MEDH001",
+      "name": "Ferrous sulfate",
+      "dose": "325 mg",
+      "route": "PO",
+      "frequency": "Daily",
+      "startDate": "2018-08-22",
+      "endDate": "2019-04-08",
+      "prescriber": "Jennifer Walsh, NP",
+      "indication": "Iron deficiency anemia",
+      "discontinuationReason": "Completed therapy; iron studies normalized"
+    }
+  ],
+  "lastUpdated": "2019-04-08"
+}

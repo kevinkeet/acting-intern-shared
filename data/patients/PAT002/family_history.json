@@ -1,0 +1,54 @@
+{
+  "familyHistory": [
+    {
+      "relationship": "Mother",
+      "condition": "Hypothyroidism",
+      "ageAtOnset": "40",
+      "deceased": false,
+      "notes": "On levothyroxine in Guatemala; intermittent supply since immigrating."
+    },
+    {
+      "relationship": "Mother",
+      "condition": "Pre-diabetes",
+      "ageAtOnset": "45",
+      "deceased": false
+    },
+    {
+      "relationship": "Father",
+      "condition": "Tuberculosis (treated)",
+      "ageAtOnset": "Unknown",
+      "deceased": true,
+      "ageAtDeath": "39",
+      "causeOfDeath": "Motor vehicle accident (Guatemala, 2014)",
+      "notes": "Patient was 11 at time of father's death. Reported TB treatment in 2010 in Guatemala — completed therapy per family report."
+    },
+    {
+      "relationship": "Maternal Aunt",
+      "condition": "Systemic Lupus Erythematosus",
+      "ageAtOnset": "Mid-20s",
+      "deceased": false,
+      "notes": "Diagnosed in Guatemala. Treated with hydroxychloroquine and steroids per family report. Has been disabled by illness — chronic joint problems, kidney issues. Limited additional history available."
+    },
+    {
+      "relationship": "Maternal Grandmother",
+      "condition": "Diabetes",
+      "ageAtOnset": "Unknown",
+      "deceased": true,
+      "ageAtDeath": "Unknown"
+    },
+    {
+      "relationship": "Paternal Grandfather",
+      "condition": "Stroke",
+      "deceased": true,
+      "ageAtDeath": "Unknown"
+    },
+    {
+      "relationship": "Brother (younger, age 14)",
+      "condition": "Healthy",
+      "deceased": false,
+      "notes": "Born in US. Up-to-date on immunizations through school."
+    }
+  ],
+  "notes": "Family history limited by patient's young age at father's death and limited documentation from Guatemala. Notable familial autoimmunity (maternal aunt with SLE).",
+  "lastUpdated": "2019-08-14"
+}

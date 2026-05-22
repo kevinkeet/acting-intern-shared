@@ -1,0 +1,58 @@
+{
+  "immunizations": [
+    {
+      "date": "2018-08-22",
+      "vaccine": "Tetanus, Diphtheria, Pertussis (Tdap)",
+      "dose": "0.5 mL",
+      "route": "IM",
+      "site": "Left deltoid",
+      "administeredBy": "Sliding-scale community clinic, Baltimore",
+      "notes": "Catch-up at age 15. Documentation of childhood vaccines from Guatemala unavailable; series accepted per family report."
+    },
+    {
+      "date": "2018-08-22",
+      "vaccine": "HPV (Gardasil 9)",
+      "dose": "0.5 mL",
+      "route": "IM",
+      "site": "Left deltoid",
+      "notes": "First of 3-dose series."
+    },
+    {
+      "date": "2018-10-15",
+      "vaccine": "HPV (Gardasil 9)",
+      "dose": "0.5 mL",
+      "route": "IM",
+      "notes": "Second of 3-dose series."
+    },
+    {
+      "date": "2019-04-08",
+      "vaccine": "HPV (Gardasil 9)",
+      "dose": "0.5 mL",
+      "route": "IM",
+      "notes": "Third dose, series complete."
+    },
+    {
+      "date": "2019-10-12",
+      "vaccine": "Influenza (Quadrivalent)",
+      "dose": "0.5 mL",
+      "route": "IM",
+      "notes": "2019-2020 seasonal flu vaccine. Free clinic."
+    },
+    {
+      "date": "2021-09-04",
+      "vaccine": "COVID-19 (Pfizer-BioNTech, primary series #1)",
+      "dose": "0.3 mL",
+      "route": "IM",
+      "site": "Right deltoid",
+      "administeredBy": "Mass vaccination site, Baltimore Convention Center"
+    },
+    {
+      "date": "2021-09-25",
+      "vaccine": "COVID-19 (Pfizer-BioNTech, primary series #2)",
+      "dose": "0.3 mL",
+      "route": "IM",
+      "site": "Right deltoid"
+    }
+  ],
+  "notes": "Pre-immigration vaccine records unavailable. No tuberculin testing on record despite father's TB history and country of origin. No pneumococcal, meningococcal, or hepatitis B series documented in adult records — possibly given in Guatemala but undocumented. COVID booster never received."
+}

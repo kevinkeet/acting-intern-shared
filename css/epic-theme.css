@@ -275,12 +275,131 @@ html, body {
     align-items: center;
     gap: 1px;
     white-space: nowrap;
+    position: relative;
 }
 
 .patient-primary-row {
     display: flex;
     align-items: baseline;
     gap: 10px;
+}
+
+/* Patient switcher button (chevron next to name) */
+.patient-switcher-btn {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.85);
+    border-radius: 4px;
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    cursor: pointer;
+    font-size: 9px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+    margin: 0 4px 0 -4px;
+    vertical-align: middle;
+}
+.patient-switcher-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.patient-switcher-chevron {
+    pointer-events: none;
+}
+
+/* Switcher dropdown menu */
+.patient-switcher-menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 380px;
+    max-width: 480px;
+    background: #fff;
+    color: #1a202c;
+    border: 1px solid var(--border-medium);
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    z-index: 1000;
+    overflow: hidden;
+    padding: 4px;
+    text-align: left;
+    white-space: normal;
+}
+
+.patient-switcher-item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 10px;
+    cursor: pointer;
+    transition: background 0.1s ease;
+}
+.patient-switcher-item:hover:not(:disabled) {
+    background: rgba(43, 108, 176, 0.08);
+}
+.patient-switcher-item:disabled {
+    cursor: default;
+    opacity: 0.7;
+}
+.patient-switcher-item.is-current {
+    background: rgba(43, 108, 176, 0.05);
+}
+
+.patient-switcher-item-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--primary-dark);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 2px;
+}
+.patient-switcher-current {
+    color: #2b6cb0;
+    font-size: 11px;
+    margin-left: auto;
+}
+.patient-switcher-tag {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 1px 6px;
+    border-radius: 3px;
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fcd34d;
+}
+.patient-switcher-item-meta {
+    display: flex;
+    gap: 10px;
+    font-size: 10.5px;
+    color: var(--text-muted);
+    margin-bottom: 3px;
+}
+.patient-switcher-mrn {
+    font-family: var(--font-mono);
+}
+.patient-switcher-item-summary {
+    font-size: 11px;
+    color: var(--text-secondary);
+    line-height: 1.35;
+    margin-top: 2px;
+}
+.patient-switcher-empty {
+    padding: 12px;
+    color: var(--text-muted);
+    font-size: 12px;
+    text-align: center;
 }
 
 .patient-name {

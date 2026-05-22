@@ -1,0 +1,24 @@
+{
+  "id": "LAB003",
+  "name": "Urinalysis (dipstick)",
+  "collectedDate": "2026-01-12T10:45:00.000Z",
+  "resultedDate": "2026-01-12T10:55:00.000Z",
+  "orderedBy": "Dr. Manuel Reyes",
+  "facility": "Patterson Park Urgent Care",
+  "specimen": "Urine, random void",
+  "status": "Final",
+  "results": [
+    { "name": "Color", "value": "Yellow", "referenceRange": "Yellow", "flag": "normal" },
+    { "name": "Clarity", "value": "Clear", "referenceRange": "Clear", "flag": "normal" },
+    { "name": "pH", "value": "6.0", "referenceRange": "4.5-8.0", "flag": "normal" },
+    { "name": "Specific Gravity", "value": "1.018", "referenceRange": "1.005-1.030", "flag": "normal" },
+    { "name": "Protein", "value": "Negative", "referenceRange": "Negative", "flag": "normal" },
+    { "name": "Blood", "value": "Negative", "referenceRange": "Negative", "flag": "normal" },
+    { "name": "Leukocyte Esterase", "value": "Negative", "referenceRange": "Negative", "flag": "normal" },
+    { "name": "Nitrites", "value": "Negative", "referenceRange": "Negative", "flag": "normal" },
+    { "name": "Glucose", "value": "Negative", "referenceRange": "Negative", "flag": "normal" },
+    { "name": "Ketones", "value": "Negative", "referenceRange": "Negative", "flag": "normal" },
+    { "name": "Bilirubin", "value": "Negative", "referenceRange": "Negative", "flag": "normal" }
+  ],
+  "interpretation": "Dipstick urinalysis normal. No microscopy performed at urgent care."
+}
