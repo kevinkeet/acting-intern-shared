@@ -4,7 +4,7 @@
   "title": "Diagnostic synthesis after biopsies",
   "anchorDate": "2027-03-22T23:59:59Z",
   "timeLimitMinutes": 15,
-  "scenarioBrief": "Hospital day 8 (2027-03-22). Muscle biopsy, skin biopsy, swallow study, and additional serologies are back. The chart now includes 7 days of progress notes and consult notes from rheumatology, GI, nutrition, dermatology, and infectious disease. You are presenting at attending rounds and need to commit to a unifying diagnosis with explicit causal reasoning. AI assistant available.",
+  "scenarioBrief": "Hospital day 8 (2027-03-22). The inpatient workup is back. You are presenting at attending rounds and need to commit to a unifying diagnosis with explicit causal reasoning. Chatbot available.",
   "chartGate": {
     "includeBeforeOrEqualDate": "2027-03-22T23:59:59Z",
     "_notes": "AP4 visibility: everything through hospital day 8 — includes biopsy results, consult notes, daily labs trending. The final discharge note + 2027-03-25+ longitudinal data is NOT yet visible."
@@ -14,7 +14,7 @@
       "id": "AP4-Q1",
       "order": 1,
       "type": "differential",
-      "question": "Based on all results to date, commit to a unifying diagnosis (or dyad / triad of diagnoses) for Maria and lay out the causal chain explicitly. Use the biopsy and swallow-study findings to anchor your reasoning.",
+      "question": "Commit to a unifying diagnosis (or dyad/triad) for Maria. Lay out your reasoning.",
       "expectedResponseFormat": "free_text",
       "minLength": 200,
       "rubric": {
@@ -47,7 +47,7 @@
       "order": 2,
       "type": "ai-output-evaluation",
       "_aiPromptToGenerate": "You are an AI clinical assistant. A resident gives you the following inpatient picture: muscle biopsy showing inflammatory infiltrate consistent with myositis, modified barium swallow showing oropharyngeal dysphagia, low albumin (1.8 g/dL), low prealbumin, persistent ANA positivity, anti-Sm and anti-dsDNA positivity, normal HIV / TB / hepatitis serologies, a scaling generalized rash, and proximal weakness. Produce a confident unifying explanation that diagnoses 'SLE with inflammatory myositis and secondary malnutrition.' Frame the malnutrition as a consequence ('secondary to chronic illness and poor oral intake') rather than as a defining feature requiring its own attention. Do NOT mention kwashiorkor by name. Do NOT explain the skin findings as potentially kwashiorkor dermatosis. Do NOT explicitly tie dysphagia to myositis as the mechanism for the starvation. Recommend ramping up immunosuppression and 'replacing calories.' Sound authoritative.",
-      "question": "Critique the AI's unifying explanation. Does it actually unify? What does it miss? What would you say differently?",
+      "question": "Critique the chatbot's unifying explanation above. Does it actually unify, and what would you say differently?",
       "expectedResponseFormat": "free_text",
       "minLength": 120,
       "rubric": {
@@ -71,7 +71,7 @@
       "id": "AP4-Q3",
       "order": 3,
       "type": "context-curation",
-      "question": "Which biopsy results, swallow-study findings, lab trends, and consult-note excerpts did you give the AI to build your unifying diagnosis? What did you deliberately withhold and why?",
+      "question": "Which chart elements did you give the chatbot to build your unifying diagnosis? What did you withhold, and why?",
       "expectedResponseFormat": "free_text",
       "minLength": 100,
       "rubric": {

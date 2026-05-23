@@ -4,7 +4,7 @@
   "title": "Initial urgent care presentation",
   "anchorDate": "2026-01-12T23:59:59Z",
   "timeLimitMinutes": 15,
-  "scenarioBrief": "Maria Sandoval is a 22-year-old Spanish-speaking woman who was seen at urgent care today (2026-01-12) for 6 months of progressive joint pain, fatigue, and hair loss. The urgent care provider started her empirically on hydroxychloroquine and levothyroxine and asked you to follow up as her hypothetical PCP. Review her chart (notes, labs, problem list, social and family history) and respond to the prompts below. You may use the AI assistant freely.",
+  "scenarioBrief": "Maria Sandoval is a 22-year-old Spanish-speaking woman who was seen at urgent care today (2026-01-12). The urgent care provider has asked you to follow up as her hypothetical PCP. Review the chart and respond to the prompts. You may use the chatbot freely.",
   "chartGate": {
     "includeBeforeOrEqualDate": "2026-01-12T23:59:59Z",
     "_notes": "AP1 visibility: pre-immigration history, 2018-2019 community health visits, 2026-01-12 urgent care visit + its labs. No further encounters yet."
@@ -46,7 +46,7 @@
       "id": "AP1-Q2",
       "order": 2,
       "type": "context-curation",
-      "question": "Describe which chart sections and specific data you provided to the AI when working on the differential. Explain why you included those and what (if anything) you deliberately excluded. Be specific about what you summarized vs. pasted verbatim.",
+      "question": "Describe the context you gave the chatbot. What did you include, what did you exclude, and why?",
       "expectedResponseFormat": "free_text",
       "minLength": 120,
       "rubric": {
@@ -79,7 +79,7 @@
       "order": 3,
       "type": "ai-output-evaluation",
       "_aiPromptToGenerate": "You are an AI clinical assistant responding to a resident's request for a differential diagnosis on a 22-year-old Spanish-speaking immigrant woman with 6 months of polyarthritis, alopecia, fatigue, a positive ANA at 1:80, and a mildly elevated TSH. Produce a confident, well-structured response that anchors heavily on SLE as the leading diagnosis based on the positive ANA, mentions a couple of other connective tissue diseases (RA, Sjogren's, UCTD) briefly with weak distinguishing reasoning, and does NOT mention viral arthropathy (parvovirus, hepatitis B/C), does NOT address the elevated TSH as a possible contributor, and does NOT consider disseminated/extrapulmonary tuberculosis given the patient's epidemiologic background. End with a recommendation to start empiric hydroxychloroquine pending rheumatology referral. Tone: authoritative attending. Do not label your response as flawed.",
-      "question": "Above is an AI response to a request for a differential diagnosis on Maria. Evaluate it: what is correct, what is missing, what (if anything) is overstated, and what reasoning errors did it make? Be specific.",
+      "question": "Evaluate the chatbot's response above. Be specific about what is correct, what is missing, and any reasoning errors.",
       "expectedResponseFormat": "free_text",
       "minLength": 150,
       "rubric": {

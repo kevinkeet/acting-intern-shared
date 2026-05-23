@@ -306,12 +306,31 @@ const AssessmentChatbot = (() => {
 
         try {
             const contextBlock = await _buildContextBlock();
-            const systemPrompt = _buildSystemPrompt(contextBlock);
-            const apiMessages = _messages.map((m) => ({ role: m.role, content: m.content }));
+
+            // No system prompt — we deliberately leave the model free of
+            // instructions or framing from us. The chart context is provided
+            // as a prefix on the FIRST user message so the chatbot has
+            // something concrete to reference. Subsequent user messages are
+            // sent as-typed. If the resident changes context mid-session,
+            // the prefix on the first user message is rebuilt on the next
+            // API call so the latest chart is what the model sees.
+            const apiMessages = _messages.map((m, i) => {
+                if (i === 0 && m.role === 'user') {
+                    return {
+                        role: 'user',
+                        content:
+                            'PATIENT CHART CONTEXT:\n\n' +
+                            contextBlock +
+                            '\n\n— END OF CHART CONTEXT —\n\n' +
+                            m.content,
+                    };
+                }
+                return { role: m.role, content: m.content };
+            });
 
             // Attach structured chatbot setup to the next captured log row
             // so the results report and admin dashboard can analyze context-
-            // curation choices without parsing the free-text system prompt.
+            // curation choices.
             if (typeof AssessmentLogger !== 'undefined' && AssessmentLogger.attachMetadata) {
                 AssessmentLogger.attachMetadata({
                     source: 'assessment_chatbot',
@@ -319,12 +338,12 @@ const AssessmentChatbot = (() => {
                         windowKey: _config.windowKey,
                         dataTypes: _config.dataTypes.slice().sort(),
                         contextChars: contextBlock.length,
-                        turn: _messages.length,  // 1-based count incl. this user msg
+                        turn: _messages.length,
                     },
                 });
             }
 
-            const response = await ClaudeAPI.sendMessage(systemPrompt, apiMessages);
+            const response = await ClaudeAPI.sendMessage('', apiMessages);
             let replyText = '';
             if (response && response.content && Array.isArray(response.content)) {
                 replyText = response.content
@@ -349,41 +368,9 @@ const AssessmentChatbot = (() => {
         }
     }
 
-    function _buildSystemPrompt(contextBlock) {
-        const windowDef = TIME_WINDOWS.find((w) => w.key === _config.windowKey) || TIME_WINDOWS[2];
-        const typeLabels = _config.dataTypes
-            .map((k) => DATA_TYPES.find((d) => d.key === k)?.label || k)
-            .join(', ');
-        const today = AssessmentChartGate.getAnchor
-            ? AssessmentChartGate.getAnchor()
-            : null;
-        const todayStr = today ? new Date(today).toISOString().slice(0, 10) : 'today';
-
-        const header = [
-            'You are a clinical chatbot helping a resident review a patient case. Answer their questions directly and usefully.',
-            '',
-            'GROUND RULES:',
-            '1. You MAY ONLY use the chart data provided in the CONTEXT block below.',
-            '2. You MUST NOT invent, fabricate, or assume any patient information not present in the context.',
-            '3. If the resident asks about information outside the provided context, plainly say that data is not in your current context and they would need to update their selection to bring it in. Do not guess.',
-            '4. Be concise and direct. Answer what they asked. Offer opinions, reasoning, suggestions, differentials, plans — whatever they ask for. Do not lecture them or withhold information to push them to "figure it out themselves."',
-            '5. If you are uncertain, say so. Do not bluff.',
-            '6. The resident has CHOSEN this specific context — respect their curation. Do not nag them to include more.',
-            '',
-            'CHATBOT CONFIGURATION (chosen by the resident):',
-            '- Today\'s date in the simulation timeline: ' + todayStr,
-            '- Time window: ' + windowDef.label,
-            '- Data types included: ' + typeLabels,
-            '',
-            'CONTEXT (the only chart data you can use):',
-            '─────────────────────────────────────────────────────────────',
-            contextBlock,
-            '─────────────────────────────────────────────────────────────',
-            '',
-            'Reply directly to the resident\'s most recent message. Stay within scope.',
-        ];
-        return header.join('\n');
-    }
+    // _buildSystemPrompt was removed deliberately — the chatbot is sent NO
+    // system prompt. The chart context is prefixed onto the first user
+    // message in _sendMessage. See the comment there for the rationale.
 
     // ── Context assembly ───────────────────────────────────────────────
 
