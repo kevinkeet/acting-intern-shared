@@ -1,16 +1,13 @@
 /**
- * AssessmentChatbot — context-bounded chatbot shown during assessment runs.
+ * AssessmentChatbot — chatbot shown during assessment runs.
  *
  * Replaces the full AI Coworker panel during an assessment. The resident
- * MUST first choose:
- *   - a time window (how far back from the anchor date to pull data)
- *   - a set of data types (notes, labs, vitals, etc.)
- * before they can chat. This forces explicit context curation — which is
- * one of the things the assessment is measuring.
+ * picks a time window and a set of data types, then chats. The selections
+ * become the chart context for the model.
  *
  * All chat calls go through ClaudeAPI.sendMessage, so the existing
  * AssessmentLogger automatically records each interaction with the
- * system-prompt-preview field including the resident's chosen setup.
+ * structured chatbot_setup metadata for backend analysis.
  *
  * Lifecycle:
  *   AssessmentChatbot.activate({ attemptId })   — called by engine on start/resume
@@ -163,9 +160,9 @@ const AssessmentChatbot = (() => {
             <div class="acb-header">
                 <div class="acb-header-title">
                     <i data-lucide="message-square" class="lucide-inline"></i>
-                    Assessment Chatbot
+                    Chatbot
                 </div>
-                <div class="acb-header-sub">Choose your context before chatting</div>
+                <div class="acb-header-sub">Pick what to include, then chat.</div>
             </div>
             <div class="acb-setup">
                 <div class="acb-setup-section">
@@ -209,7 +206,7 @@ const AssessmentChatbot = (() => {
 
                 <div class="acb-setup-hint">
                     <i data-lucide="info" class="lucide-inline"></i>
-                    Once you start, you can refine your context at any time. Your conversation continues across context changes. Every chat is recorded as part of your assessment.
+                    You can change these selections at any time. Your conversation will continue.
                 </div>
             </div>
         `;
@@ -267,7 +264,7 @@ const AssessmentChatbot = (() => {
                           rows="3"></textarea>
                 <div class="acb-composer-row">
                     <div class="acb-composer-hint">
-                        The chatbot only sees the data you selected. To bring in more, change your context.
+                        The chatbot only sees the chart data you selected.
                     </div>
                     <button class="btn btn-primary acb-send-btn" id="acb-send-btn">
                         <i data-lucide="send" class="lucide-inline"></i>

@@ -24,8 +24,7 @@ const AssessmentStart = {
                 <div class="assessment-start-hero">
                     <h1>Assessment Mode</h1>
                     <p class="assessment-start-tagline">
-                        Test how you work with AI on a real-feeling clinical case.
-                        Your responses are graded; your AI usage is recorded for review.
+                        Work through a clinical case as you would in practice.
                     </p>
                 </div>
 
@@ -42,9 +41,9 @@ const AssessmentStart = {
                     <h3>Before you begin</h3>
                     <ul>
                         <li>Plan to dedicate at least 90 minutes uninterrupted. Pausing is permitted, but it stops the timer.</li>
-                        <li>You may use the AI assistant freely. Every AI interaction during the test is logged.</li>
-                        <li>Each assessment in the case has its own time limit. When the case ends, you'll see your scoring report and the case's true diagnosis.</li>
-                        <li>The chart updates as the case progresses — content from future visits will not be visible until you advance.</li>
+                        <li>Each stage of the case has its own time limit. The chart and your responses are saved as you go.</li>
+                        <li>The chart reflects the patient's status at the current point in time. Newer encounters appear as the case progresses.</li>
+                        <li>At the end of the case you will see your scoring report and the case's true diagnosis.</li>
                     </ul>
                 </div>
             </div>

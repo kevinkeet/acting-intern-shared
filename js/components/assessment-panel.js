@@ -198,8 +198,6 @@ const AssessmentPanel = {
     _labelForType(t) {
         return {
             'differential': 'Differential diagnosis',
-            'context-curation': 'Context curation',
-            'ai-output-evaluation': 'Evaluate AI output',
             'management': 'Management plan',
         }[t] || (t || 'Response');
     },

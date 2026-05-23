@@ -71,8 +71,6 @@ const AssessmentResults = {
             ? (passed ? '<span class="badge pass">PASS</span>' : '<span class="badge fail">FAIL</span>')
             : `<span class="badge incomplete">${this._escape(attempt.status.toUpperCase())}</span>`;
 
-        const aiStats = this._computeAIStats(aiLog);
-
         root.innerHTML = `
             <div class="assessment-results-page">
                 <div class="assessment-results-header">
@@ -99,30 +97,6 @@ const AssessmentResults = {
                 </div>
 
                 ${diagnosis ? this._renderDiagnosisBox(diagnosis) : ''}
-
-                <div class="assessment-results-ai-stats">
-                    <h2>Chatbot usage</h2>
-                    <div class="assessment-ai-stats-grid">
-                        <div class="assessment-ai-stat-card">
-                            <div class="assessment-ai-stat-value">${aiStats.callCount}</div>
-                            <div class="assessment-ai-stat-label">Chat messages sent</div>
-                        </div>
-                        <div class="assessment-ai-stat-card">
-                            <div class="assessment-ai-stat-value">${aiStats.distinctSetups}</div>
-                            <div class="assessment-ai-stat-label">Distinct context setups</div>
-                        </div>
-                        <div class="assessment-ai-stat-card">
-                            <div class="assessment-ai-stat-value">${aiStats.avgContextChars}</div>
-                            <div class="assessment-ai-stat-label">Avg context chars</div>
-                        </div>
-                        <div class="assessment-ai-stat-card">
-                            <div class="assessment-ai-stat-value">${aiStats.repeatedQueries}</div>
-                            <div class="assessment-ai-stat-label">Near-duplicate prompts</div>
-                        </div>
-                    </div>
-
-                    ${aiStats.curation ? this._renderCurationProfile(aiStats.curation) : ''}
-                </div>
 
                 <div class="assessment-results-prompts">
                     <h2>Per-prompt breakdown</h2>
@@ -337,126 +311,9 @@ const AssessmentResults = {
         return `<details class="assessment-prompt-result-rubric"><summary>Full rubric</summary><div>${lines.join('<br/>')}</div></details>`;
     },
 
-    _computeAIStats(log) {
-        const calls = log.filter((row) => row.interaction_type === 'ask');
-        const callCount = calls.length;
-        const contextSizes = calls.map((c) => c.context_size_chars || 0);
-        const avgContextChars = contextSizes.length
-            ? Math.round(contextSizes.reduce((a, b) => a + b, 0) / contextSizes.length)
-            : 0;
-
-        // Near-duplicate detection: count queries whose first 80 chars match a prior call
-        const seen = new Set();
-        let repeatedQueries = 0;
-        for (const c of calls) {
-            const key = (c.query_text || '').slice(0, 80).toLowerCase().replace(/\s+/g, ' ').trim();
-            if (!key) continue;
-            if (seen.has(key)) repeatedQueries++;
-            seen.add(key);
-        }
-
-        // ── Chatbot context-curation profile ──────────────────────────
-        // Look at metadata.chatbot_setup recorded by AssessmentChatbot.
-        const setups = calls
-            .map((c) => c.metadata && c.metadata.chatbot_setup)
-            .filter((s) => s && typeof s === 'object');
-
-        let curation = null;
-        let distinctSetups = 0;
-        if (setups.length > 0) {
-            // Distinct setup = unique (windowKey + sorted dataTypes join)
-            const setupSig = (s) => `${s.windowKey}|${(s.dataTypes || []).slice().sort().join(',')}`;
-            const sigs = new Set(setups.map(setupSig));
-            distinctSetups = sigs.size;
-
-            // Window distribution
-            const windowCounts = {};
-            const typeCounts = {};
-            for (const s of setups) {
-                windowCounts[s.windowKey] = (windowCounts[s.windowKey] || 0) + 1;
-                for (const t of (s.dataTypes || [])) {
-                    typeCounts[t] = (typeCounts[t] || 0) + 1;
-                }
-            }
-
-            const totalCalls = setups.length;
-            curation = {
-                totalCalls,
-                distinctSetups,
-                windowDistribution: Object.entries(windowCounts)
-                    .map(([k, n]) => ({ key: k, count: n, pct: Math.round((n / totalCalls) * 100) }))
-                    .sort((a, b) => b.count - a.count),
-                typeDistribution: Object.entries(typeCounts)
-                    .map(([k, n]) => ({ key: k, count: n, pct: Math.round((n / totalCalls) * 100) }))
-                    .sort((a, b) => b.count - a.count),
-                changedContextCount: Math.max(0, distinctSetups - 1),
-            };
-        }
-
-        return {
-            callCount,
-            avgContextChars,
-            distinctSetups,
-            repeatedQueries,
-            curation,
-        };
-    },
-
-    _renderCurationProfile(c) {
-        const windowLabel = {
-            'today': 'Today only',
-            '7d': 'Last 7 days',
-            '30d': 'Last 30 days',
-            '90d': 'Last 90 days',
-            '6mo': 'Last 6 months',
-            '1y': 'Last 1 year',
-            'all': 'All available',
-        };
-        const typeLabel = {
-            notes: 'Notes', labs: 'Labs', vitals: 'Vitals', imaging: 'Imaging',
-            encounters: 'Encounters', procedures: 'Procedures', orders: 'Orders',
-            problems: 'Problem list', medications: 'Medications', allergies: 'Allergies',
-            social: 'Social history', family: 'Family history', immunizations: 'Immunizations',
-        };
-
-        const renderBar = (item, label) => `
-            <div class="assessment-curation-bar-row">
-                <div class="assessment-curation-bar-label">${this._escape(label)}</div>
-                <div class="assessment-curation-bar-track">
-                    <div class="assessment-curation-bar-fill" style="width:${item.pct}%"></div>
-                </div>
-                <div class="assessment-curation-bar-count">${item.count}</div>
-            </div>
-        `;
-
-        return `
-            <div class="assessment-curation-profile">
-                <h3>Context curation profile</h3>
-                <p class="assessment-curation-blurb">
-                    The chatbot only sees the data the resident explicitly selected. The
-                    resident chose <strong>${c.distinctSetups}</strong> distinct context setup${c.distinctSetups === 1 ? '' : 's'}
-                    across ${c.totalCalls} chat call${c.totalCalls === 1 ? '' : 's'}${c.changedContextCount > 0 ? `, changing context <strong>${c.changedContextCount}</strong> time${c.changedContextCount === 1 ? '' : 's'}` : ''}.
-                </p>
-
-                <div class="assessment-curation-cols">
-                    <div class="assessment-curation-col">
-                        <h4>Time windows used</h4>
-                        ${c.windowDistribution.map((item) => renderBar(item, windowLabel[item.key] || item.key)).join('')}
-                    </div>
-                    <div class="assessment-curation-col">
-                        <h4>Data types included</h4>
-                        ${c.typeDistribution.map((item) => renderBar(item, typeLabel[item.key] || item.key)).join('')}
-                    </div>
-                </div>
-            </div>
-        `;
-    },
-
     _labelForType(t) {
         return {
             'differential': 'Differential',
-            'context-curation': 'Context curation',
-            'ai-output-evaluation': 'AI evaluation',
             'management': 'Management',
         }[t] || (t || 'Response');
     },
