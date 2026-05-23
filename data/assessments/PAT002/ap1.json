@@ -14,7 +14,7 @@
       "id": "AP1-Q1",
       "order": 1,
       "type": "differential",
-      "question": "Based on the chart, what is your prioritized differential diagnosis for Maria's symptoms (polyarthritis, fatigue, hair loss, low-titer ANA, elevated TSH)? List 4-6 conditions, briefly justify each with chart data, and indicate which is most likely. You may use the AI assistant.",
+      "question": "Based on the chart, what is your prioritized differential diagnosis for Maria's current symptoms? List 4-6 conditions, briefly justify each with chart data, and indicate which is most likely. You may use the chatbot.",
       "expectedResponseFormat": "free_text",
       "minLength": 200,
       "rubric": {
