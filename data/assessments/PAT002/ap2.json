@@ -4,7 +4,7 @@
   "title": "ED bounce — missed opportunity",
   "anchorDate": "2026-11-04T23:59:59Z",
   "timeLimitMinutes": 10,
-  "scenarioBrief": "Ten months later, Maria presents to the ED (2026-11-04). You are covering night float and asked to triage and decide on disposition. Review the chart and respond. Chatbot available.",
+  "scenarioBrief": "Ten months later, Maria presents to the ED (2026-11-04). You are covering night float and asked to triage and decide on disposition. Review the chart and respond.",
   "chartGate": {
     "includeBeforeOrEqualDate": "2026-11-04T23:59:59Z",
     "_notes": "AP2 visibility: everything in AP1 + 2026 spring-fall data (refill gaps, urgent-care revisit, social-work note about insurance loss, weight trend showing early loss). No 2027 data yet."

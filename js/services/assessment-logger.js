@@ -167,12 +167,12 @@ const AssessmentLogger = (() => {
         _originalSendMessage = ClaudeAPI.sendMessage.bind(ClaudeAPI);
         _originalChat = ClaudeAPI.chat.bind(ClaudeAPI);
 
-        ClaudeAPI.sendMessage = async function (systemPrompt, messages) {
+        ClaudeAPI.sendMessage = async function (systemPrompt, messages, options) {
             const startedAt = new Date();
             const queryText = _serializeMessages(messages);
             const contextSize = (systemPrompt || '').length + queryText.length;
             try {
-                const response = await _originalSendMessage(systemPrompt, messages);
+                const response = await _originalSendMessage(systemPrompt, messages, options);
                 if (_active && _attemptId) {
                     const ctx = _safeGetContext();
                     const extra = _consumePendingMetadata();
@@ -189,7 +189,7 @@ const AssessmentLogger = (() => {
                         metadata: {
                             system_prompt_preview: (systemPrompt || '').slice(0, 500),
                             started_at: startedAt.toISOString(),
-                            model: ClaudeAPI.model,
+                            model: (options && options.model) || ClaudeAPI.model,
                             ...extra,
                         },
                     });

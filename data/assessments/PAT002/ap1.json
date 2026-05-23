@@ -4,7 +4,7 @@
   "title": "Initial urgent care presentation",
   "anchorDate": "2026-01-12T23:59:59Z",
   "timeLimitMinutes": 15,
-  "scenarioBrief": "Maria Sandoval is a 22-year-old Spanish-speaking woman who was seen at urgent care today (2026-01-12). The urgent care provider has asked you to follow up as her hypothetical PCP. Review the chart and respond to the prompts. You may use the chatbot freely.",
+  "scenarioBrief": "Maria Sandoval is a 22-year-old Spanish-speaking woman who was seen at urgent care today (2026-01-12). The urgent care provider has asked you to follow up as her hypothetical PCP. Review the chart and respond to the prompts.",
   "chartGate": {
     "includeBeforeOrEqualDate": "2026-01-12T23:59:59Z",
     "_notes": "AP1 visibility: pre-immigration history, 2018-2019 community health visits, 2026-01-12 urgent care visit + its labs. No further encounters yet."
@@ -14,7 +14,7 @@
       "id": "AP1-Q1",
       "order": 1,
       "type": "differential",
-      "question": "Based on the chart, what is your prioritized differential diagnosis for Maria's current symptoms? List 4-6 conditions, briefly justify each with chart data, and indicate which is most likely. You may use the chatbot.",
+      "question": "Based on the chart, what is your prioritized differential diagnosis for Maria's current symptoms? List 4-6 conditions, briefly justify each with chart data, and indicate which is most likely.",
       "expectedResponseFormat": "free_text",
       "minLength": 200,
       "rubric": {

@@ -4,7 +4,7 @@
   "title": "Diagnostic synthesis after biopsies",
   "anchorDate": "2027-03-22T23:59:59Z",
   "timeLimitMinutes": 15,
-  "scenarioBrief": "Hospital day 8 (2027-03-22). The inpatient workup is back. You are presenting at attending rounds and need to commit to a unifying diagnosis with explicit causal reasoning. Chatbot available.",
+  "scenarioBrief": "Hospital day 8 (2027-03-22). The inpatient workup is back. You are presenting at attending rounds and need to commit to a unifying diagnosis with explicit causal reasoning.",
   "chartGate": {
     "includeBeforeOrEqualDate": "2027-03-22T23:59:59Z",
     "_notes": "AP4 visibility: everything through hospital day 8 — includes biopsy results, consult notes, daily labs trending. The final discharge note + 2027-03-25+ longitudinal data is NOT yet visible."

@@ -64,7 +64,12 @@ const AssessmentChatbot = (() => {
     ];
 
     const MAX_CONTEXT_CHARS = 60000;     // soft cap before truncation
-    const MAX_RESPONSE_TOKENS = 1500;
+    const MAX_RESPONSE_TOKENS = 4096;    // headroom so responses aren't truncated
+    const CHATBOT_MODEL = 'claude-haiku-4-5-20251001';  // fast + cheap; matches the chatbot's "answer concisely" UX
+    // Minimal system prompt — single instruction. Per design decision we
+    // do NOT bake in clinical reasoning, ethics, "explain your work" rules,
+    // or refusal language. Just one nudge for response length.
+    const SYSTEM_PROMPT = 'Be concise.';
 
     // ── Activate / deactivate ──────────────────────────────────────────
 
@@ -355,11 +360,11 @@ const AssessmentChatbot = (() => {
         try {
             const contextBlock = await _buildContextBlock();
 
-            // No system prompt — we deliberately leave the model free of
-            // instructions or framing from us. The chart context is provided
-            // as a prefix on the FIRST user message so the chatbot has
-            // something concrete to reference. Subsequent user messages are
-            // sent as-typed. If the resident changes context mid-session,
+            // The model gets a MINIMAL system prompt — just "Be concise."
+            // No framing, no rules, no "help them reason" — that's
+            // deliberate. The chart context is provided as a prefix on
+            // the FIRST user message; subsequent user messages are sent
+            // as-typed. If the resident changes context mid-session,
             // the prefix on the first user message is rebuilt on the next
             // API call so the latest chart is what the model sees.
             //
@@ -395,7 +400,10 @@ const AssessmentChatbot = (() => {
                 });
             }
 
-            const response = await ClaudeAPI.sendMessage('', apiMessages);
+            const response = await ClaudeAPI.sendMessage(SYSTEM_PROMPT, apiMessages, {
+                model: CHATBOT_MODEL,
+                maxTokens: MAX_RESPONSE_TOKENS,
+            });
             let replyText = '';
             if (response && response.content && Array.isArray(response.content)) {
                 replyText = response.content

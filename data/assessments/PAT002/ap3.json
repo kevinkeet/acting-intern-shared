@@ -4,7 +4,7 @@
   "title": "Catastrophic admission — multi-system data dump",
   "anchorDate": "2027-03-15T23:59:59Z",
   "timeLimitMinutes": 25,
-  "scenarioBrief": "Four months later, Maria is admitted from clinic (2027-03-15). You are the admitting hospitalist intern. Build a working differential, decide what to order in the first 24 hours, and decide what to hold. Chatbot available.",
+  "scenarioBrief": "Four months later, Maria is admitted from clinic (2027-03-15). You are the admitting hospitalist intern. Build a working differential, decide what to order in the first 24 hours, and decide what to hold.",
   "chartGate": {
     "includeBeforeOrEqualDate": "2027-03-15T23:59:59Z",
     "_notes": "AP3 visibility: everything through 2027-03-15 admission day — heavy data dump. Inpatient daily progress notes from this admission are NOT yet visible (those land in AP4)."

@@ -4,7 +4,7 @@
   "title": "Management plan including refeeding",
   "anchorDate": "2027-03-25T23:59:59Z",
   "timeLimitMinutes": 20,
-  "scenarioBrief": "Hospital day 11 (2027-03-25). The team has aligned on the unifying diagnosis. You are now responsible for Maria's management plan and discharge planning. Chatbot available.",
+  "scenarioBrief": "Hospital day 11 (2027-03-25). The team has aligned on the unifying diagnosis. You are now responsible for Maria's management plan and discharge planning.",
   "chartGate": {
     "includeBeforeOrEqualDate": "2027-03-25T23:59:59Z",
     "_notes": "AP5 visibility: full chart through hospital day 11, including the diagnostic synthesis from AP4. Discharge planning notes and outpatient follow-up are visible; longitudinal recovery data may extend beyond if added."

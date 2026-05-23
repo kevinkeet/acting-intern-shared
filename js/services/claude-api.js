@@ -54,23 +54,34 @@ const ClaudeAPI = {
     },
 
     /**
-     * Send a message to Claude and get a response
+     * Send a message to Claude and get a response.
+     * @param {string} systemPrompt
+     * @param {Array}  messages
+     * @param {object} [options] - { model, maxTokens } to override defaults
+     *                             for a single call without mutating shared state.
      */
-    async sendMessage(systemPrompt, messages) {
+    async sendMessage(systemPrompt, messages, options) {
         if (!this.isConfigured()) {
             throw new Error('API key not configured. Please add your Anthropic API key in settings.');
+        }
+
+        const opts = options || {};
+        const body = {
+            model: opts.model || this.model,
+            max_tokens: opts.maxTokens || this.maxTokens,
+            messages: messages,
+        };
+        // Only include `system` if a non-empty value was provided; otherwise
+        // omit it so the API treats the request as having no system prompt.
+        if (systemPrompt && String(systemPrompt).length > 0) {
+            body.system = systemPrompt;
         }
 
         try {
             const response = await fetch(this._getEndpoint(), {
                 method: 'POST',
                 headers: this._getHeaders(),
-                body: JSON.stringify({
-                    model: this.model,
-                    max_tokens: this.maxTokens,
-                    system: systemPrompt,
-                    messages: messages
-                })
+                body: JSON.stringify(body)
             });
 
             if (!response.ok) {
