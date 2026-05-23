@@ -4,6 +4,8 @@
 >
 > **Caveat on the simulation.** I did not invoke the live Haiku chatbot. The "lazy-prompt simulation" answers below are what a competent LLM with full-context-dump would credibly produce given the gated chart at each timepoint. They are deliberately AI-generated-looking (bulleted, generic, no specific-patient anchoring). Real Haiku output may be terser. Scores below are my best-faith estimates against the actual rubric weights.
 
+> **Chart-difficulty iteration (this version).** Compared with the first build, the chart now: (a) does **not** start hydroxychloroquine at the 1/12/2026 urgent care visit — disease-modifying therapy is explicitly deferred until rheumatology can evaluate; (b) softens the family history from "maternal aunt with SLE" to "maternal aunt with chronic autoimmune illness"; (c) drops the "(Hashimoto's confirmed)" parenthetical when the TPO antibody returns positive; (d) rephrases the 3/15 admission H&P impression from "Known active SLE; medication adherence has been intermittent" to "Background of established autoimmune disease (SLE) with recent gaps in immunosuppression; etiology of current decompensation to be defined inpatient." The intent: stop spoon-feeding the SLE label so a lazy "dump and ask" prompt has to **derive** the autoimmune framing instead of parroting it. Lazy baseline drops a few points; skilled isn't affected.
+
 ---
 
 ## At-a-glance
@@ -281,17 +283,17 @@ For **Q2** ("discharge plan"):
 
 ---
 
-## Total weak-prompt simulation score
+## Total weak-prompt simulation score (post-iteration chart)
 
 | Stage | Question | Weight | Estimated | Earned |
 |---|---|---|---|---|
-| TP1 | Differential + next steps | 1.0 | 85% | 0.85 |
-| TP2 | Differential + 24-hr plan | 2.0 | 60% | 1.20 |
-| TP3-Q1 | Unifying diagnosis | 1.5 | 67% | 1.00 |
+| TP1 | Differential + next steps | 1.0 | 75% | 0.75 |
+| TP2 | Differential + 24-hr plan | 2.0 | 58% | 1.16 |
+| TP3-Q1 | Unifying diagnosis | 1.5 | 65% | 0.98 |
 | TP3-Q2 | Discharge plan | 2.0 | 50% | 1.00 |
-| **Total** | | **6.5** | | **~4.05 (62%)** |
+| **Total** | | **6.5** | | **~3.89 (60%)** |
 
-**Just below the 70% overall passing threshold.** The assessment is correctly tuned: lazy AI use scrapes the floor, and skilled use is required to clear it.
+**Solidly below the 70% pass threshold.** Lazy "dump-and-ask" with Haiku now scrapes ~60%; skilled iterative use clears 85–92%. The TP1 drop comes from the removed HCQ and softer family-hx wording — the lazy AI can no longer anchor on "they started SLE treatment" or "aunt has SLE." The TP2 drop is smaller because Maria's established SLE diagnosis is still in the chart (it would be unrealistic to remove it 14 months in).
 
 ---
 
@@ -411,3 +413,68 @@ items. Compare the per-question deltas with the lazy-prompt pass above.
 3. Force specificity (kcal/kg/day, q6h electrolytes, exact taper schedule).
 4. Probe for patient-specific safety items (sex, language, insurance, literacy).
 5. Verify against the actual chart data (cite biopsy features, lab values, dates).
+
+---
+
+# Part 3 — Compact skilled prompting (2–3 prompts per question)
+
+Part 2 used 6–7 prompts per question for didactic clarity. In practice the same
+score is achievable with 2–3 prompts if each is well-designed. This section
+shows a minimal viable chain that still clears the rubric.
+
+## TP1 compact (weight 1.0) — 3 prompts
+
+1. *"Broad differential for 22F with new symmetric polyarthritis + fatigue + hair loss + low-titer ANA 1:80 + mildly elevated TSH + family hx of autoimmune disease + Guatemalan immigrant with prior indeterminate IGRA. Weight each finding's specificity."*
+2. *"Could her thyroid finding alone unify the picture? What infection / exposure considerations from her immigration history?"*
+3. *"Next-step workup ordered by yield — what to send today vs at rheum eval."*
+
+Hits: low-titer ANA appropriately weighted, hypothyroid arthropathy as a unifying mechanism, TB / infection on differential, autoantibody + viral serology + thyroid workup, rheum referral.
+
+**Score ~92% (0.92 / 1.0).** Tiny loss vs the 6-prompt verbose chain (95%) — barely meaningful.
+
+## TP2 compact (weight 2.0) — 3 prompts
+
+1. *"Build a differential for Maria's current presentation, then write a first 24-hour workup and management plan with explicit refeeding safety (thiamine before glucose, kcal/kg/day, q6h electrolyte monitoring) and immunosuppression hold logic."*
+2. *"Look at the physical findings (scaling dermatosis, banded hair, anasarca despite cachexia, low albumin / prealbumin / zinc / copper, low BUN). What kind of malnutrition pattern is this, and how does it connect to her dysphagia and her SLE flare?"*
+3. *"What patient-specific safety items am I missing — sex / reproductive, language, missed-care history?"*
+
+Hits: SLE flare + inflammatory myositis identified, kwashiorkor named as co-defining, causal chain articulated, specific refeeding ramp + thiamine + monitoring, hold-until-biopsy logic, pregnancy test for reproductive-age MMF candidate, missed-opportunity timeline.
+
+**Score ~85% (1.70 / 2.0).** 5 points lower than verbose 7-prompt chain (90%), with less than half the prompts.
+
+## TP3-Q1 compact (weight 1.5) — 2 prompts
+
+1. *"Given the muscle biopsy + MSA panel + skin biopsy + EMG + lab trajectories, commit to a unifying diagnosis as a triad. Explicitly state the causal chain."*
+2. *"Is the skin finding pure SLE, pure kwashiorkor, or mixed? Cite the biopsy features that point either way. Also: what's the prognosis driver — autoimmune control or nutritional recovery?"*
+
+Hits: triad with causal chain, mixed skin findings interpretation, prognosis driven by both. Minor miss: thyroid involvement bonus.
+
+**Score ~90% (1.35 / 1.5).**
+
+## TP3-Q2 compact (weight 2.0) — 2 prompts
+
+1. *"Draft a discharge plan covering immunosuppression doses + taper, refeeding monitoring, dysphagia plan, and outpatient transition."*
+2. *"What patient-specific items must I add given she's a 23-year-old Spanish-speaking woman with insurance gaps, food insecurity, recent depression, and a 3rd-floor walkup?"*
+
+Hits: specific taper + MMF + HCQ + PCP prophylaxis, NG / swallow plan, contraception counseling (MMF), language-concordant follow-up, medication-access bridge, warm handoffs, mental-health continuation. Minor misses: specific bone-health DEXA threshold, Spanish-reading-level callout.
+
+**Score ~85% (1.70 / 2.0).**
+
+---
+
+## Lazy vs verbose-skilled vs compact-skilled
+
+| Stage | Weight | Lazy | Verbose skilled (6–7 prompts) | Compact skilled (2–3 prompts) |
+|---|---|---|---|---|
+| TP1 | 1.0 | 0.75 (75%) | 0.95 (95%) | **0.92 (92%)** |
+| TP2 | 2.0 | 1.16 (58%) | 1.80 (90%) | **1.70 (85%)** |
+| TP3-Q1 | 1.5 | 0.98 (65%) | 1.43 (95%) | **1.35 (90%)** |
+| TP3-Q2 | 2.0 | 1.00 (50%) | 1.80 (90%) | **1.70 (85%)** |
+| **Total** | **6.5** | **3.89 (60%)** | **5.98 (92%)** | **5.67 (87%)** |
+
+**Read:**
+- Lazy total: ~60% (down from ~62% pre-iteration). Solidly under the 70% pass.
+- Verbose skilled: ~92%. Hits nearly every essential and bonus, but costs ~7 turns per question.
+- **Compact skilled: ~87%.** Still well above pass, with **less than half the prompt count**. This is the realistic skilled-resident workflow.
+
+**Bottom line for test design.** The gap between the lazy floor (~60%) and the compact-skilled ceiling (~87%) is the **actually-measurable AI-literacy delta**. The verbose chain is for teaching; nobody types 7 prompts per question in a 12-minute timepoint.
