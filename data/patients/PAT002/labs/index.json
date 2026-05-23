@@ -1,6 +1,16 @@
 {
   "panels": [
     {
+      "id": "LAB014",
+      "name": "Hospital Day 8 Pre-Synthesis Labs — Treatment Response Markers",
+      "date": "2027-03-22"
+    },
+    {
+      "id": "LAB013",
+      "name": "Hospital Day 5 Labs — Post-Feeding Initiation + MSA Panel Results",
+      "date": "2027-03-19"
+    },
+    {
       "id": "LAB012",
       "name": "ED & Admission Comprehensive Labs — Multi-System Crisis",
       "date": "2027-03-15"
@@ -61,5 +71,5 @@
       "date": "2026-01-12"
     }
   ],
-  "notes": "Labs grow as Maria's case progresses. LAB012 contains the AP3 admission comprehensive panel (the data-dump for the catastrophic admission). LAB011 is the February AMA admission labs. LAB010 is the AP2 ED labs. LAB009 captures pre-AP2 deterioration. LAB008 is the rheumatology consult workup. LAB007 is the AP1-era send-out comprehensive workup."
+  "notes": "Labs grow as Maria's case progresses. LAB014 = HD8 pre-synthesis labs (treatment response evident: CK 1820 down, albumin 1.9 up, dsDNA 38 down). LAB013 = HD5 post-feeding initiation labs + MSA panel (all NEGATIVE — argues against primary DM, supports SLE-myositis). LAB012 = AP3 admission comprehensive panel."
 }

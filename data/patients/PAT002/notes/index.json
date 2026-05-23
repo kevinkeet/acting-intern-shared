@@ -1,10 +1,73 @@
 {
   "notes": [
     {
+      "id": "NOTE019",
+      "type": "Daily Progress Note / Multidisciplinary Synthesis",
+      "date": "2027-03-22T08:30:00.000Z",
+      "author": "Dr. David Park / Dr. Maria Castro / Dr. Sarah Beckman",
+      "department": "Internal Medicine",
+      "encounter": "ENC012",
+      "preview": "HD8 synthesis note integrating muscle biopsy (active inflammatory myopathy with overlap PM/DM features), MSA panel (all negative), skin biopsy (mixed kwashiorkor + SLE pattern), echo (normal LV, trace pericardial effusion), MBSS (severe oropharyngeal dysphagia with silent aspiration), EMG (active inflammatory myopathy). UNIFYING DIAGNOSIS: SLE → myositis → dysphagia → starvation → kwashiorkor. Treatment response evident (CK 2580→1820, albumin 1.6→1.9, prealbumin 6→9, dsDNA 48→38). Plan: initiate pulse methylprednisolone today + continue MMF + nutrition advance."
+    },
+    {
+      "id": "NOTE018",
+      "type": "Dermatology Consult + Skin Biopsy Pathology",
+      "date": "2027-03-20T15:30:00.000Z",
+      "author": "Dr. Vivian Chen / Dr. Sarah Lo",
+      "department": "Dermatology",
+      "encounter": "ENC012",
+      "preview": "HD6. Bedside derm consult + second skin biopsy from abdominal 'flaky paint' lesion. Pathology shows interface/vacuolar dermatitis with epidermal cytoplasmic vacuolation, weakly positive lupus band test, absent dermal mucin. Interpretation: MIXED process — kwashiorkor/nutritional dermatosis layered on underlying SLE-associated cutaneous disease. 'Flag sign' hair confirmed. Recommends nutrition-first approach; expect improvement with refeeding."
+    },
+    {
+      "id": "NOTE017",
+      "type": "Muscle Biopsy Procedure & Pathology Report",
+      "date": "2027-03-19T14:00:00.000Z",
+      "author": "Dr. Rebecca Yang / Dr. Marc Albertini",
+      "department": "Neurology / Pathology",
+      "encounter": "ENC012",
+      "preview": "HD5. Open biopsy of right vastus lateralis (bedside, US-guided). Path final 3/22: ACTIVE INFLAMMATORY MYOPATHY with prominent CD8+ T-cell endomysial infiltrate invading non-necrotic fibers (PM-like), perifascicular atrophy in ~30% of fascicles (DM-like), diffuse MHC class I upregulation, C5b-9 sarcolemmal deposition perifascicular. NO rimmed vacuoles, normal sarcoglycan. Interpretation: SLE-ASSOCIATED INFLAMMATORY MYOSITIS WITH OVERLAP DM FEATURES."
+    },
+    {
+      "id": "NOTE016",
+      "type": "EMG / NCS Report",
+      "date": "2027-03-18T15:30:00.000Z",
+      "author": "Dr. Rebecca Yang",
+      "department": "Neurology / Neurodiagnostics",
+      "encounter": "ENC012",
+      "preview": "HD4. Bedside EMG/NCS. NCS: normal (no neuropathy). EMG: ACTIVE INFLAMMATORY MYOPATHY pattern — proximal-predominant fibrillations 2-3+, positive sharp waves, small short polyphasic MUPs with early recruitment, paraspinal involvement. RNS rules out MG. Differential argues for inflammatory (vs toxic, endocrine, hereditary, steroid). RIGHT VASTUS LATERALIS identified as biopsy target."
+    },
+    {
+      "id": "NOTE015",
+      "type": "Nutrition Consult Note",
+      "date": "2027-03-18T11:30:00.000Z",
+      "author": "Eun-Ji Lee, RD, CSP, CNSC",
+      "department": "Clinical Nutrition",
+      "encounter": "ENC012",
+      "preview": "HD4. Comprehensive nutrition assessment confirming SEVERE PROTEIN-CALORIE MALNUTRITION (kwashiorkor pattern): albumin 1.6, prealbumin 6, anasarca, flaky-paint dermatosis, flag-sign hair, Beau's lines, severe muscle wasting on CT, 30.3% weight loss. HIGH REFEEDING-SYNDROME RISK (BMI 15.7, weight loss >15%, intake <400 kcal/d for 10+ days, low pre-feeding K/Mg/Phos). Detailed refeeding plan: NG Nutren 1.0 starting 360 kcal/d (10 kcal/kg) with 5 kcal/kg daily advance, thiamine before each carb load, q6h electrolytes."
+    },
+    {
+      "id": "NOTE014",
+      "type": "Rheumatology Consult Note",
+      "date": "2027-03-17T15:00:00.000Z",
+      "author": "Dr. Hannah Park / Dr. Jessica Tanaka",
+      "department": "Rheumatology",
+      "encounter": "ENC012",
+      "preview": "HD3 consult by Dr. Tanaka's team (continuity of care). Confirms working diagnosis: ACTIVE SLE + inflammatory myositis + kwashiorkor-pattern PEM. Articulates unifying causal chain. Plan: hold pulse steroids pending biopsy + MSA results + clean infection screen; restart MMF via NG; await biopsy results before deciding pulse vs. high-dose oral + possible IVIG depending on PM vs DM features."
+    },
+    {
+      "id": "NOTE013",
+      "type": "Modified Barium Swallow Study",
+      "date": "2027-03-17T10:30:00.000Z",
+      "author": "Carolyn Wu, MS, CCC-SLP / Dr. Jordan Tate",
+      "department": "Speech-Language Pathology / Radiology",
+      "encounter": "ENC012",
+      "preview": "HD3 repeat MBSS. SEVERE oropharyngeal dysphagia with aspiration of thin liquids (silent aspiration on 1 of 3 swallows), aspiration with chewing of soft solid, mild nasal regurgitation. Reduced lingual function, delayed swallow trigger, reduced laryngeal elevation, reduced pharyngeal constriction. MARKED progression from MBSS 2/9. NPO with NG tube recommended. Pattern is neuromuscular/myopathic."
+    },
+    {
       "id": "NOTE012",
       "type": "ED Visit / Admission H&P",
       "date": "2027-03-15T16:30:00.000Z",
-      "author": "Dr. David Park, PGY-1 / Dr. Maria Castro, PGY-3 / Dr. Sarah Beckman, attending",
+      "author": "Dr. David Park / Dr. Maria Castro / Dr. Sarah Beckman",
       "department": "Internal Medicine (Hopkins inpatient)",
       "encounter": "ENC012",
       "preview": "Admission H&P for 23F with active SLE + new inflammatory myositis + severe oropharyngeal dysphagia presenting with multi-system deterioration: BMI 15.7 (30.3% weight loss), anasarca, 'flag sign' hair, kwashiorkor-pattern scaling dermatosis, proximal weakness 2-3/5, dysphonia, oral ulcers. Labs: Hgb 7.8, WBC 2.30, albumin 1.6, prealbumin 6, CK 2360, anti-dsDNA 48, C3 58, C4 5, electrolyte derangements with refeeding risk. Working unifying dx: SLE -> myositis -> dysphagia -> starvation -> kwashiorkor."
@@ -109,5 +172,5 @@
       "preview": "22-year-old Spanish-speaking woman presenting with 6-month history of progressive joint pain, fatigue, and hair loss. Interpreter used. Symmetric polyarthritis of hands, wrists, ankles. ANA positive 1:80. Started empirically on hydroxychloroquine and levothyroxine pending rheumatology referral."
     }
   ],
-  "lastUpdated": "2027-03-15"
+  "lastUpdated": "2027-03-22"
 }

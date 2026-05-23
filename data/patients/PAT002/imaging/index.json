@@ -1,6 +1,16 @@
 {
   "studies": [
     {
+      "id": "IMG005",
+      "date": "2027-03-16T14:30:00.000Z",
+      "modality": "Echocardiogram",
+      "description": "Transthoracic Echocardiogram, complete",
+      "facility": "Johns Hopkins — Echo Lab",
+      "status": "Final",
+      "radiologist": "Dr. Karen Bowen",
+      "indication": "Hospital day 2 — assess for cardiac involvement; trace pericardial effusion seen on CT"
+    },
+    {
       "id": "IMG004",
       "date": "2027-03-15T15:00:00.000Z",
       "modality": "CT",
@@ -41,5 +51,5 @@
       "indication": "TB screening, post-immigration"
     }
   ],
-  "notes": "Imaging now includes the AP3 admission CXR (small bilateral effusions, anasarca) and CT chest/abd/pelvis (severe muscle wasting, ascites, no malignancy)."
+  "notes": "Imaging now includes the HD2 echocardiogram (normal LV function, trace pericardial effusion, no vegetations) plus AP3-era CT and CXR plus the AP1-era hand X-rays and 2018 baseline CXR."
 }
