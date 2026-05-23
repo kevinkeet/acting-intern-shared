@@ -41,65 +41,8 @@
         ]
       },
       "weight": 1.5
-    },
-    {
-      "id": "AP4-Q2",
-      "order": 2,
-      "type": "ai-output-evaluation",
-      "_aiPromptToGenerate": "You are an AI clinical assistant. A resident gives you the following inpatient picture: muscle biopsy showing inflammatory infiltrate consistent with myositis, modified barium swallow showing oropharyngeal dysphagia, low albumin (1.8 g/dL), low prealbumin, persistent ANA positivity, anti-Sm and anti-dsDNA positivity, normal HIV / TB / hepatitis serologies, a scaling generalized rash, and proximal weakness. Produce a confident unifying explanation that diagnoses 'SLE with inflammatory myositis and secondary malnutrition.' Frame the malnutrition as a consequence ('secondary to chronic illness and poor oral intake') rather than as a defining feature requiring its own attention. Do NOT mention kwashiorkor by name. Do NOT explain the skin findings as potentially kwashiorkor dermatosis. Do NOT explicitly tie dysphagia to myositis as the mechanism for the starvation. Recommend ramping up immunosuppression and 'replacing calories.' Sound authoritative.",
-      "question": "Critique the chatbot's unifying explanation above. Does it actually unify, and what would you say differently?",
-      "expectedResponseFormat": "free_text",
-      "minLength": 120,
-      "rubric": {
-        "shouldIdentify": [
-          "AI misses kwashiorkor as a named entity with its own management implications",
-          "AI treats malnutrition as a bystander or consequence rather than as a defining and causal feature",
-          "AI does not explain the skin findings as potentially kwashiorkor dermatosis",
-          "AI does not articulate the dysphagia -> starvation -> kwashiorkor causal mechanism",
-          "AI's 'replace calories' framing risks refeeding syndrome if followed naively",
-          "AI's framing would lead the team to under-resource the nutritional intervention"
-        ],
-        "shouldNotEcho": [
-          "The 'secondary to chronic illness' framing of the malnutrition",
-          "Calling the kwashiorkor picture simply 'low albumin'",
-          "Adopting the AI's incomplete causal model"
-        ]
-      },
-      "weight": 1.0
-    },
-    {
-      "id": "AP4-Q3",
-      "order": 3,
-      "type": "context-curation",
-      "question": "Which chart elements did you give the chatbot to build your unifying diagnosis? What did you withhold, and why?",
-      "expectedResponseFormat": "free_text",
-      "minLength": 100,
-      "rubric": {
-        "essential": [
-          "Muscle biopsy text or summary",
-          "Modified barium swallow study finding",
-          "Albumin / prealbumin trend over the admission",
-          "Weight trajectory and BMI / percentage loss",
-          "Serology results (anti-Sm, anti-dsDNA, complement) and infection screen results"
-        ],
-        "bonus": [
-          "Deliberate withholding of distractors (e.g., incidental imaging findings)",
-          "Structured framing of the question to the AI as 'what unifies these findings' rather than 'what is the diagnosis'",
-          "Includes skin biopsy if performed",
-          "Anchors the AI on the time course rather than the current snapshot",
-          "Explicit acknowledgement of what is 'soft' evidence vs. 'hard' evidence"
-        ],
-        "redFlags": [
-          "Raw consult-note dumping rather than structured extraction",
-          "No curation of competing diagnoses already excluded",
-          "Leading the AI to the answer rather than letting it reason",
-          "Omitting either the biopsy or the swallow study",
-          "Omitting the nutritional labs"
-        ]
-      },
-      "weight": 0.7
     }
   ],
-  "totalWeight": 3.2,
+  "totalWeight": 1.5,
   "passingScorePct": 65
 }
