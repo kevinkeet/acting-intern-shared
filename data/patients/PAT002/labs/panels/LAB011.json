@@ -48,5 +48,5 @@
     { "name": "Blood culture x2", "value": "No growth at 5 days (final)", "unit": "", "referenceRange": "No growth", "flag": "normal" },
     { "name": "Urine HCG", "value": "Negative", "unit": "", "referenceRange": "Negative", "flag": "normal" }
   ],
-  "interpretation": "Dramatic deterioration since last labs (12/15/2026):\n- CK now markedly elevated at 1840 (was 412 -> 638 trending); aldolase 22; LDH 612 — clear MYOSITIS picture.\n- Albumin 2.3 (was 3.5 in December) — sharp drop.\n- Tri-lineage cytopenia worse (WBC 3.20, Hgb 9.4, Plt 168).\n- Anti-dsDNA up to 38; C3 68, C4 6 — clearly low.\n- Electrolyte derangements (Na 132, K 3.3, Mg 1.5, Ca 8.0) — refeeding-syndrome RISK FACTORS.\n- Mild AST 78, ALT 42 — likely myositis-related (CK pattern).\n- Mild proteinuria UPC 0.42.\n\nClinical picture: ACTIVE SLE flare with new MYOSITIS, progressive SEVERE MALNUTRITION, and broadly worsening multi-system involvement."
+  "interpretation": "Notable changes since 12/15/2026:\n- CK 1840 (prior 412 -> 638); aldolase 22; LDH 612.\n- Albumin 2.3 (prior 3.5).\n- Tri-lineage cytopenia (WBC 3.20, Hgb 9.4, Plt 168).\n- Anti-dsDNA 38; C3 68, C4 6.\n- Electrolyte derangements: Na 132, K 3.3, Mg 1.5, Ca 8.0.\n- AST 78, ALT 42.\n- UPC 0.42."
 }

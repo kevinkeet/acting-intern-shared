@@ -8,11 +8,8 @@
       "provider": "Dr. Jessica Tanaka",
       "chiefComplaint": "4-week post-discharge follow-up",
       "diagnoses": [
-        "Active SLE with inflammatory myositis — excellent treatment response",
-        "Severe protein-calorie malnutrition — substantial recovery",
-        "Lupus nephritis — resolved (UPC normalized)",
-        "Hashimoto's thyroiditis — controlled",
-        "Pancytopenia — resolved"
+        "Active SLE — post-discharge follow-up",
+        "Hashimoto's thyroiditis"
       ],
       "status": "Completed",
       "interpreterUsed": "In-person Spanish-speaking interpreter"
@@ -25,17 +22,17 @@
       "provider": "Dr. Sarah Beckman (attending), Dr. Maria Castro (PGY-3), Dr. David Park (PGY-1)",
       "chiefComplaint": "Cannot move, cannot eat — multi-system deterioration",
       "diagnoses": [
-        "Active SLE flare with inflammatory myositis (overlap PM/DM features)",
+        "Active SLE flare with multi-system involvement",
         "Severe oropharyngeal dysphagia with aspiration risk",
-        "Severe protein-calorie malnutrition / kwashiorkor pattern",
-        "Anasarca with hypoalbuminemia (1.6)",
+        "Severe weight loss and hypoalbuminemia (admission albumin 1.6)",
+        "Anasarca",
         "Pancytopenia (tri-lineage)",
-        "Electrolyte derangements with refeeding-syndrome risk",
-        "Lupus nephritis (early; UPC 0.58)",
-        "Hashimoto's thyroiditis with overlapping non-thyroidal illness",
-        "Adjustment-related moderate depression"
+        "Electrolyte derangements",
+        "Mild proteinuria (UPC 0.58)",
+        "Hashimoto's thyroiditis",
+        "Adjustment-related depression"
       ],
-      "status": "Discharged home 3/25/2027 (HD11)",
+      "status": "Inpatient — discharge planning in progress",
       "interpreterUsed": "Spanish (Language Line + in-person)"
     },
     {
@@ -44,11 +41,11 @@
       "type": "Inpatient Discharge AMA",
       "department": "Internal Medicine (Hopkins inpatient)",
       "provider": "Dr. Sarah Beckman, Dr. Maria Castro",
-      "chiefComplaint": "Discharge against medical advice — 4-day admission for myositis/dysphagia workup",
+      "chiefComplaint": "Discharge against medical advice — 4-day admission for workup of proximal weakness, dysphagia, weight loss",
       "diagnoses": [
-        "Active SLE with new inflammatory myositis",
+        "Active SLE flare",
         "Oropharyngeal dysphagia (MBSS mild)",
-        "Severe protein-calorie malnutrition",
+        "Severe weight loss with hypoalbuminemia",
         "Pancytopenia"
       ],
       "status": "Discharged AMA",
@@ -62,7 +59,7 @@
       "provider": "Dr. James Tran",
       "chiefComplaint": "Cannot swallow well, worsening weakness, weight loss",
       "diagnoses": [
-        "Active SLE flare with new inflammatory myositis",
+        "Active SLE flare",
         "Oropharyngeal dysphagia",
         "Severe weight loss (18.9% from baseline)",
         "Pancytopenia"

@@ -22,6 +22,8 @@ const ChartReview = {
             ]);
 
             content.innerHTML = `
+                ${this.renderAssessmentCTA()}
+
                 <div class="section-header">
                     <h1 class="section-title">Chart Review</h1>
                     <div class="section-actions">
@@ -55,6 +57,48 @@ const ChartReview = {
                 </div>
             `;
         }
+    },
+
+    /**
+     * Render a prominent "Take Assessment" call-to-action banner.
+     * Shown when there's a known case for the currently-loaded patient
+     * and there's no assessment currently in progress.
+     */
+    renderAssessmentCTA() {
+        // Only show for patients with a known case
+        const patientId = (typeof App !== 'undefined') ? App.defaultPatientId : null;
+        if (!patientId || typeof AssessmentData === 'undefined') return '';
+        const hasCase = AssessmentData.listCases().some((c) => c.caseId === patientId);
+        if (!hasCase) return '';
+
+        // Don't show during an active assessment
+        if (typeof AssessmentEngine !== 'undefined' &&
+            AssessmentEngine.isActive &&
+            AssessmentEngine.isActive()) {
+            return '';
+        }
+
+        const patientName = (typeof PatientHeader !== 'undefined' && PatientHeader.getPatient)
+            ? (() => {
+                const p = PatientHeader.getPatient();
+                return p ? `${p.firstName} ${p.lastName}` : 'this patient';
+              })()
+            : 'this patient';
+
+        return `
+            <div class="assessment-cta-banner">
+                <div class="assessment-cta-content">
+                    <div class="assessment-cta-title">Ready to take the assessment?</div>
+                    <div class="assessment-cta-subtitle">
+                        Work through ${patientName}'s case as part of her clinical team.
+                        About 30 minutes; pauseable.
+                    </div>
+                </div>
+                <a href="#/assessment/start" class="btn btn-primary assessment-cta-btn">
+                    Take Assessment →
+                </a>
+            </div>
+        `;
     },
 
     /**

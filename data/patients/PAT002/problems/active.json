@@ -2,120 +2,100 @@
   "problems": [
     {
       "id": "PRB001",
-      "name": "Systemic lupus erythematosus, active with inflammatory myositis (overlap PM/DM features)",
+      "name": "Systemic lupus erythematosus, active",
       "icd10": "M32.9",
       "snomed": "55464009",
       "onsetDate": "2025-08-15",
-      "diagnosedBy": "Initial 1/12/2026; refined to SLE-myositis with overlap PM/DM by Dr. Tanaka 3/22/2027 after muscle biopsy + MSA panel results",
+      "date": "2026-04-10",
+      "diagnosedBy": "Dr. Jessica Tanaka, Rheumatology (initial UCTD 4/10/2026; SLE per 2019 EULAR/ACR criteria 11/9/2026)",
       "priority": "High",
-      "notes": "Disease has demonstrated full multi-system activity. Muscle biopsy (3/19/2027) shows active inflammatory myopathy with overlap PM/DM features (CD8+ T-cell endomysial infiltrate, perifascicular atrophy, diffuse MHC-I, C5b-9 perifascicular). MSA panel all negative — supports SLE-myositis over primary DM. Currently in remission on pulse-MP followed by prednisone 30 mg + MMF 1.5g BID + HCQ 200 BID. As of 4/22/2027 follow-up: dsDNA 16, complements C3 86/C4 11 (near-normal), CK 218 (near-normal), excellent treatment response."
+      "notes": "Active multi-system disease. Treatment: hydroxychloroquine, mycophenolate mofetil, prednisone (variable doses)."
     },
     {
       "id": "PRB008",
-      "name": "Oropharyngeal dysphagia (myositis-related) — resolving",
+      "name": "Oropharyngeal dysphagia",
       "icd10": "R13.10",
       "snomed": "40739000",
       "onsetDate": "2026-12-10",
-      "diagnosedBy": "First reported 12/22/2026 by Dr. Williams (PCP); MBSS confirmed 2/9/2027 and 3/17/2027; substantial resolution by 4/15/2027 MBSS",
+      "date": "2026-12-22",
+      "diagnosedBy": "First reported 12/22/2026 by Dr. Williams (PCP); MBSS confirmed 2/9/2027",
       "priority": "Medium",
-      "notes": "Onset late 2026, severe at 3/15/2027 admission (silent aspiration on MBSS). Substantial recovery with treatment of underlying myositis: NG tube removed 4/15/2027 with safe full PO diet (chin-tuck precautions for thin liquids). Outpatient SLP ongoing."
-    },
-    {
-      "id": "PRB009",
-      "name": "Inflammatory myositis (SLE-associated with overlap PM/DM features)",
-      "icd10": "M33.20",
-      "snomed": "396230008",
-      "onsetDate": "2026-12-15",
-      "diagnosedBy": "CK elevation 12/2026, biopsy 3/19/2027",
-      "priority": "Medium",
-      "notes": "CK trajectory: 412 (12/2026) -> 638 (1/2027) -> 1840 (2/2027) -> 2580 peak (HD3 admission) -> 1820 (HD8) -> 1240 (discharge) -> 218 (4 weeks post-discharge). Aldolase trended similarly. Treatment: pulse methylprednisolone 1g x 3 then prednisone taper + MMF 1.5g BID + HCQ. Continues to improve."
+      "notes": "Onset late 2026 with bolus dysphagia of dry foods; progressed to severe oropharyngeal dysphagia with aspiration risk by 2/8/2027 ED visit."
     },
     {
       "id": "PRB010",
-      "name": "Severe protein-calorie malnutrition (kwashiorkor pattern) — recovering",
-      "icd10": "E43",
-      "snomed": "70241007",
-      "onsetDate": "2026-04-10",
-      "diagnosedBy": "Diagnosis crystallized 3/15/2027 admission",
-      "priority": "Medium",
-      "notes": "Severe at admission (albumin 1.6, prealbumin 6, anasarca, kwashiorkor dermatosis, 'flag sign' hair). 4-week post-discharge: albumin 3.4, prealbumin 28 (normal), weight +9.4 kg from nadir. Skin findings substantially improved. Continued nutrition follow-up; goal to return to baseline weight (50.8 kg) over 4-6 months."
-    },
-    {
-      "id": "PRB012",
-      "name": "Lupus nephritis (early; class undetermined) — resolved",
-      "icd10": "M32.14",
-      "snomed": "68815009",
-      "onsetDate": "2026-11-04",
-      "diagnosedBy": "Progressive proteinuria across 2026-2027",
-      "priority": "Low",
-      "notes": "UPC peaked at 0.62 g/d (HD7); now 0.15 (normal) at 4-week post-discharge. Renal biopsy deferred initially and now NOT indicated given resolution. Will continue periodic UPC monitoring."
-    },
-    {
-      "id": "PRB002",
-      "name": "Alopecia, diffuse non-scarring — recovering",
-      "icd10": "L65.9",
-      "snomed": "56317004",
-      "onsetDate": "2025-08-15",
-      "priority": "Low",
-      "notes": "'Flag sign' hair from nutritional depletion; new growth visible at hairline as of 4/22/2027 follow-up. Will improve over 6-12 months."
-    },
-    {
-      "id": "PRB003",
-      "name": "Hashimoto's thyroiditis — controlled",
-      "icd10": "E06.3",
-      "snomed": "21983002",
-      "onsetDate": "2026-01-26",
-      "diagnosedBy": "TPO antibody positive (312)",
-      "priority": "Low",
-      "notes": "Levothyroxine increased from 25 mcg to 50 mcg during 3/2027 admission. TSH 2.84 / free T4 1.2 on 4/22/2027 — well-controlled."
-    },
-    {
-      "id": "PRB011",
-      "name": "Pancytopenia — resolved",
-      "icd10": "D61.818",
-      "snomed": "78378001",
-      "onsetDate": "2026-09-15",
-      "priority": "Low",
-      "notes": "Tri-lineage cytopenia at admission resolved by 4-week post-discharge. WBC 4.40, Hgb 10.8 (mild anemia of chronic inflammation remains), Plt 232."
-    },
-    {
-      "id": "PRB007",
-      "name": "Depression, moderate — improving",
-      "icd10": "F32.1",
-      "snomed": "35489007",
-      "onsetDate": "2026-09-15",
-      "diagnosedBy": "Dr. Andre Williams (PCP)",
-      "priority": "Low",
-      "notes": "PHQ-9 14 (admission) → 6 (4 weeks post-discharge — mild). Continues weekly Spanish-speaking therapy at Esperanza Behavioral Health."
-    },
-    {
-      "id": "PRB006",
-      "name": "Unintentional weight loss / cachexia — recovering",
+      "name": "Severe unintentional weight loss",
       "icd10": "R63.6",
       "snomed": "238108007",
       "onsetDate": "2026-04-10",
+      "date": "2026-04-10",
+      "diagnosedBy": "Documented at successive visits",
+      "priority": "Medium",
+      "notes": "Weight trajectory: 50.8 kg (1/12/2026 baseline) -> 46.4 kg (4/2026) -> 43.8 kg (11/4/2026 ED) -> 41.2 kg (2/8/2027 ED) -> 35.4 kg (3/15/2027 admission). BMI at admission 15.7."
+    },
+    {
+      "id": "PRB002",
+      "name": "Alopecia, diffuse non-scarring",
+      "icd10": "L65.9",
+      "snomed": "56317004",
+      "onsetDate": "2025-08-15",
+      "date": "2026-01-12",
       "priority": "Low",
-      "notes": "Nadir 35.4 kg (BMI 15.7); 4 weeks post-discharge 44.8 kg (BMI 19.9). No longer underweight. Continued recovery expected."
+      "notes": "Progressive diffuse hair shedding documented across multiple visits."
+    },
+    {
+      "id": "PRB003",
+      "name": "Hashimoto's thyroiditis",
+      "icd10": "E06.3",
+      "snomed": "21983002",
+      "onsetDate": "2026-01-26",
+      "date": "2026-01-26",
+      "diagnosedBy": "TPO antibody positive (312)",
+      "priority": "Low",
+      "notes": "Levothyroxine treatment with variable adherence."
+    },
+    {
+      "id": "PRB011",
+      "name": "Pancytopenia",
+      "icd10": "D61.818",
+      "snomed": "78378001",
+      "onsetDate": "2026-09-15",
+      "date": "2026-09-15",
+      "priority": "Low",
+      "notes": "Tri-lineage cytopenia documented across multiple visits 2026-2027."
+    },
+    {
+      "id": "PRB007",
+      "name": "Depression, moderate",
+      "icd10": "F32.1",
+      "snomed": "35489007",
+      "onsetDate": "2026-09-15",
+      "date": "2026-09-15",
+      "diagnosedBy": "Dr. Andre Williams (PCP)",
+      "priority": "Low",
+      "notes": "PHQ-9 elevated; engaged with Esperanza Behavioral Health (Spanish-speaking therapy)."
     },
     {
       "id": "PRB004",
-      "name": "Loss of health insurance coverage — RESOLVED",
+      "name": "Loss of health insurance coverage",
       "icd10": "Z59.7",
       "snomed": "423599006",
       "onsetDate": "2020-06-01",
+      "date": "2020-06-01",
       "priority": "Low",
-      "notes": "Maryland Medicaid APPROVED 4/8/2027 (coverage through 12/31/2027). Will need annual renewal but currently has insurance for first time since 2020."
+      "notes": "Maryland Medicaid lost 2020; multiple appeals through 2026-2027."
     },
     {
       "id": "PRB005",
-      "name": "Medication non-adherence due to access barriers — RESOLVED",
+      "name": "Medication non-adherence due to access barriers",
       "icd10": "Z91.120",
       "snomed": "266963000",
       "onsetDate": "2026-08-12",
+      "date": "2026-08-12",
       "priority": "Low",
-      "notes": "Adherence cycle of 2026-2027 driven by insurance barriers. Now resolved with Medicaid coverage and Hopkins financial-aid integration; future adherence is the priority outcome."
+      "notes": "Adherence cycle driven by insurance and cost barriers. HCQ lapse 8/12-9/24/2026; MMF lapse beginning 3/9/2027."
     }
   ],
-  "lastUpdated": "2027-04-22",
-  "reviewedBy": "Dr. Jessica Tanaka (Rheumatology, 4-week post-discharge visit)"
+  "lastUpdated": "2027-03-25",
+  "reviewedBy": "Internal Medicine inpatient team"
 }

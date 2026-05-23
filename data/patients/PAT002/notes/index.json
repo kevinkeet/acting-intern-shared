@@ -7,16 +7,7 @@
       "author": "Dr. Jessica Tanaka",
       "department": "Rheumatology",
       "encounter": "ENC013",
-      "preview": "4-week post-discharge follow-up. Excellent early response: NG tube removed 4/15 with normalized swallow, weight up 9.4 kg from admission nadir (44.8 kg today), albumin 3.4, prealbumin 28 (normal), CK 218 (near-normal), dsDNA 16 (down), complements near-normal, UPC 0.15 (normal — renal involvement resolved), pancytopenia resolved. Patient walking with cane. PHQ-9 6 (mild). Medicaid approved 4/8/2027. Continue MMF 1.5g BID, prednisone taper, HCQ."
-    },
-    {
-      "id": "NOTE020",
-      "type": "Discharge Summary",
-      "date": "2027-03-25T16:00:00.000Z",
-      "author": "Dr. Sarah Beckman / Dr. Maria Castro / Dr. David Park / co-signed by Dr. Tanaka",
-      "department": "Internal Medicine",
-      "encounter": "ENC012",
-      "preview": "11-day admission discharge summary. Final dx: SLE with inflammatory myositis (overlap PM/DM features, MSA-negative) + severe oropharyngeal dysphagia + kwashiorkor-pattern PEM + early lupus nephritis (resolving) + pancytopenia + Hashimoto's. Treatment: pulse methylpred 1g x 3 (HD8-10) → prednisone 40 mg with planned taper; MMF advanced to 1.5g BID; HCQ continued; nutritional rehabilitation with NG tube ramped to 75 mL/hr by HD10; swallow studies improving. Discharge weight 39.4 kg (+4 from admission). Comprehensive outpatient follow-up arranged with Medicaid coverage."
+      "preview": "4-week post-discharge follow-up. Walking with cane, NG tube removed 4/15, weight up 9.4 kg from admission nadir. Labs improving across the board. Medicaid approved 4/8/2027. Continue MMF 1.5g BID, prednisone taper, HCQ."
     },
     {
       "id": "NOTE019",
@@ -25,7 +16,7 @@
       "author": "Dr. David Park / Dr. Maria Castro / Dr. Sarah Beckman",
       "department": "Internal Medicine",
       "encounter": "ENC012",
-      "preview": "HD8 synthesis note integrating muscle biopsy (active inflammatory myopathy with overlap PM/DM features), MSA panel (all negative), skin biopsy (mixed kwashiorkor + SLE pattern), echo (normal LV, trace pericardial effusion), MBSS (severe oropharyngeal dysphagia with silent aspiration), EMG (active inflammatory myopathy). UNIFYING DIAGNOSIS: SLE → myositis → dysphagia → starvation → kwashiorkor. Treatment response evident. Plan: initiate pulse methylprednisolone today + continue MMF + nutrition advance."
+      "preview": "HD8 daily progress note integrating returned results: muscle biopsy, MSA panel, skin biopsy, echo, MBSS, EMG. Trending labs, feeding tolerance, electrolyte status. Plan to initiate pulse methylprednisolone today and continue MMF + nutrition advance."
     },
     {
       "id": "NOTE018",
@@ -34,7 +25,7 @@
       "author": "Dr. Vivian Chen / Dr. Sarah Lo",
       "department": "Dermatology",
       "encounter": "ENC012",
-      "preview": "HD6. Bedside derm consult + second skin biopsy from abdominal 'flaky paint' lesion. Pathology shows interface/vacuolar dermatitis with epidermal cytoplasmic vacuolation, weakly positive lupus band test, absent dermal mucin. Interpretation: MIXED process — kwashiorkor/nutritional dermatosis layered on underlying SLE-associated cutaneous disease. 'Flag sign' hair confirmed. Recommends nutrition-first approach; expect improvement with refeeding."
+      "preview": "HD6. Bedside derm consult and second skin biopsy from abdominal 'flaky paint' lesion. Pathology shows interface/vacuolar dermatitis with epidermal cytoplasmic vacuolation, weakly positive lupus band test, absent dermal mucin, negative PAS/GMS/Congo Red. Differential discussed; clinical correlation recommended."
     },
     {
       "id": "NOTE017",
@@ -43,7 +34,7 @@
       "author": "Dr. Rebecca Yang / Dr. Marc Albertini",
       "department": "Neurology / Pathology",
       "encounter": "ENC012",
-      "preview": "HD5. Open biopsy of right vastus lateralis (bedside, US-guided). Path final 3/22: ACTIVE INFLAMMATORY MYOPATHY with prominent CD8+ T-cell endomysial infiltrate invading non-necrotic fibers (PM-like), perifascicular atrophy in ~30% of fascicles (DM-like), diffuse MHC class I upregulation, C5b-9 sarcolemmal deposition perifascicular. NO rimmed vacuoles, normal sarcoglycan. Interpretation: SLE-ASSOCIATED INFLAMMATORY MYOSITIS WITH OVERLAP DM FEATURES."
+      "preview": "HD5. Open biopsy of right vastus lateralis (bedside, US-guided). Path final 3/22 details CD8+ T-cell endomysial infiltrate, perifascicular atrophy, MHC class I upregulation, C5b-9 sarcolemmal deposition. No rimmed vacuoles; normal sarcoglycan."
     },
     {
       "id": "NOTE016",
@@ -52,7 +43,7 @@
       "author": "Dr. Rebecca Yang",
       "department": "Neurology / Neurodiagnostics",
       "encounter": "ENC012",
-      "preview": "HD4. Bedside EMG/NCS. NCS: normal (no neuropathy). EMG: ACTIVE INFLAMMATORY MYOPATHY pattern — proximal-predominant fibrillations 2-3+, positive sharp waves, small short polyphasic MUPs with early recruitment, paraspinal involvement. RNS rules out MG. Differential argues for inflammatory (vs toxic, endocrine, hereditary, steroid). RIGHT VASTUS LATERALIS identified as biopsy target."
+      "preview": "HD4. Bedside EMG/NCS. NCS normal (no neuropathy). EMG findings: proximal-predominant fibrillations and positive sharp waves, small short polyphasic MUPs with early recruitment, paraspinal involvement. RNS negative (rules out MG). Right vastus lateralis identified as biopsy target."
     },
     {
       "id": "NOTE015",
@@ -61,7 +52,7 @@
       "author": "Eun-Ji Lee, RD, CSP, CNSC",
       "department": "Clinical Nutrition",
       "encounter": "ENC012",
-      "preview": "HD4. Comprehensive nutrition assessment confirming SEVERE PROTEIN-CALORIE MALNUTRITION (kwashiorkor pattern): albumin 1.6, prealbumin 6, anasarca, flaky-paint dermatosis, flag-sign hair, Beau's lines, severe muscle wasting on CT, 30.3% weight loss. HIGH REFEEDING-SYNDROME RISK per NICE criteria. Detailed refeeding plan: NG Nutren 1.0 starting 360 kcal/d (10 kcal/kg) with 5 kcal/kg daily advance, thiamine before each carb load, q6h electrolytes."
+      "preview": "HD4. Nutrition assessment with anthropometrics (BMI 15.7, 30.3% weight loss from UBW), lab review (albumin 1.6, prealbumin 6, micronutrient panel), and physical findings. Cautious enteral feeding plan via NG: Nutren 1.0 starting at 10 kcal/kg/d with daily advance, thiamine before carb load, q6h electrolyte monitoring."
     },
     {
       "id": "NOTE014",
@@ -70,7 +61,7 @@
       "author": "Dr. Hannah Park / Dr. Jessica Tanaka",
       "department": "Rheumatology",
       "encounter": "ENC012",
-      "preview": "HD3 consult by Dr. Tanaka's team (continuity of care). Confirms working diagnosis: ACTIVE SLE + inflammatory myositis + kwashiorkor-pattern PEM. Articulates unifying causal chain. Plan: hold pulse steroids pending biopsy + MSA results + clean infection screen; restart MMF via NG; await biopsy results before deciding pulse vs. high-dose oral + possible IVIG depending on PM vs DM features."
+      "preview": "HD3 consult by Dr. Tanaka's team (continuity of care). Reviews interval history, exam, labs, imaging, and prior 2/10 biopsy. Plan: hold pulse steroids pending biopsy + MSA results + clean infection screen; restart MMF via NG; coordinate EMG and muscle biopsy this admission."
     },
     {
       "id": "NOTE013",
@@ -79,7 +70,7 @@
       "author": "Carolyn Wu, MS, CCC-SLP / Dr. Jordan Tate",
       "department": "Speech-Language Pathology / Radiology",
       "encounter": "ENC012",
-      "preview": "HD3 repeat MBSS. SEVERE oropharyngeal dysphagia with aspiration of thin liquids (silent aspiration on 1 of 3 swallows), aspiration with chewing of soft solid, mild nasal regurgitation. NPO with NG tube recommended. Pattern is neuromuscular/myopathic."
+      "preview": "HD3 repeat MBSS. Severe oropharyngeal dysphagia with aspiration of thin liquids (silent aspiration on 1 of 3 swallows), aspiration with chewing of soft solid, mild nasal regurgitation. NPO with NG tube recommended."
     },
     {
       "id": "NOTE012",
@@ -88,7 +79,7 @@
       "author": "Dr. David Park / Dr. Maria Castro / Dr. Sarah Beckman",
       "department": "Internal Medicine (Hopkins inpatient)",
       "encounter": "ENC012",
-      "preview": "Admission H&P for 23F with active SLE + new inflammatory myositis + severe oropharyngeal dysphagia presenting with multi-system deterioration: BMI 15.7 (30.3% weight loss), anasarca, 'flag sign' hair, kwashiorkor-pattern scaling dermatosis, proximal weakness 2-3/5, dysphonia, oral ulcers. Labs: Hgb 7.8, WBC 2.30, albumin 1.6, prealbumin 6, CK 2360, anti-dsDNA 48, C3 58, C4 5, electrolyte derangements with refeeding risk. Working unifying dx: SLE -> myositis -> dysphagia -> starvation -> kwashiorkor."
+      "preview": "Admission H&P for 23F with active SLE presenting from home in extremis: BMI 15.7 (30.3% weight loss), anasarca, diffuse scaling dermatosis, proximal weakness 2-3/5 with head lag, dysphonia, oral ulcers, mild hypothermia. Labs: Hgb 7.8, WBC 2.30, albumin 1.6, prealbumin 6, CK 2360, anti-dsDNA 48, C3 58, C4 5, multiple electrolyte derangements. NPO, cautious IVF, thiamine, multi-consult workup planned."
     },
     {
       "id": "NOTE011",
@@ -97,7 +88,7 @@
       "author": "Dr. Sarah Beckman / Dr. Maria Castro",
       "department": "Internal Medicine (Hopkins inpatient)",
       "encounter": "ENC011",
-      "preview": "4-day admission for myositis/dysphagia workup ending in AMA discharge. MBSS 2/9 showed mild oropharyngeal dysphagia with laryngeal penetration of thin liquids; nectar-thick/pureed diet with chin-tuck. Skin biopsy taken 2/10 (pending). Multidisciplinary consults: rheum, neuro, GI, ID, derm, nutrition. EMG and muscle biopsy scheduled but NOT done due to AMA discharge."
+      "preview": "4-day admission for workup of proximal weakness + dysphagia + weight loss ending in AMA discharge. MBSS 2/9 showed mild oropharyngeal dysphagia with laryngeal penetration of thin liquids; nectar-thick/pureed diet with chin-tuck. Skin biopsy taken 2/10 (pending). Multidisciplinary consults: rheum, neuro, GI, ID, derm, nutrition. EMG and muscle biopsy scheduled but NOT done due to AMA discharge."
     },
     {
       "id": "NOTE010",
@@ -106,7 +97,7 @@
       "author": "Dr. James Tran",
       "department": "Emergency Department",
       "encounter": "ENC010",
-      "preview": "23F with active SLE on HCQ/MMF/prednisone presenting with new oropharyngeal dysphagia + proximal weakness + voice change + 18.9% weight loss (now 41.2 kg). CK 1840, aldolase 22, anti-dsDNA 38, low complements, mild proteinuria, oral ulcer. Diagnosis: SLE flare with new inflammatory myositis."
+      "preview": "23F with active SLE on HCQ/MMF/prednisone presenting with new oropharyngeal dysphagia + proximal weakness + voice change + 18.9% weight loss (now 41.2 kg). CK 1840, aldolase 22, anti-dsDNA 38, low complements, mild proteinuria, oral ulcer. Admitted for inpatient workup."
     },
     {
       "id": "NOTE009",
@@ -115,7 +106,7 @@
       "author": "Dr. Andre Williams",
       "department": "Primary Care (Esperanza Health FQHC)",
       "encounter": "ENC009",
-      "preview": "6-week PCP follow-up. SLE responding well to MMF + HCQ + prednisone taper. Joint pain much better, rash mostly resolved, weight up to 47.2 kg, mood improved. NEW SYMPTOM: occasional bolus dysphagia with dry foods x 2-3 weeks. Bedside swallow screen equivocal. Ordered CK / aldolase / LDH."
+      "preview": "6-week PCP follow-up. SLE responding well to MMF + HCQ + prednisone taper. Joint pain much better, rash mostly resolved, weight up to 47.2 kg, mood improved. New symptom: occasional bolus dysphagia with dry foods x 2-3 weeks. Bedside swallow screen equivocal. Ordered baseline labs."
     },
     {
       "id": "NOTE008",

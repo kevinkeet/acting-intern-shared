@@ -5,8 +5,17 @@
 
 const App = {
     // Default patient ID (can be changed via URL or search)
-    defaultPatientId: 'PAT001',
+    defaultPatientId: 'PAT002',
     isInitialized: false,
+
+    // Per-case default chart-gate anchors. Keeps the chart restricted to the
+    // initial timepoint when first opened so the resident isn't spoiled by
+    // future encounters. The assessment engine advances the gate as the
+    // resident moves through timepoints; on engine teardown we re-apply this
+    // default so casual browsing stays gated.
+    _DEFAULT_GATE_ANCHORS: {
+        PAT002: '2026-01-12T23:59:59Z',
+    },
 
     /**
      * Refresh Lucide icons — call after dynamic content is rendered.
@@ -99,6 +108,11 @@ const App = {
     async loadPatient(patientId) {
         await PatientHeader.init(patientId);
 
+        // Apply the default chart gate for this patient (if any). Done early
+        // so the first chart render is already filtered. The assessment
+        // engine will override the anchor if an assessment is in progress.
+        this._applyDefaultGate(patientId);
+
         // Build search index in background (non-blocking)
         SearchUtils.buildSearchIndex(patientId).then(() => {
             console.log('Search index ready');
@@ -113,6 +127,21 @@ const App = {
             }).catch(err => {
                 console.warn('AI longitudinal doc init failed (non-fatal):', err);
             });
+        }
+    },
+
+    /**
+     * Activate the default chart gate for a patient, if one is configured.
+     * Idempotent — safe to call repeatedly. If no default exists for the
+     * patient, deactivates any existing gate.
+     */
+    _applyDefaultGate(patientId) {
+        if (typeof AssessmentChartGate === 'undefined') return;
+        const anchor = this._DEFAULT_GATE_ANCHORS[patientId];
+        if (anchor) {
+            AssessmentChartGate.activate({ caseId: patientId, anchorDateIso: anchor });
+        } else if (AssessmentChartGate.isActive && AssessmentChartGate.isActive()) {
+            AssessmentChartGate.deactivate();
         }
     },
 
@@ -148,6 +177,16 @@ const App = {
         window.addEventListener('supabase:auth-ready', () => this._refreshAssessmentNav());
         // Initial render once nav exists.
         setTimeout(() => this._refreshAssessmentNav(), 100);
+
+        // When an assessment ends, re-apply the patient's default gate so
+        // the chart goes back to timepoint-zero instead of opening fully.
+        if (typeof AssessmentEngine !== 'undefined' && AssessmentEngine.on) {
+            AssessmentEngine.on((event) => {
+                if (event === 'stopped' || event === 'completed' || event === 'abandoned') {
+                    this._applyDefaultGate(this.defaultPatientId);
+                }
+            });
+        }
     },
 
     /**
@@ -265,7 +304,7 @@ const App = {
                         Could not load patient data. Please check that the data files exist.
                     </div>
                     <div style="margin-top: 16px; font-size: 12px; color: #666;">
-                        Expected location: data/patients/PAT001/demographics.json
+                        Expected location: data/patients/${this.defaultPatientId}/demographics.json
                     </div>
                     <div style="margin-top: 24px;">
                         <button class="btn btn-primary" onclick="location.reload()">Retry</button>
@@ -287,6 +326,12 @@ const App = {
         // Reset chart data caches
         dataLoader.clearCache();
         this.defaultPatientId = patientId;
+
+        // Drop any active gate from the previous patient — loadPatient() will
+        // re-apply this patient's default gate (if any) after data loads.
+        if (typeof AssessmentChartGate !== 'undefined' && AssessmentChartGate.isActive && AssessmentChartGate.isActive()) {
+            AssessmentChartGate.deactivate();
+        }
 
         // Reset AI session state so we don't bleed Robert's memory/conversation
         // into Maria's chart (or vice versa). The longitudinal document is
