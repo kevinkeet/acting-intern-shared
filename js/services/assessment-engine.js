@@ -270,12 +270,24 @@ const AssessmentEngine = (() => {
             attemptId: _attempt.id,
             getActiveContext: _activeContextForLogger,
         });
+
+        // Replace the AI Coworker panel with the context-bounded chatbot
+        if (typeof AssessmentChatbot !== 'undefined' && AssessmentChatbot.activate) {
+            try {
+                AssessmentChatbot.activate({ attemptId: _attempt.id });
+            } catch (e) {
+                WARN('chatbot activation failed (non-fatal):', e.message);
+            }
+        }
     }
 
     function stop() {
         // Best-effort teardown without changing DB status.
         AssessmentLogger.stop();
         AssessmentChartGate.deactivate();
+        if (typeof AssessmentChatbot !== 'undefined' && AssessmentChatbot.deactivate) {
+            try { AssessmentChatbot.deactivate(); } catch (e) { /* ignore */ }
+        }
         _attempt = null;
         _caseDef = null;
         _responses = new Map();
@@ -305,6 +317,9 @@ const AssessmentEngine = (() => {
         const finalId = _attempt.id;
         AssessmentLogger.stop();
         AssessmentChartGate.deactivate();
+        if (typeof AssessmentChatbot !== 'undefined' && AssessmentChatbot.deactivate) {
+            try { AssessmentChatbot.deactivate(); } catch (e) { /* ignore */ }
+        }
         _emit('completed', { attemptId: finalId, score });
         return { attemptId: finalId, score };
     }
