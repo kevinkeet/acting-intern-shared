@@ -313,3 +313,101 @@ The places where AI alone scores well are exactly the places where the data is b
 If a real resident with lazy prompting routinely scores **above 70%**: the rubric's essentials at TP2 and TP3 are too forgiving — consider weighting kwashiorkor recognition more heavily, or marking it as required-to-pass.
 
 If skilled prompting can't clear **80%**: a rubric essential is poorly stated or the chart doesn't support it — re-audit the visible-at-anchor data for the timepoint.
+
+---
+
+# Part 2 — Skilled iterative prompting
+
+Same paper-simulation caveat. This pass uses targeted multi-turn prompts that
+force synthesis, force specificity, and probe for patient-specific safety
+items. Compare the per-question deltas with the lazy-prompt pass above.
+
+## TP1 — skilled (weight 1.0)
+
+**Prompt chain:**
+
+1. *"Differential for 22F with 6 months of symmetric polyarthritis, fatigue, diffuse hair thinning, mildly elevated TSH 5.32, low-titer ANA 1:80. Be explicit about how specific each finding is."*
+2. *"How specific is a 1:80 homogeneous ANA in a young woman? What's the LR+ for SLE at that titer?"*
+3. *"Could her thyroid finding alone explain the whole picture? Walk me through hypothyroid arthropathy + telogen effluvium as a unifying mechanism."*
+4. *"She's a Guatemalan immigrant, last clinician visit 2019, father had treated TB, IGRA was indeterminate in 2018. What infectious considerations should be on this differential?"*
+5. *"Empiric HCQ was already started. What are the trade-offs of that vs holding until specialist eval?"*
+6. *"Give me a next-step workup ordered by yield. Distinguish what to send today from what needs rheum eval."*
+
+**Synthesized answer (what would go in the box):** UCTD / probable early SLE weighted appropriately (1:80 ANA non-specific), Hashimoto's with hypothyroid arthropathy + telogen effluvium as a single-mechanism explanation, viral arthropathy, seronegative inflammatory arthropathy, extrapulmonary TB / occult infection given immigration + family history, low-pretest heavy-metal screen. Today: specific autoantibodies, complements, viral serologies, free T4, TPO Ab, UPC, repeat IGRA. HCQ trade-off acknowledged.
+
+**Score ~95% (0.95 / 1.0).** Hits all essentials + hypothyroid-arthropathy bonus + TB bonus + environmental bonus + HCQ trade-off bonus. Minor miss: didn't explicitly invoke reactive/post-infectious arthritis.
+
+## TP2 — skilled (weight 2.0)
+
+**Prompt chain:**
+
+1. Broad opener: *"Build a differential for Maria's current presentation."*
+2. **Force synthesis:** *"Look specifically at albumin 1.6, prealbumin 6, anasarca, the scaling 'flaky-paint' dermatosis, hair shafts with bands of lighter color, Beau's lines, low zinc/copper/vit D, low BUN. What pattern of malnutrition is this and what's the textbook term?"*
+3. **Causal chain:** *"She has profound dysphagia + proximal weakness + rising CK. What's the mechanism? Connect it backward to the SLE and forward to her nutritional state."*
+4. **Force specifics:** *"Write me an order set for the first 24 hours that's explicit about refeeding-syndrome safety: thiamine timing, kcal/kg/day initiation, electrolyte monitoring frequency, and the specific repletion thresholds before each advance."*
+5. **Force hold logic:** *"Why should I NOT pulse steroids today? List the conditions that need to be met before I escalate immunosuppression."*
+6. **Missed-opportunity:** *"What happened in February 2027 (AMA admission) and the gaps before? How does that affect today's plan and the discharge plan I'll need?"*
+7. **Sex-specific:** *"Anything I should worry about specifically because she's a young woman of reproductive age?"*
+
+**Synthesized answer:** Active SLE flare with new inflammatory myositis → bulbar dysphagia → starvation → **kwashiorkor** as a co-defining diagnosis. Concrete order set: NPO + aspiration precautions, thiamine 200 mg IV before any glucose, 0.9% NaCl 50 mL/hr no dextrose, K/Mg/Phos/iCa repletion to specific thresholds before any feed advance, MBSS today, pre-immunosuppression infection screen, EMG + muscle biopsy + skin biopsy + MSA panel, hold pulse steroids until infection screen + biopsy direction + 72h stable refeeding electrolytes, NG feeds start 10 kcal/kg/d with daily +5 kcal/kg ramp, micronutrient repletion (zinc/selenium/vit D), mechanical DVT prophylaxis (Plt 122), pregnancy test on admission.
+
+**Score ~90% (1.80 / 2.0).** All essentials + explicit chain + specific kcal/kg ramp + thiamine-before-glucose + missed-opportunity timeline + sex-specific pregnancy test. Minor losses: didn't explicitly invoke DM-overlap on differential; didn't articulate ICU upgrade criteria.
+
+## TP3-Q1 — skilled (weight 1.5)
+
+**Prompt chain:**
+
+1. *"Summarize what the muscle biopsy, MSA panel, skin biopsy, and EMG show. Where do they agree and where do they leave ambiguity?"*
+2. *"Commit to a unifying diagnosis as a dyad or triad. Explicitly say whether this is SLE alone with a downstream nutritional complication, or whether kwashiorkor is a CO-defining diagnosis."*
+3. *"Is the scaling dermatosis purely SLE/DM, purely kwashiorkor, or mixed? Cite the biopsy features that point either way."*
+4. *"Lay out the causal chain explicitly. Which links broke earliest (Dec 2026, Feb 2027 AMA, MMF gap)?"*
+5. *"What's the prognosis driver — SLE control, nutritional recovery, or both?"*
+
+**Synthesized answer:** **Triad** with explicit causal chain. (1) Active SLE meeting multiple ACR/EULAR domains. (2) SLE-associated inflammatory myositis with overlap PM/DM features (biopsy mixed pattern + MSA negative). (3) Severe protein-calorie malnutrition / kwashiorkor from bulbar-myositis-driven dysphagia → starvation. Causal chain stated. Skin findings **mixed** (interface dermatitis + weakly positive lupus band, but absent dermal mucin and epidermal vacuolation more consistent with nutritional dermatosis — layered process). Missed opportunities at Dec 2026 PCP, Feb 2027 AMA, missed outpatient EMG, MMF supply lapse — insurance/language/food-insecurity amplifiers each break. Prognosis driven as much by nutritional recovery + sustained access as by SLE control.
+
+**Score ~95% (1.43 / 1.5).** All essentials + all bonuses except thyroid-involvement framing.
+
+## TP3-Q2 — skilled (weight 2.0)
+
+**Prompt chain:**
+
+1. *"Draft a discharge plan covering immunosuppression with specific doses + taper, refeeding monitoring, dysphagia plan, outpatient transition."*
+2. *"She's 23F. What sex-specific safety items must I address?"* → forces contraception + MMF teratogenicity
+3. *"Chronic + pulse steroid safety items?"* → forces PCP prophylaxis, bone health, vaccinations, ophtho
+4. *"She's Spanish-speaking, just got Medicaid 3 weeks ago after 3 years uninsured, lives in a 3rd-floor walkup. What does my plan need that a generic plan doesn't?"*
+5. *"Specific medication-access risks next 4 weeks — bridge them."*
+6. *"Continuation plan for moderate depression?"*
+7. *"Spanish return precautions tied to her actual risks?"*
+
+**Synthesized answer:** Prednisone 1 mg/kg/d (~40 mg) with explicit taper schedule (40 × 2 wk → 30 × 2 wk → 25 × 2 wk → -5 mg q2wk to 10 mg → -2.5 mg q month). MMF advance to 1.5 g BID. HCQ continued + annual ophtho. TMP/SMX MWF. Vit D + calcium + DEXA at 3 mo with bisphosphonate threshold. **Contraception counseling with specific LARC options (Mirena/Nexplanon both lupus-compatible); negative pregnancy test confirmed.** NG feeds continued; specific kcal target 25–30 kcal/kg/d; PEG conversion at 4 wk if no swallow recovery; micronutrients itemized; refeeding monitoring schedule. Outpatient SLP weekly × 4, repeat MBSS at 4 wk. **Language-concordant follow-up explicitly named at every level** (Spanish-speaking PCP, rheum interpreter pre-booked, Spanish dietitian, Spanish therapy). **Medication-access bridge** with PAP for MMF, $4 generics or 340B for HCQ/pred/levo, Lupus Foundation grant pre-funded 5 rheum visits, social worker direct cell. PHQ-9 at every visit with escalation criteria. Spanish return precautions tied to specific risks (choking → aspiration; fever → immunosuppression infection; rash/ulcers/swelling → flare). Warm handoffs to Maryland Food Bank, FQHC produce-Rx, Lupus Foundation community navigator.
+
+**Score ~90% (1.80 / 2.0).** All essentials + nearly all bonuses (specific dose rationale, LARC contraception, eye-exam plan, bone health with DEXA threshold, calorie ramp, micronutrients, PCP prophylaxis duration, warm handoffs, mental health, Spanish materials, return precautions tied to risks). Minor miss: didn't itemize Spanish reading-level for materials (low-literacy bonus).
+
+---
+
+## Lazy vs skilled — total
+
+| Stage | Weight | Lazy | Skilled | Δ |
+|---|---|---|---|---|
+| TP1 | 1.0 | 0.85 (85%) | **0.95 (95%)** | +0.10 |
+| TP2 | 2.0 | 1.20 (60%) | **1.80 (90%)** | +0.60 |
+| TP3-Q1 | 1.5 | 1.00 (67%) | **1.43 (95%)** | +0.43 |
+| TP3-Q2 | 2.0 | 1.00 (50%) | **1.80 (90%)** | +0.80 |
+| **Total** | **6.5** | **4.05 (62%)** | **5.98 (92%)** | **+1.93** |
+
+**~30-point gap between lazy and skilled prompting.** This is what you want — the assessment is measuring "can you use AI well," not "did you remember to dump the chart in."
+
+## Where the discriminating skill lives
+
+- **TP1 (+10 pts):** minor — most of TP1's value can be hit lazily because the question is appropriately broad.
+- **TP2 (+30 pts):** biggest single-question swing. Lazy misses kwashiorkor synthesis + specific refeeding safety. Iterative prompting forces both.
+- **TP3-Q1 (+28 pts):** synthesis question — iterative chain pulls out the triad + mixed-dermatosis interpretation.
+- **TP3-Q2 (+40 pts):** largest swing. Discharge planning is where social-determinant prompting matters most. Lazy → generic; targeted → specific bridges.
+
+## The iterative pattern, distilled
+
+1. Open broadly to get the AI's frame.
+2. Push it to commit on the specific synthesis (kwashiorkor, the causal chain).
+3. Force specificity (kcal/kg/day, q6h electrolytes, exact taper schedule).
+4. Probe for patient-specific safety items (sex, language, insurance, literacy).
+5. Verify against the actual chart data (cite biopsy features, lab values, dates).

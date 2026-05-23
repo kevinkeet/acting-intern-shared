@@ -113,6 +113,14 @@ const App = {
         // engine will override the anchor if an assessment is in progress.
         this._applyDefaultGate(patientId);
 
+        // Tag the body with the current patient id so CSS can hide
+        // distractions (AI panel, Sim controls) on case patients where we
+        // want the resident focused on the chart + assessment chatbot only.
+        document.body.classList.forEach((c) => {
+            if (c.startsWith('patient-')) document.body.classList.remove(c);
+        });
+        if (patientId) document.body.classList.add('patient-' + patientId.toLowerCase());
+
         // Build search index in background (non-blocking)
         SearchUtils.buildSearchIndex(patientId).then(() => {
             console.log('Search index ready');
@@ -128,6 +136,22 @@ const App = {
                 console.warn('AI longitudinal doc init failed (non-fatal):', err);
             });
         }
+    },
+
+    /**
+     * Smart navigation for the sidebar "Assessment" link.
+     * - If the engine has an active attempt loaded in memory → go straight to
+     *   the run view so the resident resumes exactly where they left off.
+     * - Otherwise → land on /assessment/start which itself surfaces any
+     *   resumable in-progress attempt from the DB or lets them begin a new one.
+     * Returns false to prevent the default href navigation when we hijack it.
+     */
+    _navigateToAssessment(e) {
+        if (e) e.preventDefault();
+        const active = (typeof AssessmentEngine !== 'undefined' &&
+                        AssessmentEngine.isActive && AssessmentEngine.isActive());
+        location.hash = active ? '#/assessment/run' : '#/assessment/start';
+        return false;
     },
 
     /**
@@ -206,9 +230,10 @@ const App = {
         section.className = 'nav-section assessment-nav-section';
         section.innerHTML = `
             <div class="nav-section-title">Assessment</div>
-            <a href="#/assessment/start" class="nav-item assessment-mode-link" data-section="assessment-start">
+            <a href="#/assessment/start" class="nav-item assessment-mode-link" data-section="assessment-start"
+               onclick="return App._navigateToAssessment(event)">
                 <span class="nav-icon"><i data-lucide="graduation-cap"></i></span>
-                Take Assessment
+                Assessment
             </a>
             <a href="#/admin/attempts" class="nav-item assessment-admin-link" data-section="admin"
                id="assessment-admin-link" style="display:none;">
