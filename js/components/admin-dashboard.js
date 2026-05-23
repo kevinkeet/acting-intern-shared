@@ -231,22 +231,46 @@ const AdminDashboard = {
 
     _renderAILog(log) {
         if (!log.length) return '<div class="empty-state-text">No AI interactions logged.</div>';
-        return log.map((row) => `
-            <details class="admin-ai-log-entry">
-                <summary>
-                    <code>${this._escape(this._fmtDate(row.timestamp))}</code>
-                    · ${this._escape(row.assessment_id || '—')}/${this._escape(row.prompt_id || '—')}
-                    · ${this._escape(row.interaction_type || '')}
-                    · ${row.context_size_chars || 0} chars
-                </summary>
-                <div class="admin-ai-log-body">
-                    ${Array.isArray(row.chart_sections) && row.chart_sections.length ? `<div><strong>Chart sections:</strong> ${row.chart_sections.map((s) => this._escape(s)).join(', ')}</div>` : ''}
-                    <details><summary>Query</summary><pre>${this._escape(row.query_text || '')}</pre></details>
-                    <details><summary>Response</summary><pre>${this._escape(row.response_text || '')}</pre></details>
-                    ${row.metadata && Object.keys(row.metadata).length ? `<details><summary>Metadata</summary><pre>${this._escape(JSON.stringify(row.metadata, null, 2))}</pre></details>` : ''}
-                </div>
-            </details>
-        `).join('');
+        return log.map((row) => {
+            const setup = row.metadata && row.metadata.chatbot_setup;
+            const setupSummary = setup
+                ? this._fmtSetupSummary(setup)
+                : '';
+            return `
+                <details class="admin-ai-log-entry">
+                    <summary>
+                        <code>${this._escape(this._fmtDate(row.timestamp))}</code>
+                        · ${this._escape(row.assessment_id || '—')}/${this._escape(row.prompt_id || '—')}
+                        · ${this._escape(row.interaction_type || '')}
+                        · ${row.context_size_chars || 0} chars
+                    </summary>
+                    <div class="admin-ai-log-body">
+                        ${setupSummary ? `<div class="admin-ai-log-setup"><strong>Chatbot setup:</strong> ${setupSummary}</div>` : ''}
+                        ${Array.isArray(row.chart_sections) && row.chart_sections.length ? `<div><strong>Chart sections:</strong> ${row.chart_sections.map((s) => this._escape(s)).join(', ')}</div>` : ''}
+                        <details><summary>Query</summary><pre>${this._escape(row.query_text || '')}</pre></details>
+                        <details><summary>Response</summary><pre>${this._escape(row.response_text || '')}</pre></details>
+                        ${row.metadata && Object.keys(row.metadata).length ? `<details><summary>Metadata</summary><pre>${this._escape(JSON.stringify(row.metadata, null, 2))}</pre></details>` : ''}
+                    </div>
+                </details>
+            `;
+        }).join('');
+    },
+
+    _fmtSetupSummary(setup) {
+        const windowLabel = {
+            'today': 'Today only', '7d': 'Last 7 days', '30d': 'Last 30 days',
+            '90d': 'Last 90 days', '6mo': 'Last 6 months', '1y': 'Last 1 year',
+            'all': 'All available',
+        };
+        const typeLabel = {
+            notes: 'Notes', labs: 'Labs', vitals: 'Vitals', imaging: 'Imaging',
+            encounters: 'Encounters', procedures: 'Procedures', orders: 'Orders',
+            problems: 'Problems', medications: 'Meds', allergies: 'Allergies',
+            social: 'Social', family: 'Family', immunizations: 'Imms',
+        };
+        const w = windowLabel[setup.windowKey] || setup.windowKey;
+        const types = (setup.dataTypes || []).map((t) => typeLabel[t] || t).join(', ');
+        return `${this._escape(w)} · ${this._escape(types)} (turn ${setup.turn || '?'})`;
     },
 
     _renderForbidden(root) {

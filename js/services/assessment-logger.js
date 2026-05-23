@@ -24,6 +24,7 @@ const AssessmentLogger = (() => {
     let _originalChat = null;
     let _queue = [];   // pending inserts (best-effort flush)
     let _flushTimer = null;
+    let _pendingMetadata = null;  // one-shot bag consumed by next captured call
 
     const LOG = (...args) => console.log('🪵 AILog', ...args);
     const WARN = (...args) => console.warn('🪵 AILog', ...args);
@@ -110,6 +111,24 @@ const AssessmentLogger = (() => {
     // ── public log methods ─────────────────────────────────────────────
 
     /**
+     * Attach a metadata bag that will be merged into the next captured
+     * ask/chat row. One-shot — consumed once and cleared. Use from
+     * AssessmentChatbot / other instrumented callers to enrich the next
+     * recorded call with structured info (e.g., chosen context window
+     * and data types).
+     */
+    function attachMetadata(meta) {
+        if (!meta || typeof meta !== 'object') return;
+        _pendingMetadata = { ...(_pendingMetadata || {}), ...meta };
+    }
+
+    function _consumePendingMetadata() {
+        const m = _pendingMetadata;
+        _pendingMetadata = null;
+        return m || {};
+    }
+
+    /**
      * Manually log a chart-view (called from router or component hooks).
      */
     function logChartView(section) {
@@ -156,6 +175,7 @@ const AssessmentLogger = (() => {
                 const response = await _originalSendMessage(systemPrompt, messages);
                 if (_active && _attemptId) {
                     const ctx = _safeGetContext();
+                    const extra = _consumePendingMetadata();
                     _writeRow({
                         attempt_id: _attemptId,
                         assessment_id: ctx.assessmentId || null,
@@ -170,6 +190,7 @@ const AssessmentLogger = (() => {
                             system_prompt_preview: (systemPrompt || '').slice(0, 500),
                             started_at: startedAt.toISOString(),
                             model: ClaudeAPI.model,
+                            ...extra,
                         },
                     });
                 }
@@ -202,6 +223,7 @@ const AssessmentLogger = (() => {
                 const text = await _originalChat(systemPrompt, messages);
                 if (_active && _attemptId) {
                     const ctx = _safeGetContext();
+                    const extra = _consumePendingMetadata();
                     _writeRow({
                         attempt_id: _attemptId,
                         assessment_id: ctx.assessmentId || null,
@@ -217,6 +239,7 @@ const AssessmentLogger = (() => {
                             started_at: startedAt.toISOString(),
                             via: 'chat',
                             model: ClaudeAPI.model,
+                            ...extra,
                         },
                     });
                 }
@@ -284,6 +307,7 @@ const AssessmentLogger = (() => {
         stop,
         isActive,
         logChartView,
+        attachMetadata,
     };
 })();
 

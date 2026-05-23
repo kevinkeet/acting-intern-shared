@@ -309,6 +309,21 @@ const AssessmentChatbot = (() => {
             const systemPrompt = _buildSystemPrompt(contextBlock);
             const apiMessages = _messages.map((m) => ({ role: m.role, content: m.content }));
 
+            // Attach structured chatbot setup to the next captured log row
+            // so the results report and admin dashboard can analyze context-
+            // curation choices without parsing the free-text system prompt.
+            if (typeof AssessmentLogger !== 'undefined' && AssessmentLogger.attachMetadata) {
+                AssessmentLogger.attachMetadata({
+                    source: 'assessment_chatbot',
+                    chatbot_setup: {
+                        windowKey: _config.windowKey,
+                        dataTypes: _config.dataTypes.slice().sort(),
+                        contextChars: contextBlock.length,
+                        turn: _messages.length,  // 1-based count incl. this user msg
+                    },
+                });
+            }
+
             const response = await ClaudeAPI.sendMessage(systemPrompt, apiMessages);
             let replyText = '';
             if (response && response.content && Array.isArray(response.content)) {

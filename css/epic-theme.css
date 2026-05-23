@@ -14467,3 +14467,81 @@ body.in-assessment .main-container {
     body.in-assessment .main-container { margin-right: 320px; }
 }
 
+/* Context curation profile in results report */
+.assessment-curation-profile {
+    margin-top: 16px;
+    padding: 14px 18px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+}
+.assessment-curation-profile h3 {
+    margin: 0 0 6px;
+    color: #2c5282;
+    font-size: 14px;
+}
+.assessment-curation-blurb {
+    color: #4a5568;
+    font-size: 12px;
+    margin: 0 0 12px;
+    line-height: 1.5;
+}
+.assessment-curation-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+@media (max-width: 760px) {
+    .assessment-curation-cols { grid-template-columns: 1fr; }
+}
+.assessment-curation-col h4 {
+    margin: 0 0 6px;
+    font-size: 11px;
+    color: #4a5568;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+}
+.assessment-curation-bar-row {
+    display: grid;
+    grid-template-columns: 130px 1fr 36px;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+    font-size: 11px;
+}
+.assessment-curation-bar-label {
+    color: #1a202c;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.assessment-curation-bar-track {
+    background: #edf2f7;
+    border-radius: 3px;
+    height: 8px;
+    overflow: hidden;
+}
+.assessment-curation-bar-fill {
+    background: linear-gradient(90deg, #1a5276, #3182ce);
+    height: 100%;
+    transition: width 0.3s;
+}
+.assessment-curation-bar-count {
+    text-align: right;
+    color: #4a5568;
+    font-family: 'SF Mono', Monaco, monospace;
+    font-size: 11px;
+}
+
+/* Admin dashboard — chatbot setup line in each AI log row */
+.admin-ai-log-setup {
+    background: #ebf8ff;
+    border-left: 3px solid #2b6cb0;
+    padding: 4px 8px;
+    margin: 4px 0;
+    font-size: 11px;
+    color: #1e40af;
+    border-radius: 3px;
+}
+
