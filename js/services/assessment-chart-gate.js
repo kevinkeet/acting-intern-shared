@@ -264,10 +264,25 @@ const AssessmentChartGate = (() => {
             };
         });
 
-        // Problems — leave un-gated. The problem list is treated as the
-        // chart's current best summary at the time of the AP. Era-specific
-        // problem list nuance would require time-stamped problem entries,
-        // which we don't have. Future enhancement.
+        // Problems — gate by item.date (added per-problem in PAT002 problems/
+        // active.json so onset-dated entries are filtered correctly). Problems
+        // without a `date` field pass through (we never want to accidentally
+        // hide entries that lack a recognizable date).
+        wrap('loadProblems', (data) => {
+            _markSection('problems');
+            if (!data) return data;
+            const filter = (sub) => sub ? { ...sub, problems: _filterArray(sub.problems) } : sub;
+            return {
+                ...data,
+                active: filter(data.active),
+                resolved: filter(data.resolved),
+            };
+        });
+        wrap('loadActiveProblems', (data) => {
+            _markSection('problems');
+            if (!data) return data;
+            return { ...data, problems: _filterArray(data.problems) };
+        });
     }
 
     function _restorePatches() {
