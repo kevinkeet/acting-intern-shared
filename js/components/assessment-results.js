@@ -37,6 +37,27 @@ const AssessmentResults = {
     },
 
     async _fetchAll(attemptId) {
+        // Local-mode results live in sessionStorage (set by engine.complete()).
+        // We check there FIRST so local attempts work even if a Supabase
+        // client happens to be configured but unauthenticated.
+        const isLocal = String(attemptId).startsWith('local-');
+        if (isLocal) {
+            const raw = sessionStorage.getItem('assessmentResults:' + attemptId);
+            if (!raw) {
+                throw new Error('Results not available — local attempts are only viewable in the tab session in which they were completed. Run the assessment again to see results.');
+            }
+            const cached = JSON.parse(raw);
+            const caseDef = await AssessmentData.loadCase(cached.attempt.case_id);
+            const diagnosis = AssessmentData.getCaseDiagnosis(cached.attempt.case_id);
+            return {
+                attempt: cached.attempt,
+                responses: cached.responses || [],
+                aiLog: cached.aiLog || [],
+                caseDef,
+                diagnosis,
+            };
+        }
+
         const sb = (typeof SupabaseSync !== 'undefined') ? SupabaseSync.getClient() : null;
         if (!sb) throw new Error('Supabase client unavailable. Sign in to view results.');
 

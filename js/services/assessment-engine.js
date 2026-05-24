@@ -96,10 +96,6 @@ const AssessmentEngine = (() => {
     // ── DB I/O ─────────────────────────────────────────────────────────
 
     async function _insertAttempt(caseId) {
-        const sb = _sb();
-        const userId = _userId();
-        if (!sb || !userId) throw new Error('Not signed in — cannot start an assessment.');
-
         // Pick first assessment + first prompt as the starting cursor.
         const apMeta = await AssessmentData.loadCaseMeta(caseId);
         const firstApId = (apMeta.assessments || [])[0];
@@ -107,8 +103,7 @@ const AssessmentEngine = (() => {
         const firstAp = await AssessmentData.loadAssessment(caseId, firstApId);
         const firstPrompt = (firstAp.prompts || [])[0];
 
-        const row = {
-            user_id: userId,
+        const baseRow = {
             case_id: caseId,
             status: 'in_progress',
             current_assessment: firstApId,
@@ -117,9 +112,20 @@ const AssessmentEngine = (() => {
             metadata: { version: apMeta.version || null },
         };
 
+        const sb = _sb();
+        const userId = _userId();
+        if (!sb || !userId) {
+            // Local-only attempt — no central persistence. Generate a synthetic id;
+            // results will be readable via sessionStorage for this tab only.
+            const id = (typeof crypto !== 'undefined' && crypto.randomUUID)
+                ? 'local-' + crypto.randomUUID()
+                : 'local-' + Date.now() + '-' + Math.random().toString(36).slice(2, 10);
+            return { id, user_id: 'local', started_at: new Date().toISOString(), ...baseRow };
+        }
+
         const { data, error } = await sb
             .from('test_attempts')
-            .insert(row)
+            .insert({ user_id: userId, ...baseRow })
             .select()
             .single();
         if (error) throw error;
@@ -147,7 +153,12 @@ const AssessmentEngine = (() => {
 
     async function _insertOrUpdateResponse(payload) {
         const sb = _sb();
-        if (!sb) return null;
+        if (!sb) {
+            // Local mode — merge into in-memory map and return the row so the
+            // caller can also store it (caller does _responses.set on truthy).
+            const existing = _responses.get(payload.prompt_id) || {};
+            return { ...existing, ...payload };
+        }
         const { data, error } = await sb
             .from('assessment_responses')
             .upsert(payload, { onConflict: 'attempt_id,prompt_id' })
@@ -162,7 +173,10 @@ const AssessmentEngine = (() => {
 
     async function _loadResponses(attemptId) {
         const sb = _sb();
-        if (!sb) return [];
+        if (!sb) {
+            // Local mode — return whatever is in the in-memory map.
+            return Array.from(_responses.values());
+        }
         const { data, error } = await sb
             .from('assessment_responses')
             .select('*')
@@ -192,13 +206,14 @@ const AssessmentEngine = (() => {
     }
 
     async function start(caseId) {
-        const userId = _userId();
-        if (!userId) throw new Error('You must sign in to start an assessment.');
+        // Auth is no longer required. If signed into Supabase the attempt
+        // is persisted centrally; otherwise it lives in memory + sessionStorage
+        // for this tab session only.
 
-        // Load case definition first so any error happens before we touch the DB.
+        // Load case definition first so any error happens before we touch storage.
         _caseDef = await AssessmentData.loadCase(caseId);
 
-        // Create DB row.
+        // Create attempt (DB row OR local synthetic).
         _attempt = await _insertAttempt(caseId);
         _responses = new Map();
         _aiSamples = new Map();
@@ -315,6 +330,19 @@ const AssessmentEngine = (() => {
             completed_at: new Date().toISOString(),
         });
         const finalId = _attempt.id;
+
+        // Local mode: cache the completed attempt + responses into sessionStorage
+        // so the results page can render after we tear down engine state.
+        if (!_sb() || String(finalId).startsWith('local-')) {
+            try {
+                sessionStorage.setItem('assessmentResults:' + finalId, JSON.stringify({
+                    attempt: _attempt,
+                    responses: rows,
+                    aiLog: [],
+                }));
+            } catch (e) { /* sessionStorage full or unavailable — non-fatal */ }
+        }
+
         AssessmentLogger.stop();
         AssessmentChartGate.deactivate();
         if (typeof AssessmentChatbot !== 'undefined' && AssessmentChatbot.deactivate) {

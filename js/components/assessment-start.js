@@ -11,14 +11,10 @@ const AssessmentStart = {
         const root = document.getElementById('main-content');
         if (!root) return;
 
-        // Auth gate
-        const authed = (typeof SupabaseSync !== 'undefined' && SupabaseSync.isAuthenticated());
-        if (!authed) {
-            this._renderAuthGate(root);
-            return;
-        }
-
-        // Logged in — render landing
+        // No auth gate. The site-level password gate already controls access.
+        // If Supabase happens to be signed in, attempts persist centrally; if
+        // not, attempts run in-memory and results are viewable in this tab
+        // session only.
         root.innerHTML = `
             <div class="assessment-start-page">
                 <div class="assessment-start-hero">
