@@ -1,5 +1,69 @@
 {
-  "notes": [],
+  "notes": [
+    {
+      "id": "NOTE_HX_007",
+      "type": "Primary Care Visit (annual)",
+      "date": "2026-10-22T09:00:00.000Z",
+      "author": "Dr. Phong Le",
+      "department": "Primary Care (Charm City Asian Health Center)",
+      "encounter": "ENC_HX_007",
+      "preview": "Most recent annual visit. HTN/HLD at goal. CKD stage 3a stable (Cr 1.3, eGFR 47). Cholelithiasis — surgery deferred by patient. Brother died of lung cancer 3/2026. Shared decision-making about LDCT screening; patient declined again (cost). Continues NSAID use despite CKD counseling. Flu shot."
+    },
+    {
+      "id": "NOTE_HX_006",
+      "type": "Urgent Care + Imaging",
+      "date": "2025-09-30T16:20:00.000Z",
+      "author": "Dr. Sandra Kim",
+      "department": "Hopkins Bayview Urgent Care",
+      "encounter": "ENC_HX_006",
+      "preview": "Biliary colic. Two RUQ pain episodes after fatty meals. Abdominal US: multiple gallstones in distended GB, no acute cholecystitis. LFTs/lipase normal. Referred to General Surgery for elective lap chole; low-fat diet."
+    },
+    {
+      "id": "NOTE_HX_005",
+      "type": "Primary Care Visit (annual)",
+      "date": "2022-11-08T11:00:00.000Z",
+      "author": "Dr. Phong Le",
+      "department": "Primary Care (Charm City Asian Health Center)",
+      "encounter": "ENC_HX_005",
+      "preview": "Annual visit. Newly recognized CKD stage 2/3a (Cr 1.2, eGFR 47, 1+ proteinuria). NSAID counseling. Older brother just diagnosed with advanced lung cancer in Vietnam. Discussion of lung cancer screening — does not meet USPSTF; patient considering."
+    },
+    {
+      "id": "NOTE_HX_004",
+      "type": "Orthopedic Pre-Op Consult",
+      "date": "2018-03-22T10:30:00.000Z",
+      "author": "Dr. Marcus Reilly",
+      "department": "Orthopedic Surgery — Hopkins Bayview",
+      "encounter": "ENC_HX_004",
+      "preview": "Pre-op evaluation for right TKA. KL grade 4 medial-compartment OA. Decade of conservative management exhausted. Surgery scheduled 4/12/2018."
+    },
+    {
+      "id": "NOTE_HX_003",
+      "type": "Primary Care Visit (annual)",
+      "date": "2015-03-12T09:30:00.000Z",
+      "author": "Dr. Phong Le",
+      "department": "Primary Care (Charm City Asian Health Center)",
+      "encounter": "ENC_HX_003",
+      "preview": "Annual visit. HTN well-controlled. New HLD (LDL 168) — started atorvastatin. Smoking cessation confirmed (quit 2004, ~14 pack-years lifetime). Latent TB infection — declined INH treatment again. Continuing 1–2 drinks/day."
+    },
+    {
+      "id": "NOTE_HX_002",
+      "type": "Pulmonary / Infectious Disease Consult",
+      "date": "2010-06-15T14:00:00.000Z",
+      "author": "Dr. Karen O'Sullivan",
+      "department": "Pulmonary / ID — Hopkins Bayview",
+      "encounter": "ENC_HX_002",
+      "preview": "Outpatient evaluation of positive PPD (14 mm) + positive QuantiFERON in a Vietnamese-born adult. CXR clear; sputum AFBs negative; cultures pending. Latent TB infection diagnosed. INH offered; patient declined given alcohol/monitoring burden."
+    },
+    {
+      "id": "NOTE_HX_001",
+      "type": "New Patient Visit",
+      "date": "2010-04-18T10:15:00.000Z",
+      "author": "Dr. Phong Le",
+      "department": "Primary Care (Charm City Asian Health Center)",
+      "encounter": "ENC_HX_001",
+      "preview": "Establishing care after workplace TB screening returned positive (PPD 14 mm). Vietnamese immigrant, 1990. Newly identified HTN (BP 142/86). Current smoker 10 cig/day. Right knee OA suspected. Referred to ID/Pulm for LTBI workup."
+    }
+  ],
   "lastUpdated": "2027-04-12",
-  "_status": "skeleton — notes to be added in subsequent build chunks"
+  "_status": "historical notes complete; admission course notes (Feb 15 - Apr 12 2027) to be added in Chunk 3"
 }
