@@ -1,0 +1,14 @@
+{
+  "id": "IMG003",
+  "date": "2027-03-01T11:30:00.000Z",
+  "modality": "Ultrasound",
+  "description": "Lower extremity venous duplex Doppler — bilateral, with focus on right lower extremity given clinical concern",
+  "facility": "Johns Hopkins Hospital Vascular Lab (bedside, step-down unit)",
+  "status": "Final",
+  "radiologist": "Dr. Brett Carroll",
+  "indication": "Asymmetric right lower extremity swelling noted by nursing on 3/1 AM. Patient with prolonged immobility (16 days hospitalized, including 10 days mechanical ventilation). Rule out deep vein thrombosis.",
+  "technique": "Bilateral lower extremity venous duplex with grayscale, color, and pulsed-wave Doppler. Compression maneuvers performed throughout the deep venous system.",
+  "findings": "RIGHT LOWER EXTREMITY:\n- Common femoral vein: Non-compressible with intraluminal echogenic material; absent color flow on Doppler. **ACUTE OCCLUSIVE THROMBUS** demonstrated.\n- Superficial femoral vein (proximal and mid): Non-compressible with echogenic intraluminal material; absent flow. **ACUTE THROMBUS extending throughout.**\n- Popliteal vein: Non-compressible with intraluminal material; absent flow. **ACUTE THROMBUS** present.\n- Posterior tibial veins: Compressible; flow demonstrated.\n- Peroneal veins: Compressible; flow demonstrated.\n- Greater saphenous vein: Compressible at the saphenofemoral junction.\n\nLEFT LOWER EXTREMITY:\n- Common femoral, superficial femoral, popliteal, posterior tibial, and peroneal veins: All compressible with normal flow demonstrated. No deep vein thrombosis identified.\n\nNo soft-tissue findings concerning for cellulitis or abscess at the level of the calf bilaterally.",
+  "impression": "1. **ACUTE OCCLUSIVE DEEP VEIN THROMBOSIS** in the right common femoral, right superficial femoral, and right popliteal veins (proximal DVT).\n2. Right calf deep veins patent.\n3. No DVT in the left lower extremity.\n4. No soft-tissue findings concerning for cellulitis.\n\nFindings are consistent with a provoked proximal DVT in a hospitalized, immobile patient with severe critical illness. Recommend therapeutic anticoagulation per hematology guidance.",
+  "comparison": "No prior LE duplex available for comparison."
+}

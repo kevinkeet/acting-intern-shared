@@ -1,0 +1,32 @@
+{
+  "id": "LAB_HX_003",
+  "name": "Annual PCP Labs",
+  "collectedDate": "2022-11-08T11:30:00.000Z",
+  "resultedDate": "2022-11-10T09:00:00.000Z",
+  "orderedBy": "Dr. Phong Le",
+  "facility": "Charm City Asian Health Center / LabCorp",
+  "specimen": "Serum + plasma + urine",
+  "status": "Final",
+  "results": [
+    { "name": "CBC — WBC", "value": "6.1", "unit": "K/uL", "referenceRange": "4.5-11.0", "flag": "normal" },
+    { "name": "CBC — Hemoglobin", "value": "11.8", "unit": "g/dL", "referenceRange": "12.0-15.5", "flag": "low", "interpretation": "Mildly low — likely early CKD-related anemia of chronic disease." },
+    { "name": "CBC — Platelets", "value": "268", "unit": "K/uL", "referenceRange": "150-400", "flag": "normal" },
+    { "name": "CMP — Sodium", "value": "138", "unit": "mmol/L", "referenceRange": "135-145", "flag": "normal" },
+    { "name": "CMP — Potassium", "value": "4.4", "unit": "mmol/L", "referenceRange": "3.5-5.0", "flag": "normal" },
+    { "name": "CMP — BUN", "value": "22", "unit": "mg/dL", "referenceRange": "7-20", "flag": "high" },
+    { "name": "CMP — Creatinine", "value": "1.2", "unit": "mg/dL", "referenceRange": "0.5-1.1", "flag": "high", "interpretation": "eGFR 47 — CKD stage 3a." },
+    { "name": "CMP — Glucose", "value": "102", "unit": "mg/dL", "referenceRange": "70-100", "flag": "borderline" },
+    { "name": "CMP — Albumin", "value": "4.0", "unit": "g/dL", "referenceRange": "3.5-5.0", "flag": "normal" },
+    { "name": "CMP — AST", "value": "24", "unit": "U/L", "referenceRange": "10-40", "flag": "normal" },
+    { "name": "CMP — ALT", "value": "22", "unit": "U/L", "referenceRange": "7-56", "flag": "normal" },
+    { "name": "Lipid — Total cholesterol", "value": "168", "unit": "mg/dL", "referenceRange": "<200", "flag": "normal" },
+    { "name": "Lipid — LDL", "value": "82", "unit": "mg/dL", "referenceRange": "<100", "flag": "normal", "interpretation": "At goal on atorvastatin 40 mg." },
+    { "name": "Lipid — HDL", "value": "50", "unit": "mg/dL", "referenceRange": ">40", "flag": "normal" },
+    { "name": "Lipid — Triglycerides", "value": "145", "unit": "mg/dL", "referenceRange": "<150", "flag": "normal" },
+    { "name": "HbA1c", "value": "5.6", "unit": "%", "referenceRange": "<5.7", "flag": "normal" },
+    { "name": "TSH", "value": "2.85", "unit": "uIU/mL", "referenceRange": "0.30-4.00", "flag": "normal" },
+    { "name": "UA — protein", "value": "1+", "unit": "", "referenceRange": "Negative", "flag": "abnormal", "interpretation": "New proteinuria — sent spot ACR." },
+    { "name": "Urine ACR (spot)", "value": "62", "unit": "mg/g", "referenceRange": "<30", "flag": "high", "interpretation": "Microalbuminuria; consistent with CKD." }
+  ],
+  "interpretation": "CKD stage 3a newly identified (Cr 1.2 from prior 0.9-1.0; eGFR 47; microalbuminuria). Mild anemia (Hgb 11.8). HTN well-controlled implicit. Lipids at goal. Pre-diabetic glucose stable."
+}

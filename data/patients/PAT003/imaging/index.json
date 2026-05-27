@@ -1,5 +1,59 @@
 {
-  "studies": [],
-  "lastUpdated": "2027-04-12",
-  "_status": "skeleton — studies to be added in subsequent build chunks"
+  "studies": [
+    {
+      "id": "IMG004",
+      "date": "2027-03-15T10:30:00.000Z",
+      "modality": "CT",
+      "description": "CT Chest with IV contrast — follow-up after ARDS resolution",
+      "facility": "Johns Hopkins Hospital Radiology",
+      "radiologist": "Dr. Anil Vachani",
+      "preview": "Resolution of prior ARDS pattern. STABLE 2.5 cm solid RUL pulmonary nodule with smooth-to-mildly-spiculated borders and homogeneous post-contrast enhancement (~40 HU). Indeterminate-to-suspicious characteristics. RECOMMENDATION: percutaneous CT-guided biopsy OR repeat CT in 3 months."
+    },
+    {
+      "id": "IMG003",
+      "date": "2027-03-01T11:30:00.000Z",
+      "modality": "Ultrasound",
+      "description": "LE Venous Duplex (bilateral)",
+      "facility": "Johns Hopkins Vascular Lab",
+      "radiologist": "Dr. Brett Carroll",
+      "preview": "ACUTE OCCLUSIVE DVT in right common femoral, R superficial femoral, and R popliteal veins (proximal). Right calf veins patent. Left LE no DVT."
+    },
+    {
+      "id": "IMG002",
+      "date": "2027-02-16T09:00:00.000Z",
+      "modality": "X-Ray",
+      "description": "Chest X-Ray — portable AP",
+      "facility": "Johns Hopkins (portable, MICU)",
+      "radiologist": "Dr. Sandra Wu",
+      "preview": "Bilateral interstitial markings, small bilateral pleural effusions — consistent with developing ARDS. INCIDENTAL 2.5 cm well-circumscribed opacity in RIGHT UPPER LOBE, newly visualized — recommend dedicated chest CT for further characterization."
+    },
+    {
+      "id": "IMG001",
+      "date": "2027-02-15T18:45:00.000Z",
+      "modality": "CT",
+      "description": "CT Abdomen + Pelvis with IV contrast",
+      "facility": "Johns Hopkins ED Radiology",
+      "radiologist": "Dr. James Park",
+      "preview": "Acute interstitial pancreatitis with peripancreatic stranding. CHOLELITHIASIS with suspected CHOLEDOCHOLITHIASIS — distended GB with multiple stones, 6 mm filling defect in distal CBD, intrahepatic biliary dilatation (CBD 9 mm). Mild GB wall thickening. Recommend urgent ERCP."
+    },
+    {
+      "id": "IMG_HX_002",
+      "date": "2025-09-30T17:45:00.000Z",
+      "modality": "Ultrasound",
+      "description": "Abdominal Ultrasound (RUQ)",
+      "facility": "Hopkins Bayview Urgent Care",
+      "radiologist": "Dr. Sandra Kim",
+      "preview": "Cholelithiasis without acute cholecystitis. Multiple gallstones in distended GB; wall not thickened. No biliary obstruction. CBD 5 mm."
+    },
+    {
+      "id": "IMG_HX_001",
+      "date": "2010-06-15T14:30:00.000Z",
+      "modality": "X-Ray",
+      "description": "Chest X-Ray — outpatient TB workup",
+      "facility": "Hopkins Bayview Pulm/ID Clinic",
+      "radiologist": "Dr. Margaret Nguyen",
+      "preview": "No radiographic evidence of active or healed pulmonary TB. No nodules, masses, or focal infiltrates. Lungs clear bilaterally. (Important historical baseline for comparison.)"
+    }
+  ],
+  "lastUpdated": "2027-04-12"
 }

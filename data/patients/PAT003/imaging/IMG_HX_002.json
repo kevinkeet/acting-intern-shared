@@ -1,0 +1,14 @@
+{
+  "id": "IMG_HX_002",
+  "date": "2025-09-30T17:45:00.000Z",
+  "modality": "Ultrasound",
+  "description": "Abdominal Ultrasound (right upper quadrant)",
+  "facility": "Johns Hopkins Bayview Urgent Care",
+  "status": "Final",
+  "radiologist": "Dr. Sandra Kim (reading)",
+  "indication": "RUQ pain, biliary colic presentation. Rule out cholecystitis, choledocholithiasis, hepatic pathology.",
+  "technique": "Real-time ultrasound of the right upper quadrant.",
+  "findings": "LIVER: Normal size, smooth contour. Homogeneous parenchymal echotexture. No focal lesions. No biliary dilatation at the hilum. Intrahepatic ducts not dilated.\n\nGALLBLADDER: Distended. **CONTAINS MULTIPLE ECHOGENIC FOCI WITH POSTERIOR ACOUSTIC SHADOWING — CONSISTENT WITH GALLSTONES.** Largest stone measures ~1.4 cm in maximal dimension. No mobile stones impacted at the neck on real-time scanning. Wall thickness 2.5 mm (within normal limits). No pericholecystic fluid. Sonographic Murphy sign: NEGATIVE (patient pain-free at time of scan).\n\nCOMMON BILE DUCT: 5 mm in maximal diameter (within normal limits for her age). No demonstrable stones within the visualized CBD.\n\nPANCREAS: Body and tail incompletely visualized due to overlying bowel gas. Head appears normal. No fluid collections in the visualized portions.\n\nKIDNEYS: Both kidneys normal in size and cortical thickness for age. No hydronephrosis. No stones. Right kidney 10.4 cm; left kidney 10.6 cm. Bilateral mild cortical thinning consistent with known CKD.\n\nAORTA: Normal caliber. No aneurysm.",
+  "impression": "1. **CHOLELITHIASIS WITHOUT ACUTE CHOLECYSTITIS.** Multiple gallstones in a distended gallbladder; wall not thickened, no pericholecystic fluid, negative sonographic Murphy sign at time of evaluation.\n2. NO BILIARY OBSTRUCTION on this study. CBD 5 mm.\n3. No acute pancreatitis findings on visualized portions; full pancreatic evaluation limited by bowel gas — CT or MRCP would be the next test if pancreatitis is clinically suspected.\n4. No hydronephrosis or other acute renal findings; chronic cortical thinning consistent with known CKD.",
+  "comparison": "None available."
+}

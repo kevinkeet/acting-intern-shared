@@ -1,0 +1,30 @@
+{
+  "id": "LAB_HX_001",
+  "name": "Initial PCP Labs (Establishing Care)",
+  "collectedDate": "2010-04-18T11:00:00.000Z",
+  "resultedDate": "2010-04-22T09:00:00.000Z",
+  "orderedBy": "Dr. Phong Le",
+  "facility": "Charm City Asian Health Center / LabCorp",
+  "specimen": "Serum + plasma + urine",
+  "status": "Final",
+  "results": [
+    { "name": "CBC — WBC", "value": "6.4", "unit": "K/uL", "referenceRange": "4.5-11.0", "flag": "normal" },
+    { "name": "CBC — Hemoglobin", "value": "13.1", "unit": "g/dL", "referenceRange": "12.0-15.5", "flag": "normal" },
+    { "name": "CBC — Platelets", "value": "232", "unit": "K/uL", "referenceRange": "150-400", "flag": "normal" },
+    { "name": "CMP — Sodium", "value": "138", "unit": "mmol/L", "referenceRange": "135-145", "flag": "normal" },
+    { "name": "CMP — Potassium", "value": "4.2", "unit": "mmol/L", "referenceRange": "3.5-5.0", "flag": "normal" },
+    { "name": "CMP — BUN", "value": "14", "unit": "mg/dL", "referenceRange": "7-20", "flag": "normal" },
+    { "name": "CMP — Creatinine", "value": "0.9", "unit": "mg/dL", "referenceRange": "0.5-1.1", "flag": "normal", "interpretation": "eGFR 65 mL/min — borderline at age 55." },
+    { "name": "CMP — Glucose", "value": "102", "unit": "mg/dL", "referenceRange": "70-100", "flag": "high" },
+    { "name": "CMP — AST", "value": "22", "unit": "U/L", "referenceRange": "10-40", "flag": "normal" },
+    { "name": "CMP — ALT", "value": "18", "unit": "U/L", "referenceRange": "7-56", "flag": "normal" },
+    { "name": "Lipid panel — Total cholesterol", "value": "214", "unit": "mg/dL", "referenceRange": "<200", "flag": "borderline" },
+    { "name": "Lipid panel — LDL", "value": "148", "unit": "mg/dL", "referenceRange": "<130", "flag": "borderline" },
+    { "name": "Lipid panel — HDL", "value": "46", "unit": "mg/dL", "referenceRange": ">40", "flag": "normal" },
+    { "name": "Lipid panel — Triglycerides", "value": "138", "unit": "mg/dL", "referenceRange": "<150", "flag": "normal" },
+    { "name": "HbA1c", "value": "5.7", "unit": "%", "referenceRange": "<5.7", "flag": "borderline", "interpretation": "Pre-diabetic range, borderline." },
+    { "name": "UA", "value": "Negative for protein, blood, leuks, nitrites; SG 1.012", "unit": "", "referenceRange": "Negative", "flag": "normal" },
+    { "name": "Urine HCG", "value": "Negative", "unit": "", "referenceRange": "Negative", "flag": "normal" }
+  ],
+  "interpretation": "Baseline established. Borderline lipids and HbA1c at 5.7 (pre-diabetic). eGFR 65, age-appropriate. No anemia. Normal LFTs."
+}

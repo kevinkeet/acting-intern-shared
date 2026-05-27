@@ -1,0 +1,28 @@
+{
+  "id": "LAB005",
+  "name": "Step-Down Labs HD16 — DVT Diagnosis Day",
+  "collectedDate": "2027-03-02T06:00:00.000Z",
+  "resultedDate": "2027-03-02T08:30:00.000Z",
+  "orderedBy": "Dr. Marcus Hong (Medicine resident, step-down)",
+  "facility": "Johns Hopkins Inpatient Lab",
+  "specimen": "Serum + plasma",
+  "status": "Final",
+  "results": [
+    { "name": "CBC — WBC", "value": "6.8", "unit": "K/uL", "referenceRange": "4.5-11.0", "flag": "normal" },
+    { "name": "CBC — Hemoglobin", "value": "8.6", "unit": "g/dL", "referenceRange": "12.0-15.5", "flag": "low" },
+    { "name": "CBC — Platelets", "value": "285", "unit": "K/uL", "referenceRange": "150-400", "flag": "normal" },
+    { "name": "CMP — Sodium", "value": "138", "unit": "mmol/L", "referenceRange": "135-145", "flag": "normal" },
+    { "name": "CMP — Potassium", "value": "4.1", "unit": "mmol/L", "referenceRange": "3.5-5.0", "flag": "normal" },
+    { "name": "CMP — BUN", "value": "22", "unit": "mg/dL", "referenceRange": "7-20", "flag": "high" },
+    { "name": "CMP — Creatinine", "value": "1.4", "unit": "mg/dL", "referenceRange": "0.5-1.1", "flag": "high", "interpretation": "Near baseline (1.3); AKI essentially resolved." },
+    { "name": "CMP — Albumin", "value": "2.8", "unit": "g/dL", "referenceRange": "3.5-5.0", "flag": "low" },
+    { "name": "CMP — AST", "value": "28", "unit": "U/L", "referenceRange": "10-40", "flag": "normal" },
+    { "name": "CMP — ALT", "value": "34", "unit": "U/L", "referenceRange": "7-56", "flag": "normal" },
+    { "name": "CMP — ALP", "value": "96", "unit": "U/L", "referenceRange": "44-147", "flag": "normal" },
+    { "name": "CMP — Total bilirubin", "value": "1.0", "unit": "mg/dL", "referenceRange": "0.1-1.2", "flag": "normal" },
+    { "name": "INR", "value": "1.1", "unit": "", "referenceRange": "0.8-1.2", "flag": "normal" },
+    { "name": "aPTT (baseline pre-heparin)", "value": "32", "unit": "sec", "referenceRange": "25-35", "flag": "normal" },
+    { "name": "D-dimer", "value": "8.4", "unit": "ug/mL FEU", "referenceRange": "<0.5", "flag": "high" }
+  ],
+  "interpretation": "Lab values largely normalized except chronic anemia (Hgb 8.6, chronic + ICU, no acute bleeding). LFTs and lipase resolved. Cr near baseline. D-dimer elevated as expected in setting of new VTE (D-dimer was not used diagnostically — confirmed by US). Coags within normal limits, appropriate for therapeutic anticoagulation initiation."
+}

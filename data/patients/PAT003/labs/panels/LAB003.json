@@ -1,0 +1,22 @@
+{
+  "id": "LAB003",
+  "name": "TB Rule-Out Workup + Cultures HD5",
+  "collectedDate": "2027-02-19T06:00:00.000Z",
+  "resultedDate": "2027-02-22T10:30:00.000Z",
+  "orderedBy": "Dr. Lisa Tran (Infectious Disease fellow)",
+  "facility": "Johns Hopkins Hospital Lab + State TB Reference Lab",
+  "specimen": "Sputum (via ET tube suction) x3 + 1 for NAAT; blood; biliary fluid culture follow-up",
+  "status": "Final",
+  "results": [
+    { "name": "Sputum AFB smear #1 (collected 2/19 AM)", "value": "Negative — no acid-fast bacilli seen", "unit": "", "referenceRange": "No AFB", "flag": "normal" },
+    { "name": "Sputum AFB smear #2 (collected 2/20 AM)", "value": "Negative", "unit": "", "referenceRange": "No AFB", "flag": "normal" },
+    { "name": "Sputum AFB smear #3 (collected 2/21 AM)", "value": "Negative", "unit": "", "referenceRange": "No AFB", "flag": "normal" },
+    { "name": "Sputum NAAT (Xpert MTB/RIF) — Mycobacterium tuberculosis complex", "value": "NOT DETECTED", "unit": "", "referenceRange": "Not detected", "flag": "normal" },
+    { "name": "Sputum AFB cultures x3 (final 8-week read)", "value": "No growth at 8 weeks (final 4/16/2027)", "unit": "", "referenceRange": "No growth", "flag": "normal" },
+    { "name": "Biliary fluid culture (from ERCP 2/16)", "value": "E. coli, susceptible to ceftriaxone, ciprofloxacin, piperacillin-tazobactam, ampicillin-sulbactam; intermediate to ampicillin alone; susceptible to gentamicin", "unit": "", "referenceRange": "No growth", "flag": "abnormal" },
+    { "name": "Repeat blood cultures (2/17, ICU)", "value": "No growth at 5 days (final)", "unit": "", "referenceRange": "No growth", "flag": "normal" },
+    { "name": "Admission blood cultures speciation (5/15)", "value": "Coagulase-negative Staphylococcus — confirmed contaminant pattern (single bottle, no time-to-positivity match)", "unit": "", "referenceRange": "No growth", "flag": "normal" },
+    { "name": "Urine culture (2/16)", "value": "No growth at 48h (final)", "unit": "", "referenceRange": "No growth", "flag": "normal" }
+  ],
+  "interpretation": "Active pulmonary tuberculosis effectively RULED OUT: 3 sputum AFB smears negative + Xpert MTB/RIF negative. Final 8-week cultures also negative. Airborne isolation discontinued HD8. Biliary E. coli identified as source organism — sensitive to current pip/tazo. Patient's latent TB infection (2010) remains untreated but no evidence of reactivation."
+}

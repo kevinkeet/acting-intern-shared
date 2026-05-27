@@ -1,5 +1,114 @@
 {
-  "encounters": [],
-  "lastUpdated": "2027-04-12",
-  "_status": "skeleton — encounters to be added in subsequent build chunks"
+  "encounters": [
+    {
+      "id": "ENC001",
+      "date": "2027-02-15T16:30:00.000Z",
+      "dischargeDate": "2027-04-12T11:00:00.000Z",
+      "type": "Inpatient Admission",
+      "department": "Internal Medicine (Hopkins inpatient — MICU, step-down, then 5N general medicine)",
+      "provider": "Dr. Jennifer Beckman (attending), Dr. Marcus Hong / Dr. Anna Reyes (residents), Dr. Sarah Patel / Dr. Daniel Foster (MICU)",
+      "chiefComplaint": "Severe RUQ pain, fevers, lethargy",
+      "diagnoses": [
+        "Severe acute biliary pancreatitis with choledocholithiasis (resolved s/p ERCP 2/16)",
+        "Biliary sepsis (E. coli source, treated)",
+        "Moderate ARDS s/p mechanical ventilation 2/17-2/27 (resolved)",
+        "AKI on CKD (resolved)",
+        "Right lower extremity proximal DVT (3/2, on apixaban)",
+        "ICU-acquired weakness",
+        "Incidental 2.5 cm right upper lobe pulmonary nodule (newly identified)"
+      ],
+      "status": "Discharged to FutureCare Charles Village SNF on 4/12/2027 (HD57)",
+      "interpreterUsed": "Vietnamese (Language Line + in-person)"
+    },
+    {
+      "id": "ENC_HX_007",
+      "date": "2026-10-22T09:00:00.000Z",
+      "type": "Primary Care Visit (annual)",
+      "department": "Primary Care (Charm City Asian Health Center)",
+      "provider": "Dr. Phong Le",
+      "chiefComplaint": "Annual physical; cancer-screening discussion in context of brother's recent death",
+      "diagnoses": [
+        "Hypertension (well-controlled)",
+        "Hyperlipidemia (at goal)",
+        "CKD stage 3a (stable, Cr 1.3)",
+        "Cholelithiasis (symptomatic, surgery declined by patient)",
+        "Latent TB infection (untreated)"
+      ],
+      "status": "Completed",
+      "interpreterUsed": "Vietnamese (Dr. Le bilingual)"
+    },
+    {
+      "id": "ENC_HX_006",
+      "date": "2025-09-30T16:20:00.000Z",
+      "type": "Urgent Care Visit",
+      "department": "Hopkins Bayview Urgent Care",
+      "provider": "Dr. Sandra Kim",
+      "chiefComplaint": "RUQ pain after fatty meals",
+      "diagnoses": ["Symptomatic cholelithiasis (biliary colic)"],
+      "status": "Discharged with surgical referral",
+      "interpreterUsed": "Vietnamese (Language Line)"
+    },
+    {
+      "id": "ENC_HX_005",
+      "date": "2022-11-08T11:00:00.000Z",
+      "type": "Primary Care Visit (annual)",
+      "department": "Primary Care (Charm City Asian Health Center)",
+      "provider": "Dr. Phong Le",
+      "chiefComplaint": "Annual visit; emotional impact of brother's lung cancer diagnosis",
+      "diagnoses": [
+        "Hypertension (well-controlled)",
+        "Hyperlipidemia (at goal)",
+        "CKD stage 2/3a (newly identified)",
+        "Latent TB infection (untreated)"
+      ],
+      "status": "Completed",
+      "interpreterUsed": "Vietnamese (Dr. Le bilingual)"
+    },
+    {
+      "id": "ENC_HX_004",
+      "date": "2018-03-22T10:30:00.000Z",
+      "dischargeDate": "2018-04-15T00:00:00.000Z",
+      "type": "Orthopedic Consult + Surgery + Rehab",
+      "department": "Orthopedic Surgery — Hopkins Bayview",
+      "provider": "Dr. Marcus Reilly",
+      "chiefComplaint": "End-stage right knee OA",
+      "diagnoses": ["End-stage right knee osteoarthritis (KL grade 4)", "s/p Right TKA 4/12/2018"],
+      "status": "Completed",
+      "interpreterUsed": "Vietnamese (in-person Hopkins Language Services)"
+    },
+    {
+      "id": "ENC_HX_003",
+      "date": "2015-03-12T09:30:00.000Z",
+      "type": "Primary Care Visit (annual)",
+      "department": "Primary Care (Charm City Asian Health Center)",
+      "provider": "Dr. Phong Le",
+      "chiefComplaint": "Annual visit",
+      "diagnoses": ["Hypertension (well-controlled)", "New hyperlipidemia (LDL 168) — started statin", "Latent TB infection (untreated)"],
+      "status": "Completed",
+      "interpreterUsed": "Vietnamese (Dr. Le bilingual)"
+    },
+    {
+      "id": "ENC_HX_002",
+      "date": "2010-06-15T14:00:00.000Z",
+      "type": "Pulmonary / ID Consult",
+      "department": "Pulmonary / Infectious Diseases — Hopkins Bayview",
+      "provider": "Dr. Karen O'Sullivan",
+      "chiefComplaint": "Positive PPD evaluation",
+      "diagnoses": ["Latent tuberculosis infection — INH declined by patient"],
+      "status": "Completed",
+      "interpreterUsed": "Vietnamese (in-person Hopkins Language Services)"
+    },
+    {
+      "id": "ENC_HX_001",
+      "date": "2010-04-18T10:15:00.000Z",
+      "type": "New Patient Visit (Establishing Care)",
+      "department": "Primary Care (Charm City Asian Health Center)",
+      "provider": "Dr. Phong Le",
+      "chiefComplaint": "Workplace PPD positive — establishing primary care",
+      "diagnoses": ["Latent TB infection (suspected, confirmed at consult)", "New hypertension", "Tobacco use (current)"],
+      "status": "Completed",
+      "interpreterUsed": "Vietnamese (Dr. Le bilingual)"
+    }
+  ],
+  "lastUpdated": "2027-04-12"
 }

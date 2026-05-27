@@ -1,0 +1,28 @@
+{
+  "id": "LAB004",
+  "name": "MICU AM Labs HD8 — Improving",
+  "collectedDate": "2027-02-22T05:30:00.000Z",
+  "resultedDate": "2027-02-22T07:00:00.000Z",
+  "orderedBy": "Dr. Sarah Patel (MICU resident)",
+  "facility": "Johns Hopkins Inpatient Lab",
+  "specimen": "Serum + plasma",
+  "status": "Final",
+  "results": [
+    { "name": "CBC — WBC", "value": "9.2", "unit": "K/uL", "referenceRange": "4.5-11.0", "flag": "normal" },
+    { "name": "CBC — Hemoglobin", "value": "8.4", "unit": "g/dL", "referenceRange": "12.0-15.5", "flag": "low" },
+    { "name": "CBC — Platelets", "value": "312", "unit": "K/uL", "referenceRange": "150-400", "flag": "normal" },
+    { "name": "CMP — Sodium", "value": "139", "unit": "mmol/L", "referenceRange": "135-145", "flag": "normal" },
+    { "name": "CMP — Potassium", "value": "3.4", "unit": "mmol/L", "referenceRange": "3.5-5.0", "flag": "low" },
+    { "name": "CMP — BUN", "value": "38", "unit": "mg/dL", "referenceRange": "7-20", "flag": "high" },
+    { "name": "CMP — Creatinine", "value": "1.6", "unit": "mg/dL", "referenceRange": "0.5-1.1", "flag": "high", "interpretation": "Improving from peak 2.6; trending toward baseline 1.3." },
+    { "name": "CMP — Albumin", "value": "2.6", "unit": "g/dL", "referenceRange": "3.5-5.0", "flag": "low" },
+    { "name": "CMP — AST", "value": "48", "unit": "U/L", "referenceRange": "10-40", "flag": "high" },
+    { "name": "CMP — ALT", "value": "62", "unit": "U/L", "referenceRange": "7-56", "flag": "high" },
+    { "name": "CMP — ALP", "value": "88", "unit": "U/L", "referenceRange": "44-147", "flag": "normal" },
+    { "name": "CMP — Total bilirubin", "value": "1.6", "unit": "mg/dL", "referenceRange": "0.1-1.2", "flag": "high" },
+    { "name": "Lipase", "value": "240", "unit": "U/L", "referenceRange": "0-160", "flag": "high" },
+    { "name": "Lactate", "value": "1.4", "unit": "mmol/L", "referenceRange": "0.5-2.0", "flag": "normal" },
+    { "name": "ABG (on vent, FiO2 0.45, PEEP 10)", "value": "pH 7.38 / pCO2 36 / pO2 76 / HCO3 22 / SpO2 96%", "unit": "", "referenceRange": "", "flag": "improving", "interpretation": "P/F 168 — moderate ARDS, improving from 124." }
+  ],
+  "interpretation": "Improving across the board. WBC normalized, lactate cleared, LFTs improving, Cr down to 1.6 from peak 2.6, lipase trending down. Hypokalemia (K 3.4) — replacing. Mild anemia. P/F ratio improving."
+}

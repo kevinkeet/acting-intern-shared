@@ -1,0 +1,14 @@
+{
+  "id": "IMG_HX_001",
+  "date": "2010-06-15T14:30:00.000Z",
+  "modality": "X-Ray",
+  "description": "Chest X-Ray, 2 views (PA + lateral)",
+  "facility": "Johns Hopkins Bayview Pulmonary / Infectious Disease Clinic",
+  "status": "Final",
+  "radiologist": "Dr. Margaret Nguyen (no relation)",
+  "indication": "Evaluation of positive PPD (14 mm) in a Vietnamese-born adult; rule out active pulmonary tuberculosis.",
+  "technique": "PA and lateral views of the chest with adequate inspiration and penetration.",
+  "findings": "Lungs are clear bilaterally. No focal consolidation, mass, or pleural effusion. No cavitary lesions. No upper-lobe scarring. No miliary pattern. Cardiomediastinal silhouette within normal limits. Hila are without lymphadenopathy. No nodules visualized at this resolution. Bony thorax is unremarkable.",
+  "impression": "1. NO RADIOGRAPHIC EVIDENCE OF ACTIVE OR HEALED PULMONARY TUBERCULOSIS.\n2. No nodules, masses, or focal infiltrates identified.\n3. No acute cardiopulmonary process.",
+  "comparison": "None available."
+}

@@ -1,6 +1,76 @@
 {
-  "panels": [],
-  "totalResults": 0,
-  "lastUpdated": "2027-04-12",
-  "_status": "skeleton — panels to be added in subsequent build chunks"
+  "panels": [
+    {
+      "id": "LAB006",
+      "name": "Discharge Labs HD57",
+      "collectedDate": "2027-04-12T05:30:00.000Z",
+      "orderedBy": "Dr. Anna Reyes",
+      "preview": "WBC 6.4, Hgb 10.5, Plt 256. Cr 1.3 (baseline). LFTs normal. Alb 3.2 (low normal). INR 1.0."
+    },
+    {
+      "id": "LAB005",
+      "name": "Step-Down Labs HD16 — DVT Diagnosis Day",
+      "collectedDate": "2027-03-02T06:00:00.000Z",
+      "orderedBy": "Dr. Marcus Hong",
+      "preview": "Cr 1.4 (near baseline). Hgb 8.6. INR 1.1, aPTT 32, D-dimer 8.4 (elevated, consistent with new VTE). Coags appropriate for therapeutic anticoag initiation."
+    },
+    {
+      "id": "LAB004",
+      "name": "MICU AM Labs HD8 — Improving",
+      "collectedDate": "2027-02-22T05:30:00.000Z",
+      "orderedBy": "Dr. Sarah Patel",
+      "preview": "WBC 9.2 (normalized from peak 19.8). Cr 1.6 (down from peak 2.6). Lactate 1.4 (cleared). Lipase 240 (down from peak 1124). P/F 168 (improving from 124, moderate ARDS)."
+    },
+    {
+      "id": "LAB003",
+      "name": "TB Rule-Out Workup HD5 (results final 2/22)",
+      "collectedDate": "2027-02-19T06:00:00.000Z",
+      "orderedBy": "Dr. Lisa Tran (ID)",
+      "preview": "3 sputum AFB smears NEGATIVE. Sputum Xpert MTB/RIF NOT DETECTED. Sputum AFB cultures (final 8-week read 4/16) all NEGATIVE. Biliary fluid culture grew E. coli, pansensitive."
+    },
+    {
+      "id": "LAB002",
+      "name": "MICU AM Labs HD2 — Worsening Sepsis",
+      "collectedDate": "2027-02-16T05:30:00.000Z",
+      "orderedBy": "Dr. Marcus Hong",
+      "preview": "WBC 19.8 (up). Cr 2.1 (up). T-bili 4.1 (up). Lipase 1124. Lactate 3.8. Biliary fluid Gram-negative rods. P/F 124 (ARDS criteria). Patient on low-dose norepi."
+    },
+    {
+      "id": "LAB001",
+      "name": "ED Admission Labs — Biliary Pancreatitis",
+      "collectedDate": "2027-02-15T16:30:00.000Z",
+      "orderedBy": "Dr. Kavita Patel (ED)",
+      "preview": "WBC 17.3, Hgb 10.2, Plt 345. Cr 1.8 (from baseline 1.3, AKI on CKD). T-bili 3.2 with direct fraction. ALP 102. Lipase 603. Lactate 3.2. Procalcitonin 4.8."
+    },
+    {
+      "id": "LAB_HX_004",
+      "name": "Annual PCP Labs (pre-admission)",
+      "collectedDate": "2026-10-22T09:30:00.000Z",
+      "orderedBy": "Dr. Phong Le",
+      "preview": "Most recent baseline labs. WBC 5.8, Hgb 11.6 (chronic mild anemia), Plt 232. Cr 1.3 (CKD III stable, eGFR 47). LDL 78 at goal. HbA1c 5.8 pre-diabetic stable. Vit D 28 (low)."
+    },
+    {
+      "id": "LAB_HX_003",
+      "name": "Annual PCP Labs (CKD discovery)",
+      "collectedDate": "2022-11-08T11:30:00.000Z",
+      "orderedBy": "Dr. Phong Le",
+      "preview": "CKD stage 3a newly identified (Cr 1.2 from prior 0.9-1.0, eGFR 47, microalbuminuria ACR 62). Hgb 11.8 (early CKD anemia). LDL 82 at goal."
+    },
+    {
+      "id": "LAB_HX_002",
+      "name": "LTBI Workup (Pulm/ID Consult)",
+      "collectedDate": "2010-04-30T08:00:00.000Z",
+      "orderedBy": "Dr. Karen O'Sullivan",
+      "preview": "Positive PPD 14 mm + positive QuantiFERON-TB Gold. HIV/Hep B/Hep C all negative. Baseline LFTs normal. 3 sputum AFB smears + 8-week cultures all negative. Latent TB infection confirmed; INH offered, patient declined."
+    },
+    {
+      "id": "LAB_HX_001",
+      "name": "Initial PCP Labs (Establishing Care)",
+      "collectedDate": "2010-04-18T11:00:00.000Z",
+      "orderedBy": "Dr. Phong Le",
+      "preview": "Baseline (age 55). Cr 0.9 (eGFR 65). Borderline lipids (LDL 148). HbA1c 5.7 (pre-diabetic). Normal LFTs, CBC, UA."
+    }
+  ],
+  "totalResults": 10,
+  "lastUpdated": "2027-04-12"
 }

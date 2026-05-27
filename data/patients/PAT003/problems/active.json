@@ -1,5 +1,167 @@
 {
-  "problems": [],
+  "problems": [
+    {
+      "id": "PRB001",
+      "name": "Severe acute biliary pancreatitis (resolved)",
+      "icd10": "K85.10",
+      "snomed": "439081002",
+      "onsetDate": "2027-02-15",
+      "date": "2027-02-15",
+      "diagnosedBy": "Dr. Marcus Hong / Dr. Jennifer Beckman (admission 2/15/2027)",
+      "priority": "High",
+      "notes": "Clinically and biochemically resolved. Status post emergent ERCP 2/16/2027 with sphincterotomy + CBD stone extraction; biliary E. coli identified. Source-controlled and treated with 13 days of pip/tazo."
+    },
+    {
+      "id": "PRB002",
+      "name": "Right lower extremity proximal deep vein thrombosis (acute, provoked)",
+      "icd10": "I82.401",
+      "snomed": "5375008",
+      "onsetDate": "2027-03-02",
+      "date": "2027-03-02",
+      "diagnosedBy": "Dr. Allyson Pishko / Dr. Maya Singh (Hematology consult)",
+      "priority": "High",
+      "notes": "Right CFV through popliteal vein. Provoked by prolonged ICU course + immobility + severe pancreatitis. On apixaban 5 mg PO BID since 3/9/2027 (after 7 days at 10 mg BID loading). Planned ≥3-month treatment duration; outpatient hematology to reassess."
+    },
+    {
+      "id": "PRB003",
+      "name": "Cholelithiasis (chronic, symptomatic)",
+      "icd10": "K80.20",
+      "snomed": "266474003",
+      "onsetDate": "2025-09-30",
+      "date": "2025-09-30",
+      "diagnosedBy": "Dr. Sandra Kim (Hopkins Bayview UC, US 9/30/2025)",
+      "priority": "Medium",
+      "notes": "Known multiple gallstones in distended gallbladder. Prior surgery deferred by patient. Now symptomatic with severe acute biliary pancreatitis (2/2027) — elective cholecystectomy planned outpatient ~6/2027 with General Surgery (Dr. Markovich)."
+    },
+    {
+      "id": "PRB004",
+      "name": "Hypertension (essential)",
+      "icd10": "I10",
+      "snomed": "59621000",
+      "onsetDate": "2010-04-18",
+      "date": "2010-04-18",
+      "diagnosedBy": "Dr. Phong Le, PCP",
+      "priority": "Medium",
+      "notes": "Well-controlled chronic HTN, currently on lisinopril 5 mg PO daily (dose decreased from 10 to 5 in 1/2026 with CKD progression). BP at goal."
+    },
+    {
+      "id": "PRB005",
+      "name": "Hyperlipidemia",
+      "icd10": "E78.5",
+      "snomed": "55822004",
+      "onsetDate": "2015-03-12",
+      "date": "2015-03-12",
+      "diagnosedBy": "Dr. Phong Le, PCP",
+      "priority": "Medium",
+      "notes": "Initial LDL 168. Well-controlled on atorvastatin 40 mg daily; LDL at goal <100."
+    },
+    {
+      "id": "PRB006",
+      "name": "Chronic kidney disease, stage 3a",
+      "icd10": "N18.30",
+      "snomed": "433144002",
+      "onsetDate": "2022-11-08",
+      "date": "2022-11-08",
+      "diagnosedBy": "Dr. Phong Le (incidentally noted on annual labs)",
+      "priority": "Medium",
+      "notes": "Baseline Cr 1.3 (eGFR 47). Slow progression from 0.9 over 12 years. Contributors: HTN, chronic NSAID use (now minimized), age. AKI superimposed during 2/2027 admission resolved to baseline. AVOID NSAIDs and IV contrast (pre-medicate if essential)."
+    },
+    {
+      "id": "PRB007",
+      "name": "Latent tuberculosis infection (untreated)",
+      "icd10": "Z22.7",
+      "snomed": "11999007",
+      "onsetDate": "2010-04-30",
+      "date": "2010-04-30",
+      "diagnosedBy": "Dr. Karen O'Sullivan (Pulm/ID, Hopkins Bayview)",
+      "priority": "Low",
+      "notes": "PPD 14 mm + IGRA positive in 2010 (workplace screening). 8 documented declinations of INH treatment over 16 years. Active TB ruled out during 2/2027 admission (3 AFB smears + Xpert MTB/RIF negative). Continue monitoring for symptoms of reactivation."
+    },
+    {
+      "id": "PRB008",
+      "name": "Right TKA (status post 4/2018)",
+      "icd10": "Z96.651",
+      "snomed": "446191007",
+      "onsetDate": "2018-04-12",
+      "date": "2018-04-12",
+      "diagnosedBy": "Dr. Marcus Reilly (Orthopedic Surgery, Hopkins Bayview)",
+      "priority": "Low",
+      "notes": "Excellent outcome; no acute issues. Surgical history reference only."
+    },
+    {
+      "id": "PRB009",
+      "name": "Left knee osteoarthritis",
+      "icd10": "M17.12",
+      "snomed": "239873007",
+      "onsetDate": "2015-03-12",
+      "date": "2015-03-12",
+      "diagnosedBy": "Dr. Phong Le",
+      "priority": "Low",
+      "notes": "KL grade 2. Conservative management with topical diclofenac gel + acetaminophen. AVOID systemic NSAIDs given CKD + apixaban."
+    },
+    {
+      "id": "PRB010",
+      "name": "Anemia, chronic (CKD-related, anemia of chronic disease)",
+      "icd10": "D63.1",
+      "snomed": "234351002",
+      "onsetDate": "2022-11-08",
+      "date": "2022-11-08",
+      "diagnosedBy": "Dr. Phong Le",
+      "priority": "Low",
+      "notes": "Hgb chronically 11.5-12.0 baseline. Nadir Hgb 7.4 during ICU; received 1 unit PRBC. Discharge Hgb 10.5 — improving toward baseline. No active bleeding."
+    },
+    {
+      "id": "PRB011",
+      "name": "Osteopenia",
+      "icd10": "M85.8",
+      "snomed": "312894000",
+      "onsetDate": "2020-03-12",
+      "date": "2020-03-12",
+      "priority": "Low",
+      "notes": "T-score -1.8 femoral neck on 2020 DEXA. On calcium + vitamin D supplementation. No fragility fractures."
+    },
+    {
+      "id": "PRB012",
+      "name": "Pre-diabetes",
+      "icd10": "R73.03",
+      "snomed": "714628002",
+      "onsetDate": "2015-03-12",
+      "date": "2015-03-12",
+      "priority": "Low",
+      "notes": "HbA1c 5.6-5.8 historically. Diet/lifestyle counseling only. Will reassess at outpatient follow-up."
+    },
+    {
+      "id": "PRB013",
+      "name": "Right upper lobe pulmonary nodule, 2.5 cm",
+      "icd10": "R91.1",
+      "snomed": "427359005",
+      "onsetDate": "2027-02-16",
+      "date": "2027-02-16",
+      "diagnosedBy": "Hopkins Radiology (Dr. Sandra Wu CXR 2/16; Dr. Anil Vachani CT 3/15)",
+      "priority": "High",
+      "notes": "INCIDENTAL FINDING during sepsis workup admission. Solitary 2.5 cm well-circumscribed solid lesion in apical segment of RUL. Stable across 4 weeks of serial imaging (CXRs 2/16, 2/17, 2/18; dedicated CT 3/15). Indeterminate-to-suspicious imaging characteristics. Active TB ruled out this admission. Radiologist recommendation: percutaneous CT-guided biopsy OR repeat CT in 3 months. **FOLLOW-UP TO BE OPERATIONALIZED — currently no specific outpatient appointment booked for this finding.** Note: this problem was added to the active problem list on 4/12/2027 (discharge day) by the medicine team upon final review of imaging."
+    },
+    {
+      "id": "PRB014",
+      "name": "Penicillin allergy",
+      "icd10": "Z88.0",
+      "snomed": "294505008",
+      "onsetDate": "1960-01-01",
+      "date": "1960-01-01",
+      "priority": "Low",
+      "notes": "Childhood rash, non-anaphylactic, never re-challenged. Tolerated piperacillin-tazobactam during 2/2027 admission without reaction — confirms low cross-reactivity for current β-lactams in the family."
+    },
+    {
+      "id": "PRB015",
+      "name": "Iodinated contrast allergy",
+      "icd10": "Z88.8",
+      "snomed": "294501004",
+      "onsetDate": "2019-08-04",
+      "date": "2019-08-04",
+      "priority": "Medium",
+      "notes": "Urticarial reaction with facial flushing during 2019 contrast CT. Subsequent contrast studies (including 2/2027 admission CT and 3/15/2027 follow-up chest CT) have used Hopkins Radiology pre-medication protocol (prednisone at 13, 7, 1 hr + diphenhydramine at 1 hr) without reaction. PRE-MEDICATION REQUIRED FOR ANY FUTURE IV CONTRAST IMAGING."
+    }
+  ],
   "lastUpdated": "2027-04-12",
-  "_status": "skeleton — problems to be added in subsequent build chunks"
+  "reviewedBy": "Dr. Anna Reyes (PGY-2) at discharge"
 }

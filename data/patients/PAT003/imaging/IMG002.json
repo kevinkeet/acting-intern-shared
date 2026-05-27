@@ -1,0 +1,14 @@
+{
+  "id": "IMG002",
+  "date": "2027-02-16T09:00:00.000Z",
+  "modality": "X-Ray",
+  "description": "Chest X-Ray, single AP portable",
+  "facility": "Johns Hopkins Hospital (portable, medicine floor 5N)",
+  "status": "Final",
+  "radiologist": "Dr. Sandra Wu",
+  "indication": "Evaluate for pneumonia in setting of new hypoxemia, increasing oxygen requirements, and possible aspiration during emesis on admission. Patient with prior LTBI history.",
+  "technique": "Single AP portable view at semi-upright position. Image quality moderate due to patient size and supine technique.",
+  "findings": "Bilateral interstitial markings present, more pronounced in the right mid-lung field. Small bilateral pleural effusions, right greater than left. No focal alveolar consolidation. No air bronchograms. No pneumothorax.\n\nCardiomediastinal silhouette appears within normal limits accounting for AP technique. Hila are without obvious adenopathy.\n\n**A WELL-CIRCUMSCRIBED OPACITY MEASURING APPROXIMATELY 2.5 CM IS NOTED IN THE RIGHT UPPER LOBE.** The lesion appears solid with a slightly irregular border on this view. No cavitation. No calcification clearly identified. No surrounding consolidation. Not visible on the prior ED CXR from 2/15/2027 PM (which was underpenetrated).\n\nLungs are otherwise without focal consolidation. No prominent miliary or upper-lobe scarring pattern that would specifically suggest active or healed tuberculosis. Bony thorax intact.\n\nOsseous structures and visualized soft tissues are otherwise unremarkable. Surgical clips noted in the right upper abdomen — likely cholecystic field or peri-pancreatic; no acute findings related.",
+  "impression": "1. Bilateral interstitial markings with small bilateral pleural effusions — findings are nonspecific and may reflect early ARDS, pulmonary edema from resuscitation, or evolving pneumonia. Clinical correlation recommended.\n2. **INCIDENTAL 2.5 cm right upper lobe pulmonary nodule, newly visualized.** Not present on prior 2/15 ED CXR (which was underpenetrated and of limited evaluation). No prior cross-sectional or comparison imaging available. Differential includes primary lung malignancy, granuloma, infectious nodule (including atypical mycobacterial or fungal etiologies), or other. **RECOMMEND DEDICATED CHEST CT FOR FURTHER CHARACTERIZATION when patient's clinical condition permits.**\n3. No focal pneumonia identified on this study.",
+  "comparison": "Prior CXR 2/15/2027 evening (ED): limited by underpenetration. No clear nodule on that view. Prior CXR 6/15/2010 (Hopkins Bayview Pulm/ID clinic, during LTBI workup): no nodule. The current finding is new compared to 2010."
+}

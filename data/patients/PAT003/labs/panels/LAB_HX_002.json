@@ -1,0 +1,25 @@
+{
+  "id": "LAB_HX_002",
+  "name": "LTBI Workup (Pulm/ID Consult)",
+  "collectedDate": "2010-04-30T08:00:00.000Z",
+  "resultedDate": "2010-08-15T00:00:00.000Z",
+  "orderedBy": "Dr. Karen O'Sullivan (Pulm/ID, Hopkins Bayview)",
+  "facility": "Johns Hopkins / Maryland State TB Reference Lab",
+  "specimen": "Serum + sputum (3 samples) + blood",
+  "status": "Final",
+  "results": [
+    { "name": "PPD (placed 3/15/2010, read 3/17/2010 at 48 hrs)", "value": "14 mm induration", "unit": "mm", "referenceRange": "Negative if <5 mm; positive ≥10 mm in foreign-born from high-prevalence areas", "flag": "positive" },
+    { "name": "QuantiFERON-TB Gold", "value": "POSITIVE", "unit": "", "referenceRange": "Negative", "flag": "positive" },
+    { "name": "HIV 1/2 Ag/Ab", "value": "Non-reactive", "unit": "", "referenceRange": "Non-reactive", "flag": "normal" },
+    { "name": "Hepatitis B surface antigen", "value": "Negative", "unit": "", "referenceRange": "Negative", "flag": "normal" },
+    { "name": "Hepatitis B core antibody (total)", "value": "Negative", "unit": "", "referenceRange": "Negative", "flag": "normal" },
+    { "name": "Hepatitis C antibody", "value": "Negative", "unit": "", "referenceRange": "Negative", "flag": "normal" },
+    { "name": "LFTs — AST", "value": "22", "unit": "U/L", "referenceRange": "10-40", "flag": "normal" },
+    { "name": "LFTs — ALT", "value": "18", "unit": "U/L", "referenceRange": "7-56", "flag": "normal" },
+    { "name": "LFTs — ALP", "value": "65", "unit": "U/L", "referenceRange": "44-147", "flag": "normal" },
+    { "name": "LFTs — T-bili", "value": "0.6", "unit": "mg/dL", "referenceRange": "0.1-1.2", "flag": "normal" },
+    { "name": "Sputum AFB smear x3 (induced, 5/12, 5/13, 5/14)", "value": "All negative", "unit": "", "referenceRange": "No AFB", "flag": "normal" },
+    { "name": "Sputum AFB cultures x3 (final 8-week read)", "value": "All negative", "unit": "", "referenceRange": "No growth", "flag": "normal" }
+  ],
+  "interpretation": "Latent tuberculosis infection (LTBI) confirmed: positive PPD 14 mm + positive QuantiFERON-TB Gold; no clinical or microbiological evidence of active TB (3 AFB smears + 8-week cultures all negative; CXR normal). HIV/Hep B/Hep C all negative. Baseline LFTs normal — safe for INH therapy. Patient ultimately declined INH treatment."
+}
