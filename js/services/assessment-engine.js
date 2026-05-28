@@ -52,6 +52,14 @@ const AssessmentEngine = (() => {
         return SupabaseSync.client || null;
     }
 
+    // True when the active attempt is a local-only synthetic row (id prefixed
+    // 'local-'). Such attempts must NOT be written to the DB even though a
+    // Supabase client exists — the row doesn't exist there, so updates and
+    // FK-bound child inserts would fail.
+    function _isLocalAttempt() {
+        return !!(_attempt && typeof _attempt.id === 'string' && _attempt.id.startsWith('local-'));
+    }
+
     function _userId() {
         if (typeof SupabaseSync === 'undefined') return null;
         const u = SupabaseSync.getUser ? SupabaseSync.getUser() : SupabaseSync._user;
@@ -114,54 +122,63 @@ const AssessmentEngine = (() => {
 
         const sb = _sb();
         const userId = _userId();
-        const userCode = (typeof UserCode !== 'undefined') ? UserCode.get() : null;
+        let userCode = (typeof UserCode !== 'undefined') ? UserCode.get() : null;
+
+        const localFallback = (code) => {
+            const id = (typeof crypto !== 'undefined' && crypto.randomUUID)
+                ? 'local-' + crypto.randomUUID()
+                : 'local-' + Date.now() + '-' + Math.random().toString(36).slice(2, 10);
+            return { id, user_id: 'local', user_code: code || null, started_at: new Date().toISOString(), ...baseRow };
+        };
 
         // No Supabase client at all → local-only fallback.
-        if (!sb) {
-            const id = (typeof crypto !== 'undefined' && crypto.randomUUID)
-                ? 'local-' + crypto.randomUUID()
-                : 'local-' + Date.now() + '-' + Math.random().toString(36).slice(2, 10);
-            return { id, user_id: 'local', user_code: userCode, started_at: new Date().toISOString(), ...baseRow };
-        }
+        if (!sb) return localFallback(userCode);
 
-        // Insert with whichever identity we have. The DB requires AT LEAST
-        // one of user_id or user_code (per 002_user_code_identity.sql).
-        if (!userId && !userCode) {
-            // Should not happen — start() guards against this by prompting
-            // for a code first. Defensive fallback to local mode.
-            const id = (typeof crypto !== 'undefined' && crypto.randomUUID)
-                ? 'local-' + crypto.randomUUID()
-                : 'local-' + Date.now() + '-' + Math.random().toString(36).slice(2, 10);
-            return { id, user_id: 'local', user_code: null, started_at: new Date().toISOString(), ...baseRow };
-        }
+        // The DB requires AT LEAST one of user_id / user_code
+        // (per 002_user_code_identity.sql). start() guards this, but be safe.
+        if (!userId && !userCode) return localFallback(null);
 
-        // Try the modern insert (with user_code). If the column doesn't
-        // exist yet (002_user_code_identity.sql not applied), fall back
-        // to legacy insert (user_id only) or local mode if no auth.
-        let resp = await sb
-            .from('test_attempts')
-            .insert({
-                user_id: userId || null,
-                user_code: userCode || null,
-                ...baseRow,
-            })
-            .select()
-            .single();
+        const doInsert = (row) =>
+            sb.from('test_attempts').insert(row).select().single();
 
+        // 1) Primary attempt — whichever identity we have.
+        let resp = await doInsert({
+            user_id: userId || null,
+            user_code: userCode || null,
+            ...baseRow,
+        });
+
+        // 2) Missing-column fallback (migration 002 not applied yet).
         if (resp.error && /user_code|schema cache/i.test(resp.error.message || '')) {
-            WARN('user_code column missing — falling back. Apply supabase/migrations/002_user_code_identity.sql to enable code-based identity.');
+            WARN('user_code column missing — apply supabase/migrations/002_user_code_identity.sql. Falling back.');
             if (userId) {
-                resp = await sb
-                    .from('test_attempts')
-                    .insert({ user_id: userId, ...baseRow })
-                    .select()
-                    .single();
+                resp = await doInsert({ user_id: userId, ...baseRow });
             } else {
-                // No Supabase identity and DB can't accept code → local-only.
-                const id = (typeof crypto !== 'undefined' && crypto.randomUUID)
-                    ? 'local-' + crypto.randomUUID()
-                    : 'local-' + Date.now() + '-' + Math.random().toString(36).slice(2, 10);
-                return { id, user_id: 'local', user_code: userCode, started_at: new Date().toISOString(), ...baseRow };
+                return localFallback(userCode);
+            }
+        }
+
+        // 3) RLS fallback — the (user_id) identity was rejected. This happens
+        //    when a Supabase session has expired/refreshed but a stale user
+        //    object lingered: the request goes out anonymous (auth.uid() null)
+        //    while we sent a non-null user_id, so neither RLS branch matches.
+        //    Recover by inserting a pure code-based row (prompting for a code
+        //    if the resident doesn't have one yet).
+        if (resp.error && /row-level security|violates row-level/i.test(resp.error.message || '')) {
+            WARN('RLS rejected the insert (likely a stale/expired Supabase session). Retrying as code-based.');
+            if (!userCode && typeof UserCode !== 'undefined') {
+                try {
+                    userCode = await UserCode.prompt({
+                        reason: 'To save this attempt we need an identity code (your sign-in session is not active). Pick a code to continue.',
+                    });
+                } catch (e) { userCode = null; }
+            }
+            if (userCode) {
+                resp = await doInsert({ user_id: null, user_code: userCode, ...baseRow });
+            }
+            if (resp.error) {
+                WARN('Code-based retry also failed; using local-only mode.', resp.error.message);
+                return localFallback(userCode);
             }
         }
 
@@ -173,7 +190,7 @@ const AssessmentEngine = (() => {
         if (!_attempt) return;
         Object.assign(_attempt, patch);
         const sb = _sb();
-        if (!sb) return;
+        if (!sb || _isLocalAttempt()) return;
         const { error } = await sb
             .from('test_attempts')
             .update({
@@ -190,7 +207,7 @@ const AssessmentEngine = (() => {
 
     async function _insertOrUpdateResponse(payload) {
         const sb = _sb();
-        if (!sb) {
+        if (!sb || _isLocalAttempt()) {
             // Local mode — merge into in-memory map and return the row so the
             // caller can also store it (caller does _responses.set on truthy).
             const existing = _responses.get(payload.prompt_id) || {};
@@ -210,7 +227,7 @@ const AssessmentEngine = (() => {
 
     async function _loadResponses(attemptId) {
         const sb = _sb();
-        if (!sb) {
+        if (!sb || _isLocalAttempt()) {
             // Local mode — return whatever is in the in-memory map.
             return Array.from(_responses.values());
         }

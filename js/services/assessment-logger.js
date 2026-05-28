@@ -83,10 +83,13 @@ const AssessmentLogger = (() => {
 
     async function _writeRow(row) {
         const sb = _supabase();
-        if (!sb) {
+        // Local-only attempts (id prefixed 'local-') have no DB parent row, so
+        // an assessment_ai_log insert would FK-fail. Skip persistence for them.
+        const isLocal = typeof row.attempt_id === 'string' && row.attempt_id.startsWith('local-');
+        if (!sb || isLocal) {
             // Queue for later; if a session restarts, we accept the loss
             // (these are observational, not gate-critical).
-            _queue.push(row);
+            if (!isLocal) _queue.push(row);
             return;
         }
         try {
