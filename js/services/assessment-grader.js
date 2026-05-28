@@ -16,6 +16,13 @@ const AssessmentGrader = (() => {
     const GRADER_MODEL = 'claude-sonnet-4-6';
     const SAMPLE_MODEL = 'claude-sonnet-4-6';
 
+    // ── Grading reliability (important for the RCT primary endpoint) ──
+    // LLM-as-judge scores are noisy. We pin a low temperature for stability
+    // and aggregate several independent gradings (median) to shrink the
+    // measurement error that would otherwise inflate variance and cost power.
+    const GRADER_TEMPERATURE = 0.0;   // deterministic-leaning judge
+    const GRADER_SAMPLES = 3;         // independent gradings per response; median is the score
+
     const LOG = (...args) => console.log('🧮 Grader', ...args);
     const WARN = (...args) => console.warn('🧮 Grader', ...args);
 
@@ -99,16 +106,11 @@ const AssessmentGrader = (() => {
      *      the AI sample the resident was critiquing
      * @returns {Promise<{score:number, breakdown:object, notes:string, raw:string}>}
      */
-    async function grade(prompt, responseText, opts = {}) {
-        if (!responseText || !responseText.trim()) {
-            return {
-                score: 0,
-                breakdown: { essential_hit: [], essential_missed: ['(no response submitted)'], bonus_hit: [], red_flags_triggered: [] },
-                notes: 'No response was submitted.',
-                raw: '',
-            };
-        }
-
+    /**
+     * One independent grading pass. Returns { ok, score, breakdown, notes, raw }.
+     * `ok` is false when the API call failed or the output was unparseable.
+     */
+    async function _gradeOnce(prompt, responseText, opts = {}) {
         const rubric = prompt.rubric || {};
         const isAIEval = prompt.type === 'ai-output-evaluation';
         const isPlaceholderRubric = _rubricIsAllTODO(rubric);
@@ -123,10 +125,12 @@ const AssessmentGrader = (() => {
                 userMessage,
                 model: GRADER_MODEL,
                 maxTokens: 1200,
+                temperature: GRADER_TEMPERATURE,
             });
         } catch (err) {
             WARN('grade call failed:', err.message);
             return {
+                ok: false,
                 score: 0,
                 breakdown: { essential_hit: [], essential_missed: ['(grader call failed)'], bonus_hit: [], red_flags_triggered: [] },
                 notes: 'Grader call failed: ' + err.message,
@@ -137,6 +141,7 @@ const AssessmentGrader = (() => {
         const parsed = _parseGraderResponse(raw);
         if (!parsed) {
             return {
+                ok: false,
                 score: 0,
                 breakdown: { essential_hit: [], essential_missed: ['(grader output unparseable)'], bonus_hit: [], red_flags_triggered: [] },
                 notes: 'Grader returned a response we could not parse as JSON.',
@@ -145,10 +150,102 @@ const AssessmentGrader = (() => {
         }
 
         return {
+            ok: true,
             score: _clampScore(parsed.score),
             breakdown: parsed.breakdown || {},
             notes: parsed.notes || '',
             raw,
+        };
+    }
+
+    /**
+     * Grade a response. Runs GRADER_SAMPLES independent gradings and returns the
+     * MEDIAN score to reduce LLM-judge measurement noise (the breakdown/notes come
+     * from the sample closest to the median; all sample scores are kept in
+     * breakdown._graderSamples for audit). Partial failures are tolerated — as
+     * long as one grading succeeds we aggregate the successful ones.
+     */
+    async function grade(prompt, responseText, opts = {}) {
+        if (!responseText || !responseText.trim()) {
+            return {
+                score: 0,
+                breakdown: { essential_hit: [], essential_missed: ['(no response submitted)'], bonus_hit: [], red_flags_triggered: [] },
+                notes: 'No response was submitted.',
+                raw: '',
+            };
+        }
+
+        const runs = Math.max(1, GRADER_SAMPLES);
+        const settled = await Promise.all(
+            Array.from({ length: runs }, () => _gradeOnce(prompt, responseText, opts))
+        );
+
+        const ok = settled.filter((r) => r.ok);
+        if (ok.length === 0) {
+            // Every grading failed — surface the first failure reason as before.
+            const { ok: _omit, ...failure } = settled[0];
+            return failure;
+        }
+
+        const sortedScores = ok.map((r) => r.score).sort((a, b) => a - b);
+        const medianScore = _median(sortedScores);
+        // Representative breakdown/notes: the successful sample closest to the median.
+        const repr = ok.reduce(
+            (best, r) => (Math.abs(r.score - medianScore) < Math.abs(best.score - medianScore) ? r : best),
+            ok[0]
+        );
+
+        return {
+            score: medianScore,
+            breakdown: {
+                ...(repr.breakdown || {}),
+                _graderSamples: ok.map((r) => r.score),
+                _graderSampleCount: ok.length,
+            },
+            notes: repr.notes || '',
+            raw: repr.raw || '',
+        };
+    }
+
+    function _median(sortedNums) {
+        const n = sortedNums.length;
+        if (n === 0) return 0;
+        const mid = Math.floor(n / 2);
+        return n % 2 ? sortedNums[mid] : (sortedNums[mid - 1] + sortedNums[mid]) / 2;
+    }
+
+    /**
+     * Reliability probe for instrument validation (RCT). Grades the SAME response
+     * `runs` times as independent single-call gradings and reports the spread of
+     * the raw (pre-aggregation) scores — so you can quantify judge noise and
+     * justify GRADER_SAMPLES. Run from the browser console once unlocked, e.g.:
+     *
+     *   const ap = await AssessmentData.loadAssessment('PAT003','AP1');
+     *   const q  = ap.prompts[0];
+     *   await AssessmentGrader.measureReliability(q, "a canned resident answer...", 10);
+     *
+     * Returns { n, failed, scores, mean, sd, median, min, max, range }.
+     */
+    async function measureReliability(prompt, responseText, runs = 10) {
+        const results = await Promise.all(
+            Array.from({ length: Math.max(1, runs) }, () => _gradeOnce(prompt, responseText))
+        );
+        const ok = results.filter((r) => r.ok);
+        const scores = ok.map((r) => r.score);
+        const n = scores.length;
+        const mean = n ? scores.reduce((a, b) => a + b, 0) / n : 0;
+        const variance = n ? scores.reduce((a, b) => a + (b - mean) ** 2, 0) / n : 0;
+        const sorted = scores.slice().sort((a, b) => a - b);
+        return {
+            n,
+            failed: results.length - n,
+            scores,
+            mean: Number(mean.toFixed(4)),
+            sd: Number(Math.sqrt(variance).toFixed(4)),
+            median: n ? _median(sorted) : null,
+            min: n ? sorted[0] : null,
+            max: n ? sorted[n - 1] : null,
+            range: n ? Number((sorted[n - 1] - sorted[0]).toFixed(4)) : null,
         };
     }
 
@@ -261,6 +358,7 @@ const AssessmentGrader = (() => {
     return {
         generateAISample,
         grade,
+        measureReliability,
     };
 })();
 

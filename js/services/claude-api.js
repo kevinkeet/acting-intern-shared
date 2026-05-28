@@ -202,15 +202,19 @@ const ClaudeAPI = {
             throw new Error('API key not configured');
         }
 
+        const singleBody = {
+            model: req.model || this.model,
+            max_tokens: req.maxTokens || 1024,
+            system: req.systemPrompt,
+            messages: [{ role: 'user', content: req.userMessage }]
+        };
+        // Allow callers (e.g., the grader) to pin temperature for reproducibility.
+        if (typeof req.temperature === 'number') singleBody.temperature = req.temperature;
+
         const response = await fetch(this._getEndpoint(), {
             method: 'POST',
             headers: this._getHeaders(),
-            body: JSON.stringify({
-                model: req.model || this.model,
-                max_tokens: req.maxTokens || 1024,
-                system: req.systemPrompt,
-                messages: [{ role: 'user', content: req.userMessage }]
-            })
+            body: JSON.stringify(singleBody)
         });
 
         if (!response.ok) {

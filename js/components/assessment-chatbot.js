@@ -61,12 +61,13 @@ const AssessmentChatbot = (() => {
     ];
 
     const MAX_CONTEXT_CHARS = 60000;     // soft cap before truncation
-    const MAX_RESPONSE_TOKENS = 4096;    // headroom so responses aren't truncated
+    const MAX_RESPONSE_TOKENS = 1024;    // soft ceiling on length (a concise reply fits easily)
     const CHATBOT_MODEL = 'claude-haiku-4-5-20251001';  // fast + cheap; matches the chatbot's "answer concisely" UX
-    // Minimal system prompt — single instruction. Per design decision we
-    // do NOT bake in clinical reasoning, ethics, "explain your work" rules,
-    // or refusal language. Just one nudge for response length.
-    const SYSTEM_PROMPT = 'Be concise.';
+    // Minimal system prompt — a length/format nudge ONLY. Per design decision we
+    // do NOT bake in clinical reasoning, ethics, "explain your work" rules, or
+    // refusal language; this must stay construct-neutral and held constant across
+    // RCT arms. We only constrain verbosity (Haiku otherwise over-answers).
+    const SYSTEM_PROMPT = 'Be concise. Answer in at most a few sentences or a short bulleted list. No preamble, no restating the question, and no summary at the end.';
 
     // ── Activate / deactivate ──────────────────────────────────────────
 
