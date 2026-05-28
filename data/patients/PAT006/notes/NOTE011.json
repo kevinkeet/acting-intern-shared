@@ -1,0 +1,10 @@
+{
+  "id": "NOTE011",
+  "type": "Surgical Pathology Report",
+  "date": "2027-06-12T14:00:00.000Z",
+  "author": "Dr. Wei Lin (Anatomic Pathology)",
+  "department": "Pathology",
+  "encounter": "ENC001",
+  "content": "SURGICAL PATHOLOGY REPORT — GREATER BALTIMORE MEDICAL CENTER\n\nSpecimen: Gallbladder (cholecystectomy, 6/10/2027).\nClinical history: Perforated acute cholecystitis with peritonitis.\n\nGROSS: Gallbladder with markedly thickened, dusky, friable wall and a focal full-thickness defect (perforation) at the fundus. Multiple mixed gallstones within the lumen. Purulent/bilious exudate on the serosal surface.\n\nMICROSCOPIC: Transmural acute and chronic inflammation with extensive mucosal ulceration, hemorrhagic necrosis, and a focal area of transmural necrosis with perforation. Vascular congestion and acute serositis. No granulomas. No dysplasia. No invasive carcinoma. No porcelain (calcified) gallbladder.\n\nDIAGNOSIS:\n1. Gallbladder, cholecystectomy: ACUTE GANGRENOUS CHOLECYSTITIS with transmural necrosis and PERFORATION.\n2. Cholelithiasis.\n3. NEGATIVE for malignancy and dysplasia.\n\nThe findings confirm the clinical and intraoperative impression. No incidental neoplastic finding requiring additional oncologic follow-up.",
+  "attestation": "Electronically signed by Dr. Wei Lin, MD (Anatomic Pathology). 6/12/2027."
+}

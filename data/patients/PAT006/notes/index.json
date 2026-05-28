@@ -37,6 +37,15 @@
       "preview": "POD#3. No arrhythmia on telemetry POD#2 or #3. Afebrile, ambulating, diet advanced, pain controlled. Surgically on track. Anticipated discharge POD#5. Rhythm being monitored."
     },
     {
+      "id": "NOTE011",
+      "type": "Surgical Pathology Report",
+      "date": "2027-06-12T14:00:00.000Z",
+      "author": "Dr. Wei Lin (Anatomic Pathology)",
+      "department": "Pathology",
+      "encounter": "ENC001",
+      "preview": "Cholecystectomy specimen: acute gangrenous cholecystitis with focal transmural necrosis and perforation; cholelithiasis. NO malignancy, dysplasia, or porcelain gallbladder. Confirms the clinical and operative diagnosis."
+    },
+    {
       "id": "NOTE006",
       "type": "Surgery Daily Progress Note (POD#2)",
       "date": "2027-06-12T07:45:00.000Z",

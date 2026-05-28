@@ -1,0 +1,14 @@
+{
+  "id": "IMG_HX_001",
+  "date": "2026-11-12T10:30:00.000Z",
+  "modality": "ECG",
+  "description": "12-lead Electrocardiogram — outpatient cardiology consultation (baseline)",
+  "facility": "Cardiology Clinic — GBMC",
+  "status": "Final",
+  "radiologist": "Dr. Steven Marsh (Cardiology)",
+  "indication": "Obtained at the one-time outpatient cardiology consultation (atypical chest discomfort / risk assessment). See cardiology consult note (NOTE_HX_003).",
+  "technique": "Standard 12-lead ECG, 25 mm/s, 10 mm/mV.",
+  "findings": "Rate 76 bpm. Rhythm: NORMAL SINUS. Uniform P waves; PR 156 ms; QRS 86 ms; QTc 428 ms. Normal axis. No left ventricular hypertrophy by voltage criteria. No ST-segment or T-wave abnormality. No conduction disease.",
+  "impression": "NORMAL SINUS RHYTHM. No evidence of ischemia, chamber enlargement, or conduction disease. This is the earliest ECG on file and documents NO prior atrial fibrillation — a pre-admission baseline for comparison with the perioperative tracings.",
+  "comparison": "No earlier ECG available. Compared prospectively with the 6/10/2027 preop ECG (sinus), 6/11/2027 POD#1 ECG (sinus), and 6/14/2027 POD#4 ECG (atrial fibrillation)."
+}

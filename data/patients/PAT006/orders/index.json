@@ -1,0 +1,133 @@
+{
+  "active": [
+    {
+      "id": "ORD010",
+      "category": "Cardiology",
+      "name": "Continuous cardiac telemetry monitoring",
+      "details": "Started perioperatively; continued for new atrial fibrillation surveillance through the remainder of admission.",
+      "priority": "Routine",
+      "orderedBy": "Dr. Priya Anand",
+      "status": "Active",
+      "orderDate": "2027-06-10T20:30:00.000Z"
+    },
+    {
+      "id": "ORD011",
+      "category": "Medication",
+      "name": "Enoxaparin 40 mg SubQ daily — VTE PROPHYLAXIS",
+      "details": "PROPHYLACTIC dose for post-operative VTE prevention. NOT therapeutic anticoagulation for atrial fibrillation.",
+      "priority": "Routine",
+      "orderedBy": "Dr. Priya Anand",
+      "status": "Active",
+      "orderDate": "2027-06-11T06:30:00.000Z"
+    },
+    {
+      "id": "ORD012",
+      "category": "Medication",
+      "name": "Piperacillin-tazobactam 3.375 g IV q6h",
+      "details": "Empiric coverage for perforated cholecystitis/peritonitis; intraop bile culture pansensitive E. coli.",
+      "priority": "Routine",
+      "orderedBy": "Dr. Helena Vargas",
+      "status": "Active",
+      "orderDate": "2027-06-10T12:50:00.000Z"
+    },
+    {
+      "id": "ORD013",
+      "category": "Medication",
+      "name": "Insulin aspart correctional (sliding) scale",
+      "details": "Inpatient glycemic management while metformin held.",
+      "priority": "Routine",
+      "orderedBy": "Dr. Priya Anand",
+      "status": "Active",
+      "orderDate": "2027-06-10T13:00:00.000Z"
+    },
+    {
+      "id": "ORD014",
+      "category": "Diet",
+      "name": "Diet: cardiac / consistent-carbohydrate, regular texture",
+      "details": "Advanced from clear liquids on POD#2; tolerating well.",
+      "priority": "Routine",
+      "orderedBy": "Dr. Owen Pratt",
+      "status": "Active",
+      "orderDate": "2027-06-12T08:00:00.000Z"
+    },
+    {
+      "id": "ORD015",
+      "category": "Lab",
+      "name": "CBC + Basic Metabolic Panel — daily",
+      "details": "Trend leukocytosis and electrolytes post-op.",
+      "priority": "Routine",
+      "orderedBy": "Dr. Priya Anand",
+      "status": "Active",
+      "orderDate": "2027-06-10T13:00:00.000Z"
+    }
+  ],
+  "completed": [
+    {
+      "id": "ORD001",
+      "category": "Imaging",
+      "name": "CT Abdomen/Pelvis with IV contrast",
+      "details": "Diagnostic — established perforated cholecystitis (IMG001).",
+      "priority": "STAT",
+      "orderedBy": "Dr. Tomas Reyes",
+      "status": "Completed",
+      "orderDate": "2027-06-10T11:30:00.000Z",
+      "completedDate": "2027-06-10T13:25:00.000Z"
+    },
+    {
+      "id": "ORD002",
+      "category": "Cardiology",
+      "name": "12-lead ECG — preoperative",
+      "details": "Baseline preop tracing (IMG002) — normal sinus rhythm.",
+      "priority": "Routine",
+      "orderedBy": "Dr. Tomas Reyes",
+      "status": "Completed",
+      "orderDate": "2027-06-10T11:35:00.000Z",
+      "completedDate": "2027-06-10T11:40:00.000Z"
+    },
+    {
+      "id": "ORD003",
+      "category": "Imaging",
+      "name": "Chest X-Ray — portable AP (preoperative)",
+      "details": "No acute cardiopulmonary process; normal heart size (IMG005).",
+      "priority": "Routine",
+      "orderedBy": "Dr. Tomas Reyes",
+      "status": "Completed",
+      "orderDate": "2027-06-10T11:35:00.000Z",
+      "completedDate": "2027-06-10T11:50:00.000Z"
+    },
+    {
+      "id": "ORD004",
+      "category": "Lab",
+      "name": "Type & Screen",
+      "details": "Preoperative.",
+      "priority": "STAT",
+      "orderedBy": "Dr. Helena Vargas",
+      "status": "Completed",
+      "orderDate": "2027-06-10T12:00:00.000Z",
+      "completedDate": "2027-06-10T12:40:00.000Z"
+    },
+    {
+      "id": "ORD005",
+      "category": "Cardiology",
+      "name": "12-lead ECG — POD#1",
+      "details": "Obtained between telemetry runs (IMG003) — normal sinus rhythm.",
+      "priority": "Routine",
+      "orderedBy": "Dr. Priya Anand",
+      "status": "Completed",
+      "orderDate": "2027-06-11T07:45:00.000Z",
+      "completedDate": "2027-06-11T08:00:00.000Z"
+    },
+    {
+      "id": "ORD006",
+      "category": "Cardiology",
+      "name": "12-lead ECG — STAT (POD#4 arrhythmia)",
+      "details": "Obtained during the 2-hour episode (IMG004) — confirmed atrial fibrillation.",
+      "priority": "STAT",
+      "orderedBy": "Dr. Priya Anand",
+      "status": "Completed",
+      "orderDate": "2027-06-14T14:32:00.000Z",
+      "completedDate": "2027-06-14T14:35:00.000Z"
+    }
+  ],
+  "lastUpdated": "2027-06-14"
+}

@@ -44,6 +44,15 @@
       "facility": "Greater Baltimore Medical Center — ED",
       "radiologist": "Dr. Nadia Okonkwo",
       "preview": "No acute cardiopulmonary process. Normal cardiomediastinal silhouette (no cardiomegaly). No effusion, no consolidation. No free air under the diaphragm on this projection."
+    },
+    {
+      "id": "IMG_HX_001",
+      "date": "2026-11-12T10:30:00.000Z",
+      "modality": "ECG",
+      "description": "12-lead ECG — outpatient cardiology consultation (baseline)",
+      "facility": "Cardiology Clinic — GBMC",
+      "radiologist": "Dr. Steven Marsh (Cardiology)",
+      "preview": "NORMAL SINUS RHYTHM, rate 76. Normal intervals and axis, no LVH by voltage, no ischemic changes. The earliest ECG on file — NO atrial fibrillation; establishes a pre-admission baseline (no prior documented AF)."
     }
   ],
   "lastUpdated": "2027-06-14"
