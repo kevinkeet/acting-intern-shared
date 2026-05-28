@@ -174,7 +174,24 @@
         }
         localStorage.setItem(STORAGE_KEY_API, trimmed);
         localStorage.setItem(STORAGE_KEY_GRANTED, 'byo');
+        _configureApiClient(trimmed);
         dismissModal();
+    }
+
+    // Push the key into the in-memory ClaudeAPI client so the chatbot, grader,
+    // and AI coworker can authenticate immediately in this session — without
+    // waiting for a page reload or for detectBackend() to re-run.
+    function _configureApiClient(apiKey) {
+        if (typeof ClaudeAPI === 'undefined') return;
+        try {
+            ClaudeAPI.setApiKey(apiKey);
+            // GitHub Pages / static hosting has no /api/claude proxy, so force
+            // direct-browser mode. (On localhost with server.js, detectBackend
+            // may set useProxy=true; don't override that.)
+            const host = String(location.hostname || '');
+            const isLocal = host === 'localhost' || host === '127.0.0.1';
+            if (!isLocal) ClaudeAPI.useProxy = false;
+        } catch (e) { /* non-fatal */ }
     }
 
     async function attemptUnlock(password, cfg) {
@@ -197,6 +214,7 @@
                 localStorage.setItem(STORAGE_KEY_API, apiKey);
             }
             localStorage.setItem(STORAGE_KEY_GRANTED, 'gate');
+            _configureApiClient(localStorage.getItem(STORAGE_KEY_API) || apiKey);
             clearAttempts();
             dismissModal();
         } catch (err) {

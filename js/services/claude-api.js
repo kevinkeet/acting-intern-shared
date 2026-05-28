@@ -20,13 +20,30 @@ const ClaudeAPI = {
     },
 
     /**
+     * Lazily load the API key from localStorage if it isn't already in memory.
+     * Needed because the access gate writes the decrypted key to localStorage
+     * but may not have called setApiKey() in this session (e.g., on the first
+     * unlock, after detectBackend already ran). Self-healing here ensures every
+     * downstream caller — chatbot, grader, AI coworker — can authenticate.
+     */
+    _ensureKey() {
+        if (!this.useProxy && !this.apiKey) {
+            try {
+                const k = localStorage.getItem('anthropic-api-key');
+                if (k) this.apiKey = k;
+            } catch (e) { /* localStorage unavailable */ }
+        }
+        return this.apiKey;
+    },
+
+    /**
      * Check if API is configured
      * In proxy mode: always true (server handles auth)
-     * In fallback mode: needs localStorage API key
+     * In fallback mode: needs an API key (pulled from localStorage if needed)
      */
     isConfigured() {
         if (this.useProxy) return true;
-        return !!this.apiKey;
+        return !!this._ensureKey();
     },
 
     /**
@@ -39,7 +56,7 @@ const ClaudeAPI = {
         // Fallback: direct browser access
         return {
             'Content-Type': 'application/json',
-            'x-api-key': this.apiKey,
+            'x-api-key': this._ensureKey(),
             'anthropic-version': '2023-06-01',
             'anthropic-dangerous-direct-browser-access': 'true'
         };

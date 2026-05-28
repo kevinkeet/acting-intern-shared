@@ -43,6 +43,7 @@ const AssessmentEngine = (() => {
     let _lastAdvanceAt = null;    // for time accounting
     let _isPaused = false;
     let _listeners = new Set();
+    let _pendingGrades = new Set(); // in-flight grading promises; awaited at complete()
 
     // ── helpers ────────────────────────────────────────────────────────
 
@@ -284,6 +285,7 @@ const AssessmentEngine = (() => {
         _attempt = await _insertAttempt(caseId);
         _responses = new Map();
         _aiSamples = new Map();
+        _pendingGrades = new Set();
         _lastAdvanceAt = Date.now();
         _isPaused = false;
 
@@ -387,8 +389,19 @@ const AssessmentEngine = (() => {
 
     async function complete() {
         if (!_attempt) return;
-        // Pull all responses fresh to compute final score (in case background
-        // grading is still finishing for the last prompt).
+        // Wait for any in-flight background grading to finish so the last
+        // answer(s) are scored before we compute the total. Bounded so a hung
+        // grader call can't block completion forever.
+        if (_pendingGrades.size > 0) {
+            _emit('grading-in-progress', { count: _pendingGrades.size });
+            try {
+                await Promise.race([
+                    Promise.allSettled(Array.from(_pendingGrades)),
+                    new Promise((res) => setTimeout(res, 25000)),
+                ]);
+            } catch (e) { /* proceed regardless */ }
+        }
+        // Pull all responses fresh to compute final score.
         const rows = await _loadResponses(_attempt.id);
         const score = _computeOverallScore(rows);
         await _flushAttempt({
@@ -572,8 +585,11 @@ const AssessmentEngine = (() => {
 
         _emit('response-saved', { promptId: prompt.id });
 
-        // Kick off grading async; do not block the resident.
-        _gradeInBackground(prompt, text, aiSample);
+        // Kick off grading async; do not block the resident. Track the promise
+        // so complete() can await any still-in-flight grading before scoring.
+        const gradePromise = _gradeInBackground(prompt, text, aiSample);
+        _pendingGrades.add(gradePromise);
+        gradePromise.finally(() => _pendingGrades.delete(gradePromise));
 
         return draft;
     }
