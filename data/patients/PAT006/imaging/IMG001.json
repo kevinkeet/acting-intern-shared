@@ -1,0 +1,14 @@
+{
+  "id": "IMG001",
+  "date": "2027-06-10T13:25:00.000Z",
+  "modality": "CT",
+  "description": "CT Abdomen + Pelvis with IV contrast",
+  "facility": "Greater Baltimore Medical Center — Emergency Radiology",
+  "status": "Final",
+  "radiologist": "Dr. Nadia Okonkwo",
+  "indication": "72-year-old woman with fevers, chills, and right-upper-quadrant/epigastric pain. Evaluate for acute intra-abdominal process.",
+  "technique": "Multidetector CT of the abdomen and pelvis with IV iodinated contrast (portal venous phase). Axial, coronal, and sagittal reformats.",
+  "findings": "GALLBLADDER / BILIARY: Distended gallbladder containing multiple gallstones, with marked wall thickening and a focal wall defect along the fundus consistent with PERFORATION. Large-volume pericholecystic fluid with adjacent fat stranding and enhancement of the peritoneal lining in the right upper quadrant, consistent with localized peritonitis. No large discrete abscess. No diffuse free intraperitoneal air. Common bile duct normal caliber (5 mm); no choledocholithiasis. Intrahepatic ducts not dilated.\n\nLIVER/PANCREAS/SPLEEN: Liver normal. Pancreas normal without peripancreatic stranding (no imaging features of pancreatitis). Spleen normal.\n\nBOWEL: No obstruction. No pneumatosis.\n\nVASCULAR: Aorta normal caliber with mild atherosclerotic calcification. No aneurysm.\n\nOTHER: Kidneys without hydronephrosis. No suspicious osseous lesion.",
+  "impression": "1. PERFORATED ACUTE CALCULOUS CHOLECYSTITIS with large-volume pericholecystic fluid and localized peritonitis. Recommend urgent surgical evaluation.\n2. Cholelithiasis without choledocholithiasis or biliary obstruction.\n3. No imaging evidence of pancreatitis.",
+  "comparison": "No prior cross-sectional abdominal imaging available."
+}

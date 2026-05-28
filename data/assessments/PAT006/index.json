@@ -1,0 +1,16 @@
+{
+  "caseId": "PAT006",
+  "caseTitle": "Dorothy Pierce — The post-op atrial fibrillation",
+  "patientId": "PAT006",
+  "version": "0.1.0",
+  "status": "two_timepoint",
+  "_status_notes": "2 timepoints (TP1 — POD#1 brief AF runs; TP2 — POD#4 sustained asymptomatic AF episode the day before anticipated discharge). 4 questions total (Q1 at TP1; Q2/Q3/Q4 at TP2). ~20 minutes. Weights 0.8 / 1.2 / 0.8 / 0.8 = 3.6 total. Source: Management Case Bank, Case 4 (original discussants Nick Villano, Jason Matos, Greg Katz, Pooja Jagadish; finalized by Eric Strong).",
+  "totalTimeLimitMinutes": 20,
+  "assessments": ["AP1", "AP2"],
+  "passingOverallScorePct": 70,
+  "description": "A 2-stage perioperative case following Dorothy Pierce, a 72-year-old woman with poorly-controlled hypertension and type 2 diabetes who develops new atrial fibrillation after an urgent open cholecystectomy for perforated cholecystitis. The case tests management of new perioperative/subclinical atrial fibrillation: distinguishing transient post-operative AF from incident paroxysmal AF, risk-stratifying for stroke (CHA2DS2-VASc) and bleeding in a borderline patient who has just had major surgery, choosing an anticoagulant, and designing an ambulatory monitoring strategy that matches an infrequent, asymptomatic arrhythmia.",
+  "warning": "Plan to dedicate about 20 minutes uninterrupted. Pausing is permitted but stops the timer.",
+  "instructions": "You are evaluating a real patient across two timepoints in her hospital course. Review the chart, then respond to each clinical question. Your responses are graded against a rubric; the case's intended teaching points are revealed at the end.",
+  "originalDiscussants": "Nick Villano, Jason Matos, Greg Katz, Pooja Jagadish",
+  "finalizedBy": "Eric Strong"
+}

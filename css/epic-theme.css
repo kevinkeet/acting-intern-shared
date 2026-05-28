@@ -656,7 +656,10 @@ body.patient-pat002 #ai-panel-floating-btn,
 body.patient-pat002 #sim-controls,
 body.patient-pat003 #ai-panel,
 body.patient-pat003 #ai-panel-floating-btn,
-body.patient-pat003 #sim-controls {
+body.patient-pat003 #sim-controls,
+body.patient-pat006 #ai-panel,
+body.patient-pat006 #ai-panel-floating-btn,
+body.patient-pat006 #sim-controls {
     display: none !important;
 }
 

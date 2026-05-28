@@ -1,0 +1,48 @@
+{
+  "familyHistory": [
+    {
+      "relation": "Father",
+      "vital": "Deceased",
+      "ageAtDeath": 74,
+      "conditions": [
+        { "condition": "Stroke (ischemic)", "age": 74, "notes": "Cause of death. Had atrial fibrillation and hypertension; was reportedly not on anticoagulation." },
+        { "condition": "Atrial fibrillation", "ageOnset": 68 },
+        { "condition": "Hypertension" }
+      ]
+    },
+    {
+      "relation": "Mother",
+      "vital": "Deceased",
+      "ageAtDeath": 86,
+      "conditions": [
+        { "condition": "Type 2 diabetes", "ageOnset": 60 },
+        { "condition": "Osteoporosis" },
+        { "condition": "Congestive heart failure", "age": 86, "notes": "Cause of death." }
+      ]
+    },
+    {
+      "relation": "Brother",
+      "vital": "Alive (age 76)",
+      "conditions": [
+        { "condition": "Coronary artery disease s/p stents", "ageOnset": 64 },
+        { "condition": "Type 2 diabetes" }
+      ]
+    },
+    {
+      "relation": "Husband (Frank)",
+      "vital": "Deceased",
+      "ageAtDeath": 73,
+      "yearOfDeath": 2025,
+      "conditions": [
+        { "condition": "Pancreatic adenocarcinoma", "age": 73, "notes": "Cause of death, 2025. Patient was his primary caregiver through his illness; relevant to her recent grief and her wariness of aggressive interventions." }
+      ]
+    },
+    {
+      "relation": "Daughter (Karen)",
+      "vital": "Alive (age 46)",
+      "conditions": [{ "condition": "Healthy", "notes": "Health-care proxy." }]
+    }
+  ],
+  "summary": "Notable for FATHER with atrial fibrillation + hypertension who died of an ISCHEMIC STROKE at 74, reportedly not anticoagulated — directly relevant to the patient's own AFib/stroke-risk discussion. Maternal type 2 diabetes and CHF. Brother with CAD + T2DM. No known inherited bleeding disorders.",
+  "lastUpdated": "2027-06-10"
+}

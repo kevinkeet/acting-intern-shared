@@ -1,0 +1,17 @@
+{
+  "allergies": [
+    {
+      "id": "ALG001",
+      "substance": "Sulfa drugs (sulfamethoxazole)",
+      "type": "Drug",
+      "category": "Antibiotic",
+      "reaction": "Diffuse maculopapular rash (2011, treated for UTI)",
+      "severity": "Moderate",
+      "source": "Patient reported + documented 2011 PCP note",
+      "notes": "Non-anaphylactic. Avoid sulfonamide antibiotics. Tolerates other antibiotic classes."
+    }
+  ],
+  "nkda": false,
+  "lastReviewed": "2027-06-10",
+  "reviewedBy": "Emergency Department intake"
+}

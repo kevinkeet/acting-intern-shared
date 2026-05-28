@@ -1,0 +1,14 @@
+{
+  "id": "IMG005",
+  "date": "2027-06-10T11:50:00.000Z",
+  "modality": "X-Ray",
+  "description": "Chest X-Ray — portable AP (preoperative)",
+  "facility": "Greater Baltimore Medical Center — Emergency Department",
+  "status": "Final",
+  "radiologist": "Dr. Nadia Okonkwo",
+  "indication": "Preoperative chest radiograph prior to urgent surgery.",
+  "technique": "Single portable AP view of the chest.",
+  "findings": "Lungs clear without consolidation, effusion, or pneumothorax. Normal cardiomediastinal silhouette; NO cardiomegaly. No pulmonary edema. No free air under the hemidiaphragms on this projection (note: free intraperitoneal air is better assessed on the concurrent CT). Bony thorax intact.",
+  "impression": "No acute cardiopulmonary process. Normal heart size. No pulmonary edema or effusion.",
+  "comparison": "No prior chest radiograph on file."
+}

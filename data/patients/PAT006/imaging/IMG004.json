@@ -1,0 +1,14 @@
+{
+  "id": "IMG004",
+  "date": "2027-06-14T14:35:00.000Z",
+  "modality": "ECG",
+  "description": "12-lead Electrocardiogram — obtained during telemetry-detected arrhythmia (POD#4)",
+  "facility": "Greater Baltimore Medical Center",
+  "status": "Final",
+  "radiologist": "Dr. Steven Marsh (Cardiology over-read)",
+  "indication": "POD#4 — telemetry alarm for an irregular tachyarrhythmia. 12-lead obtained to confirm rhythm during the episode.",
+  "technique": "Standard 12-lead ECG, 25 mm/s, 10 mm/mV, obtained during the arrhythmia. Follow-up rhythm strip obtained later the same afternoon.",
+  "findings": "ATRIAL FIBRILLATION. Irregularly irregular R-R intervals with absence of organized P waves and a fibrillatory baseline. Ventricular response ranged 70-105 bpm during the recording (mean ~92). QRS narrow (88 ms), unchanged from baseline. No ST-segment elevation or depression; no new T-wave inversions; no ischemic changes. QTc 436 ms. The patient was asymptomatic and normotensive (BP 132/78) throughout.\n\nThe episode lasted approximately two hours from telemetry onset. A repeat 12-lead/rhythm strip at 16:40 the same day demonstrated SPONTANEOUS RETURN TO NORMAL SINUS RHYTHM (rate 78) without pharmacologic or electrical intervention.",
+  "impression": "1. ATRIAL FIBRILLATION with controlled-to-mildly-elevated ventricular response (70-105/min), hemodynamically tolerated and asymptomatic, lasting ~2 hours and SPONTANEOUSLY CONVERTING to sinus rhythm.\n2. No acute ischemic ECG changes.\n3. Confirms the telemetry-detected rhythm; this is the second discrete documented occurrence of atrial fibrillation this admission (after the brief POD#1 runs).",
+  "comparison": "Compared with preoperative ECG (6/10) and POD#1 ECG (6/11), both of which showed normal sinus rhythm. This tracing shows atrial fibrillation; the subsequent same-day strip returned to sinus."
+}

@@ -1,0 +1,10 @@
+{
+  "id": "NOTE_HX_004",
+  "type": "Primary Care Visit (chronic disease management)",
+  "date": "2027-04-15T09:30:00.000Z",
+  "author": "Dr. Robert Feldman",
+  "department": "Primary Care (Towson Internal Medicine Associates)",
+  "encounter": "ENC_HX_004",
+  "content": "PRIMARY CARE VISIT — TOWSON INTERNAL MEDICINE ASSOCIATES\n\nSUBJECTIVE: 72-year-old woman for chronic disease management. Feels well. Fully independent; drives herself to all appointments, church, and errands, and is emphatic about maintaining that independence. No chest pain, palpitations, syncope, dyspnea, or edema. No bleeding problems; no easy bruising. Adherent with medications by report; continues to struggle with dietary sodium and carbohydrates (lives alone, relies on canned/frozen foods).\n\nOBJECTIVE: BP 158/90 (above goal). HR 74, regular. BMI ~30.\nLabs this visit (LAB_HX_001): HbA1c 7.6% (suboptimal), LDL 72 (at goal), Cr 0.9 (eGFR ~68), normal CBC. No thyroid studies ordered.\n\nMEDICATION LIST REVIEWED (reconciled): lisinopril 20, amlodipine 10, hydrochlorothiazide 25, metformin 1000 BID, atorvastatin 40, omeprazole 20, calcium/vitamin D, OTC fish oil. She is on NO anticoagulant and NO antiplatelet.\n\nASSESSMENT/PLAN:\n#Hypertension, poorly controlled — above goal on three agents; reinforce sodium restriction and adherence; consider further adjustment vs. evaluation for secondary causes if persistently uncontrolled.\n#T2DM — A1c 7.6%; reinforce diet; continue metformin; discuss adding agent at next visit.\n#Hyperlipidemia — at goal; continue statin.\n#Osteopenia — continue calcium/vitamin D; next DEXA due.\n#Health maintenance — up to date.",
+  "attestation": "Electronically signed by Dr. Robert Feldman, MD. 4/15/2027."
+}

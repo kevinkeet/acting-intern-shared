@@ -1,0 +1,10 @@
+{
+  "id": "NOTE004",
+  "type": "Telemetry / Nursing Event Note (POD#1 runs)",
+  "date": "2027-06-11T10:15:00.000Z",
+  "author": "Devon Carter, RN / Telemetry tech S. Ahmed; reviewed by Dr. Priya Anand (Medicine)",
+  "department": "Telemetry",
+  "encounter": "ENC001",
+  "content": "TELEMETRY EVENT DOCUMENTATION — POD#1\n\nReason for note: Document atrial fibrillation runs captured on continuous telemetry over the preceding 24 hours and reviewed in detail with the monitoring technician.\n\nDETAILED REVIEW OF TELEMETRY (last 24 h):\n- THREE discrete episodes of ATRIAL FIBRILLATION were captured.\n- Each episode lasted approximately 15-20 SECONDS and terminated spontaneously (self-limited), with return to normal sinus rhythm between episodes.\n- During the runs, the ventricular response was irregular and briefly increased to ~115-120 bpm; baseline sinus rate between runs ~70-80.\n- The patient was ASYMPTOMATIC during all three episodes (no palpitations, chest pain, lightheadedness, or dyspnea reported; sleeping during two of the three).\n- No associated hypotension; blood pressure remained at her baseline during and after the runs.\n- No ventricular ectopy of concern; no pauses; no high-grade AV block.\n\nNursing actions: Episodes reviewed with telemetry tech and flagged to the Medicine team (Dr. Anand) for co-management. 12-lead ECG obtained this morning (IMG003) showed normal sinus rhythm (captured between runs). Patient reassured; continues to feel well.\n\nThis note exists to consolidate the objective rhythm data, which is otherwise summarized only briefly in the daily progress notes.",
+  "attestation": "Electronically documented by Devon Carter, RN; telemetry data reviewed with S. Ahmed (monitor tech) and Dr. Priya Anand (Medicine). 6/11/2027."
+}

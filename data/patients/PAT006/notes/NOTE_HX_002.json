@@ -1,0 +1,10 @@
+{
+  "id": "NOTE_HX_002",
+  "type": "Primary Care Visit (annual)",
+  "date": "2026-10-20T10:00:00.000Z",
+  "author": "Dr. Robert Feldman",
+  "department": "Primary Care (Towson Internal Medicine Associates)",
+  "encounter": "ENC_HX_002",
+  "content": "ANNUAL PHYSICAL — TOWSON INTERNAL MEDICINE ASSOCIATES\n\nSUBJECTIVE: 71-year-old woman for annual visit. Doing better with grief; back to driving herself everywhere, water aerobics, and church activities. Brings her home blood-pressure log: systolics frequently in the 150s-160s despite reporting good adherence. No chest pain, palpitations, syncope, or edema.\n\nOBJECTIVE: BP 162/92 in clinic. HR 78, regular. BMI 30. Heart regular, no murmur; lungs clear; no edema. Monofilament intact.\n\nASSESSMENT/PLAN:\n#Hypertension, poorly controlled — three-drug regimen; optimized hydrochlorothiazide today; reinforced low-sodium diet; recheck in 6-8 weeks.\n#T2DM — continue metformin; A1c at next labs.\n#Osteopenia — continue calcium/vitamin D.\n#Hyperlipidemia — continue atorvastatin; LDL at goal.\n#Health maintenance — influenza vaccine given; due for screening colonoscopy follow-up.",
+  "attestation": "Electronically signed by Dr. Robert Feldman, MD. 10/20/2026."
+}

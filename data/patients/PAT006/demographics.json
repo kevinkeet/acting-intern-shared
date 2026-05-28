@@ -1,0 +1,52 @@
+{
+  "id": "PAT006",
+  "mrn": "MRN-90215922",
+  "firstName": "Dorothy",
+  "middleName": "Anne",
+  "lastName": "Pierce",
+  "dateOfBirth": "1954-11-08",
+  "sex": "Female",
+  "gender": "Female",
+  "race": "White",
+  "ethnicity": "Not Hispanic or Latino",
+  "preferredLanguage": "English",
+  "interpreterNeeded": false,
+  "countryOfBirth": "USA",
+  "maritalStatus": "Widowed (2025)",
+  "ssn": null,
+  "phone": "(443) 555-1180",
+  "email": "dot.pierce54@gmail.com",
+  "address": {
+    "street": "812 Sherwood Forest Dr",
+    "city": "Towson",
+    "state": "MD",
+    "zip": "21286",
+    "country": "USA"
+  },
+  "emergencyContact": {
+    "name": "Karen Pierce-Walsh",
+    "relationship": "Daughter (lives ~20 min away in Lutherville; visits weekly)",
+    "phone": "(443) 555-1182",
+    "language": "English"
+  },
+  "primaryCareProvider": {
+    "name": "Dr. Robert Feldman, MD",
+    "npi": "1457820391",
+    "phone": "(410) 555-6600",
+    "practice": "Towson Internal Medicine Associates",
+    "notes": "PCP since 2009. Sees patient every 3-6 months for chronic disease management. Has repeatedly addressed her hypertension control and diabetes."
+  },
+  "insurance": {
+    "name": "Medicare Part A + B + AARP/UnitedHealthcare Medigap (Plan G)",
+    "memberId": "2KQ8-WD4-RT91",
+    "notes": "Good supplemental coverage. Part D prescription plan via SilverScript."
+  },
+  "advanceDirectives": {
+    "livingWill": true,
+    "healthcareProxy": "Daughter Karen Pierce-Walsh (documented MOLST 2025 after husband's death)",
+    "dnr": false,
+    "lastReviewed": "2025-08-14"
+  },
+  "createdAt": "2009-05-12T10:00:00Z",
+  "lastUpdated": "2027-06-14T08:00:00Z"
+}

@@ -1,0 +1,50 @@
+{
+  "studies": [
+    {
+      "id": "IMG004",
+      "date": "2027-06-14T14:35:00.000Z",
+      "modality": "ECG",
+      "description": "12-lead ECG — obtained during telemetry-detected arrhythmia (POD#4)",
+      "facility": "Greater Baltimore Medical Center",
+      "radiologist": "Dr. Steven Marsh (Cardiology over-read)",
+      "preview": "ATRIAL FIBRILLATION with ventricular response 70-105/min. No acute ST-T changes, no ischemia. QTc normal. Confirms the telemetry finding. A repeat strip ~2 h later showed spontaneous return to normal sinus rhythm."
+    },
+    {
+      "id": "IMG003",
+      "date": "2027-06-11T08:00:00.000Z",
+      "modality": "ECG",
+      "description": "12-lead ECG — current/post-op (POD#1)",
+      "facility": "Greater Baltimore Medical Center",
+      "radiologist": "Dr. Priya Anand / Dr. Steven Marsh (Cardiology over-read)",
+      "preview": "NORMAL SINUS RHYTHM, rate 74. Normal axis and intervals (PR 158, QRS 88, QTc 430). No LVH by voltage. No ischemic changes. (Obtained between the brief telemetry runs.)"
+    },
+    {
+      "id": "IMG002",
+      "date": "2027-06-10T11:40:00.000Z",
+      "modality": "ECG",
+      "description": "12-lead ECG — preoperative",
+      "facility": "Greater Baltimore Medical Center — ED",
+      "radiologist": "Dr. Tomas Reyes (ED) / automated read confirmed",
+      "preview": "NORMAL SINUS RHYTHM, rate 96 (sinus tachycardia at presentation). No significant abnormalities, no ischemia, normal intervals. Baseline pre-op tracing."
+    },
+    {
+      "id": "IMG001",
+      "date": "2027-06-10T13:25:00.000Z",
+      "modality": "CT",
+      "description": "CT Abdomen + Pelvis with IV contrast",
+      "facility": "Greater Baltimore Medical Center — Emergency Radiology",
+      "radiologist": "Dr. Nadia Okonkwo",
+      "preview": "PERFORATED ACUTE CHOLECYSTITIS — distended gallbladder with wall defect, large-volume pericholecystic fluid, and localized peritonitis. Multiple gallstones. No diffuse free intraperitoneal air. Recommend urgent surgical evaluation."
+    },
+    {
+      "id": "IMG005",
+      "date": "2027-06-10T11:50:00.000Z",
+      "modality": "X-Ray",
+      "description": "Chest X-Ray — portable AP (preoperative)",
+      "facility": "Greater Baltimore Medical Center — ED",
+      "radiologist": "Dr. Nadia Okonkwo",
+      "preview": "No acute cardiopulmonary process. Normal cardiomediastinal silhouette (no cardiomegaly). No effusion, no consolidation. No free air under the diaphragm on this projection."
+    }
+  ],
+  "lastUpdated": "2027-06-14"
+}

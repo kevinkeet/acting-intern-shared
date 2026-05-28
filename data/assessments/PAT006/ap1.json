@@ -1,0 +1,48 @@
+{
+  "id": "AP1",
+  "order": 1,
+  "title": "Timepoint 1 — Post-operative day #1",
+  "anchorDate": "2027-06-11T23:59:59Z",
+  "timeLimitMinutes": 7,
+  "scenarioBrief": "Dorothy Pierce is a 72-year-old woman with poorly-controlled hypertension, type 2 diabetes, and GERD who was admitted on 6/10/2027 with perforated cholecystitis and peritonitis and underwent an urgent open cholecystectomy the same day. It is now post-operative day #1. You are paged by nursing because she was noted to have a brief run of asymptomatic atrial fibrillation on telemetry. From the perspective of her cholecystitis she is clinically improving — afebrile since surgery, tolerating a liquid diet, with normal blood pressure and heart rate and a downtrending leukocytosis. She has no prior echocardiogram and is on no anticoagulation or antiplatelet medication. Review the chart (including the telemetry event documentation and her ECGs) before answering.",
+  "chartGate": {
+    "includeBeforeOrEqualDate": "2027-06-11T23:59:59Z",
+    "_notes": "TP1 visibility: complete chart through POD#1 — historical PCP visits (poorly-controlled HTN, T2DM, A1c 7.6%), the 2026 outpatient cardiology consult (no structural heart disease, no echo performed), admission H&P, CT abd/pelvis (perforated cholecystitis), preop and POD#1 ECGs (both sinus), the operative note, the POD#1 surgery progress note, the POD#1 telemetry event note (the 3 brief AF runs), the POD#1 medicine consult, admission and POD#1 labs (downtrending leukocytosis, normal electrolytes/Mg, no thyroid studies), and the medication list (no anticoagulant/antiplatelet). The POD#2-4 course (including the 2-hour episode) is NOT yet visible."
+  },
+  "prompts": [
+    {
+      "id": "AP1-Q1",
+      "order": 1,
+      "type": "management-decision",
+      "question": "In addition to continuing telemetry monitoring, would you recommend any additional monitoring, testing, or treatment at this time? If so, what?",
+      "expectedResponseFormat": "free_text",
+      "minLength": 200,
+      "rubric": {
+        "essential": [
+          "Affirms continuing telemetry AND systematically looks for / addresses reversible or secondary triggers of post-operative AF (at least two of: electrolytes especially potassium and magnesium — verify/replete; volume status; pain control; hypoxia; anemia; ongoing inflammation/infection from the recent perforated cholecystitis)",
+          "Recommends checking thyroid function (TSH) — note none is on file in the chart",
+          "Recommends a transthoracic echocardiogram to evaluate for structural heart disease / LV function / left atrial size — explicitly recognizing she has NO prior echocardiogram",
+          "Does NOT start therapeutic anticoagulation at this point for brief (15-20 second), self-terminating, asymptomatic runs on POD#1 (recognizes it is premature / burden is minimal / she is early post-op)",
+          "Does NOT start a rate- or rhythm-control drug or attempt cardioversion for asymptomatic, self-terminating, rate-controlled runs"
+        ],
+        "bonus": [
+          "Quantifies the actual AF burden by reading the telemetry EVENT note (3 runs, each 15-20 seconds, asymptomatic, self-limited) rather than relying on the brief daily progress-note summary",
+          "Frames the key uncertainty up front: new AF in the setting of acute illness/recent surgery is often transient/secondary and may not reflect a chronic substrate — this is what ongoing monitoring will clarify",
+          "Notes that very brief self-terminating runs generally do not by themselves cross a threshold mandating anticoagulation, but do warrant continued monitoring and risk-factor optimization",
+          "Specifically addresses magnesium optimization (even toward high-normal) and treating pain/volume as AF triggers",
+          "Mentions reviewing the medication list for proarrhythmic agents and confirming adequate oxygenation"
+        ],
+        "redFlags": [
+          "Starting therapeutic anticoagulation immediately for 15-20 second self-terminating runs on POD#1",
+          "Starting an antiarrhythmic or aggressive rate control, or cardioverting, an asymptomatic self-terminating brief run",
+          "Ignoring reversible/secondary causes (no electrolyte or thyroid assessment)",
+          "Failing to recognize that no prior echocardiogram exists / not assessing for structural heart disease"
+        ]
+      },
+      "weight": 0.8,
+      "sourceQuestion": "Question #1"
+    }
+  ],
+  "totalWeight": 0.8,
+  "passingScorePct": 70
+}

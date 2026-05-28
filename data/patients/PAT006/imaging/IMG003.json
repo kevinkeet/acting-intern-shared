@@ -1,0 +1,14 @@
+{
+  "id": "IMG003",
+  "date": "2027-06-11T08:00:00.000Z",
+  "modality": "ECG",
+  "description": "12-lead Electrocardiogram — current/post-op (POD#1)",
+  "facility": "Greater Baltimore Medical Center",
+  "status": "Final",
+  "radiologist": "Dr. Priya Anand (Medicine); Dr. Steven Marsh (Cardiology over-read)",
+  "indication": "Post-operative day #1; brief self-terminating atrial fibrillation runs noted on telemetry — obtain 12-lead to characterize the baseline rhythm between runs.",
+  "technique": "Standard 12-lead ECG, 25 mm/s, 10 mm/mV.",
+  "findings": "Rate 74 bpm. Rhythm: NORMAL SINUS at the time of recording (obtained between the brief telemetry runs of atrial fibrillation). Uniform P waves; PR 158 ms; QRS 88 ms; QTc 430 ms. Normal axis. No ST-T abnormality. No LVH by voltage. No evidence of ischemia. Atrial fibrillation was NOT captured on this 12-lead (the runs were 15-20 seconds and self-terminated); see telemetry event documentation.",
+  "impression": "NORMAL SINUS RHYTHM at the time of this tracing. No ischemic or structural abnormality evident. The brief paroxysms of atrial fibrillation are documented on telemetry rather than on this 12-lead.",
+  "comparison": "Compared with the preoperative ECG (6/10): unchanged, both sinus."
+}

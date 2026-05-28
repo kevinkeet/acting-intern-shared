@@ -1,0 +1,93 @@
+{
+  "problems": [
+    {
+      "id": "PRB001",
+      "name": "New-onset paroxysmal atrial fibrillation (perioperative)",
+      "icd10": "I48.0",
+      "snomed": "282825002",
+      "onsetDate": "2027-06-11",
+      "date": "2027-06-11",
+      "diagnosedBy": "Dr. Priya Anand (Medicine) / telemetry; confirmed on 12-lead ECG (Cardiology over-read Dr. Steven Marsh)",
+      "priority": "High",
+      "notes": "First documented atrial fibrillation, identified on POD#1 telemetry after urgent open cholecystectomy for perforated cholecystitis. POD#1: three brief (15-20 second) asymptomatic runs. No episodes POD#2-3. POD#4: a single 2-hour asymptomatic episode confirmed by 12-lead ECG, ventricular rate 70-105, hemodynamically tolerated, spontaneously converted to sinus rhythm. Preoperative and current 12-lead ECGs both show normal sinus rhythm. No prior echocardiogram on file. Patient on NO anticoagulation or antiplatelet therapy. Occurred in the setting of acute surgical illness/inflammation — distinction between transient perioperative AF and incident paroxysmal AF is central to management. CHA2DS2-VASc = 4 (age 65-74 = 1, female = 1, hypertension = 1, diabetes = 1)."
+    },
+    {
+      "id": "PRB002",
+      "name": "Perforated acute calculous cholecystitis with localized biliary peritonitis (status post urgent open cholecystectomy)",
+      "icd10": "K81.0",
+      "snomed": "65275009",
+      "onsetDate": "2027-06-10",
+      "date": "2027-06-10",
+      "diagnosedBy": "Dr. Helena Vargas (Acute Care Surgery) / ED (Dr. Tomas Reyes)",
+      "priority": "High",
+      "notes": "Presented 6/10/2027 with fevers, chills, and RUQ/epigastric pain. CT abdomen/pelvis: perforated gallbladder with pericholecystic fluid and localized peritonitis. Started on broad-spectrum antibiotics (piperacillin-tazobactam) and taken for urgent OPEN cholecystectomy 6/10 — procedure uncomplicated, gangrenous/perforated gallbladder removed, peritoneal washout. Clinically improving post-op: afebrile since surgery, tolerating liquids, downtrending leukocytosis. Recent major intra-abdominal surgery is directly relevant to bleeding risk and anticoagulation timing."
+    },
+    {
+      "id": "PRB003",
+      "name": "Essential hypertension — poorly controlled",
+      "icd10": "I10",
+      "snomed": "59621000",
+      "onsetDate": "2009-08-20",
+      "date": "2009-08-20",
+      "diagnosedBy": "Dr. Robert Feldman, PCP",
+      "priority": "High",
+      "notes": "Longstanding hypertension, repeatedly above goal despite three-agent therapy (lisinopril, amlodipine, hydrochlorothiazide). Home BP log and serial PCP visits document systolics frequently 150-168. PCP has escalated therapy several times and counseled on dietary sodium. Contributes 1 point to CHA2DS2-VASc and is also a HAS-BLED factor. Lisinopril and HCTZ held perioperatively; amlodipine continued."
+    },
+    {
+      "id": "PRB004",
+      "name": "Type 2 diabetes mellitus",
+      "icd10": "E11.9",
+      "snomed": "44054006",
+      "onsetDate": "2016-02-11",
+      "date": "2016-02-11",
+      "diagnosedBy": "Dr. Robert Feldman, PCP",
+      "priority": "Medium",
+      "notes": "On metformin 1000 mg BID. Most recent outpatient HbA1c 7.6% (4/2027) — suboptimal control; PCP notes partial dietary adherence. No documented retinopathy, nephropathy (normal renal function, eGFR ~68), or known neuropathy. Contributes 1 point to CHA2DS2-VASc. Metformin held perioperatively; managed with sliding-scale insulin inpatient."
+    },
+    {
+      "id": "PRB005",
+      "name": "Gastroesophageal reflux disease",
+      "icd10": "K21.9",
+      "snomed": "235595009",
+      "onsetDate": "2014-05-02",
+      "date": "2014-05-02",
+      "diagnosedBy": "Dr. Robert Feldman, PCP",
+      "priority": "Low",
+      "notes": "Chronic reflux managed with omeprazole 20 mg daily plus PRN OTC famotidine. No history of GI bleed, no known erosive esophagitis or Barrett's. Relevant to bleeding-risk discussion if anticoagulation is started."
+    },
+    {
+      "id": "PRB006",
+      "name": "Hyperlipidemia",
+      "icd10": "E78.5",
+      "snomed": "55822004",
+      "onsetDate": "2016-02-11",
+      "date": "2016-02-11",
+      "diagnosedBy": "Dr. Robert Feldman, PCP",
+      "priority": "Low",
+      "notes": "On atorvastatin 40 mg daily; LDL at goal (72, 4/2027). No known coronary, carotid, or peripheral arterial disease (i.e., no 'vascular disease' point for CHA2DS2-VASc)."
+    },
+    {
+      "id": "PRB007",
+      "name": "Osteopenia",
+      "icd10": "M85.80",
+      "snomed": "312894000",
+      "onsetDate": "2021-09-15",
+      "date": "2021-09-15",
+      "diagnosedBy": "Dr. Robert Feldman, PCP",
+      "priority": "Low",
+      "notes": "T-score -2.1 lumbar spine on 2021 DEXA. On calcium + vitamin D. No fragility fractures. No falls in the past year (patient drives independently and is fully ambulatory). Relevant to fall/bleeding-risk framing in an anticoagulation conversation, though fall risk is currently low."
+    },
+    {
+      "id": "PRB008",
+      "name": "Grief / adjustment reaction following spousal loss (improving)",
+      "icd10": "Z63.4",
+      "snomed": "60157001",
+      "onsetDate": "2025-04-01",
+      "date": "2025-04-01",
+      "priority": "Low",
+      "notes": "Husband Frank died of pancreatic cancer in 2025; patient was his primary caregiver. PHQ-9 = 8 (mild) in 2025; declined antidepressant, engaged with church grief group; PHQ-9 = 3 by 2027. Documented here because it informs her wariness of aggressive interventions and the importance of shared decision-making. Fully decisional."
+    }
+  ],
+  "lastUpdated": "2027-06-14",
+  "reviewedBy": "Dr. Priya Anand (PGY-2, Internal Medicine) at POD#4"
+}

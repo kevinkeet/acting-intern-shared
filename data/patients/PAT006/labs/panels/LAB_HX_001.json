@@ -1,0 +1,24 @@
+{
+  "id": "LAB_HX_001",
+  "name": "Outpatient PCP Labs (most recent baseline)",
+  "collectedDate": "2027-04-15T09:00:00.000Z",
+  "resultedDate": "2027-04-16T08:00:00.000Z",
+  "orderedBy": "Dr. Robert Feldman (Towson Internal Medicine Associates)",
+  "facility": "LabCorp — Towson",
+  "specimen": "Serum + plasma + whole blood (A1c)",
+  "status": "Final",
+  "results": [
+    { "name": "CBC — WBC", "value": "6.8", "unit": "K/uL", "referenceRange": "4.5-11.0", "flag": "normal" },
+    { "name": "CBC — Hemoglobin", "value": "13.2", "unit": "g/dL", "referenceRange": "12.0-15.5", "flag": "normal" },
+    { "name": "CBC — Platelets", "value": "240", "unit": "K/uL", "referenceRange": "150-400", "flag": "normal" },
+    { "name": "CMP — Sodium", "value": "140", "unit": "mmol/L", "referenceRange": "135-145", "flag": "normal" },
+    { "name": "CMP — Potassium", "value": "4.2", "unit": "mmol/L", "referenceRange": "3.5-5.0", "flag": "normal" },
+    { "name": "CMP — Creatinine", "value": "0.9", "unit": "mg/dL", "referenceRange": "0.5-1.1", "flag": "normal", "interpretation": "Baseline renal function; eGFR ~68." },
+    { "name": "CMP — Glucose (fasting)", "value": "142", "unit": "mg/dL", "referenceRange": "70-100", "flag": "high" },
+    { "name": "HbA1c", "value": "7.6", "unit": "%", "referenceRange": "<7.0 (treated diabetic goal)", "flag": "high", "interpretation": "Suboptimal glycemic control." },
+    { "name": "Lipid — LDL", "value": "72", "unit": "mg/dL", "referenceRange": "<100", "flag": "normal", "interpretation": "At goal on atorvastatin." },
+    { "name": "Lipid — HDL", "value": "52", "unit": "mg/dL", "referenceRange": ">40", "flag": "normal" },
+    { "name": "Lipid — Triglycerides", "value": "138", "unit": "mg/dL", "referenceRange": "<150", "flag": "normal" }
+  ],
+  "interpretation": "Most recent outpatient baseline. Suboptimal diabetes control (HbA1c 7.6%), lipids at goal, normal renal function. No thyroid studies ordered. Establishes pre-admission baseline for CBC, renal function, and metabolic parameters."
+}

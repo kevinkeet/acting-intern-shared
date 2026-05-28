@@ -1,0 +1,14 @@
+{
+  "id": "IMG002",
+  "date": "2027-06-10T11:40:00.000Z",
+  "modality": "ECG",
+  "description": "12-lead Electrocardiogram — preoperative",
+  "facility": "Greater Baltimore Medical Center — Emergency Department",
+  "status": "Final",
+  "radiologist": "Dr. Tomas Reyes (ED); automated interpretation confirmed",
+  "indication": "Preoperative evaluation prior to urgent cholecystectomy; sinus tachycardia noted on monitor.",
+  "technique": "Standard 12-lead ECG, 25 mm/s, 10 mm/mV.",
+  "findings": "Rate 96 bpm. Rhythm: normal sinus (sinus tachycardia at presentation, attributable to pain/fever/sepsis). P waves normal and uniform; PR interval 156 ms; QRS 86 ms (narrow); QTc 432 ms. Normal axis. No ST-segment elevation or depression. No T-wave inversions. No left ventricular hypertrophy by voltage criteria. No prior ECG on file for comparison.",
+  "impression": "NORMAL SINUS RHYTHM (with sinus tachycardia). No significant abnormalities. No evidence of ischemia, chamber enlargement, or conduction disease. Baseline preoperative tracing — NO atrial fibrillation.",
+  "comparison": "No prior ECG available."
+}

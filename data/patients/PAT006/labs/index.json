@@ -1,0 +1,34 @@
+{
+  "panels": [
+    {
+      "id": "LAB003",
+      "name": "POD#4 Labs — Pre-discharge",
+      "collectedDate": "2027-06-14T05:30:00.000Z",
+      "orderedBy": "Dr. Priya Anand",
+      "preview": "WBC 7.4 (normalized). Hgb 12.6, Plt 232. Cr 0.9 (baseline, eGFR 68). K 4.2, Mg 2.1. INR 1.0, aPTT 30. LFTs near normal. Coagulation and renal parameters within range for therapeutic anticoagulation if elected."
+    },
+    {
+      "id": "LAB002",
+      "name": "POD#1 Labs — Post-op / new AF workup",
+      "collectedDate": "2027-06-11T05:30:00.000Z",
+      "orderedBy": "Dr. Priya Anand",
+      "preview": "WBC 11.2 (downtrending from 17.6). Hgb 12.4, Plt 228. Cr 0.9 (back to baseline). K 4.1, Mg 2.0, Ca 8.8 (all normal — no electrolyte trigger for AF identified). Troponin I <0.02 (negative). Glucose 156 on sliding-scale insulin. No thyroid studies on file."
+    },
+    {
+      "id": "LAB001",
+      "name": "ED Admission Labs — Perforated Cholecystitis",
+      "collectedDate": "2027-06-10T13:00:00.000Z",
+      "orderedBy": "Dr. Tomas Reyes (Emergency Department)",
+      "preview": "WBC 17.6 with neutrophilia (leukocytosis). Hgb 13.0, Plt 244. Cr 1.1 (mild pre-renal bump from baseline 0.9). Total bili 1.6, ALP 142, AST 64, ALT 70 (mild obstructive pattern). Lipase 88 (normal — not pancreatitis). Lactate 2.1. INR 1.1. Glucose 188. CRP 18."
+    },
+    {
+      "id": "LAB_HX_001",
+      "name": "Outpatient PCP Labs (most recent baseline)",
+      "collectedDate": "2027-04-15T09:00:00.000Z",
+      "orderedBy": "Dr. Robert Feldman",
+      "preview": "WBC 6.8, Hgb 13.2, Plt 240. Cr 0.9 (eGFR 68). K 4.2, glucose 142. HbA1c 7.6% (suboptimal control). LDL 72 (at goal). No thyroid panel ordered."
+    }
+  ],
+  "totalResults": 4,
+  "lastUpdated": "2027-06-14"
+}

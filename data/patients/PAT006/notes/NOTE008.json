@@ -1,0 +1,10 @@
+{
+  "id": "NOTE008",
+  "type": "Telemetry / Nursing Event Note (POD#4 episode)",
+  "date": "2027-06-14T14:40:00.000Z",
+  "author": "Maria Delgado, RN / Telemetry tech J. Boyd; reviewed by Dr. Steven Marsh (Cardiology)",
+  "department": "Telemetry / Cardiology",
+  "encounter": "ENC001",
+  "content": "TELEMETRY EVENT DOCUMENTATION — POD#4\n\nReason for note: Document a sustained atrial fibrillation episode captured on telemetry today.\n\nDETAILED CHARACTERIZATION:\n- Onset: approximately 14:30. Telemetry alarmed for an irregular tachyarrhythmia.\n- Rhythm: ATRIAL FIBRILLATION (irregularly irregular, no organized P waves). Confirmed by 12-lead ECG obtained at 14:35 (see IMG004; Cardiology over-read by Dr. Marsh).\n- Ventricular response: ranged 70 to 105 bpm during the episode (mean ~92). No rapid ventricular response above ~105.\n- Symptoms: NONE. Patient was sitting up eating lunch, denied palpitations, chest pain, dyspnea, or lightheadedness throughout.\n- Hemodynamics: blood pressure UNAFFECTED (132/78 during the episode); no hypotension.\n- Duration: approximately TWO HOURS.\n- Resolution: SPONTANEOUS conversion to normal sinus rhythm at ~16:40, WITHOUT any rate-control or rhythm-control medication and WITHOUT electrical cardioversion. Repeat rhythm strip confirmed sinus (rate 78).\n\nThis is the second discrete documented occurrence of atrial fibrillation this admission (after the brief self-limited runs on POD#1, see NOTE004). Findings communicated to the Medicine team for management decisions prior to the planned discharge.",
+  "attestation": "Electronically documented by Maria Delgado, RN; rhythm reviewed with J. Boyd (monitor tech) and Dr. Steven Marsh (Cardiology). 6/14/2027."
+}

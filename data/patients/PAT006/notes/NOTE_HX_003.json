@@ -1,0 +1,10 @@
+{
+  "id": "NOTE_HX_003",
+  "type": "Cardiology Consultation (outpatient)",
+  "date": "2026-11-12T10:30:00.000Z",
+  "author": "Dr. Steven Marsh",
+  "department": "Cardiology (GBMC)",
+  "encounter": "ENC_HX_003",
+  "content": "OUTPATIENT CARDIOLOGY CONSULTATION\n\nReferral: PCP (Dr. Feldman) for evaluation of intermittent atypical chest discomfort and cardiovascular risk assessment in a patient with poorly-controlled hypertension and diabetes.\n\nSUBJECTIVE: 71-year-old woman describes occasional brief, sharp left-sided chest discomfort, non-exertional, reproducible with position and unrelated to activity, lasting seconds. No dyspnea on exertion, orthopnea, PND, palpitations, presyncope, or syncope. Good functional capacity (climbs her stairs at home, walks the neighborhood, water aerobics) — well over 4 METs without limitation.\n\nOBJECTIVE: BP 158/90, HR 76 regular. Cardiac exam normal — no murmurs, rubs, or gallops; no JVD; no edema. Lungs clear.\nECG: NORMAL SINUS RHYTHM, rate 76, normal intervals and axis, no LVH by voltage, no ischemic changes.\n\nASSESSMENT/PLAN:\n#Atypical chest discomfort — features are non-cardiac (positional, reproducible, non-exertional) with excellent functional capacity. Low pretest probability for obstructive coronary disease.\n#No evidence of structural heart disease by history, exam, or ECG. Given the low pretest probability, NO echocardiogram or stress testing performed at this time; would reconsider echocardiography if new murmur, heart failure symptoms, or an arrhythmia were to develop.\n#Cardiovascular risk — the most important interventions are improving blood-pressure and glycemic control; continue statin. No antiplatelet indicated for primary prevention at this time.\nNo routine cardiology follow-up needed; return if new cardiac symptoms.",
+  "attestation": "Electronically signed by Dr. Steven Marsh, MD (Cardiology). 11/12/2026."
+}

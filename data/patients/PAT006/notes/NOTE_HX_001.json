@@ -1,0 +1,10 @@
+{
+  "id": "NOTE_HX_001",
+  "type": "Primary Care Visit",
+  "date": "2025-09-08T11:00:00.000Z",
+  "author": "Dr. Robert Feldman",
+  "department": "Primary Care (Towson Internal Medicine Associates)",
+  "encounter": "ENC_HX_001",
+  "content": "PRIMARY CARE VISIT — TOWSON INTERNAL MEDICINE ASSOCIATES\n\nSUBJECTIVE: 70-year-old woman seen for follow-up in the months after her husband Frank's death from pancreatic cancer (she was his primary caregiver). Reports low mood, poor sleep, and reduced appetite. Engaged with her church grief group. Declines starting an antidepressant for now. Otherwise no new physical complaints; specifically no chest pain, palpitations, or shortness of breath.\n\nShe asked a pointed question this visit about her own heart-disease risk: her father had atrial fibrillation and high blood pressure and died of a stroke at 74, and she wanted to know whether she is at similar risk. We discussed that controlling her blood pressure and diabetes is the most important modifiable factor and reassured her; she has no current evidence of arrhythmia.\n\nOBJECTIVE: BP 156/88 (above goal). HR 80, regular. PHQ-9 = 8 (mild). Exam otherwise unremarkable; heart regular without murmur.\n\nASSESSMENT/PLAN:\n#Grief/adjustment reaction — supportive; continue church grief group; reassess; antidepressant declined.\n#Hypertension — above goal; reinforce adherence; will recheck and consider adjustment.\n#T2DM — continue metformin.\n#Health maintenance — up to date.",
+  "attestation": "Electronically signed by Dr. Robert Feldman, MD. 9/8/2025."
+}

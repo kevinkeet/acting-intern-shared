@@ -1,0 +1,66 @@
+{
+  "tobacco": {
+    "status": "Former smoker",
+    "type": "Cigarettes",
+    "amount": "~half pack/day for ~15 years (age 25-40); quit 1994",
+    "packYears": 7,
+    "quitDate": "1994",
+    "notes": "Quit over 30 years ago. ~7 pack-year lifetime history."
+  },
+  "alcohol": {
+    "status": "Occasional",
+    "frequency": "1-2 glasses of wine per week",
+    "amount": "Social only",
+    "notes": "No history of heavy use. AUDIT-C 1."
+  },
+  "drugs": {
+    "status": "Denies",
+    "details": "No illicit drug use."
+  },
+  "occupation": {
+    "current": "Retired (since 2017)",
+    "previous": "Elementary school teacher, Baltimore County Public Schools (1978-2017, ~39 years)",
+    "status": "Retired; lives on pension + Social Security",
+    "exposures": "None occupationally significant."
+  },
+  "education": {
+    "highestLevel": "Master's degree (Education)",
+    "literacyConcerns": "None. Health-literate; keeps her own medication list and a blood-pressure log."
+  },
+  "housing": {
+    "status": "Lives alone in a single-family home (paid off)",
+    "livingWith": "Alone since her husband Frank died in 2025 (pancreatic cancer). One indoor cat.",
+    "ownership": "Owns her home",
+    "notes": "Two-story house; bedroom upstairs. Manages independently. Daughter Karen lives ~20 min away and visits weekly, handles some errands, and is the documented health-care proxy."
+  },
+  "diet": {
+    "type": "Tries to follow a 'diabetic diet' but admits inconsistency; likes baked goods. High-sodium tendency (canned soups, frozen dinners since living alone).",
+    "restrictions": "Counseled on low-sodium + carbohydrate-consistent diet for HTN and T2DM; adherence is partial.",
+    "supplements": "Calcium + vitamin D; fish oil; occasional OTC famotidine for reflux."
+  },
+  "exercise": {
+    "frequency": "Walks the neighborhood ~20 min most days, weather permitting. Water aerobics at the Y twice weekly (lapsed since husband's death).",
+    "intensity": "Light-moderate."
+  },
+  "functionalStatus": {
+    "adls": "Fully independent.",
+    "iadls": "Fully independent — drives herself everywhere (still has a current license and drives to appointments, church, grocery), manages finances, medications, cooking.",
+    "driving": "Drives independently. This is important to her autonomy and she is anxious about anything that might threaten it.",
+    "falls": "No falls in the past year."
+  },
+  "transportation": {
+    "primary": "Drives herself. Daughter available as backup."
+  },
+  "religion": "Methodist; active in her church community (choir, volunteer).",
+  "safety": {
+    "intimatePartnerViolence": "N/A (widowed); denies any safety concerns at home.",
+    "weaponsInHome": false,
+    "feelsSafeAtHome": true
+  },
+  "mentalHealth": {
+    "depressionScreening": "PHQ-9 = 8 (mild) at 2025 visit, in the months after husband's death — grief-related. Declined antidepressant; engaged with church grief group. PHQ-9 = 3 at most recent 2027 visit.",
+    "anxietyScreening": "GAD-2 = 1.",
+    "support": "Daughter Karen (weekly), church community, neighbor friends. Strong social support despite living alone."
+  },
+  "notes": "Independent, health-literate, socially supported widow who highly values her autonomy — particularly driving. Any management decision (e.g., anticoagulation with fall/bleeding implications, or activity restrictions) should be discussed with her preferences in mind. Daughter Karen is the proxy and is engaged but the patient is fully decisional."
+}

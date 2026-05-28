@@ -1,0 +1,10 @@
+{
+  "id": "NOTE003",
+  "type": "Surgery Daily Progress Note (POD#1)",
+  "date": "2027-06-11T07:30:00.000Z",
+  "author": "Dr. Helena Vargas / Dr. Owen Pratt (Surgery PGY-3)",
+  "department": "Acute Care Surgery",
+  "encounter": "ENC001",
+  "content": "ACUTE CARE SURGERY — DAILY PROGRESS NOTE\nPOD#1 s/p open cholecystectomy (6/10).\n\nSUBJECTIVE: Resting comfortably. Pain controlled on scheduled acetaminophen with minimal oxycodone. Passing flatus. No nausea. Tolerated clear liquids overnight. No chest pain or shortness of breath.\n\nOBJECTIVE:\n- Afebrile since surgery (Tmax 99.1). HR/BP normal. (See vitals.)\n- Telemetry: nursing noted SOME ATRIAL FIBRILLATION overnight — brief and self-limited; Medicine consulted to co-manage. Details documented in the telemetry event note (see NOTE004).\n- Abdomen: incision clean/dry/intact, appropriate tenderness, drain with scant serosanguinous output. Bowel sounds present.\n- Labs (LAB002): WBC downtrending to 11.2 from 17.6. Cr 0.9.\n\nASSESSMENT/PLAN (surgical):\n#Perforated cholecystitis s/p open chole — improving. Continue pip/tazo; advance diet; remove drain when output low. Continue VTE prophylaxis (prophylactic enoxaparin started today) + SCDs.\n#New telemetry atrial fibrillation — Medicine following; see their note. Continue telemetry.\n#Pain — multimodal, opioid-sparing.\nAnticipate discharge around POD#5 if course continues to improve.",
+  "attestation": "Electronically signed by Dr. Owen Pratt, MD (PGY-3) and Dr. Helena Vargas, MD (Acute Care Surgery). 6/11/2027."
+}

@@ -1,0 +1,132 @@
+{
+  "notes": [
+    {
+      "id": "NOTE010",
+      "type": "Medication Reconciliation",
+      "date": "2027-06-14T18:00:00.000Z",
+      "author": "Dr. Priya Anand / Inpatient Pharmacy (PharmD Rachel Kim)",
+      "department": "Internal Medicine / Pharmacy",
+      "encounter": "ENC001",
+      "preview": "POD#4 pre-discharge medication reconciliation. Home meds: lisinopril, amlodipine, HCTZ, metformin, atorvastatin, omeprazole, calcium/vit D, OTC fish oil. Explicitly confirms patient is on NO anticoagulant and NO antiplatelet at baseline or currently. Only parenteral agent is prophylactic-dose enoxaparin (VTE prophylaxis, not therapeutic)."
+    },
+    {
+      "id": "NOTE009",
+      "type": "Medicine Co-Management Progress Note (POD#4)",
+      "date": "2027-06-14T17:30:00.000Z",
+      "author": "Dr. Priya Anand / Dr. Alan Whitfield",
+      "department": "Internal Medicine",
+      "encounter": "ENC001",
+      "preview": "POD#4, day before anticipated discharge. Surgically improving; tolerating regular diet; afebrile; WBC normalized. Today: a recurrent, asymptomatic atrial fibrillation episode (see telemetry event note + ECG). Rhythm management and the anticoagulation question to be addressed before discharge. A&P intentionally brief."
+    },
+    {
+      "id": "NOTE008",
+      "type": "Telemetry / Nursing Event Note (POD#4 episode)",
+      "date": "2027-06-14T14:40:00.000Z",
+      "author": "Maria Delgado, RN / Telemetry tech J. Boyd; reviewed Dr. Steven Marsh (Cardiology)",
+      "department": "Telemetry / Cardiology",
+      "encounter": "ENC001",
+      "preview": "Detailed characterization of the POD#4 arrhythmia: atrial fibrillation beginning ~14:30, ventricular rate 70-105, completely asymptomatic, blood pressure unaffected (132/78). 12-lead ECG obtained confirming AF. Duration ~2 hours; spontaneous conversion to sinus at ~16:40 without intervention."
+    },
+    {
+      "id": "NOTE007",
+      "type": "Medicine Co-Management Progress Note (POD#3)",
+      "date": "2027-06-13T08:30:00.000Z",
+      "author": "Dr. Priya Anand / Dr. Alan Whitfield",
+      "department": "Internal Medicine",
+      "encounter": "ENC001",
+      "preview": "POD#3. No arrhythmia on telemetry POD#2 or #3. Afebrile, ambulating, diet advanced, pain controlled. Surgically on track. Anticipated discharge POD#5. Rhythm being monitored."
+    },
+    {
+      "id": "NOTE006",
+      "type": "Surgery Daily Progress Note (POD#2)",
+      "date": "2027-06-12T07:45:00.000Z",
+      "author": "Dr. Helena Vargas / Dr. Owen Pratt (Surgery PGY-3)",
+      "department": "Acute Care Surgery",
+      "encounter": "ENC001",
+      "preview": "POD#2. Incision clean/dry/intact. Tolerating liquids, advancing diet. Afebrile, hemodynamically stable. WBC downtrending. No telemetry events overnight. Continue antibiotics; medicine co-managing rhythm and chronic disease."
+    },
+    {
+      "id": "NOTE005",
+      "type": "Medicine Consult — New Atrial Fibrillation (POD#1)",
+      "date": "2027-06-11T12:30:00.000Z",
+      "author": "Dr. Priya Anand / Dr. Alan Whitfield",
+      "department": "Internal Medicine",
+      "encounter": "ENC001",
+      "preview": "POD#1 consult for new telemetry atrial fibrillation. Documents objective data: brief self-limited runs on telemetry, normotensive, asymptomatic, electrolytes/Mg normal, troponin negative, preop + current 12-leads in sinus, no prior echocardiogram, no home anticoagulant/antiplatelet. A&P intentionally brief — continue telemetry and monitor."
+    },
+    {
+      "id": "NOTE004",
+      "type": "Telemetry / Nursing Event Note (POD#1 runs)",
+      "date": "2027-06-11T10:15:00.000Z",
+      "author": "Devon Carter, RN / Telemetry tech S. Ahmed; reviewed Dr. Priya Anand",
+      "department": "Telemetry",
+      "encounter": "ENC001",
+      "preview": "Detailed characterization of the POD#1 telemetry findings: THREE discrete runs of atrial fibrillation over the preceding 24 hours, each lasting 15-20 seconds, asymptomatic, self-terminating, with ventricular rates briefly up to ~115-120 during the runs and normal sinus between. No hypotension, no symptoms reported."
+    },
+    {
+      "id": "NOTE003",
+      "type": "Surgery Daily Progress Note (POD#1)",
+      "date": "2027-06-11T07:30:00.000Z",
+      "author": "Dr. Helena Vargas / Dr. Owen Pratt (Surgery PGY-3)",
+      "department": "Acute Care Surgery",
+      "encounter": "ENC001",
+      "preview": "POD#1 after open cholecystectomy. Clinically improving: afebrile since surgery, tolerating liquid diet, pain controlled, incision intact. Hemodynamically normal. Brief note that telemetry showed 'some atrial fibrillation overnight — medicine consulted'; details deferred to the telemetry event note. Downtrending leukocytosis."
+    },
+    {
+      "id": "NOTE002",
+      "type": "Operative Note — Open Cholecystectomy",
+      "date": "2027-06-10T16:30:00.000Z",
+      "author": "Dr. Helena Vargas (Acute Care Surgery)",
+      "department": "Acute Care Surgery",
+      "encounter": "ENC001",
+      "preview": "Urgent open cholecystectomy with peritoneal washout for perforated gangrenous gallbladder with localized biliary peritonitis. Uncomplicated, minimal blood loss. Intraoperative bile culture sent (later: pansensitive E. coli). Recent major intra-abdominal surgery — relevant to subsequent bleeding-risk/anticoagulation timing."
+    },
+    {
+      "id": "NOTE001",
+      "type": "ED Visit / Admission H&P",
+      "date": "2027-06-10T13:00:00.000Z",
+      "author": "Dr. Tomas Reyes (ED) / Dr. Priya Anand (Medicine) / Dr. Helena Vargas (Surgery)",
+      "department": "Emergency Department / Internal Medicine / Acute Care Surgery",
+      "encounter": "ENC001",
+      "preview": "72F with GERD, T2DM, and poorly-controlled HTN presents with fevers, chills, and RUQ/epigastric pain. CT: perforated cholecystitis with localized peritonitis. Leukocytosis 17.6, normal lipase, mild obstructive LFTs. Broad-spectrum antibiotics started; to OR for urgent open cholecystectomy. Preop ECG normal sinus rhythm."
+    },
+    {
+      "id": "NOTE_HX_004",
+      "type": "Primary Care Visit (chronic disease management)",
+      "date": "2027-04-15T09:30:00.000Z",
+      "author": "Dr. Robert Feldman",
+      "department": "Primary Care (Towson Internal Medicine Associates)",
+      "encounter": "ENC_HX_004",
+      "preview": "Most recent PCP visit. Hypertension above goal on three agents (home log systolics 150-168); diabetes suboptimal (A1c 7.6%); lipids at goal. Medication list reviewed — NO anticoagulant, NO antiplatelet. Patient emphasizes how much she values driving independence. Resting pulse regular; no palpitations reported."
+    },
+    {
+      "id": "NOTE_HX_003",
+      "type": "Cardiology Consultation (outpatient)",
+      "date": "2026-11-12T10:30:00.000Z",
+      "author": "Dr. Steven Marsh",
+      "department": "Cardiology (GBMC)",
+      "encounter": "ENC_HX_003",
+      "preview": "One-time outpatient eval for atypical chest discomfort. Judged non-cardiac. ECG normal sinus rhythm; no evidence of structural heart disease on history/exam. NO echocardiogram performed (low pretest probability at the time). Optimize HTN/DM risk factors; no further cardiac workup recommended then."
+    },
+    {
+      "id": "NOTE_HX_002",
+      "type": "Primary Care Visit (annual)",
+      "date": "2026-10-20T10:00:00.000Z",
+      "author": "Dr. Robert Feldman",
+      "department": "Primary Care (Towson Internal Medicine Associates)",
+      "encounter": "ENC_HX_002",
+      "preview": "Annual physical. Hypertension poorly controlled — HCTZ optimized. Diabetes on metformin. Osteopenia continued on calcium/vit D. Reviewed home BP log (frequently 150s-160s systolic). Counseled on sodium and adherence."
+    },
+    {
+      "id": "NOTE_HX_001",
+      "type": "Primary Care Visit",
+      "date": "2025-09-08T11:00:00.000Z",
+      "author": "Dr. Robert Feldman",
+      "department": "Primary Care (Towson Internal Medicine Associates)",
+      "encounter": "ENC_HX_001",
+      "preview": "Visit in the months after her husband's death from pancreatic cancer. Grief discussed (PHQ-9 8, declined antidepressant, engaged church grief group). Blood pressure above goal. Asked about her own heart risks given her father's atrial fibrillation and fatal stroke; reassured, risk factors to be optimized."
+    }
+  ],
+  "lastUpdated": "2027-06-14",
+  "_status": "notes complete (14 total: 4 historical + 10 admission course). AFib episode characteristics are placed in telemetry EVENT notes (NOTE004 POD#1, NOTE008 POD#4) and the ECG (IMG004), not in the daily progress notes. Management-decision notes (NOTE005, NOTE009) are deliberately sparse on the A&P so the assessment tests reasoning, not reading."
+}

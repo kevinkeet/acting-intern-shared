@@ -30,7 +30,18 @@
       "summary": "72 y.o. Vietnamese-speaking woman s/p prolonged ICU admission for severe gallstone pancreatitis; incidental 2.5 cm RUL lung nodule discovered HD~5; preparing for discharge HD 57. Management assessment case.",
       "caseType": "assessment",
       "caseTitle": "The lung nodule that almost left (adapted from management case bank)"
+    },
+    {
+      "id": "PAT006",
+      "name": "Pierce, Dorothy A",
+      "mrn": "MRN-90215922",
+      "dob": "1954-11-08",
+      "sex": "Female",
+      "status": "Active",
+      "summary": "72 y.o. woman with poorly-controlled HTN and T2DM; new-onset perioperative atrial fibrillation after urgent open cholecystectomy for perforated cholecystitis (brief runs POD#1, 2-hour asymptomatic episode POD#4). Management assessment case.",
+      "caseType": "assessment",
+      "caseTitle": "The post-op atrial fibrillation (adapted from management case bank)"
     }
   ],
-  "lastUpdated": "2027-04-12T09:00:00Z"
+  "lastUpdated": "2027-06-14T09:00:00Z"
 }

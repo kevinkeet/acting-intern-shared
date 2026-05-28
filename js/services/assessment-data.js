@@ -16,7 +16,7 @@ const AssessmentData = (() => {
     const BASE = 'data/assessments';
 
     // List of cases offered. Add new caseIds here as they're scaffolded.
-    const CASE_IDS = ['PAT002', 'PAT003'];
+    const CASE_IDS = ['PAT002', 'PAT003', 'PAT006'];
 
     // Per-case diagnosis reveal (used on the results page only).
     // Lives in code rather than the JSON so it can't accidentally leak via
@@ -44,6 +44,19 @@ const AssessmentData = (() => {
                 'Decision point: hospitalize for biopsy now (risks: deconditioning, nosocomial infection, anticoagulation conflict) vs defer to outpatient (risks: loss to follow-up given language barrier, cost concerns, fragmented care across multiple specialties)',
             ],
             source: 'Adapted from the Management Case Bank (Case 1; original discussants Anil Vachani, Corinne Rhodes, Karin Ouchida; finalized by Parsons).',
+        },
+        PAT006: {
+            primary: 'New-onset perioperative atrial fibrillation after urgent open cholecystectomy for perforated cholecystitis',
+            secondary: 'The teaching point is NOT a hidden diagnosis but the management of new atrial fibrillation detected after major surgery: distinguishing potentially transient post-operative AF from incident paroxysmal AF, weighing stroke vs bleeding risk in a borderline patient who has just had surgery, and matching a monitoring strategy to an infrequent, asymptomatic arrhythmia.',
+            causalChain: [
+                'Acute perforated cholecystitis + urgent open cholecystectomy → acute inflammatory/surgical milieu that can trigger atrial fibrillation',
+                'POD#1: three brief (15-20 sec) asymptomatic self-terminating AF runs on telemetry — minimal burden, early post-op; reversible triggers (electrolytes, pain, volume, inflammation) should be addressed and anticoagulation is premature',
+                'POD#4: a single 2-hour asymptomatic AF episode (rate 70-105, hemodynamically tolerated) that spontaneously converts — establishes paroxysmal AF with a real, if uncertain, long-term burden',
+                'CHA2DS2-VASc = 4 (age 65-74, female, hypertension, diabetes) favors anticoagulation by guideline, but recent major surgery and bleeding risk complicate the timing; the decision is patient-centered and shared',
+                'If anticoagulated: a DOAC (e.g., standard-dose apixaban given eGFR ~68, weight >60 kg, age <80) is preferred over warfarin for non-valvular AF',
+                'Because episodes are infrequent and ASYMPTOMATIC, post-discharge monitoring must use a long-duration auto-detecting monitor (extended patch / MCT / loop recorder), not a 24-48 h Holter or a symptom-triggered recorder, with closed-loop follow-up to refine the anticoagulation decision',
+            ],
+            source: 'Adapted from the Management Case Bank (Case 4; original discussants Nick Villano, Jason Matos, Greg Katz, Pooja Jagadish; finalized by Eric Strong).',
         },
     };
 

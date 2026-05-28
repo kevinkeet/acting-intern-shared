@@ -1,0 +1,11 @@
+{
+  "immunizations": [
+    { "id": "IMM001", "vaccine": "Influenza (quadrivalent)", "date": "2026-10-08", "administeredBy": "Towson Internal Medicine Associates", "notes": "Annual." },
+    { "id": "IMM002", "vaccine": "Pneumococcal (PCV20)", "date": "2024-03-19", "administeredBy": "Towson Internal Medicine Associates", "notes": "Single dose per 2024 ACIP." },
+    { "id": "IMM003", "vaccine": "Shingrix (recombinant zoster) — 2 doses", "date": "2021-05-10 / 2021-08-12", "administeredBy": "CVS Pharmacy", "notes": "Series complete." },
+    { "id": "IMM004", "vaccine": "Tdap", "date": "2019-04-22", "administeredBy": "Towson Internal Medicine Associates", "notes": "Td booster due ~2029." },
+    { "id": "IMM005", "vaccine": "COVID-19 (updated 2024-2025)", "date": "2024-10-08", "administeredBy": "Towson Internal Medicine Associates" }
+  ],
+  "lastReviewed": "2026-10-08",
+  "reviewedBy": "Dr. Robert Feldman, MD"
+}

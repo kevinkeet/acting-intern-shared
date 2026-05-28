@@ -1,0 +1,85 @@
+{
+  "encounters": [
+    {
+      "id": "ENC001",
+      "date": "2027-06-10T12:45:00.000Z",
+      "dischargeDate": null,
+      "type": "Inpatient Admission (Surgical, co-managed by Medicine)",
+      "department": "Acute Care Surgery / Internal Medicine (GBMC)",
+      "provider": "Dr. Helena Vargas (Acute Care Surgery attending), Dr. Priya Anand (Medicine PGY-2), Dr. Alan Whitfield (Medicine attending), Dr. Steven Marsh (Cardiology consult)",
+      "chiefComplaint": "Fevers, chills, and right-upper-quadrant/epigastric abdominal pain",
+      "diagnoses": [
+        "Perforated acute calculous cholecystitis with localized biliary peritonitis (s/p urgent open cholecystectomy 6/10)",
+        "New-onset paroxysmal atrial fibrillation, perioperative (6/11 brief runs; 6/14 two-hour episode)",
+        "Essential hypertension, poorly controlled",
+        "Type 2 diabetes mellitus",
+        "Postoperative leukocytosis, downtrending"
+      ],
+      "status": "Inpatient (POD#4 as of 6/14; discharge anticipated 6/15)",
+      "interpreterUsed": "None (English-speaking)"
+    },
+    {
+      "id": "ENC_HX_004",
+      "date": "2027-04-15T09:30:00.000Z",
+      "type": "Primary Care Visit (chronic disease management)",
+      "department": "Towson Internal Medicine Associates",
+      "provider": "Dr. Robert Feldman",
+      "chiefComplaint": "Routine follow-up; blood pressure and diabetes management",
+      "diagnoses": [
+        "Essential hypertension — above goal on three agents",
+        "Type 2 diabetes mellitus (HbA1c 7.6%)",
+        "Hyperlipidemia (LDL at goal)",
+        "GERD (stable)"
+      ],
+      "status": "Completed",
+      "interpreterUsed": "None"
+    },
+    {
+      "id": "ENC_HX_003",
+      "date": "2026-11-12T10:30:00.000Z",
+      "type": "Cardiology Consultation (outpatient)",
+      "department": "Cardiology — GBMC",
+      "provider": "Dr. Steven Marsh",
+      "chiefComplaint": "One-time evaluation for atypical chest tightness / preoperative-type risk assessment requested by PCP",
+      "diagnoses": [
+        "Atypical chest discomfort — non-cardiac, reassured",
+        "No evidence of structural heart disease on exam/ECG; no ischemia by history",
+        "Hypertension and diabetes — optimize risk factors"
+      ],
+      "status": "Completed — no echocardiogram performed (low pretest probability at the time); ECG normal sinus rhythm",
+      "interpreterUsed": "None"
+    },
+    {
+      "id": "ENC_HX_002",
+      "date": "2026-10-20T10:00:00.000Z",
+      "type": "Primary Care Visit (annual)",
+      "department": "Towson Internal Medicine Associates",
+      "provider": "Dr. Robert Feldman",
+      "chiefComplaint": "Annual physical",
+      "diagnoses": [
+        "Essential hypertension — poorly controlled (added/optimized HCTZ)",
+        "Type 2 diabetes mellitus",
+        "Osteopenia",
+        "Hyperlipidemia"
+      ],
+      "status": "Completed",
+      "interpreterUsed": "None"
+    },
+    {
+      "id": "ENC_HX_001",
+      "date": "2025-09-08T11:00:00.000Z",
+      "type": "Primary Care Visit",
+      "department": "Towson Internal Medicine Associates",
+      "provider": "Dr. Robert Feldman",
+      "chiefComplaint": "Follow-up after spousal bereavement; blood pressure check",
+      "diagnoses": [
+        "Grief / adjustment reaction (PHQ-9 8)",
+        "Essential hypertension — above goal",
+        "Type 2 diabetes mellitus"
+      ],
+      "status": "Completed",
+      "interpreterUsed": "None"
+    }
+  ],
+  "lastUpdated": "2027-06-14"
+}
