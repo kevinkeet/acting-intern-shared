@@ -1,0 +1,10 @@
+{
+  "id": "NOTE_HX_001",
+  "type": "Primary Care Visit (work physical)",
+  "date": "2026-09-18T10:00:00.000Z",
+  "author": "Dr. Anita Joshi",
+  "department": "Primary Care (Dundalk Family Medicine)",
+  "encounter": "ENC_HX_001",
+  "content": "PRIMARY CARE — WORK PHYSICAL\n\nSUBJECTIVE: 42-year-old construction foreman for a routine employment physical. Feels well. No chest pain, dyspnea, leg swelling, or bleeding problems. No prior blood clots. Former smoker (quit 2014). Social alcohol. Very active through work.\n\nOBJECTIVE: BP 126/80, HR 72, BMI ~29. Exam unremarkable. Labs (LAB_HX_001): normal CBC, renal and hepatic function, A1c 5.4, LDL borderline.\n\nASSESSMENT/PLAN:\n#Healthy adult male — cleared for work.\n#Overweight — counseled on diet/activity.\n#Health maintenance — influenza vaccine; routine screening age-appropriate.\nNo chronic medications. No anticoagulation. No known liver disease.",
+  "attestation": "Electronically signed by Dr. Anita Joshi, MD. 9/18/2026."
+}

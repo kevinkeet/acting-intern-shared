@@ -1,0 +1,14 @@
+{
+  "id": "IMG008",
+  "date": "2027-08-10T13:00:00.000Z",
+  "modality": "Ultrasound",
+  "description": "Lower Extremity Venous Duplex (bilateral) — readmission",
+  "facility": "University of Maryland Medical Center — Vascular Lab",
+  "status": "Final",
+  "radiologist": "Dr. Brett Carroll (Vascular)",
+  "indication": "Re-evaluate lower-extremity DVT in the setting of recurrent PE.",
+  "technique": "Bilateral lower-extremity venous duplex.",
+  "findings": "Persistent occlusive/partially-occlusive thrombus in the RIGHT common femoral and posterior tibial veins, similar to the prior study. No new thrombus in the LEFT lower extremity. Some interval partial recanalization of the right femoral segment.",
+  "impression": "Persistent right lower extremity DVT (residual), without new contralateral thrombus. A continued source of potential further embolization.",
+  "comparison": "7/6/2027 right LE duplex — largely unchanged residual right-leg thrombus."
+}

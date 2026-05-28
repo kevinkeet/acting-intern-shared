@@ -1,0 +1,14 @@
+{
+  "id": "IMG002",
+  "date": "2027-07-06T10:30:00.000Z",
+  "modality": "Ultrasound",
+  "description": "Right Lower Extremity Venous Duplex",
+  "facility": "University of Maryland Medical Center — Vascular Lab",
+  "status": "Final",
+  "radiologist": "Dr. Brett Carroll (Vascular)",
+  "indication": "Evaluate for deep vein thrombosis as the source of pulmonary embolism.",
+  "technique": "Grayscale, color, and spectral Doppler of the right lower extremity deep and superficial venous system.",
+  "findings": "Non-compressible, echogenic thrombus with absent flow involving the RIGHT proximal/common femoral vein, the posterior tibial veins, and the greater saphenous vein. Extensive clot burden. The left lower extremity was not the focus of this study.",
+  "impression": "Acute extensive RIGHT lower extremity deep vein thrombosis (proximal femoral, posterior tibial) plus superficial (greater saphenous) involvement. Source for the pulmonary embolism.",
+  "comparison": "None."
+}

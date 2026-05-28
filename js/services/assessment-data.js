@@ -16,7 +16,7 @@ const AssessmentData = (() => {
     const BASE = 'data/assessments';
 
     // List of cases offered. Add new caseIds here as they're scaffolded.
-    const CASE_IDS = ['PAT002', 'PAT003', 'PAT006'];
+    const CASE_IDS = ['PAT002', 'PAT003', 'PAT004', 'PAT006'];
 
     // Per-case diagnosis reveal (used on the results page only).
     // Lives in code rather than the JSON so it can't accidentally leak via
@@ -44,6 +44,19 @@ const AssessmentData = (() => {
                 'Decision point: hospitalize for biopsy now (risks: deconditioning, nosocomial infection, anticoagulation conflict) vs defer to outpatient (risks: loss to follow-up given language barrier, cost concerns, fragmented care across multiple specialties)',
             ],
             source: 'Adapted from the Management Case Bank (Case 1; original discussants Anil Vachani, Corinne Rhodes, Karin Ouchida; finalized by Parsons).',
+        },
+        PAT004: {
+            primary: 'Acute unprovoked pulmonary embolism + extensive DVT with a concurrent 17 cm liver mass (with portal-vein thrombus) concerning for malignancy',
+            secondary: 'The teaching point is competing-risk anticoagulation management, not the tissue diagnosis of the liver mass. The case turns on protecting the patient through the highest-recurrence-risk window after acute VTE while still pursuing the malignancy workup, and on recognizing that a recurrence during a peri-procedural anticoagulation HOLD is not an anticoagulation failure (and therefore generally not an IVC-filter indication).',
+            causalChain: [
+                'Acute unprovoked segmental PE + extensive right-leg DVT; low-risk at presentation (troponin negative, no RV strain)',
+                'Incidental 17 cm right-hepatic-lobe mass with left-lobe foci and right portal-vein thrombus — high radiologic suspicion for malignancy; biopsy recommended (the unprovoked VTE + mass raises occult-malignancy concern)',
+                'Competing risk: the biopsy requires interrupting anticoagulation, but VTE recurrence risk is highest in the first ~month — so anticoagulate ~3-4 weeks first and defer the (non-emergent) biopsy',
+                'For the high-bleeding-risk liver biopsy, hold apixaban ~48h (renal-function dependent); DOACs do not require bridging',
+                'IR held apixaban 3 days; during that hold the PE PROGRESSED to bilateral with RV strain and troponin elevation',
+                'Because the recurrence occurred OFF anticoagulation (during a supervised hold), not despite therapeutic anticoagulation, the answer is to resume/optimize anticoagulation — an IVC filter is generally NOT indicated (a retrievable filter only if another mandatory interruption is truly unavoidable)',
+            ],
+            source: 'Adapted from the Management Case Bank (Case 2; original discussants Allyson Pishko, Brett Carroll, Jeff Weinstein; finalized by Zahir Kanjee).',
         },
         PAT006: {
             primary: 'New-onset perioperative atrial fibrillation after urgent open cholecystectomy for perforated cholecystitis',

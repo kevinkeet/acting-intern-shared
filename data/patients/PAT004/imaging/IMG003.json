@@ -1,0 +1,14 @@
+{
+  "id": "IMG003",
+  "date": "2027-07-06T16:30:00.000Z",
+  "modality": "Echocardiogram",
+  "description": "Transthoracic Echocardiogram — index admission",
+  "facility": "University of Maryland Medical Center — Cardiology",
+  "status": "Final",
+  "radiologist": "Dr. Brett Carroll (Cardiology)",
+  "indication": "Risk-stratify acute pulmonary embolism (assess for right-heart strain).",
+  "technique": "Complete 2D transthoracic echocardiogram with Doppler.",
+  "findings": "Normal left ventricular size and systolic function (EF 60%). NORMAL right ventricular size and systolic function — no dilation, no hypokinesis, no septal flattening. Normal estimated RV systolic pressure. No significant valvular disease. No pericardial effusion.",
+  "impression": "No echocardiographic evidence of right-heart strain. Consistent with a LOW-RISK pulmonary embolism at this time. (Baseline for comparison with any future study.)",
+  "comparison": "None on file."
+}

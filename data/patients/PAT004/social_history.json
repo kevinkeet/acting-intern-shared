@@ -1,0 +1,67 @@
+{
+  "tobacco": {
+    "status": "Former smoker",
+    "type": "Cigarettes",
+    "amount": "~1/2 pack/day for ~12 years (age 19-31); quit 2014",
+    "packYears": 6,
+    "quitDate": "2014",
+    "notes": "Quit ~13 years ago. Occasional cigar at social events."
+  },
+  "alcohol": {
+    "status": "Social",
+    "frequency": "3-4 beers on weekends",
+    "amount": "Moderate, weekend-predominant. AUDIT-C 3.",
+    "notes": "No history of heavy or daily use; no withdrawal history. No known liver disease."
+  },
+  "drugs": {
+    "status": "Denies",
+    "details": "No illicit drug use. No IV drug use."
+  },
+  "occupation": {
+    "current": "Construction foreman (commercial concrete/steel), Local 24 trades, ~20 years",
+    "previous": "Started as a laborer at 19; foreman since 2016.",
+    "status": "Actively working full-time; physically demanding job.",
+    "exposures": "Construction dust (silica, concrete), diesel exhaust; possible incidental asbestos on older renovation sites (no documented heavy exposure). Wears PPE per site rules."
+  },
+  "education": {
+    "highestLevel": "High school diploma + trade apprenticeship",
+    "literacyConcerns": "None."
+  },
+  "housing": {
+    "status": "Owns a townhouse in Dundalk",
+    "livingWith": "Wife Tanya and two children (ages 10 and 13).",
+    "ownership": "Owns",
+    "notes": "Stable housing, strong family support. Wife works as a dental hygienist."
+  },
+  "diet": {
+    "type": "Typical American diet; eats out frequently at job sites.",
+    "restrictions": "None.",
+    "supplements": "Occasional protein shakes; a daily multivitamin."
+  },
+  "exercise": {
+    "frequency": "Very physically active through work; plays recreational basketball ~weekly.",
+    "intensity": "Moderate-vigorous."
+  },
+  "functionalStatus": {
+    "adls": "Fully independent.",
+    "iadls": "Fully independent. Sole or primary earner for the household.",
+    "driving": "Drives; commutes to job sites.",
+    "falls": "None."
+  },
+  "travel": {
+    "recent": "No long-haul travel or prolonged immobility in the months before presentation.",
+    "notes": "Relevant because it makes this venous thromboembolism essentially UNPROVOKED — no recent surgery, immobilization, long flights, or known prior clots."
+  },
+  "religion": "Baptist; attends church with family.",
+  "safety": {
+    "intimatePartnerViolence": "Denies.",
+    "weaponsInHome": false,
+    "feelsSafeAtHome": true
+  },
+  "mentalHealth": {
+    "depressionScreening": "PHQ-2 negative.",
+    "anxietyScreening": "GAD-2 negative; understandably anxious about the new liver finding and the possibility of cancer.",
+    "support": "Wife and extended family closely involved. Worried about ability to keep working and provide for the family."
+  },
+  "notes": "Previously healthy, very active 43-year-old tradesman and primary breadwinner. The venous thromboembolism is essentially unprovoked, which — together with the incidentally discovered large liver mass — raises concern for an occult malignancy-associated hypercoagulable state. His livelihood depends on physical work, which is relevant to shared decisions about anticoagulation duration and any procedure."
+}

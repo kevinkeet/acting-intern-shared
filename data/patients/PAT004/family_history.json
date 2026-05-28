@@ -1,0 +1,37 @@
+{
+  "familyHistory": [
+    {
+      "relation": "Father",
+      "vital": "Alive (age 68)",
+      "conditions": [
+        { "condition": "Colorectal cancer", "ageOnset": 62, "notes": "Diagnosed at 62, treated with surgery + chemotherapy; in remission. Relevant to the differential for the patient's liver lesion (a metastasis would be on the differential)." },
+        { "condition": "Hypertension" }
+      ]
+    },
+    {
+      "relation": "Mother",
+      "vital": "Alive (age 66)",
+      "conditions": [
+        { "condition": "Type 2 diabetes" },
+        { "condition": "Obesity" }
+      ]
+    },
+    {
+      "relation": "Maternal grandfather",
+      "vital": "Deceased",
+      "ageAtDeath": 79,
+      "conditions": [
+        { "condition": "Venous thromboembolism", "notes": "Reportedly had 'a blood clot in the leg' in his 60s; details unknown. Raises the question of an inherited thrombophilia, though family detail is limited." }
+      ]
+    },
+    {
+      "relation": "Siblings",
+      "vital": "Alive",
+      "conditions": [
+        { "condition": "Healthy", "notes": "One younger brother (39), healthy. No known clotting or cancer history." }
+      ]
+    }
+  ],
+  "summary": "Notable for FATHER with colorectal cancer (treated, in remission) — relevant because metastatic malignancy is on the differential for the liver lesion. A maternal grandfather reportedly had a leg clot, raising a limited question of inherited thrombophilia. No known first-degree VTE.",
+  "lastUpdated": "2027-07-06"
+}

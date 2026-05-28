@@ -1,0 +1,60 @@
+{
+  "problems": [
+    {
+      "id": "PRB001",
+      "name": "Acute pulmonary embolism — segmental (low-risk)",
+      "icd10": "I26.99",
+      "snomed": "59282003",
+      "onsetDate": "2027-07-06",
+      "date": "2027-07-06",
+      "diagnosedBy": "Dr. Olivia Reyes (Emergency Medicine) / CTPA",
+      "priority": "High",
+      "notes": "Initial presentation 7/6/2027 with 6 hours of pleuritic left-sided chest pain and dyspnea. CTPA: SEGMENTAL pulmonary embolus. Troponin negative; TTE without right-heart strain — i.e., LOW-RISK PE at presentation. Essentially UNPROVOKED (no recent surgery, immobilization, long travel, or prior VTE). Started on anticoagulation with clinical improvement. (For the later progression, see the separate recurrent-PE problem.)"
+    },
+    {
+      "id": "PRB002",
+      "name": "Acute extensive right lower extremity deep vein thrombosis",
+      "icd10": "I82.401",
+      "snomed": "128053003",
+      "onsetDate": "2027-07-06",
+      "date": "2027-07-06",
+      "diagnosedBy": "Dr. Brett Carroll (Vascular) / venous duplex",
+      "priority": "High",
+      "notes": "Right lower extremity duplex (7/6): occlusive DVT involving the right proximal (common/proximal superficial) femoral vein, posterior tibial veins, and greater saphenous vein. Extensive clot burden. Source of the pulmonary emboli."
+    },
+    {
+      "id": "PRB003",
+      "name": "Liver mass, 17 cm right lobe — indeterminate, concerning for malignancy; with right portal vein thrombus",
+      "icd10": "K76.89",
+      "snomed": "300332007",
+      "onsetDate": "2027-07-08",
+      "date": "2027-07-08",
+      "diagnosedBy": "Dr. Priya Nathan (Radiology) / liver MRI",
+      "priority": "High",
+      "notes": "Heterogeneous right-hepatic-lobe enhancement first seen incidentally on the staging-quality CTPA (radiologist favored focal fatty infiltration but included primary or metastatic malignancy in the differential). Dedicated liver MRI: a 17 cm abnormality in the posterior right lobe, additional abnormal-signal foci in the left lobe, and apparent THROMBUS within branches of the RIGHT PORTAL VEIN — radiologist with high suspicion for malignancy (primary vs metastatic) and recommends 'consider needle biopsy.' Triple-phase liver CT non-diagnostic but also concerning for malignancy. Workup ongoing; tissue diagnosis pending. (Father had colorectal cancer — metastasis is on the differential.)"
+    },
+    {
+      "id": "PRB004",
+      "name": "Recurrent / progressed pulmonary embolism — bilateral, intermediate-risk (submassive) with right ventricular strain",
+      "icd10": "I26.99",
+      "snomed": "59282003",
+      "onsetDate": "2027-08-10",
+      "date": "2027-08-10",
+      "diagnosedBy": "Dr. Olivia Reyes (Emergency Medicine) / CTA + TTE",
+      "priority": "High",
+      "notes": "Readmission 8/10/2027. Presented to a scheduled outpatient liver biopsy with recurrent dyspnea and pleuritic chest pain after apixaban had been held 3 days per interventional radiology. CTA: PE now in BOTH main pulmonary arteries (progressed from the prior segmental embolus). NEW troponin elevation and NEW right-ventricular strain on TTE — i.e., now INTERMEDIATE-RISK (submassive) PE. Tachycardic to 115, SpO2 93% on 4 L NC. Recurrence occurred during the supervised peri-procedural anticoagulation hold. Restarted on a heparin infusion."
+    },
+    {
+      "id": "PRB005",
+      "name": "Overweight",
+      "icd10": "E66.3",
+      "snomed": "238131007",
+      "onsetDate": "2022-01-01",
+      "date": "2022-01-01",
+      "priority": "Low",
+      "notes": "BMI ~29. No diabetes or hypertension. Mentioned for completeness; weight >60 kg is relevant to standard DOAC dosing."
+    }
+  ],
+  "lastUpdated": "2027-08-10",
+  "reviewedBy": "Dr. Daniel Okafor (PGY-2, Internal Medicine)"
+}

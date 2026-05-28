@@ -1,0 +1,156 @@
+{
+  "active": [
+    {
+      "id": "ORD020",
+      "category": "Medication",
+      "name": "Heparin sodium IV infusion (readmission) — therapeutic",
+      "details": "Restarted on readmission for progressed bilateral PE; titrated to therapeutic aPTT/anti-Xa.",
+      "priority": "STAT",
+      "orderedBy": "Dr. Olivia Reyes",
+      "status": "Active",
+      "orderDate": "2027-08-10T11:15:00.000Z"
+    },
+    {
+      "id": "ORD021",
+      "category": "Respiratory",
+      "name": "Oxygen — titrate to SpO2 > 92%",
+      "details": "On 4 L nasal cannula at presentation.",
+      "priority": "Routine",
+      "orderedBy": "Dr. Olivia Reyes",
+      "status": "Active",
+      "orderDate": "2027-08-10T11:00:00.000Z"
+    },
+    {
+      "id": "ORD022",
+      "category": "Cardiology",
+      "name": "Continuous cardiac telemetry",
+      "details": "Intermediate-risk PE with RV strain — monitor.",
+      "priority": "Routine",
+      "orderedBy": "Dr. Daniel Okafor",
+      "status": "Active",
+      "orderDate": "2027-08-10T12:00:00.000Z"
+    },
+    {
+      "id": "ORD010",
+      "category": "Medication",
+      "name": "Apixaban — treatment of acute VTE",
+      "details": "10 mg BID x7 days then 5 mg BID; prescribed at discharge (7/11). Hold peri-procedurally per proceduralist when the biopsy is scheduled.",
+      "priority": "Routine",
+      "orderedBy": "Dr. Allyson Pishko",
+      "status": "Active (outpatient)",
+      "orderDate": "2027-07-10T16:00:00.000Z"
+    }
+  ],
+  "completed": [
+    {
+      "id": "ORD001",
+      "category": "Imaging",
+      "name": "CT Pulmonary Angiogram",
+      "details": "Segmental PE; incidental liver finding (IMG001).",
+      "priority": "STAT",
+      "orderedBy": "Dr. Olivia Reyes",
+      "status": "Completed",
+      "orderDate": "2027-07-06T09:00:00.000Z",
+      "completedDate": "2027-07-06T09:30:00.000Z"
+    },
+    {
+      "id": "ORD002",
+      "category": "Imaging",
+      "name": "Right lower extremity venous duplex",
+      "details": "Extensive right-leg DVT (IMG002).",
+      "priority": "STAT",
+      "orderedBy": "Dr. Olivia Reyes",
+      "status": "Completed",
+      "orderDate": "2027-07-06T10:00:00.000Z",
+      "completedDate": "2027-07-06T10:30:00.000Z"
+    },
+    {
+      "id": "ORD003",
+      "category": "Cardiology",
+      "name": "Transthoracic echocardiogram (PE risk stratification)",
+      "details": "No RV strain — low-risk PE (IMG003).",
+      "priority": "Routine",
+      "orderedBy": "Dr. Daniel Okafor",
+      "status": "Completed",
+      "orderDate": "2027-07-06T12:00:00.000Z",
+      "completedDate": "2027-07-06T16:30:00.000Z"
+    },
+    {
+      "id": "ORD004",
+      "category": "Medication",
+      "name": "Heparin sodium IV infusion (initial)",
+      "details": "Initial short-acting anticoagulation for acute VTE; transitioned to apixaban 7/10.",
+      "priority": "STAT",
+      "orderedBy": "Dr. Daniel Okafor",
+      "status": "Completed (discontinued 7/10)",
+      "orderDate": "2027-07-06T11:00:00.000Z",
+      "completedDate": "2027-07-10T16:00:00.000Z"
+    },
+    {
+      "id": "ORD005",
+      "category": "Imaging",
+      "name": "MRI liver with and without contrast",
+      "details": "17 cm right-lobe mass + portal vein thrombus; biopsy recommended (IMG004).",
+      "priority": "Routine",
+      "orderedBy": "Dr. Allyson Pishko",
+      "status": "Completed",
+      "orderDate": "2027-07-07T09:00:00.000Z",
+      "completedDate": "2027-07-08T14:00:00.000Z"
+    },
+    {
+      "id": "ORD006",
+      "category": "Imaging",
+      "name": "Triple-phase liver CT",
+      "details": "Non-diagnostic, concerning for malignancy (IMG005).",
+      "priority": "Routine",
+      "orderedBy": "Dr. Allyson Pishko",
+      "status": "Completed",
+      "orderDate": "2027-07-08T16:00:00.000Z",
+      "completedDate": "2027-07-09T10:00:00.000Z"
+    },
+    {
+      "id": "ORD007",
+      "category": "Referral",
+      "name": "Interventional Radiology — outpatient liver biopsy",
+      "details": "Tissue diagnosis of the liver mass; to be scheduled as an outpatient after a period of anticoagulation (planned ~1 month out).",
+      "priority": "Routine",
+      "orderedBy": "Dr. Allyson Pishko",
+      "status": "Scheduled (outpatient)",
+      "orderDate": "2027-07-10T15:00:00.000Z"
+    },
+    {
+      "id": "ORD008",
+      "category": "Consult",
+      "name": "Hematology consult — VTE management / anticoagulation plan",
+      "details": "Anticoagulation strategy around the planned biopsy; occult-malignancy framing.",
+      "priority": "Routine",
+      "orderedBy": "Dr. Daniel Okafor",
+      "status": "Completed",
+      "orderDate": "2027-07-06T18:00:00.000Z",
+      "completedDate": "2027-07-07T11:00:00.000Z"
+    },
+    {
+      "id": "ORD023",
+      "category": "Imaging",
+      "name": "CT Pulmonary Angiogram (readmission)",
+      "details": "Progressed bilateral PE with RV strain (IMG006).",
+      "priority": "STAT",
+      "orderedBy": "Dr. Olivia Reyes",
+      "status": "Completed",
+      "orderDate": "2027-08-10T11:15:00.000Z",
+      "completedDate": "2027-08-10T11:45:00.000Z"
+    },
+    {
+      "id": "ORD024",
+      "category": "Cardiology",
+      "name": "Transthoracic echocardiogram (readmission)",
+      "details": "New RV strain (IMG007).",
+      "priority": "STAT",
+      "orderedBy": "Dr. Daniel Okafor",
+      "status": "Completed",
+      "orderDate": "2027-08-10T12:00:00.000Z",
+      "completedDate": "2027-08-10T12:30:00.000Z"
+    }
+  ],
+  "lastUpdated": "2027-08-10"
+}

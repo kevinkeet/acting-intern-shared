@@ -1,0 +1,34 @@
+{
+  "panels": [
+    {
+      "id": "LAB004",
+      "name": "Readmission Labs — Recurrent PE",
+      "collectedDate": "2027-08-10T11:00:00.000Z",
+      "orderedBy": "Dr. Olivia Reyes (ED)",
+      "preview": "NEW troponin elevation (0.18, up from negative). BNP elevated (640). CBC stable. Cr 0.9 (normal). INR 1.1, aPTT now therapeutic on heparin. Lactate normal. Consistent with intermediate-risk (submassive) PE with right-heart strain."
+    },
+    {
+      "id": "LAB002",
+      "name": "Hospital Day 3 — Liver Mass / Malignancy Workup",
+      "collectedDate": "2027-07-08T06:30:00.000Z",
+      "orderedBy": "Dr. Allyson Pishko (Hematology)",
+      "preview": "LFTs mildly abnormal (ALP 142, mild transaminitis), bilirubin normal, synthetic function intact (albumin 4.0, INR 1.1 off anticoagulation effect). AFP mildly elevated (24, nonspecific), CEA normal, CA 19-9 normal. Hepatitis B and C serologies negative. Thrombophilia testing deferred (acute clot + on anticoagulation)."
+    },
+    {
+      "id": "LAB001",
+      "name": "ED Admission Labs — Acute PE/DVT",
+      "collectedDate": "2027-07-06T09:00:00.000Z",
+      "orderedBy": "Dr. Olivia Reyes (ED)",
+      "preview": "WBC 11.8 (mild). Hgb 14.6, Plt 268. Cr 0.9 (normal renal function). Troponin NEGATIVE. D-dimer markedly elevated. LDH normal, uric acid normal. INR 1.0, aPTT 30 (baseline, pre-anticoagulation). LFTs near-normal."
+    },
+    {
+      "id": "LAB_HX_001",
+      "name": "Routine Labs (work physical)",
+      "collectedDate": "2026-09-18T10:00:00.000Z",
+      "orderedBy": "Dr. Anita Joshi (PCP)",
+      "preview": "Pre-illness baseline. CBC normal (WBC 6.4, Hgb 15.0, Plt 250). CMP normal incl. Cr 0.9 and normal LFTs. Lipids borderline. A1c 5.4."
+    }
+  ],
+  "totalResults": 4,
+  "lastUpdated": "2027-08-10"
+}

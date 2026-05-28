@@ -1,0 +1,96 @@
+{
+  "notes": [
+    {
+      "id": "NOTE009",
+      "type": "Medicine Admission Note (readmission)",
+      "date": "2027-08-10T15:00:00.000Z",
+      "author": "Dr. Daniel Okafor / Dr. Marisol Vega",
+      "department": "Internal Medicine",
+      "encounter": "ENC002",
+      "preview": "Readmission for recurrent/progressed bilateral PE with RV strain and troponin elevation, occurring during the 3-day peri-procedural anticoagulation hold. On heparin infusion. Documents the objective data; the questions of IVC filter and revised biopsy/anticoagulation strategy are raised but the A&P is intentionally brief."
+    },
+    {
+      "id": "NOTE008",
+      "type": "ED Re-presentation H&P (readmission)",
+      "date": "2027-08-10T11:00:00.000Z",
+      "author": "Dr. Olivia Reyes (Emergency Medicine)",
+      "department": "Emergency Department",
+      "encounter": "ENC002",
+      "preview": "Presented to the scheduled outpatient liver biopsy with recurrent dyspnea and pleuritic chest pain after apixaban had been held. Tachycardic 115, SpO2 93% on 4L. CTA: bilateral PE (progressed). New troponin elevation; TTE with RV strain. Heparin infusion started; biopsy cancelled."
+    },
+    {
+      "id": "NOTE007",
+      "type": "Interventional Radiology — Pre-Procedure / Biopsy Planning Note",
+      "date": "2027-08-08T10:00:00.000Z",
+      "author": "Dr. Jeff Weinstein (Interventional Radiology)",
+      "department": "Interventional Radiology",
+      "encounter": "ENC001",
+      "preview": "Pre-procedure planning for the outpatient CT-guided liver biopsy scheduled 8/10. Per IR protocol for this high-bleeding-risk procedure, instructs the patient to HOLD apixaban for 3 days prior; resume after hemostasis confirmed. (This is the actual instruction that preceded the recurrence.)"
+    },
+    {
+      "id": "NOTE006",
+      "type": "Outpatient Hematology Follow-up",
+      "date": "2027-07-24T10:30:00.000Z",
+      "author": "Dr. Allyson Pishko (Hematology)",
+      "department": "Hematology (outpatient)",
+      "encounter": "ENC001",
+      "preview": "Interim outpatient visit ~2.5 weeks after discharge. Doing well on apixaban; symptoms resolved; no bleeding. Liver biopsy upcoming. Reinforced the importance of resuming anticoagulation promptly after the procedure."
+    },
+    {
+      "id": "NOTE005",
+      "type": "Discharge Summary",
+      "date": "2027-07-11T13:30:00.000Z",
+      "author": "Dr. Daniel Okafor / Dr. Marisol Vega",
+      "department": "Internal Medicine",
+      "encounter": "ENC001",
+      "preview": "Discharge after acute PE/DVT, transitioned from heparin to apixaban. Liver mass concerning for malignancy — outpatient interventional-radiology biopsy and hepatology follow-up arranged. Return precautions for recurrent VTE symptoms."
+    },
+    {
+      "id": "NOTE004",
+      "type": "Medicine Progress Note (HD5, pre-discharge)",
+      "date": "2027-07-10T08:30:00.000Z",
+      "author": "Dr. Daniel Okafor / Dr. Marisol Vega",
+      "department": "Internal Medicine",
+      "encounter": "ENC001",
+      "preview": "HD5. Clinically improved, off oxygen. Triple-phase CT non-diagnostic but concerning. Plan to transition from heparin to apixaban and arrange the liver biopsy as an outpatient. A&P intentionally brief on timing specifics."
+    },
+    {
+      "id": "NOTE003",
+      "type": "Medicine Progress Note (HD3)",
+      "date": "2027-07-08T09:00:00.000Z",
+      "author": "Dr. Daniel Okafor / Dr. Marisol Vega",
+      "department": "Internal Medicine",
+      "encounter": "ENC001",
+      "preview": "HD3. Liver MRI back: 17 cm right-lobe mass + left-lobe foci + right portal vein thrombus, high suspicion for malignancy, biopsy recommended. Symptoms improving on anticoagulation. Multidisciplinary discussion (heme, IR, hepatology) regarding biopsy timing."
+    },
+    {
+      "id": "NOTE002",
+      "type": "Hematology Consult — VTE Management",
+      "date": "2027-07-07T11:00:00.000Z",
+      "author": "Dr. Allyson Pishko (Hematology)",
+      "department": "Hematology",
+      "encounter": "ENC001",
+      "preview": "Consult for management of unprovoked PE + extensive DVT in a previously healthy 43-year-old, with a concurrent liver mass concerning for malignancy. Frames the competing-risk tension between anticoagulation needs and the recommended biopsy. A&P deliberately brief on the timing decision."
+    },
+    {
+      "id": "NOTE001",
+      "type": "ED Visit / Admission H&P",
+      "date": "2027-07-06T10:00:00.000Z",
+      "author": "Dr. Olivia Reyes (ED) / Dr. Daniel Okafor (Medicine)",
+      "department": "Emergency Department / Internal Medicine",
+      "encounter": "ENC001",
+      "preview": "43M previously healthy with 6 hours of pleuritic left chest pain and dyspnea. CTPA: segmental PE + incidental heterogeneous liver enhancement. RLE duplex: extensive DVT. Troponin negative, TTE no RV strain (low-risk PE). Essentially unprovoked. Anticoagulation started; admitted."
+    },
+    {
+      "id": "NOTE_HX_001",
+      "type": "Primary Care Visit (work physical)",
+      "date": "2026-09-18T10:00:00.000Z",
+      "author": "Dr. Anita Joshi",
+      "department": "Primary Care (Dundalk Family Medicine)",
+      "encounter": "ENC_HX_001",
+      "preview": "Routine work physical ~10 months before presentation. Healthy; overweight (BMI ~29); normal labs. No prior clots, no anticoagulation, no liver disease. Establishes a healthy baseline."
+    }
+  ],
+  "lastUpdated": "2027-08-10",
+  "_status": "10 notes (1 historical + 9 admission/transition/readmission). The IR 'hold apixaban 3 days' instruction lives only in NOTE007 (dated 8/8, gated to TP2) so it cannot hand away the TP1 DOAC-hold question. Management-decision notes (NOTE002, NOTE004, NOTE009) are deliberately sparse on the A&P."
+}

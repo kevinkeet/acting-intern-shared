@@ -1,0 +1,52 @@
+{
+  "id": "PAT004",
+  "mrn": "MRN-90216044",
+  "firstName": "Marcus",
+  "middleName": "DeShawn",
+  "lastName": "Bell",
+  "dateOfBirth": "1983-11-22",
+  "sex": "Male",
+  "gender": "Male",
+  "race": "Black or African American",
+  "ethnicity": "Not Hispanic or Latino",
+  "preferredLanguage": "English",
+  "interpreterNeeded": false,
+  "countryOfBirth": "USA",
+  "maritalStatus": "Married",
+  "ssn": null,
+  "phone": "(410) 555-3471",
+  "email": "marcus.bell83@gmail.com",
+  "address": {
+    "street": "27 Inverness Ave",
+    "city": "Dundalk",
+    "state": "MD",
+    "zip": "21222",
+    "country": "USA"
+  },
+  "emergencyContact": {
+    "name": "Tanya Bell",
+    "relationship": "Wife",
+    "phone": "(410) 555-3472",
+    "language": "English"
+  },
+  "primaryCareProvider": {
+    "name": "Dr. Anita Joshi, MD",
+    "npi": "1689043215",
+    "phone": "(410) 555-7700",
+    "practice": "Dundalk Family Medicine",
+    "notes": "Establishing-care visit 2024; otherwise healthy, infrequent visits. Last seen 2026 for a work physical."
+  },
+  "insurance": {
+    "name": "CareFirst BlueCross BlueShield PPO (employer plan via Local 24 / construction trades)",
+    "memberId": "CFB-7741-22Q",
+    "notes": "Commercial PPO through the union. Active coverage."
+  },
+  "advanceDirectives": {
+    "livingWill": false,
+    "healthcareProxy": "Wife Tanya Bell (verbal; not formally documented)",
+    "dnr": false,
+    "lastReviewed": "2027-07-06"
+  },
+  "createdAt": "2024-03-04T10:00:00Z",
+  "lastUpdated": "2027-08-10T09:00:00Z"
+}

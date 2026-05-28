@@ -1,0 +1,9 @@
+{
+  "immunizations": [
+    { "id": "IMM001", "vaccine": "Influenza (inactivated)", "date": "2026-10-15", "source": "Pharmacy (CVS Dundalk)" },
+    { "id": "IMM002", "vaccine": "Tdap", "date": "2021-05-20", "source": "PCP — required for work site" },
+    { "id": "IMM003", "vaccine": "COVID-19 (bivalent booster)", "date": "2024-11-02", "source": "Pharmacy" }
+  ],
+  "lastReviewed": "2027-07-06",
+  "notes": "Up to date on tetanus (workplace requirement). No pneumococcal/zoster (age-appropriate, not yet indicated)."
+}

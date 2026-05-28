@@ -32,6 +32,17 @@
       "caseTitle": "The lung nodule that almost left (adapted from management case bank)"
     },
     {
+      "id": "PAT004",
+      "name": "Bell, Marcus D",
+      "mrn": "MRN-90216044",
+      "dob": "1983-11-22",
+      "sex": "Male",
+      "status": "Active",
+      "summary": "43 y.o. previously healthy man with acute unprovoked PE + extensive DVT and an incidental 17 cm liver mass (with portal-vein thrombus) concerning for malignancy; later readmitted with progressed bilateral PE after a peri-procedural anticoagulation hold. Management assessment case.",
+      "caseType": "assessment",
+      "caseTitle": "The PE and the liver mass (adapted from management case bank)"
+    },
+    {
       "id": "PAT006",
       "name": "Pierce, Dorothy A",
       "mrn": "MRN-90215922",

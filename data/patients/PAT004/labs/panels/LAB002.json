@@ -1,0 +1,24 @@
+{
+  "id": "LAB002",
+  "name": "Hospital Day 3 — Liver Mass / Malignancy Workup",
+  "collectedDate": "2027-07-08T06:30:00.000Z",
+  "resultedDate": "2027-07-08T12:00:00.000Z",
+  "orderedBy": "Dr. Allyson Pishko (Hematology)",
+  "facility": "University of Maryland Medical Center — Inpatient Lab",
+  "specimen": "Serum",
+  "status": "Final",
+  "results": [
+    { "name": "AST", "value": "52", "unit": "U/L", "referenceRange": "10-40", "flag": "high" },
+    { "name": "ALT", "value": "58", "unit": "U/L", "referenceRange": "7-56", "flag": "high" },
+    { "name": "ALP", "value": "142", "unit": "U/L", "referenceRange": "44-147", "flag": "normal-high" },
+    { "name": "Total bilirubin", "value": "0.9", "unit": "mg/dL", "referenceRange": "0.1-1.2", "flag": "normal" },
+    { "name": "Albumin", "value": "4.0", "unit": "g/dL", "referenceRange": "3.5-5.0", "flag": "normal", "interpretation": "Preserved hepatic synthetic function." },
+    { "name": "INR (off anticoagulation effect)", "value": "1.1", "unit": "", "referenceRange": "0.8-1.2", "flag": "normal" },
+    { "name": "AFP (alpha-fetoprotein)", "value": "24", "unit": "ng/mL", "referenceRange": "<10", "flag": "high", "interpretation": "Mildly elevated and NONSPECIFIC — does not establish a diagnosis; tissue is needed." },
+    { "name": "CEA", "value": "2.1", "unit": "ng/mL", "referenceRange": "<3.0", "flag": "normal" },
+    { "name": "CA 19-9", "value": "18", "unit": "U/mL", "referenceRange": "<37", "flag": "normal" },
+    { "name": "Hepatitis B surface antigen", "value": "Negative", "unit": "", "referenceRange": "Negative", "flag": "normal" },
+    { "name": "Hepatitis C antibody", "value": "Negative", "unit": "", "referenceRange": "Negative", "flag": "normal" }
+  ],
+  "interpretation": "Mild transaminitis with preserved synthetic function. Tumor markers are non-diagnostic (AFP mildly and nonspecifically elevated; CEA and CA 19-9 normal). Hepatitis B and C negative. These narrow but do not resolve the liver-mass differential — a tissue diagnosis (biopsy) remains the recommendation. Inherited-thrombophilia testing was deferred, as results are unreliable during acute thrombosis and on anticoagulation."
+}

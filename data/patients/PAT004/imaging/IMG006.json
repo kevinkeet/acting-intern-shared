@@ -1,0 +1,14 @@
+{
+  "id": "IMG006",
+  "date": "2027-08-10T11:45:00.000Z",
+  "modality": "CT",
+  "description": "CT Pulmonary Angiogram — readmission",
+  "facility": "University of Maryland Medical Center — Emergency Radiology",
+  "status": "Final",
+  "radiologist": "Dr. Priya Nathan",
+  "indication": "Recurrent dyspnea and pleuritic chest pain after a 3-day peri-procedural anticoagulation hold; evaluate for recurrent/progressed PE.",
+  "technique": "CT pulmonary angiography, pulmonary arterial phase, with reformats.",
+  "findings": "Pulmonary emboli are now present in BOTH MAIN pulmonary arteries with extension into lobar branches bilaterally — PROGRESSED compared with the segmental right-lower-lobe embolus on the 7/6 CTPA. The RV:LV ratio is increased (>1.0) with reflux of contrast into the IVC/hepatic veins, suggesting right-heart strain. No frank pulmonary infarction. The partially imaged liver lesion is again noted, grossly unchanged.",
+  "impression": "1. PROGRESSED, now BILATERAL pulmonary embolism with CT signs of right-ventricular strain (RV:LV >1.0) — intermediate-risk.\n2. Marked interval progression compared with the 7/6 study, in the setting of the recent anticoagulation interruption.",
+  "comparison": "7/6/2027 CTPA showed only a segmental right-lower-lobe embolus with a normal RV:LV ratio. Significant interval progression."
+}

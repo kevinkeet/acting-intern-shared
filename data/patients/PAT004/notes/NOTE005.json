@@ -1,0 +1,10 @@
+{
+  "id": "NOTE005",
+  "type": "Discharge Summary",
+  "date": "2027-07-11T13:30:00.000Z",
+  "author": "Dr. Daniel Okafor / Dr. Marisol Vega",
+  "department": "Internal Medicine",
+  "encounter": "ENC001",
+  "content": "DISCHARGE SUMMARY — UNIVERSITY OF MARYLAND MEDICAL CENTER\nAdmission 7/6/2027 — Discharge 7/11/2027.\n\nADMISSION DIAGNOSES: Acute segmental PE (low-risk); extensive right LE DVT; incidental liver mass concerning for malignancy.\n\nHOSPITAL COURSE: Previously healthy 43-year-old man with acute unprovoked PE and extensive DVT, started on a heparin infusion with prompt symptomatic improvement and no right-heart strain. Dedicated liver MRI and triple-phase CT characterized a large right-hepatic-lobe lesion with left-lobe foci and a right portal-vein thrombus, with high radiologic suspicion for malignancy and a recommendation to biopsy. Hematology, interventional radiology, and hepatology were involved. He was transitioned from heparin to apixaban and remained stable.\n\nDISCHARGE DIAGNOSES: Acute VTE (PE + DVT), on anticoagulation; liver mass — tissue diagnosis pending.\n\nDISCHARGE MEDICATIONS: Apixaban (acute-VTE regimen). Acetaminophen PRN. (No NSAIDs.)\n\nFOLLOW-UP:\n- Interventional radiology: OUTPATIENT CT-guided liver biopsy (to be scheduled).\n- Hepatology and hematology: outpatient follow-up.\n- Strict return precautions: recurrent chest pain, dyspnea, leg swelling, bleeding.\n\nThe importance of adherence to anticoagulation and of prompt re-evaluation for any recurrent symptoms was emphasized.",
+  "attestation": "Electronically signed by Dr. Daniel Okafor, MD (PGY-2) and Dr. Marisol Vega, MD. 7/11/2027."
+}

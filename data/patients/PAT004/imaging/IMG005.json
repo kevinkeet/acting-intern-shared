@@ -1,0 +1,14 @@
+{
+  "id": "IMG005",
+  "date": "2027-07-09T10:00:00.000Z",
+  "modality": "CT",
+  "description": "Triple-phase Liver CT (with IV contrast)",
+  "facility": "University of Maryland Medical Center — Radiology",
+  "status": "Final",
+  "radiologist": "Dr. Henry Cole (abdominal imaging)",
+  "indication": "Further characterization of the liver lesion seen on MRI; assess enhancement kinetics.",
+  "technique": "Triple-phase (arterial, portal-venous, delayed) contrast-enhanced CT of the liver.",
+  "findings": "Large heterogeneously enhancing right-hepatic-lobe lesion with additional left-lobe foci, corresponding to the MRI findings. The enhancement pattern is NON-DIAGNOSTIC for a specific tumor type and does not cleanly fit a benign entity. Right portal-vein thrombus again noted. No definite extrahepatic metastatic disease within the imaged field.",
+  "impression": "Non-diagnostic but CONCERNING for malignancy. The imaging cannot establish a specific diagnosis — tissue sampling (biopsy) remains the recommended next step for definitive characterization.",
+  "comparison": "Corresponds to the 7/8 liver MRI."
+}

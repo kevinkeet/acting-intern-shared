@@ -1,0 +1,14 @@
+{
+  "id": "IMG007",
+  "date": "2027-08-10T12:30:00.000Z",
+  "modality": "Echocardiogram",
+  "description": "Transthoracic Echocardiogram — readmission",
+  "facility": "University of Maryland Medical Center — Cardiology",
+  "status": "Final",
+  "radiologist": "Dr. Brett Carroll (Cardiology)",
+  "indication": "Risk-stratify recurrent PE; assess for right-heart strain.",
+  "technique": "Complete 2D transthoracic echocardiogram with Doppler.",
+  "findings": "NEW right ventricular dilation with reduced RV systolic function and regional hypokinesis sparing the apex (McConnell-type pattern). Septal flattening suggesting RV pressure/volume overload. Estimated RV systolic pressure elevated. LV function preserved (EF 60%). No pericardial effusion.",
+  "impression": "NEW acute right-ventricular strain — not present on the 7/6 study. Consistent with INTERMEDIATE-RISK (submassive) pulmonary embolism.",
+  "comparison": "7/6/2027 TTE showed normal RV size and function. Interval development of RV strain."
+}

@@ -1,0 +1,77 @@
+{
+  "studies": [
+    {
+      "id": "IMG008",
+      "date": "2027-08-10T13:00:00.000Z",
+      "modality": "Ultrasound",
+      "description": "Lower Extremity Venous Duplex (bilateral) — readmission",
+      "facility": "UMMC Vascular Lab",
+      "radiologist": "Dr. Brett Carroll",
+      "preview": "Persistent occlusive DVT in the right femoral and posterior tibial veins. No new left-leg DVT. Compared with 7/6 — largely unchanged residual right-leg thrombus."
+    },
+    {
+      "id": "IMG007",
+      "date": "2027-08-10T12:30:00.000Z",
+      "modality": "Echocardiogram",
+      "description": "Transthoracic Echocardiogram — readmission",
+      "facility": "UMMC Cardiology",
+      "radiologist": "Dr. Brett Carroll",
+      "preview": "NEW right ventricular dilation and hypokinesis with septal flattening (McConnell-pattern). Elevated estimated RV systolic pressure. Findings of acute RV strain — NOT present on the 7/6 study. Consistent with intermediate-risk (submassive) PE."
+    },
+    {
+      "id": "IMG006",
+      "date": "2027-08-10T11:45:00.000Z",
+      "modality": "CT",
+      "description": "CT Pulmonary Angiogram — readmission",
+      "facility": "UMMC Emergency Radiology",
+      "radiologist": "Dr. Priya Nathan",
+      "preview": "PROGRESSED pulmonary embolism — now involving BOTH main pulmonary arteries (bilateral), advanced beyond the segmental clot on the 7/6 CTPA. RV:LV ratio >1.0 suggesting strain. No frank infarction."
+    },
+    {
+      "id": "IMG005",
+      "date": "2027-07-09T10:00:00.000Z",
+      "modality": "CT",
+      "description": "Triple-phase Liver CT",
+      "facility": "UMMC Radiology",
+      "radiologist": "Dr. Priya Nathan",
+      "preview": "Large right-hepatic-lobe lesion with heterogeneous enhancement; NON-DIAGNOSTIC for a specific etiology but concerning for malignancy. Does not exclude primary vs metastatic disease. Tissue sampling recommended."
+    },
+    {
+      "id": "IMG004",
+      "date": "2027-07-08T14:00:00.000Z",
+      "modality": "MRI",
+      "description": "MRI Liver with and without contrast",
+      "facility": "UMMC Radiology",
+      "radiologist": "Dr. Priya Nathan",
+      "preview": "A 17 cm abnormality in the posterior right hepatic lobe, additional abnormal-signal foci in the left lobe, and apparent THROMBUS within branches of the right portal vein. HIGH SUSPICION for malignancy (primary vs metastatic). Recommendation: consider needle biopsy."
+    },
+    {
+      "id": "IMG003",
+      "date": "2027-07-06T16:30:00.000Z",
+      "modality": "Echocardiogram",
+      "description": "Transthoracic Echocardiogram — index admission",
+      "facility": "UMMC Cardiology",
+      "radiologist": "Dr. Brett Carroll",
+      "preview": "Normal right ventricular size and function. NO evidence of right-heart strain. Normal LV function. Establishes a low-risk PE at presentation (baseline for later comparison)."
+    },
+    {
+      "id": "IMG002",
+      "date": "2027-07-06T10:30:00.000Z",
+      "modality": "Ultrasound",
+      "description": "Right Lower Extremity Venous Duplex",
+      "facility": "UMMC Vascular Lab",
+      "radiologist": "Dr. Brett Carroll",
+      "preview": "Occlusive DVT involving the right proximal (common/proximal) femoral vein, posterior tibial veins, and greater saphenous vein. Extensive right-leg clot burden."
+    },
+    {
+      "id": "IMG001",
+      "date": "2027-07-06T09:30:00.000Z",
+      "modality": "CT",
+      "description": "CT Pulmonary Angiogram (with incidental liver finding)",
+      "facility": "UMMC Emergency Radiology",
+      "radiologist": "Dr. Priya Nathan",
+      "preview": "SEGMENTAL pulmonary embolus (no central/saddle clot; RV:LV ratio normal). Incidental heterogeneous enhancement in the right hepatic lobe — favored to represent focal fatty infiltration, but the differential includes primary or metastatic malignancy; dedicated liver imaging recommended."
+    }
+  ],
+  "lastUpdated": "2027-08-10"
+}

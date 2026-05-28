@@ -1,0 +1,21 @@
+{
+  "id": "LAB_HX_001",
+  "name": "Routine Labs (work physical)",
+  "collectedDate": "2026-09-18T10:00:00.000Z",
+  "resultedDate": "2026-09-19T08:00:00.000Z",
+  "orderedBy": "Dr. Anita Joshi (Dundalk Family Medicine)",
+  "facility": "LabCorp — Dundalk",
+  "specimen": "Serum + whole blood",
+  "status": "Final",
+  "results": [
+    { "name": "CBC — WBC", "value": "6.4", "unit": "K/uL", "referenceRange": "4.5-11.0", "flag": "normal" },
+    { "name": "CBC — Hemoglobin", "value": "15.0", "unit": "g/dL", "referenceRange": "13.5-17.5", "flag": "normal" },
+    { "name": "CBC — Platelets", "value": "250", "unit": "K/uL", "referenceRange": "150-400", "flag": "normal" },
+    { "name": "CMP — Creatinine", "value": "0.9", "unit": "mg/dL", "referenceRange": "0.7-1.3", "flag": "normal" },
+    { "name": "CMP — AST", "value": "26", "unit": "U/L", "referenceRange": "10-40", "flag": "normal" },
+    { "name": "CMP — ALT", "value": "30", "unit": "U/L", "referenceRange": "7-56", "flag": "normal" },
+    { "name": "HbA1c", "value": "5.4", "unit": "%", "referenceRange": "<5.7", "flag": "normal" },
+    { "name": "Lipid — LDL", "value": "128", "unit": "mg/dL", "referenceRange": "<130", "flag": "normal" }
+  ],
+  "interpretation": "Pre-illness baseline — entirely normal blood counts, renal and hepatic function, and metabolic screen. Establishes that the liver abnormality and VTE are new."
+}

@@ -1,0 +1,73 @@
+{
+  "id": "AP2",
+  "order": 2,
+  "title": "Timepoint 2 — Readmission with recurrent PE (~1 month later)",
+  "anchorDate": "2027-08-10T23:59:59Z",
+  "timeLimitMinutes": 10,
+  "scenarioBrief": "About a month after discharge, Mr. Bell was transitioned to apixaban and an outpatient liver biopsy was arranged. Per interventional radiology's instructions, his apixaban was held for three days before the procedure. When he arrived for the biopsy he had recurrent dyspnea and pleuritic chest pain and was sent to the emergency department. A CTA now shows pulmonary embolism in BOTH pulmonary arteries (progressed from the prior segmental clot), with a newly elevated troponin and new right-ventricular strain on echocardiography. He is tachycardic to 115 and satting 93% on 4 L nasal cannula but remains normotensive. He has been readmitted and started on a heparin infusion. Review the chart (including the interventional-radiology pre-procedure note and the new imaging) before answering.",
+  "chartGate": {
+    "includeBeforeOrEqualDate": "2027-08-10T23:59:59Z",
+    "_notes": "TP2 visibility: the full chart, including the discharge summary, the outpatient hematology note, the IR pre-procedure note (which specifies the 3-day apixaban hold), and the readmission workup — CTA (bilateral, progressed PE), repeat TTE (new RV strain), repeat duplex (persistent DVT), the readmission labs (new troponin elevation), and the heparin infusion."
+  },
+  "prompts": [
+    {
+      "id": "AP2-Q5",
+      "order": 1,
+      "type": "management-decision",
+      "question": "Would you recommend placement of an IVC filter in this case? Explain why or why not.",
+      "expectedResponseFormat": "free_text",
+      "minLength": 250,
+      "rubric": {
+        "essential": [
+          "Recognizes that this recurrence occurred during a SUPERVISED INTERRUPTION of anticoagulation (the 3-day peri-procedural hold) — i.e., it is NOT a failure of therapeutic anticoagulation, but progression while subtherapeutic/off anticoagulation",
+          "Notes the patient has NO contraindication to anticoagulation and is now therapeutically anticoagulated (heparin) — so the standard indications for a filter (contraindication to anticoagulation, OR recurrent VTE despite therapeutic anticoagulation) are NOT met",
+          "Concludes that the primary treatment is to RESUME / optimize anticoagulation, and that a filter is generally NOT indicated here for that reason",
+          "Reaches a clear, justified position (rather than hedging) — and if a filter is entertained at all, frames it only as a TEMPORARY/RETRIEVABLE device for a specific future scenario (e.g., if another mandatory anticoagulation interruption for the biopsy is truly unavoidable), not as primary therapy"
+        ],
+        "bonus": [
+          "States that a filter does NOT treat the existing clot and is NOT a substitute for anticoagulation",
+          "Argues the better fix is to reconsider the necessity/timing of the biopsy (or pursue a diagnosis without stopping anticoagulation) given the demonstrated recurrence on holding",
+          "If a retrievable filter is placed, commits to a removal plan",
+          "Notes that the recurrence actually demonstrates how dangerous interrupting anticoagulation is in this patient — reinforcing uninterrupted anticoagulation rather than a filter"
+        ],
+        "redFlags": [
+          "Placing a PERMANENT filter as the primary response to this recurrence",
+          "Framing this as 'anticoagulation failure' (it was a recurrence OFF anticoagulation, during a hold)",
+          "Using a filter INSTEAD OF anticoagulation in a patient who can be anticoagulated",
+          "Not recognizing that the recurrence was provoked by the anticoagulation interruption"
+        ]
+      },
+      "weight": 0.9,
+      "sourceQuestion": "Question 5"
+    },
+    {
+      "id": "AP2-Q6",
+      "order": 2,
+      "type": "knowledge",
+      "question": "More generally, what are the arguments for and against placing an IVC filter?",
+      "expectedResponseFormat": "free_text",
+      "minLength": 200,
+      "rubric": {
+        "essential": [
+          "Gives valid arguments FOR — at least: a contraindication to anticoagulation (e.g., active or high-risk bleeding), and recurrent VTE DESPITE therapeutic anticoagulation; (may also mention as a temporary measure when anticoagulation must be interrupted in a very high-risk patient)",
+          "Gives valid arguments AGAINST — at least two of: filters do not treat existing clot or replace anticoagulation; they increase the risk of (recurrent) DVT; mechanical complications (migration, fracture, IVC perforation/thrombosis, retrieval failure); retrievable filters are frequently never retrieved",
+          "Conveys that a filter addresses only embolization of lower-extremity clot to the lungs — it is not a treatment for thrombosis itself"
+        ],
+        "bonus": [
+          "Cites the evidence base (e.g., PREPIC / PREPIC2): filters reduce PE recurrence but increase DVT, with NO mortality benefit",
+          "Distinguishes retrievable vs permanent filters and stresses planned retrieval",
+          "Notes appropriate-use considerations and avoidance of routine filter placement for PE"
+        ],
+        "redFlags": [
+          "Claiming IVC filters provide a mortality benefit",
+          "Recommending filters broadly/routinely for PE",
+          "Omitting the major harms (increased DVT, mechanical complications) entirely"
+        ]
+      },
+      "weight": 0.5,
+      "sourceQuestion": "Question 6"
+    }
+  ],
+  "totalWeight": 1.4,
+  "passingScorePct": 70
+}

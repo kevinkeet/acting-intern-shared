@@ -1,0 +1,50 @@
+{
+  "encounters": [
+    {
+      "id": "ENC002",
+      "date": "2027-08-10T10:45:00.000Z",
+      "dischargeDate": null,
+      "type": "Inpatient Admission (readmission)",
+      "department": "Internal Medicine / Cardiology (UMMC)",
+      "provider": "Dr. Daniel Okafor (Medicine PGY-2), Dr. Marisol Vega (Medicine attending), Dr. Brett Carroll (Vascular/Cardiology), Dr. Allyson Pishko (Hematology)",
+      "chiefComplaint": "Recurrent dyspnea and pleuritic chest pain (at scheduled biopsy appointment)",
+      "diagnoses": [
+        "Recurrent/progressed pulmonary embolism — bilateral, intermediate-risk with right ventricular strain and troponin elevation",
+        "Recurrence during the peri-procedural anticoagulation hold",
+        "Liver mass — biopsy deferred",
+        "Right lower extremity DVT (persistent)"
+      ],
+      "status": "Inpatient (readmitted 8/10; on heparin infusion)",
+      "interpreterUsed": "None"
+    },
+    {
+      "id": "ENC001",
+      "date": "2027-07-06T08:15:00.000Z",
+      "dischargeDate": "2027-07-11T14:00:00.000Z",
+      "type": "Inpatient Admission",
+      "department": "Internal Medicine (UMMC)",
+      "provider": "Dr. Daniel Okafor (Medicine PGY-2), Dr. Marisol Vega (Medicine attending), Dr. Allyson Pishko (Hematology), Dr. Brett Carroll (Vascular)",
+      "chiefComplaint": "Pleuritic left chest pain and dyspnea",
+      "diagnoses": [
+        "Acute segmental pulmonary embolism (low-risk)",
+        "Acute extensive right lower extremity DVT",
+        "Incidental 17 cm liver mass — indeterminate, concerning for malignancy, with right portal vein thrombus",
+        "Essentially unprovoked VTE — occult malignancy workup"
+      ],
+      "status": "Discharged 7/11/2027 on apixaban; outpatient liver biopsy planned in ~1 month",
+      "interpreterUsed": "None"
+    },
+    {
+      "id": "ENC_HX_001",
+      "date": "2026-09-18T10:00:00.000Z",
+      "type": "Primary Care Visit (work physical)",
+      "department": "Dundalk Family Medicine",
+      "provider": "Dr. Anita Joshi",
+      "chiefComplaint": "Routine work physical",
+      "diagnoses": ["Healthy adult male", "Overweight (BMI ~29)"],
+      "status": "Completed",
+      "interpreterUsed": "None"
+    }
+  ],
+  "lastUpdated": "2027-08-10"
+}

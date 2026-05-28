@@ -1,0 +1,16 @@
+{
+  "procedures": [
+    {
+      "id": "PROC001",
+      "date": "2027-08-10T09:30:00.000Z",
+      "name": "CT-guided percutaneous liver biopsy",
+      "laterality": "Right hepatic lobe",
+      "cptCode": "47000",
+      "provider": "Dr. Jeff Weinstein (Interventional Radiology)",
+      "facility": "University of Maryland Medical Center — IR Suite",
+      "status": "Cancelled / not performed",
+      "notes": "Outpatient biopsy scheduled after the planned anticoagulation hold. CANCELLED on arrival — the patient presented to the appointment with recurrent dyspnea and pleuritic chest pain and was sent to the ED, where progressed bilateral PE was found. Biopsy deferred pending stabilization and a revised anticoagulation/timing plan."
+    }
+  ],
+  "lastUpdated": "2027-08-10"
+}

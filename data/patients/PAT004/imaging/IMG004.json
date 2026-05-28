@@ -1,0 +1,14 @@
+{
+  "id": "IMG004",
+  "date": "2027-07-08T14:00:00.000Z",
+  "modality": "MRI",
+  "description": "MRI Liver, with and without IV contrast (multiphase)",
+  "facility": "University of Maryland Medical Center — Radiology",
+  "status": "Final",
+  "radiologist": "Dr. Priya Nathan / Dr. Henry Cole (abdominal imaging)",
+  "indication": "Characterization of the heterogeneous right-hepatic-lobe abnormality seen on CTPA (7/6).",
+  "technique": "Multiphase contrast-enhanced MRI of the liver (T1 in/out of phase, T2, diffusion-weighted, dynamic post-gadolinium arterial/portal-venous/delayed phases).",
+  "findings": "A large, 17 cm abnormality occupies much of the POSTERIOR RIGHT hepatic lobe, with heterogeneous signal and enhancement. Multiple ADDITIONAL areas of abnormal signal/enhancement are present in the LEFT lobe. There is apparent THROMBUS within branches of the RIGHT PORTAL VEIN adjacent to the dominant lesion. The lesions do not follow a simple benign pattern (not typical of hemangioma, FNH, or simple steatosis). No biliary dilatation. Spleen normal. No ascites.",
+  "impression": "1. Dominant 17 cm right-hepatic-lobe lesion with additional left-lobe foci and apparent right portal-vein thrombus — HIGH SUSPICION for malignancy (primary hepatic vs metastatic). The portal-vein thrombus may represent bland or tumor thrombus.\n2. RECOMMENDATION: CONSIDER NEEDLE BIOPSY for tissue diagnosis.\n\n(Note: the patient is concurrently anticoagulated for acute VTE — the timing/safety of any biopsy must be coordinated with the treating teams.)",
+  "comparison": "Corresponds to the incidental finding flagged on the 7/6 CTPA; now far better characterized."
+}

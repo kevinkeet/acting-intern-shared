@@ -1,0 +1,22 @@
+{
+  "id": "LAB004",
+  "name": "Readmission Labs — Recurrent / Progressed PE",
+  "collectedDate": "2027-08-10T11:00:00.000Z",
+  "resultedDate": "2027-08-10T11:40:00.000Z",
+  "orderedBy": "Dr. Olivia Reyes (Emergency Department)",
+  "facility": "University of Maryland Medical Center — ED Lab",
+  "specimen": "Serum + plasma",
+  "status": "Final",
+  "results": [
+    { "name": "Troponin I", "value": "0.18", "unit": "ng/mL", "referenceRange": "<0.04", "flag": "high", "interpretation": "NEW elevation (was negative on the prior admission) — indicates right-ventricular myocardial strain." },
+    { "name": "BNP", "value": "640", "unit": "pg/mL", "referenceRange": "<100", "flag": "high", "interpretation": "Elevated — consistent with RV strain." },
+    { "name": "CBC — WBC", "value": "10.4", "unit": "K/uL", "referenceRange": "4.5-11.0", "flag": "normal" },
+    { "name": "CBC — Hemoglobin", "value": "14.2", "unit": "g/dL", "referenceRange": "13.5-17.5", "flag": "normal" },
+    { "name": "CBC — Platelets", "value": "255", "unit": "K/uL", "referenceRange": "150-400", "flag": "normal" },
+    { "name": "CMP — Creatinine", "value": "0.9", "unit": "mg/dL", "referenceRange": "0.7-1.3", "flag": "normal" },
+    { "name": "Lactate", "value": "1.4", "unit": "mmol/L", "referenceRange": "0.5-2.0", "flag": "normal", "interpretation": "Normal — no shock physiology." },
+    { "name": "Coag — INR", "value": "1.1", "unit": "", "referenceRange": "0.8-1.2", "flag": "normal" },
+    { "name": "Coag — aPTT", "value": "68", "unit": "sec", "referenceRange": "25-35", "flag": "high", "interpretation": "Therapeutic on the heparin infusion started in the ED." }
+  ],
+  "interpretation": "New troponin elevation and elevated BNP in the setting of progressed bilateral PE indicate right-ventricular strain — intermediate-risk (submassive) PE. Normal lactate and preserved blood pressure argue against high-risk/massive PE at this moment. Renal function normal. Now therapeutically anticoagulated on heparin."
+}

@@ -1,0 +1,77 @@
+{
+  "medications": [
+    {
+      "id": "MED001",
+      "name": "Apixaban",
+      "genericName": "Apixaban",
+      "dose": "10 mg (then 5 mg)",
+      "route": "PO",
+      "frequency": "BID",
+      "startDate": "2027-07-10",
+      "prescriber": "Dr. Allyson Pishko (Hematology)",
+      "indication": "Treatment of acute venous thromboembolism (PE + extensive DVT)",
+      "instructions": "Acute-VTE regimen: 10 mg PO BID for 7 days, then 5 mg PO BID. Transitioned from the initial heparin infusion before discharge. Will need to be HELD peri-procedurally per the proceduralist's instructions when the outpatient liver biopsy is scheduled; resume promptly afterward.",
+      "pharmacy": "CVS Dundalk",
+      "notes": "Weight >60 kg, normal renal function — standard dosing. Chosen for outpatient convenience after the initial short-acting agent."
+    },
+    {
+      "id": "MED002",
+      "name": "Heparin sodium IV infusion (initial course)",
+      "genericName": "Unfractionated heparin",
+      "dose": "Weight-based per nomogram",
+      "route": "IV",
+      "frequency": "Continuous infusion",
+      "startDate": "2027-07-06",
+      "prescriber": "Dr. Olivia Reyes (ED) / Dr. Daniel Okafor (Medicine)",
+      "indication": "Initial anticoagulation for acute VTE",
+      "instructions": "Titrated to therapeutic anti-Xa / aPTT.",
+      "status": "Discontinued 7/10/2027 — transitioned to apixaban",
+      "pharmacy": "UMMC Inpatient Pharmacy",
+      "notes": "A SHORT-ACTING parenteral agent was chosen initially given an anticipated diagnostic procedure (liver biopsy) and the evolving picture — it allows rapid on/off control. Transitioned to apixaban on HD5 before discharge."
+    },
+    {
+      "id": "MED005",
+      "name": "Heparin sodium IV infusion (readmission course)",
+      "genericName": "Unfractionated heparin",
+      "dose": "Weight-based per nomogram",
+      "route": "IV",
+      "frequency": "Continuous infusion",
+      "startDate": "2027-08-10",
+      "prescriber": "Dr. Olivia Reyes (ED) / Dr. Daniel Okafor (Medicine)",
+      "indication": "Anticoagulation for recurrent/progressed bilateral PE on readmission",
+      "instructions": "Restarted on readmission after the recurrent PE that occurred during the peri-procedural anticoagulation hold. Titrated to therapeutic range.",
+      "status": "Active",
+      "pharmacy": "UMMC Inpatient Pharmacy",
+      "notes": "Short-acting agent chosen on readmission for control while management decisions (including any procedural questions) are made."
+    },
+    {
+      "id": "MED003",
+      "name": "Acetaminophen",
+      "genericName": "Acetaminophen",
+      "dose": "650 mg",
+      "route": "PO",
+      "frequency": "Q6H PRN pleuritic chest pain",
+      "startDate": "2027-07-06",
+      "prescriber": "Dr. Daniel Okafor (Medicine)",
+      "indication": "Pleuritic chest pain (avoid NSAIDs given anticoagulation)",
+      "instructions": "Max 3000 mg/day. NSAIDs avoided due to anticoagulation/bleeding risk.",
+      "pharmacy": "UMMC Inpatient Pharmacy"
+    },
+    {
+      "id": "MED004",
+      "name": "Multivitamin",
+      "genericName": "Adult multivitamin",
+      "dose": "1 tablet",
+      "route": "PO",
+      "frequency": "Daily",
+      "startDate": "2023-01-01",
+      "prescriber": "Self-administered (OTC)",
+      "indication": "General supplement",
+      "instructions": "Daily.",
+      "pharmacy": "OTC"
+    }
+  ],
+  "lastReviewed": "2027-08-10",
+  "reviewedBy": "Dr. Daniel Okafor (PGY-2) + Inpatient Pharmacy",
+  "_anticoagulation_note": "No chronic home medications before this illness (previously healthy). The only therapy of consequence is anticoagulation for the new VTE: initial short-acting heparin infusion, transitioned to apixaban for discharge, then a heparin infusion again on readmission. The specific peri-procedural hold instructions for the planned biopsy are documented by interventional radiology."
+}
