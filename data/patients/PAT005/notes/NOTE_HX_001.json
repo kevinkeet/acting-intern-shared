@@ -1,0 +1,10 @@
+{
+  "id": "NOTE_HX_001",
+  "type": "Hepatology Continuity Note",
+  "date": "2026-11-05T10:00:00.000Z",
+  "author": "Dr. Marcus Hale (Hepatology)",
+  "department": "Hepatology",
+  "encounter": "ENC_HX_001",
+  "content": "HEPATOLOGY CONTINUITY NOTE — UNIVERSITY\nDate: 11/5/2026\n\nINTERVAL HISTORY: 49F (now 50) with decompensated alcohol-related cirrhosis. Recurrent ascites and a right hepatic hydrothorax cause episodic dyspnea and abdominal distension. Hepatic encephalopathy controlled on lactulose (titrated to 3 BMs/day) and rifaximin. She has been SOBER for ~6 months at this visit, engaged in an outpatient recovery program and AA. Lives in a rural county ~90 minutes away; her sister drives her to appointments — distance is a recurring barrier to frequent visits/procedures.\n\nEXAM: stable; distended abdomen with shifting dullness; decreased right basilar breath sounds. No asterixis today.\n\nASSESSMENT/PLAN:\n- Decompensated cirrhosis with recurrent ascites + right hydrothorax; on spironolactone 50 / furosemide 20.\n- Continue lactulose/rifaximin for HE.\n- Begin formal liver-transplant evaluation given decompensation and progress toward the sobriety milestone.\n- Counsel on sodium restriction; reinforce abstinence and recovery engagement.\n- Anticipate that fluid control may become difficult; will escalate diuretics cautiously and consider mechanical drainage if refractory.",
+  "attestation": "Electronically signed by Dr. Marcus Hale, MD (Hepatology). 11/5/2026."
+}

@@ -1,0 +1,10 @@
+{
+  "id": "NOTE_HX_002",
+  "type": "Hepatology Clinic Note — Diuretic Intolerance",
+  "date": "2027-02-12T10:00:00.000Z",
+  "author": "Dr. Marcus Hale (Hepatology)",
+  "department": "Hepatology",
+  "encounter": "ENC_HX_002",
+  "content": "HEPATOLOGY CLINIC NOTE — UNIVERSITY\nDate: 2/12/2027\n\nINTERVAL HISTORY: Worsening abdominal distension and dyspnea from recurrent ascites and right hydrothorax. Over the past several weeks I increased her furosemide and spironolactone in an attempt to control the fluid.\n\nDATA (LAB_HX_001): On the higher diuretic doses her creatinine rose to 1.6 (from ~1.1 baseline), potassium climbed to 5.6, and sodium fell to 126. These changes reversed somewhat after pulling the doses back to spironolactone 50 / furosemide 20.\n\nASSESSMENT/PLAN:\n- Diuretic-refractory ascites/hydrothorax with clear DIURETIC INTOLERANCE — higher doses produce azotemia, hyperkalemia, and hyponatremia. We cannot safely diurese her further.\n- Therefore, plan to rely on MECHANICAL DRAINAGE (therapeutic paracentesis/thoracentesis) for symptom control rather than more diuretic.\n- When symptomatic, she will go to the ED for drainage (and we will explore options closer to home given the 90-minute travel).\n- Continue lactulose/rifaximin; continue transplant evaluation; reinforce abstinence.",
+  "attestation": "Electronically signed by Dr. Marcus Hale, MD (Hepatology). 2/12/2027."
+}

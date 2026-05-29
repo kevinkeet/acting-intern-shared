@@ -1,0 +1,76 @@
+{
+  "id": "AP2",
+  "order": 2,
+  "title": "Timepoint 2 — ICU for FFP-related flash pulmonary edema; drainage strategy",
+  "anchorDate": "2027-04-30T23:59:59Z",
+  "timeLimitMinutes": 13,
+  "scenarioBrief": "After the initial procedures, her ascites and hydrothorax recurred. Because she lives ~90 minutes away, her hepatologist arranged WEEKLY outpatient thoracentesis and paracentesis with a local radiologist. Those procedures went without bleeding — but because of her elevated INR, she received 4 units of FFP plus albumin at each session. After several weeks she presented with acute dyspnea: afebrile, BP 104/65, HR 112, RR 30, SpO2 82%, with bilateral pulmonary edema on chest X-ray. She was intubated, treated with IV furosemide for flash pulmonary edema, extubated the next day, and discharged. The team concluded the most likely cause was the repeated peri-procedural FFP. Review the full chart (including the outpatient procedure records and the ICU course) before answering.",
+  "chartGate": {
+    "includeBeforeOrEqualDate": "2027-04-30T23:59:59Z",
+    "_notes": "TP2 visibility: everything from TP1 PLUS the community-radiology weekly procedure notes (each documenting 4 units FFP + albumin), the interval hepatology note, the MICU admission/course (flash pulmonary edema attributed to FFP overload; BNP up, troponin negative, afebrile, normal echo), and the IR consult weighing drainage options. The PleurX placement, transplant evaluation/listing, and the transplant itself are NOT yet visible."
+  },
+  "prompts": [
+    {
+      "id": "AP2-Q3",
+      "order": 1,
+      "type": "communication",
+      "question": "After her ICU admission for flash pulmonary edema, you call her radiologist to ask that he stop giving FFP during her procedures. How would you approach that conversation?",
+      "expectedResponseFormat": "free_text",
+      "minLength": 200,
+      "rubric": {
+        "essential": [
+          "Collegial, non-judgmental tone — the radiologist followed a common (if outdated) practice; the goal is collaboration, not blame",
+          "Shares the specific harm that occurred (ICU admission / flash pulmonary edema from volume overload) and the evidence: an elevated INR in cirrhosis does not predict bleeding, prophylactic FFP is not indicated for these low-risk procedures, and FFP carries real volume-overload risk",
+          "Proposes a concrete alternative going forward: continue the drainage WITHOUT prophylactic FFP (albumin for large-volume paracentesis is fine); offer to share guidelines and serve as a resource",
+          "Explicitly preserves her LOCAL ACCESS — she lives 90 minutes away and depends on this radiologist; the aim is to keep her getting safe care close to home, not to end the arrangement"
+        ],
+        "bonus": [
+          "Offers a written shared protocol / follow-up and hepatology backup for questions",
+          "Frames it as two clinicians jointly problem-solving for a shared patient",
+          "Anticipates and respectfully addresses the radiologist's bleeding-risk concern with specifics rather than dismissing it",
+          "Confirms the plan in writing and closes the loop"
+        ],
+        "redFlags": [
+          "A blaming, condescending, or accusatory approach that risks the relationship and her local access",
+          "Simply telling the patient to stop going there (ignores the 90-minute access barrier)",
+          "Failing to offer a concrete, safe alternative protocol",
+          "Not communicating the specific harm or the evidence behind the request"
+        ]
+      },
+      "weight": 0.7,
+      "sourceQuestion": "Question 2 (TP2): approach to the radiologist conversation"
+    },
+    {
+      "id": "AP2-Q4",
+      "order": 2,
+      "type": "management-decision",
+      "question": "Should a PleurX (indwelling tunneled pleural) catheter be placed, and/or should a TIPS be considered, to manage her recurrent hydrothorax? Give the risks and benefits of each for THIS patient.",
+      "expectedResponseFormat": "free_text",
+      "minLength": 300,
+      "rubric": {
+        "essential": [
+          "TIPS: can durably lower portal pressure and control refractory hydrothorax/ascites and can bridge to transplant — BUT carries a major risk of precipitating or worsening HEPATIC ENCEPHALOPATHY, which she already has recurrently (a key caution here), and requires adequate hepatic reserve",
+          "PleurX (indwelling pleural catheter): avoids repeated procedures and transfusions and is convenient for a rural patient — BUT in hepatic hydrothorax carries notable risks of INFECTION (empyema/peritonitis), protein and fluid/electrolyte loss, and is relatively controversial in this setting",
+          "Tailors the recommendation to HER specifics — recurrent encephalopathy raises TIPS risk; she is a transplant candidate (so a bridging strategy matters); rural access argues against frequent travel — and reaches a clear, justified position rather than listing options abstractly",
+          "Frames liver transplant as the DEFINITIVE therapy, with PleurX/TIPS as bridges to it"
+        ],
+        "bonus": [
+          "Specifically notes TIPS could worsen HER encephalopathy",
+          "Notes PleurX infection risk is heightened by her transplant candidacy / anticipated post-transplant immunosuppression",
+          "Recommends a multidisciplinary decision (hepatology, IR, transplant, patient)",
+          "Weighs quality-of-life and the procedural/transfusion burden she has already suffered"
+        ],
+        "redFlags": [
+          "Recommending TIPS without acknowledging the hepatic-encephalopathy risk in a patient with recurrent HE",
+          "Recommending PleurX without acknowledging the infection / protein-loss risk",
+          "Ignoring that transplant is the definitive therapy / not framing these as bridges",
+          "Giving a generic risk/benefit list not applied to her specifics"
+        ]
+      },
+      "weight": 0.9,
+      "sourceQuestion": "Questions 3 and 4 (TP2): PleurX and TIPS"
+    }
+  ],
+  "totalWeight": 1.6,
+  "passingScorePct": 70
+}

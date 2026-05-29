@@ -1,0 +1,14 @@
+{
+  "id": "IMG002",
+  "date": "2027-03-10T13:45:00.000Z",
+  "modality": "X-Ray",
+  "description": "Chest X-Ray — PA/lateral (TP1)",
+  "facility": "University Medical Center — ED Radiology",
+  "status": "Final",
+  "radiologist": "Dr. Helen Cho",
+  "indication": "Dyspnea with absent right basilar breath sounds in known hepatic hydrothorax.",
+  "technique": "PA and lateral chest radiographs.",
+  "findings": "Moderate-to-large RIGHT pleural effusion with associated compressive basilar atelectasis. No focal consolidation. No pneumothorax. Left lung clear. Cardiomediastinal silhouette normal; no pulmonary edema. Findings consistent with a transudative hepatic hydrothorax.",
+  "impression": "Moderate-to-large right pleural effusion consistent with hepatic hydrothorax. No infiltrate or edema. Amenable to therapeutic thoracentesis.",
+  "comparison": "Right effusion larger than on prior films."
+}

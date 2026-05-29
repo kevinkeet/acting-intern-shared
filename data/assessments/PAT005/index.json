@@ -1,0 +1,16 @@
+{
+  "caseId": "PAT005",
+  "caseTitle": "Sarah Whitlock — The prophylactic FFP that drowned her",
+  "patientId": "PAT005",
+  "version": "0.1.0",
+  "status": "three_timepoint",
+  "_status_notes": "3 timepoints (TP1 ED presentation for para/thora; TP2 ICU for FFP-related flash pulmonary edema + drainage-strategy decision; TP3 post-transplant). 5 questions. Weights 0.7/1.1/0.7/0.9/0.4 = 3.8 total. Source: Management Case Bank, Case 3 (finalized by Adam Rodman).",
+  "totalTimeLimitMinutes": 28,
+  "assessments": ["AP1", "AP2", "AP3"],
+  "passingOverallScorePct": 70,
+  "description": "A 3-stage case following Sarah Whitlock, a 50-year-old woman with decompensated alcohol-related cirrhosis (hepatic encephalopathy, diuretic-refractory ascites, and right hepatic hydrothorax) who is referred for therapeutic drainage. The case centers on iatrogenic harm from prophylactic blood products (an elevated INR in cirrhosis does not predict procedural bleeding, and prophylactic FFP causes volume overload), cross-system communication when a community provider's protocol diverges from the evidence, and PleurX-vs-TIPS decision-making in a transplant candidate. A non-evidence-based practice is documented in the chart — the resident must recognize and resist it rather than propagate it.",
+  "warning": "Plan to dedicate about 28 minutes uninterrupted. Pausing is permitted but stops the timer.",
+  "instructions": "You are caring for a real patient across three timepoints. Review the chart, then respond to each clinical question. Your responses are graded against a rubric; the case's intended teaching points are revealed at the end.",
+  "originalDiscussants": "Allyson Pishko, Brett Carroll, Jeff Weinstein",
+  "finalizedBy": "Adam Rodman"
+}

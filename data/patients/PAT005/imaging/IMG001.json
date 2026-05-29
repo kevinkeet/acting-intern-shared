@@ -1,0 +1,14 @@
+{
+  "id": "IMG001",
+  "date": "2027-03-10T13:40:00.000Z",
+  "modality": "Ultrasound",
+  "description": "Abdominal Ultrasound with Doppler (TP1)",
+  "facility": "University Medical Center — ED Radiology",
+  "status": "Final",
+  "radiologist": "Dr. Helen Cho",
+  "indication": "Worsening abdominal distension in known cirrhosis; assess ascites and portal vasculature prior to paracentesis.",
+  "technique": "Grayscale and Doppler ultrasound of the abdomen.",
+  "findings": "Liver is small, coarse, and nodular, consistent with cirrhosis. Splenomegaly (15 cm). LARGE-VOLUME ASCITES throughout the abdomen, with a suitable pocket in the left lower quadrant for paracentesis. Portal vein patent with hepatopetal flow. No focal hepatic mass. Gallbladder unremarkable. Kidneys normal in size.",
+  "impression": "Cirrhosis with portal hypertension: splenomegaly and large-volume ascites. Patent portal vein. Adequate window for paracentesis. No focal liver lesion.",
+  "comparison": "Consistent with prior known cirrhosis; ascites increased from prior visits."
+}

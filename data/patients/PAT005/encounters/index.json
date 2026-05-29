@@ -1,0 +1,83 @@
+{
+  "encounters": [
+    {
+      "id": "ENC003",
+      "date": "2027-09-15T10:00:00.000Z",
+      "type": "Post-transplant Hepatology Clinic",
+      "department": "Transplant Hepatology (University)",
+      "provider": "Dr. Marcus Hale / Dr. Priya Nair (Transplant Hepatology)",
+      "chiefComplaint": "Routine post-liver-transplant follow-up (~2 months)",
+      "diagnoses": [
+        "Status post orthotopic liver transplant (7/19/2027), doing well",
+        "Resolution of ascites and hepatic hydrothorax",
+        "No longer requiring paracentesis/thoracentesis"
+      ],
+      "status": "Completed",
+      "interpreterUsed": "None"
+    },
+    {
+      "id": "ENC002",
+      "date": "2027-04-28T18:30:00.000Z",
+      "dischargeDate": "2027-04-30T12:00:00.000Z",
+      "type": "Inpatient Admission (MICU)",
+      "department": "Medical ICU (University)",
+      "provider": "Dr. Lena Park (MICU attending), Dr. Daniel Okafor (Medicine), Dr. Marcus Hale (Hepatology consult), Dr. Sameer Iqbal (Interventional Radiology consult)",
+      "chiefComplaint": "Acute dyspnea / respiratory distress",
+      "diagnoses": [
+        "Flash pulmonary edema requiring intubation",
+        "Transfusion-associated circulatory overload from peri-procedural FFP (most likely cause)",
+        "Decompensated cirrhosis with recurrent ascites + hepatic hydrothorax"
+      ],
+      "status": "Extubated POD#1; discharged 4/30/2027",
+      "interpreterUsed": "None"
+    },
+    {
+      "id": "ENC001",
+      "date": "2027-03-10T13:30:00.000Z",
+      "dischargeDate": "2027-03-10T20:00:00.000Z",
+      "type": "Emergency Department Visit + Procedures",
+      "department": "Emergency Department / Interventional Radiology (University)",
+      "provider": "Dr. Olivia Reyes (ED), Dr. Sameer Iqbal (IR), Dr. Marcus Hale (Hepatology, referring)",
+      "chiefComplaint": "Worsening abdominal distension and difficulty breathing",
+      "diagnoses": [
+        "Diuretic-refractory ascites",
+        "Right hepatic hydrothorax",
+        "Decompensated alcohol-related cirrhosis",
+        "Diuretic-induced AKI/hyponatremia/hyperkalemia (recent)"
+      ],
+      "status": "Therapeutic paracentesis + thoracentesis performed; discharged home same day",
+      "interpreterUsed": "None"
+    },
+    {
+      "id": "ENC_HX_002",
+      "date": "2027-02-12T10:00:00.000Z",
+      "type": "Hepatology Clinic Visit",
+      "department": "Hepatology (University)",
+      "provider": "Dr. Marcus Hale",
+      "chiefComplaint": "Worsening ascites/hydrothorax; diuretic management",
+      "diagnoses": [
+        "Diuretic-refractory ascites/hydrothorax",
+        "Diuretic intolerance (AKI, hyperkalemia, hyponatremia on up-titration)"
+      ],
+      "status": "Completed — plan for mechanical drainage given diuretic intolerance",
+      "interpreterUsed": "None"
+    },
+    {
+      "id": "ENC_HX_001",
+      "date": "2026-11-05T10:00:00.000Z",
+      "type": "Hepatology Clinic Visit (continuity)",
+      "department": "Hepatology (University)",
+      "provider": "Dr. Marcus Hale",
+      "chiefComplaint": "Cirrhosis follow-up; recurring ascites and hydrothorax",
+      "diagnoses": [
+        "Decompensated cirrhosis",
+        "Recurrent ascites + right hydrothorax",
+        "Hepatic encephalopathy (controlled on lactulose/rifaximin)",
+        "Alcohol use disorder in remission — transplant evaluation in progress"
+      ],
+      "status": "Completed",
+      "interpreterUsed": "None"
+    }
+  ],
+  "lastUpdated": "2027-09-15"
+}

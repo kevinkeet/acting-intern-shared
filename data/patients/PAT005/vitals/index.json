@@ -1,0 +1,14 @@
+{
+  "vitals": [
+    { "date": "2027-09-15T10:00:00.000Z", "bloodPressure": "118/74", "heartRate": 78, "temperature": 98.2, "respiratoryRate": 14, "oxygenSaturation": 99, "weight": 63.0, "height": 165, "bmi": 23.1, "context": "Post-transplant clinic (~2 months post-OLT) — well, euvolemic, no ascites or effusion. Dry weight markedly lower than during decompensation." },
+    { "date": "2027-04-29T08:00:00.000Z", "bloodPressure": "112/70", "heartRate": 92, "temperature": 98.4, "respiratoryRate": 20, "oxygenSaturation": 95, "oxygenSupport": "2 L nasal cannula", "weight": 72.0, "context": "MICU, post-extubation (day after flash pulmonary edema) — improving on IV diuresis; weaned to nasal cannula." },
+    { "date": "2027-04-28T18:30:00.000Z", "bloodPressure": "104/65", "heartRate": 112, "temperature": 98.1, "respiratoryRate": 30, "oxygenSaturation": 82, "oxygenSupport": "Pre-intubation", "weight": 76.5, "context": "ED presentation — acute dyspnea after weeks of outpatient drainage. Accessory-muscle use, fatigued, respiratory distress. CXR bilateral pulmonary edema. Intubated, to MICU." },
+    { "date": "2027-04-07T09:30:00.000Z", "bloodPressure": "120/76", "heartRate": 84, "temperature": 98.0, "respiratoryRate": 18, "oxygenSaturation": 96, "weight": 75.0, "context": "Outpatient (local radiology) — weekly thoracentesis/paracentesis session. Drained for symptomatic recurrence." },
+    { "date": "2027-03-24T09:30:00.000Z", "bloodPressure": "122/78", "heartRate": 82, "temperature": 98.1, "respiratoryRate": 18, "oxygenSaturation": 96, "weight": 75.5, "context": "Outpatient (local radiology) — weekly thoracentesis/paracentesis session." },
+    { "date": "2027-03-10T14:00:00.000Z", "bloodPressure": "118/72", "heartRate": 88, "temperature": 98.0, "respiratoryRate": 22, "oxygenSaturation": 98, "weight": 77.0, "context": "ED presentation (TP1) — worsening abdominal distension and dyspnea. Vitals stable except RR 22; SpO2 98%. Distended abdomen with fluid wave; absent breath sounds R base with dullness." },
+    { "date": "2027-02-12T10:00:00.000Z", "bloodPressure": "116/74", "heartRate": 80, "temperature": 98.2, "respiratoryRate": 18, "oxygenSaturation": 97, "weight": 74.0, "context": "Hepatology visit — diuretic up-titration attempted; later limited by rising creatinine, hyperkalemia, hyponatremia." },
+    { "date": "2026-11-05T10:00:00.000Z", "bloodPressure": "120/76", "heartRate": 78, "temperature": 98.1, "respiratoryRate": 16, "oxygenSaturation": 98, "weight": 72.0, "context": "Hepatology continuity visit — ascites and right hydrothorax recurring; on diuretics + lactulose/rifaximin." },
+    { "date": "2026-02-10T10:00:00.000Z", "bloodPressure": "122/78", "heartRate": 76, "temperature": 98.0, "respiratoryRate": 16, "oxygenSaturation": 98, "weight": 70.0, "context": "Hepatology visit — new right hepatic hydrothorax diagnosed." }
+  ],
+  "lastUpdated": "2027-09-15"
+}

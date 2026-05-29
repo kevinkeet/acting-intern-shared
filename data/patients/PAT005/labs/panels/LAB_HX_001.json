@@ -1,0 +1,20 @@
+{
+  "id": "LAB_HX_001",
+  "name": "Hepatology Labs — Diuretic Intolerance",
+  "collectedDate": "2027-02-12T10:00:00.000Z",
+  "resultedDate": "2027-02-12T11:30:00.000Z",
+  "orderedBy": "Dr. Marcus Hale (Hepatology)",
+  "facility": "University Hepatology Lab",
+  "specimen": "Serum",
+  "status": "Final",
+  "results": [
+    { "name": "CMP — Sodium", "value": "126", "unit": "mmol/L", "referenceRange": "135-145", "flag": "low", "interpretation": "Worsened with diuretic up-titration." },
+    { "name": "CMP — Potassium", "value": "5.6", "unit": "mmol/L", "referenceRange": "3.5-5.0", "flag": "high", "interpretation": "Hyperkalemia on higher spironolactone." },
+    { "name": "CMP — BUN", "value": "38", "unit": "mg/dL", "referenceRange": "7-20", "flag": "high" },
+    { "name": "CMP — Creatinine", "value": "1.6", "unit": "mg/dL", "referenceRange": "0.5-1.1", "flag": "high", "interpretation": "Risen from ~1.1 baseline after diuretic up-titration — diuretic-induced AKI." },
+    { "name": "CMP — Total bilirubin", "value": "4.0", "unit": "mg/dL", "referenceRange": "0.1-1.2", "flag": "high" },
+    { "name": "Coag — INR", "value": "1.9", "unit": "", "referenceRange": "0.8-1.2", "flag": "high" },
+    { "name": "CBC — Platelets", "value": "58", "unit": "K/uL", "referenceRange": "150-400", "flag": "low" }
+  ],
+  "interpretation": "Up-titration of furosemide and spironolactone to control the hydrothorax produced hyperkalemia, hyponatremia, and azotemia — demonstrating that this patient does not tolerate higher diuretic doses. This is the rationale for moving to mechanical drainage (paracentesis/thoracentesis) rather than more diuretic."
+}

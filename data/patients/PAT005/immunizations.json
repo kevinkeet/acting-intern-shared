@@ -1,0 +1,11 @@
+{
+  "immunizations": [
+    { "id": "IMM001", "vaccine": "Hepatitis A", "date": "2024-08-12", "source": "Hepatology (recommended in chronic liver disease)" },
+    { "id": "IMM002", "vaccine": "Hepatitis B (series complete)", "date": "2024-10-20", "source": "Hepatology" },
+    { "id": "IMM003", "vaccine": "Pneumococcal (PCV20)", "date": "2024-08-12", "source": "Hepatology (chronic liver disease)" },
+    { "id": "IMM004", "vaccine": "Influenza (inactivated)", "date": "2026-10-08", "source": "PCP" },
+    { "id": "IMM005", "vaccine": "Tdap", "date": "2023-04-15", "source": "PCP" }
+  ],
+  "lastReviewed": "2027-03-10",
+  "notes": "Pre-transplant vaccinations completed per hepatology protocol (hep A/B, pneumococcal) given chronic liver disease and transplant candidacy."
+}

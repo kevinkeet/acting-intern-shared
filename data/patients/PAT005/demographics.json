@@ -1,0 +1,52 @@
+{
+  "id": "PAT005",
+  "mrn": "MRN-90216055",
+  "firstName": "Sarah",
+  "middleName": "Lynn",
+  "lastName": "Whitlock",
+  "dateOfBirth": "1976-12-03",
+  "sex": "Female",
+  "gender": "Female",
+  "race": "White",
+  "ethnicity": "Not Hispanic or Latino",
+  "preferredLanguage": "English",
+  "interpreterNeeded": false,
+  "countryOfBirth": "USA",
+  "maritalStatus": "Single (divorced 2019)",
+  "ssn": null,
+  "phone": "(301) 555-2208",
+  "email": "sarah.whitlock76@gmail.com",
+  "address": {
+    "street": "4412 Mountain Glen Rd",
+    "city": "Oakland",
+    "state": "MD",
+    "zip": "21550",
+    "country": "USA"
+  },
+  "emergencyContact": {
+    "name": "Donna Whitlock-Reyes",
+    "relationship": "Sister (lives ~15 min away; drives patient to appointments)",
+    "phone": "(301) 555-2210",
+    "language": "English"
+  },
+  "primaryCareProvider": {
+    "name": "Dr. Karen Estrada, MD",
+    "npi": "1538904412",
+    "phone": "(301) 555-9100",
+    "practice": "Garrett County Family Health",
+    "notes": "Rural PCP. Coordinates with the academic hepatology team ~90 minutes away (University hepatology). Sees patient for general care; defers liver management to hepatology."
+  },
+  "insurance": {
+    "name": "Maryland Medicaid (HealthChoice) + Medicare (disability)",
+    "memberId": "MD-HC-66218043",
+    "notes": "Dual-eligible. Transportation to the academic center is a recurring barrier (rural, 90 min each way; relies on her sister)."
+  },
+  "advanceDirectives": {
+    "livingWill": true,
+    "healthcareProxy": "Sister Donna Whitlock-Reyes",
+    "dnr": false,
+    "lastReviewed": "2027-03-10"
+  },
+  "createdAt": "2022-06-01T10:00:00Z",
+  "lastUpdated": "2027-09-15T09:00:00Z"
+}

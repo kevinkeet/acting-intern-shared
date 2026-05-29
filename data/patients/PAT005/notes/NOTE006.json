@@ -1,0 +1,10 @@
+{
+  "id": "NOTE006",
+  "type": "Interventional Radiology Consult — Drainage Strategy",
+  "date": "2027-04-29T14:00:00.000Z",
+  "author": "Dr. Sameer Iqbal (Interventional Radiology)",
+  "department": "Interventional Radiology",
+  "encounter": "ENC002",
+  "content": "IR CONSULT — UNIVERSITY MEDICAL CENTER\nDate: 4/29/2027 (MICU)\n\nReason for consult: Longer-term management of recurrent symptomatic hepatic hydrothorax (and ascites) in a patient who does not tolerate diuretic escalation, has needed frequent drainage, and is a liver-transplant candidate.\n\nRelevant context assembled:\n- Recurrent right hepatic hydrothorax + diuretic-refractory ascites; frequent (weekly) therapeutic drainage required.\n- Hepatic encephalopathy, recurrent (on lactulose + rifaximin).\n- MELD-Na in the high-20s; actively listed / in transplant evaluation.\n- Just admitted to the MICU with flash pulmonary edema.\n\nOptions discussed with the team for ongoing drainage / definitive control:\n- Indwelling tunneled pleural catheter (PleurX) for the hydrothorax.\n- Transjugular intrahepatic portosystemic shunt (TIPS).\n\nPlan: The choice between these (and their respective risks/benefits in THIS patient — considering her encephalopathy, transplant candidacy, infection/nutrition risks, and the goal of bridging to transplant) will be decided with hepatology, transplant, and the patient. Decision deferred pending that multidisciplinary discussion; documenting that IR is available for either approach.",
+  "attestation": "Electronically signed by Dr. Sameer Iqbal, MD (Interventional Radiology). 4/29/2027."
+}

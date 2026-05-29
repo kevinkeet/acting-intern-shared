@@ -1,0 +1,41 @@
+{
+  "id": "AP3",
+  "order": 3,
+  "title": "Timepoint 3 — Post-transplant",
+  "anchorDate": "2027-09-15T23:59:59Z",
+  "timeLimitMinutes": 4,
+  "scenarioBrief": "Her radiologist agreed to stop infusing FFP, and a PleurX catheter was placed. She then improved markedly and no longer needed additional drainage. She ultimately received a liver transplant (7/19/2027) and is now about two months out, doing well, with resolved ascites and hydrothorax and normalized liver function.",
+  "chartGate": {
+    "includeBeforeOrEqualDate": "2027-09-15T23:59:59Z",
+    "_notes": "TP3 visibility: the complete record, including the transplant evaluation/listing note, the PleurX placement, the transplant hospitalization summary, and the post-transplant clinic note + labs/imaging showing resolution of ascites/hydrothorax and normalized synthetic function."
+  },
+  "prompts": [
+    {
+      "id": "AP3-Q5",
+      "order": 1,
+      "type": "reasoning",
+      "question": "After her transplant, her need for paracentesis and thoracentesis dropped away entirely. What are the possible reasons for this adjustment in her drainage needs?",
+      "expectedResponseFormat": "free_text",
+      "minLength": 100,
+      "rubric": {
+        "essential": [
+          "The liver transplant RESOLVED the portal hypertension that drove the ascites and hepatic hydrothorax — so the fluid stopped re-accumulating and drainage was no longer needed",
+          "Restored hepatic synthetic function (normalized albumin) corrected the hypoalbuminemia that contributed to fluid accumulation"
+        ],
+        "bonus": [
+          "Frames it as the transplant correcting the ROOT CAUSE (cirrhosis/portal hypertension) rather than the bridges (diuretics, drainage, PleurX) treating the symptom",
+          "Notes corroborating normalization of INR, bilirubin, and platelets as evidence of restored liver function / regressing portal hypertension",
+          "Notes resolution of the hepatic hydrothorax mechanism (no ascitic fluid to track across the diaphragm)"
+        ],
+        "redFlags": [
+          "Attributing the improvement to the PleurX or diuretics rather than the transplant correcting the underlying physiology",
+          "Failing to connect the resolution to reversal of portal hypertension"
+        ]
+      },
+      "weight": 0.4,
+      "sourceQuestion": "Question 5 (TP3)"
+    }
+  ],
+  "totalWeight": 0.4,
+  "passingScorePct": 70
+}

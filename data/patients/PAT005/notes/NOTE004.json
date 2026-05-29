@@ -1,0 +1,10 @@
+{
+  "id": "NOTE004",
+  "type": "Hepatology Continuity Note",
+  "date": "2027-04-15T10:00:00.000Z",
+  "author": "Dr. Marcus Hale (Hepatology)",
+  "department": "Hepatology",
+  "encounter": "ENC002",
+  "content": "HEPATOLOGY CONTINUITY NOTE — UNIVERSITY\nDate: 4/15/2027 (telehealth)\n\nINTERVAL HISTORY: Seen by telehealth (patient at home, ~90 minutes away). Her ascites and right hydrothorax continue to recur quickly between drainage. She has been getting weekly thoracentesis and paracentesis at the community radiology facility near her home, which has been logistically far easier than traveling here. She reports the local procedures have gone without bleeding and that her breathing improves after each session. Sober, engaged in recovery. No overt encephalopathy currently (lactulose titrated, on rifaximin).\n\nASSESSMENT/PLAN:\n- Decompensated cirrhosis with diuretic-refractory ascites + recurrent right hepatic hydrothorax. MELD-Na remains in the high-20s.\n- Continue weekly outpatient thoracentesis/paracentesis locally for symptom control (transportation barrier makes academic-center drainage impractical at this frequency).\n- Continue transplant evaluation; reinforce sodium restriction.\n- Continue lactulose/rifaximin; do not further escalate diuretics (prior intolerance).\n\n(Note: the specifics of the outside facility's peri-procedural protocol are managed at that site; coordinate as needed.)",
+  "attestation": "Electronically signed by Dr. Marcus Hale, MD (Hepatology). 4/15/2027."
+}

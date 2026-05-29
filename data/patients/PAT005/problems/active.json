@@ -1,0 +1,104 @@
+{
+  "problems": [
+    {
+      "id": "PRB001",
+      "name": "Alcohol-related cirrhosis, decompensated",
+      "icd10": "K70.31",
+      "snomed": "420054005",
+      "onsetDate": "2024-05-01",
+      "date": "2024-05-01",
+      "diagnosedBy": "Dr. Marcus Hale (Hepatology)",
+      "priority": "High",
+      "notes": "Decompensated since 2024 (ascites, hepatic encephalopathy, hepatic hydrothorax). MELD-Na in the high-20s at the 3/2027 presentation. Listed / being worked up for liver transplant. Sustained alcohol abstinence ~14 months."
+    },
+    {
+      "id": "PRB002",
+      "name": "Hepatic encephalopathy",
+      "icd10": "K72.90",
+      "snomed": "61977001",
+      "onsetDate": "2024-06-15",
+      "date": "2024-06-15",
+      "diagnosedBy": "Dr. Marcus Hale (Hepatology)",
+      "priority": "High",
+      "notes": "Recurrent; managed with lactulose (titrated to 3 BMs/day) and rifaximin. Episodic flares with unsteadiness/confusion. Relevant to any TIPS decision (TIPS can precipitate or worsen encephalopathy)."
+    },
+    {
+      "id": "PRB003",
+      "name": "Diuretic-refractory ascites",
+      "icd10": "R18.8",
+      "snomed": "1116001",
+      "onsetDate": "2024-06-01",
+      "date": "2024-06-01",
+      "diagnosedBy": "Dr. Marcus Hale (Hepatology)",
+      "priority": "High",
+      "notes": "Increasingly refractory. Attempts to up-titrate spironolactone + furosemide have been limited by renal injury and electrolyte derangement (see below). Requires recurrent large-volume paracentesis."
+    },
+    {
+      "id": "PRB004",
+      "name": "Hepatic hydrothorax (right-sided)",
+      "icd10": "J94.8",
+      "snomed": "232679003",
+      "onsetDate": "2026-02-10",
+      "date": "2026-02-10",
+      "diagnosedBy": "Dr. Marcus Hale (Hepatology)",
+      "priority": "High",
+      "notes": "Right-sided transudative effusion from cirrhosis. Causes dyspnea; requires recurrent therapeutic thoracentesis. Recurs quickly. Central to the PleurX-vs-TIPS discussion later."
+    },
+    {
+      "id": "PRB005",
+      "name": "Diuretic-induced acute kidney injury with hyponatremia and hyperkalemia",
+      "icd10": "N17.9",
+      "snomed": "14669001",
+      "onsetDate": "2027-02-12",
+      "date": "2027-02-12",
+      "diagnosedBy": "Dr. Marcus Hale (Hepatology)",
+      "priority": "High",
+      "notes": "Recent hepatology attempts to increase furosemide and spironolactone to control the hydrothorax produced worsening creatinine, hyperkalemia, and hyponatremia — i.e., she does NOT tolerate higher diuretic doses. This is why she was referred for mechanical drainage (para/thora) rather than further diuresis."
+    },
+    {
+      "id": "PRB006",
+      "name": "Thrombocytopenia and coagulopathy of chronic liver disease",
+      "icd10": "D69.6",
+      "snomed": "302215000",
+      "onsetDate": "2024-05-01",
+      "date": "2024-05-01",
+      "diagnosedBy": "Hepatology",
+      "priority": "Medium",
+      "notes": "Platelets chronically ~50-60 K/uL; INR chronically ~1.8-2.2 off any anticoagulation. Reflects synthetic dysfunction and splenic sequestration. (Documented as data; interpretation of bleeding risk for low-risk bedside procedures is a clinical judgment, not a transfusion mandate.)"
+    },
+    {
+      "id": "PRB007",
+      "name": "Alcohol use disorder, in sustained remission",
+      "icd10": "F10.21",
+      "snomed": "7200002",
+      "onsetDate": "2010-01-01",
+      "date": "2010-01-01",
+      "priority": "Medium",
+      "notes": "~15 years of heavy use → cirrhosis. SOBER ~14 months, engaged in an outpatient recovery program + AA with documented abstinence. Supports transplant candidacy."
+    },
+    {
+      "id": "PRB008",
+      "name": "Transfusion-associated circulatory overload (peri-procedural FFP)",
+      "icd10": "E87.70",
+      "snomed": "111307005",
+      "onsetDate": "2027-04-28",
+      "date": "2027-04-28",
+      "diagnosedBy": "Dr. Lena Park (MICU)",
+      "priority": "High",
+      "notes": "Flash pulmonary edema requiring intubation, attributed to repeated prophylactic FFP (4 units per session, plus albumin) administered during weekly outpatient thora/para for an elevated INR. Extubated the next day. Added to the problem list after the 4/2027 ICU admission."
+    },
+    {
+      "id": "PRB009",
+      "name": "Status post orthotopic liver transplant",
+      "icd10": "Z94.4",
+      "snomed": "1217123003",
+      "onsetDate": "2027-07-19",
+      "date": "2027-07-19",
+      "diagnosedBy": "Transplant Hepatology / Transplant Surgery",
+      "priority": "High",
+      "notes": "Deceased-donor orthotopic liver transplant 7/19/2027 after sustained sobriety and completed evaluation. On immunosuppression. Portal hypertension resolved post-transplant — ascites and hydrothorax have essentially resolved (no longer requires recurrent drainage)."
+    }
+  ],
+  "lastUpdated": "2027-09-15",
+  "reviewedBy": "Transplant Hepatology"
+}

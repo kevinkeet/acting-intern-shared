@@ -1,0 +1,30 @@
+{
+  "familyHistory": [
+    {
+      "relation": "Father",
+      "vital": "Deceased",
+      "ageAtDeath": 61,
+      "conditions": [
+        { "condition": "Alcohol use disorder", "notes": "Long history; relevant to family pattern." },
+        { "condition": "Cirrhosis", "age": 61, "notes": "Cause of death." }
+      ]
+    },
+    {
+      "relation": "Mother",
+      "vital": "Alive (age 74)",
+      "conditions": [
+        { "condition": "Type 2 diabetes" },
+        { "condition": "Hypertension" }
+      ]
+    },
+    {
+      "relation": "Sister (Donna)",
+      "vital": "Alive (age 47)",
+      "conditions": [
+        { "condition": "Healthy", "notes": "Health-care proxy and primary support/driver." }
+      ]
+    }
+  ],
+  "summary": "Father with alcohol use disorder and cirrhosis (died at 61). Mother with T2DM/HTN. No known inherited bleeding or thrombotic disorders. No family history of hepatocellular carcinoma.",
+  "lastUpdated": "2027-03-10"
+}

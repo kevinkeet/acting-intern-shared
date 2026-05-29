@@ -1,0 +1,14 @@
+{
+  "id": "IMG003",
+  "date": "2027-04-28T18:45:00.000Z",
+  "modality": "X-Ray",
+  "description": "Chest X-Ray — portable AP (MICU presentation)",
+  "facility": "University Medical Center — ED Radiology",
+  "status": "Final",
+  "radiologist": "Dr. Helen Cho",
+  "indication": "Acute dyspnea and hypoxemia.",
+  "technique": "Single portable AP chest radiograph.",
+  "findings": "Diffuse BILATERAL alveolar and interstitial opacities with perihilar (bat-wing) distribution, vascular redistribution, and Kerley B lines — a pulmonary-edema pattern. This differs from the patient's prior isolated right transudative effusion. No focal lobar consolidation to suggest pneumonia. Heart size difficult to assess on portable film.",
+  "impression": "Acute BILATERAL pulmonary edema (volume-overload pattern), distinct from her chronic unilateral hepatic hydrothorax.",
+  "comparison": "Prior films showed an isolated right pleural effusion without edema; the bilateral edema is new and acute."
+}

@@ -1,0 +1,105 @@
+{
+  "notes": [
+    {
+      "id": "NOTE009",
+      "type": "Post-transplant Hepatology Clinic Note",
+      "date": "2027-09-15T10:00:00.000Z",
+      "author": "Dr. Marcus Hale / Dr. Priya Nair (Transplant Hepatology)",
+      "department": "Transplant Hepatology",
+      "encounter": "ENC003",
+      "preview": "~2 months post-OLT. Doing well on tacrolimus/MMF/prednisone taper. Ascites and right hydrothorax RESOLVED; no longer requires paracentesis or thoracentesis. Diuretics, lactulose, and rifaximin discontinued. Graft function normal."
+    },
+    {
+      "id": "NOTE008",
+      "type": "Liver Transplant — Hospitalization Summary",
+      "date": "2027-07-19T07:00:00.000Z",
+      "author": "Dr. Anil Mehta (Transplant Surgery) / Transplant Hepatology",
+      "department": "Transplant Surgery",
+      "encounter": "ENC003",
+      "preview": "Deceased-donor orthotopic liver transplant. Uncomplicated. Immunosuppression initiated. Pre-transplant ascites/hydrothorax expected to resolve with restoration of normal portal pressures."
+    },
+    {
+      "id": "NOTE007",
+      "type": "Transplant Evaluation / Listing Note",
+      "date": "2027-05-20T11:00:00.000Z",
+      "author": "Dr. Priya Nair (Transplant Hepatology)",
+      "department": "Transplant Hepatology",
+      "encounter": "ENC003",
+      "preview": "Multidisciplinary transplant evaluation. MELD-Na high-20s; sustained alcohol abstinence ~14 months with documented recovery engagement. Listed for liver transplant. Recurrent diuretic-refractory ascites/hydrothorax as a major quality-of-life burden bridging to transplant."
+    },
+    {
+      "id": "NOTE006",
+      "type": "Interventional Radiology Consult — Drainage Strategy",
+      "date": "2027-04-29T14:00:00.000Z",
+      "author": "Dr. Sameer Iqbal (Interventional Radiology)",
+      "department": "Interventional Radiology",
+      "encounter": "ENC002",
+      "preview": "Consulted after the ICU admission to weigh longer-term management of recurrent hydrothorax given diuretic intolerance and transplant candidacy. Options on the table: indwelling tunneled pleural (PleurX) catheter vs TIPS. Decision deferred pending team/patient discussion. A&P intentionally brief."
+    },
+    {
+      "id": "NOTE005",
+      "type": "MICU Admission H&P + Hospital Course",
+      "date": "2027-04-28T19:30:00.000Z",
+      "author": "Dr. Lena Park (MICU) / Dr. Daniel Okafor (Medicine)",
+      "department": "Medical Intensive Care Unit",
+      "encounter": "ENC002",
+      "preview": "Acute hypoxemic respiratory failure → intubation. CXR bilateral pulmonary edema; BNP markedly elevated; troponin negative; afebrile, no leukocytosis; echo with preserved EF. Treated with IV furosemide, extubated POD#1, discharged 4/30. Team's assessment: volume overload from the repeated peri-procedural FFP transfusions during her weekly outpatient drainage."
+    },
+    {
+      "id": "NOTE004",
+      "type": "Hepatology Continuity Note",
+      "date": "2027-04-15T10:00:00.000Z",
+      "author": "Dr. Marcus Hale (Hepatology)",
+      "department": "Hepatology",
+      "encounter": "ENC002",
+      "preview": "Interval visit. Ascites/hydrothorax recurring quickly; tolerating weekly outpatient drainage close to home given the 90-minute distance. Plan: continue weekly local thoracentesis/paracentesis; proceed with transplant evaluation. (No mention of the local transfusion protocol — managed at the outside site.)"
+    },
+    {
+      "id": "NOTE003",
+      "type": "Outpatient Procedure Note (Community Radiology)",
+      "date": "2027-03-24T10:00:00.000Z",
+      "author": "Dr. Frank Mueller (Garrett Regional Radiology)",
+      "department": "Radiology (community)",
+      "encounter": "ENC002",
+      "preview": "Representative weekly outpatient thoracentesis + paracentesis at the local facility. Documents the site's standing practice: because of the elevated INR (2.0), 4 units of FFP plus 8 g albumin/L were transfused with each session. Procedures without bleeding."
+    },
+    {
+      "id": "NOTE002",
+      "type": "Interventional Radiology Procedure Note (TP1)",
+      "date": "2027-03-10T17:00:00.000Z",
+      "author": "Dr. Sameer Iqbal (Interventional Radiology)",
+      "department": "Interventional Radiology",
+      "encounter": "ENC001",
+      "preview": "Academic-center therapeutic paracentesis (6.5 L) + right thoracentesis (1.3 L). Albumin given for large-volume paracentesis. NO prophylactic FFP/platelets given despite INR 2.0 / platelets 55 K; no bleeding. Symptoms returned to baseline."
+    },
+    {
+      "id": "NOTE001",
+      "type": "ED Visit Note (TP1)",
+      "date": "2027-03-10T13:30:00.000Z",
+      "author": "Dr. Olivia Reyes (Emergency Medicine)",
+      "department": "Emergency Department",
+      "encounter": "ENC001",
+      "preview": "50F with decompensated alcohol-related cirrhosis (HE, ascites, hydrothorax) referred by hepatology for therapeutic para + thora after diuretics could not be safely up-titrated. RR 22, SpO2 98%; distended abdomen with fluid wave; absent right basilar breath sounds. Labs: Na 128, Cr 1.4, Plt 55 K, INR 2.0, bili 4.5."
+    },
+    {
+      "id": "NOTE_HX_002",
+      "type": "Hepatology Clinic Note — Diuretic Intolerance",
+      "date": "2027-02-12T10:00:00.000Z",
+      "author": "Dr. Marcus Hale (Hepatology)",
+      "department": "Hepatology",
+      "encounter": "ENC_HX_002",
+      "preview": "Attempted to increase furosemide and spironolactone for the worsening hydrothorax/ascites, but higher doses caused rising creatinine, hyperkalemia, and hyponatremia. Concludes she does not tolerate diuretic escalation; plan to rely on mechanical drainage. Refer to ED for para/thora when symptomatic."
+    },
+    {
+      "id": "NOTE_HX_001",
+      "type": "Hepatology Continuity Note",
+      "date": "2026-11-05T10:00:00.000Z",
+      "author": "Dr. Marcus Hale (Hepatology)",
+      "department": "Hepatology",
+      "encounter": "ENC_HX_001",
+      "preview": "Decompensated alcohol-related cirrhosis with recurrent ascites and right hepatic hydrothorax; HE controlled on lactulose/rifaximin. Sustained sobriety; transplant evaluation underway. Documents the chronic, recurrent nature of the fluid and her rural access barrier."
+    }
+  ],
+  "lastUpdated": "2027-09-15",
+  "_status": "12 notes (2 historical + 10 course across 3 timepoints). The peri-procedural FFP is documented in the COMMUNITY RADIOLOGY procedure notes + procedures tab (gated to TP2), NOT in the hepatology notes — the resident must surface it. The MICU note carries the FFP-causation conclusion (TP2). Management-decision notes (IR consult) are intentionally sparse on the answer."
+}

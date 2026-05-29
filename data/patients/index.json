@@ -43,6 +43,17 @@
       "caseTitle": "The PE and the liver mass (adapted from management case bank)"
     },
     {
+      "id": "PAT005",
+      "name": "Whitlock, Sarah L",
+      "mrn": "MRN-90216055",
+      "dob": "1976-12-03",
+      "sex": "Female",
+      "status": "Active",
+      "summary": "50 y.o. woman with decompensated alcohol-related cirrhosis (hepatic encephalopathy, diuretic-refractory ascites, right hepatic hydrothorax) referred for therapeutic drainage; harmed by prophylactic peri-procedural FFP (flash pulmonary edema/ICU); later transplanted. Management assessment case.",
+      "caseType": "assessment",
+      "caseTitle": "The prophylactic FFP that drowned her (adapted from management case bank)"
+    },
+    {
       "id": "PAT006",
       "name": "Pierce, Dorothy A",
       "mrn": "MRN-90215922",

@@ -1,0 +1,95 @@
+{
+  "procedures": [
+    {
+      "id": "PROC010",
+      "date": "2027-07-19T07:00:00.000Z",
+      "name": "Orthotopic liver transplant (deceased donor)",
+      "cptCode": "47135",
+      "provider": "Dr. Anil Mehta (Transplant Surgery)",
+      "facility": "University Transplant Center",
+      "status": "Completed",
+      "notes": "Deceased-donor orthotopic liver transplant after completed evaluation and sustained sobriety. Cured the portal hypertension driving her ascites/hydrothorax."
+    },
+    {
+      "id": "PROC009",
+      "date": "2027-05-05T11:00:00.000Z",
+      "name": "Tunneled pleural drainage catheter (PleurX) placement, right",
+      "cptCode": "32550",
+      "provider": "Dr. Sameer Iqbal (Interventional Radiology)",
+      "facility": "University Interventional Radiology",
+      "status": "Completed",
+      "notes": "Placed for recurrent symptomatic right hepatic hydrothorax after FFP was discontinued. (She subsequently improved markedly and ultimately required little drainage.)"
+    },
+    {
+      "id": "PROC008",
+      "date": "2027-04-21T09:30:00.000Z",
+      "name": "Outpatient thoracentesis + paracentesis (community radiology)",
+      "cptCode": "32555 / 49083",
+      "provider": "Dr. Frank Mueller (Garrett Regional Radiology)",
+      "facility": "Garrett Regional Medical Center",
+      "status": "Completed",
+      "notes": "Weekly therapeutic drainage. Per local protocol for INR 2.0: 4 units FFP + 8 g albumin/L administered peri-procedurally. No procedural bleeding."
+    },
+    {
+      "id": "PROC007",
+      "date": "2027-04-07T09:30:00.000Z",
+      "name": "Outpatient thoracentesis + paracentesis (community radiology)",
+      "cptCode": "32555 / 49083",
+      "provider": "Dr. Frank Mueller (Garrett Regional Radiology)",
+      "facility": "Garrett Regional Medical Center",
+      "status": "Completed",
+      "notes": "Weekly therapeutic drainage. Per local protocol for INR 2.0: 4 units FFP + 8 g albumin/L administered peri-procedurally. No procedural bleeding."
+    },
+    {
+      "id": "PROC006",
+      "date": "2027-03-31T09:30:00.000Z",
+      "name": "Outpatient thoracentesis + paracentesis (community radiology)",
+      "cptCode": "32555 / 49083",
+      "provider": "Dr. Frank Mueller (Garrett Regional Radiology)",
+      "facility": "Garrett Regional Medical Center",
+      "status": "Completed",
+      "notes": "Weekly therapeutic drainage. Per local protocol for INR 2.0: 4 units FFP + 8 g albumin/L administered peri-procedurally. No procedural bleeding."
+    },
+    {
+      "id": "PROC005",
+      "date": "2027-03-24T09:30:00.000Z",
+      "name": "Outpatient thoracentesis + paracentesis (community radiology)",
+      "cptCode": "32555 / 49083",
+      "provider": "Dr. Frank Mueller (Garrett Regional Radiology)",
+      "facility": "Garrett Regional Medical Center",
+      "status": "Completed",
+      "notes": "Weekly therapeutic drainage. Per local protocol for INR 2.0: 4 units FFP + 8 g albumin/L administered peri-procedurally. No procedural bleeding."
+    },
+    {
+      "id": "PROC004",
+      "date": "2027-03-17T09:30:00.000Z",
+      "name": "Outpatient thoracentesis + paracentesis (community radiology)",
+      "cptCode": "32555 / 49083",
+      "provider": "Dr. Frank Mueller (Garrett Regional Radiology)",
+      "facility": "Garrett Regional Medical Center",
+      "status": "Completed",
+      "notes": "First weekly outpatient session after referral. Per local protocol for INR 2.0: 4 units FFP + 8 g albumin/L administered peri-procedurally. No procedural bleeding."
+    },
+    {
+      "id": "PROC002",
+      "date": "2027-03-10T16:30:00.000Z",
+      "name": "Therapeutic thoracentesis, right",
+      "cptCode": "32555",
+      "provider": "Dr. Sameer Iqbal (Interventional Radiology)",
+      "facility": "University Interventional Radiology",
+      "status": "Completed",
+      "notes": "1.3 L of serous transudative fluid removed from the right pleural space. Ultrasound-guided. NO prophylactic blood products given despite INR 2.0 / platelets 55 K. No bleeding complication. Breathing improved to baseline."
+    },
+    {
+      "id": "PROC001",
+      "date": "2027-03-10T15:30:00.000Z",
+      "name": "Large-volume therapeutic paracentesis",
+      "cptCode": "49083",
+      "provider": "Dr. Sameer Iqbal (Interventional Radiology)",
+      "facility": "University Interventional Radiology",
+      "status": "Completed",
+      "notes": "6.5 L of ascitic fluid removed; 8 g albumin per liter given for large-volume paracentesis. Ascitic fluid: SAAG >1.1, PMN <250 (no SBP). NO prophylactic FFP/platelets given despite INR 2.0 / platelets 55 K. No bleeding complication. Abdomen returned to baseline."
+    }
+  ],
+  "lastUpdated": "2027-09-15"
+}

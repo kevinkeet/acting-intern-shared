@@ -1,0 +1,34 @@
+{
+  "panels": [
+    {
+      "id": "LAB003",
+      "name": "Post-transplant Labs (~2 months)",
+      "collectedDate": "2027-09-15T09:00:00.000Z",
+      "orderedBy": "Dr. Marcus Hale (Transplant Hepatology)",
+      "preview": "Recovered graft function: bilirubin 0.9, INR 1.1, albumin 3.8, AST/ALT normal. Na 139, Cr 1.0. Platelets recovering (118 K). Tacrolimus trough therapeutic. Portal-hypertension physiology resolved."
+    },
+    {
+      "id": "LAB002",
+      "name": "MICU Labs — Flash Pulmonary Edema",
+      "collectedDate": "2027-04-28T19:00:00.000Z",
+      "orderedBy": "Dr. Lena Park (MICU)",
+      "preview": "Respiratory failure picture. BNP elevated (high), consistent with volume overload. Liver numbers near her baseline (bili 4.8, INR 2.1, Plt 52). Na 130, Cr 1.5. Troponin negative. No leukocytosis / afebrile — argues against infection/TRALI, favoring circulatory overload."
+    },
+    {
+      "id": "LAB001",
+      "name": "ED Presentation Labs (TP1)",
+      "collectedDate": "2027-03-10T13:30:00.000Z",
+      "orderedBy": "Dr. Olivia Reyes (ED)",
+      "preview": "Na 128, BUN 32, Cr 1.4. Hgb 10.1, Plt 55 K. INR 2.0. Bilirubin 4.5, albumin 2.6. MELD-Na ~27. Decompensated cirrhosis labs; coagulopathy and thrombocytopenia of liver disease."
+    },
+    {
+      "id": "LAB_HX_001",
+      "name": "Hepatology Labs — Diuretic Intolerance",
+      "collectedDate": "2027-02-12T10:00:00.000Z",
+      "orderedBy": "Dr. Marcus Hale (Hepatology)",
+      "preview": "After diuretic up-titration: Cr risen to 1.6 (from ~1.1 baseline), K 5.6 (hyperkalemia), Na 126 (hyponatremia). Documents that higher diuretic doses are NOT tolerated — basis for referral for mechanical drainage."
+    }
+  ],
+  "totalResults": 4,
+  "lastUpdated": "2027-09-15"
+}

@@ -16,7 +16,7 @@ const AssessmentData = (() => {
     const BASE = 'data/assessments';
 
     // List of cases offered. Add new caseIds here as they're scaffolded.
-    const CASE_IDS = ['PAT002', 'PAT003', 'PAT004', 'PAT006'];
+    const CASE_IDS = ['PAT002', 'PAT003', 'PAT004', 'PAT005', 'PAT006'];
 
     // Per-case diagnosis reveal (used on the results page only).
     // Lives in code rather than the JSON so it can't accidentally leak via
@@ -57,6 +57,19 @@ const AssessmentData = (() => {
                 'Because the recurrence occurred OFF anticoagulation (during a supervised hold), not despite therapeutic anticoagulation, the answer is to resume/optimize anticoagulation — an IVC filter is generally NOT indicated (a retrievable filter only if another mandatory interruption is truly unavoidable)',
             ],
             source: 'Adapted from the Management Case Bank (Case 2; original discussants Allyson Pishko, Brett Carroll, Jeff Weinstein; finalized by Zahir Kanjee).',
+        },
+        PAT005: {
+            primary: 'Iatrogenic transfusion-associated circulatory overload from PROPHYLACTIC FFP given for an elevated INR before low-risk drainage procedures in cirrhosis',
+            secondary: 'The teaching point is not a hidden diagnosis but recognizing and resisting a non-evidence-based practice documented in the chart: in cirrhosis the INR does not predict procedural bleeding (rebalanced hemostasis), prophylactic FFP is not indicated for low-risk para/thoracentesis, and repeated FFP caused volume overload. The case also tests cross-system communication and PleurX-vs-TIPS bridging decisions in a transplant candidate.',
+            causalChain: [
+                'Decompensated alcohol-related cirrhosis with diuretic-refractory ascites + right hepatic hydrothorax; diuretics could not be up-titrated (AKI/hyperkalemia/hyponatremia) → referred for mechanical drainage',
+                'INR 2.0 and platelets 55 K reflect the hemostatic profile of cirrhosis — they do NOT mandate transfusion; para/thoracentesis are low-bleeding-risk, and the academic center correctly did them without prophylactic FFP',
+                'A community radiologist, following an outdated protocol, gave 4 units FFP per weekly session for the elevated INR (documented in the outpatient procedure notes — the resident must surface it)',
+                'Repeated peri-procedural FFP → transfusion-associated circulatory overload → flash pulmonary edema, intubation, ICU',
+                'Management: collegial, evidence-based cross-system communication to stop the FFP while preserving her local access; bridge the recurrent hydrothorax (PleurX vs TIPS — TIPS risks worsening her hepatic encephalopathy; PleurX risks infection) toward transplant',
+                'Liver transplant corrected the portal hypertension driving the fluid — ascites/hydrothorax resolved and drainage was no longer needed',
+            ],
+            source: 'Adapted from the Management Case Bank (Case 3; original discussants Allyson Pishko, Brett Carroll, Jeff Weinstein; finalized by Adam Rodman).',
         },
         PAT006: {
             primary: 'New-onset perioperative atrial fibrillation after urgent open cholecystectomy for perforated cholecystitis',

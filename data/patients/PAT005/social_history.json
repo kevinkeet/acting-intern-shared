@@ -1,0 +1,66 @@
+{
+  "tobacco": {
+    "status": "Former smoker",
+    "type": "Cigarettes",
+    "amount": "~1 pack/day for ~20 years; quit 2026 during her recovery",
+    "packYears": 20,
+    "quitDate": "2026",
+    "notes": "Quit alongside achieving alcohol sobriety."
+  },
+  "alcohol": {
+    "status": "In sustained remission (sober)",
+    "frequency": "None currently",
+    "amount": "Prior heavy daily use (~a pint of liquor/day) for ~15 years → alcoholic cirrhosis.",
+    "notes": "ACHIEVED SOBRIETY ~14 months ago (since ~early 2026). Actively engaged in an outpatient recovery program + AA; documented abstinence with negative screens. This sustained sobriety is central to her liver-transplant candidacy."
+  },
+  "drugs": {
+    "status": "Denies",
+    "details": "No illicit drug use. No IV drug use."
+  },
+  "occupation": {
+    "current": "On disability (since cirrhosis decompensation 2024)",
+    "previous": "Certified nursing assistant / home health aide for ~18 years.",
+    "status": "Not currently working due to her liver disease.",
+    "exposures": "None significant."
+  },
+  "education": {
+    "highestLevel": "High school diploma + CNA certification",
+    "literacyConcerns": "None. Engaged and knowledgeable about her own care; keeps a symptom and weight diary."
+  },
+  "housing": {
+    "status": "Rents a small house in Oakland (Garrett County), rural western Maryland.",
+    "livingWith": "Lives alone. Sister Donna lives ~15 minutes away and is the primary support + driver.",
+    "ownership": "Rents",
+    "notes": "Lives ~90 minutes (mountain roads) from the academic medical center where her hepatology/transplant team is. Distance and transportation are recurring barriers to the frequent procedures her liver disease requires — directly relevant to the decision to use a local radiologist for outpatient drainage."
+  },
+  "diet": {
+    "type": "Tries to follow a sodium-restricted diet for ascites; adherence variable. Limited grocery access in her rural area.",
+    "restrictions": "2 g sodium recommended; fluid restriction at times for hyponatremia.",
+    "supplements": "Thiamine, folate, multivitamin (nutritional support in cirrhosis)."
+  },
+  "exercise": {
+    "frequency": "Limited by abdominal distension and dyspnea from ascites/hydrothorax; walks short distances.",
+    "intensity": "Light."
+  },
+  "functionalStatus": {
+    "adls": "Independent at baseline; limited during decompensations.",
+    "iadls": "Mostly independent; relies on sister for transportation and some errands.",
+    "driving": "Does not reliably drive the 90-minute mountain route to the academic center; sister drives her.",
+    "falls": "Occasional unsteadiness during hepatic encephalopathy flares."
+  },
+  "transportation": {
+    "primary": "Sister Donna drives her. No reliable public transit in the rural county. This barrier shaped the plan to do weekly drainage locally rather than at the academic center."
+  },
+  "religion": "Methodist; finds support through her recovery community.",
+  "safety": {
+    "intimatePartnerViolence": "Denies.",
+    "weaponsInHome": false,
+    "feelsSafeAtHome": true
+  },
+  "mentalHealth": {
+    "depressionScreening": "PHQ-9 6 (mild) — improved with sobriety and recovery engagement.",
+    "anxietyScreening": "GAD-2 1.",
+    "support": "Sister Donna (primary), recovery program/AA sponsor, PCP. Strong recovery support despite rural isolation."
+  },
+  "notes": "50-year-old woman with decompensated alcoholic cirrhosis who has achieved sustained sobriety and is working toward liver transplant. Her rural location (90 minutes from the academic center) and reliance on her sister for transportation are central social determinants: they drove the decision to have a local radiologist perform her frequent therapeutic drainage — the setting in which a non-evidence-based prophylactic-FFP protocol led to harm. Cross-system communication with that community provider is part of her safe care."
+}

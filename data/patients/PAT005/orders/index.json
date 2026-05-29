@@ -1,0 +1,61 @@
+{
+  "active": [
+    {
+      "id": "ORD010",
+      "category": "Medication",
+      "name": "Albumin 25% — 8 g per liter of fluid removed (large-volume drainage)",
+      "details": "Standing peri-procedural order for large-volume paracentesis/thoracentesis to prevent post-paracentesis circulatory dysfunction. (Distinct from FFP — albumin is the evidence-based adjunct here.)",
+      "priority": "Routine",
+      "orderedBy": "Dr. Sameer Iqbal (IR)",
+      "status": "Active",
+      "orderDate": "2027-03-10T15:00:00.000Z"
+    }
+  ],
+  "completed": [
+    {
+      "id": "ORD001",
+      "category": "Procedure",
+      "name": "Large-volume paracentesis",
+      "details": "Therapeutic; ascitic fluid analysis (cell count/differential, albumin, culture). No prophylactic blood products ordered.",
+      "priority": "Urgent",
+      "orderedBy": "Dr. Olivia Reyes (ED)",
+      "status": "Completed",
+      "orderDate": "2027-03-10T14:00:00.000Z",
+      "completedDate": "2027-03-10T15:30:00.000Z"
+    },
+    {
+      "id": "ORD002",
+      "category": "Procedure",
+      "name": "Therapeutic thoracentesis, right",
+      "details": "Ultrasound-guided; pleural fluid studies. No prophylactic blood products ordered.",
+      "priority": "Urgent",
+      "orderedBy": "Dr. Olivia Reyes (ED)",
+      "status": "Completed",
+      "orderDate": "2027-03-10T14:00:00.000Z",
+      "completedDate": "2027-03-10T16:30:00.000Z"
+    },
+    {
+      "id": "ORD003",
+      "category": "Lab",
+      "name": "CBC, CMP, coagulation panel, ammonia",
+      "details": "Decompensated cirrhosis labs at presentation.",
+      "priority": "STAT",
+      "orderedBy": "Dr. Olivia Reyes (ED)",
+      "status": "Completed",
+      "orderDate": "2027-03-10T13:30:00.000Z",
+      "completedDate": "2027-03-10T14:15:00.000Z"
+    },
+    {
+      "id": "ORD004",
+      "category": "Medication",
+      "name": "Furosemide 40 mg IV",
+      "details": "For flash pulmonary edema in the MICU.",
+      "priority": "STAT",
+      "orderedBy": "Dr. Lena Park (MICU)",
+      "status": "Completed",
+      "orderDate": "2027-04-28T19:00:00.000Z",
+      "completedDate": "2027-04-28T19:10:00.000Z"
+    }
+  ],
+  "lastUpdated": "2027-09-15"
+}

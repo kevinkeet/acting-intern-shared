@@ -1,0 +1,10 @@
+{
+  "id": "NOTE003",
+  "type": "Outpatient Procedure Note (Community Radiology)",
+  "date": "2027-03-24T10:00:00.000Z",
+  "author": "Dr. Frank Mueller (Garrett Regional Radiology)",
+  "department": "Radiology (community)",
+  "encounter": "ENC002",
+  "content": "OUTPATIENT PROCEDURE NOTE — GARRETT REGIONAL MEDICAL CENTER\nDate: 3/24/2027 (one of the recurring weekly sessions)\nOperator: Dr. Frank Mueller (Diagnostic/Interventional Radiology)\n\nINDICATION: Recurrent symptomatic ascites and right hepatic hydrothorax in cirrhosis. Patient referred by University hepatology for weekly therapeutic drainage close to home (she lives locally; the academic center is ~90 minutes away).\n\nPROCEDURES: Ultrasound-guided right thoracentesis and large-volume paracentesis.\n\nPERI-PROCEDURAL TRANSFUSION (per this facility's standing protocol): Because of the patient's elevated INR (2.0), she received 4 units of fresh frozen plasma prior to the procedures, along with 8 g albumin per liter of fluid removed. This is the facility's routine correction for an elevated INR before drainage procedures.\n\nFLUID REMOVED: ~1.2 L pleural (right); ~5.5 L peritoneal. Both straw-colored/serous.\n\nCOMPLICATIONS: None. No procedural bleeding. Patient tolerated the session and was discharged home.\n\nPLAN: Continue weekly thoracentesis/paracentesis here for symptom control, with the same peri-procedural FFP + albumin protocol, until the academic team advises otherwise.",
+  "attestation": "Electronically signed by Dr. Frank Mueller, MD (Garrett Regional Radiology). 3/24/2027. (Representative of the recurring weekly outpatient sessions — see the Procedures tab for the full series, each documenting the same FFP protocol.)"
+}
