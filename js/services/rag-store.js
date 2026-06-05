@@ -41,9 +41,11 @@ const RagStore = (function () {
     let _available = false;
 
     function _tokenize(text) {
+        // Split on hyphens too, so "blood-pressure" matches a "blood pressure"
+        // query (and "low-risk", "rule-out", etc.).
         return (text || '')
             .toLowerCase()
-            .replace(/[^a-z0-9\s-]/g, ' ')
+            .replace(/[^a-z0-9\s]/g, ' ')
             .split(/\s+/)
             .filter((t) => t.length >= 2 && !STOP.has(t));
     }

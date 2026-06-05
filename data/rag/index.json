@@ -1,9 +1,37 @@
 {
   "version": 1,
   "generated": "static-tfidf-prototype",
-  "docCount": 3,
-  "chunkCount": 6,
+  "docCount": 11,
+  "chunkCount": 23,
   "chunks": [
+    {
+      "id": "ardsnet-arma-low-tidal-volume.md#0",
+      "docTitle": "ARDSNet (ARMA) — low tidal volume ventilation in ARDS (NEJM 2000)",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/?term=ARDS+network+ventilation+lower+tidal+volumes+2000",
+      "type": "study",
+      "text": "The ARDSNet ARMA trial established lung-protective ventilation as standard of care in acute respiratory distress syndrome (ARDS). Patients were randomized to a lower tidal volume strategy (about 6 mL/kg of predicted body weight, with a plateau pressure limit around 30 cm H2O) versus the then-conventional 12 mL/kg. The trial was stopped early: lower tidal volumes reduced in-hospital mortality by roughly 9 percentage points (about 31% versus 40%) and increased ventilator-free days. The mechanism is reduction of ventilator-induced lung injury from overdistension (volutrauma) and repeated alveolar opening and closing."
+    },
+    {
+      "id": "ardsnet-arma-low-tidal-volume.md#1",
+      "docTitle": "ARDSNet (ARMA) — low tidal volume ventilation in ARDS (NEJM 2000)",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/?term=ARDS+network+ventilation+lower+tidal+volumes+2000",
+      "type": "study",
+      "text": "or-free days. The mechanism is reduction of ventilator-induced lung injury from overdistension (volutrauma) and repeated alveolar opening and closing. Two teaching points follow. First, dose ventilation to PREDICTED body weight (a function of height and sex), not actual weight, because lung size scales with height; using actual weight systematically over-ventilates. Second, this is a counterintuitive result for trainees who equate larger breaths with better gas exchange: accepting permissive hypercapnia and smaller volumes improves survival. ARMA is the empirical foundation for the 6 mL/kg target used in modern ARDS bundles."
+    },
+    {
+      "id": "chest-2021-vte-anticoagulation.md#0",
+      "docTitle": "CHEST 2021 — antithrombotic therapy for VTE disease",
+      "url": "https://journal.chestnet.org/article/S0012-3692(21)01506-3/fulltext",
+      "type": "guideline",
+      "text": "The 2021 CHEST guideline on antithrombotic therapy for venous thromboembolism (VTE) sets the modern framework for how long and with what agent to anticoagulate. For most acute DVT or PE without contraindication, a minimum treatment phase of three months is strongly recommended. A direct oral anticoagulant (apixaban, rivaroxaban, edoxaban, or dabigatran) is suggested over a vitamin K antagonist for most patients. Duration beyond three months turns on WHY the clot happened. VTE provoked by a major transient risk factor (for example major surgery) should generally stop at three months, because the recurrence risk falls once the provocation resolves. Unprovoked VTE, or VTE with a persistent risk factor such as active cancer, carries a high ongoing recurrence risk and favors extended anticoagulation, with periodic reassessment of the bleeding-versus-clotting balance."
+    },
+    {
+      "id": "chest-2021-vte-anticoagulation.md#1",
+      "docTitle": "CHEST 2021 — antithrombotic therapy for VTE disease",
+      "url": "https://journal.chestnet.org/article/S0012-3692(21)01506-3/fulltext",
+      "type": "guideline",
+      "text": "ancer, carries a high ongoing recurrence risk and favors extended anticoagulation, with periodic reassessment of the bleeding-versus-clotting balance. For cancer-associated VTE, an oral factor Xa inhibitor is now generally preferred over low-molecular-weight heparin for many patients. The teaching framework is the provoked-versus-unprovoked distinction as the hinge for duration, and an explicit, recurring weighing of thrombotic risk against bleeding risk rather than a fixed stop date."
+    },
     {
       "id": "clinical-problem-solvers-schemas.md#0",
       "docTitle": "Clinical Problem Solvers — Illness Scripts & Diagnostic Schemas",
@@ -17,6 +45,20 @@
       "url": "https://clinicalproblemsolving.com",
       "type": "framework",
       "text": "ings). Learners compare a patient's presentation against competing illness scripts to decide which best fits, and equally to decide what does not fit. A diagnostic schema is a branching framework for a presenting problem (for example, a schema for anemia, hyponatremia, or acute kidney injury). The schema organizes the differential into a small number of categories with a logical first split, so the reasoner narrows the space systematically instead of pattern-matching to a single answer. Good teaching points name the relevant schema and the branch point that the current case turns on. A common reasoning trap these tools guard against is premature closure: committing to the first plausible diagnosis without testing competing scripts or working the schema. Framing a teaching moment around the schema and the discriminating feature helps the learner generalize beyond the single case."
+    },
+    {
+      "id": "nice-sugar-glucose-control.md#0",
+      "docTitle": "NICE-SUGAR — intensive vs conventional glucose control in the ICU (NEJM 2009)",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/19318384/",
+      "type": "study",
+      "text": "NICE-SUGAR randomized about 6,100 critically ill adults to intensive glucose control (target 81 to 108 mg/dL) versus conventional control (target 180 mg/dL or less). Contrary to earlier single-center enthusiasm for tight glycemic control, the intensive arm had HIGHER 90-day mortality (about 27.5% versus 25%) and far more severe hypoglycemia. The result reversed practice: ICU glucose is now generally targeted to roughly 140 to 180 mg/dL rather than tight normalization. The likely harm is from iatrogenic hypoglycemia and glycemic variability outweighing any benefit of normoglycemia."
+    },
+    {
+      "id": "nice-sugar-glucose-control.md#1",
+      "docTitle": "NICE-SUGAR — intensive vs conventional glucose control in the ICU (NEJM 2009)",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/19318384/",
+      "type": "study",
+      "text": "dL rather than tight normalization. The likely harm is from iatrogenic hypoglycemia and glycemic variability outweighing any benefit of normoglycemia. The teaching point is a reasoning trap: a physiologically appealing target (normal blood glucose) is not the same as a better patient outcome, and a striking early single-center trial can be overturned by a large multicenter trial. NICE-SUGAR is a clean example of why practice should rest on adequately powered, generalizable evidence and why \"more normal numbers\" can cause net harm."
     },
     {
       "id": "pioped2-ctpa.md#0",
@@ -45,6 +87,83 @@
       "url": "https://pubmed.ncbi.nlm.nih.gov/?term=PREPIC2+vena+cava+filter",
       "type": "study",
       "text": "his is the key teaching point: in a patient who can be anticoagulated, a filter does not add meaningful protection and should not be placed routinely. The earlier PREPIC trial had shown that permanent filters reduced early PE but increased deep vein thrombosis over long-term follow-up, with no mortality benefit. Together the PREPIC studies anchor the principle that IVC filters substitute for anticoagulation when it is contraindicated; they are not an add-on for extra protection, and an unretrieved filter is a source of long-term harm."
+    },
+    {
+      "id": "rales-spironolactone-hfref.md#0",
+      "docTitle": "RALES — spironolactone in severe heart failure (NEJM 1999)",
+      "url": "https://www.nejm.org/doi/full/10.1056/NEJM199909023411001",
+      "type": "study",
+      "text": "RALES randomized patients with severe heart failure (NYHA class III to IV) and a reduced ejection fraction (35% or less), already treated with an ACE inhibitor and a loop diuretic, to low-dose spironolactone (a mineralocorticoid-receptor antagonist) versus placebo. Spironolactone reduced all-cause mortality by about 30% (roughly 35% versus 46%), reducing both pump-failure deaths and sudden cardiac death, and the trial was stopped early for benefit. RALES helped establish mineralocorticoid-receptor antagonists as a pillar of guideline-directed therapy for heart failure with reduced ejection fraction (HFrEF)."
+    },
+    {
+      "id": "rales-spironolactone-hfref.md#1",
+      "docTitle": "RALES — spironolactone in severe heart failure (NEJM 1999)",
+      "url": "https://www.nejm.org/doi/full/10.1056/NEJM199909023411001",
+      "type": "study",
+      "text": "d establish mineralocorticoid-receptor antagonists as a pillar of guideline-directed therapy for heart failure with reduced ejection fraction (HFrEF). The most important teaching point is the gap between a trial and real-world implementation. RALES used a low dose (commonly 25 mg) with protocolized potassium and renal monitoring and excluded patients with significant baseline renal dysfunction or hyperkalemia. After publication, population studies showed rising hospitalizations and deaths from hyperkalemia when the drug was prescribed more broadly and less carefully. The generalizable lesson: a mortality benefit depends on appropriate patient selection and on the monitoring that made the trial safe, not on the pill alone."
+    },
+    {
+      "id": "sprint-blood-pressure.md#0",
+      "docTitle": "SPRINT — intensive vs standard blood-pressure control (NEJM 2015)",
+      "url": "https://www.nejm.org/doi/full/10.1056/NEJMoa1511939",
+      "type": "study",
+      "text": "SPRINT randomized about 9,300 adults at high cardiovascular risk (but without diabetes or prior stroke) to an intensive systolic blood-pressure target below 120 mm Hg versus a standard target below 140 mm Hg. The intensive arm reduced major cardiovascular events by roughly 25% and all-cause mortality by roughly 27%, and the trial was stopped early for benefit after a median of about 3.3 years. The crucial teaching caveat is measurement technique. SPRINT used a protocolized, often unattended, automated office blood-pressure measurement, which tends to read several mm Hg lower than a routine clinic cuff. A \"120\" in SPRINT is therefore not the same number as a hurried manual clinic reading, so the target cannot be applied naively to casually measured pressures."
+    },
+    {
+      "id": "sprint-blood-pressure.md#1",
+      "docTitle": "SPRINT — intensive vs standard blood-pressure control (NEJM 2015)",
+      "url": "https://www.nejm.org/doi/full/10.1056/NEJMoa1511939",
+      "type": "study",
+      "text": "in SPRINT is therefore not the same number as a hurried manual clinic reading, so the target cannot be applied naively to casually measured pressures. There were trade-offs: the intensive group had more hypotension, syncope, electrolyte abnormalities, and acute kidney injury. The generalizable principle is that a trial's benefit is inseparable from how its key variable was measured and which population was studied (SPRINT excluded diabetics and stroke patients), so applying the result requires reproducing the measurement method and respecting the enrollment criteria."
+    },
+    {
+      "id": "surviving-sepsis-2021.md#0",
+      "docTitle": "Surviving Sepsis Campaign 2021 — bundles for sepsis & septic shock",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8486643/",
+      "type": "guideline",
+      "text": "The Surviving Sepsis Campaign 2021 international guideline frames early sepsis management around a time-critical bundle. The core early actions are: measure lactate (and remeasure if elevated above 2 mmol/L), obtain blood cultures before antibiotics, give broad-spectrum antibiotics, begin 30 mL/kg of crystalloid for hypotension or lactate of 4 mmol/L or higher, and start vasopressors (norepinephrine first line) to maintain a mean arterial pressure of at least 65 mm Hg if the patient remains hypotensive. A key 2021 nuance is risk-stratified urgency for antibiotics: when shock is present or the likelihood of sepsis is high, give antimicrobials immediately, ideally within one hour; when sepsis is possible but not yet confirmed and there is no shock, a brief period of rapid investigation (up to a few hours) is acceptable to avoid reflexive broad-spectrum overuse."
+    },
+    {
+      "id": "surviving-sepsis-2021.md#1",
+      "docTitle": "Surviving Sepsis Campaign 2021 — bundles for sepsis & septic shock",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8486643/",
+      "type": "guideline",
+      "text": "et confirmed and there is no shock, a brief period of rapid investigation (up to a few hours) is acceptable to avoid reflexive broad-spectrum overuse. Teaching points: blood cultures BEFORE antibiotics (but never delay antibiotics in shock to obtain them), lactate as both a resuscitation target and a marker of perfusion, and the deliberate tension between \"treat fast\" and \"do not over-treat every possible infection.\" The hour-1 bundle is influential but its strict timing remains debated."
+    },
+    {
+      "id": "teaching-omp-snapps.md#0",
+      "docTitle": "Clinical teaching frameworks — One-Minute Preceptor & SNAPPS",
+      "url": "https://meded.ucsf.edu/resource/clinical-teaching-tools-omp-and-snapps",
+      "type": "framework",
+      "text": "Two efficient, evidence-supported frameworks structure clinical teaching at the point of care. The One-Minute Preceptor (OMP) is a five-microskill model used by the teacher: (1) get a commitment (\"what do you think is going on?\"), (2) probe for supporting reasoning (\"what led you there?\"), (3) teach a general rule that transfers beyond this case, (4) reinforce what was done well, and (5) correct mistakes constructively. It externalizes the learner's reasoning before the teacher supplies an answer, which is why it is more instructive than simply giving the diagnosis."
+    },
+    {
+      "id": "teaching-omp-snapps.md#1",
+      "docTitle": "Clinical teaching frameworks — One-Minute Preceptor & SNAPPS",
+      "url": "https://meded.ucsf.edu/resource/clinical-teaching-tools-omp-and-snapps",
+      "type": "framework",
+      "text": ". It externalizes the learner's reasoning before the teacher supplies an answer, which is why it is more instructive than simply giving the diagnosis. SNAPPS is a learner-driven counterpart for case presentations: Summarize the case, Narrow the differential to two or three, Analyze the differential by comparing and contrasting, Probe the preceptor with questions about uncertainties, Plan management, and Select an issue for self-directed learning. SNAPPS shifts cognitive work to the learner and surfaces their reasoning gaps. Teaching point for an AI tutor: good teaching does not just deliver the answer; it asks for a commitment, makes the underlying rule explicit, and ends with a probing question that the learner must work through. The \"Check yourself\" prompt in these teaching points is the OMP \"get a commitment\" step applied in reverse."
+    },
+    {
+      "id": "wells-perc-pe-pretest.md#0",
+      "docTitle": "Wells score & PERC rule — pretest probability for PE (Kline, J Thromb Haemost 2004)",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/?term=Kline+clinical+criteria+pulmonary+embolism+rule-out",
+      "type": "study",
+      "text": "Workup for suspected pulmonary embolism (PE) should begin with a structured pretest probability, not an immediate scan. Two validated tools anchor this. The Wells score (Philip Wells, 1990s) stratifies patients into low, moderate, or high probability using items such as clinical signs of DVT, PE being the most likely diagnosis, tachycardia, immobilization or recent surgery, prior VTE, hemoptysis, and active malignancy."
+    },
+    {
+      "id": "wells-perc-pe-pretest.md#1",
+      "docTitle": "Wells score & PERC rule — pretest probability for PE (Kline, J Thromb Haemost 2004)",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/?term=Kline+clinical+criteria+pulmonary+embolism+rule-out",
+      "type": "study",
+      "text": "linical signs of DVT, PE being the most likely diagnosis, tachycardia, immobilization or recent surgery, prior VTE, hemoptysis, and active malignancy. The Pulmonary Embolism Rule-out Criteria (PERC), derived by Jeff Kline and colleagues, is a set of eight clinical features (including age under 50, heart rate under 100, oxygen saturation at or above 95%, no hemoptysis, no estrogen use, no prior VTE, no recent surgery or trauma, and no unilateral leg swelling). In a patient already judged low risk, satisfying all eight PERC criteria lowers the probability of PE below the testing threshold, so no D-dimer or imaging is needed."
+    },
+    {
+      "id": "wells-perc-pe-pretest.md#2",
+      "docTitle": "Wells score & PERC rule — pretest probability for PE (Kline, J Thromb Haemost 2004)",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/?term=Kline+clinical+criteria+pulmonary+embolism+rule-out",
+      "type": "study",
+      "text": "eady judged low risk, satisfying all eight PERC criteria lowers the probability of PE below the testing threshold, so no D-dimer or imaging is needed. The teaching point is sequencing: use Wells (or a similar rule) to set the pretest probability, apply PERC only in low-risk patients to avoid unnecessary D-dimer, and reserve CT pulmonary angiography for those who cannot be ruled out clinically. This prevents both missed PE and overtesting."
     }
   ]
 }
