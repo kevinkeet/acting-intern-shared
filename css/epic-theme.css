@@ -15455,6 +15455,18 @@ body.in-assessment .main-container {
 }
 .tutor-rag-toggle.active .tutor-rag-count { background: rgba(255,255,255,0.25); }
 
+/* Grounding segmented control (Web / Library / Off) */
+.tutor-ground-btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    border: 1px solid var(--border-medium); background: var(--bg-white);
+    color: var(--text-secondary); font-size: 11px; padding: 4px 10px;
+    border-radius: 6px; cursor: pointer;
+    transition: background 0.12s var(--ease-out), color 0.12s var(--ease-out), border-color 0.12s var(--ease-out);
+}
+.tutor-ground-btn .lucide { width: 13px; height: 13px; }
+.tutor-ground-btn:hover { background: var(--bg-hover); }
+.tutor-ground-btn.active { background: #1f6f54; color: #fff; border-color: #1f6f54; }
+
 /* Inline source links inside answer/teaching markdown */
 .tutor-link { color: var(--text-link); text-decoration: none; border-bottom: 1px solid rgba(0,102,204,0.35); }
 .tutor-link:hover { border-bottom-color: var(--text-link); }

@@ -229,6 +229,82 @@ const ClaudeAPI = {
         throw new Error('Invalid response format');
     },
 
+    /**
+     * Single chat with Anthropic's server-side web_search tool enabled.
+     * The API runs the searches server-side and returns the assembled answer
+     * with citations — no client-side loop needed.
+     * @param {object} req — { systemPrompt, userMessage, model, maxTokens,
+     *                         temperature, allowedDomains, maxUses }
+     * @returns {Promise<{text:string, cited:Array<{url,title}>, found:Array<{url,title}>}>}
+     */
+    async webSearchChat(req) {
+        if (!this.isConfigured()) {
+            throw new Error('API key not configured');
+        }
+        const tool = {
+            type: 'web_search_20250305',
+            name: 'web_search',
+            max_uses: req.maxUses || 4,
+        };
+        if (req.allowedDomains && req.allowedDomains.length) {
+            tool.allowed_domains = req.allowedDomains;
+        }
+        const body = {
+            model: req.model || this.model,
+            max_tokens: req.maxTokens || 1500,
+            system: req.systemPrompt,
+            messages: [{ role: 'user', content: req.userMessage }],
+            tools: [tool],
+        };
+        if (typeof req.temperature === 'number') body.temperature = req.temperature;
+
+        const response = await fetch(this._getEndpoint(), {
+            method: 'POST',
+            headers: this._getHeaders(),
+            body: JSON.stringify(body),
+        });
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.error?.message || `HTTP ${response.status}`);
+        }
+        const data = await response.json();
+
+        const blocks = data.content || [];
+        // Keep only the FINAL answer text (after the last search), so the
+        // model's "I'll search…" narration before/between searches is dropped.
+        let lastToolIdx = -1;
+        blocks.forEach((b, i) => { if (b.type === 'web_search_tool_result') lastToolIdx = i; });
+
+        let text = '';
+        const cited = [];
+        const found = [];
+        const seenCited = new Set();
+        const seenFound = new Set();
+        blocks.forEach((block, i) => {
+            if (block.type === 'text') {
+                if (i > lastToolIdx) text += block.text;
+                for (const c of block.citations || []) {
+                    if (c.url && !seenCited.has(c.url)) {
+                        seenCited.add(c.url);
+                        cited.push({ url: c.url, title: c.title || c.url });
+                    }
+                }
+            } else if (block.type === 'web_search_tool_result') {
+                for (const r of block.content || []) {
+                    if (r && r.url && !seenFound.has(r.url)) {
+                        seenFound.add(r.url);
+                        found.push({ url: r.url, title: r.title || r.url });
+                    }
+                }
+            }
+        });
+        // Fallback: if no post-search text (e.g., model never searched), use all text.
+        if (!text.trim()) {
+            text = blocks.filter((b) => b.type === 'text').map((b) => b.text).join('');
+        }
+        return { text: text.trim(), cited, found };
+    },
+
     setModel(model) {
         this.model = model;
     },

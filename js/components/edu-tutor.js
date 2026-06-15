@@ -79,10 +79,14 @@ const EduTutor = (function () {
             'say so in one line.\n' +
             '**Teaching points** — 2–4 bullets of the highest-yield facts: thresholds, doses, discriminating features, and ' +
             'the classic error to avoid. Concrete and factual.\n' +
-            '**Clinical reasoning** — name the reasoning approach this case exercises (diagnostic schema, illness script, ' +
-            'pretest-probability/Bayesian step, competing-risk trade-off, surrogate-vs-outcome appraisal) and how it drives ' +
-            'the decision, with a link to a clinical-reasoning resource that supports it.\n\n' +
+            '**Clinical reasoning** — name the SINGLE most precise reasoning frame this case exercises, chosen from: ' +
+            'diagnostic schema; illness script; pretest-probability / Bayesian step; test-threshold (test / treat / no-test); ' +
+            'competing-risk trade-off; surrogate-vs-outcome appraisal; problem representation; therapeutic-window / ' +
+            'dose-titration; time-dependent benefit decay. Do NOT default to "competing-risk" — pick the frame that genuinely ' +
+            'fits THIS case. Say how it drives the decision, and link a clinical-reasoning resource that supports it.\n\n' +
             'LINKS (strict — never fabricate a URL):\n' +
+            '- When web search results are available, link the SPECIFIC source you found (its real article/guideline URL), ' +
+            'not a PubMed search.\n' +
             '- Trials/guidelines: cite from SOURCE MATERIAL with its exact URLs when provided; otherwise link the name to a ' +
             'PubMed SEARCH: [TRIAL (year)](https://pubmed.ncbi.nlm.nih.gov/?term=TRIAL+key+words).\n' +
             '- Clinical-reasoning resources (use these, do not invent deep links): Clinical Problem Solvers — schemas, ' +
@@ -111,8 +115,28 @@ const EduTutor = (function () {
     let _busy = false;
     let _root = null;
     let _displayMode = 'rail'; // rail | margin | flip | chips
-    let _useRag = true; // ground answers in the source corpus when available
+    let _grounding = 'web'; // web | library | off
     const RAG_TOP_K = 4;
+
+    // Grounding modes shown in the segmented control.
+    const GROUNDING_MODES = [
+        { id: 'web', label: 'Web search', icon: 'globe' },
+        { id: 'library', label: 'Library', icon: 'book-open-text' },
+        { id: 'off', label: 'Off', icon: 'circle-slash' },
+    ];
+
+    // Quality-source allowlist for the server-side web_search tool — high-signal
+    // primary literature, guideline bodies, and clinical-reasoning resources.
+    const WEB_DOMAINS = [
+        'pubmed.ncbi.nlm.nih.gov', 'pmc.ncbi.nlm.nih.gov', 'ncbi.nlm.nih.gov',
+        'nejm.org', 'jamanetwork.com', 'thelancet.com', 'bmj.com',
+        'annals.org', 'acpjournals.org', 'academic.oup.com',
+        'ahajournals.org', 'journal.chestnet.org', 'chestnet.org',
+        'nice.org.uk', 'cdc.gov', 'idsociety.org', 'kdigo.org',
+        'escardio.org', 'goldcopd.org', 'uptodate.com',
+        'clinicalproblemsolving.com', 'mdcalc.com',
+    ];
+    const WEB_MAX_USES = 4;
 
     // The four teaching-pane treatments being compared.
     const DISPLAY_MODES = [
@@ -250,12 +274,18 @@ const EduTutor = (function () {
                                     )}</button>`
                             ).join('')}
                         </div>
-                        <div class="tutor-mode-group">
-                            <button id="tutor-rag-toggle" class="tutor-rag-toggle ${_useRag ? 'active' : ''}" title="Ground answers in the source library and cite landmark studies / frameworks">
-                                <i data-lucide="book-open-text"></i>
-                                <span>Ground in sources</span>
-                                <span class="tutor-rag-count" id="tutor-rag-count"></span>
-                            </button>
+                        <div class="tutor-mode-group" role="group" aria-label="Grounding">
+                            <span class="tutor-level-label">Sources:</span>
+                            ${GROUNDING_MODES.map(
+                                (g) =>
+                                    `<button class="tutor-ground-btn ${g.id === _grounding ? 'active' : ''}" data-ground="${g.id}" title="${
+                                        g.id === 'web'
+                                            ? 'Search high-quality sources (NEJM, PubMed, guidelines) live'
+                                            : g.id === 'library'
+                                            ? 'Use the local source library (offline)'
+                                            : 'No grounding — model only'
+                                    }"><i data-lucide="${g.icon}"></i><span>${_escape(g.label)}</span></button>`
+                            ).join('')}
                         </div>
                     </div>
                 </div>
@@ -278,15 +308,13 @@ const EduTutor = (function () {
         _renderThread();
         if (typeof App !== 'undefined' && App.refreshIcons) App.refreshIcons();
 
-        // Warm the source index (non-blocking) and reflect availability.
+        // Warm the local source index in the background (used by Library mode).
         if (typeof RagStore !== 'undefined') {
             RagStore.load().then((ok) => {
-                const countEl = _root && _root.querySelector('#tutor-rag-count');
-                const toggle = _root && _root.querySelector('#tutor-rag-toggle');
-                if (countEl) countEl.textContent = ok ? `${RagStore.count()}` : '';
-                if (toggle && !ok) {
-                    toggle.classList.add('tutor-rag-empty');
-                    toggle.title = 'No source library found (data/rag/index.json). Add sources and run tools/rag-ingest.mjs.';
+                const libBtn = _root && _root.querySelector('.tutor-ground-btn[data-ground="library"]');
+                if (libBtn && ok) {
+                    const span = libBtn.querySelector('span');
+                    if (span) span.textContent = `Library (${RagStore.count()})`;
                 }
             });
         }
@@ -318,14 +346,15 @@ const EduTutor = (function () {
             });
         });
 
-        // RAG grounding toggle.
-        const ragToggle = _root.querySelector('#tutor-rag-toggle');
-        if (ragToggle) {
-            ragToggle.addEventListener('click', () => {
-                _useRag = !_useRag;
-                ragToggle.classList.toggle('active', _useRag);
+        // Grounding mode (Web / Library / Off).
+        _root.querySelectorAll('.tutor-ground-btn').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                _grounding = btn.getAttribute('data-ground');
+                _root.querySelectorAll('.tutor-ground-btn').forEach((b) =>
+                    b.classList.toggle('active', b === btn)
+                );
             });
-        }
+        });
 
         const send = _root.querySelector('#tutor-send');
         const input = _root.querySelector('#tutor-input');
@@ -463,8 +492,22 @@ const EduTutor = (function () {
         );
     }
 
+    // Merge web_search citations (preferring cited over merely found) onto a turn.
+    function _addWebSources(turn, res) {
+        if (!res) return;
+        const list = res.cited && res.cited.length ? res.cited : (res.found || []).slice(0, 5);
+        turn.sources = turn.sources || [];
+        const seen = new Set(turn.sources.map((s) => s.url));
+        list.forEach((c) => {
+            if (c.url && !seen.has(c.url)) {
+                seen.add(c.url);
+                turn.sources.push({ docTitle: c.title || c.url, url: c.url, type: 'web', score: 1 });
+            }
+        });
+    }
+
     // UI-side "Sources" panel (shown under each grounded turn).
-    const TYPE_ICON = { study: 'flask-conical', framework: 'shapes', reference: 'book-open' };
+    const TYPE_ICON = { study: 'flask-conical', framework: 'shapes', reference: 'book-open', web: 'globe' };
     function _sourcesPanelHtml(turn) {
         if (!turn.sources || !turn.sources.length) return '';
         // de-dupe by document title, keep best score
@@ -640,13 +683,15 @@ const EduTutor = (function () {
         if (sendBtn) sendBtn.disabled = true;
         input.value = '';
 
-        const turn = { q, level: _level, answer: null, teaching: null, answerErr: null, teachingErr: null, sources: null };
+        const turn = { q, level: _level, answer: null, teaching: null, answerErr: null, teachingErr: null, sources: null, grounding: _grounding };
         _turns.push(turn);
         _renderThread();
 
-        // RETRIEVAL — ground in the source corpus (best-effort, non-blocking failure).
+        const mode = _grounding;
+
+        // LIBRARY mode: retrieve from the local corpus first.
         let sourcesBlock = '';
-        if (_useRag && typeof RagStore !== 'undefined') {
+        if (mode === 'library' && typeof RagStore !== 'undefined') {
             try {
                 const hits = await RagStore.search(q, RAG_TOP_K);
                 if (hits && hits.length) {
@@ -661,12 +706,25 @@ const EduTutor = (function () {
 
         // LANE 1 — Answer (fires immediately).
         try {
-            turn.answer = await ClaudeAPI._singleChat({
-                systemPrompt: ANSWER_SYSTEM,
-                userMessage: sourcesBlock ? q + '\n\n' + sourcesBlock : q,
-                model: ANSWER_MODEL,
-                maxTokens: ANSWER_MAX_TOKENS,
-            });
+            if (mode === 'web') {
+                const res = await ClaudeAPI.webSearchChat({
+                    systemPrompt: ANSWER_SYSTEM,
+                    userMessage: q,
+                    model: ANSWER_MODEL,
+                    maxTokens: ANSWER_MAX_TOKENS,
+                    allowedDomains: WEB_DOMAINS,
+                    maxUses: WEB_MAX_USES,
+                });
+                turn.answer = res.text;
+                _addWebSources(turn, res);
+            } else {
+                turn.answer = await ClaudeAPI._singleChat({
+                    systemPrompt: ANSWER_SYSTEM,
+                    userMessage: sourcesBlock ? q + '\n\n' + sourcesBlock : q,
+                    model: ANSWER_MODEL,
+                    maxTokens: ANSWER_MAX_TOKENS,
+                });
+            }
         } catch (e) {
             turn.answerErr = (e && e.message) || String(e);
         }
@@ -682,12 +740,25 @@ const EduTutor = (function () {
                     turn.answer +
                     (sourcesBlock ? '\n\n' + sourcesBlock : '') +
                     '\n\nNow produce the teaching points as instructed.';
-                turn.teaching = await ClaudeAPI._singleChat({
-                    systemPrompt: teachingSystem(turn.level),
-                    userMessage,
-                    model: TEACHING_MODEL,
-                    maxTokens: TEACHING_MAX_TOKENS,
-                });
+                if (mode === 'web') {
+                    const res = await ClaudeAPI.webSearchChat({
+                        systemPrompt: teachingSystem(turn.level),
+                        userMessage,
+                        model: TEACHING_MODEL,
+                        maxTokens: TEACHING_MAX_TOKENS,
+                        allowedDomains: WEB_DOMAINS,
+                        maxUses: WEB_MAX_USES,
+                    });
+                    turn.teaching = res.text;
+                    _addWebSources(turn, res);
+                } else {
+                    turn.teaching = await ClaudeAPI._singleChat({
+                        systemPrompt: teachingSystem(turn.level),
+                        userMessage,
+                        model: TEACHING_MODEL,
+                        maxTokens: TEACHING_MAX_TOKENS,
+                    });
+                }
             } catch (e) {
                 turn.teachingErr = (e && e.message) || String(e);
             }
