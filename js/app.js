@@ -95,11 +95,28 @@ const App = {
             this.showPatientError();
         }
 
+        // Apply the three-purpose app shell (Assessment / Tutor / Assistant).
+        // Scopes chrome by mode and renders the top-bar switcher.
+        let _mode = null;
+        if (typeof ModeManager !== 'undefined') {
+            _mode = ModeManager.init();
+            // If a mode is already chosen and we booted with no/default route,
+            // land on that mode's home instead of the chart-review default.
+            if (_mode && (!window.location.hash || window.location.hash === '#/' || window.location.hash === '#/chart-review')) {
+                window.location.hash = ModeManager.MODES[_mode].home;
+            }
+        }
+
         // Initialize router
         router.init();
 
-        // Show About popup on first visit
-        About.checkFirstVisit();
+        // First entry: ask which part of the site to use. Otherwise show the
+        // About popup on first visit (chooser takes precedence).
+        if (typeof ModeManager !== 'undefined' && !_mode) {
+            ModeManager.showChooser();
+        } else {
+            About.checkFirstVisit();
+        }
 
         // Start the logo AI reveal animation
         this.startLogoAnimation();
