@@ -216,7 +216,12 @@ const App = {
             .on('/orders', () => Orders.render())
             .on('/about', () => About.render())
             // Teaching Tutor (standalone medical-education chatbot)
-            .on('/tutor', () => EduTutor.render())
+            // Tutor is now a docked side panel (AI Tutor mode), not a full page.
+            // A direct #/tutor hit switches into tutor mode (chart + tutor panel).
+            .on('/tutor', () => {
+                if (typeof ModeManager !== 'undefined') ModeManager.set('tutor');
+                else EduTutor.render();
+            })
             // Assessment Framework (Phase 3)
             .on('/assessment/start', () => AssessmentStart.render())
             .on('/assessment/run', () => AssessmentPanel.renderActive())

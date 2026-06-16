@@ -29,10 +29,12 @@ const ModeManager = (function () {
         },
         tutor: {
             id: 'tutor',
+            // Tutor is a docked right-side panel shown alongside the chart, so
+            // its "home" is the chart route; the panel itself is always open.
             label: 'AI Tutor',
             short: 'AI Tutor',
             icon: 'graduation-cap',
-            home: '#/tutor',
+            home: '#/chart-review',
             tagline: 'Ask any clinical question and get a sharp answer plus structured teaching with sources.',
         },
         assistant: {
@@ -72,6 +74,22 @@ const ModeManager = (function () {
             window.location.hash = MODES[mode].home;
             // Force a route run if the hash didn't change.
             if (typeof router !== 'undefined' && router.handleRoute) router.handleRoute();
+        }
+        _activateMode(mode);
+    }
+
+    // Open the right-side panel that belongs to a mode.
+    function _activateMode(mode) {
+        if (mode === 'assistant') {
+            // The advanced AI coworker IS the point of this mode — open it.
+            if (typeof AIPanel !== 'undefined' && AIPanel.expand) AIPanel.expand();
+        } else if (mode === 'tutor') {
+            // Render the Teaching Tutor into its docked panel (once is enough;
+            // re-rendering is harmless but we keep the conversation).
+            if (typeof EduTutor !== 'undefined' && EduTutor.render) {
+                const body = document.getElementById('tutor-panel-body');
+                if (body && !body.querySelector('.tutor-page')) EduTutor.render();
+            }
         }
     }
 
@@ -162,6 +180,9 @@ const ModeManager = (function () {
         const cur = get();
         _applyBodyClass(cur);
         _renderSwitcher();
+        // Open the mode's right-side panel on boot (deferred so AIPanel/EduTutor
+        // and the routed chart have finished initializing).
+        if (cur) setTimeout(() => _activateMode(cur), 0);
         return cur;
     }
 

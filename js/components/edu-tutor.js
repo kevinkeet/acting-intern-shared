@@ -240,7 +240,10 @@ const EduTutor = (function () {
 
     // ── Render ─────────────────────────────────────────────────────────
     function render() {
-        const content = document.getElementById('main-content');
+        // Render into the docked right-side tutor panel when present (tutor
+        // mode shows the chart in main-content alongside this panel); fall
+        // back to main-content otherwise.
+        const content = document.getElementById('tutor-panel-body') || document.getElementById('main-content');
         if (!content) return;
         _syncBodyClass();
 
