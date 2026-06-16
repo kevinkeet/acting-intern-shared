@@ -11,6 +11,16 @@ const AssessmentStart = {
         const root = document.getElementById('main-content');
         if (!root) return;
 
+        // Informed-consent + access-code gate (once per browser session).
+        // Admins/proctors skip it. The access code is the participant identifier
+        // saved with every result and chat log.
+        const consented = sessionStorage.getItem('assessment-consented') === '1';
+        const isAdmin = (typeof UserCode !== 'undefined' && UserCode.isAdmin && UserCode.isAdmin());
+        if (!consented && !isAdmin) {
+            this._renderConsent(root);
+            return;
+        }
+
         // No auth gate. The site-level password gate already controls access.
         // If Supabase happens to be signed in, attempts persist centrally; if
         // not, attempts run in-memory and results are viewable in this tab
@@ -55,6 +65,87 @@ const AssessmentStart = {
         ]);
         this._renderResume(resume);
         this._renderCaseList(cases);
+    },
+
+    /**
+     * Informed consent + access-code entry. Shown before the case list on
+     * first entry to Assessment mode each session. The access code is the
+     * participant identifier; it is saved with every response, score, and
+     * chat log via UserCode.
+     */
+    _renderConsent(root) {
+        root.innerHTML = `
+            <div class="assessment-consent-page">
+                <div class="assessment-consent-card">
+                    <div class="assessment-consent-brand">Acting Intern — Research Study</div>
+                    <h1>Informed Consent</h1>
+                    <div class="assessment-consent-body">
+                        <p>You are invited to take part in an educational research study examining how
+                        physicians use AI tools to reason through clinical cases. Participation is voluntary.</p>
+                        <ul>
+                            <li><strong>What you'll do:</strong> work through one or more simulated clinical
+                            cases, using the built-in AI assistant as you see fit, and submit written answers.
+                            Plan for roughly 30–90 minutes of uninterrupted time.</li>
+                            <li><strong>What is recorded:</strong> your written responses, your scores, and a
+                            complete log of your interactions with the AI assistant (your messages and its
+                            replies). This is the data the study analyzes.</li>
+                            <li><strong>Privacy:</strong> all patients are synthetic — there is no real patient
+                            data (no PHI). Your data is stored under the access code you enter below, not your name.</li>
+                            <li><strong>Voluntary:</strong> you may stop at any time. Completing a case means you
+                            consent to your responses and interaction logs being used for research.</li>
+                        </ul>
+                    </div>
+                    <form id="assessment-consent-form" autocomplete="off">
+                        <label class="assessment-consent-agree">
+                            <input type="checkbox" id="assessment-consent-check">
+                            <span>I have read the above and agree to participate.</span>
+                        </label>
+                        <label class="assessment-consent-code-label" for="assessment-access-code">Access code</label>
+                        <p class="assessment-consent-code-help">
+                            Enter the code provided for the study (3–32 characters: letters, digits, <code>_</code>, <code>-</code>).
+                            Your results are saved under this code.
+                        </p>
+                        <input type="text" id="assessment-access-code" placeholder="your-access-code"
+                            spellcheck="false" autocapitalize="off" maxlength="32" autocomplete="off">
+                        <div id="assessment-consent-error" class="assessment-consent-error" aria-live="polite"></div>
+                        <button type="submit" id="assessment-consent-continue" class="btn btn-primary">
+                            Agree &amp; continue
+                        </button>
+                    </form>
+                </div>
+            </div>
+        `;
+        if (typeof App !== 'undefined' && App.refreshIcons) App.refreshIcons();
+
+        // Prefill an existing code if one is already stored.
+        const codeInput = document.getElementById('assessment-access-code');
+        if (codeInput && typeof UserCode !== 'undefined' && UserCode.get && UserCode.get()) {
+            codeInput.value = UserCode.get();
+        }
+        const form = document.getElementById('assessment-consent-form');
+        if (form) {
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                this._submitConsent();
+            });
+        }
+    },
+
+    _submitConsent() {
+        const errEl = document.getElementById('assessment-consent-error');
+        const checked = document.getElementById('assessment-consent-check');
+        const codeInput = document.getElementById('assessment-access-code');
+        const show = (m) => { if (errEl) errEl.textContent = m || ''; };
+        if (!checked || !checked.checked) { show('Please confirm you agree to participate.'); return; }
+        try {
+            UserCode.set((codeInput && codeInput.value) || '');
+        } catch (err) {
+            show(err.message);
+            if (codeInput) { codeInput.focus(); codeInput.select(); }
+            return;
+        }
+        sessionStorage.setItem('assessment-consented', '1');
+        this.render();
     },
 
     _renderAuthGate(root) {

@@ -15678,3 +15678,33 @@ body.mode-tutor #patient-banner { display: none !important; }
 body:not(.mode-assessment) .assessment-cta-banner,
 body:not(.mode-assessment) .assessment-nav-section { display: none !important; }
 
+/* Informed-consent + access-code screen (assessment entry) */
+.assessment-consent-page { display: flex; justify-content: center; padding: 32px 20px 64px; }
+.assessment-consent-card {
+    width: 100%; max-width: 680px;
+    background: var(--bg-white); border: 1px solid var(--border-light);
+    border-radius: 14px; padding: 32px 34px;
+    box-shadow: 0 8px 30px rgba(13, 33, 55, 0.08);
+}
+.assessment-consent-brand {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--primary-light); margin-bottom: 6px;
+}
+.assessment-consent-card h1 { font-size: 24px; font-weight: 700; color: var(--text-primary); margin: 0 0 16px; }
+.assessment-consent-body p { font-size: 14px; line-height: 1.6; color: var(--text-secondary); margin: 0 0 12px; }
+.assessment-consent-body ul { margin: 0 0 8px; padding-left: 20px; }
+.assessment-consent-body li { font-size: 14px; line-height: 1.55; color: var(--text-secondary); margin-bottom: 8px; }
+.assessment-consent-body strong { color: var(--text-primary); }
+#assessment-consent-form { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-light); }
+.assessment-consent-agree { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: var(--text-primary); cursor: pointer; margin-bottom: 18px; }
+.assessment-consent-agree input { margin-top: 3px; width: 16px; height: 16px; flex: 0 0 auto; cursor: pointer; }
+.assessment-consent-code-label { display: block; font-size: 13px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+.assessment-consent-code-help { font-size: 12.5px; color: var(--text-muted); margin: 0 0 8px; }
+#assessment-access-code {
+    width: 100%; box-sizing: border-box; font-size: 15px; padding: 10px 12px;
+    border: 1px solid var(--border-medium); border-radius: 8px; margin-bottom: 6px;
+}
+#assessment-access-code:focus { outline: none; border-color: var(--primary-light); box-shadow: 0 0 0 3px rgba(43, 108, 176, 0.15); }
+.assessment-consent-error { color: #c0392b; font-size: 13px; min-height: 18px; margin: 4px 0 10px; }
+#assessment-consent-continue { width: 100%; padding: 11px; font-size: 15px; }
+
