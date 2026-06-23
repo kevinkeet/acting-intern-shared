@@ -52,7 +52,7 @@
       "author": "Eun-Ji Lee, RD, CSP, CNSC",
       "department": "Clinical Nutrition",
       "encounter": "ENC012",
-      "preview": "HD4. Nutrition assessment with anthropometrics (BMI 15.7, 30.3% weight loss from UBW), lab review (albumin 1.6, prealbumin 6, micronutrient panel), and physical findings. Cautious enteral feeding plan via NG: Nutren 1.0 starting at 10 kcal/kg/d with daily advance, thiamine before carb load, q6h electrolyte monitoring."
+      "preview": "HD4. Nutrition assessment with anthropometrics (BMI 15.7, 30.3% weight loss from UBW), lab review (albumin 0.7, prealbumin 6, micronutrient panel), and physical findings. Cautious enteral feeding plan via NG: Nutren 1.0 starting at 10 kcal/kg/d with daily advance, thiamine before carb load, q6h electrolyte monitoring."
     },
     {
       "id": "NOTE014",
@@ -79,7 +79,7 @@
       "author": "Dr. David Park / Dr. Maria Castro / Dr. Sarah Beckman",
       "department": "Internal Medicine (Hopkins inpatient)",
       "encounter": "ENC012",
-      "preview": "Admission H&P for 23F with active SLE presenting from home in extremis: BMI 15.7 (30.3% weight loss), anasarca, diffuse scaling dermatosis, proximal weakness 2-3/5 with head lag, dysphonia, oral ulcers, mild hypothermia. Labs: Hgb 7.8, WBC 2.30, albumin 1.6, prealbumin 6, CK 2360, anti-dsDNA 48, C3 58, C4 5, multiple electrolyte derangements. NPO, cautious IVF, thiamine, multi-consult workup planned."
+      "preview": "Admission H&P for 23F with active SLE presenting from home in extremis: BMI 15.7 (30.3% weight loss), anasarca, diffuse scaling dermatosis, proximal weakness 2-3/5 with head lag, dysphonia, oral ulcers, mild hypothermia. Labs: Hgb 7.8, WBC 2.30, albumin 0.7, prealbumin 6, normal CK with elevated aldolase, anti-dsDNA 48, C3 58, C4 5, multiple electrolyte derangements."
     },
     {
       "id": "NOTE011",
@@ -97,7 +97,7 @@
       "author": "Dr. James Tran",
       "department": "Emergency Department",
       "encounter": "ENC010",
-      "preview": "23F with active SLE on HCQ/MMF/prednisone presenting with new oropharyngeal dysphagia + proximal weakness + voice change + 18.9% weight loss (now 41.2 kg). CK 1840, aldolase 22, anti-dsDNA 38, low complements, mild proteinuria, oral ulcer. Admitted for inpatient workup."
+      "preview": "23F with active SLE on HCQ/MMF/prednisone presenting with new oropharyngeal dysphagia + proximal weakness + voice change + 18.9% weight loss (now 41.2 kg). normal CK, aldolase 22, anti-dsDNA 38, low complements, mild proteinuria, oral ulcer. Admitted for inpatient workup."
     },
     {
       "id": "NOTE009",
