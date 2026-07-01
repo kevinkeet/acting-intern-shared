@@ -17,6 +17,9 @@ const AssessmentPanel = {
     _tickInterval: null,
     _expiredHandled: false,
     _gradingPromptIds: new Set(),
+    _draftTimer: null,
+    _beforeUnloadHandler: null,
+    _pendingWrites: 0,
 
     renderActive() {
         if (!AssessmentEngine.isActive()) {
@@ -29,6 +32,60 @@ const AssessmentPanel = {
         this._renderChartArea();
         this._startTicker();
         this._attachEngineListener();
+        this._attachUnloadGuard();
+    },
+
+    // ── draft autosave ──────────────────────────────────────────────────
+    // Every keystroke is debounced into localStorage so a refresh or crash
+    // never loses a participant's in-progress answer.
+
+    _draftKey() {
+        const cur = AssessmentEngine.getCurrent();
+        if (!cur || !cur.prompt) return null;
+        return 'assessment-draft:' + cur.attempt.id + ':' + cur.prompt.id;
+    },
+
+    _saveDraftLocal() {
+        const key = this._draftKey();
+        const input = document.getElementById('assessment-response-input');
+        if (!key || !input) return;
+        try {
+            if (input.value) localStorage.setItem(key, input.value);
+            else localStorage.removeItem(key);
+        } catch (e) { /* storage full — non-fatal */ }
+    },
+
+    _loadDraftLocal() {
+        const key = this._draftKey();
+        if (!key) return null;
+        try { return localStorage.getItem(key); } catch (e) { return null; }
+    },
+
+    _clearDraftLocal() {
+        const key = this._draftKey();
+        if (!key) return;
+        try { localStorage.removeItem(key); } catch (e) { /* ignore */ }
+    },
+
+    // ── unload guard ────────────────────────────────────────────────────
+
+    _attachUnloadGuard() {
+        if (this._beforeUnloadHandler) return;
+        this._beforeUnloadHandler = (e) => {
+            if (!AssessmentEngine.isActive()) return;
+            // The draft is autosaved locally, but leaving mid-attempt still
+            // deserves a deliberate confirmation.
+            e.preventDefault();
+            e.returnValue = '';
+            return '';
+        };
+        window.addEventListener('beforeunload', this._beforeUnloadHandler);
+    },
+
+    _detachUnloadGuard() {
+        if (!this._beforeUnloadHandler) return;
+        window.removeEventListener('beforeunload', this._beforeUnloadHandler);
+        this._beforeUnloadHandler = null;
     },
 
     _renderShell() {
@@ -99,6 +156,7 @@ const AssessmentPanel = {
         App.refreshIcons();
         document.getElementById('assessment-pause-btn').addEventListener('click', () => this._togglePause());
         document.getElementById('assessment-abandon-btn').addEventListener('click', () => this._confirmAbandon());
+        this._renderSyncPill(); // bar re-render wipes the pill — restore it
     },
 
     _renderProgressDots(cur) {
@@ -156,7 +214,12 @@ const AssessmentPanel = {
 
         const minLength = prompt.minLength || 0;
         const typeLabel = this._labelForType(prompt.type);
-        const existingText = existing && existing.response_text ? existing.response_text : '';
+        // Prefer a locally-autosaved draft (it is always at least as new as the
+        // last submitted text — drafts are cleared on successful submit).
+        const draft = this._loadDraftLocal();
+        const existingText = (draft != null && draft !== '')
+            ? draft
+            : (existing && existing.response_text ? existing.response_text : '');
 
         area.innerHTML = `
             ${showBrief ? `
@@ -205,7 +268,12 @@ const AssessmentPanel = {
     _wirePromptControls() {
         const input = document.getElementById('assessment-response-input');
         if (input) {
-            input.addEventListener('input', () => this._updateCharCount());
+            input.addEventListener('input', () => {
+                this._updateCharCount();
+                // Debounced local autosave — survives refresh/crash.
+                if (this._draftTimer) clearTimeout(this._draftTimer);
+                this._draftTimer = setTimeout(() => this._saveDraftLocal(), 400);
+            });
         }
         const submit = document.getElementById('assessment-submit-btn');
         if (submit) submit.addEventListener('click', () => this._submitCurrent());
@@ -276,6 +344,12 @@ const AssessmentPanel = {
         if (!cur) return;
         const min = cur.prompt.minLength || 0;
         if (text.length < min) {
+            // Persistent inline feedback (a toast alone disappears and leaves
+            // the participant wondering why Submit "does nothing").
+            const needed = min - text.length;
+            if (status) {
+                status.innerHTML = `<span class="assessment-status-error">Your response is ${text.length} characters — at least ${min} are required (${needed} more to go).</span>`;
+            }
             App.showToast(`Response must be at least ${min} characters.`, 'error');
             return;
         }
@@ -285,6 +359,8 @@ const AssessmentPanel = {
         try {
             await AssessmentEngine.submitResponse(text);
             this._gradingPromptIds.add(cur.prompt.id);
+            // Submitted — the local draft for this prompt is no longer needed.
+            this._clearDraftLocal();
 
             // Advance cursor
             const result = await AssessmentEngine.advance();
@@ -319,6 +395,7 @@ const AssessmentPanel = {
             try {
                 App.showLoading('Finalizing scores…');
                 const { attemptId } = await AssessmentEngine.complete();
+                this._detachUnloadGuard();
                 router.navigate('/assessment/results/' + attemptId);
             } catch (err) {
                 App.showToast('Could not finalize: ' + err.message, 'error');
@@ -342,6 +419,7 @@ const AssessmentPanel = {
         try {
             await AssessmentEngine.abandon();
             this._stopTicker();
+            this._detachUnloadGuard();
             App.showToast('Attempt abandoned.', 'info');
             router.navigate('/assessment/start');
         } catch (err) {
@@ -380,6 +458,7 @@ const AssessmentPanel = {
         try {
             if (text) {
                 await AssessmentEngine.submitResponse(text);
+                this._clearDraftLocal();
             }
             const result = await AssessmentEngine.advance();
             if (result.atEnd) this._renderFinishConfirm();
@@ -399,8 +478,36 @@ const AssessmentPanel = {
         this._engineUnsub = AssessmentEngine.on((event, payload) => {
             if (event === 'response-graded') {
                 this._gradingPromptIds.delete(payload.promptId);
+            } else if (event === 'grading-failed') {
+                // Grading retries at finalize; the participant should still
+                // know their answer was SAVED (the scary part is data loss).
+                this._gradingPromptIds.delete(payload.promptId);
+                App.showToast('Your answer is saved. Automatic grading hit an error — it will be retried when you finish.', 'info', 6000);
+            } else if (event === 'sync-status') {
+                this._pendingWrites = payload && payload.pending ? payload.pending : 0;
+                this._renderSyncPill();
             }
         });
+    },
+
+    // Small persistent indicator when writes are queued for retry (offline /
+    // rate-limited). Reassures the participant nothing is being lost.
+    _renderSyncPill() {
+        let pill = document.getElementById('assessment-sync-pill');
+        if (!this._pendingWrites) {
+            if (pill) pill.remove();
+            return;
+        }
+        if (!pill) {
+            const bar = document.querySelector('.assessment-bar-right');
+            if (!bar) return;
+            pill = document.createElement('span');
+            pill.id = 'assessment-sync-pill';
+            pill.className = 'assessment-paused-pill';
+            pill.title = 'Some saves are queued and will retry automatically. Do not close this tab.';
+            bar.prepend(pill);
+        }
+        pill.textContent = 'SYNCING (' + this._pendingWrites + ')';
     },
 
     _fmtTime(secs) {

@@ -110,7 +110,9 @@ const ClaudeAPI = {
             const data = await response.json();
             return data;
         } catch (error) {
-            console.error('Claude API Error:', error);
+            // Log only the message — never the full error object (a fetch error
+            // can carry request config including the x-api-key header).
+            console.error('Claude API Error:', error && error.message ? error.message : String(error));
             throw error;
         }
     },

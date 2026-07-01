@@ -15,8 +15,10 @@ const SupabaseSync = (() => {
   // ── Constants ───────────────────────────────────────────────────────
   const DEFAULT_URL = 'https://piwoinyrlicvndpsmtde.supabase.co';
 
+  // NOTE: 'anthropic-api-key' is deliberately NOT synced. The decrypted key
+  // must stay in this browser only (it comes from the access gate or BYOK);
+  // silently copying it to the cloud was a consent/security problem.
   const SYNC_KEYS = [
-    'anthropic-api-key',
     'ai-model-chat',
     'ai-model-analysis',
     'ai-assistant-mode',
@@ -59,7 +61,9 @@ const SupabaseSync = (() => {
 
   function collectSyncData() {
     const data = {
-      api_key: localStorage.getItem('anthropic-api-key') || null,
+      // Always null: the API key is never synced, and writing null scrubs any
+      // copy stored by earlier versions of this file.
+      api_key: null,
       model_preferences: {
         chat: localStorage.getItem('ai-model-chat'),
         analysis: localStorage.getItem('ai-model-analysis'),
@@ -115,6 +119,9 @@ const SupabaseSync = (() => {
 
     _client = supabase.createClient(url, key);
     log('Client created for', url);
+    // Present any already-chosen participant code on every request (RLS for
+    // code-based rows is scoped to this header — migration 004).
+    _applyParticipantCodeHeader();
 
     // Check existing session
     try {
@@ -220,13 +227,9 @@ const SupabaseSync = (() => {
       if (error) { warn('Load settings error:', error.message); return; }
       if (!data) { log('No cloud settings found, using local'); return; }
 
-      // api_key
-      if (data.api_key) {
-        localStorage.setItem('anthropic-api-key', data.api_key);
-        if (typeof AICoworker !== 'undefined' && AICoworker.saveApiKey) {
-          AICoworker.saveApiKey(data.api_key);
-        }
-      }
+      // api_key: intentionally NOT restored from the cloud. The key is
+      // browser-local only (access gate / BYOK). Old cloud copies are
+      // scrubbed by collectSyncData() writing api_key: null.
 
       // model_preferences
       if (data.model_preferences) {
@@ -451,10 +454,35 @@ const SupabaseSync = (() => {
     return el.innerHTML;
   }
 
+  // ── Participant-code header ─────────────────────────────────────────
+  // Code-based RLS (migration 004) scopes SELECT/UPDATE of anonymous rows to
+  // the code presented in this header. Sets it on the underlying PostgREST
+  // client so every .from() request carries it.
+  function _applyParticipantCodeHeader() {
+    if (!_client) return;
+    let code = null;
+    try { code = localStorage.getItem('user-code') || null; } catch (e) { /* ignore */ }
+    try {
+      const rest = _client.rest;
+      if (rest && rest.headers) {
+        if (code) rest.headers['x-participant-code'] = code;
+        else delete rest.headers['x-participant-code'];
+      }
+    } catch (e) {
+      warn('Could not set participant-code header:', e.message);
+    }
+  }
+
+  // Called by UserCode.set()/clear() so the header tracks the current code.
+  function setParticipantCode() {
+    _applyParticipantCodeHeader();
+  }
+
   // ── Public API ──────────────────────────────────────────────────────
 
   return {
     init,
+    setParticipantCode,
     signUp,
     signIn,
     signInWithGoogle,

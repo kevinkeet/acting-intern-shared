@@ -35,11 +35,23 @@
             throw new Error('Code must be 3–32 characters, letters/digits/underscore/hyphen only.');
         }
         localStorage.setItem(STORAGE_KEY, trimmed);
+        _syncHeader();
         return trimmed;
     }
 
     function clear() {
         localStorage.removeItem(STORAGE_KEY);
+        _syncHeader();
+    }
+
+    // Keep the Supabase client's x-participant-code header in step with the
+    // stored code (code-based RLS is scoped to it — migration 004).
+    function _syncHeader() {
+        try {
+            if (typeof SupabaseSync !== 'undefined' && SupabaseSync.setParticipantCode) {
+                SupabaseSync.setParticipantCode();
+            }
+        } catch (e) { /* non-fatal */ }
     }
 
     function isAdmin() {

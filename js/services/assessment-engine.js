@@ -102,6 +102,75 @@ const AssessmentEngine = (() => {
         };
     }
 
+    // ── write-retry queue ──────────────────────────────────────────────
+    // Failed Supabase writes are queued in localStorage and retried in the
+    // background so a rate-limit or network blip never silently drops RCT
+    // data. The panel listens for 'sync-status' to show a saving indicator.
+
+    const RETRY_KEY = 'assessment-pending-writes';
+    const RETRY_DELAY_MS = 8000;
+    let _retryTimer = null;
+
+    function _loadQueue() {
+        try { return JSON.parse(localStorage.getItem(RETRY_KEY)) || []; }
+        catch (e) { return []; }
+    }
+    function _saveQueue(q) {
+        try { localStorage.setItem(RETRY_KEY, JSON.stringify(q)); }
+        catch (e) { /* storage full — keep in-memory only */ }
+    }
+
+    function _enqueueWrite(kind, payload) {
+        let q = _loadQueue();
+        // Supersede older queued writes for the same target so retries apply
+        // only the latest state.
+        if (kind === 'attempt-update') {
+            q = q.filter((it) => !(it.kind === kind && it.payload.id === payload.id));
+        } else if (kind === 'response-upsert') {
+            q = q.filter((it) => !(it.kind === kind
+                && it.payload.attempt_id === payload.attempt_id
+                && it.payload.prompt_id === payload.prompt_id));
+        }
+        q.push({ kind, payload, at: Date.now() });
+        _saveQueue(q);
+        WARN('Write failed — queued for retry (' + kind + '). Pending:', q.length);
+        _emit('sync-status', { pending: q.length });
+        _scheduleRetry();
+    }
+
+    function _scheduleRetry() {
+        if (_retryTimer) return;
+        _retryTimer = setTimeout(() => {
+            _retryTimer = null;
+            _flushQueue().catch(() => {});
+        }, RETRY_DELAY_MS);
+    }
+
+    async function _flushQueue() {
+        const q = _loadQueue();
+        if (!q.length) { _emit('sync-status', { pending: 0 }); return; }
+        const sb = _sb();
+        if (!sb) { _scheduleRetry(); return; }
+        const remaining = [];
+        for (const item of q) {
+            try {
+                let error = null;
+                if (item.kind === 'attempt-update') {
+                    ({ error } = await sb.from('test_attempts')
+                        .update(item.payload.patch).eq('id', item.payload.id));
+                } else if (item.kind === 'response-upsert') {
+                    ({ error } = await sb.from('assessment_responses')
+                        .upsert(item.payload, { onConflict: 'attempt_id,prompt_id' }));
+                }
+                if (error) remaining.push(item);
+            } catch (e) { remaining.push(item); }
+        }
+        _saveQueue(remaining);
+        _emit('sync-status', { pending: remaining.length });
+        if (remaining.length) _scheduleRetry();
+        else LOG('Retry queue drained.');
+    }
+
     // ── DB I/O ─────────────────────────────────────────────────────────
 
     async function _insertAttempt(caseId) {
@@ -199,18 +268,24 @@ const AssessmentEngine = (() => {
         Object.assign(_attempt, patch);
         const sb = _sb();
         if (!sb || _isLocalAttempt()) return;
-        const { error } = await sb
-            .from('test_attempts')
-            .update({
-                status: _attempt.status,
-                current_assessment: _attempt.current_assessment,
-                current_prompt: _attempt.current_prompt,
-                time_used_seconds: _attempt.time_used_seconds,
-                total_score: _attempt.total_score,
-                completed_at: _attempt.completed_at,
-            })
-            .eq('id', _attempt.id);
-        if (error) WARN('flushAttempt error:', error.message);
+        const updateBody = {
+            status: _attempt.status,
+            current_assessment: _attempt.current_assessment,
+            current_prompt: _attempt.current_prompt,
+            time_used_seconds: _attempt.time_used_seconds,
+            total_score: _attempt.total_score,
+            completed_at: _attempt.completed_at,
+        };
+        let resp;
+        try {
+            resp = await sb.from('test_attempts').update(updateBody).eq('id', _attempt.id);
+        } catch (e) {
+            resp = { error: e };
+        }
+        if (resp.error) {
+            WARN('flushAttempt error:', resp.error.message);
+            _enqueueWrite('attempt-update', { id: _attempt.id, patch: updateBody });
+        }
     }
 
     async function _insertOrUpdateResponse(payload) {
@@ -221,15 +296,22 @@ const AssessmentEngine = (() => {
             const existing = _responses.get(payload.prompt_id) || {};
             return { ...existing, ...payload };
         }
-        // No read-back: code-based rows aren't SELECT-able under RLS, so a
-        // returning .select() would falsely look like a failure. We already
-        // hold the full payload, so return it on success.
-        const { error } = await sb
-            .from('assessment_responses')
-            .upsert(payload, { onConflict: 'attempt_id,prompt_id' });
-        if (error) {
-            WARN('upsert response error:', error.message);
-            return null;
+        // No read-back: code-based rows are only SELECT-able with the matching
+        // participant-code header, so a returning .select() could falsely look
+        // like a failure. We already hold the full payload, so return it.
+        let resp;
+        try {
+            resp = await sb
+                .from('assessment_responses')
+                .upsert(payload, { onConflict: 'attempt_id,prompt_id' });
+        } catch (e) {
+            resp = { error: e };
+        }
+        if (resp.error) {
+            // NEVER drop the response: keep it in memory AND queue the write
+            // for background retry. The participant's answer survives either way.
+            WARN('upsert response error:', resp.error.message);
+            _enqueueWrite('response-upsert', payload);
         }
         return payload;
     }
@@ -299,6 +381,10 @@ const AssessmentEngine = (() => {
 
         await _activatePerCase(caseId, _attempt.current_assessment);
 
+        // Drain any writes left over from a previous session (e.g., the tab
+        // was closed while a submit retry was pending).
+        _flushQueue().catch(() => {});
+
         LOG('Started attempt', _attempt.id, 'on case', caseId);
         _emit('started', { attempt: _attempt, caseDef: _caseDef });
         return _attempt;
@@ -328,6 +414,7 @@ const AssessmentEngine = (() => {
         _lastAdvanceAt = Date.now();
         _isPaused = false;
         await _activatePerCase(_attempt.case_id, _attempt.current_assessment);
+        _flushQueue().catch(() => {});
         LOG('Resumed attempt', _attempt.id);
         _emit('resumed', { attempt: _attempt, caseDef: _caseDef });
         return _attempt;
@@ -409,8 +496,19 @@ const AssessmentEngine = (() => {
                 ]);
             } catch (e) { /* proceed regardless */ }
         }
-        // Pull all responses fresh to compute final score.
-        const rows = await _loadResponses(_attempt.id);
+        // Drain any queued writes first so the freshly-pulled rows are current.
+        try { await _flushQueue(); } catch (e) { /* retries continue in background */ }
+        // Pull all responses fresh to compute final score — then merge with the
+        // in-memory map so a failed/empty SELECT can never zero out the score.
+        const loaded = await _loadResponses(_attempt.id);
+        const byPrompt = new Map(loaded.map((r) => [r.prompt_id, r]));
+        for (const [pid, row] of _responses) {
+            const existing = byPrompt.get(pid);
+            if (!existing || (typeof existing.score !== 'number' && typeof row.score === 'number')) {
+                byPrompt.set(pid, row);
+            }
+        }
+        const rows = Array.from(byPrompt.values());
         const score = _computeOverallScore(rows);
         await _flushAttempt({
             status: 'completed',
