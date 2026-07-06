@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#ffffff">
+  <title>SAT Daily — Quick games to boost your score</title>
+  <meta name="description" content="Five-minute daily games that sharpen SAT math and reading/writing skills. Vocab, Connections, a Mini quiz, and a math Sprint — with streaks and progress tracking.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23121212'/><text x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='Georgia'>S</text></svg>">
+  <link rel="stylesheet" href="css/style.css?v=20260706">
+</head>
+<body>
+  <header class="topbar">
+    <button class="topbar-btn" id="btn-home" aria-label="Home" title="Home">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>
+    </button>
+    <a class="masthead" href="#/">SAT&nbsp;Daily</a>
+    <button class="topbar-btn" id="btn-stats" aria-label="Stats" title="Stats">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 20V10"/><path d="M12 20V4"/><path d="M19 20v-7"/></svg>
+    </button>
+  </header>
+
+  <main id="view" class="view"></main>
+
+  <div id="toast-root" aria-live="polite"></div>
+  <div id="modal-root"></div>
+
+  <script src="js/data/vocab.js?v=20260706"></script>
+  <script src="js/data/connections-puzzles.js?v=20260706"></script>
+  <script src="js/data/questions.js?v=20260706"></script>
+  <script src="js/core.js?v=20260706"></script>
+  <script src="js/games/vocab-game.js?v=20260706"></script>
+  <script src="js/games/connections-game.js?v=20260706"></script>
+  <script src="js/games/mini-quiz.js?v=20260706"></script>
+  <script src="js/games/sprint.js?v=20260706"></script>
+  <script src="js/app.js?v=20260706"></script>
+</body>
+</html>
