@@ -154,7 +154,7 @@
     function finish(won) {
       over = true;
       store.recordVocab(won, guesses.length);
-      store.recordTopic('vocabulary', won);
+      store.recordSkill('craft-wic', won);
       if (!practice) {
         store.completeDaily('vocab', { won, guesses });
       }

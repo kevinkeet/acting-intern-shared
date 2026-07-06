@@ -1,18 +1,24 @@
-// SAT Daily — home + stats pages.
+// SAT Daily — home + progress pages.
 (function () {
-  const { el, todayStr, dayIndex, modal } = SAT.util;
+  const { el, dayIndex, modal } = SAT.util;
   const store = SAT.store;
 
   const GAMES = [
+    { key: 'drill', route: '/focus', cls: 'mini', icon: '🎯', name: 'Focus',
+      desc: 'Today’s skill on the 30-day syllabus: learn the card, drill 4 questions.',
+      result: (r) => (window.SAT_SKILLS ? window.SAT_SKILLS.name(r.skill) : '') + ' — ' + r.correct + '/' + r.total },
+    { key: 'mini', route: '/mini', cls: 'mini', icon: '🔵', name: 'The Mini',
+      desc: '5 SAT questions picked for you: focus, weak spots, something new.',
+      result: (r) => r.correct + '/' + r.total + ' in ' + Math.floor(r.seconds / 60) + ':' + String(r.seconds % 60).padStart(2, '0') },
     { key: 'vocab', route: '/vocab', cls: 'vocab', icon: '🟩', name: 'Vocab',
       desc: 'Guess the SAT word from its definition. Wordle rules, test-day payoff.',
       result: (r) => (r.won ? 'Solved in ' + r.guesses.length + '/6' : 'Revealed — see the word') },
+    { key: 'editor', route: '/editor', cls: 'sprint', icon: '✏️', name: 'The Editor',
+      desc: '90 seconds of grammar fixes — punctuation, agreement, usage.',
+      result: (r) => r.score + ' fixed in 90s' },
     { key: 'conn', route: '/connections', cls: 'conn', icon: '🟪', name: 'Connections',
       desc: 'Sort 16 terms into 4 groups — math and reading mixed together.',
       result: (r) => (r.won ? 'Solved with ' + r.mistakes + ' mistake' + (r.mistakes === 1 ? '' : 's') : 'Out of guesses') },
-    { key: 'mini', route: '/mini', cls: 'mini', icon: '🔵', name: 'The Mini',
-      desc: '5 real SAT questions against the clock, with explanations.',
-      result: (r) => r.correct + '/' + r.total + ' in ' + Math.floor(r.seconds / 60) + ':' + String(r.seconds % 60).padStart(2, '0') },
     { key: 'sprint', route: '/sprint', cls: 'sprint', icon: '⚡', name: 'Sprint',
       desc: '60 seconds of mental math. No calculator, no mercy.',
       result: (r) => r.score + ' correct in 60s' }
@@ -20,10 +26,15 @@
 
   // ---------- Home ----------
   SAT.router.register('/', (view) => {
+    store.ensurePlanStart();
+    const SK = window.SAT_SKILLS;
     const now = new Date();
     const dateLabel = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
     const streak = store.streak();
     const doneCount = GAMES.filter((g) => store.dailyRecord(g.key)).length;
+    const focusId = SAT.curriculum.focusSkill(0);
+    const focusDomain = SK.domainOf(focusId);
+    const planDay = store.planDay();
 
     view.appendChild(el('p', { class: 'home-date' }, [dateLabel + ' · Puzzle #' + (dayIndex() + 1)]));
     view.appendChild(el('h1', { class: 'home-greeting' }, [
@@ -31,7 +42,14 @@
     ]));
     view.appendChild(el('div', { class: 'streak-chip' }, [
       '🔥 ' + streak + '-day streak',
-      doneCount > 0 ? ' · ' + doneCount + '/' + GAMES.length + ' played today' : ''
+      ' · Day ' + Math.min(planDay, 120) + ' of 120',
+      doneCount > 0 ? ' · ' + doneCount + '/' + GAMES.length + ' played' : ''
+    ]));
+
+    view.appendChild(el('button', { class: 'focus-banner', onclick: () => SAT.router.navigate('/focus') }, [
+      el('span', { class: 'focus-banner-label' }, ['Today’s focus']),
+      el('span', { class: 'focus-banner-skill' }, [SK.name(focusId)]),
+      el('span', { class: 'focus-banner-domain' }, [(focusDomain ? focusDomain.name : '') + ' · ' + coverageSummary()])
     ]));
 
     const grid = el('div', { class: 'game-grid' });
@@ -51,125 +69,94 @@
     view.appendChild(grid);
 
     view.appendChild(el('div', { class: 'home-footer' }, [
-      el('button', { class: 'btn secondary', onclick: () => SAT.router.navigate('/stats') }, ['📊 My progress'])
+      el('button', { class: 'btn secondary', onclick: () => SAT.router.navigate('/stats') }, ['📊 My syllabus & progress'])
     ]));
   });
 
-  // ---------- Stats ----------
-  const MATH_TOPICS = [
-    ['algebra', 'Algebra'], ['geometry', 'Geometry'], ['data', 'Data & Stats'],
-    ['advanced', 'Advanced Math'], ['mental-math', 'Mental Math']
-  ];
-  const RW_TOPICS = [
-    ['grammar', 'Grammar'], ['vocabulary', 'Vocabulary'], ['reading', 'Reading']
-  ];
-
-  function topicBars(pairs, cls, topics) {
-    const wrap = el('div');
-    let any = false;
-    pairs.forEach(([key, label]) => {
-      const t = topics[key];
-      if (!t || t.t === 0) return;
-      any = true;
-      const pct = Math.round((t.c / t.t) * 100);
-      wrap.appendChild(el('div', { class: 'bar-row' }, [
-        el('span', { class: 'bar-label' }, [label]),
-        el('div', { class: 'bar-track' }, [el('div', { class: 'bar-fill ' + cls, style: 'width:' + pct + '%' })]),
-        el('span', { class: 'bar-val' }, [pct + '% (' + t.c + '/' + t.t + ')'])
-      ]));
-    });
-    if (!any) wrap.appendChild(el('p', { class: 'empty-note' }, ['No questions answered yet — play The Mini or Sprint to build this chart.']));
-    return wrap;
+  function coverageSummary() {
+    const SK = window.SAT_SKILLS;
+    const solid = SK.all.filter((id) => ['solid', 'mastered'].indexOf(store.mastery(id)) !== -1).length;
+    return solid + '/' + SK.all.length + ' skills solid';
   }
 
+  // ---------- Progress / syllabus ----------
+  const MASTERY_LABEL = { new: 'not started', learning: 'learning', solid: 'solid', mastered: 'mastered' };
+
   SAT.router.register('/stats', (view) => {
+    const SK = window.SAT_SKILLS;
     const s = store.raw();
     const g = s.games;
-    const totalPlays = g.vocab.played + g.conn.played + g.mini.played + g.sprint.played;
-    const daysPlayed = Object.keys(s.daily).length;
+    const totalPlays = g.vocab.played + g.conn.played + g.mini.played + g.sprint.played + g.editor.played + g.drill.played;
+    const mastered = SK.all.filter((id) => store.mastery(id) === 'mastered').length;
+    const solid = SK.all.filter((id) => store.mastery(id) === 'solid').length;
 
-    view.appendChild(el('h1', { class: 'page-title' }, ['My progress']));
-    view.appendChild(el('p', { class: 'page-sub' }, ['Everything is saved on this device.']));
+    view.appendChild(el('h1', { class: 'page-title' }, ['My syllabus']));
+    view.appendChild(el('p', { class: 'page-sub' }, ['Every skill the Digital SAT tests, and where you stand. Goal: all 30 mastered.']));
 
     view.appendChild(el('div', { class: 'stat-hero' }, [
       el('div', { class: 'stat-box' }, [el('div', { class: 'num' }, ['🔥' + store.streak()]), el('div', { class: 'lbl' }, ['Day streak'])]),
-      el('div', { class: 'stat-box' }, [el('div', { class: 'num' }, [String(daysPlayed)]), el('div', { class: 'lbl' }, ['Days played'])]),
-      el('div', { class: 'stat-box' }, [el('div', { class: 'num' }, [String(totalPlays)]), el('div', { class: 'lbl' }, ['Games played'])])
+      el('div', { class: 'stat-box' }, [el('div', { class: 'num' }, ['Day ' + Math.min(store.planDay(), 120)]), el('div', { class: 'lbl' }, ['of 120-day plan'])]),
+      el('div', { class: 'stat-box' }, [el('div', { class: 'num' }, [mastered + '/' + SK.all.length]), el('div', { class: 'lbl' }, ['Skills mastered'])])
     ]));
 
-    // Skills
-    const skills = el('div', { class: 'stats-section' }, [el('h3', {}, ['Math skills'])]);
-    skills.appendChild(topicBars(MATH_TOPICS, 'math', s.topics));
-    view.appendChild(skills);
+    // coverage progress bar
+    const pctSolid = Math.round(((mastered + solid) / SK.all.length) * 100);
+    view.appendChild(el('div', { class: 'stats-section' }, [
+      el('div', { class: 'bar-row' }, [
+        el('span', { class: 'bar-label' }, ['Coverage']),
+        el('div', { class: 'bar-track' }, [el('div', { class: 'bar-fill math', style: 'width:' + pctSolid + '%' })]),
+        el('span', { class: 'bar-val' }, [pctSolid + '%'])
+      ]),
+      el('p', { class: 'empty-note' }, ['Skills at “solid” or better. Play Focus daily — it walks the whole syllabus every 30 days.'])
+    ]));
 
-    const rwSkills = el('div', { class: 'stats-section' }, [el('h3', {}, ['Reading & Writing skills'])]);
-    rwSkills.appendChild(topicBars(RW_TOPICS, 'rw', s.topics));
-    view.appendChild(rwSkills);
-
-    // Vocab
-    const vSec = el('div', { class: 'stats-section' }, [el('h3', {}, ['🟩 Vocab'])]);
-    if (g.vocab.played === 0) {
-      vSec.appendChild(el('p', { class: 'empty-note' }, ['Not played yet.']));
-    } else {
-      vSec.appendChild(el('p', { class: 'mini-stat-line' }, [
-        'Played: ', el('b', {}, [String(g.vocab.played)]),
-        ' · Win rate: ', el('b', {}, [Math.round((g.vocab.won / g.vocab.played) * 100) + '%'])
-      ]));
-      const maxDist = Math.max(1, ...g.vocab.dist);
-      g.vocab.dist.forEach((n, i) => {
-        vSec.appendChild(el('div', { class: 'dist-row' }, [
-          el('span', { class: 'g' }, [String(i + 1)]),
-          el('span', {
-            class: 'dist-bar' + (n === maxDist && n > 0 ? ' hl' : ''),
-            style: 'width:' + Math.max(8, (n / maxDist) * 70) + '%'
-          }, [String(n)])
-        ]));
+    ['math', 'rw'].forEach((section) => {
+      view.appendChild(el('h2', { class: 'section-title' }, [section === 'math' ? 'Math' : 'Reading & Writing']));
+      SK.domains.filter((d) => d.section === section).forEach((d) => {
+        const sec = el('div', { class: 'stats-section' }, [
+          el('h3', {}, [d.name + ' ', el('span', { class: 'domain-weight' }, ['~' + d.weight + '% of section'])])
+        ]);
+        d.skills.forEach((sk) => {
+          const st = store.skill(sk.id);
+          const m = store.mastery(sk.id);
+          const acc = Math.round(store.recentAcc(sk.id) * 100);
+          sec.appendChild(el('div', { class: 'skill-row' }, [
+            el('span', { class: 'skill-name' }, [sk.name]),
+            el('div', { class: 'bar-track skill-bar' }, [
+              el('div', { class: 'bar-fill ' + (section === 'math' ? 'math' : 'rw'), style: 'width:' + (st.t ? acc : 0) + '%' })
+            ]),
+            el('span', { class: 'mastery-chip m-' + m }, [MASTERY_LABEL[m]]),
+            el('span', { class: 'skill-count' }, [st.t ? acc + '% · ' + st.t + ' tried' : '—'])
+          ]));
+        });
+        view.appendChild(sec);
       });
-    }
-    view.appendChild(vSec);
+    });
 
-    // Connections
-    const cSec = el('div', { class: 'stats-section' }, [el('h3', {}, ['🟪 Connections'])]);
-    cSec.appendChild(g.conn.played === 0
-      ? el('p', { class: 'empty-note' }, ['Not played yet.'])
-      : el('p', { class: 'mini-stat-line' }, [
-          'Played: ', el('b', {}, [String(g.conn.played)]),
-          ' · Win rate: ', el('b', {}, [Math.round((g.conn.won / g.conn.played) * 100) + '%']),
-          ' · Avg mistakes: ', el('b', {}, [(g.conn.mistakes / g.conn.played).toFixed(1)])
-        ]));
-    view.appendChild(cSec);
+    // Game stats, condensed
+    const gsec = el('div', { class: 'stats-section' }, [el('h3', {}, ['Games'])]);
+    const lines = [];
+    if (g.drill.played) lines.push('🎯 Focus: ' + g.drill.played + ' drills, ' + Math.round((g.drill.correct / Math.max(g.drill.total, 1)) * 100) + '% correct');
+    if (g.mini.played) lines.push('🔵 Mini: ' + g.mini.played + ' quizzes, ' + Math.round((g.mini.correct / Math.max(g.mini.total, 1)) * 100) + '% accuracy' + (g.mini.bestTime !== null ? ', best perfect ' + SAT.quizEngine.fmtTime(g.mini.bestTime) : ''));
+    if (g.vocab.played) lines.push('🟩 Vocab: ' + g.vocab.played + ' played, ' + Math.round((g.vocab.won / g.vocab.played) * 100) + '% solved');
+    if (g.editor.played) lines.push('✏️ Editor: best ' + g.editor.best + ' fixes, avg ' + (g.editor.totalScore / g.editor.played).toFixed(1));
+    if (g.conn.played) lines.push('🟪 Connections: ' + g.conn.played + ' played, ' + Math.round((g.conn.won / g.conn.played) * 100) + '% solved');
+    if (g.sprint.played) lines.push('⚡ Sprint: best ' + g.sprint.best + ', avg ' + (g.sprint.totalScore / g.sprint.played).toFixed(1));
+    if (!lines.length) gsec.appendChild(el('p', { class: 'empty-note' }, ['No games played yet — start with today’s Focus.']));
+    lines.forEach((l) => gsec.appendChild(el('p', { class: 'mini-stat-line' }, [l])));
+    view.appendChild(gsec);
 
-    // Mini
-    const mSec = el('div', { class: 'stats-section' }, [el('h3', {}, ['🔵 The Mini'])]);
-    if (g.mini.played === 0) {
-      mSec.appendChild(el('p', { class: 'empty-note' }, ['Not played yet.']));
-    } else {
-      mSec.appendChild(el('p', { class: 'mini-stat-line' }, [
-        'Quizzes: ', el('b', {}, [String(g.mini.played)]),
-        ' · Accuracy: ', el('b', {}, [Math.round((g.mini.correct / g.mini.total) * 100) + '%']),
-        g.mini.bestTime !== null ? ' · Best perfect time: ' : '',
-        g.mini.bestTime !== null ? el('b', {}, [Math.floor(g.mini.bestTime / 60) + ':' + String(g.mini.bestTime % 60).padStart(2, '0')]) : ''
-      ]));
-    }
-    view.appendChild(mSec);
-
-    // Sprint
-    const spSec = el('div', { class: 'stats-section' }, [el('h3', {}, ['⚡ Sprint'])]);
-    spSec.appendChild(g.sprint.played === 0
-      ? el('p', { class: 'empty-note' }, ['Not played yet.'])
-      : el('p', { class: 'mini-stat-line' }, [
-          'Runs: ', el('b', {}, [String(g.sprint.played)]),
-          ' · Best: ', el('b', {}, [String(g.sprint.best)]),
-          ' · Average: ', el('b', {}, [(g.sprint.totalScore / g.sprint.played).toFixed(1)])
-        ]));
-    view.appendChild(spSec);
+    view.appendChild(el('div', { class: 'stats-section' }, [
+      el('h3', {}, ['The last mile']),
+      el('p', { class: 'mini-stat-line' }, ['This app is your daily engine. In months 2–4, also take full-length timed practice tests in College Board’s Bluebook app — pacing under real conditions is the one skill games can’t teach.'])
+    ]));
 
     view.appendChild(el('div', { class: 'danger-zone' }, [
       el('button', {
         onclick: () => {
           const close = modal(el('div', {}, [
             el('h2', {}, ['Reset all progress?']),
-            el('p', { class: 'sub' }, ['This clears your streak, stats, and today’s games on this device. It can’t be undone.']),
+            el('p', { class: 'sub' }, ['This clears your streak, mastery, and today’s games on this device. It can’t be undone.']),
             el('div', { class: 'btn-row' }, [
               el('button', { class: 'btn', onclick: () => { store.reset(); close(); SAT.router.navigate('/'); } }, ['Yes, reset']),
               el('button', { class: 'btn secondary', onclick: () => close() }, ['Cancel'])

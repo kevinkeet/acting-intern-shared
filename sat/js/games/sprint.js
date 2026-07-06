@@ -7,50 +7,95 @@
   function ri(min, max) { return min + Math.floor(Math.random() * (max - min + 1)); }
   function pick(arr) { return arr[ri(0, arr.length - 1)]; }
 
-  // Each generator returns { q, answer } with an integer answer.
+  // Each generator returns { q, answer, skill } — skill feeds the mastery
+  // tracker (null for pure-arithmetic warmups the SAT doesn't test directly).
   const GENERATORS = [
     function addSub() {
       const a = ri(13, 89), b = ri(12, 78);
       return Math.random() < 0.5
-        ? { q: a + ' + ' + b + ' = ?', answer: a + b }
-        : { q: (a + b) + ' − ' + b + ' = ?', answer: a };
+        ? { q: a + ' + ' + b + ' = ?', answer: a + b, skill: null }
+        : { q: (a + b) + ' − ' + b + ' = ?', answer: a, skill: null };
     },
     function times() {
       const a = ri(3, 12), b = ri(6, 15);
-      return { q: a + ' × ' + b + ' = ?', answer: a * b };
+      return { q: a + ' × ' + b + ' = ?', answer: a * b, skill: null };
     },
     function divide() {
       const b = ri(3, 12), ans = ri(4, 13);
-      return { q: (b * ans) + ' ÷ ' + b + ' = ?', answer: ans };
+      return { q: (b * ans) + ' ÷ ' + b + ' = ?', answer: ans, skill: null };
     },
     function percent() {
       const pct = pick([10, 20, 25, 50, 75]);
       const base = pick([40, 60, 80, 120, 160, 200, 240, 300]);
-      return { q: pct + '% of ' + base + ' = ?', answer: (pct * base) / 100 };
+      return { q: pct + '% of ' + base + ' = ?', answer: (pct * base) / 100, skill: 'psda-percent' };
+    },
+    function percentChange() {
+      const base = pick([50, 80, 100, 120, 200]);
+      const pct = pick([10, 20, 25, 50]);
+      const up = Math.random() < 0.5;
+      return {
+        q: base + ' ' + (up ? 'increased' : 'decreased') + ' by ' + pct + '% = ?',
+        answer: up ? base + (base * pct) / 100 : base - (base * pct) / 100,
+        skill: 'psda-percent'
+      };
     },
     function solveX() {
       const a = ri(2, 9), x = ri(2, 12), b = ri(1, 20);
-      return { q: 'If ' + a + 'x + ' + b + ' = ' + (a * x + b) + ', x = ?', answer: x };
+      return { q: 'If ' + a + 'x + ' + b + ' = ' + (a * x + b) + ', x = ?', answer: x, skill: 'alg-lin1' };
+    },
+    function evalLinear() {
+      const m = ri(2, 8), b = ri(1, 15), x = ri(2, 9);
+      return { q: 'f(x) = ' + m + 'x + ' + b + '. f(' + x + ') = ?', answer: m * x + b, skill: 'alg-linfunc' };
+    },
+    function slope() {
+      const x1 = ri(0, 5), y1 = ri(0, 10), m = ri(2, 6), dx = ri(1, 4);
+      return {
+        q: 'Slope through (' + x1 + ', ' + y1 + ') and (' + (x1 + dx) + ', ' + (y1 + m * dx) + ') = ?',
+        answer: m, skill: 'alg-lin2'
+      };
     },
     function square() {
       const n = ri(4, 15);
-      return { q: n + '² = ?', answer: n * n };
+      return { q: n + '² = ?', answer: n * n, skill: 'adv-equiv' };
+    },
+    function exponentRule() {
+      const a = ri(2, 6), b = ri(2, 6);
+      return { q: 'x' + sup(a) + ' · x' + sup(b) + ' = x^?', answer: a + b, skill: 'adv-equiv' };
     },
     function fraction() {
       const f = pick([[1, 2], [1, 3], [1, 4], [2, 3], [3, 4]]);
       const mult = ri(2, 9);
       const base = f[1] * mult * pick([1, 2, 3]);
-      return { q: f[0] + '/' + f[1] + ' of ' + base + ' = ?', answer: (base / f[1]) * f[0] };
+      return { q: f[0] + '/' + f[1] + ' of ' + base + ' = ?', answer: (base / f[1]) * f[0], skill: 'psda-ratio' };
+    },
+    function unitRate() {
+      const rate = ri(3, 12), n = pick([4, 5, 6, 8, 10]);
+      return { q: n + ' items cost $' + n * rate + '. One item = $?', answer: rate, skill: 'psda-ratio' };
     },
     function mean() {
       const m = ri(5, 20), d = ri(1, 4);
       const nums = [m - d, m, m + d];
-      return { q: 'Mean of ' + nums.join(', ') + ' = ?', answer: m };
+      return { q: 'Mean of ' + nums.join(', ') + ' = ?', answer: m, skill: 'psda-1var' };
+    },
+    function rectArea() {
+      const w = ri(3, 9), l = ri(4, 12);
+      return Math.random() < 0.5
+        ? { q: 'Area of a ' + l + ' × ' + w + ' rectangle = ?', answer: l * w, skill: 'geo-area' }
+        : { q: 'Perimeter of a ' + l + ' × ' + w + ' rectangle = ?', answer: 2 * (l + w), skill: 'geo-area' };
+    },
+    function pythag() {
+      const t = pick([[3, 4, 5], [6, 8, 10], [5, 12, 13], [9, 12, 15], [8, 15, 17]]);
+      return { q: 'Right triangle, legs ' + t[0] + ' and ' + t[1] + '. Hypotenuse = ?', answer: t[2], skill: 'geo-trig' };
     }
   ];
 
+  function sup(n) {
+    const map = { 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶' };
+    return map[n] || '^' + n;
+  }
+
   function makeQuestion() {
-    const { q, answer } = pick(GENERATORS)();
+    const { q, answer, skill } = pick(GENERATORS)();
     const opts = new Set([answer]);
     let guard = 0;
     while (opts.size < 4 && guard++ < 60) {
@@ -60,7 +105,7 @@
     }
     while (opts.size < 4) opts.add(answer + opts.size * 7 + 1);
     const choices = Array.from(opts).sort(() => Math.random() - 0.5);
-    return { q, answer, choices };
+    return { q, answer, choices, skill };
   }
 
   function render(view, practice) {
@@ -117,7 +162,7 @@
 
       function nextQuestion() {
         qArea.innerHTML = '';
-        const { q, answer, choices } = makeQuestion();
+        const { q, answer, choices, skill } = makeQuestion();
         qArea.appendChild(el('div', { class: 'sprint-q' }, [q]));
         const grid = el('div', { class: 'sprint-choices' });
         let locked = false;
@@ -128,7 +173,7 @@
               if (locked) return;
               locked = true;
               const right = c === answer;
-              store.recordTopic('mental-math', right);
+              if (skill) store.recordSkill(skill, right);
               if (right) {
                 score++;
                 scoreEl.textContent = 'Score: ' + score;

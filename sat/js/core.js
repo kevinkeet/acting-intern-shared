@@ -45,14 +45,18 @@
   function blankStats() {
     return {
       streak: { count: 0, lastDay: null },
-      daily: {}, // dateStr -> { vocab:{...}, conn:{...}, mini:{...}, sprint:{...} }
+      daily: {}, // dateStr -> per-game results for that day
       games: {
         vocab: { played: 0, won: 0, dist: [0, 0, 0, 0, 0, 0] },
         conn: { played: 0, won: 0, mistakes: 0 },
         mini: { played: 0, correct: 0, total: 0, bestTime: null },
-        sprint: { played: 0, best: 0, totalScore: 0 }
+        sprint: { played: 0, best: 0, totalScore: 0 },
+        editor: { played: 0, best: 0, totalScore: 0 },
+        drill: { played: 0, correct: 0, total: 0 }
       },
-      topics: {} // topic -> { c, t }
+      skills: {}, // skill id -> { t, c, recent: [0|1, ...] (last 12) }
+      seenQ: [],  // hashes of served bank questions (avoid repeats)
+      plan: { startDay: null } // dayIndex of first play; drives "Day N of 120"
     };
   }
 
@@ -137,11 +141,64 @@
       if (score > g.best) g.best = score;
       save();
     },
-    recordTopic(topic, correct) {
-      const t = (state.topics[topic] = state.topics[topic] || { c: 0, t: 0 });
-      t.t++;
-      if (correct) t.c++;
+    recordEditor(score) {
+      const g = state.games.editor;
+      g.played++;
+      g.totalScore += score;
+      if (score > g.best) g.best = score;
       save();
+    },
+    recordDrill(correct, total) {
+      const g = state.games.drill;
+      g.played++;
+      g.correct += correct;
+      g.total += total;
+      save();
+    },
+
+    // ---- Skill mastery ----
+    recordSkill(skillId, correct) {
+      if (!skillId) return;
+      const s = (state.skills[skillId] = state.skills[skillId] || { t: 0, c: 0, recent: [] });
+      s.t++;
+      if (correct) s.c++;
+      s.recent.push(correct ? 1 : 0);
+      if (s.recent.length > 12) s.recent.shift();
+      save();
+    },
+    skill(skillId) {
+      return state.skills[skillId] || { t: 0, c: 0, recent: [] };
+    },
+    recentAcc(skillId) {
+      const s = this.skill(skillId);
+      if (!s.recent.length) return 0;
+      return s.recent.reduce((a, b) => a + b, 0) / s.recent.length;
+    },
+    mastery(skillId) {
+      const s = this.skill(skillId);
+      if (s.t === 0) return 'new';
+      const acc = this.recentAcc(skillId);
+      if (s.t >= 12 && acc >= 0.85) return 'mastered';
+      if (s.t >= 6 && acc >= 0.7) return 'solid';
+      return 'learning';
+    },
+
+    // ---- Served-question tracking (avoid repeats until pool exhausted) ----
+    isSeen(hash) { return state.seenQ.indexOf(hash) !== -1; },
+    markSeen(hash) {
+      if (this.isSeen(hash)) return;
+      state.seenQ.push(hash);
+      if (state.seenQ.length > 500) state.seenQ.splice(0, state.seenQ.length - 500);
+      save();
+    },
+
+    // ---- 120-day plan ----
+    ensurePlanStart() {
+      if (state.plan.startDay == null) { state.plan.startDay = dayIndex(); save(); }
+    },
+    planDay() {
+      if (state.plan.startDay == null) return 1;
+      return dayIndex() - state.plan.startDay + 1;
     },
 
     streak() {
@@ -156,6 +213,67 @@
     reset() {
       state = blankStats();
       save();
+    }
+  };
+
+  // ---------- Curriculum: daily focus + adaptive question selection ----------
+  function qHash(str) { // djb2, for tracking served questions
+    let h = 5381;
+    for (let i = 0; i < str.length; i++) h = ((h << 5) + h + str.charCodeAt(i)) | 0;
+    return (h >>> 0).toString(36);
+  }
+
+  // Stable identity for a bank question. R&W questions share standard stems
+  // ("Which choice completes the text…"), so the passage must be included.
+  function qKey(q) { return qHash((q.passage || '') + '|' + q.q); }
+
+  const curriculum = {
+    // The skill formally taught today (30-day rotation, defined in skills.js).
+    focusSkill(offset) {
+      const rot = window.SAT_SKILLS.rotation;
+      const i = (((dayIndex() + (offset || 0)) % rot.length) + rot.length) % rot.length;
+      return rot[i];
+    },
+
+    // Pick up to n questions for a skill, preferring never-served ones.
+    // Falls back to same domain, then same section, so it always fills.
+    questionsFor(skillId, n, exclude) {
+      const bank = window.SAT_QUESTIONS || [];
+      const SK = window.SAT_SKILLS;
+      const ex = exclude || new Set();
+      const pools = [
+        bank.filter((q) => q.skill === skillId),
+        bank.filter((q) => SK.domainOf(q.skill) === SK.domainOf(skillId)),
+        bank.filter((q) => SK.sectionOf(q.skill) === SK.sectionOf(skillId))
+      ];
+      const picked = [];
+      for (const pool of pools) {
+        if (picked.length >= n) break;
+        const fresh = shuffle(pool.filter((q) => !ex.has(qKey(q)) && !store.isSeen(qKey(q))));
+        const rest = shuffle(pool.filter((q) => !ex.has(qKey(q))));
+        for (const q of fresh.concat(rest)) {
+          if (picked.length >= n) break;
+          const h = qKey(q);
+          if (ex.has(h)) continue;
+          ex.add(h);
+          picked.push(q);
+        }
+      }
+      return picked;
+    },
+
+    // Skills the student is doing worst at (attempted, lowest recent accuracy).
+    weakestSkills(n) {
+      return window.SAT_SKILLS.all
+        .filter((id) => store.skill(id).t > 0)
+        .map((id) => ({ id, acc: store.recentAcc(id), t: store.skill(id).t }))
+        .sort((a, b) => a.acc - b.acc || a.t - b.t)
+        .slice(0, n)
+        .map((s) => s.id);
+    },
+
+    unseenSkills() {
+      return window.SAT_SKILLS.all.filter((id) => store.skill(id).t === 0);
     }
   };
 
@@ -247,7 +365,8 @@
     render();
   });
 
-  SAT.util = { todayStr, dayIndex, seededRng, shuffle, el, toast, modal, share };
+  SAT.util = { todayStr, dayIndex, seededRng, shuffle, el, toast, modal, share, qHash, qKey };
   SAT.store = store;
+  SAT.curriculum = curriculum;
   SAT.router = { register, navigate };
 })();
