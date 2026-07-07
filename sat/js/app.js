@@ -20,7 +20,7 @@
       desc: 'Sort 16 terms into 4 groups — math and reading mixed together.',
       result: (r) => (r.won ? 'Solved with ' + r.mistakes + ' mistake' + (r.mistakes === 1 ? '' : 's') : 'Out of guesses') },
     { key: 'sprint', route: '/sprint', cls: 'sprint', icon: '⚡', name: 'Sprint',
-      desc: '60 seconds of mental math. No calculator, no mercy.',
+      desc: '60 seconds of rapid-fire SAT math — vertex spots, slopes, percents, trig.',
       result: (r) => r.score + ' correct in 60s' }
   ];
 
@@ -69,7 +69,24 @@
     view.appendChild(grid);
 
     view.appendChild(el('div', { class: 'home-footer' }, [
-      el('button', { class: 'btn secondary', onclick: () => SAT.router.navigate('/stats') }, ['📊 My syllabus & progress'])
+      el('button', { class: 'btn secondary', onclick: () => SAT.router.navigate('/stats') }, ['📊 My syllabus & progress']),
+      el('button', { class: 'btn secondary', onclick: () => SAT.router.navigate('/playbook') }, ['🧭 Test-Day Playbook'])
+    ]));
+  });
+
+  // ---------- Test-Day Playbook ----------
+  SAT.router.register('/playbook', (view) => {
+    view.appendChild(el('h1', { class: 'page-title' }, ['Test-Day Playbook']));
+    view.appendChild(el('p', { class: 'page-sub' }, ['How to take the test itself — pacing, guessing, tools, and nerves. One of these joins your Focus lesson every third day.']));
+    (window.SAT_STRATEGY || []).forEach((lesson) => {
+      view.appendChild(el('div', { class: 'lesson-card strategy-card' }, [
+        el('h3', {}, [lesson.title]),
+        el('ul', {}, lesson.points.map((p) => el('li', {}, [p]))),
+        lesson.tip ? el('p', { class: 'lesson-tip' }, ['💡 ' + lesson.tip]) : null
+      ]));
+    });
+    view.appendChild(el('div', { class: 'btn-row' }, [
+      el('button', { class: 'btn secondary', onclick: () => SAT.router.navigate('/') }, ['Home'])
     ]));
   });
 
@@ -148,7 +165,10 @@
 
     view.appendChild(el('div', { class: 'stats-section' }, [
       el('h3', {}, ['The last mile']),
-      el('p', { class: 'mini-stat-line' }, ['This app is your daily engine. In months 2–4, also take full-length timed practice tests in College Board’s Bluebook app — pacing under real conditions is the one skill games can’t teach.'])
+      el('p', { class: 'mini-stat-line' }, ['This app is your daily engine. In months 2–4, also take full-length timed practice tests in College Board’s Bluebook app — pacing under real conditions is the one skill games can’t teach.']),
+      el('div', { class: 'btn-row' }, [
+        el('button', { class: 'btn secondary small', onclick: () => SAT.router.navigate('/playbook') }, ['🧭 Read the Test-Day Playbook'])
+      ])
     ]));
 
     view.appendChild(el('div', { class: 'danger-zone' }, [

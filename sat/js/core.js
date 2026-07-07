@@ -66,7 +66,13 @@
     if (raw) {
       const parsed = JSON.parse(raw);
       state = Object.assign(blankStats(), parsed);
-      state.games = Object.assign(blankStats().games, parsed.games || {});
+      // Deep-merge one level so saves written before a field existed
+      // (e.g. vocab.dist, sprint.totalScore) still get their defaults.
+      const blankGames = blankStats().games;
+      state.games = {};
+      for (const k in blankGames) {
+        state.games[k] = Object.assign(blankGames[k], (parsed.games || {})[k]);
+      }
     }
   } catch (e) { /* corrupted or unavailable storage — start fresh */ }
 
@@ -87,14 +93,17 @@
   const store = {
     raw: () => state,
 
-    dailyRecord(game) {
-      const day = state.daily[todayStr()];
-      return day ? day[game] : undefined;
+    // All daily read/writes accept an optional `day` (yyyy-mm-dd). Games
+    // capture the day ONCE at render and pass it through, so a session that
+    // crosses midnight saves under the day whose puzzle was actually played.
+    dailyRecord(game, day) {
+      const rec = state.daily[day || todayStr()];
+      return rec ? rec[game] : undefined;
     },
 
-    // Save today's completed result for a daily game (also feeds streak).
-    completeDaily(game, result) {
-      const t = todayStr();
+    // Save a completed daily-game result (also feeds streak).
+    completeDaily(game, result, day) {
+      const t = day || todayStr();
       state.daily[t] = state.daily[t] || {};
       state.daily[t][game] = result;
       touchStreak();
@@ -102,15 +111,15 @@
     },
 
     // In-progress daily state (so a refresh doesn't lose the board).
-    saveProgress(game, progress) {
-      const t = todayStr();
+    saveProgress(game, progress, day) {
+      const t = day || todayStr();
       state.daily[t] = state.daily[t] || {};
       state.daily[t][game + '_wip'] = progress;
       save();
     },
-    getProgress(game) {
-      const day = state.daily[todayStr()];
-      return day ? day[game + '_wip'] : undefined;
+    getProgress(game, day) {
+      const rec = state.daily[day || todayStr()];
+      return rec ? rec[game + '_wip'] : undefined;
     },
 
     recordVocab(won, guessCount) {
@@ -311,7 +320,15 @@
       contentNode
     ]);
     const scrim = el('div', { class: 'modal-scrim' }, [box]);
-    scrim.addEventListener('click', (e) => { if (e.target === scrim) close(); });
+    // Scrim-click closes, but not in the first 350ms and only if the press
+    // started on the scrim — the second click of a double-clicked "Finish"
+    // button must not dismiss the freshly opened results modal.
+    const openedAt = Date.now();
+    let downOnScrim = false;
+    scrim.addEventListener('mousedown', (e) => { downOnScrim = e.target === scrim; });
+    scrim.addEventListener('click', (e) => {
+      if (e.target === scrim && downOnScrim && Date.now() - openedAt > 350) close();
+    });
     function close() {
       root.innerHTML = '';
       if (opts.onClose) opts.onClose();

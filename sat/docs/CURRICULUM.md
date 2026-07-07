@@ -34,6 +34,8 @@ Three mechanisms together guarantee full-syllabus coverage; none relies on the s
 
 **b) Adaptive selection (weakness targeting).** *The Mini* (5 questions/day) is not random: it picks from (1) skills you've never seen, (2) your weakest skills by recent accuracy, (3) today's and yesterday's focus skills (spaced repetition), weighted toward the domains the real test weights most. Seen questions are tracked and not repeated until the pool is exhausted.
 
+**b2) The Test-Day Playbook (test-taking itself).** Content mastery isn't the whole score: 8 strategy lessons cover the machine of the test — module adaptivity and structure, pacing budgets, process of elimination, Bluebook's built-in tools (Desmos, reference sheet, answer eliminator), backsolving/plugging in, SAT-style reading order, test-week logistics, and nerves/error-log habits. One playbook lesson joins the daily Focus card every third day (~5 full passes in 120 days), and all are browsable at `#/playbook`.
+
 **c) Fluency games (automaticity).** Sprint (mental math across algebra/data/geometry generators), The Editor (90-second grammar conventions blitz), Vocab (words in context), and Connections (cross-domain terminology) build the speed layer that the adaptive drilling doesn't. Every answer in every game feeds the same per-skill mastery record.
 
 ### Mastery model
@@ -69,7 +71,7 @@ Every skill is covered by at least two games: the Focus drill (deliberate practi
 - Question bank: ~300 skill-tagged multiple-choice questions (every skill ≥ 6, weighted toward Algebra/Advanced Math to match the test), each with difficulty 1–3 and an explanation that names the trap.
 - Editor bank: 60 rapid conventions items (30 Boundaries, 30 Form/Structure/Sense).
 - Lesson cards: 30 — one per skill, 4–6 bullets of complete essential knowledge + a test-day tip.
-- Vocab bank: 56 SAT-level words. Connections: 12 cross-domain puzzles. Sprint: 15 procedural generators (infinite).
+- Vocab bank: 56 SAT-level words. Connections: 12 cross-domain puzzles (all word-based groups). Sprint: 17 procedural generators (infinite), every one mapped to a tested skill — no raw arithmetic, since Desmos is available on all real SAT math questions.
 
 ## 5. Honest scope note
 

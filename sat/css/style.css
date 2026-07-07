@@ -736,3 +736,9 @@ button { font-family: inherit; cursor: pointer; }
 }
 .editor-choice { justify-content: center; font-weight: 600; }
 .editor-review-line { font-family: var(--serif); margin-bottom: 4px; font-weight: 600; }
+
+/* ---------- Test-Day Playbook ---------- */
+.strategy-card { border-left: 4px solid var(--sprint); background: #fdfaf4; }
+.lesson-more { font-size: 13px; margin-top: 4px; }
+.lesson-more a { color: var(--sprint); font-weight: 700; text-decoration: none; }
+.lesson-more a:hover { text-decoration: underline; }

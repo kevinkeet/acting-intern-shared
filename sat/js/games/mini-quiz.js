@@ -54,7 +54,8 @@
   }
 
   function render(view, practice) {
-    const done = !practice && store.dailyRecord('mini');
+    const day = SAT.util.todayStr(); // pin: a session crossing midnight stays on this day
+    const done = !practice && store.dailyRecord('mini', day);
     if (done) {
       renderDone(view, done);
       return;
@@ -72,7 +73,7 @@
     const teardown = SAT.quizEngine.run(body, pickQuestions(), {
       onDone(rec) {
         store.recordMini(rec.correct, rec.total, rec.seconds);
-        if (!practice) store.completeDaily('mini', rec);
+        if (!practice) store.completeDaily('mini', rec, day);
         showResult(rec, practice);
       }
     });

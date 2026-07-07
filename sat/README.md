@@ -25,7 +25,7 @@ The pitch: play ~10 minutes a day for 120 days and you will have been taught, dr
 ## Content inventory
 
 - ~300 skill-tagged questions (`js/data/questions.js` + `js/data/bank/*.js`), every skill ≥6 questions, difficulty 1–3, explanation names the trap. Math answers machine-verified; R&W reviewed for single-defensible-answer.
-- 60 rapid conventions items (`js/data/editor-items.js`), 30 lesson cards (`js/data/lessons.js`), 56 vocab words, 12 connections puzzles, 15 sprint generators.
+- 60 rapid conventions items (`js/data/editor-items.js`), 30 lesson cards (`js/data/lessons.js`), 8 test-taking strategy lessons (`js/data/strategy-lessons.js`, one joins Focus every 3rd day; all at `#/playbook`), 56 vocab words, 12 connections puzzles, 17 sprint generators (all skill-mapped).
 
 ## Structure
 

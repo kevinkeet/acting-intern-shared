@@ -11,6 +11,27 @@
   let activeTeardown = null;
   function cleanup() { if (activeTeardown) { activeTeardown(); activeTeardown = null; } }
 
+  // A Test-Day Playbook lesson appears every 3rd day, cycling all 8 strategies
+  // (~5 full passes across 120 days).
+  function strategyForToday() {
+    const di = dayIndex();
+    if (di % 3 !== 0) return null;
+    const list = window.SAT_STRATEGY || [];
+    return list.length ? list[Math.floor(di / 3) % list.length] : null;
+  }
+
+  function strategyCard(lesson) {
+    return el('div', { class: 'lesson-card strategy-card' }, [
+      el('div', { class: 'lesson-eyebrow' }, ['Test-Day Playbook · bonus lesson']),
+      el('h3', {}, [lesson.title]),
+      el('ul', {}, lesson.points.map((p) => el('li', {}, [p]))),
+      lesson.tip ? el('p', { class: 'lesson-tip' }, ['💡 ' + lesson.tip]) : null,
+      el('p', { class: 'lesson-more' }, [
+        el('a', { href: '#/playbook' }, ['See all 8 playbook lessons →'])
+      ])
+    ]);
+  }
+
   function lessonCard(skillId) {
     const lesson = (window.SAT_LESSONS || {})[skillId];
     const SK = window.SAT_SKILLS;
@@ -25,13 +46,14 @@
   }
 
   function render(view, practice, practiceSkill) {
+    const day = SAT.util.todayStr(); // pin: a session crossing midnight stays on this day
     const skillId = practice ? practiceSkill : curriculum.focusSkill(0);
     const SK = window.SAT_SKILLS;
 
     // Practice mode with no skill chosen yet: show the skill picker.
     if (practice && !skillId) return renderPicker(view);
 
-    const done = !practice && store.dailyRecord('drill');
+    const done = !practice && store.dailyRecord('drill', day);
 
     view.appendChild(el('div', { class: 'game-head' }, [
       el('h1', { class: 'page-title' }, ['Focus']),
@@ -42,6 +64,11 @@
     ]));
 
     view.appendChild(lessonCard(skillId));
+
+    if (!practice) {
+      const strat = strategyForToday();
+      if (strat) view.appendChild(strategyCard(strat));
+    }
 
     const body = el('div');
     view.appendChild(body);
@@ -67,7 +94,7 @@
           activeTeardown = SAT.quizEngine.run(body, shuffle(questions), {
             onDone(rec) {
               store.recordDrill(rec.correct, rec.total);
-              if (!practice) store.completeDaily('drill', { correct: rec.correct, total: rec.total, skill: skillId });
+              if (!practice) store.completeDaily('drill', { correct: rec.correct, total: rec.total, skill: skillId }, day);
               showResult(rec, skillId, practice);
             }
           });

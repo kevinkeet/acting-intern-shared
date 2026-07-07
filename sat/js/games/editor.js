@@ -6,7 +6,8 @@
   const DURATION = 90;
 
   function render(view, practice) {
-    const doneToday = !practice && store.dailyRecord('editor');
+    const day = SAT.util.todayStr(); // pin: a session crossing midnight stays on this day
+    const doneToday = !practice && store.dailyRecord('editor', day);
     const best = store.raw().games.editor.best;
 
     view.appendChild(el('div', { class: 'game-head' }, [
@@ -100,13 +101,15 @@
       function finish() {
         clearInterval(timer);
         timer = null;
+        // read best BEFORE recording, fresh each run ("Go again" reuses this render)
+        const prevBest = store.raw().games.editor.best;
         store.recordEditor(score);
         if (!practice) {
-          const prev = store.dailyRecord('editor');
-          if (!prev || score > prev.score) store.completeDaily('editor', { score });
-          else store.completeDaily('editor', prev);
+          const prev = store.dailyRecord('editor', day);
+          if (!prev || score > prev.score) store.completeDaily('editor', { score }, day);
+          else store.completeDaily('editor', prev, day);
         }
-        const newBest = score > best && best > 0;
+        const newBest = score > prevBest && prevBest > 0;
         body.innerHTML = '';
         const wrap = el('div', { class: 'sprint-splash' }, [
           el('h2', {}, [newBest ? '🏆 New personal best!' : 'Time!']),

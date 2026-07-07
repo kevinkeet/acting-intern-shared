@@ -1,4 +1,4 @@
-// SAT Daily — Sprint: 60 seconds of rapid-fire mental math.
+// SAT Daily — Sprint: 60 seconds of rapid-fire SAT math recognitions.
 (function () {
   const { el, share, dayIndex } = SAT.util;
   const store = SAT.store;
@@ -7,22 +7,45 @@
   function ri(min, max) { return min + Math.floor(Math.random() * (max - min + 1)); }
   function pick(arr) { return arr[ri(0, arr.length - 1)]; }
 
-  // Each generator returns { q, answer, skill } — skill feeds the mastery
-  // tracker (null for pure-arithmetic warmups the SAT doesn't test directly).
+  // Each generator returns { q, answer, skill } and may supply its own
+  // `choices` array (for non-numeric answers). Every generator maps to a
+  // tested SAT skill — Desmos makes raw arithmetic worthless on test day,
+  // so Sprint drills the recognitions that save clock time instead.
   const GENERATORS = [
-    function addSub() {
-      const a = ri(13, 89), b = ri(12, 78);
-      return Math.random() < 0.5
-        ? { q: a + ' + ' + b + ' = ?', answer: a + b, skill: null }
-        : { q: (a + b) + ' − ' + b + ' = ?', answer: a, skill: null };
+    function minVertex() {
+      const h = ri(1, 8), k = ri(1, 12);
+      return {
+        q: 'Minimum value of y = (x − ' + h + ')² + ' + k + ' ?',
+        answer: k, skill: 'adv-nonlinfunc'
+      };
     },
-    function times() {
-      const a = ri(3, 12), b = ri(6, 15);
-      return { q: a + ' × ' + b + ' = ?', answer: a * b, skill: null };
+    function sinCos() {
+      const a = ri(10, 80);
+      return { q: 'sin(' + a + '°) = cos(?°)', answer: 90 - a, skill: 'geo-trig' };
     },
-    function divide() {
-      const b = ri(3, 12), ans = ri(4, 13);
-      return { q: (b * ans) + ' ÷ ' + b + ' = ?', answer: ans, skill: null };
+    function solutionCount() {
+      const m = ri(2, 6), b1 = ri(1, 9), b2 = b1 + ri(1, 6);
+      const same = Math.random() < 0.5;
+      const q = same
+        ? 'Solutions of y = ' + m + 'x + ' + b1 + ' and y = ' + m + 'x + ' + b2 + ' ?'
+        : 'Solutions of y = ' + m + 'x + ' + b1 + ' and y = ' + (m + 2) + 'x + ' + b2 + ' ?';
+      return {
+        q, answer: same ? 'None' : 'One',
+        choices: ['None', 'One', 'Two', 'Infinite'], skill: 'alg-sys'
+      };
+    },
+    function proportion() {
+      const a = ri(2, 8), k = ri(2, 6), b = a * k, c = ri(3, 9);
+      return { q: 'If ' + a + '/' + c + ' = ' + b + '/x, x = ?', answer: c * k, skill: 'psda-ratio' };
+    },
+    function factorDiff() {
+      const n = ri(2, 9);
+      return {
+        q: 'x² − ' + n * n + ' factors as ?',
+        answer: '(x−' + n + ')(x+' + n + ')',
+        choices: ['(x−' + n + ')(x+' + n + ')', '(x−' + n + ')²', '(x+' + n + ')²', '(x−' + n * n + ')(x+1)'],
+        skill: 'adv-equiv'
+      };
     },
     function percent() {
       const pct = pick([10, 20, 25, 50, 75]);
@@ -95,7 +118,11 @@
   }
 
   function makeQuestion() {
-    const { q, answer, skill } = pick(GENERATORS)();
+    const gen = pick(GENERATORS)();
+    if (gen.choices) {
+      return { q: gen.q, answer: gen.answer, choices: gen.choices.slice().sort(() => Math.random() - 0.5), skill: gen.skill };
+    }
+    const { q, answer, skill } = gen;
     const opts = new Set([answer]);
     let guard = 0;
     while (opts.size < 4 && guard++ < 60) {
@@ -109,14 +136,15 @@
   }
 
   function render(view, practice) {
-    const doneToday = !practice && store.dailyRecord('sprint');
+    const day = SAT.util.todayStr(); // pin: a session crossing midnight stays on this day
+    const doneToday = !practice && store.dailyRecord('sprint', day);
     const best = store.raw().games.sprint.best;
 
     view.appendChild(el('div', { class: 'game-head' }, [
       el('h1', { class: 'page-title' }, ['Sprint']),
       practice ? el('span', { class: 'practice-tag' }, ['Practice']) : null
     ]));
-    view.appendChild(el('p', { class: 'page-sub' }, ['60 seconds. As many mental-math problems as you can. No calculator — that’s the point.']));
+    view.appendChild(el('p', { class: 'page-sub' }, ['60 seconds of rapid SAT math — the recognitions that save you clock time on test day.']));
 
     const body = el('div');
     view.appendChild(body);
@@ -194,14 +222,16 @@
       function finish() {
         clearInterval(timer);
         timer = null;
+        // read best BEFORE recording, fresh each run ("Go again" reuses this render)
+        const prevBest = store.raw().games.sprint.best;
         store.recordSprint(score);
         if (!practice) {
-          const prev = store.dailyRecord('sprint');
+          const prev = store.dailyRecord('sprint', day);
           // keep the best score of the day as the daily record
-          if (!prev || score > prev.score) store.completeDaily('sprint', { score });
-          else store.completeDaily('sprint', prev);
+          if (!prev || score > prev.score) store.completeDaily('sprint', { score }, day);
+          else store.completeDaily('sprint', prev, day);
         }
-        const newBest = score > best && best > 0;
+        const newBest = score > prevBest && prevBest > 0;
         body.innerHTML = '';
         body.appendChild(el('div', { class: 'sprint-splash' }, [
           el('h2', {}, [newBest ? '🏆 New personal best!' : 'Time!']),

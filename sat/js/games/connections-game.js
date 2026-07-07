@@ -9,6 +9,8 @@
   function dailyIdx() { return ((dayIndex() % PUZZLES.length) + PUZZLES.length) % PUZZLES.length; }
 
   function render(view, practice) {
+    const day = SAT.util.todayStr(); // pin: a session crossing midnight stays on this day
+    let resultTimer = null;
     const pIdx = practice
       ? (dailyIdx() + 1 + Math.floor(Math.random() * (PUZZLES.length - 1))) % PUZZLES.length
       : dailyIdx();
@@ -22,15 +24,17 @@
     let history = [];  // each guess: array of 4 group indices
     let selected = [];
     let over = false;
+    let gameWon = false;
 
-    const done = !practice && store.dailyRecord('conn');
+    const done = !practice && store.dailyRecord('conn', day);
     if (done) {
       solved = done.solved.slice();
       mistakes = done.mistakes;
       history = done.history || [];
+      gameWon = !!done.won;
       over = true;
     } else if (!practice) {
-      const wip = store.getProgress('conn');
+      const wip = store.getProgress('conn', day);
       if (wip) {
         solved = (wip.solved || []).slice();
         mistakes = wip.mistakes || 0;
@@ -98,7 +102,7 @@
     function drawControls() {
       controls.innerHTML = '';
       if (over) {
-        controls.appendChild(el('button', { class: 'btn', onclick: () => showResult(solved.length === 4) }, ['View results']));
+        controls.appendChild(el('button', { class: 'btn', onclick: () => showResult(gameWon) }, ['View results']));
         controls.appendChild(el('button', { class: 'btn secondary', onclick: () => SAT.router.navigate('/connections/practice') }, ['Practice']));
         return;
       }
@@ -116,7 +120,7 @@
     }
 
     function persist() {
-      if (!practice) store.saveProgress('conn', { solved, mistakes, history });
+      if (!practice) store.saveProgress('conn', { solved, mistakes, history }, day);
     }
 
     function submitGuess() {
@@ -153,6 +157,7 @@
 
     function finish(won) {
       over = true;
+      gameWon = won;
       if (!won) {
         // reveal the unsolved groups in difficulty order
         puzzle.groups.forEach((g, gi) => { if (!solved.includes(gi)) solved.push(gi); });
@@ -163,8 +168,8 @@
       selected = [];
       drawControls();
       store.recordConn(won, mistakes);
-      if (!practice) store.completeDaily('conn', { won, solved, mistakes, history });
-      setTimeout(() => showResult(won), 600);
+      if (!practice) store.completeDaily('conn', { won, solved, mistakes, history }, day);
+      resultTimer = setTimeout(() => showResult(won), 600);
     }
 
     function emojiGrid() {
@@ -192,6 +197,8 @@
     drawGrid();
     drawMistakes();
     drawControls();
+
+    return () => { if (resultTimer) clearTimeout(resultTimer); };
   }
 
   SAT.router.register('/connections', (view) => render(view, false));

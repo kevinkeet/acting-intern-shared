@@ -38,18 +38,20 @@
   }
 
   function render(view, practice) {
+    const day = SAT.util.todayStr(); // pin: a session crossing midnight stays on this day
+    let resultTimer = null;
     const entry = practice ? randomEntry() : dailyEntry();
     const answer = entry.w;
     let guesses = [];
     let current = '';
     let over = false;
 
-    const done = !practice && store.dailyRecord('vocab');
+    const done = !practice && store.dailyRecord('vocab', day);
     if (done) {
       guesses = done.guesses.slice();
       over = true;
     } else if (!practice) {
-      const wip = store.getProgress('vocab');
+      const wip = store.getProgress('vocab', day);
       if (wip && wip.guesses) guesses = wip.guesses.slice();
     }
 
@@ -136,7 +138,7 @@
         if (won || guesses.length === ROWS) {
           finish(won);
         } else if (!practice) {
-          store.saveProgress('vocab', { guesses });
+          store.saveProgress('vocab', { guesses }, day);
         }
         return;
       }
@@ -156,9 +158,9 @@
       store.recordVocab(won, guesses.length);
       store.recordSkill('craft-wic', won);
       if (!practice) {
-        store.completeDaily('vocab', { won, guesses });
+        store.completeDaily('vocab', { won, guesses }, day);
       }
-      setTimeout(() => showResult(won), 500);
+      resultTimer = setTimeout(() => showResult(won), 500);
     }
 
     function showResult(won) {
@@ -198,7 +200,10 @@
       }
     };
     window.addEventListener('keydown', onKeydown);
-    return () => window.removeEventListener('keydown', onKeydown);
+    return () => {
+      window.removeEventListener('keydown', onKeydown);
+      if (resultTimer) clearTimeout(resultTimer);
+    };
   }
 
   SAT.router.register('/vocab', (view) => render(view, false));
