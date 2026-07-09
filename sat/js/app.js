@@ -24,6 +24,19 @@
       result: (r) => r.score + ' correct in 60s' }
   ];
 
+  // ---------- Daily plan: Focus + one bonus game ----------
+  // The Mini appears most often (adaptive weakness targeting); the others
+  // rotate in for variety. Everything else lives under "More games".
+  const BONUS_CYCLE = ['mini', 'vocab', 'mini', 'editor', 'conn', 'sprint'];
+
+  function bonusGame() {
+    const i = ((dayIndex() % BONUS_CYCLE.length) + BONUS_CYCLE.length) % BONUS_CYCLE.length;
+    return GAMES.find((g) => g.key === BONUS_CYCLE[i]);
+  }
+
+  // Used by the Focus result modal to offer "Continue: <bonus> →".
+  SAT.dailyPlan = { bonus: bonusGame };
+
   // ---------- Home ----------
   SAT.router.register('/', (view) => {
     store.ensurePlanStart();
@@ -31,42 +44,78 @@
     const now = new Date();
     const dateLabel = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
     const streak = store.streak();
-    const doneCount = GAMES.filter((g) => store.dailyRecord(g.key)).length;
     const focusId = SAT.curriculum.focusSkill(0);
-    const focusDomain = SK.domainOf(focusId);
     const planDay = store.planDay();
 
-    view.appendChild(el('p', { class: 'home-date' }, [dateLabel + ' · Puzzle #' + (dayIndex() + 1)]));
+    const focusG = GAMES.find((g) => g.key === 'drill');
+    const bonusG = bonusGame();
+    const steps = [focusG, bonusG];
+    const recs = steps.map((g) => store.dailyRecord(g.key));
+    const doneSteps = recs.filter(Boolean).length;
+
+    view.appendChild(el('p', { class: 'home-date' }, [dateLabel + ' · Day ' + Math.min(planDay, 120) + ' of 120']));
     view.appendChild(el('h1', { class: 'home-greeting' }, [
-      doneCount === GAMES.length ? 'All done for today! 🎉' : 'Today’s games'
+      doneSteps === steps.length ? 'Done for today! 🎉' : 'Today’s plan'
     ]));
     view.appendChild(el('div', { class: 'streak-chip' }, [
       '🔥 ' + streak + '-day streak',
-      ' · Day ' + Math.min(planDay, 120) + ' of 120',
-      doneCount > 0 ? ' · ' + doneCount + '/' + GAMES.length + ' played' : ''
+      doneSteps < steps.length ? ' · 2 quick steps · ~5 min' : ' · see you tomorrow'
     ]));
 
-    view.appendChild(el('button', { class: 'focus-banner', onclick: () => SAT.router.navigate('/focus') }, [
-      el('span', { class: 'focus-banner-label' }, ['Today’s focus']),
-      el('span', { class: 'focus-banner-skill' }, [SK.name(focusId)]),
-      el('span', { class: 'focus-banner-domain' }, [(focusDomain ? focusDomain.name : '') + ' · ' + coverageSummary()])
-    ]));
+    steps.forEach((g, i) => {
+      const rec = recs[i];
+      const isNext = !rec && recs.slice(0, i).every(Boolean);
 
-    const grid = el('div', { class: 'game-grid' });
-    GAMES.forEach((g) => {
-      const rec = store.dailyRecord(g.key);
-      grid.appendChild(el('button', {
-        class: 'game-card ' + g.cls,
-        onclick: () => SAT.router.navigate(g.route)
-      }, [
-        rec ? el('span', { class: 'done-badge' }, ['✓']) : null,
-        el('div', { class: 'game-icon' }, [g.icon]),
-        el('div', { class: 'game-name' }, [g.name]),
-        el('div', { class: 'game-desc' }, [g.desc]),
-        el('div', { class: 'game-status ' + (rec ? 'done' : 'todo') }, [rec ? g.result(rec) : 'Play →'])
-      ]));
+      if (rec) {
+        view.appendChild(el('div', { class: 'path-row done' }, [
+          el('span', { class: 'path-check' }, ['✓']),
+          el('span', { class: 'path-row-name' }, [g.name]),
+          el('span', { class: 'path-row-result' }, [g.result(rec)])
+        ]));
+      } else if (isNext) {
+        view.appendChild(el('button', {
+          class: 'path-card game-card ' + g.cls,
+          onclick: () => SAT.router.navigate(g.route)
+        }, [
+          el('div', { class: 'path-step' }, ['Step ' + (i + 1) + ' of ' + steps.length]),
+          el('div', { class: 'game-icon' }, [g.icon]),
+          el('div', { class: 'game-name' }, [g.key === 'drill' ? 'Focus: ' + SK.name(focusId) : g.name]),
+          el('div', { class: 'game-desc' }, [g.key === 'drill' ? 'Read a 60-second lesson card, then drill 4 questions on it.' : g.desc]),
+          el('div', { class: 'game-status todo' }, ['Start →'])
+        ]));
+      } else {
+        view.appendChild(el('div', { class: 'path-row upcoming' }, [
+          el('span', { class: 'path-check' }, [String(i + 1)]),
+          el('span', { class: 'path-row-name' }, ['Then: ' + g.name]),
+          el('span', { class: 'path-row-result' }, ['~2 min'])
+        ]));
+      }
     });
-    view.appendChild(grid);
+
+    if (doneSteps === steps.length) {
+      view.appendChild(el('div', { class: 'path-card-done' }, [
+        el('div', { class: 'big' }, ['🎉']),
+        el('p', {}, ['That’s the plan — your streak is safe. Want more? The extras below are always open.'])
+      ]));
+    }
+
+    // Everything else, tucked away so the default view stays calm.
+    const extras = GAMES.filter((g) => steps.indexOf(g) === -1);
+    const details = el('details', { class: 'more-games' }, [
+      el('summary', {}, ['More games & practice']),
+      ...extras.map((g) => {
+        const rec = store.dailyRecord(g.key);
+        return el('button', {
+          class: 'extra-row',
+          onclick: () => SAT.router.navigate(g.route)
+        }, [
+          el('span', { class: 'extra-icon' }, [g.icon]),
+          el('span', { class: 'extra-name' }, [g.name]),
+          el('span', { class: 'extra-status' + (rec ? ' done' : '') }, [rec ? '✓ ' + g.result(rec) : 'Play →'])
+        ]);
+      })
+    ]);
+    view.appendChild(details);
 
     view.appendChild(el('div', { class: 'home-footer' }, [
       el('button', { class: 'btn secondary', onclick: () => SAT.router.navigate('/stats') }, ['📊 My syllabus & progress']),
@@ -89,12 +138,6 @@
       el('button', { class: 'btn secondary', onclick: () => SAT.router.navigate('/') }, ['Home'])
     ]));
   });
-
-  function coverageSummary() {
-    const SK = window.SAT_SKILLS;
-    const solid = SK.all.filter((id) => ['solid', 'mastered'].indexOf(store.mastery(id)) !== -1).length;
-    return solid + '/' + SK.all.length + ' skills solid';
-  }
 
   // ---------- Progress / syllabus ----------
   const MASTERY_LABEL = { new: 'not started', learning: 'learning', solid: 'solid', mastered: 'mastered' };

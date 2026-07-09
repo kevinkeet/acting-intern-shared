@@ -74,11 +74,14 @@
     view.appendChild(body);
 
     if (done) {
+      const bonus = SAT.dailyPlan ? SAT.dailyPlan.bonus() : null;
+      const bonusOpen = bonus && !store.dailyRecord(bonus.key);
       body.appendChild(el('div', { class: 'sprint-splash' }, [
         el('div', { class: 'big-score' }, [done.correct + '/' + done.total]),
         el('p', { class: 'sub' }, ['Today’s drill: ' + SK.name(done.skill) + '. Back tomorrow for the next skill.']),
         el('div', { class: 'btn-row' }, [
-          el('button', { class: 'btn', onclick: () => SAT.router.navigate('/focus/practice') }, ['Practice another skill']),
+          bonusOpen ? el('button', { class: 'btn', onclick: () => SAT.router.navigate(bonus.route) }, ['Next: ' + bonus.name + ' →']) : null,
+          el('button', { class: 'btn' + (bonusOpen ? ' secondary' : ''), onclick: () => SAT.router.navigate('/focus/practice') }, ['Practice another skill']),
           el('button', { class: 'btn secondary', onclick: () => SAT.router.navigate('/') }, ['Home'])
         ])
       ]));
@@ -134,17 +137,25 @@
   function showResult(rec, skillId, practice) {
     const SK = window.SAT_SKILLS;
     const num = dayIndex() + 1;
+    // Step 2 of the daily plan: offer the day's bonus game right here.
+    const bonus = !practice && SAT.dailyPlan ? SAT.dailyPlan.bonus() : null;
+    const bonusOpen = bonus && !store.dailyRecord(bonus.key);
     modal(el('div', {}, [
       el('h2', {}, [rec.correct === rec.total ? 'Skill sharpened!' : 'Progress made']),
       el('div', { class: 'big-score' }, [rec.correct + '/' + rec.total]),
       el('p', { class: 'sub' }, [SK.name(skillId) + ' — mastery: ' + store.mastery(skillId)]),
       el('div', { class: 'share-grid' }, [rec.marks.map((m) => (m ? '✅' : '❌')).join('')]),
+      bonusOpen ? el('p', { class: 'sub' }, ['One more quick step and today is done:']) : null,
       el('div', { class: 'btn-row' }, [
-        practice ? null : el('button', {
+        bonusOpen ? el('button', {
           class: 'btn',
+          onclick: () => SAT.router.navigate(bonus.route)
+        }, ['Continue: ' + bonus.name + ' →']) : null,
+        practice ? null : el('button', {
+          class: 'btn' + (bonusOpen ? ' secondary' : ''),
           onclick: () => share('SAT Daily Focus #' + num + ' — ' + SK.name(skillId), rec.marks.map((m) => (m ? '✅' : '❌')).join('') + ' 🎯')
         }, ['Share']),
-        el('button', { class: 'btn secondary', onclick: () => SAT.router.navigate('/focus/practice') }, ['Another skill']),
+        practice ? el('button', { class: 'btn secondary', onclick: () => SAT.router.navigate('/focus/practice') }, ['Another skill']) : null,
         el('button', { class: 'btn secondary', onclick: () => SAT.router.navigate('/') }, ['Home'])
       ])
     ]));

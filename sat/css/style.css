@@ -742,3 +742,92 @@ button { font-family: inherit; cursor: pointer; }
 .lesson-more { font-size: 13px; margin-top: 4px; }
 .lesson-more a { color: var(--sprint); font-weight: 700; text-decoration: none; }
 .lesson-more a:hover { text-decoration: underline; }
+
+/* ---------- Daily plan (home) ---------- */
+.path-card {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 20px 18px;
+  border-width: 2px;
+}
+.path-step {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.path-card .game-name { font-size: 22px; }
+.path-card .game-status { font-size: 14px; }
+
+.path-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  background: var(--paper);
+}
+.path-row .path-check {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.path-row.done .path-check { background: var(--good); color: #fff; }
+.path-row.done .path-row-name { font-weight: 700; }
+.path-row.done .path-row-result { color: var(--good); font-weight: 600; }
+.path-row.upcoming { border-style: dashed; color: var(--ink-soft); background: var(--paper-dim); }
+.path-row.upcoming .path-check { border: 1.5px dashed var(--ink-soft); color: var(--ink-soft); }
+.path-row-name { flex: 1; text-align: left; }
+.path-row-result { font-size: 12.5px; }
+
+.path-card-done {
+  text-align: center;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--vocab-soft);
+  padding: 22px 16px;
+  margin-bottom: 12px;
+}
+.path-card-done .big { font-size: 40px; margin-bottom: 6px; }
+.path-card-done p { font-size: 14px; color: #333; line-height: 1.5; }
+
+.more-games { margin-top: 18px; }
+.more-games summary {
+  cursor: pointer;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  padding: 8px 2px;
+  user-select: none;
+  list-style-position: inside;
+}
+.more-games summary:hover { color: var(--ink); }
+.extra-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--paper);
+  padding: 10px 12px;
+  margin-top: 8px;
+  font-size: 14px;
+}
+.extra-row:hover { border-color: #aaa; }
+.extra-icon { font-size: 18px; }
+.extra-name { flex: 1; font-weight: 700; }
+.extra-status { font-size: 12.5px; color: var(--ink-soft); font-weight: 600; }
+.extra-status.done { color: var(--good); }
