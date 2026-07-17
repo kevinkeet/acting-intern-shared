@@ -239,10 +239,9 @@ const AssessmentStart = {
             return `
                 <div class="assessment-case-card">
                     <div class="assessment-case-card-header">
-                        <h3>${this._escape(m.caseTitle || m.caseId)}</h3>
+                        <h3>${this._escape(this._cardTitle(m))}</h3>
                         ${isScaffold ? '<span class="assessment-case-tag scaffold">SCAFFOLD</span>' : ''}
                     </div>
-                    <p class="assessment-case-card-desc">${this._escape(m.description || '')}</p>
                     <div class="assessment-case-card-meta">
                         <span>${(m.assessments || []).length} assessment points</span>
                         <span>&middot;</span>
@@ -319,6 +318,14 @@ const AssessmentStart = {
         } catch (err) {
             App.showToast('Could not abandon: ' + err.message, 'error');
         }
+    },
+
+    // Pre-test card title: the patient name only. The full caseTitle embeds a
+    // spoiler subtitle (e.g. "— The drug fever that almost killed her") that
+    // gives the case away, so we strip everything after the em/en/hyphen dash.
+    _cardTitle(m) {
+        const full = m.caseTitle || m.caseId || '';
+        return full.split(/\s[—–-]\s/)[0].trim() || full;
     },
 
     _escape(s) {
