@@ -13807,6 +13807,48 @@ body.assessment-dock-open { --arail: 440px; }
     position: static;
     flex: 0 0 auto;
     box-shadow: none;
+    padding: 7px 12px;
+}
+/* Compact two-row bar: timer + actions, then a single truncated context line
+   with the progress dots inline. */
+.assessment-dock .assessment-bar-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+.assessment-dock .assessment-timer {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 18px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+.assessment-bar-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.assessment-bar-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 5px;
+    min-width: 0;
+}
+.assessment-bar-context {
+    font-size: 11px;
+    color: #cbd5e0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+}
+.assessment-dock .assessment-progress-dots {
+    margin: 0;
+    flex: 0 0 auto;
 }
 .assessment-rail-tabs {
     flex: 0 0 auto;
@@ -13862,10 +13904,8 @@ body.assessment-dock-open { --arail: 440px; }
 /* Tab visibility. */
 .assessment-dock.tab-answer .assessment-chatbot-panel { display: none; }
 .assessment-dock.tab-chat .assessment-dock-body { display: none; }
-/* Chart clears the rail; full height on the left. */
-body.assessment-dock-open #main-content {
-    padding-right: calc(var(--arail, 440px) + 16px);
-}
+/* (Right-side space for the rail is reserved on .main-container above — do NOT
+   also pad #main-content here, or the chart content gets double-squeezed.) */
 .assessment-bar {
     position: sticky;
     top: 0;
@@ -14970,16 +15010,12 @@ body.in-assessment #chat-trigger-buttons {
     gap: 4px;
 }
 
-/* Make sure main-content doesn't get hidden behind the chatbot panel on
-   wide screens — adjust margin-right when chatbot is active */
-body.in-assessment .main-container {
-    margin-right: 420px;
-}
-@media (max-width: 1100px) {
-    body.in-assessment .main-container { margin-right: 360px; }
-}
-@media (max-width: 900px) {
-    body.in-assessment .main-container { margin-right: 320px; }
+/* Reserve the right rail so the chart (main-container) never hides behind it.
+   Keyed off the dock and sized to --arail so it stays in sync with the rail
+   width at every breakpoint. This is the SINGLE right-side reservation — do
+   not also pad #main-content, or the chart content gets squeezed. */
+body.assessment-dock-open .main-container {
+    margin-right: var(--arail, 440px);
 }
 
 /* Context curation profile in results report */

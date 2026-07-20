@@ -192,31 +192,23 @@ const AssessmentPanel = {
         if (!bar) return;
         bar.innerHTML = `
             <div class="assessment-bar-row">
-                <div class="assessment-bar-left">
-                    <div class="assessment-bar-title">
-                        Assessment ${apIndex1} of ${total}: <strong>${this._escape(ap.title || ap.id)}</strong>
-                    </div>
-                    <div class="assessment-bar-subtitle">
-                        Prompt ${promptIdx1} of ${promptCount}
-                    </div>
+                <div class="assessment-timer ${timeRemaining < 60 ? 'low' : ''} ${isPaused ? 'paused' : ''}">
+                    <i data-lucide="clock" class="lucide-inline"></i>
+                    <span id="assessment-timer-text">${this._fmtTime(timeRemaining)}</span>
+                    ${isPaused ? '<span class="assessment-paused-pill">PAUSED</span>' : ''}
                 </div>
-                <div class="assessment-bar-right">
-                    <div class="assessment-timer ${timeRemaining < 60 ? 'low' : ''} ${isPaused ? 'paused' : ''}">
-                        <i data-lucide="clock" class="lucide-inline"></i>
-                        <span id="assessment-timer-text">${this._fmtTime(timeRemaining)}</span>
-                        ${isPaused ? '<span class="assessment-paused-pill">PAUSED</span>' : ''}
-                    </div>
-                    <button class="btn btn-sm" id="assessment-pause-btn">
-                        ${isPaused ? '<i data-lucide="play" class="lucide-inline"></i> Resume' : '<i data-lucide="pause" class="lucide-inline"></i> Pause'}
+                <div class="assessment-bar-actions">
+                    <button class="btn btn-sm" id="assessment-pause-btn" title="${isPaused ? 'Resume' : 'Pause'}">
+                        ${isPaused ? '<i data-lucide="play" class="lucide-inline"></i>' : '<i data-lucide="pause" class="lucide-inline"></i>'}
                     </button>
                     <button class="btn btn-sm" id="assessment-abandon-btn" title="Abandon attempt">
                         <i data-lucide="x-octagon" class="lucide-inline"></i>
-                        Abandon
                     </button>
                 </div>
             </div>
-            <div class="assessment-progress-dots">
-                ${this._renderProgressDots(cur)}
+            <div class="assessment-bar-meta">
+                <span class="assessment-bar-context" title="${this._escape(ap.title || ap.id)}">${total > 1 ? `AP ${apIndex1}/${total} · ` : ''}${this._escape(ap.title || ap.id)} · Prompt ${promptIdx1}/${promptCount}</span>
+                <div class="assessment-progress-dots">${this._renderProgressDots(cur)}</div>
             </div>
         `;
         App.refreshIcons();
@@ -549,7 +541,7 @@ const AssessmentPanel = {
             return;
         }
         if (!pill) {
-            const bar = document.querySelector('.assessment-bar-right');
+            const bar = document.querySelector('.assessment-dock .assessment-bar-actions');
             if (!bar) return;
             pill = document.createElement('span');
             pill.id = 'assessment-sync-pill';
