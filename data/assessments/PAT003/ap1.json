@@ -16,7 +16,7 @@
       "type": "differential",
       "question": "Based on the information you have at this time, what is your differential diagnosis for this incidental lung nodule?",
       "expectedResponseFormat": "free_text",
-      "minLength": 150,
+      "minLength": 0,
       "rubric": {
         "essential": [
           "Primary lung malignancy on the differential (1 source pt)",
@@ -47,7 +47,7 @@
       "type": "additional-info",
       "question": "What additional information (from the patient, the chart, or non-invasive workup) could you obtain that would help further hone the differential diagnosis for this lung nodule?",
       "expectedResponseFormat": "free_text",
-      "minLength": 200,
+      "minLength": 0,
       "rubric": {
         "essential": [
           "Detailed smoking history (pack-years, time since quit) — 1 source pt",
@@ -78,7 +78,7 @@
       "type": "management-decision",
       "question": "The patient is being planned for discharge today and is expecting to leave today to go to rehab. What factors would influence your decision about keeping her in the hospital for additional workup vs. deferring to the outpatient setting?",
       "expectedResponseFormat": "free_text",
-      "minLength": 300,
+      "minLength": 0,
       "rubric": {
         "essential": [
           "Patient's understanding of her current condition (and the limits imposed by language barrier) — 1 source pt",
@@ -114,7 +114,7 @@
       "type": "management-plan",
       "question": "If you were to defer the workup to the outpatient setting, what would be your process? Be concrete.",
       "expectedResponseFormat": "free_text",
-      "minLength": 250,
+      "minLength": 0,
       "rubric": {
         "essential": [
           "Ensure patient and family understanding of the current condition (in Vietnamese, with formal interpretation) — 1 source pt",
@@ -147,7 +147,7 @@
       "type": "management-decision",
       "question": "If you were to keep her in the hospital for additional investigations, at what point in those investigations would you discharge her?",
       "expectedResponseFormat": "free_text",
-      "minLength": 100,
+      "minLength": 0,
       "rubric": {
         "essential": [
           "After the biopsy itself is completed — 1 source pt",

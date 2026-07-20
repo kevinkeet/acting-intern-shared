@@ -16,7 +16,7 @@
       "type": "differential",
       "question": "What is your prioritized differential diagnosis for Maria's current symptoms, and what would you do next?",
       "expectedResponseFormat": "free_text",
-      "minLength": 250,
+      "minLength": 0,
       "rubric": {
         "essential": [
           "Systemic lupus erythematosus considered but appropriately weighted given low-titer (1:80) ANA and limited specific criteria",

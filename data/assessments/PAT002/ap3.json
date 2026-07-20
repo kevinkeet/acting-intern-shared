@@ -16,7 +16,7 @@
       "type": "differential",
       "question": "Commit to a unifying diagnosis (or dyad/triad) for Maria. Lay out your reasoning.",
       "expectedResponseFormat": "free_text",
-      "minLength": 200,
+      "minLength": 0,
       "rubric": {
         "essential": [
           "Active systemic lupus erythematosus is the underlying autoimmune diagnosis",
@@ -48,7 +48,7 @@
       "type": "management",
       "question": "Write Maria's discharge management plan. Address immunosuppression, nutrition, and the outpatient transition.",
       "expectedResponseFormat": "free_text",
-      "minLength": 350,
+      "minLength": 0,
       "rubric": {
         "essential": [
           "Specific corticosteroid plan with stated dose and taper (e.g., prednisone 1 mg/kg with slow taper schedule)",

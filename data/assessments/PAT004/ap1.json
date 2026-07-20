@@ -16,7 +16,7 @@
       "type": "management-decision",
       "question": "How long would you anticoagulate this patient before biopsying the liver lesion, and what is your rationale for choosing that amount of time?",
       "expectedResponseFormat": "free_text",
-      "minLength": 200,
+      "minLength": 0,
       "rubric": {
         "essential": [
           "Recommends DEFERRING the biopsy to allow a meaningful period of uninterrupted anticoagulation first — on the order of about a month (roughly 3-4 weeks), rather than biopsying acutely",
@@ -50,7 +50,7 @@
       "type": "management-decision",
       "question": "Thinking beyond this specific patient: which general factors would you weigh in deciding the timing of biopsy for a hepatic lesion in a patient with a new PE and DVT? Which factors would push you to biopsy PROMPTLY, and which would push you to DELAY until after a longer period of anticoagulation?",
       "expectedResponseFormat": "free_text",
-      "minLength": 250,
+      "minLength": 0,
       "rubric": {
         "essential": [
           "Names factors favoring PROMPT biopsy — e.g., a result that would urgently change management (an aggressive or treatable malignancy needing time-sensitive therapy), high diagnostic uncertainty that anticoagulation alone doesn't resolve, low bleeding risk of the lesion/approach, and patient stability",
@@ -83,7 +83,7 @@
       "type": "management-decision",
       "question": "When a patient on a direct oral anticoagulant (here, apixaban) is to undergo an invasive procedure such as a liver biopsy, how long before the procedure would you hold the anticoagulant, and what is your rationale?",
       "expectedResponseFormat": "free_text",
-      "minLength": 150,
+      "minLength": 0,
       "rubric": {
         "essential": [
           "Recognizes a percutaneous liver biopsy is a HIGH-bleeding-risk procedure (deep solid-organ biopsy), which lengthens the required hold",
@@ -117,7 +117,7 @@
       "type": "management-decision",
       "question": "When a patient on a direct oral anticoagulant is to undergo an invasive procedure, what factors would help you decide whether or not to use bridging anticoagulation?",
       "expectedResponseFormat": "free_text",
-      "minLength": 150,
+      "minLength": 0,
       "rubric": {
         "essential": [
           "Recognizes that DOACs generally do NOT require bridging — their rapid offset/onset and short half-life mean the interruption window is brief, so bridging is usually unnecessary (bridging is largely a warfarin-era concept)",

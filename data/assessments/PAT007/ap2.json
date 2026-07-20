@@ -16,7 +16,7 @@
       "type": "management-decision",
       "question": "What do you do with her antibiotics, and why?",
       "expectedResponseFormat": "free_text",
-      "minLength": 250,
+      "minLength": 0,
       "rubric": {
         "essential": [
           "Recognizes the infectious workup is comprehensively NEGATIVE (cultures NGTD, no abscess, normal CSF, negative paracentesis, procalcitonin not elevated, WBC not rising) and that she is WORSENING despite escalating antibiotics — so the occult-infection hypothesis is not supported",
@@ -49,7 +49,7 @@
       "type": "management-decision",
       "question": "The family is raising comfort measures after two weeks without improvement. What factors go into your decision about transitioning this patient to comfort-focused care (CMO)?",
       "expectedResponseFormat": "free_text",
-      "minLength": 250,
+      "minLength": 0,
       "rubric": {
         "essential": [
           "Weighs prognosis and the REVERSIBILITY of the current illness, the patient's values/goals (she cannot currently express them → rely on the surrogate), surrogate/family input, quality of life, and the burden vs benefit of continued aggressive care",

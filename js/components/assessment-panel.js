@@ -254,7 +254,6 @@ const AssessmentPanel = {
             `;
         }
 
-        const minLength = prompt.minLength || 0;
         const typeLabel = this._labelForType(prompt.type);
         // Prefer a locally-autosaved draft (it is always at least as new as the
         // last submitted text — drafts are cleared on successful submit).
@@ -279,12 +278,10 @@ const AssessmentPanel = {
                 ${aiSampleHtml}
                 <textarea class="assessment-response-input" id="assessment-response-input"
                           placeholder="Type your response here…"
-                          minlength="${minLength}"
                           rows="6">${this._escape(existingText)}</textarea>
                 <div class="assessment-response-controls">
                     <div class="assessment-response-meta">
                         <span id="assessment-char-count">0</span> chars
-                        ${minLength ? `<span class="assessment-minlength">(min ${minLength})</span>` : ''}
                     </div>
                     <div class="assessment-response-actions">
                         <button class="btn" id="assessment-save-draft-btn">Save Draft</button>
@@ -378,17 +375,8 @@ const AssessmentPanel = {
         const text = (input.value || '').trim();
         const cur = AssessmentEngine.getCurrent();
         if (!cur) return;
-        const min = cur.prompt.minLength || 0;
-        if (text.length < min) {
-            // Persistent inline feedback (a toast alone disappears and leaves
-            // the participant wondering why Submit "does nothing").
-            const needed = min - text.length;
-            if (status) {
-                status.innerHTML = `<span class="assessment-status-error">Your response is ${text.length} characters — at least ${min} are required (${needed} more to go).</span>`;
-            }
-            App.showToast(`Response must be at least ${min} characters.`, 'error');
-            return;
-        }
+        // No minimum-length requirement — residents may answer as briefly as
+        // they wish. (The engine still guards against a fully empty submit.)
         if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Submitting…'; }
         if (status) status.innerHTML = '<span class="assessment-status-info">Submitting…</span>';
 

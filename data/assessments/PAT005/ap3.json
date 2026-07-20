@@ -16,7 +16,7 @@
       "type": "reasoning",
       "question": "After her transplant, her need for paracentesis and thoracentesis dropped away entirely. What are the possible reasons for this adjustment in her drainage needs?",
       "expectedResponseFormat": "free_text",
-      "minLength": 100,
+      "minLength": 0,
       "rubric": {
         "essential": [
           "The liver transplant RESOLVED the portal hypertension that drove the ascites and hepatic hydrothorax — so the fluid stopped re-accumulating and drainage was no longer needed",

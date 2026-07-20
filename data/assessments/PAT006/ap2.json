@@ -16,7 +16,7 @@
       "type": "management-decision",
       "question": "Would you recommend to this patient that she be started on therapeutic anticoagulation? State your recommendation, and explain what factors would influence your decision.",
       "expectedResponseFormat": "free_text",
-      "minLength": 300,
+      "minLength": 0,
       "rubric": {
         "essential": [
           "Calculates or cites CHA2DS2-VASc = 4 for this patient (age 65-74 = 1, female sex = 1, hypertension = 1, diabetes = 1; no prior stroke/TIA, no heart failure, no vascular disease) and recognizes this score generally favors anticoagulation by guideline",
@@ -53,7 +53,7 @@
       "type": "management-decision",
       "question": "If the decision was made to start therapeutic anticoagulation on hospital day #4 (immediately after the asymptomatic 2-hour episode), what would be the best choice of anticoagulant for this patient, and why?",
       "expectedResponseFormat": "free_text",
-      "minLength": 200,
+      "minLength": 0,
       "rubric": {
         "essential": [
           "Chooses a direct oral anticoagulant (DOAC) over warfarin for her non-valvular atrial fibrillation, with rationale (guideline-preferred; better safety/efficacy profile; no INR monitoring)",
@@ -88,7 +88,7 @@
       "type": "management-plan",
       "question": "The patient is about to be discharged. Would you discharge her with an ambulatory ECG monitor? If so, what type would you choose, what factors should be considered in that choice, and what would you do with the information from the monitor?",
       "expectedResponseFormat": "free_text",
-      "minLength": 250,
+      "minLength": 0,
       "rubric": {
         "essential": [
           "YES — recommends extended ambulatory ECG monitoring after discharge to clarify the atrial fibrillation burden once in-hospital telemetry ends (the long-term burden/recurrence is still unresolved)",

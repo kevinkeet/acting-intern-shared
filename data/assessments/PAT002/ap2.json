@@ -16,7 +16,7 @@
       "type": "differential",
       "question": "What is your working diagnosis or unifying explanation for Maria's current presentation? Lay out your reasoning.",
       "expectedResponseFormat": "free_text",
-      "minLength": 200,
+      "minLength": 0,
       "rubric": {
         "essential": [
           "Identifies active SLE flare with inflammatory myositis as a unifying autoimmune driver",
@@ -45,7 +45,7 @@
       "type": "management",
       "question": "Write your first 24-hour management plan for Maria. What do you start, what do you hold, and in what order? Be explicit about safety.",
       "expectedResponseFormat": "free_text",
-      "minLength": 300,
+      "minLength": 0,
       "rubric": {
         "essential": [
           "NPO with formal swallow evaluation (MBSS) before any oral intake; aspiration precautions in place",

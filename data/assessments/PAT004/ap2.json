@@ -16,7 +16,7 @@
       "type": "management-decision",
       "question": "Would you recommend placement of an IVC filter in this case? Explain why or why not.",
       "expectedResponseFormat": "free_text",
-      "minLength": 250,
+      "minLength": 0,
       "rubric": {
         "essential": [
           "Recognizes that this recurrence occurred during a SUPERVISED INTERRUPTION of anticoagulation (the 3-day peri-procedural hold) — i.e., it is NOT a failure of therapeutic anticoagulation, but progression while subtherapeutic/off anticoagulation",
@@ -50,7 +50,7 @@
       "type": "knowledge",
       "question": "More generally, what are the arguments for and against placing an IVC filter?",
       "expectedResponseFormat": "free_text",
-      "minLength": 200,
+      "minLength": 0,
       "rubric": {
         "essential": [
           "Gives valid arguments FOR — at least: a contraindication to anticoagulation (e.g., active or high-risk bleeding), and recurrent VTE DESPITE therapeutic anticoagulation; (may also mention as a temporary measure when anticoagulation must be interrupted in a very high-risk patient)",

@@ -15,7 +15,7 @@
       "type": "reasoning",
       "question": "During each outpatient procedure she is now receiving 4 units of FFP because of her elevated INR. What are the possible risks and benefits of giving FFP in this patient?",
       "expectedResponseFormat": "free_text",
-      "minLength": 120,
+      "minLength": 0,
       "scoringRubric": {
         "maxPoints": 4,
         "rubricText": "Total 4 points.\n- Recognizes there are NO benefits to giving FFP here: 1 point\n- Three of the five of the following risks: 3 points\n  - Portal hypertension (volume/pressure)\n  - Transfusion reaction\n  - Transfusion-related infection\n  - Transfusion-associated lung injury (TRALI)\n  - Waste of blood products\nAPPLICABLE MAXIMUM: 4."
@@ -29,7 +29,7 @@
       "type": "communication",
       "question": "After her ICU admission for flash pulmonary edema, you call her radiologist to ask that he stop giving FFP during her procedures. How would you approach that conversation?",
       "expectedResponseFormat": "free_text",
-      "minLength": 200,
+      "minLength": 0,
       "rubric": {
         "essential": [
           "Collegial, non-judgmental tone — the radiologist followed a common (if outdated) practice; the goal is collaboration, not blame",
@@ -63,7 +63,7 @@
       "type": "management-decision",
       "question": "Should a PleurX (indwelling tunneled pleural) catheter be placed, and/or should a TIPS be considered, to manage her recurrent hydrothorax? Give the risks and benefits of each for THIS patient.",
       "expectedResponseFormat": "free_text",
-      "minLength": 300,
+      "minLength": 0,
       "rubric": {
         "essential": [
           "TIPS: can durably lower portal pressure and control refractory hydrothorax/ascites and can bridge to transplant — BUT carries a major risk of precipitating or worsening HEPATIC ENCEPHALOPATHY, which she already has recurrently (a key caution here), and requires adequate hepatic reserve",
