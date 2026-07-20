@@ -2,11 +2,11 @@
  * AssessmentPanel — the active test-taking UI at #/assessment/run
  *
  * Layout: the chart occupies #main-content as a normal EHR page (all nav tabs
- * work), while the timer, progress, scenario, question, and answer box live in
- * a persistent DOCK in the right rail, directly below the AI chatbot. Because
- * the dock is attached to <body> (outside #main-content), browsing the chart
- * (Problems, Meds, Labs…) never destroys the question or the answer box. The
- * dock can be collapsed to its bar to give the chatbot the full rail.
+ * work) at full height on the left. The right rail is a single persistent DOCK
+ * (attached to <body>) with the timer/progress bar on top and a tab switcher
+ * below it: "Your Answer" (scenario + question + answer box) and "AI Assistant"
+ * (the chatbot panel, relocated into the rail). Each tab gets the full rail
+ * height, so nothing is cramped, and browsing chart tabs never destroys either.
  *
  * Controls:
  *   - Timer (per-assessment limit, auto-locks on expiry)
@@ -111,40 +111,68 @@ const AssessmentPanel = {
         if (!dock) {
             dock = document.createElement('div');
             dock.id = 'assessment-dock';
-            dock.className = 'assessment-dock';
+            // Full-height right rail: timer bar on top, then a tab switcher
+            // between the answer panel and the AI chatbot, each getting the
+            // whole remaining height (no more cramped vertical split).
+            dock.className = 'assessment-dock tab-answer';
             dock.innerHTML = `
                 <div class="assessment-bar" id="assessment-bar"></div>
-                <div class="assessment-dock-body" id="assessment-dock-body">
-                    <div class="assessment-prompt-area" id="assessment-prompt-area"></div>
+                <div class="assessment-rail-tabs" role="tablist">
+                    <button class="assessment-rail-tab active" data-tab="answer" role="tab">
+                        <i data-lucide="pencil-line" class="lucide-inline"></i> Your Answer
+                    </button>
+                    <button class="assessment-rail-tab" data-tab="chat" role="tab">
+                        <i data-lucide="message-circle" class="lucide-inline"></i> AI Assistant
+                    </button>
+                </div>
+                <div class="assessment-rail-content" id="assessment-rail-content">
+                    <div class="assessment-dock-body" id="assessment-dock-body">
+                        <div class="assessment-prompt-area" id="assessment-prompt-area"></div>
+                    </div>
                 </div>
             `;
             document.body.appendChild(dock);
+            dock.querySelectorAll('.assessment-rail-tab').forEach((b) => {
+                b.addEventListener('click', () => this._switchRailTab(b.getAttribute('data-tab')));
+            });
         }
         document.body.classList.add('assessment-dock-open');
+        this._attachChatbot();
         App.refreshIcons();
         this._renderBar();
+    },
+
+    // Move the AI chatbot's panel into the rail so it becomes the "AI Assistant"
+    // tab. The chatbot is activated by the engine (possibly slightly after us),
+    // so retry briefly until its panel exists.
+    _attachChatbot(tries) {
+        tries = (tries == null) ? 16 : tries;
+        const content = document.getElementById('assessment-rail-content');
+        const cb = document.getElementById('assessment-chatbot-panel');
+        if (content && cb) {
+            if (cb.parentElement !== content) content.appendChild(cb);
+            return;
+        }
+        if (content && tries > 0) {
+            setTimeout(() => this._attachChatbot(tries - 1), 200);
+        }
+    },
+
+    _switchRailTab(tab) {
+        const dock = document.getElementById('assessment-dock');
+        if (!dock) return;
+        const isChat = (tab === 'chat');
+        dock.classList.toggle('tab-chat', isChat);
+        dock.classList.toggle('tab-answer', !isChat);
+        dock.querySelectorAll('.assessment-rail-tab').forEach((b) => {
+            b.classList.toggle('active', b.getAttribute('data-tab') === tab);
+        });
     },
 
     _unmountDock() {
         const dock = document.getElementById('assessment-dock');
         if (dock) dock.remove();
-        document.body.classList.remove('assessment-dock-open', 'assessment-dock-collapsed');
-    },
-
-    // Collapse the dock to just its bar (timer + progress) so the resident can
-    // read the full chart, then expand again to answer.
-    _toggleCollapse() {
-        const dock = document.getElementById('assessment-dock');
-        if (!dock) return;
-        const collapsed = dock.classList.toggle('collapsed');
-        document.body.classList.toggle('assessment-dock-collapsed', collapsed);
-        const btn = document.getElementById('assessment-collapse-btn');
-        if (btn) {
-            btn.innerHTML = collapsed
-                ? '<i data-lucide="chevron-up" class="lucide-inline"></i> Show question'
-                : '<i data-lucide="chevron-down" class="lucide-inline"></i> Hide';
-        }
-        App.refreshIcons();
+        document.body.classList.remove('assessment-dock-open');
     },
 
     _renderBar() {
@@ -178,9 +206,6 @@ const AssessmentPanel = {
                         <span id="assessment-timer-text">${this._fmtTime(timeRemaining)}</span>
                         ${isPaused ? '<span class="assessment-paused-pill">PAUSED</span>' : ''}
                     </div>
-                    <button class="btn btn-sm" id="assessment-collapse-btn" title="Show/hide the question panel">
-                        <i data-lucide="chevron-down" class="lucide-inline"></i> Hide
-                    </button>
                     <button class="btn btn-sm" id="assessment-pause-btn">
                         ${isPaused ? '<i data-lucide="play" class="lucide-inline"></i> Resume' : '<i data-lucide="pause" class="lucide-inline"></i> Pause'}
                     </button>
@@ -195,7 +220,6 @@ const AssessmentPanel = {
             </div>
         `;
         App.refreshIcons();
-        document.getElementById('assessment-collapse-btn').addEventListener('click', () => this._toggleCollapse());
         document.getElementById('assessment-pause-btn').addEventListener('click', () => this._togglePause());
         document.getElementById('assessment-abandon-btn').addEventListener('click', () => this._confirmAbandon());
         this._renderSyncPill(); // bar re-render wipes the pill — restore it
