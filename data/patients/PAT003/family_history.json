@@ -26,10 +26,10 @@
       "relation": "Brother (oldest)",
       "name": null,
       "vital": "Deceased",
-      "ageAtDeath": 64,
-      "yearOfDeath": 2018,
+      "ageAtDeath": 67,
+      "yearOfDeath": 2026,
       "conditions": [
-        { "condition": "Lung cancer (squamous cell, primary)", "age": 63, "notes": "Heavy smoker (40+ pack years). Diagnosed advanced stage; died 11 months after diagnosis. Lived in Vietnam." }
+        { "condition": "Lung cancer (squamous cell, primary)", "age": 64, "notes": "Heavy smoker (40+ pack years). Diagnosed with advanced (stage IV) squamous cell lung cancer in Hanoi in summer 2022; received palliative care in Vietnam; died March 2026. Lived in Vietnam. This loss prompted the patient's repeated (declined) lung-cancer-screening discussions in 2022 and 2026." }
       ]
     },
     {
