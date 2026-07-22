@@ -48,6 +48,30 @@ const ModeManager = (function () {
     };
     const ORDER = ['assessment', 'tutor', 'assistant'];
 
+    // ── Study lock ──────────────────────────────────────────────────────
+    // The RCT deployment exposes ONLY the Assessment mode: no landing
+    // chooser, no top-bar switcher, tutor/assistant refused. The other two
+    // modes are not removed — load the site once with ?allmodes in the URL
+    // to restore all three in this browser (persists via localStorage);
+    // load with ?studymode to lock it back down.
+    const UNLOCK_KEY = 'all-modes-unlocked';
+
+    function _syncUnlockFromUrl() {
+        try {
+            const q = new URLSearchParams(window.location.search);
+            if (q.has('allmodes')) localStorage.setItem(UNLOCK_KEY, '1');
+            if (q.has('studymode')) localStorage.removeItem(UNLOCK_KEY);
+        } catch (e) { /* ignore */ }
+    }
+
+    function isStudyLocked() {
+        try { return localStorage.getItem(UNLOCK_KEY) !== '1'; } catch (e) { return true; }
+    }
+
+    function availableModes() {
+        return isStudyLocked() ? ['assessment'] : ORDER;
+    }
+
     function get() {
         try {
             const m = localStorage.getItem(KEY);
@@ -66,6 +90,7 @@ const ModeManager = (function () {
     // and navigate to the mode's home route.
     function set(mode, opts) {
         if (!MODES[mode]) return;
+        if (isStudyLocked() && mode !== 'assessment') mode = 'assessment';
         opts = opts || {};
         try { localStorage.setItem(KEY, mode); } catch (e) { /* ignore */ }
         _applyBodyClass(mode);
@@ -113,8 +138,11 @@ const ModeManager = (function () {
     function _renderSwitcher() {
         const el = _switcherContainer();
         if (!el) return;
+        const modes = availableModes();
+        // A one-mode app needs no switcher chrome.
+        if (modes.length < 2) { el.innerHTML = ''; return; }
         const cur = get();
-        el.innerHTML = ORDER.map((id) => {
+        el.innerHTML = modes.map((id) => {
             const m = MODES[id];
             const active = id === cur;
             return `<button class="mode-switch-item ${active ? 'active' : ''}" data-mode="${id}"
@@ -133,6 +161,8 @@ const ModeManager = (function () {
 
     // ── Landing chooser ────────────────────────────────────────────────
     function showChooser() {
+        // Study deployment: no choice to offer — go straight to Assessment.
+        if (isStudyLocked()) { set('assessment'); return; }
         if (document.getElementById('mode-chooser')) return;
         const overlay = document.createElement('div');
         overlay.id = 'mode-chooser';
@@ -145,7 +175,7 @@ const ModeManager = (function () {
                     <p>Choose what you'd like to do. You can switch any time from the top bar.</p>
                 </div>
                 <div class="mode-chooser-grid">
-                    ${ORDER.map((id) => {
+                    ${availableModes().map((id) => {
                         const m = MODES[id];
                         return `<button class="mode-card" data-mode="${id}">
                             <div class="mode-card-icon"><i data-lucide="${m.icon}"></i></div>
@@ -177,7 +207,14 @@ const ModeManager = (function () {
     // Apply scoping + switcher for any already-chosen mode. Returns the
     // current mode (or null if the chooser should be shown).
     function init() {
-        const cur = get();
+        _syncUnlockFromUrl();
+        let cur = get();
+        // Locked deployment: a previously stored tutor/assistant choice must
+        // not resurrect those modes.
+        if (isStudyLocked() && cur && cur !== 'assessment') {
+            cur = 'assessment';
+            try { localStorage.setItem(KEY, cur); } catch (e) { /* ignore */ }
+        }
         _applyBodyClass(cur);
         _renderSwitcher();
         // Open the mode's right-side panel on boot (deferred so AIPanel/EduTutor
@@ -186,7 +223,7 @@ const ModeManager = (function () {
         return cur;
     }
 
-    return { MODES, ORDER, get, set, init, showChooser, _renderSwitcher };
+    return { MODES, ORDER, get, set, init, showChooser, _renderSwitcher, isStudyLocked, availableModes };
 })();
 
 window.ModeManager = ModeManager;
