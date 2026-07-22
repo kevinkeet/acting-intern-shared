@@ -1,0 +1,10 @@
+{
+  "id": "NOTE010",
+  "type": "Hepatology Continuity Note",
+  "date": "2027-06-25T10:00:00.000Z",
+  "author": "Dr. Priya Anand (Transplant Hepatology)",
+  "department": "Hepatology",
+  "encounter": "ENC_OUTPT_0625",
+  "content": "HEPATOLOGY CONTINUITY NOTE — 6/25/2027\n\nMs. Sarah Whitlock, 50F with decompensated alcohol-related cirrhosis (hepatic encephalopathy, ascites, and right hepatic hydrothorax), active on the liver-transplant list.\n\nINTERVAL HISTORY:\nTwo things changed after her April ICU admission for flash pulmonary edema (attributed to the repeated prophylactic peri-procedural FFP): (1) her community radiologist stopped giving prophylactic FFP with her drainage procedures, and (2) an indwelling tunneled pleural (PleurX) catheter was placed in early June.\n\nSince then she has improved markedly. Over the past ~2 weeks she has required essentially NO scheduled thoracentesis or paracentesis, with only minimal PleurX output, and her weight and abdominal girth have been stable. She has had no further respiratory distress and reports more energy and appetite.\n\nLABS (today): Na 130 (improved from 126-128 through the spring), K 4.0, Cr 1.3, INR 1.9, T.bili 3.8, albumin 2.9, platelets 58. MELD-Na re-check pending.\n\nASSESSMENT / PLAN:\n- Decompensated cirrhosis with a markedly reduced drainage requirement. Hold routine scheduled drainage while she remains clinically stable; use the PleurX as needed for symptoms.\n- Continue the current outpatient regimen with close follow-up.\n- Remains active on the transplant list; will update the listing team with this interval improvement.\n\nElectronically signed by Dr. Priya Anand, MD (Transplant Hepatology). 6/25/2027.",
+  "attestation": "Electronically signed by Dr. Priya Anand, MD (Transplant Hepatology). 6/25/2027."
+}

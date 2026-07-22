@@ -61,37 +61,31 @@
       "id": "AP2-Q4",
       "order": 3,
       "type": "management-decision",
-      "question": "Should a PleurX (indwelling tunneled pleural) catheter be placed, and/or should a TIPS be considered, to manage her recurrent hydrothorax? Give the risks and benefits of each for THIS patient.",
+      "question": "Should a PleurX (indwelling tunneled pleural) catheter be placed to aid in drainage of her pleural effusion? What are the risks and benefits for THIS patient?",
       "expectedResponseFormat": "free_text",
       "minLength": 0,
-      "rubric": {
-        "essential": [
-          "TIPS: can durably lower portal pressure and control refractory hydrothorax/ascites and can bridge to transplant — BUT carries a major risk of precipitating or worsening HEPATIC ENCEPHALOPATHY, which she already has recurrently (a key caution here), and requires adequate hepatic reserve",
-          "PleurX (indwelling pleural catheter): avoids repeated procedures and transfusions and is convenient for a rural patient — BUT in hepatic hydrothorax carries notable risks of INFECTION (empyema/peritonitis), protein and fluid/electrolyte loss, and is relatively controversial in this setting",
-          "Tailors the recommendation to HER specifics — recurrent encephalopathy raises TIPS risk; she is a transplant candidate (so a bridging strategy matters); rural access argues against frequent travel — and reaches a clear, justified position rather than listing options abstractly",
-          "Frames liver transplant as the DEFINITIVE therapy, with PleurX/TIPS as bridges to it"
-        ],
-        "bonus": [
-          "Specifically notes TIPS could worsen HER encephalopathy",
-          "Notes PleurX infection risk is heightened by her transplant candidacy / anticipated post-transplant immunosuppression",
-          "Recommends a multidisciplinary decision (hepatology, IR, transplant, patient)",
-          "Weighs quality-of-life and the procedural/transfusion burden she has already suffered"
-        ],
-        "redFlags": [
-          "Recommending TIPS without acknowledging the hepatic-encephalopathy risk in a patient with recurrent HE",
-          "Recommending PleurX without acknowledging the infection / protein-loss risk",
-          "Ignoring that transplant is the definitive therapy / not framing these as bridges",
-          "Giving a generic risk/benefit list not applied to her specifics"
-        ]
-      },
-      "weight": 8,
-      "sourceQuestion": "Questions 3 and 4 (TP2): PleurX and TIPS",
+      "weight": 4,
+      "sourceQuestion": "Question 5 (Aliquot 3): PleurX catheter",
       "scoringRubric": {
-        "maxPoints": 8,
-        "rubricText": "This question covers BOTH a PleurX catheter and TIPS. Score each out of 4; sum (max 8).\n\nPleurX catheter (4 points):\n- One of the two contingencies pointing to yes: 1 point\n  - If truly diuretic refractory\n  - If not a candidate for TIPS\n- Two of three benefits: 2 points\n  - Reduces number of procedures\n  - Smaller amount drained more frequently\n  - Can be done at home\n- Increased likelihood of infection (risk): 1 point\n\nTIPS (4 points):\n- Yes, TIPS should be considered: 1 point\n- Risk of liver failure with an elevated MELD: 1 point\n- Risk of hepatic encephalopathy: 1 point\n- One of the two benefits: 1 point\n  - Improved nutrition\n  - Improved frailty status\n\nAPPLICABLE MAXIMUM: 8."
+        "maxPoints": 4,
+        "rubricText": "PleurX catheter — total 4 points.\n- One of the two contingencies pointing to yes: 1 point\n  - If truly diuretic refractory\n  - If not a candidate for TIPS\n- Two of three benefits: 2 points\n  - Reduces the number of procedures\n  - Smaller amount drained more frequently\n  - Can be done at home\n- Increases the likelihood of infection (risk): 1 point\nAPPLICABLE MAXIMUM: 4."
+      }
+    },
+    {
+      "id": "AP2-Q4b",
+      "order": 4,
+      "type": "management-decision",
+      "question": "Should a TIPS be considered to manage her recurrent hydrothorax? What are the risks and benefits for THIS patient?",
+      "expectedResponseFormat": "free_text",
+      "minLength": 0,
+      "weight": 4,
+      "sourceQuestion": "Question 6 (Aliquot 3): TIPS",
+      "scoringRubric": {
+        "maxPoints": 4,
+        "rubricText": "TIPS — total 4 points.\n- Yes, a TIPS should be considered: 1 point\n- Risk of liver failure with an elevated MELD: 1 point\n- Risk of hepatic encephalopathy: 1 point\n- One of the two benefits: 1 point\n  - Improved nutrition\n  - Improved frailty status\nAPPLICABLE MAXIMUM: 4."
       }
     }
   ],
-  "totalWeight": 1.6,
+  "totalWeight": 16,
   "passingScorePct": 70
 }

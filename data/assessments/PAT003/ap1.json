@@ -39,7 +39,11 @@
         ]
       },
       "weight": 0.6,
-      "sourcePoints": 6
+      "sourcePoints": 6,
+      "scoringRubric": {
+        "maxPoints": 6,
+        "rubricText": "Differential diagnosis for the incidental lung nodule. Award 1 point for EACH category included on the differential (6 items, 1 point each; max 6):\na) Primary lung malignancy\nb) Metastasis to the lung\nc) Tuberculosis\nd) Non-TB primary lung infection (e.g., bacterial pneumonia; fungal / endemic mycoses such as histoplasmosis, coccidioidomycosis)\ne) Rheumatologic / autoimmune nodule (e.g., rheumatoid nodule, granulomatosis with polyangiitis)\nf) Benign tumor / granuloma / calcified scar\nAPPLICABLE MAXIMUM: 6."
+      }
     },
     {
       "id": "AP1-Q2",
@@ -70,7 +74,11 @@
         ]
       },
       "weight": 0.9,
-      "sourcePoints": 9
+      "sourcePoints": 9,
+      "scoringRubric": {
+        "maxPoints": 9,
+        "rubricText": "Additional non-invasive information to further hone the differential. Award points as follows (max 9):\n- Detailed smoking history (pack-years, time since quit): 1\n- Environmental / occupational exposure history (e.g., textile cotton dust, asbestos, radon): 1\n- Personal or family cancer history (especially the brother's lung cancer, sister's breast cancer): 1\n- Prior history of lung infections: 1\n- Prior TB testing, treatment, or BCG vaccination status: 1\n- Nodule imaging features — TWO OF THREE of {spiculation; solid vs subsolid character; upper-lobe location}: 2\n- ONE OF TWO of {history of rheumatologic/autoimmune disease; geography of current and previous living (regions endemic for histo/cocci/blasto)}: 1\n- ONE OF TWO of {hemoptysis; lymphadenopathy}: 1\nAPPLICABLE MAXIMUM: 9."
+      }
     },
     {
       "id": "AP1-Q3",
@@ -106,7 +114,11 @@
         ]
       },
       "weight": 1.1,
-      "sourcePoints": 11
+      "sourcePoints": 11,
+      "scoringRubric": {
+        "maxPoints": 11,
+        "rubricText": "Factors influencing keep-in-hospital vs. defer-to-outpatient for the nodule workup. Award points as follows (max 11):\n- Patient's understanding of her current condition (including limits imposed by the language barrier): 1\n- Patient's understanding of the importance of follow-up: 1\n- Patient's ability to navigate the healthcare system (language, insurance, transportation): 1\n- Family / caregiver support (specifically the role of the son and daughter-in-law): 1\n- Quality / effectiveness of the health system's operations for lung-nodule patients (nodule clinic? tracking mechanism?): 1\n- Risk and cost of additional inpatient days (deconditioning, nosocomial infection, financial burden): 1\n- Plan for anticoagulation around any biopsy (currently on apixaban for the new DVT): 1\n- Whether a biopsy plan is in place: 1\n- ONE OF TWO of {risk tolerance of the patient; risk tolerance of the clinician}: 1\n- TWO OF FOUR of {outpatient/PCP access; location/distance of and ease of communication with the rehab facility; ability to attend outpatient specialist appointments while at rehab; timeliness of outpatient specialty appointments}: 2\nAPPLICABLE MAXIMUM: 11."
+      }
     },
     {
       "id": "AP1-Q4",
@@ -139,7 +151,11 @@
         ]
       },
       "weight": 0.7,
-      "sourcePoints": 7
+      "sourcePoints": 7,
+      "scoringRubric": {
+        "maxPoints": 7,
+        "rubricText": "Concrete process for deferring the workup to the outpatient setting. Award 1 point for EACH (max 7):\n- Ensure patient and family understanding of the current condition (in Vietnamese, with formal interpretation)\n- Emphasize the importance of follow-up specifically because of concern for malignancy\n- Schedule the outpatient biopsy (or pulmonary nodule clinic referral) BEFORE discharge — not left to the patient as an outpatient task\n- Assess patient and family needs around discharge (transportation to follow-up, language, financial)\n- Communicate the discharge recommendation to the outpatient care team (PCP, rehab facility medical director)\n- Clear communication of the plan and anticipatory guidance to the patient/family in appropriate language\n- Establish an anticoagulation plan around the biopsy (when to hold apixaban, when to resume)\nAPPLICABLE MAXIMUM: 7."
+      }
     },
     {
       "id": "AP1-Q5",
@@ -164,7 +180,11 @@
         ]
       },
       "weight": 0.3,
-      "sourcePoints": 3
+      "sourcePoints": 3,
+      "scoringRubric": {
+        "maxPoints": 3,
+        "rubricText": "If she is kept in the hospital for the additional workup, at what point should she be discharged. Award 1 point for EACH (max 3):\n- After the biopsy itself is completed\n- After resumption of oral anticoagulation post-procedure (i.e., safely back on apixaban)\n- After clear delineation of the outpatient care plan (results pathway, follow-up appointment booked, who is calling whom with the results)\nAPPLICABLE MAXIMUM: 3."
+      }
     }
   ],
   "totalWeight": 3.6,

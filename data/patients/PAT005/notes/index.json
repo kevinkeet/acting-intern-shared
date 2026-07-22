@@ -98,6 +98,15 @@
       "department": "Hepatology",
       "encounter": "ENC_HX_001",
       "preview": "Decompensated alcohol-related cirrhosis with recurrent ascites and right hepatic hydrothorax; HE controlled on lactulose/rifaximin. Sustained sobriety; transplant evaluation underway. Documents the chronic, recurrent nature of the fluid and her rural access barrier."
+    },
+    {
+      "id": "NOTE010",
+      "type": "Hepatology Continuity Note",
+      "date": "2027-06-25T10:00:00.000Z",
+      "author": "Dr. Priya Anand (Transplant Hepatology)",
+      "department": "Hepatology",
+      "encounter": "ENC_OUTPT_0625",
+      "preview": "Pre-transplant interval note. After stopping prophylactic FFP and placing a PleurX catheter, she improved markedly — essentially no scheduled drainage for ~2 weeks; hyponatremia improved to Na 130. Remains listed for transplant."
     }
   ],
   "lastUpdated": "2027-09-15",

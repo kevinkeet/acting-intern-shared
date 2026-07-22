@@ -11,42 +11,50 @@
   },
   "prompts": [
     {
-      "id": "AP2-Q5",
+      "id": "AP2-Q5a",
       "order": 1,
       "type": "management-decision",
-      "question": "Would you recommend placement of an IVC filter in this case? Explain why or why not.",
+      "question": "Would you recommend placement of an IVC filter in this case? State your position — you will give the arguments for and against on the next two questions.",
       "expectedResponseFormat": "free_text",
       "minLength": 0,
-      "rubric": {
-        "essential": [
-          "Recognizes that this recurrence occurred during a SUPERVISED INTERRUPTION of anticoagulation (the 3-day peri-procedural hold) — i.e., it is NOT a failure of therapeutic anticoagulation, but progression while subtherapeutic/off anticoagulation",
-          "Notes the patient has NO contraindication to anticoagulation and is now therapeutically anticoagulated (heparin) — so the standard indications for a filter (contraindication to anticoagulation, OR recurrent VTE despite therapeutic anticoagulation) are NOT met",
-          "Concludes that the primary treatment is to RESUME / optimize anticoagulation, and that a filter is generally NOT indicated here for that reason",
-          "Reaches a clear, justified position (rather than hedging) — and if a filter is entertained at all, frames it only as a TEMPORARY/RETRIEVABLE device for a specific future scenario (e.g., if another mandatory anticoagulation interruption for the biopsy is truly unavoidable), not as primary therapy"
-        ],
-        "bonus": [
-          "States that a filter does NOT treat the existing clot and is NOT a substitute for anticoagulation",
-          "Argues the better fix is to reconsider the necessity/timing of the biopsy (or pursue a diagnosis without stopping anticoagulation) given the demonstrated recurrence on holding",
-          "If a retrievable filter is placed, commits to a removal plan",
-          "Notes that the recurrence actually demonstrates how dangerous interrupting anticoagulation is in this patient — reinforcing uninterrupted anticoagulation rather than a filter"
-        ],
-        "redFlags": [
-          "Placing a PERMANENT filter as the primary response to this recurrence",
-          "Framing this as 'anticoagulation failure' (it was a recurrence OFF anticoagulation, during a hold)",
-          "Using a filter INSTEAD OF anticoagulation in a patient who can be anticoagulated",
-          "Not recognizing that the recurrence was provoked by the anticoagulation interruption"
-        ]
-      },
-      "weight": 8,
-      "sourceQuestion": "Question 5",
+      "weight": 5,
+      "sourceQuestion": "Aliquot 4 — 'Would you recommend an IVC filter in this case?'",
       "scoringRubric": {
-        "maxPoints": 8,
-        "rubricText": "Score the decision AND the reasoning for the stance the resident takes.\n\nDECISION (5 points): Award 5 points if the resident recommends YES, place an IVC filter. (The on-case answer is yes.)\n\nREASONING - apply the branch matching the resident's stance.\nIf YES, award up to 3 points for any 3 of (any-3 = 3/3):\na) This person needs a biopsy\nb) This person needs a pause of anticoagulation and can't safely pause it\nc) No prospective data answer the exact question, but the balance of benefits/harms suggests benefit here\nd) The patient had a large hemodynamically significant PE recently\ne) Recurrent clot would be dangerous\n\nIf NO, award up to 3 points for any 3 of (any-3 = 3/3):\na) No hard indication in this case based on existing data\nb) Data are limited (only compared anticoagulation alone vs anticoagulation plus filter)\nc) Data are absent for IVC use around anticoagulation pauses\nd) An anticoagulation pause is short (and therefore feasible here)\ne) The patient is extremely thrombogenic already and the filter increases thrombogenic risk\nf) Risks of IVC filter placement\ng) Risks of IVC filter retrieval\n\nAPPLICABLE MAXIMUM: 8 for a YES stance (5 + 3); 3 for a NO stance (reasoning only, since the decision points require YES)."
+        "maxPoints": 5,
+        "rubricText": "Decision only. Award 5 points if the resident recommends YES, place an IVC filter. (The on-case answer is Yes.) No partial credit for other stances on this sub-question. APPLICABLE MAXIMUM: 5."
+      }
+    },
+    {
+      "id": "AP2-Q5b",
+      "order": 2,
+      "type": "reasoning",
+      "question": "Regardless of your answer above: what are the arguments FOR placing an IVC filter in THIS patient? Assume, for the sake of the question, that you would place one.",
+      "expectedResponseFormat": "free_text",
+      "minLength": 0,
+      "weight": 3,
+      "sourceQuestion": "Aliquot 4 — 'Why would you recommend an IVC filter (assume you do)?'",
+      "scoringRubric": {
+        "maxPoints": 3,
+        "rubricText": "Arguments FOR an IVC filter in this specific patient. The resident is explicitly asked to argue this side; score it REGARDLESS of the recommendation they gave on the decision question. Award 1 point for each, up to 3 (any 3 = 3/3):\na) This person needs a biopsy\nb) This person needs a pause of anticoagulation and can't safely pause anticoagulation\nc) There are no prospective data answering the exact question, but the balance of benefits and harms suggests benefit in a scenario like this\nd) The patient had a large, hemodynamically significant PE recently\ne) Recurrent clot would be dangerous\nAPPLICABLE MAXIMUM: 3."
+      }
+    },
+    {
+      "id": "AP2-Q5c",
+      "order": 3,
+      "type": "reasoning",
+      "question": "Regardless of your answer above: what are the arguments AGAINST placing an IVC filter in THIS patient? Assume, for the sake of the question, that you would not place one.",
+      "expectedResponseFormat": "free_text",
+      "minLength": 0,
+      "weight": 3,
+      "sourceQuestion": "Aliquot 4 — 'Why would you NOT recommend an IVC filter (assume you do not)?'",
+      "scoringRubric": {
+        "maxPoints": 3,
+        "rubricText": "Arguments AGAINST an IVC filter in this specific patient. The resident is explicitly asked to argue this side; score it REGARDLESS of the recommendation they gave on the decision question. Award 1 point for each, up to 3 (any 3 = 3/3):\na) There is no hard indication in this case based on the existing data\nb) Data are limited and have only compared anticoagulation alone versus anticoagulation plus filter\nc) Data are absent for guidance around IVC use and anticoagulation pauses\nd) An anticoagulation pause is short (and therefore feasible in this case)\ne) The patient is extremely thrombogenic already, and the IVC filter increases thrombogenic risk\nf) There are risks of IVC filter placement\ng) There are risks of IVC filter retrieval\nAPPLICABLE MAXIMUM: 3."
       }
     },
     {
       "id": "AP2-Q6",
-      "order": 2,
+      "order": 4,
       "type": "knowledge",
       "question": "More generally, what are the arguments for and against placing an IVC filter?",
       "expectedResponseFormat": "free_text",
@@ -76,6 +84,6 @@
       }
     }
   ],
-  "totalWeight": 1.4,
+  "totalWeight": 19,
   "passingScorePct": 70
 }
