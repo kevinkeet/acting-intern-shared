@@ -12,9 +12,10 @@ Living status doc so work can resume in a fresh session. Repo:
 - **Supabase** project (`piwoinyrlicvndpsmtde`) auto-pauses on free tier; resume from the dashboard before use.
 - **Live testing:** the Claude Preview MCP drives a local dev server (`ehr-dev` in `.claude/launch.json`). To reach the assessment runner programmatically: `UserCode.set('X'); ModeManager.set('assessment',{navigate:false}); await AssessmentEngine.start('PAT00N'); location.hash='#/assessment/run'; router.handleRoute();` then hide `#access-gate-overlay` for screenshots.
 
-## The study (why this exists)
-RCT: does a training session improve residents' ability to use an AI assistant for clinical decisions?
-Assessment cases PAT002–PAT007; participants answer via a context-bounded chatbot; answers LLM-graded, logged to Supabase.
+## The study (why this exists) — ASSESSMENT IS THE ONLY IN-SCOPE FEATURE
+**Goal:** an RCT testing whether a training session improves residents' ability to use an AI assistant to solve clinical problems / make clinical decisions — *safely and well* (recognizing and overriding the AI when it is confidently wrong), not merely extracting answers. Deeper stakes: how to bring AI into clinical training without deskilling.
+**Scope:** the app is dual-purpose today (Assessment / AI Tutor / AI Assistant modes), **but for the study only the ASSESSMENT mode is used — the Tutor and Assistant modes will be HIDDEN in the study deployment.** Focus all work on the assessment component: cases PAT002–PAT007, the context-bounded chatbot, the grader, and Supabase logging. Do not invest in Tutor/Assistant unless asked.
+Flow: participants take a timed, chart-gated case, answer each prompt in their own words (informed by the context-bounded chatbot), LLM-graded against the rubric, logged to Supabase.
 **Central finding from simulations this session:** on the current rubrics, naive **copy-paste beats skilled prompting** — even Opus-as-a-trained-resident (knowledge-suppressed) did NOT beat copy-paste, and multi-turn "challenge/steelman" often *lowered* scores. Root cause: rubrics reward **coverage/enumeration**, which a strong model supplies for free; they're blind to the judgment the training teaches. This is an instrument problem, not (only) a training-effect problem. (Full analyses delivered as Word docs in `~/Downloads/`.)
 
 ## Case ↔ patient ↔ source-rubric map
@@ -52,7 +53,8 @@ PAT002 (Sandoval, SLE/NEJM) has NO source docx rubric — graded by the older es
 2. **Live-verify the rubric-fidelity fixes** (preview was down / out of credits when they were made): PAT003 scores via the points path; the PAT004 3-part IVC split renders/flows; **PAT005 AP3 at anchor 7/05 shows NOTE010 and HIDES the 7/19 transplant** (most moving parts).
 3. **Bell (PAT004) content audit** — the user was mid-audit of Case 2 (we'd only reviewed Q1 clinically). Continue Q2–Q6 + chart consistency.
 4. **Human-synthesizer re-test** (needs credits): the "does skilled multi-turn help" question is confounded because the simulated resident was an LLM. Real answer needs a human (or the recorded transcripts) writing the final answer — especially on PAT007 (the drug-fever trap case, the missing data point).
-5. **Instrument redesign discussion** (deferred by validity choice): user wants grading identical to prior studies, so the "reward judgment over coverage" changes are OFF the table for now. Any future scoring changes must preserve comparability.
+5. **Hide the non-assessment modes for study deployment:** the landing chooser + top-bar switcher (`js/services/mode-manager.js`, MODES/ORDER) offer Assessment / AI Tutor / AI Assistant. For the study, show ONLY Assessment (hide the other two cards/switcher entries, and ideally lock the app into assessment mode). Not yet done.
+6. **Instrument redesign discussion** (deferred by validity choice): user wants grading identical to prior studies, so the "reward judgment over coverage" changes are OFF the table for now. Any future scoring changes must preserve comparability.
 
 ## Answered clinical question (for the record)
 "Is there evidence for waiting ~a month to biopsy in a patient with suspected cancer + new VTE?" — Yes; the highest VTE-recurrence risk is the first ~month, so elective procedures are generally deferred ≥1 month (ideally 3) after acute VTE; the docx keys "4–6 weeks." (Case 2 / PAT004 Q1.)
