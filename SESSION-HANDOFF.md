@@ -6,7 +6,7 @@ Living status doc so work can resume in a fresh session. Repo:
 ## How the app works (fast facts)
 - Vanilla HTML/JS/CSS, **no build system**. `index.html` loads all scripts; `js/router.js` hash routing.
 - **Two git remotes — push BOTH after every commit:** `git push origin main && git push shared main`.
-- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260722e`**.
+- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260722f`**.
 - **Access gate password:** `0slerian` → PBKDF2 → decrypts the embedded Anthropic key into localStorage. Never log/commit the decrypted key.
 - **The shared Anthropic API key repeatedly runs OUT OF CREDITS** (Opus runs burn it fast). When it does, the live assessment (chat + grading) is DOWN. Only the user can top it up.
 - **Supabase** project (`piwoinyrlicvndpsmtde`) auto-pauses on free tier; resume from the dashboard before use.
@@ -75,6 +75,10 @@ The sidebar Assessment link was present in markup but hidden by CSS (`.assessmen
 ## CASE AUDIT — ANSWER-ALREADY-IN-CHART (new bug class)
 **PAT005 AP1 FIXED:** Q1 asks *"would you perform a paracentesis and a thoracentesis?"* and Q2 *"would you give blood products?"* — but the IR procedure note (NOTE002, 3/10 **17:00**) documenting both procedures (and no FFP) was VISIBLE under the old 23:59 anchor. Anchor + chartGate moved to **2027-03-10T15:00:00Z**, between the ED workup (note/labs 13:30, US+CXR 13:40/13:45, vitals 14:00 — all still visible) and the 17:00 procedure note (now hidden). Verified live.
 **GENERALIZE:** any question of the form *"would you do X?"* must have its anchor set BEFORE the chart documents X being done. Remaining cases not yet swept for this: PAT003, PAT004, PAT006, PAT007.
+
+## TIME IS NO LONGER A LIMIT + CHART REFRESH ON PHASE ADVANCE
+- **No time limit.** The timer now counts UP (elapsed) and NEVER auto-submits. `time_used_seconds` is still recorded for analysis. `_handleExpired` is now dead code (left in place, uncalled). Per-case `warning` text rewritten to say there is no limit. NOTE: `timeLimitMinutes` / `totalTimeLimitMinutes` still exist in the JSON but are no longer enforced or displayed.
+- **Chart now refreshes when the phase advances.** The gate always advanced correctly in the data layer (verified: PAT005 AP1 = 3 notes → AP2 = 8), but the on-screen chart page did not re-render, so it looked stale until the resident navigated. `assessment-advanced` now calls `router.handleRoute()` and shows a 'New information has been added to the chart.' toast. Verified live: notes list went 3 → 8 on screen without navigating.
 
 ## PENDING / NEXT
 1. **Cleanup pass — DONE.** `assessment-results.js._renderRubric` now prefers `scoringRubric.rubricText` (falls back to essential/bonus only when there's no scoringRubric). Deleted the stale `rubric` block from all 22 points-graded prompts (PAT003–007). PAT002 keeps its 5 essential/bonus rubrics (they ARE its grader). `admin-dashboard.js` does not render rubrics. Final: PAT003=5, PAT004=8, PAT005=7, PAT006=4, PAT007=6 scoringRubrics, 0 legacy blocks; PAT002=5 legacy.

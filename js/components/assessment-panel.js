@@ -9,7 +9,7 @@
  * height, so nothing is cramped, and browsing chart tabs never destroys either.
  *
  * Controls:
- *   - Timer (per-assessment limit, auto-locks on expiry)
+ *   - Timer (elapsed time only — recorded for analysis, never a limit)
  *   - Pause/resume
  *   - Response textarea + Submit & Continue button
  *   - Progress dots (which prompt of which assessment)
@@ -183,18 +183,18 @@ const AssessmentPanel = {
         const ap = cur.assessment;
         const promptIdx1 = cur.indexes.pIdx + 1;
         const promptCount = (ap.prompts || []).length;
-        const timeUsed = AssessmentEngine.getTimeUsedSeconds();
-        const apLimit = AssessmentEngine.getAssessmentTimeLimitSeconds();
-        const timeRemaining = Math.max(0, apLimit - timeUsed);
+        // Time is tracked for analysis but is NOT a limit — show elapsed time,
+        // never a countdown, and never auto-submit.
+        const timeElapsed = AssessmentEngine.getTimeUsedSeconds();
         const isPaused = AssessmentEngine.isPaused();
 
         const bar = document.getElementById('assessment-bar');
         if (!bar) return;
         bar.innerHTML = `
             <div class="assessment-bar-row">
-                <div class="assessment-timer ${timeRemaining < 60 ? 'low' : ''} ${isPaused ? 'paused' : ''}">
+                <div class="assessment-timer ${isPaused ? 'paused' : ''}" title="Time elapsed (not a limit)">
                     <i data-lucide="clock" class="lucide-inline"></i>
-                    <span id="assessment-timer-text">${this._fmtTime(timeRemaining)}</span>
+                    <span id="assessment-timer-text">${this._fmtTime(timeElapsed)}</span>
                     ${isPaused ? '<span class="assessment-paused-pill">PAUSED</span>' : ''}
                 </div>
                 <div class="assessment-bar-actions">
@@ -475,14 +475,8 @@ const AssessmentPanel = {
         this._tickInterval = setInterval(() => {
             const t = document.getElementById('assessment-timer-text');
             if (!t) return;
-            const used = AssessmentEngine.getTimeUsedSeconds();
-            const limit = AssessmentEngine.getAssessmentTimeLimitSeconds();
-            const rem = Math.max(0, limit - used);
-            t.textContent = this._fmtTime(rem);
-            if (rem === 0 && !this._expiredHandled) {
-                this._expiredHandled = true;
-                this._handleExpired();
-            }
+            // Count UP. Time is recorded for analysis but never cuts anyone off.
+            t.textContent = this._fmtTime(AssessmentEngine.getTimeUsedSeconds());
         }, 1000);
     },
 
@@ -525,6 +519,13 @@ const AssessmentPanel = {
                 // know their answer was SAVED (the scary part is data loss).
                 this._gradingPromptIds.delete(payload.promptId);
                 App.showToast('Your answer is saved. Automatic grading hit an error — it will be retried when you finish.', 'info', 6000);
+            } else if (event === 'assessment-advanced') {
+                // The chart gate just moved forward — re-render whatever chart
+                // page is on screen so the newly-unlocked notes/labs/imaging
+                // appear immediately instead of looking stale until the
+                // resident happens to navigate.
+                try { if (window.router && router.handleRoute) router.handleRoute(); } catch (e) { /* ignore */ }
+                App.showToast('New information has been added to the chart.', 'info', 5000);
             } else if (event === 'sync-status') {
                 this._pendingWrites = payload && payload.pending ? payload.pending : 0;
                 this._renderSyncPill();

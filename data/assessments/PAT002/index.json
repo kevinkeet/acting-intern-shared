@@ -7,9 +7,13 @@
   "status": "three_timepoint",
   "_status_notes": "3 timepoints (TP1 initial presentation, TP2 catastrophic re-presentation, TP3 synthesis + discharge management). 4 questions total. 30 minutes total time budget.",
   "totalTimeLimitMinutes": 30,
-  "assessments": ["AP1", "AP2", "AP3"],
+  "assessments": [
+    "AP1",
+    "AP2",
+    "AP3"
+  ],
   "passingOverallScorePct": 70,
   "description": "A 3-stage clinical case following Maria Sandoval, a 22-year-old patient with a complex multi-system illness that evolves over 14 months. Adapted from a published clinical case report.",
-  "warning": "Plan to dedicate about 30 minutes uninterrupted. Pausing is permitted but stops the timer.",
+  "warning": "Set aside uninterrupted time to work through the case. There is no time limit — your elapsed time is recorded, but you will not be cut off. Pausing is permitted.",
   "instructions": "You are evaluating a real patient. Review the chart and respond to each clinical question. Your responses are graded against a rubric; the diagnosis is revealed at the end."
 }
