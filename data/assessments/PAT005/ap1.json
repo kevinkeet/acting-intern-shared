@@ -2,12 +2,12 @@
   "id": "AP1",
   "order": 1,
   "title": "Timepoint 1 — ED presentation for drainage",
-  "anchorDate": "2027-03-10T23:59:59Z",
+  "anchorDate": "2027-03-10T15:00:00Z",
   "timeLimitMinutes": 11,
   "scenarioBrief": "You are the intern seeing Sarah Whitlock in the emergency department today (3/10/2027). She has decompensated cirrhosis and was referred in by her hepatologist with worsening abdominal distension and shortness of breath. The chart contains her prior records and today's workup. Please review the chart and answer the questions below.",
   "chartGate": {
-    "includeBeforeOrEqualDate": "2027-03-10T23:59:59Z",
-    "_notes": "TP1 visibility: presentation labs/imaging + the hepatology continuity notes documenting the recurrent fluid and the diuretic-intolerance that prompted referral. The later outpatient weekly-FFP procedure notes, the ICU admission, and the transplant course are NOT yet visible."
+    "includeBeforeOrEqualDate": "2027-03-10T15:00:00Z",
+    "_notes": "TP1 visibility: her prior outpatient records PLUS today's ED presentation — the ED note (13:30), ED labs (13:30), abdominal US + chest X-ray (13:40/13:45) and vitals (14:00). The anchor is set to 15:00 DELIBERATELY so the 17:00 Interventional Radiology procedure note is NOT yet visible: Q1 asks whether the resident WOULD perform the paracentesis/thoracentesis and Q2 whether they would give blood products, so the chart must not already show those procedures having been done (and no FFP given)."
   },
   "prompts": [
     {
