@@ -15830,10 +15830,12 @@ body.mode-assessment #chat-trigger-buttons,
 body.mode-tutor .floating-chat-window,
 body.mode-assessment .floating-chat-window { display: none !important; }
 
-/* The in-sidebar Learn (tutor) link and the redundant Assessment mode link
-   are replaced by the top-bar switcher — hide them in every mode. */
-.nav-section-learn,
-.assessment-nav-section .assessment-mode-link { display: none !important; }
+/* The in-sidebar Learn (tutor) link is replaced by the top-bar switcher. */
+.nav-section-learn { display: none !important; }
+
+/* The sidebar "Assessment" link IS shown: it is how a resident returns to the
+   questions after browsing the chart. App._navigateToAssessment sends them to
+   #/assessment/run when an attempt is active, otherwise #/assessment/start. */
 
 /* Assessment-specific chrome (the chart-review CTA banner and the Assessment
    sidebar section with its Admin link) only appears in assessment mode. */
