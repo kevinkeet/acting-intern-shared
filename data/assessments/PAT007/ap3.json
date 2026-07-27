@@ -4,7 +4,7 @@
   "title": "Timepoint 3 — Unexpected recovery after antibiotics stopped",
   "anchorDate": "2027-05-28T23:59:59Z",
   "timeLimitMinutes": 5,
-  "scenarioBrief": "The patient was transitioned to comfort measures, and as part of that the antibiotics and vasopressors were stopped. Unexpectedly, she did not die — her fevers resolved, she weaned off pressors, and she woke up. With infection excluded and a dramatic response to drug cessation, the team now attributes her syndrome to a drug fever and drug-associated neurotoxicity from the antibiotics, a diagnosis not fully considered while she was treated for presumed occult infection. She is recovering and can now participate in her care.",
+  "scenarioBrief": "You are the intern caring for Janet Brooks. Today is 5/28/2027. Review the chart before answering.",
   "chartGate": {
     "includeBeforeOrEqualDate": "2027-05-28T23:59:59Z",
     "_notes": "TP3 visibility: the complete record, including the transition-to-comfort note, the recovery progress note recognizing drug fever, the recovery labs (normalizing, eosinophilia resolved, cultures final no-growth), and the transfer/course summary with the learning point."
@@ -26,5 +26,6 @@
     }
   ],
   "totalWeight": 0.5,
-  "passingScorePct": 70
+  "passingScorePct": 70,
+  "_scenarioBriefRemoved": "Full scenario brief removed by design: the resident must piece the picture together from the chart. Trigger facts verified discoverable at/before this anchor date. Original brief archived in git history."
 }

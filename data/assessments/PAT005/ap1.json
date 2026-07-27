@@ -4,7 +4,7 @@
   "title": "Timepoint 1 — ED presentation for drainage",
   "anchorDate": "2027-03-10T23:59:59Z",
   "timeLimitMinutes": 11,
-  "scenarioBrief": "Sarah Whitlock is a 50-year-old woman with decompensated alcohol-related cirrhosis (hepatic encephalopathy, ascites, right hepatic hydrothorax) who presents to the ED with worsening abdominal distension and dyspnea. Her hepatologist had been increasing furosemide and spironolactone, but higher doses caused worsening kidney injury, hyperkalemia, and hyponatremia, so she was referred for therapeutic thoracentesis and paracentesis. Vitals are stable except RR 22 (SpO2 98%). She has a distended abdomen with a positive fluid wave and absent breath sounds at the right base. Labs: Na 128, BUN 32, Cr 1.4, Hgb 10.1, platelets 55 K, INR 2.0. Ultrasound shows ascites and a cirrhotic liver; chest X-ray shows a right pleural effusion consistent with hepatic hydrothorax.",
+  "scenarioBrief": "You are the intern seeing Sarah Whitlock in the emergency department today (3/10/2027). Review the chart before answering.",
   "chartGate": {
     "includeBeforeOrEqualDate": "2027-03-10T23:59:59Z",
     "_notes": "TP1 visibility: presentation labs/imaging + the hepatology continuity notes documenting the recurrent fluid and the diuretic-intolerance that prompted referral. The later outpatient weekly-FFP procedure notes, the ICU admission, and the transplant course are NOT yet visible."
@@ -40,5 +40,6 @@
     }
   ],
   "totalWeight": 1.8,
-  "passingScorePct": 70
+  "passingScorePct": 70,
+  "_scenarioBriefRemoved": "Full scenario brief removed by design: the resident must piece the picture together from the chart. Trigger facts verified discoverable at/before this anchor date. Original brief archived in git history."
 }

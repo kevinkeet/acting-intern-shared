@@ -4,7 +4,7 @@
   "title": "Timepoint 3 — Drainage needs resolved (still awaiting transplant)",
   "anchorDate": "2027-07-05T23:59:59Z",
   "timeLimitMinutes": 4,
-  "scenarioBrief": "After her ICU admission for FFP-related flash pulmonary edema, her radiologist agreed to STOP giving prophylactic FFP with her procedures, and an indwelling tunneled pleural (PleurX) catheter was placed. Since then she has improved dramatically and no longer needs additional thoracentesis or paracentesis; her hyponatremia has improved (Na 130). She remains active on the liver-transplant list but has not yet been transplanted. Review the chart before answering.",
+  "scenarioBrief": "You are the intern following Sarah Whitlock. Today is 7/5/2027. Review the chart before answering.",
   "chartGate": {
     "includeBeforeOrEqualDate": "2027-07-05T23:59:59Z",
     "_notes": "TP3 visibility: the full chart through early July — TP1/TP2 records PLUS the transplant evaluation/listing note and the interval hepatology note documenting improvement after stopping FFP and placing the PleurX (off scheduled drainage, Na improved to 130). The transplant itself (7/19) and the post-transplant clinic note are NOT yet visible — this timepoint is deliberately pre-transplant."
@@ -26,5 +26,6 @@
     }
   ],
   "totalWeight": 0.4,
-  "passingScorePct": 70
+  "passingScorePct": 70,
+  "_scenarioBriefRemoved": "Full scenario brief removed by design: the resident must piece the picture together from the chart. Trigger facts verified discoverable at/before this anchor date. Original brief archived in git history."
 }

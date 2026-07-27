@@ -4,7 +4,7 @@
   "title": "Timepoint 3 — Synthesis and management",
   "anchorDate": "2027-03-25T23:59:59Z",
   "timeLimitMinutes": 13,
-  "scenarioBrief": "Hospital day 11 (2027-03-25). The inpatient workup is back: muscle biopsy, skin biopsy, MBSS, EMG, serologies, consults. Maria is being discharged today. You are responsible for committing to a unifying diagnosis and writing her discharge plan.",
+  "scenarioBrief": "You are the intern responsible for Maria Sandoval's care. It is hospital day 11 (3/25/2027) and she is being discharged today. Review the chart before answering.",
   "chartGate": {
     "includeBeforeOrEqualDate": "2027-03-25T23:59:59Z",
     "_notes": "TP3 visibility: full chart through hospital day 11 — admission H&P, MBSS, EMG, muscle biopsy, skin biopsy, consult notes, trending labs, daily progress notes, discharge summary."
@@ -89,5 +89,6 @@
     }
   ],
   "totalWeight": 3.5,
-  "passingScorePct": 65
+  "passingScorePct": 65,
+  "_scenarioBriefRemoved": "Full scenario brief removed by design: the resident must piece the picture together from the chart. Trigger facts verified discoverable at/before this anchor date. Original brief archived in git history."
 }

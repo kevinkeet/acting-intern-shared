@@ -4,7 +4,7 @@
   "title": "Timepoint 1 — Post-operative day #1",
   "anchorDate": "2027-06-11T23:59:59Z",
   "timeLimitMinutes": 7,
-  "scenarioBrief": "Dorothy Pierce is a 72-year-old woman with poorly-controlled hypertension, type 2 diabetes, and GERD who was admitted on 6/10/2027 with perforated cholecystitis and peritonitis and underwent an urgent open cholecystectomy the same day. It is now post-operative day #1. You are paged by nursing because she was noted to have a brief run of asymptomatic atrial fibrillation on telemetry. From the perspective of her cholecystitis she is clinically improving — afebrile since surgery, tolerating a liquid diet, with normal blood pressure and heart rate and a downtrending leukocytosis. She has no prior echocardiogram and is on no anticoagulation or antiplatelet medication. Review the chart (including the telemetry event documentation and her ECGs) before answering.",
+  "scenarioBrief": "You are the intern covering Dorothy Pierce. It is post-operative day #1 (6/11/2027) and you have been paged by nursing. Review the chart before answering.",
   "chartGate": {
     "includeBeforeOrEqualDate": "2027-06-11T23:59:59Z",
     "_notes": "TP1 visibility: complete chart through POD#1 — historical PCP visits (poorly-controlled HTN, T2DM, A1c 7.6%), the 2026 outpatient cardiology consult (no structural heart disease, no echo performed), admission H&P, CT abd/pelvis (perforated cholecystitis), preop and POD#1 ECGs (both sinus), the operative note, the POD#1 surgery progress note, the POD#1 telemetry event note (the 3 brief AF runs), the POD#1 medicine consult, admission and POD#1 labs (downtrending leukocytosis, normal electrolytes/Mg, no thyroid studies), and the medication list (no anticoagulant/antiplatelet). The POD#2-4 course (including the 2-hour episode) is NOT yet visible."
@@ -26,5 +26,6 @@
     }
   ],
   "totalWeight": 0.8,
-  "passingScorePct": 70
+  "passingScorePct": 70,
+  "_scenarioBriefRemoved": "Full scenario brief removed by design: the resident must piece the picture together from the chart. Trigger facts verified discoverable at/before this anchor date. Original brief archived in git history."
 }

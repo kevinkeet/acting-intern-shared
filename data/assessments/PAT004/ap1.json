@@ -4,7 +4,7 @@
   "title": "Timepoint 1 — Initial admission (hospital day 5)",
   "anchorDate": "2027-07-10T23:59:59Z",
   "timeLimitMinutes": 18,
-  "scenarioBrief": "Marcus Bell is a previously healthy 43-year-old man admitted on 7/6/2027 with an acute, essentially unprovoked SEGMENTAL pulmonary embolism (low-risk — troponin negative, no right-heart strain) and an extensive right lower extremity DVT. He was started on anticoagulation with prompt improvement. Imaging incidentally revealed a liver abnormality, and a dedicated liver MRI now shows a 17 cm posterior-right-lobe mass with additional left-lobe foci and apparent thrombus in the right portal vein; radiology has a high suspicion for malignancy and recommends considering a needle biopsy. A triple-phase liver CT is non-diagnostic but also concerning. He is clinically well and the team is planning to transition him to apixaban and complete the workup. Review the chart (including the imaging reports) before answering.",
+  "scenarioBrief": "You are the intern caring for Marcus Bell during his current admission. Today is 7/10/2027. Review the chart before answering.",
   "chartGate": {
     "includeBeforeOrEqualDate": "2027-07-10T23:59:59Z",
     "_notes": "TP1 visibility: the initial admission through HD5 — ED H&P, CTPA (segmental PE + incidental liver finding), RLE duplex (extensive DVT), TTE (no RV strain), liver MRI (17 cm mass + portal-vein thrombus + biopsy recommendation), triple-phase liver CT (non-diagnostic, concerning), admission/HD3/HD5 progress notes, the hematology consult, admission and malignancy-workup labs, and the inpatient orders (heparin infusion, transition-to-apixaban plan, outpatient biopsy referral). NOT visible: the discharge summary, the outpatient hematology note, the IR pre-procedure note that specifies the exact peri-procedural hold, and the entire readmission/recurrence (CTA, repeat TTE, etc.)."
@@ -68,5 +68,6 @@
     }
   ],
   "totalWeight": 2.8,
-  "passingScorePct": 70
+  "passingScorePct": 70,
+  "_scenarioBriefRemoved": "Full scenario brief removed by design: the resident must piece the picture together from the chart. Trigger facts verified discoverable at/before this anchor date. Original brief archived in git history."
 }

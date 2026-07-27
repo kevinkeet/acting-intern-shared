@@ -4,7 +4,7 @@
   "title": "Timepoint 1 — Discharge day",
   "anchorDate": "2027-04-12T23:59:59Z",
   "timeLimitMinutes": 25,
-  "scenarioBrief": "Lan Nguyen is a 72-year-old Vietnamese-speaking woman who was admitted on 2/15/2027 with severe gallstone pancreatitis. Her course was complicated by septic shock, ARDS requiring intubation, DVT, and a 57-day hospital stay. She is preparing for discharge to a rehab facility today (4/12/2027). On a final review of imaging before discharge, a 2.5 cm right upper lobe lung nodule that was incidentally noted on her sepsis-workup chest X-ray (and confirmed on follow-up CT) is re-noticed — it has not appeared in her daily progress notes since hospital day 8.",
+  "scenarioBrief": "You are the intern caring for Lan Nguyen. Today is 4/12/2027 and she is being discharged. Review the chart before answering.",
   "chartGate": {
     "includeBeforeOrEqualDate": "2027-04-12T23:59:59Z",
     "_notes": "TP1 visibility: complete chart through discharge day — historical PCP visits at Charm City Asian Health Center, prior orthopedic record (R TKA 2018), prior infectious disease workup (positive PPD 2010), prior US confirming cholelithiasis (2025), admission H&P, ICU consults, daily progress notes (which dropped the lung nodule after HD 8), CXR and CT reports, pulmonary nodule consult, TB rule-out (AFB + NAAT all negative), DVT consult, rehab planning."
@@ -83,5 +83,6 @@
   ],
   "totalWeight": 3.6,
   "totalSourcePoints": 36,
-  "passingScorePct": 70
+  "passingScorePct": 70,
+  "_scenarioBriefRemoved": "Full scenario brief removed by design: the resident must piece the picture together from the chart. Trigger facts verified discoverable at/before this anchor date. Original brief archived in git history."
 }

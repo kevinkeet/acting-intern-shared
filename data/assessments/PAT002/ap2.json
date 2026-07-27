@@ -4,7 +4,7 @@
   "title": "Timepoint 2 — Severe re-presentation",
   "anchorDate": "2027-03-15T23:59:59Z",
   "timeLimitMinutes": 12,
-  "scenarioBrief": "Fourteen months have passed since you first saw Maria. She is admitted from clinic today (2027-03-15). You are the admitting hospitalist intern. Review the chart, commit to a working diagnosis, and write your first 24-hour management plan.",
+  "scenarioBrief": "You are the admitting hospitalist intern. Maria Sandoval is being admitted from clinic today (3/15/2027). Review the chart before answering.",
   "chartGate": {
     "includeBeforeOrEqualDate": "2027-03-15T23:59:59Z",
     "_notes": "TP2 visibility: everything in TP1 + intercurrent 14 months (rheum consults, ED bounce, AMA admission Feb 2027, pharmacy gaps, social-work notes, PCP visits) + today's admission H&P + admission labs + admission CXR/CT."
@@ -78,5 +78,6 @@
     }
   ],
   "totalWeight": 2.0,
-  "passingScorePct": 65
+  "passingScorePct": 65,
+  "_scenarioBriefRemoved": "Full scenario brief removed by design: the resident must piece the picture together from the chart. Trigger facts verified discoverable at/before this anchor date. Original brief archived in git history."
 }

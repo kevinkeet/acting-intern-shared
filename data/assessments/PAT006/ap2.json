@@ -4,7 +4,7 @@
   "title": "Timepoint 2 — Post-operative day #4 (day before anticipated discharge)",
   "anchorDate": "2027-06-14T23:59:59Z",
   "timeLimitMinutes": 13,
-  "scenarioBrief": "There were no episodes of atrial fibrillation on post-operative days #2 or #3. However, on post-operative day #4 — the day before anticipated discharge — Ms. Pierce again develops an episode on telemetry, confirmed by 12-lead ECG. The episode is completely asymptomatic. It lasts two hours, during which the ventricular rate ranges from 70 to 105 beats/min and her blood pressure is unaffected. It spontaneously converts back to normal sinus rhythm. She is surgically ready for discharge, her labs have normalized, and she remains on no therapeutic anticoagulation. Review the full chart (including the POD#4 telemetry event note and ECG) before answering.",
+  "scenarioBrief": "You are the intern covering Dorothy Pierce. It is post-operative day #4 (6/14/2027), the day before her anticipated discharge. Review the chart before answering.",
   "chartGate": {
     "includeBeforeOrEqualDate": "2027-06-14T23:59:59Z",
     "_notes": "TP2 visibility: full chart through POD#4 — everything from TP1 PLUS the POD#2 and POD#3 progress notes (no arrhythmia), the POD#4 telemetry event note (2-hour asymptomatic episode, rate 70-105, spontaneous conversion), the POD#4 ECG (IMG004) confirming AF, the normalized POD#4 labs (renal function and coags adequate for anticoagulation), the POD#4 medicine progress note, and the pre-discharge medication reconciliation (confirming no anticoagulant/antiplatelet)."
@@ -54,5 +54,6 @@
     }
   ],
   "totalWeight": 2.8,
-  "passingScorePct": 70
+  "passingScorePct": 70,
+  "_scenarioBriefRemoved": "Full scenario brief removed by design: the resident must piece the picture together from the chart. Trigger facts verified discoverable at/before this anchor date. Original brief archived in git history."
 }

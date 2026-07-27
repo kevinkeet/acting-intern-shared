@@ -4,7 +4,7 @@
   "title": "Timepoint 1 — Initial presentation",
   "anchorDate": "2026-01-12T23:59:59Z",
   "timeLimitMinutes": 5,
-  "scenarioBrief": "Maria Sandoval is a 22-year-old Spanish-speaking woman who was seen at urgent care today (2026-01-12). The urgent care provider has asked you to follow up as her hypothetical PCP. Review the chart and respond.",
+  "scenarioBrief": "You are Maria Sandoval's primary care provider. She was seen at urgent care today (1/12/2026) and referred to you for follow-up. Review the chart before answering.",
   "chartGate": {
     "includeBeforeOrEqualDate": "2026-01-12T23:59:59Z",
     "_notes": "TP1 visibility: historical encounters (2018-2023, minor ailments + immigration intake) + today's urgent care visit + its labs."
@@ -48,5 +48,6 @@
     }
   ],
   "totalWeight": 1.0,
-  "passingScorePct": 60
+  "passingScorePct": 60,
+  "_scenarioBriefRemoved": "Full scenario brief removed by design: the resident must piece the picture together from the chart. Trigger facts verified discoverable at/before this anchor date. Original brief archived in git history."
 }
