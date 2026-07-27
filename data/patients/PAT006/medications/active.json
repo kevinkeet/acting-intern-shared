@@ -131,12 +131,13 @@
       "dose": "40 mg",
       "route": "SubQ",
       "frequency": "Daily",
-      "startDate": "2027-06-11",
+      "startDate": "2027-06-12",
       "prescriber": "Dr. Priya Anand (Medicine)",
       "indication": "Postoperative VTE prophylaxis",
       "instructions": "PROPHYLACTIC dose only (not therapeutic). Sequential compression devices also in use. Distinct from any therapeutic anticoagulation that might be considered for atrial fibrillation.",
       "pharmacy": "GBMC Inpatient Pharmacy",
-      "notes": "Started POD#1 once surgical hemostasis confirmed. This is VTE prophylaxis, NOT stroke-prevention anticoagulation for AF."
+      "notes": "Started POD#1 once surgical hemostasis confirmed. This is VTE prophylaxis, NOT stroke-prevention anticoagulation for AF.",
+      "_note": "Pharmacologic VTE prophylaxis was deliberately deferred on POD#1 (mechanical SCDs only) and begun POD#2."
     },
     {
       "id": "MED011",
