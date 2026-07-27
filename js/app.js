@@ -5,7 +5,7 @@
 
 const App = {
     // Default patient ID (can be changed via URL or search)
-    defaultPatientId: 'PAT002',
+    defaultPatientId: 'PAT003',
     isInitialized: false,
 
     // Per-case default chart-gate anchors. Keeps the chart restricted to the

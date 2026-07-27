@@ -16,7 +16,8 @@ const AssessmentData = (() => {
     const BASE = 'data/assessments';
 
     // List of cases offered. Add new caseIds here as they're scaffolded.
-    const CASE_IDS = ['PAT002', 'PAT003', 'PAT004', 'PAT005', 'PAT006', 'PAT007'];
+    // PAT002 (Sandoval) withheld from the current study build — re-add to offer it again.
+    const CASE_IDS = ['PAT003', 'PAT004', 'PAT005', 'PAT006', 'PAT007'];
 
     // Per-case diagnosis reveal (used on the results page only).
     // Lives in code rather than the JSON so it can't accidentally leak via

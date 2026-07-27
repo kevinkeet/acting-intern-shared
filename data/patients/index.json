@@ -9,7 +9,9 @@
       "status": "Active",
       "summary": "73 y.o. man with HFrEF (EF ~30%), T2DM on insulin, persistent AFib, CKD3b, CAD; longitudinal outpatient case.",
       "caseType": "demo",
-      "source": "Synthetic teaching patient (not an assessment case)"
+      "source": "Synthetic teaching patient (not an assessment case)",
+      "hidden": true,
+      "_hiddenNote": "Withheld from the current study build; unhide by removing this flag."
     },
     {
       "id": "PAT002",
@@ -21,7 +23,9 @@
       "summary": "22 y.o. woman with 6 months of polyarthritis, alopecia, fatigue; ANA+ 1:80; uninsured. Diagnostic / management assessment case.",
       "caseType": "assessment",
       "source": "NEJM Clinical Problem-Solving (2024)",
-      "caseTitle": "Peeling and Plummeting (adapted from NEJM Clinical Problem-Solving, 2024)"
+      "caseTitle": "Peeling and Plummeting (adapted from NEJM Clinical Problem-Solving, 2024)",
+      "hidden": true,
+      "_hiddenNote": "Withheld from the current study build; unhide by removing this flag."
     },
     {
       "id": "PAT003",

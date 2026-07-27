@@ -54,7 +54,14 @@ class DataLoader {
             return this.patientIndex;
         }
         const baseUrl = this.getBaseUrl();
-        this.patientIndex = await this.fetchJSON(`${baseUrl}/index.json`);
+        const raw = await this.fetchJSON(`${baseUrl}/index.json`);
+        // Patients flagged `hidden` are omitted from listings (patient
+        // switcher, nav) — e.g. cases withheld from the current study build.
+        // Their data still loads by id if referenced directly (past attempts,
+        // results pages), so nothing breaks retroactively.
+        this.patientIndex = Object.assign({}, raw, {
+            patients: (raw.patients || []).filter((p) => !p.hidden),
+        });
         return this.patientIndex;
     }
 

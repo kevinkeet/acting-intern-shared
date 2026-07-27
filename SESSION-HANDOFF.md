@@ -6,7 +6,7 @@ Living status doc so work can resume in a fresh session. Repo:
 ## How the app works (fast facts)
 - Vanilla HTML/JS/CSS, **no build system**. `index.html` loads all scripts; `js/router.js` hash routing.
 - **Two git remotes — push BOTH after every commit:** `git push origin main && git push shared main`.
-- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260722c`**.
+- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260722d`**.
 - **Access gate password:** `0slerian` → PBKDF2 → decrypts the embedded Anthropic key into localStorage. Never log/commit the decrypted key.
 - **The shared Anthropic API key repeatedly runs OUT OF CREDITS** (Opus runs burn it fast). When it does, the live assessment (chat + grading) is DOWN. Only the user can top it up.
 - **Supabase** project (`piwoinyrlicvndpsmtde`) auto-pauses on free tier; resume from the dashboard before use.
@@ -59,6 +59,15 @@ Example (PAT004 AP2): *"Now we jump ahead about a month. Mr. Bell went to his sc
 **Verified:** (1) every trigger fact each old brief carried is present in the chart AND visible at/before that AP's anchorDate under the chart gate (checked programmatically); (2) no new stub names a diagnosis, conclusion, or treatment (leak-grep clean on all 14). Questions unchanged (validated). Originals in git history.
 **Methods caveat:** the source docx presented these as vignettes, so this is a deliberate departure from the validated ADMINISTRATION format (scoring unchanged). Consider A/B testing with vs. without once credits return.
 **Watch:** residents must now reconstruct from the chart within the same 20-30 min limits — TIME LIMITS MAY NEED LOOSENING. This is the top thing to observe in the first live run.
+
+## HIDDEN CASES (current study build)
+**PAT001 (Morrison, demo) and PAT002 (Sandoval, SLE/NEJM) are HIDDEN.** Implemented as:
+- `data/patients/index.json`: both carry `"hidden": true` (+ `_hiddenNote`).
+- `js/data-loader.js loadPatientIndex()` filters out `hidden` patients — this feeds BOTH the patient switcher (`patient-header.js`) and the nav (`navigation.js`).
+- `js/services/assessment-data.js` `CASE_IDS` no longer lists PAT002.
+- `js/app.js` `defaultPatientId` moved PAT002 → **PAT003** (the old default was being hidden).
+**To unhide:** remove the `hidden` flag(s), re-add PAT002 to `CASE_IDS`. Patient data files are untouched, so past attempts/results still resolve by id.
+Verified live: visible patients = PAT003–007; assessment cases = PAT003–007; default = PAT003; no boot error.
 
 ## PENDING / NEXT
 1. **Cleanup pass — DONE.** `assessment-results.js._renderRubric` now prefers `scoringRubric.rubricText` (falls back to essential/bonus only when there's no scoringRubric). Deleted the stale `rubric` block from all 22 points-graded prompts (PAT003–007). PAT002 keeps its 5 essential/bonus rubrics (they ARE its grader). `admin-dashboard.js` does not render rubrics. Final: PAT003=5, PAT004=8, PAT005=7, PAT006=4, PAT007=6 scoringRubrics, 0 legacy blocks; PAT002=5 legacy.
