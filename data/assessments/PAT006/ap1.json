@@ -4,7 +4,7 @@
   "title": "Timepoint 1 — Post-operative day #1",
   "anchorDate": "2027-06-11T23:59:59Z",
   "timeLimitMinutes": 7,
-  "scenarioBrief": "You are the intern covering Dorothy Pierce. It is post-operative day #1 (6/11/2027) and you have been paged by nursing. Review the chart before answering.",
+  "scenarioBrief": "You are the intern covering Dorothy Pierce, who underwent an urgent open cholecystectomy on 6/10/2027. It is now post-operative day #1 (6/11/2027) and you have been paged by nursing about a telemetry finding. The chart contains her admission, operative note, and telemetry documentation. Please review the chart and answer the questions below.",
   "chartGate": {
     "includeBeforeOrEqualDate": "2027-06-11T23:59:59Z",
     "_notes": "TP1 visibility: complete chart through POD#1 — historical PCP visits (poorly-controlled HTN, T2DM, A1c 7.6%), the 2026 outpatient cardiology consult (no structural heart disease, no echo performed), admission H&P, CT abd/pelvis (perforated cholecystitis), preop and POD#1 ECGs (both sinus), the operative note, the POD#1 surgery progress note, the POD#1 telemetry event note (the 3 brief AF runs), the POD#1 medicine consult, admission and POD#1 labs (downtrending leukocytosis, normal electrolytes/Mg, no thyroid studies), and the medication list (no anticoagulant/antiplatelet). The POD#2-4 course (including the 2-hour episode) is NOT yet visible."
@@ -27,5 +27,5 @@
   ],
   "totalWeight": 0.8,
   "passingScorePct": 70,
-  "_scenarioBriefRemoved": "Full scenario brief removed by design: the resident must piece the picture together from the chart. Trigger facts verified discoverable at/before this anchor date. Original brief archived in git history."
+  "_scenarioBriefRemoved": "Orientation stub only: names the time jump, the reason for the encounter/presenting problem, and that the chart is updated. The clinical picture, workup results and conclusions are NOT summarized — the resident must piece them together from the chart. Trigger facts verified discoverable at/before this anchor date. Original full brief in git history."
 }

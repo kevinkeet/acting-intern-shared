@@ -4,7 +4,7 @@
   "title": "Timepoint 1 — ED presentation for drainage",
   "anchorDate": "2027-03-10T23:59:59Z",
   "timeLimitMinutes": 11,
-  "scenarioBrief": "You are the intern seeing Sarah Whitlock in the emergency department today (3/10/2027). Review the chart before answering.",
+  "scenarioBrief": "You are the intern seeing Sarah Whitlock in the emergency department today (3/10/2027). She has decompensated cirrhosis and was referred in by her hepatologist with worsening abdominal distension and shortness of breath. The chart contains her prior records and today's workup. Please review the chart and answer the questions below.",
   "chartGate": {
     "includeBeforeOrEqualDate": "2027-03-10T23:59:59Z",
     "_notes": "TP1 visibility: presentation labs/imaging + the hepatology continuity notes documenting the recurrent fluid and the diuretic-intolerance that prompted referral. The later outpatient weekly-FFP procedure notes, the ICU admission, and the transplant course are NOT yet visible."
@@ -41,5 +41,5 @@
   ],
   "totalWeight": 1.8,
   "passingScorePct": 70,
-  "_scenarioBriefRemoved": "Full scenario brief removed by design: the resident must piece the picture together from the chart. Trigger facts verified discoverable at/before this anchor date. Original brief archived in git history."
+  "_scenarioBriefRemoved": "Orientation stub only: names the time jump, the reason for the encounter/presenting problem, and that the chart is updated. The clinical picture, workup results and conclusions are NOT summarized — the resident must piece them together from the chart. Trigger facts verified discoverable at/before this anchor date. Original full brief in git history."
 }

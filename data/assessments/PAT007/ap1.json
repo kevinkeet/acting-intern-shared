@@ -4,7 +4,7 @@
   "title": "Timepoint 1 — Admission, variceal bleed/TIPS, and new post-procedure fevers",
   "anchorDate": "2027-05-06T23:59:59Z",
   "timeLimitMinutes": 9,
-  "scenarioBrief": "You are the intern caring for Janet Brooks in the ICU. Today is 5/6/2027. Review the chart before answering.",
+  "scenarioBrief": "You are the intern caring for Janet Brooks in the ICU. She was admitted on 5/2/2027 with three months of involuntary weight loss, and her course was complicated by a major gastrointestinal bleed requiring an urgent procedure. She is now febrile and requiring a vasopressor. Today is 5/6/2027 and the chart is updated with her admission and ICU course. Please review the chart and answer the questions below.",
   "chartGate": {
     "includeBeforeOrEqualDate": "2027-05-06T23:59:59Z",
     "_notes": "TP1 visibility: the outpatient weight-loss workup notes/labs, the ED H&P, the ICU admission + EGD/TIPS note, and the early post-TIPS progress note (fevers begin, workup initiated). The later negative results, the ID consult, the CMO deliberation, and the recovery/drug-fever reveal are NOT yet visible."
@@ -54,5 +54,5 @@
   ],
   "totalWeight": 1.4,
   "passingScorePct": 70,
-  "_scenarioBriefRemoved": "Full scenario brief removed by design: the resident must piece the picture together from the chart. Trigger facts verified discoverable at/before this anchor date. Original brief archived in git history."
+  "_scenarioBriefRemoved": "Orientation stub only: names the time jump, the reason for the encounter/presenting problem, and that the chart is updated. The clinical picture, workup results and conclusions are NOT summarized — the resident must piece them together from the chart. Trigger facts verified discoverable at/before this anchor date. Original full brief in git history."
 }

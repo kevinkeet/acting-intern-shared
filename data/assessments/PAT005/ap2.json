@@ -4,7 +4,7 @@
   "title": "Timepoint 2 — ICU for FFP-related flash pulmonary edema; drainage strategy",
   "anchorDate": "2027-04-30T23:59:59Z",
   "timeLimitMinutes": 13,
-  "scenarioBrief": "You are the intern caring for Sarah Whitlock. Today is 4/30/2027. Review the chart before answering.",
+  "scenarioBrief": "Now we jump ahead about seven weeks. Ms. Whitlock has been undergoing weekly outpatient drainage procedures in the interim. She presented today (4/30/2027) with acute shortness of breath and required intensive care. The chart is updated with the interval outpatient procedure records and this admission. Please review the chart and answer the questions below.",
   "chartGate": {
     "includeBeforeOrEqualDate": "2027-04-30T23:59:59Z",
     "_notes": "TP2 visibility: everything from TP1 PLUS the community-radiology weekly procedure notes (each documenting 4 units FFP + albumin), the interval hepatology note, the MICU admission/course (flash pulmonary edema attributed to FFP overload; BNP up, troponin negative, afebrile, normal echo), and the IR consult weighing drainage options. The PleurX placement, transplant evaluation/listing, and the transplant itself are NOT yet visible."
@@ -68,5 +68,5 @@
   ],
   "totalWeight": 16,
   "passingScorePct": 70,
-  "_scenarioBriefRemoved": "Full scenario brief removed by design: the resident must piece the picture together from the chart. Trigger facts verified discoverable at/before this anchor date. Original brief archived in git history."
+  "_scenarioBriefRemoved": "Orientation stub only: names the time jump, the reason for the encounter/presenting problem, and that the chart is updated. The clinical picture, workup results and conclusions are NOT summarized — the resident must piece them together from the chart. Trigger facts verified discoverable at/before this anchor date. Original full brief in git history."
 }

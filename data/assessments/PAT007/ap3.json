@@ -4,7 +4,7 @@
   "title": "Timepoint 3 — Unexpected recovery after antibiotics stopped",
   "anchorDate": "2027-05-28T23:59:59Z",
   "timeLimitMinutes": 5,
-  "scenarioBrief": "You are the intern caring for Janet Brooks. Today is 5/28/2027. Review the chart before answering.",
+  "scenarioBrief": "Now we jump ahead about ten days. After the family meeting, comfort-focused care was begun — and unexpectedly Ms. Brooks improved rather than died. Her family has asked you to explain what happened. Today is 5/28/2027 and the chart is updated. Please review the chart and answer the questions below.",
   "chartGate": {
     "includeBeforeOrEqualDate": "2027-05-28T23:59:59Z",
     "_notes": "TP3 visibility: the complete record, including the transition-to-comfort note, the recovery progress note recognizing drug fever, the recovery labs (normalizing, eosinophilia resolved, cultures final no-growth), and the transfer/course summary with the learning point."
@@ -27,5 +27,5 @@
   ],
   "totalWeight": 0.5,
   "passingScorePct": 70,
-  "_scenarioBriefRemoved": "Full scenario brief removed by design: the resident must piece the picture together from the chart. Trigger facts verified discoverable at/before this anchor date. Original brief archived in git history."
+  "_scenarioBriefRemoved": "Orientation stub only: names the time jump, the reason for the encounter/presenting problem, and that the chart is updated. The clinical picture, workup results and conclusions are NOT summarized — the resident must piece them together from the chart. Trigger facts verified discoverable at/before this anchor date. Original full brief in git history."
 }

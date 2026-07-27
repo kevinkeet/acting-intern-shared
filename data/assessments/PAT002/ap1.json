@@ -4,7 +4,7 @@
   "title": "Timepoint 1 — Initial presentation",
   "anchorDate": "2026-01-12T23:59:59Z",
   "timeLimitMinutes": 5,
-  "scenarioBrief": "You are Maria Sandoval's primary care provider. She was seen at urgent care today (1/12/2026) and referred to you for follow-up. Review the chart before answering.",
+  "scenarioBrief": "You are Maria Sandoval's primary care provider. She was seen at urgent care today (1/12/2026) for a several-month history of progressive joint pain, hair loss, and fatigue, and has been referred to you for follow-up. The chart contains that visit and her prior records. Please review the chart and answer the questions below.",
   "chartGate": {
     "includeBeforeOrEqualDate": "2026-01-12T23:59:59Z",
     "_notes": "TP1 visibility: historical encounters (2018-2023, minor ailments + immigration intake) + today's urgent care visit + its labs."
@@ -49,5 +49,5 @@
   ],
   "totalWeight": 1.0,
   "passingScorePct": 60,
-  "_scenarioBriefRemoved": "Full scenario brief removed by design: the resident must piece the picture together from the chart. Trigger facts verified discoverable at/before this anchor date. Original brief archived in git history."
+  "_scenarioBriefRemoved": "Orientation stub only: names the time jump, the reason for the encounter/presenting problem, and that the chart is updated. The clinical picture, workup results and conclusions are NOT summarized — the resident must piece them together from the chart. Trigger facts verified discoverable at/before this anchor date. Original full brief in git history."
 }

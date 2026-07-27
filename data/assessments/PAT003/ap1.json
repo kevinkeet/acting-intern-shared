@@ -4,7 +4,7 @@
   "title": "Timepoint 1 — Discharge day",
   "anchorDate": "2027-04-12T23:59:59Z",
   "timeLimitMinutes": 25,
-  "scenarioBrief": "You are the intern caring for Lan Nguyen. Today is 4/12/2027 and she is being discharged. Review the chart before answering.",
+  "scenarioBrief": "You are the intern caring for Lan Nguyen on hospital day 57 of a long, complicated admission. She is being discharged to a rehabilitation facility today (4/12/2027). The chart contains her entire admission along with her prior outpatient records. Please review the chart and answer the questions below.",
   "chartGate": {
     "includeBeforeOrEqualDate": "2027-04-12T23:59:59Z",
     "_notes": "TP1 visibility: complete chart through discharge day — historical PCP visits at Charm City Asian Health Center, prior orthopedic record (R TKA 2018), prior infectious disease workup (positive PPD 2010), prior US confirming cholelithiasis (2025), admission H&P, ICU consults, daily progress notes (which dropped the lung nodule after HD 8), CXR and CT reports, pulmonary nodule consult, TB rule-out (AFB + NAAT all negative), DVT consult, rehab planning."
@@ -84,5 +84,5 @@
   "totalWeight": 3.6,
   "totalSourcePoints": 36,
   "passingScorePct": 70,
-  "_scenarioBriefRemoved": "Full scenario brief removed by design: the resident must piece the picture together from the chart. Trigger facts verified discoverable at/before this anchor date. Original brief archived in git history."
+  "_scenarioBriefRemoved": "Orientation stub only: names the time jump, the reason for the encounter/presenting problem, and that the chart is updated. The clinical picture, workup results and conclusions are NOT summarized — the resident must piece them together from the chart. Trigger facts verified discoverable at/before this anchor date. Original full brief in git history."
 }

@@ -4,7 +4,7 @@
   "title": "Timepoint 2 — Severe re-presentation",
   "anchorDate": "2027-03-15T23:59:59Z",
   "timeLimitMinutes": 12,
-  "scenarioBrief": "You are the admitting hospitalist intern. Maria Sandoval is being admitted from clinic today (3/15/2027). Review the chart before answering.",
+  "scenarioBrief": "Now we jump ahead about 14 months. Maria is being admitted today (3/15/2027) with severe weight loss, proximal weakness, and difficulty swallowing. You are the admitting hospitalist intern. The chart has been updated with the interval outpatient records and today's admission data. Please review the chart and answer the questions below.",
   "chartGate": {
     "includeBeforeOrEqualDate": "2027-03-15T23:59:59Z",
     "_notes": "TP2 visibility: everything in TP1 + intercurrent 14 months (rheum consults, ED bounce, AMA admission Feb 2027, pharmacy gaps, social-work notes, PCP visits) + today's admission H&P + admission labs + admission CXR/CT."
@@ -79,5 +79,5 @@
   ],
   "totalWeight": 2.0,
   "passingScorePct": 65,
-  "_scenarioBriefRemoved": "Full scenario brief removed by design: the resident must piece the picture together from the chart. Trigger facts verified discoverable at/before this anchor date. Original brief archived in git history."
+  "_scenarioBriefRemoved": "Orientation stub only: names the time jump, the reason for the encounter/presenting problem, and that the chart is updated. The clinical picture, workup results and conclusions are NOT summarized — the resident must piece them together from the chart. Trigger facts verified discoverable at/before this anchor date. Original full brief in git history."
 }

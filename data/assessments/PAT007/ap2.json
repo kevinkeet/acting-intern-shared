@@ -4,7 +4,7 @@
   "title": "Timepoint 2 — Negative workup, worsening, family raises comfort measures",
   "anchorDate": "2027-05-18T23:59:59Z",
   "timeLimitMinutes": 12,
-  "scenarioBrief": "You are the intern caring for Janet Brooks in the ICU. Today is 5/18/2027. Review the chart before answering.",
+  "scenarioBrief": "Now we jump ahead about two weeks. Ms. Brooks remains critically ill in the ICU despite treatment, and her workup has continued. Her family has asked to meet with you today (5/18/2027). The chart is updated with the interval ICU course and workup results. Please review the chart and answer the questions below.",
   "chartGate": {
     "includeBeforeOrEqualDate": "2027-05-18T23:59:59Z",
     "_notes": "TP2 visibility: everything from TP1 PLUS the negative workup (CT, repeat paracentesis, LP, serial cultures), the ICU progress note continuing/broadening antibiotics, the ID consult (infection-anchored), and the palliative-care family-meeting note (CMO deliberation only). The transition-to-comfort note, the recovery, and the drug-fever recognition are NOT yet visible."
@@ -41,5 +41,5 @@
   ],
   "totalWeight": 1.9,
   "passingScorePct": 70,
-  "_scenarioBriefRemoved": "Full scenario brief removed by design: the resident must piece the picture together from the chart. Trigger facts verified discoverable at/before this anchor date. Original brief archived in git history."
+  "_scenarioBriefRemoved": "Orientation stub only: names the time jump, the reason for the encounter/presenting problem, and that the chart is updated. The clinical picture, workup results and conclusions are NOT summarized — the resident must piece them together from the chart. Trigger facts verified discoverable at/before this anchor date. Original full brief in git history."
 }
