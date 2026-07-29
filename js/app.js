@@ -97,12 +97,18 @@ const App = {
 
         // Apply the three-purpose app shell (Assessment / Tutor / Assistant).
         // Scopes chrome by mode and renders the top-bar switcher.
+        // An #/admin/... deep link is the ONLY way into the admin dashboard
+        // before you have signed in (the sidebar link is hidden until then),
+        // so mode bootstrapping must not navigate away from it.
+        const _onAdminRoute = (window.location.hash || '').indexOf('#/admin') === 0;
+
         let _mode = null;
         if (typeof ModeManager !== 'undefined') {
             _mode = ModeManager.init();
             // If a mode is already chosen and we booted with no/default route,
             // land on that mode's home instead of the chart-review default.
-            if (_mode && (!window.location.hash || window.location.hash === '#/' || window.location.hash === '#/chart-review')) {
+            if (_mode && !_onAdminRoute
+                && (!window.location.hash || window.location.hash === '#/' || window.location.hash === '#/chart-review')) {
                 window.location.hash = ModeManager.MODES[_mode].home;
             }
         }
@@ -113,8 +119,14 @@ const App = {
         // First entry: ask which part of the site to use. Otherwise show the
         // About popup on first visit (chooser takes precedence).
         if (typeof ModeManager !== 'undefined' && !_mode) {
-            ModeManager.showChooser();
-        } else {
+            if (_onAdminRoute) {
+                // Apply the study chrome without navigating (set() would push
+                // the hash to the assessment home and kick us off /admin).
+                ModeManager.set('assessment', { navigate: false });
+            } else {
+                ModeManager.showChooser();
+            }
+        } else if (!_onAdminRoute) {
             About.checkFirstVisit();
         }
 
@@ -228,11 +240,16 @@ const App = {
             .on('/assessment/run', () => AssessmentPanel.renderActive())
             .on('/assessment/results/:id', (params) => AssessmentResults.render(params.id))
             .on('/admin/attempts', () => AdminDashboard.renderList())
+            .on('/admin/analytics', () => AdminDashboard.renderAnalytics())
+            .on('/admin/export', () => AdminDashboard.renderExport())
             .on('/admin/attempts/:id', (params) => AdminDashboard.renderDetail(params.id));
 
         // Refresh sidebar entries when auth state changes (Assessment + Admin links).
         window.addEventListener('supabase:auth-state-change', () => this._refreshAssessmentNav());
         window.addEventListener('supabase:auth-ready', () => this._refreshAssessmentNav());
+        // The admin dashboard owns its own Supabase client/session (see
+        // admin-dashboard.js) so it emits its own event.
+        window.addEventListener('admin:auth-change', () => this._refreshAssessmentNav());
         // Initial render once nav exists.
         setTimeout(() => this._refreshAssessmentNav(), 100);
 
@@ -250,7 +267,10 @@ const App = {
     /**
      * Inject (or refresh) the "Take Assessment" and "Admin" links in the sidebar.
      * - Assessment link is always visible (auth gate handled in the page).
-     * - Admin link only appears for users with admin/proctor role.
+     * - Admin link only appears once you are signed in AND confirmed as an
+     *   admin/proctor. Before that, `#/admin/attempts` is still reachable by
+     *   typing the URL — that route renders the admin sign-in gate — which is
+     *   how the PI gets in the first time.
      */
     async _refreshAssessmentNav() {
         const sidebar = document.getElementById('sidebar');
@@ -278,24 +298,24 @@ const App = {
         sidebar.appendChild(section);
         this.refreshIcons();
 
-        // Show the admin link if user is an admin / proctor.
-        if (typeof SupabaseSync !== 'undefined' && SupabaseSync.isAuthenticated()) {
-            try {
-                const sb = SupabaseSync.getClient();
-                const user = SupabaseSync.getUser();
-                if (sb && user) {
-                    const { data, error } = await sb
-                        .from('admin_roles')
-                        .select('role')
-                        .eq('user_id', user.id)
-                        .maybeSingle();
-                    if (!error && data && (data.role === 'admin' || data.role === 'proctor')) {
-                        const link = document.getElementById('assessment-admin-link');
-                        if (link) link.style.display = '';
-                    }
+        // Show the admin link once the AdminDashboard's own (separate) Supabase
+        // client holds a session for a confirmed admin/proctor. It must NOT
+        // depend on SupabaseSync.isAuthenticated() — participants use code
+        // identity and are never authenticated on that client, so the old check
+        // meant the link could never appear.
+        const showAdminLink = () => {
+            const link = document.getElementById('assessment-admin-link');
+            if (link) link.style.display = '';
+        };
+        if (typeof AdminDashboard !== 'undefined') {
+            if (AdminDashboard.isAdmin && AdminDashboard.isAdmin()) {
+                showAdminLink();
+            } else if (AdminDashboard.probeAdmin) {
+                try {
+                    if (await AdminDashboard.probeAdmin()) showAdminLink();
+                } catch (e) {
+                    /* non-fatal */
                 }
-            } catch (e) {
-                /* non-fatal */
             }
         }
     },

@@ -6,7 +6,7 @@ Living status doc so work can resume in a fresh session. Repo:
 ## How the app works (fast facts)
 - Vanilla HTML/JS/CSS, **no build system**. `index.html` loads all scripts; `js/router.js` hash routing.
 - **Two git remotes — push BOTH after every commit:** `git push origin main && git push shared main`.
-- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260722i`**.
+- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260722j`**.
 - **Access gate password:** `0slerian` → PBKDF2 → decrypts the embedded Anthropic key into localStorage. Never log/commit the decrypted key.
 - **The shared Anthropic API key repeatedly runs OUT OF CREDITS** (Opus runs burn it fast). When it does, the live assessment (chat + grading) is DOWN. Only the user can top it up.
 - **Supabase** project (`piwoinyrlicvndpsmtde`) auto-pauses on free tier; resume from the dashboard before use.
@@ -92,6 +92,82 @@ The rail used to TAB between "Your Answer" and "AI Assistant", which hid the ass
 - Chatbot: `flex: 1 1 auto; min-height: 240px`.
 - Question/prompt shrunk to fit: question 15px→13.5px, scenario body 12px→11.5px with `max-height:5.6em; overflow-y:auto` (it is only an orientation stub now), prompt card padding 18/22→10/12, textarea min-height 160px→88px.
 **Gotcha for future live checks:** `window.innerHeight` and `getBoundingClientRect()` returned 0 in the preview eval context, producing bogus "height 0" readings. Trust SCREENSHOTS for layout verification here, not measured rects.
+
+## ADMIN REVIEW CONSOLE (study PI) — NEW, needs migration 005 applied
+The admin dashboard is now a four-view console for reviewing every participant's assessment.
+All of it lives in `js/components/admin-dashboard.js` (+ `.admin-*` styles at the end of the
+admin block in `css/epic-theme.css`). Cache version bumped to **`20260722j`**.
+
+**Routes** (registered in `js/app.js setupRoutes()`):
+- `#/admin/attempts` — attempts list (per-participant cards, answers + AI-turn counts per attempt)
+- `#/admin/attempts/:id` — **per-attempt chronological transcript** (the main deliverable)
+- `#/admin/analytics` — aggregate AI-usage analytics
+- `#/admin/export` — CSV / JSON download
+
+**Login flow.** Participants use code identity and NEVER authenticate; admins sign in with
+Supabase Auth (email + password) at `#/admin/attempts`. Key design point: the dashboard creates
+its **own Supabase client** (`storageKey: 'sb-admin-auth'`), *not* `SupabaseSync.getClient()`.
+Two reasons — (a) the SupabaseSync client injects `x-participant-code` on every request, and
+(b) more importantly `assessment-engine.js` stamps new attempts with `SupabaseSync.getUser().id`
+whenever that client holds a session, so a PI signed in on the shared client would silently
+poison any attempt taken in the same browser. The separate client keeps the admin session
+invisible to the participant path. After sign-in the dashboard confirms the role by selecting
+its own row from `admin_roles` (policy `p_admin_roles_select_self`). Sign-out is in the admin
+top bar. No credentials are hardcoded; nothing logs tokens, passwords, or the Anthropic key.
+
+**Sidebar Admin link (fixed).** `App._refreshAssessmentNav()` used to gate the link on
+`SupabaseSync.isAuthenticated()`, which is never true under code identity — so the link could
+never appear. It now calls `AdminDashboard.probeAdmin()` and listens for the `admin:auth-change`
+event. Before you have signed in the link stays hidden, so **the way in is to type
+`#/admin/attempts` directly**. `App.init()` has a guard (`_onAdminRoute`) so ModeManager's study
+lock does not bounce an `#/admin/...` deep link back to the assessment home.
+
+**The transcript view** renders, per question, in order: the question text → the resident's
+interleaved AI conversation for that `prompt_id` (each turn shows the chatbot settings from
+`metadata->chatbot_setup` — time window + data types — plus `context_size_chars`) → the
+submitted answer → the score with rubric breakdown and grader notes. AI turns are blue and
+indented; the answer is a green block; the score is amber. Grouped by `assessment_id` then
+`prompt_id`, ordered by the case definition. Long text collapses via pure-CSS `<details>`
+(Expand all / Collapse all buttons up top). Unattributed AI turns and stored responses whose
+prompt is missing from the case definition get their own sections.
+
+**Analytics** (descriptive only, banner says so): distribution of chosen time windows;
+frequency of each data type; AI turns per question (histogram) and per attempt; median context
+size; questions answered with ZERO AI turns; mean score by turn-count bucket and by context
+tercile; per-case usage; and a per-attempt table. Bars are plain CSS divs — no chart library
+(CSP / no-build constraint).
+
+**Export** is pure client-side Blob + object URL: flat responses CSV (one row per question,
+29 columns, joined to attempt + question/rubric text + AI-usage summary), flat AI-log CSV, and
+a lossless nested JSON dump. Every CSV field is quoted and embedded quotes doubled (RFC 4180),
+with a UTF-8 BOM — verified by round-tripping an answer containing commas, quotes and newlines.
+
+### ⚠️ MIGRATION 005 IS NOT YET APPLIED — do this before the dashboard shows any data
+`supabase/migrations/005_admin_read_all.sql` adds `public.is_study_admin()` plus SELECT-all RLS
+policies for authenticated admins, and `p_admin_roles_select_self`. **Until it is applied, RLS
+silently filters every row (no error), so the dashboard looks empty.** The UI says exactly that
+and names the file rather than showing a blank page. Three steps, in the Supabase SQL editor /
+dashboard:
+1. Run `supabase/migrations/005_admin_read_all.sql`.
+2. Create the admin account: Dashboard → Authentication → Users → "Add user" (email + password,
+   mark email confirmed).
+3. Grant the role (substituting your email):
+   ```sql
+   INSERT INTO public.admin_roles (user_id, role)
+   SELECT id, 'admin' FROM auth.users WHERE email = 'kkeet@stanford.edu'
+   ON CONFLICT (user_id) DO UPDATE SET role = 'admin';
+   ```
+Then verify with `SELECT count(*) FROM public.test_attempts;` — it should return every attempt.
+
+**Verified live vs. not.** Verified in the dev server: the sign-in gate renders and rejects bad
+credentials with the real Supabase error; the "signed in but not an admin" and
+"no attempts returned" states name migration 005; all four routes render; the transcript,
+analytics and export layouts render correctly against an injected synthetic dataset (including
+zero-AI questions, unanswered questions, and `ask_error` turns); all three export files build
+and the responses CSV round-trips answer text containing commas, quotes and newlines; the
+sidebar Admin link appears only once admin status is confirmed; a normal participant boot still
+lands on `#/assessment/start`. **NOT verified against real rows** — no live data is readable
+until migration 005 is applied.
 
 ## PENDING / NEXT
 1. **Cleanup pass — DONE.** `assessment-results.js._renderRubric` now prefers `scoringRubric.rubricText` (falls back to essential/bonus only when there's no scoringRubric). Deleted the stale `rubric` block from all 22 points-graded prompts (PAT003–007). PAT002 keeps its 5 essential/bonus rubrics (they ARE its grader). `admin-dashboard.js` does not render rubrics. Final: PAT003=5, PAT004=8, PAT005=7, PAT006=4, PAT007=6 scoringRubrics, 0 legacy blocks; PAT002=5 legacy.
