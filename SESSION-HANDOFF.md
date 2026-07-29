@@ -169,6 +169,30 @@ sidebar Admin link appears only once admin status is confirmed; a normal partici
 lands on `#/assessment/start`. **NOT verified against real rows** — no live data is readable
 until migration 005 is applied.
 
+## ADMIN CONSOLE — MIGRATION 005 IS APPLIED (2026-07-28). NO SETUP LEFT.
+
+**Done live on the production DB (`piwoinyrlicvndpsmtde`) — do NOT re-run:**
+1. `005_admin_read_all.sql` APPLIED ("Success. No rows returned"). Adds `public.is_study_admin()` + SELECT-all
+   policies on `test_attempts` / `assessment_responses` / `assessment_ai_log`, and `p_admin_roles_select_self`.
+2. Verified 19 policies across the 4 tables: the new `{authenticated}` admin policies sit ALONGSIDE the 004
+   `{public}` code-scoped ones — participant isolation intact.
+3. Auth users already existed and were confirmed; `admin_roles` now has **kevinkeet@gmail.com = admin** and
+   **kkeet@stanford.edu = admin**. Sign in at `#/admin/attempts` with either (Kevin's own passwords —
+   Claude never handles them; account creation/password entry is a prohibited action).
+
+**Live data as of 2026-07-28:** 58 attempts (3 completed) · 54 responses · 46 AI turns · **only 15 of 46 AI
+turns carry `metadata->chatbot_setup`** — the settings capture was added partway through, so time-window /
+data-type analytics are PARTIAL for historical turns and complete only for turns logged from now on.
+
+**Data-integrity bug the build caught:** `assessment-engine.js` stamps new attempts with
+`SupabaseSync.getUser().id` whenever the shared client holds a session, so a PI signed in on the SHARED client
+would have silently written PARTICIPANT attempts under the PI's user_id. The admin console therefore uses a
+SEPARATE Supabase client (`storageKey: 'sb-admin-auth'`). Do not merge the two clients.
+
+Routes: `#/admin/attempts` (list + login gate) · `#/admin/attempts/:id` (per-question transcript: AI turns
+interleaved before the submitted answer, each turn showing its window/data-types) · `#/admin/analytics` ·
+`#/admin/export` (responses CSV, AI-log CSV, JSON; RFC-4180 quoted + BOM). SELECT-only by design.
+
 ## PENDING / NEXT
 1. **Cleanup pass — DONE.** `assessment-results.js._renderRubric` now prefers `scoringRubric.rubricText` (falls back to essential/bonus only when there's no scoringRubric). Deleted the stale `rubric` block from all 22 points-graded prompts (PAT003–007). PAT002 keeps its 5 essential/bonus rubrics (they ARE its grader). `admin-dashboard.js` does not render rubrics. Final: PAT003=5, PAT004=8, PAT005=7, PAT006=4, PAT007=6 scoringRubrics, 0 legacy blocks; PAT002=5 legacy.
 2. **Live-verify the rubric-fidelity fixes — DONE (2026-07-22)** except one piece: verified live that the PAT004 3-part IVC split (Q5a 5 / Q5b 3 / Q5c 3 / Q6 8) renders and flows end-to-end; PAT005 AP2-Q4→Q4b→AP3 flows; **PAT005 AP3 at anchor 7/05 shows NOTE010 (6/25) and hides NOTE008 (7/19 transplant) + NOTE009**; AP3 stem shows the pre-transplant rewrite. Point totals re-verified from data: 36/71/27/23/78.5, 0 legacy rubric blocks on PAT003–007. PAT003 points-path grading confirmed statically (grader branches on `scoringRubric.rubricText`, present on all 5 Qs) — **an actual end-to-end grade call still needs the access gate unlocked + API credits** (tooling can't enter the password).
