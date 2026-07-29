@@ -114,17 +114,9 @@ const AssessmentPanel = {
             // Full-height right rail: timer bar on top, then a tab switcher
             // between the answer panel and the AI chatbot, each getting the
             // whole remaining height (no more cramped vertical split).
-            dock.className = 'assessment-dock tab-answer';
+            dock.className = 'assessment-dock';
             dock.innerHTML = `
                 <div class="assessment-bar" id="assessment-bar"></div>
-                <div class="assessment-rail-tabs" role="tablist">
-                    <button class="assessment-rail-tab active" data-tab="answer" role="tab">
-                        <i data-lucide="pencil-line" class="lucide-inline"></i> Your Answer
-                    </button>
-                    <button class="assessment-rail-tab" data-tab="chat" role="tab">
-                        <i data-lucide="message-circle" class="lucide-inline"></i> AI Assistant
-                    </button>
-                </div>
                 <div class="assessment-rail-content" id="assessment-rail-content">
                     <div class="assessment-dock-body" id="assessment-dock-body">
                         <div class="assessment-prompt-area" id="assessment-prompt-area"></div>

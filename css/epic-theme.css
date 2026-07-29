@@ -13850,12 +13850,9 @@ body.assessment-dock-open { --arail: 440px; }
     margin: 0;
     flex: 0 0 auto;
 }
-.assessment-rail-tabs {
-    flex: 0 0 auto;
-    display: flex;
-    background: #eef2f6;
-    border-bottom: 1px solid #d5dee6;
-}
+/* The rail no longer tabs between panes — the answer box and the AI Assistant
+   are BOTH always visible (the assistant must be obvious, not discoverable). */
+.assessment-rail-tabs { display: none !important; }
 .assessment-rail-tab {
     flex: 1 1 0;
     padding: 9px 8px;
@@ -13879,14 +13876,24 @@ body.assessment-dock-open { --arail: 440px; }
 }
 .assessment-rail-content {
     flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
     position: relative;
     overflow: hidden;
     min-height: 0;
 }
+/* Question + answer box: compact, capped, scrolls on its own so it can never
+   push the AI Assistant off screen. */
 .assessment-dock-body {
-    height: 100%;
+    /* 0 0 auto, NOT 0 1 auto: the answer pane must never shrink below its own
+       content, or the textarea gets pushed under the chat panel. It takes
+       min(content, 54%) and the assistant gets everything else. */
+    flex: 0 0 auto;
+    max-height: 54%;
     overflow-y: auto;
-    padding: 12px 16px 16px;
+    padding: 10px 14px 12px;
+    border-bottom: 1px solid #d5dee6;
+    background: #fff;
 }
 /* Points-based rubric shown on the results page (preserves line breaks). */
 .assessment-rubric-text {
@@ -13900,19 +13907,21 @@ body.assessment-dock-open { --arail: 440px; }
 /* The chatbot panel, relocated into the rail: fill it, drop its own fixed
    positioning / borders. */
 .assessment-dock .assessment-chatbot-panel {
+    min-height: 240px;
     position: static;
     top: auto;
     right: auto;
     left: auto;
     width: 100%;
-    height: 100%;
+    height: auto;
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
     border-left: none;
     box-shadow: none;
     z-index: auto;
 }
-/* Tab visibility. */
-.assessment-dock.tab-answer .assessment-chatbot-panel { display: none; }
-.assessment-dock.tab-chat .assessment-dock-body { display: none; }
 /* (Right-side space for the rail is reserved on .main-container above — do NOT
    also pad #main-content here, or the chart content gets double-squeezed.) */
 .assessment-bar {
@@ -14015,14 +14024,14 @@ body.assessment-dock-open { --arail: 440px; }
 
 .assessment-prompt-area {
     max-width: 880px;
-    margin: 16px auto;
-    padding: 0 18px;
+    margin: 0 auto;
+    padding: 0;
 }
 .assessment-scenario {
     background: #fffaf0;
-    border-left: 4px solid #dd6b20;
-    padding: 10px 14px;
-    margin-bottom: 14px;
+    border-left: 3px solid #dd6b20;
+    padding: 7px 10px;
+    margin-bottom: 9px;
     border-radius: 4px;
 }
 .assessment-scenario-label {
@@ -14033,16 +14042,18 @@ body.assessment-dock-open { --arail: 440px; }
     margin-bottom: 4px;
 }
 .assessment-scenario-body {
-    font-size: 13px;
+    font-size: 11.5px;
     color: #2d3748;
-    line-height: 1.5;
+    line-height: 1.4;
+    max-height: 5.6em;
+    overflow-y: auto;
 }
 .assessment-prompt-card {
     background: #fff;
     border: 1px solid #cbd5e0;
-    border-radius: 8px;
-    padding: 18px 22px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    border-radius: 6px;
+    padding: 10px 12px;
+    box-shadow: none;
 }
 .assessment-prompt-meta {
     display: flex;
@@ -14065,10 +14076,10 @@ body.assessment-dock-open { --arail: 440px; }
     font-family: 'SF Mono', Monaco, monospace;
 }
 .assessment-prompt-question {
-    font-size: 15px;
-    line-height: 1.5;
+    font-size: 13.5px;
+    line-height: 1.45;
     color: #1a202c;
-    margin-bottom: 14px;
+    margin-bottom: 9px;
 }
 .assessment-ai-sample {
     background: #f0f9ff;
@@ -14100,7 +14111,7 @@ body.assessment-dock-open { --arail: 440px; }
 }
 .assessment-response-input {
     width: 100%;
-    min-height: 160px;
+    min-height: 88px;
     border: 1px solid #cbd5e0;
     border-radius: 6px;
     padding: 10px 12px;

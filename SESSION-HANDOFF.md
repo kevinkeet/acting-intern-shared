@@ -6,7 +6,7 @@ Living status doc so work can resume in a fresh session. Repo:
 ## How the app works (fast facts)
 - Vanilla HTML/JS/CSS, **no build system**. `index.html` loads all scripts; `js/router.js` hash routing.
 - **Two git remotes — push BOTH after every commit:** `git push origin main && git push shared main`.
-- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260722f`**.
+- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260722i`**.
 - **Access gate password:** `0slerian` → PBKDF2 → decrypts the embedded Anthropic key into localStorage. Never log/commit the decrypted key.
 - **The shared Anthropic API key repeatedly runs OUT OF CREDITS** (Opus runs burn it fast). When it does, the live assessment (chat + grading) is DOWN. Only the user can top it up.
 - **Supabase** project (`piwoinyrlicvndpsmtde`) auto-pauses on free tier; resume from the dashboard before use.
@@ -84,6 +84,14 @@ The sidebar Assessment link was present in markup but hidden by CSS (`.assessmen
 ## TIME IS NO LONGER A LIMIT + CHART REFRESH ON PHASE ADVANCE
 - **No time limit.** The timer now counts UP (elapsed) and NEVER auto-submits. `time_used_seconds` is still recorded for analysis. `_handleExpired` is now dead code (left in place, uncalled). Per-case `warning` text rewritten to say there is no limit. NOTE: `timeLimitMinutes` / `totalTimeLimitMinutes` still exist in the JSON but are no longer enforced or displayed.
 - **Chart now refreshes when the phase advances.** The gate always advanced correctly in the data layer (verified: PAT005 AP1 = 3 notes → AP2 = 8), but the on-screen chart page did not re-render, so it looked stale until the resident navigated. `assessment-advanced` now calls `router.handleRoute()` and shows a 'New information has been added to the chart.' toast. Verified live: notes list went 3 → 8 on screen without navigating.
+
+## RAIL LAYOUT — AI ASSISTANT ALWAYS OPEN (no more tabs)
+The rail used to TAB between "Your Answer" and "AI Assistant", which hid the assistant — wrong for a study about whether residents can use AI. The tab bar is gone; the rail is now a vertical stack, both panes always visible: compact question/answer on top, chatbot below.
+- `.assessment-rail-content` → flex column. `.assessment-rail-tabs` → `display:none`. Tab markup removed from `_mountDock`; the `tab-answer`/`tab-chat` visibility rules are deleted.
+- **`.assessment-dock-body { flex: 0 0 auto; max-height: 54% }` — the `0 0` matters.** With `0 1 auto` the pane shrank below its own content and pushed the answer textarea underneath the chat panel (the resident could not type without scrolling). Do not reintroduce flex-shrink here.
+- Chatbot: `flex: 1 1 auto; min-height: 240px`.
+- Question/prompt shrunk to fit: question 15px→13.5px, scenario body 12px→11.5px with `max-height:5.6em; overflow-y:auto` (it is only an orientation stub now), prompt card padding 18/22→10/12, textarea min-height 160px→88px.
+**Gotcha for future live checks:** `window.innerHeight` and `getBoundingClientRect()` returned 0 in the preview eval context, producing bogus "height 0" readings. Trust SCREENSHOTS for layout verification here, not measured rects.
 
 ## PENDING / NEXT
 1. **Cleanup pass — DONE.** `assessment-results.js._renderRubric` now prefers `scoringRubric.rubricText` (falls back to essential/bonus only when there's no scoringRubric). Deleted the stale `rubric` block from all 22 points-graded prompts (PAT003–007). PAT002 keeps its 5 essential/bonus rubrics (they ARE its grader). `admin-dashboard.js` does not render rubrics. Final: PAT003=5, PAT004=8, PAT005=7, PAT006=4, PAT007=6 scoringRubrics, 0 legacy blocks; PAT002=5 legacy.
