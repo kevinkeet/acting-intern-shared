@@ -162,10 +162,11 @@ const AssessmentChatbot = (() => {
         _root.innerHTML = `
             <div class="acb-header">
                 <div class="acb-header-title">
-                    <i data-lucide="message-square" class="lucide-inline"></i>
-                    Chatbot
+                    <i data-lucide="sparkles" class="lucide-inline"></i>
+                    AI Assistant
+                    <span class="acb-header-badge">Available</span>
                 </div>
-                <div class="acb-header-sub">Pick what to include, then chat.</div>
+                <div class="acb-header-sub">Ask about this patient. Choose what chart data it can see, then chat.</div>
             </div>
             <div class="acb-setup">
                 <div class="acb-setup-section">
