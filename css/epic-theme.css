@@ -16496,3 +16496,70 @@ body:not(.mode-assessment) .assessment-nav-section { display: none !important; }
 .assessment-consent-error { color: #c0392b; font-size: 13px; min-height: 18px; margin: 4px 0 10px; }
 #assessment-consent-continue { width: 100%; padding: 11px; font-size: 15px; }
 
+
+
+/* ── Resizable assessment rail ──────────────────────────────────────────
+   Left edge drags the rail width (--arail on <html>, inline so it beats the
+   responsive breakpoints); the bar between the answer pane and the assistant
+   drags the split (--abody-h on the dock). Double-click either to reset.
+   Sizes persist in localStorage. */
+.assessment-dock-resize-x {
+    position: absolute;
+    left: -3px;
+    top: 0;
+    bottom: 0;
+    width: 9px;
+    cursor: ew-resize;
+    z-index: 20;
+    background: transparent;
+}
+.assessment-dock-resize-x::after {
+    content: '';
+    position: absolute;
+    left: 3px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 46px;
+    border-radius: 3px;
+    background: #94a3b8;
+    opacity: 0;
+    transition: opacity 0.15s;
+}
+.assessment-dock-resize-x:hover::after { opacity: 0.9; }
+
+.assessment-dock-resize-y {
+    flex: 0 0 auto;
+    height: 9px;
+    margin: -4px 0;
+    cursor: ns-resize;
+    z-index: 20;
+    position: relative;
+    background: transparent;
+}
+.assessment-dock-resize-y::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 3px;
+    width: 46px;
+    border-radius: 3px;
+    background: #94a3b8;
+    opacity: 0;
+    transition: opacity 0.15s;
+}
+.assessment-dock-resize-y:hover::after { opacity: 0.9; }
+
+/* A dragged split wins over the percentage cap. */
+.assessment-dock.split-custom .assessment-dock-body {
+    height: var(--abody-h);
+    max-height: none;
+}
+
+/* While dragging: kill text selection and pointer-events inside the panes so
+   the drag never gets swallowed by an iframe/textarea under the cursor. */
+body.assessment-resizing { user-select: none; cursor: ew-resize; }
+body.assessment-resizing .assessment-dock-body,
+body.assessment-resizing .assessment-chatbot-panel { pointer-events: none; }

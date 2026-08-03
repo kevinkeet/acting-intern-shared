@@ -127,6 +127,13 @@ const AssessmentPanel = {
             dock.querySelectorAll('.assessment-rail-tab').forEach((b) => {
                 b.addEventListener('click', () => this._switchRailTab(b.getAttribute('data-tab')));
             });
+            // Drag handles: left edge resizes the rail width, the bar between
+            // the answer pane and the assistant resizes the split.
+            const hx = document.createElement('div');
+            hx.className = 'assessment-dock-resize-x';
+            hx.title = 'Drag to resize the panel width (double-click to reset)';
+            dock.appendChild(hx);
+            this._initResizers(dock, hx);
         }
         document.body.classList.add('assessment-dock-open');
         this._attachChatbot();
@@ -143,11 +150,117 @@ const AssessmentPanel = {
         const cb = document.getElementById('assessment-chatbot-panel');
         if (content && cb) {
             if (cb.parentElement !== content) content.appendChild(cb);
+            if (!content.querySelector('.assessment-dock-resize-y')) {
+                const hy = document.createElement('div');
+                hy.className = 'assessment-dock-resize-y';
+                hy.title = 'Drag to resize the answer / assistant split (double-click to reset)';
+                content.insertBefore(hy, cb);
+                this._initSplitter(hy);
+            }
             return;
         }
         if (content && tries > 0) {
             setTimeout(() => this._attachChatbot(tries - 1), 200);
         }
+    },
+
+    // ── panel resizing ──────────────────────────────────────────────────
+    // Width lives in --arail on <html> (inline, so it beats the responsive
+    // breakpoints in the stylesheet). The split lives in --abody-h on the dock.
+    // Both persist to localStorage so a resident's layout survives a reload.
+
+    _RAIL_MIN: 300,
+    _BODY_MIN: 120,
+    _CHAT_MIN: 220,
+
+    _saveSize(key, val) {
+        try { localStorage.setItem(key, String(val)); } catch (e) { /* storage full */ }
+    },
+
+    _restoreSizes(dock) {
+        try {
+            const w = parseInt(localStorage.getItem('assessment-rail-width'), 10);
+            if (w) document.documentElement.style.setProperty('--arail', this._clampRail(w) + 'px');
+            const h = parseInt(localStorage.getItem('assessment-body-height'), 10);
+            if (h) {
+                dock.style.setProperty('--abody-h', h + 'px');
+                dock.classList.add('split-custom');
+            }
+        } catch (e) { /* ignore */ }
+    },
+
+    _clampRail(px) {
+        const max = Math.max(this._RAIL_MIN, Math.round(window.innerWidth * 0.6));
+        return Math.min(max, Math.max(this._RAIL_MIN, px));
+    },
+
+    _initResizers(dock, handle) {
+        this._restoreSizes(dock);
+        let dragging = false;
+        const move = (e) => {
+            if (!dragging) return;
+            // rail is anchored right, so width grows as the pointer moves left
+            const px = this._clampRail(window.innerWidth - e.clientX);
+            document.documentElement.style.setProperty('--arail', px + 'px');
+        };
+        const up = () => {
+            if (!dragging) return;
+            dragging = false;
+            document.body.classList.remove('assessment-resizing');
+            window.removeEventListener('pointermove', move);
+            window.removeEventListener('pointerup', up);
+            const cur = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--arail'), 10);
+            if (cur) this._saveSize('assessment-rail-width', cur);
+        };
+        handle.addEventListener('pointerdown', (e) => {
+            e.preventDefault();
+            dragging = true;
+            document.body.classList.add('assessment-resizing');
+            window.addEventListener('pointermove', move);
+            window.addEventListener('pointerup', up);
+        });
+        handle.addEventListener('dblclick', () => {
+            document.documentElement.style.removeProperty('--arail');
+            try { localStorage.removeItem('assessment-rail-width'); } catch (e) { /* ignore */ }
+        });
+    },
+
+    _initSplitter(handle) {
+        const dock = document.getElementById('assessment-dock');
+        const body = dock && dock.querySelector('.assessment-dock-body');
+        const content = document.getElementById('assessment-rail-content');
+        if (!dock || !body || !content) return;
+        let dragging = false;
+        const move = (e) => {
+            if (!dragging) return;
+            const top = content.getBoundingClientRect().top;
+            const avail = content.getBoundingClientRect().height;
+            let h = e.clientY - top;
+            h = Math.max(this._BODY_MIN, Math.min(avail - this._CHAT_MIN, h));
+            dock.classList.add('split-custom');
+            dock.style.setProperty('--abody-h', Math.round(h) + 'px');
+        };
+        const up = () => {
+            if (!dragging) return;
+            dragging = false;
+            document.body.classList.remove('assessment-resizing');
+            window.removeEventListener('pointermove', move);
+            window.removeEventListener('pointerup', up);
+            const cur = parseInt(dock.style.getPropertyValue('--abody-h'), 10);
+            if (cur) this._saveSize('assessment-body-height', cur);
+        };
+        handle.addEventListener('pointerdown', (e) => {
+            e.preventDefault();
+            dragging = true;
+            document.body.classList.add('assessment-resizing');
+            window.addEventListener('pointermove', move);
+            window.addEventListener('pointerup', up);
+        });
+        handle.addEventListener('dblclick', () => {
+            dock.classList.remove('split-custom');
+            dock.style.removeProperty('--abody-h');
+            try { localStorage.removeItem('assessment-body-height'); } catch (e) { /* ignore */ }
+        });
     },
 
     _switchRailTab(tab) {
