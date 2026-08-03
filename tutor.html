@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>AI Teaching Tutor — Acting Intern</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg?v=20260722n">
+    <link rel="stylesheet" href="css/epic-theme.css?v=20260722n">
+
+    <!--
+      STANDALONE TUTOR ENTRY POINT — actingintern.com/tutor.html
+
+      Deliberately a SEPARATE page from index.html, not a route inside it:
+      index.html is the study build (assessment only), and nothing here may
+      appear in, or reach into, that app. There is intentionally NO link from
+      index.html to this page and none back. Reachable only by typing the URL.
+
+      EduTutor is self-contained by design — it shares only window.ClaudeAPI and
+      cannot touch AssessmentEngine, the grader, the chart gate, the logger, or
+      any patient data. So this page loads FOUR scripts, not the ~90 index.html
+      needs. Keep it that way: if a future change makes this page need an
+      assessment script, that coupling is the bug, not the missing <script>.
+
+      No Google Analytics here on purpose — index.html has it for the study;
+      this is a private side tool and does not need tracking.
+    -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body class="tutor-standalone">
+    <!-- EduTutor.render() targets #tutor-panel-body, falling back to #main-content -->
+    <div id="main-content" class="tutor-standalone-main"></div>
+
+    <!-- Access gate first: it self-initializes and decrypts the API key into
+         localStorage, which ClaudeAPI then reads. Same password as the main app. -->
+    <script src="js/access-config.js?v=20260722n"></script>
+    <script src="js/services/access-gate.js?v=20260722n"></script>
+    <script src="js/services/claude-api.js?v=20260722n"></script>
+    <script src="js/components/edu-tutor.js?v=20260722n"></script>
+    <script>
+        (function () {
+            function start() {
+                try {
+                    if (window.EduTutor && EduTutor.render) EduTutor.render();
+                } catch (e) {
+                    document.getElementById('main-content').innerHTML =
+                        '<div class="tutor-standalone-error">The tutor failed to start: ' +
+                        String(e && e.message || e).replace(/[<>]/g, '') + '</div>';
+                }
+                // Icons are rendered by the CDN lucide build; index.html's
+                // App.refreshIcons() does not exist on this page.
+                try { if (window.lucide && lucide.createIcons) lucide.createIcons(); } catch (e) { /* icons are cosmetic */ }
+            }
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', start, { once: true });
+            } else {
+                start();
+            }
+        })();
+    </script>
+</body>
+</html>
