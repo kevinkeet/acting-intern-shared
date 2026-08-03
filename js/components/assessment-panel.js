@@ -165,8 +165,11 @@ const AssessmentPanel = {
     },
 
     // ── panel resizing ──────────────────────────────────────────────────
-    // Width lives in --arail on <html> (inline, so it beats the responsive
-    // breakpoints in the stylesheet). The split lives in --abody-h on the dock.
+    // Width lives in --arail set INLINE ON <body>. It must be body, not <html>:
+    // the stylesheet declares `body.assessment-dock-open { --arail: … }`, and a
+    // declaration on body shadows any inherited value from <html>, so setting it
+    // on documentElement silently does nothing. The split lives in --abody-h on
+    // the dock.
     // Both persist to localStorage so a resident's layout survives a reload.
 
     _RAIL_MIN: 300,
@@ -180,7 +183,7 @@ const AssessmentPanel = {
     _restoreSizes(dock) {
         try {
             const w = parseInt(localStorage.getItem('assessment-rail-width'), 10);
-            if (w) document.documentElement.style.setProperty('--arail', this._clampRail(w) + 'px');
+            if (w) document.body.style.setProperty('--arail', this._clampRail(w) + 'px');
             const h = parseInt(localStorage.getItem('assessment-body-height'), 10);
             if (h) {
                 dock.style.setProperty('--abody-h', h + 'px');
@@ -201,7 +204,7 @@ const AssessmentPanel = {
             if (!dragging) return;
             // rail is anchored right, so width grows as the pointer moves left
             const px = this._clampRail(window.innerWidth - e.clientX);
-            document.documentElement.style.setProperty('--arail', px + 'px');
+            document.body.style.setProperty('--arail', px + 'px');
         };
         const up = () => {
             if (!dragging) return;
@@ -209,7 +212,7 @@ const AssessmentPanel = {
             document.body.classList.remove('assessment-resizing');
             window.removeEventListener('pointermove', move);
             window.removeEventListener('pointerup', up);
-            const cur = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--arail'), 10);
+            const cur = parseInt(document.body.style.getPropertyValue('--arail'), 10);
             if (cur) this._saveSize('assessment-rail-width', cur);
         };
         handle.addEventListener('pointerdown', (e) => {
@@ -220,7 +223,7 @@ const AssessmentPanel = {
             window.addEventListener('pointerup', up);
         });
         handle.addEventListener('dblclick', () => {
-            document.documentElement.style.removeProperty('--arail');
+            document.body.style.removeProperty('--arail');
             try { localStorage.removeItem('assessment-rail-width'); } catch (e) { /* ignore */ }
         });
     },

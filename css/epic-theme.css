@@ -16499,8 +16499,9 @@ body:not(.mode-assessment) .assessment-nav-section { display: none !important; }
 
 
 /* ── Resizable assessment rail ──────────────────────────────────────────
-   Left edge drags the rail width (--arail on <html>, inline so it beats the
-   responsive breakpoints); the bar between the answer pane and the assistant
+   Left edge drags the rail width (--arail set inline on <body> — the stylesheet
+   declares it on body.assessment-dock-open, so a value on <html> would be
+   shadowed and silently do nothing); the bar between the answer pane and the assistant
    drags the split (--abody-h on the dock). Double-click either to reset.
    Sizes persist in localStorage. */
 .assessment-dock-resize-x {

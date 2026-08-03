@@ -6,7 +6,7 @@ Living status doc so work can resume in a fresh session. Repo:
 ## How the app works (fast facts)
 - Vanilla HTML/JS/CSS, **no build system**. `index.html` loads all scripts; `js/router.js` hash routing.
 - **Two git remotes — push BOTH after every commit:** `git push origin main && git push shared main`.
-- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260722m`**.
+- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260722n`**.
 - **Access gate password:** `0slerian` → PBKDF2 → decrypts the embedded Anthropic key into localStorage. Never log/commit the decrypted key.
 - **The shared Anthropic API key repeatedly runs OUT OF CREDITS** (Opus runs burn it fast). When it does, the live assessment (chat + grading) is DOWN. Only the user can top it up.
 - **Supabase** project (`piwoinyrlicvndpsmtde`) auto-pauses on free tier; resume from the dashboard before use.
@@ -195,15 +195,20 @@ interleaved before the submitted answer, each turn showing its window/data-types
 
 ## RESIZABLE ASSESSMENT RAIL
 Two drag handles, both persisted to localStorage and both resettable by double-click:
-- **Rail width** — `.assessment-dock-resize-x` on the dock's left edge. Writes `--arail` INLINE on `<html>`
-  so it beats the responsive breakpoints in the stylesheet. Clamped 300px .. 60% of viewport.
-  Key: `assessment-rail-width`.
+- **Rail width** — `.assessment-dock-resize-x` on the dock's left edge. Writes `--arail` INLINE ON `<body>`.
+  **It MUST be body, not `<html>`:** the stylesheet declares `body.assessment-dock-open { --arail: … }` (plus
+  1300px/1024px breakpoints), and a declaration on body SHADOWS any inherited value from `<html>` — setting it
+  on `documentElement` changes the computed value on html and silently does nothing to the dock. Clamped
+  300px .. 60% of viewport. Key: `assessment-rail-width`.
+  *Testing note:* `window.innerWidth` reports **0** in the preview's JS eval context, which collapses the clamp
+  to its 300px floor — assert the DOCK's `getBoundingClientRect().width` and `.main-container` margin-right,
+  never just the CSS variable, or a no-op reads as a pass (that is exactly how this bug shipped).
 - **Answer / assistant split** — `.assessment-dock-resize-y` between the two panes. Writes `--abody-h` on the
   dock + adds `.split-custom`, which overrides the default `max-height: 44%`. Clamped so the answer pane keeps
   >=120px and the assistant >=220px. Key: `assessment-body-height`.
 `body.assessment-resizing` disables user-select and sets `pointer-events:none` inside both panes so a drag is
 never swallowed by the textarea or the chat panel underneath.
-Verified live at 20260722m by synthetic PointerEvents: width 380px and persisted; min clamp held at 300px;
+Verified live at 20260722n: dock width actually changed 340px -> 300px AND `.main-container` margin-right followed (340px -> 300px), persisted;
 split 376px, `.split-custom` applied and persisted; double-click cleared both localStorage keys and the class.
 
 ## PENDING / NEXT
