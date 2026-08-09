@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MedModel — Methods &amp; Evidence</title>
+<meta name="description" content="The full model: formulas, calibration, and the evidence behind every adjustment — baseline risk, competing mortality, time-to-benefit, adherence, harms, and burden.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>">
+<link rel="stylesheet" href="css/style.css?v=20260809">
+</head>
+<body>
+<div class="mm-shell doc">
+    <header class="mm-masthead">
+        <div>
+            <h1><span class="mm-word">MedModel</span> — Methods &amp; Evidence</h1>
+            <p class="mm-tagline">Every adjustment in the model, the math it uses, and the literature that justifies it. Written to be argued with.</p>
+        </div>
+        <nav><a href="index.html">← Back to the model</a></nav>
+    </header>
+
+    <main>
+        <span class="eyebrow">The problem</span>
+        <h2>Why the trial's number is not your patient's number</h2>
+        <p>A randomized trial reports an <em>average</em> effect in a <em>selected</em> population. Applying that summary number to an individual fails in predictable ways (Kent &amp; Hayward, JAMA 2007 [1]; the PATH Statement, Ann Intern Med 2020 [2]; Rothwell's external-validity critique, Lancet 2005 [3]):</p>
+        <ul>
+            <li><strong>Baseline risk varies enormously between patients</strong> — often 10-fold within one trial — while the <em>relative</em> effect is comparatively stable. Absolute benefit is roughly <em>baseline risk × relative risk reduction</em>, so trial-average absolute numbers (including NNTs) are wrong for almost everyone.</li>
+            <li><strong>Trial populations are curated.</strong> A review of 283 major-journal RCTs found common medical conditions, age, and polypharmacy among the most frequent exclusions, with only 47% of exclusion criteria strongly justified (Van Spall, JAMA 2007 [4]). The multimorbid older adults who take the most preventive medication are the least represented in the trials of it.</li>
+            <li><strong>Prevention takes time that not every patient has.</strong> Preventive drugs deliver benefit on a lag (time-to-benefit), while harms and burden start with the first tablet — the asymmetry at the core of prescribing-late-in-life frameworks (Holmes, Arch Intern Med 2006 [5]).</li>
+            <li><strong>Trial adherence is not clinic adherence.</strong> Intention-to-treat effects embed in-trial adherence (~85–90%); half of real-world statin starters have stopped within a year (Jackevicius, JAMA 2002 [6]).</li>
+        </ul>
+        <p>MedModel makes those four corrections explicitly, in a fixed order, and shows its work as a step-by-step waterfall so each adjustment can be inspected — and challenged.</p>
+
+        <span class="eyebrow">The model</span>
+        <h2>Structure: a discrete-time competing-hazards model</h2>
+        <p>For each scenario the engine simulates monthly cycles over the chosen horizon. While alive and event-free, a patient faces two hazards: the index outcome (e.g., major vascular event) and death from other causes. Cumulative incidence is accumulated cause-specifically:</p>
+        <div class="formula">
+            CIF<sub>event</sub>(T) = Σ<sub>t≤T</sub> S(t−1) · p<sub>event</sub>(t) · (1 − p<sub>other</sub>(t)/2)<br>
+            S(t) = S(t−1) · (1 − p<sub>event</sub>(t)) · (1 − p<sub>other</sub>(t))
+        </div>
+        <p>ARR(T) = CIF<sub>untreated</sub>(T) − CIF<sub>treated</sub>(T); NNT = 1/ARR. This is the standard cause-specific-hazard construction (a discrete Fine-Gray-style cumulative incidence), which automatically produces the geriatric result: as competing mortality rises, achievable absolute benefit falls even at identical event risk.</p>
+
+        <h3>1 · Baseline risk: the patient's, not the trial's</h3>
+        <p>The first substitution replaces the trial control-arm risk with the individual's predicted risk, applying the trial's <em>relative</em> effect to it. This is the central recommendation of the PATH Statement [2] and is justified empirically: relative effects are approximately constant across baseline-risk strata for the drug classes modeled here —</p>
+        <ul>
+            <li><strong>Statins:</strong> RR 0.78 (95% CI 0.76–0.80) per 1.0 mmol/L LDL reduction, with no significant heterogeneity across five strata of baseline 5-year risk (CTT, Lancet 2010 [7]; low-risk analysis, Lancet 2012 [8]).</li>
+            <li><strong>BP lowering:</strong> RR 0.80 (0.77–0.83) for major CV events per 10 mmHg SBP, consistent across baseline BP, prior CVD, and comorbidity (Ettehad, Lancet 2016 [9]; BPLTTC, Lancet 2021 [10]).</li>
+        </ul>
+        <p>Baseline risk sources, in order of preference: a validated multivariable equation where one exists (Pooled Cohort Equations for primary-prevention ASCVD [11], implemented exactly and verified against the guideline's published worked examples; CHA₂DS₂-VASc with the Friberg 2012 Swedish-cohort untreated event rates for AF [12]); otherwise the trial control-arm rate anchored to a user-selected risk stratum with transparent multipliers.</p>
+
+        <h3>2 · Competing mortality and prognosis</h3>
+        <p>Other-cause mortality follows a Gompertz hazard h(a) = A·e<sup>B·a</sup> — the classical law of adult mortality, with rates doubling roughly every 8 years — anchored by sex to the NCHS US life tables (q<sub>65</sub>, q<sub>85</sub>) and validated in the test suite against published remaining life expectancies (2022 tables: e<sub>65</sub> 17.5 y men / 20.2 y women) [13].</p>
+        <p>The five overall-health levels scale this hazard (×0.55 to ×2.9), calibrated so that "excellent / average / poor" reproduce approximately the top-quartile / median / bottom-quartile life expectancies of the Walter &amp; Covinsky individualized-prevention framework (JAMA 2001) [14]. The frailty multiplier magnitude matches meta-analytic frailty mortality hazards (HR ≈ 2.4 [15]) and the survival spread demonstrated for gait speed (Studenski, JAMA 2011 [16]). Selected high-lethality conditions multiply further, using published all-cause mortality hazards: heart failure ≈1.8 [17], moderate-severe dementia ≈2.5 [18], home-oxygen COPD ≈3 (NOTT/MRC [19]), eGFR &lt;30 ≈3 (Go, NEJM 2004 [20]), metastatic cancer ≈4 (SEER-based estimate). The product is capped (×8); this is deliberately a prognosis <em>sketch</em>, not a validated index — for real prognostication use ePrognosis (Lee [21]/Schonberg [22] indices).</p>
+
+        <h3>3 · Time-to-benefit</h3>
+        <p>Treatment effect ramps in linearly from zero to the full hazard ratio over a class-specific period fitted to the survival-meta-analysis time-to-benefit literature (the displayed TTB quotes the source directly):</p>
+        <div class="tablewrap"><table>
+            <tr><th>Therapy</th><th>Time to benefit</th><th>Source</th></tr>
+            <tr><td>Statins (primary prevention)</td><td>0.8 y to 1/500; 2.5 y to 1/100 MACE</td><td>Yourman, JAMA IM 2021 [23]</td></tr>
+            <tr><td>BP lowering (age ≥65)</td><td>0.9 y to 1/500; 1.7 y to 1/200; 3.0 y to 1/100 (stroke)</td><td>Ho, JAGS 2022 [24]</td></tr>
+            <tr><td>Bisphosphonates</td><td>12.4 mo to 1/100 nonvertebral fx; 20.3 mo to 1/200 hip fx</td><td>Deardorff, JAMA IM 2022 [25]</td></tr>
+            <tr><td>SGLT2i in HFrEF</td><td>significant by day 28 (DAPA-HF); day 12 (EMPEROR-Reduced)</td><td>Berg, JAMA Cardiol 2021 [26]; Packer, Circulation 2021 [27]</td></tr>
+            <tr><td>Anticoagulation in AF</td><td>effectively immediate</td><td>no formal TTB analysis; KM curves separate from the outset [28]</td></tr>
+            <tr><td>Intensive glycemic control</td><td>~6–9 y to microvascular benefit</td><td>UKPDS 33 KM curves [29]; Huang decision model, Ann IM 2008 [30]</td></tr>
+        </table></div>
+        <p>When median survival (from step 2) is shorter than the therapy's TTB, the app raises the Holmes flag [5]: the patient is likely to carry burden and harm-risk without living to collect the benefit. The same logic underpins deprescribing tools (STOPPFrail [31]) and is supported by trial evidence that stopping statins in advanced illness does not worsen survival and improves quality of life (Kutner, JAMA IM 2015 [32]). Lee's cancer-screening lagtimes (BMJ 2013 [33]) established the framework.</p>
+
+        <h3>4 · Adherence: diluting the trial effect honestly</h3>
+        <p>Under proportional hazards with an on/off drug effect, a patient covered for a fraction <em>f</em> of days experiences an average hazard of h·(1 − f·(1−HR<sub>bio</sub>)). The trial's ITT hazard ratio already embeds the trial's own adherence f<sub>trial</sub>, so:</p>
+        <div class="formula">
+            RRR<sub>patient</sub> = (f<sub>patient</sub> / f<sub>trial</sub>) · RRR<sub>trial</sub>,&nbsp; capped at the implied fully-adherent effect
+        </div>
+        <p>Anchors: trial adherence ~85–90% (HPS in-trial compliance ≈85% [34]); real-world adherence to chronic preventive therapy 43–78%, typically ~50–65% (Osterberg, NEJM 2005 [35]); half of elderly statin starters stop within a year and only ~1 in 4 maintain PDC ≥80% at 5 years (Jackevicius [6]; Benner, JAMA 2002 [36]). The presets (90% / 65% / 40%) span that literature.</p>
+        <p class="callout"><strong>What we deliberately do not do:</strong> observational adherence–mortality gradients (e.g., good-vs-poor adherence all-cause mortality RR 0.55 [37]) are heavily confounded — adherence <em>to placebo</em> carries nearly the same association (OR 0.56; Simpson, BMJ 2006 [38]). MedModel therefore uses only the proportional-exposure dilution above, not the observational gradient. This is the conservative, mechanism-based choice for the efficacy-effectiveness gap (Eichler, Nat Rev Drug Discov 2011 [39]).</p>
+
+        <h3>5 · Representativeness, stated — not faked</h3>
+        <p>Where a patient falls outside the trial population, no defensible multiplier exists — so the model does not invent one. Instead it grades the mismatch (<em>in the trials / extrapolated / outside the evidence</em>) from each medication's actual enrollment (age ranges, exclusions) plus global rules (older than the oldest participants; frailty [4]), states the reason in plain language, and — where subgroup evidence exists — quotes it (e.g., CTT 2019: relative effect similar across ages overall but inconclusive for primary prevention over 75 [40]; SPRINT's exclusion of diabetes, stroke, dementia, and nursing-home residents; ELDERCARE-AF supporting anticoagulation benefit in frail ≥80 [41]; ASPREE showing primary-prevention aspirin ≥70 causes net harm [42] — included in the library deliberately as the cautionary case).</p>
+
+        <span class="eyebrow">The other side of the ledger</span>
+        <h2>Harms</h2>
+        <p>Harms are modeled as absolute excess rates (vs no treatment) from trial safety tables and pharmacoepidemiology, with three deliberate differences from the benefit side:</p>
+        <ul>
+            <li><strong>No time-to-harm lag.</strong> Bleeding, hypoglycemia, falls, and intolerance begin at once — the clinically decisive asymmetry near the end of life [5].</li>
+            <li><strong>Patient-factor scaling with cited multipliers.</strong> Examples: major bleeding on anticoagulants roughly doubles from trial-average age to ≥80 (ARISTOTLE age strata; Halvorsen, EHJ 2014 [43]); upper-GI bleeding on antiplatelets rises ~4-fold at ≥75, ~10-fold for disabling/fatal bleeds (Li, Lancet 2017 [44]); statin new-onset diabetes NNH ≈255 over 4 y (Sattar [45]; dose-dependence, Preiss [46]); reported statin muscle symptoms are ~90% nocebo (SAMSON [47]; StatinWISE [48]) while true rhabdomyolysis is ~4.4/100,000 py (Graham, JAMA 2004 [49]); atypical femoral fractures rise steeply beyond 5 years of bisphosphonate use but are outnumbered ~149:2 by hip fractures prevented at 3 y (Black, NEJM 2020 [50]); serious fall injuries on antihypertensives in frail elders, HR ~1.3–1.4 (Tinetti, JAMA IM 2014 [51]); severe hypoglycemia with intensive control, ACCORD [52]/ADVANCE [53].</li>
+            <li><strong>Exposure-scaled.</strong> A patient who takes 40% of doses gets less harm as well as less benefit; harms scale with actual exposure.</li>
+        </ul>
+        <p>Harm rates also pass through the competing-mortality machinery (a bleed cannot happen after death), so harm counts are honest per-1000 figures over the same horizon as benefits. Where an excess-vs-nothing rate had to be derived (e.g., anticoagulant bleeding vs <em>no</em> antithrombotic, from AVERROES arms [54]), the derivation is stated on the card and marked "est."</p>
+
+        <h2>Treatment burden</h2>
+        <p>Burden — the workload of being a patient — is scored 0–10 from a transparent rubric, not presented as probability. It operationalizes minimally disruptive medicine (May, Montori &amp; Mair, BMJ 2009 [55]) and the Treatment Burden Questionnaire tradition (Tran, BMC Med 2012/2014 [56]); the classic demonstration is Boyd's guideline-perfect 79-year-old taking 12 drugs on a 19-dose day (JAMA 2005 [57]).</p>
+        <div class="tablewrap"><table>
+            <tr><th>Facet</th><th>Points</th></tr>
+            <tr><td>Dosing frequency</td><td>1×/d +0.5 · 2×/d +1.5 · ≥3×/d +2.5</td></tr>
+            <tr><td>Monitoring (labs + extra visits/year)</td><td>1 +0.5 · 2–3 +1.0 · ≥4 +1.5</td></tr>
+            <tr><td>Administration constraints</td><td>+0.8 each (fasting rituals, sick-day rules, INR checks…), cap 2.5</td></tr>
+            <tr><td>Cost tier</td><td>$ +0 · $$ +0.75 · $$$ +1.5</td></tr>
+            <tr><td>Interaction potential</td><td>low +0 · moderate +0.5 · high +1.0</td></tr>
+        </table></div>
+
+        <span class="eyebrow">Trust, but verify</span>
+        <h2>Calibration and validation</h2>
+        <p>The repository ships a test suite (<span style="font-family:var(--mono);font-size:13px">medmodel/test/engine.test.js</span>, run with node) that asserts:</p>
+        <ul>
+            <li><strong>PCE implementation is exact:</strong> reproduces all four published worked examples from the 2013 guideline appendix (2.1% / 3.0% / 5.3% / 6.1% for the standard 55-year-old profiles) [11].</li>
+            <li><strong>Mortality model matches the US life tables:</strong> e<sub>65</sub>, e<sub>75</sub>, e<sub>85</sub> by sex within tolerance of the NCHS 2022 values [13]; health levels reproduce the Walter &amp; Covinsky quartile spread [14].</li>
+            <li><strong>Trial round-trips:</strong> with patient set to the trial average, the model reproduces published results (SPRINT: NNT ≈ 61 over 3.26 y [58]; DAPA-HF: NNT ≈ 21 over 18 months [59]). The waterfall's step 1 performs this same replication live for every medication, so the calibration is visible on screen, per drug.</li>
+            <li><strong>Directional sanity:</strong> benefit shrinks monotonically with frailty and non-adherence; a time-to-benefit longer than survival collapses it.</li>
+        </ul>
+
+        <h2>Limitations — read these</h2>
+        <ul>
+            <li><strong>This is an educational model, not a clinical calculator.</strong> Individualized outputs are model estimates layered on trial averages; they have not themselves been validated against outcomes. It is a reasoning scaffold — the honest version of the arithmetic clinicians already do implicitly.</li>
+            <li>Event hazards are held constant over the horizon (except mortality); real risks drift with age. PCE is applied for horizons other than 10 years by hazard conversion.</li>
+            <li>The model does not feed prevented events back into survival, so for mortality-including composites the benefit is, if anything, slightly understated in high-risk cases.</li>
+            <li>Adherence dilution assumes an immediate on/off effect; drugs with legacy effects (statins) retain some benefit after gaps, so the dilution there is conservative.</li>
+            <li>Friberg CHA₂DS₂-VASc rates come from a 2005–2008 cohort; contemporary untreated rates run somewhat lower, so AF benefits may be modestly overstated.</li>
+            <li>Several harm excess rates versus "no treatment" required derivation from active-comparator trials and are marked "est." on their cards.</li>
+            <li>Confidence intervals are displayed but not propagated through the simulation; the waterfall shows point estimates.</li>
+            <li>Race in the PCE is a cohort calibration variable, not biology; the 2023 PREVENT equations (race-free) are the natural upgrade path.</li>
+            <li>Trial-population values (mean ages, adherence, some control rates) are curated from the sources cited in each entry; a handful (marked "est.") are informed estimates awaiting a primary-source pass.</li>
+        </ul>
+
+        <span class="eyebrow">Bibliography</span>
+        <h2>References</h2>
+        <ol class="refs">
+            <li>Kent DM, Hayward RA. Limitations of applying summary results of clinical trials to individual patients. JAMA 2007;298:1209–12.</li>
+            <li>Kent DM, et al. The Predictive Approaches to Treatment effect Heterogeneity (PATH) Statement. Ann Intern Med 2020;172:35–45.</li>
+            <li>Rothwell PM. External validity of randomised controlled trials. Lancet 2005;365:82–93.</li>
+            <li>Van Spall HGC, et al. Eligibility criteria of randomized controlled trials published in high-impact general medical journals. JAMA 2007;297:1233–40.</li>
+            <li>Holmes HM, et al. Reconsidering medication appropriateness for patients late in life. Arch Intern Med 2006;166:605–9.</li>
+            <li>Jackevicius CA, et al. Adherence with statin therapy in elderly patients with and without acute coronary syndromes. JAMA 2002;288:462–7.</li>
+            <li>Cholesterol Treatment Trialists' (CTT) Collaboration. Efficacy and safety of more intensive lowering of LDL cholesterol: meta-analysis of 170,000 participants in 26 randomised trials. Lancet 2010;376:1670–81.</li>
+            <li>CTT Collaboration. The effects of lowering LDL cholesterol with statin therapy in people at low risk of vascular disease. Lancet 2012;380:581–90.</li>
+            <li>Ettehad D, et al. Blood pressure lowering for prevention of cardiovascular disease and death: systematic review and meta-analysis. Lancet 2016;387:957–67.</li>
+            <li>Blood Pressure Lowering Treatment Trialists' Collaboration. Pharmacological blood pressure lowering for primary and secondary prevention of cardiovascular disease across different levels of blood pressure. Lancet 2021;397:1625–36.</li>
+            <li>Goff DC Jr, et al. 2013 ACC/AHA Guideline on the Assessment of Cardiovascular Risk. Circulation 2014;129(Suppl 2):S49–73 (Pooled Cohort Equations, Appendix 7).</li>
+            <li>Friberg L, Rosenqvist M, Lip GYH. Evaluation of risk stratification schemes for ischaemic stroke and bleeding in 182,678 patients with atrial fibrillation. Eur Heart J 2012;33:1500–10.</li>
+            <li>Arias E, et al. United States Life Tables, 2022. Natl Vital Stat Rep (NCHS).</li>
+            <li>Walter LC, Covinsky KE. Cancer screening in elderly patients: a framework for individualized decision making. JAMA 2001;285:2750–6.</li>
+            <li>O'Donovan M, et al. Frailty and all-cause mortality: meta-analysis (frail vs robust HR ≈ 2.4). 2022.</li>
+            <li>Studenski S, et al. Gait speed and survival in older adults. JAMA 2011;305:50–8.</li>
+            <li>Kaiser Permanente Southern California HF cohort: 1-year all-cause mortality HR 1.70 (HFrEF 2.43). 2023.</li>
+            <li>Meta-analyses of dementia and mortality (adjusted HR ~2.4–2.7); median survival ~5–6 y from diagnosis. Lancet Healthy Longev 2021.</li>
+            <li>Nocturnal Oxygen Therapy Trial Group. Ann Intern Med 1980;93:391–8; MRC Working Party. Lancet 1981;1:681–6.</li>
+            <li>Go AS, et al. Chronic kidney disease and the risks of death, cardiovascular events, and hospitalization. N Engl J Med 2004;351:1296–305.</li>
+            <li>Lee SJ, et al. Development and validation of a prognostic index for 4-year mortality in older adults. JAMA 2006;295:801–8.</li>
+            <li>Schonberg MA, et al. Index to predict 5-year mortality of community-dwelling adults aged 65 and older. J Gen Intern Med 2009;24:1115–22.</li>
+            <li>Yourman LC, et al. Evaluation of time to benefit of statins for the primary prevention of cardiovascular events in adults aged 50 to 75 years: a meta-analysis. JAMA Intern Med 2021;181:179–85.</li>
+            <li>Ho VS, Cenzer IS, Nguyen BT, Lee SJ. Time to benefit for stroke reduction after blood pressure treatment in older adults: a meta-analysis. J Am Geriatr Soc 2022;70:1558–68.</li>
+            <li>Deardorff WJ, et al. Time to benefit of bisphosphonate therapy for the prevention of fractures among postmenopausal women with osteoporosis: a meta-analysis. JAMA Intern Med 2022;182:33–41.</li>
+            <li>Berg DD, et al. Time to clinical benefit of dapagliflozin in patients with heart failure with reduced ejection fraction (DAPA-HF). JAMA Cardiol 2021;6:499–507.</li>
+            <li>Packer M, et al. Effect of empagliflozin on the clinical stability of patients with heart failure and a reduced ejection fraction (EMPEROR-Reduced). Circulation 2021;143:326–36.</li>
+            <li>Hart RG, Pearce LA, Aguilar MI. Meta-analysis: antithrombotic therapy to prevent stroke in patients who have nonvalvular atrial fibrillation. Ann Intern Med 2007;146:857–67.</li>
+            <li>UK Prospective Diabetes Study (UKPDS) Group. Intensive blood-glucose control with sulphonylureas or insulin (UKPDS 33). Lancet 1998;352:837–53.</li>
+            <li>Huang ES, et al. The effect of comorbid illness and functional status on the expected benefits of intensive glucose control in older patients with type 2 diabetes: a decision analysis. Ann Intern Med 2008;149:11–19.</li>
+            <li>Lavan AH, et al. STOPPFrail: consensus validation. Age Ageing 2017;46:600–7 (v2: Curtin D, et al. Age Ageing 2021;50:465–71).</li>
+            <li>Kutner JS, et al. Safety and benefit of discontinuing statin therapy in the setting of advanced, life-limiting illness. JAMA Intern Med 2015;175:691–700.</li>
+            <li>Lee SJ, et al. Time lag to benefit after screening for breast and colorectal cancer. BMJ 2013;346:e8441.</li>
+            <li>Heart Protection Study Collaborative Group. Lancet 2002;360:7–22.</li>
+            <li>Osterberg L, Blaschke T. Adherence to medication. N Engl J Med 2005;353:487–97.</li>
+            <li>Benner JS, et al. Long-term persistence in use of statin therapy in elderly patients. JAMA 2002;288:455–61.</li>
+            <li>Chowdhury R, et al. Adherence to cardiovascular therapy: a meta-analysis of prevalence and clinical consequences. Eur Heart J 2013;34:2940–8.</li>
+            <li>Simpson SH, et al. A meta-analysis of the association between adherence to drug therapy and mortality. BMJ 2006;333:15 (the "healthy adherer" effect).</li>
+            <li>Eichler HG, et al. Bridging the efficacy–effectiveness gap. Nat Rev Drug Discov 2011;10:495–506.</li>
+            <li>CTT Collaboration. Efficacy and safety of statin therapy in older people. Lancet 2019;393:407–15.</li>
+            <li>Okumura K, et al. Low-dose edoxaban in very elderly patients with atrial fibrillation (ELDERCARE-AF). N Engl J Med 2020;383:1735–45.</li>
+            <li>McNeil JJ, et al. ASPREE: effect of aspirin on cardiovascular events, bleeding, and mortality in healthy elderly. N Engl J Med 2018;379:1499–1519 (three papers).</li>
+            <li>Halvorsen S, et al. Efficacy and safety of apixaban compared with warfarin according to age (ARISTOTLE). Eur Heart J 2014;35:1864–72.</li>
+            <li>Li L, et al. Age-specific risks, severity, time course, and outcome of bleeding on long-term antiplatelet treatment (Oxford Vascular Study). Lancet 2017;390:490–9.</li>
+            <li>Sattar N, et al. Statins and risk of incident diabetes: meta-analysis. Lancet 2010;375:735–42.</li>
+            <li>Preiss D, et al. Risk of incident diabetes with intensive-dose compared with moderate-dose statin therapy. JAMA 2011;305:2556–64.</li>
+            <li>Wood FA, et al. N-of-1 trial of a statin, placebo, or no treatment to assess side effects (SAMSON). N Engl J Med 2020;383:2182–4.</li>
+            <li>Herrett E, et al. StatinWISE: series of randomised n-of-1 trials. BMJ 2021;372:n135.</li>
+            <li>Graham DJ, et al. Incidence of hospitalized rhabdomyolysis in patients treated with lipid-lowering drugs. JAMA 2004;292:2585–90.</li>
+            <li>Black DM, et al. Atypical femur fracture risk versus fragility fracture prevention with bisphosphonates. N Engl J Med 2020;383:743–53.</li>
+            <li>Tinetti ME, et al. Antihypertensive medications and serious fall injuries in a nationally representative sample of older adults. JAMA Intern Med 2014;174:588–95.</li>
+            <li>ACCORD Study Group. Effects of intensive glucose lowering in type 2 diabetes. N Engl J Med 2008;358:2545–59.</li>
+            <li>ADVANCE Collaborative Group. Intensive blood glucose control and vascular outcomes in patients with type 2 diabetes. N Engl J Med 2008;358:2560–72.</li>
+            <li>Connolly SJ, et al. Apixaban in patients with atrial fibrillation (AVERROES). N Engl J Med 2011;364:806–17.</li>
+            <li>May C, Montori VM, Mair FS. We need minimally disruptive medicine. BMJ 2009;339:b2803.</li>
+            <li>Tran VT, et al. Development and description of measurement properties of an instrument to assess treatment burden among patients with multiple chronic conditions. BMC Med 2012;10:68; English validation BMC Med 2014;12:109.</li>
+            <li>Boyd CM, et al. Clinical practice guidelines and quality of care for older patients with multiple comorbid diseases. JAMA 2005;294:716–24.</li>
+            <li>SPRINT Research Group. A randomized trial of intensive versus standard blood-pressure control. N Engl J Med 2015;373:2103–16.</li>
+            <li>McMurray JJV, et al. Dapagliflozin in patients with heart failure and reduced ejection fraction (DAPA-HF). N Engl J Med 2019;381:1995–2008.</li>
+        </ol>
+
+        <p><a class="backlink" href="index.html">← Back to the model</a></p>
+    </main>
+
+    <footer class="mm-foot">
+        <p>MedModel is an educational companion to the Acting Intern clinical simulator. It is not medical advice and must not drive individual treatment decisions.</p>
+    </footer>
+</div>
+</body>
+</html>

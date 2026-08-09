@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MedModel — what will this medication actually do for this patient?</title>
+<meta name="description" content="An evidence-based model that adjusts RCT benefit estimates for the patient in front of you: baseline risk, competing mortality, time-to-benefit, and adherence — plus harms and treatment burden.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>">
+<link rel="stylesheet" href="css/style.css?v=20260809">
+</head>
+<body>
+<div class="mm-shell">
+
+    <header class="mm-masthead">
+        <div>
+            <h1><span class="mm-word">MedModel</span> — what will this medication actually do for <em>this</em> patient?</h1>
+            <p class="mm-tagline">Trial results describe trial patients. This model starts from the RCT evidence and adjusts it — for your patient's baseline risk, competing mortality, time-to-benefit, and real-world adherence — then shows the harms and the day-to-day burden next to it.</p>
+        </div>
+        <nav>
+            <a href="methods.html">Methods &amp; evidence</a>
+        </nav>
+    </header>
+
+    <div class="mm-cols">
+        <aside>
+            <section class="panel" aria-label="Patient">
+                <div class="panel-head"><h2>The patient</h2><span class="kicker">Step 1</span></div>
+                <div class="panel-body">
+                    <div class="inline-fields">
+                        <div class="field">
+                            <label for="pt-age">Age</label>
+                            <input type="number" id="pt-age" min="40" max="99" value="76">
+                        </div>
+                        <div class="field">
+                            <span class="flabel" id="sexlabel">Sex</span>
+                            <div class="seg" role="group" aria-labelledby="sexlabel">
+                                <button type="button" data-sex="female" aria-pressed="true">Female</button>
+                                <button type="button" data-sex="male" aria-pressed="false">Male</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <span class="flabel">Overall health for their age</span>
+                        <div class="radio-cards" id="health-cards"></div>
+                        <p class="hint">Levels are calibrated to the top-quartile / median / bottom-quartile life-expectancy framework of Walter &amp; Covinsky (JAMA 2001).</p>
+                    </div>
+
+                    <div class="field">
+                        <span class="flabel">Conditions (drive risk scores, harm scaling &amp; prognosis)</span>
+                        <div class="check-grid" id="cond-grid"></div>
+                    </div>
+
+                    <div class="field">
+                        <span class="flabel">Expected adherence</span>
+                        <div class="radio-cards" id="adh-cards"></div>
+                    </div>
+
+                    <div class="life-readout" id="life-readout" aria-live="polite"></div>
+                </div>
+            </section>
+
+            <section class="panel" aria-label="Medication">
+                <div class="panel-head"><h2>The medication</h2><span class="kicker">Step 2</span></div>
+                <div class="panel-body">
+                    <div class="med-list" id="med-list"></div>
+                </div>
+            </section>
+
+            <section class="panel" aria-label="Baseline risk" id="baseline-panel" hidden>
+                <div class="panel-head"><h2>Baseline risk</h2><span class="kicker">Step 3</span></div>
+                <div class="panel-body" id="baseline-body"></div>
+            </section>
+
+            <section class="panel" aria-label="Horizon">
+                <div class="panel-head"><h2>Time horizon</h2><span class="kicker">Step 4</span></div>
+                <div class="panel-body">
+                    <div class="seg" role="group" aria-label="Horizon">
+                        <button type="button" data-horizon="1" aria-pressed="false">1 y</button>
+                        <button type="button" data-horizon="2" aria-pressed="false">2 y</button>
+                        <button type="button" data-horizon="5" aria-pressed="true">5 y</button>
+                        <button type="button" data-horizon="10" aria-pressed="false">10 y</button>
+                    </div>
+                    <p class="hint">Numbers below are cumulative over this horizon, capped by the patient's chance of surviving it.</p>
+                </div>
+            </section>
+        </aside>
+
+        <main id="results" aria-live="polite">
+            <div class="panel"><div class="results-empty">Choose a medication to see individualized numbers.</div></div>
+        </main>
+    </div>
+
+    <footer class="mm-foot">
+        <p id="foot-disclaimer"></p>
+        <p>Built as an educational companion to the Acting Intern clinical simulator. Model, parameters, and every citation: <a href="methods.html">Methods &amp; evidence</a>.</p>
+    </footer>
+</div>
+
+<script src="js/engine.js?v=20260809"></script>
+<script src="js/data/lifetables.js?v=20260809"></script>
+<script src="js/data/riskmodels.js?v=20260809"></script>
+<script src="js/data/medications.js?v=20260809"></script>
+<script src="js/app.js?v=20260809"></script>
+</body>
+</html>
