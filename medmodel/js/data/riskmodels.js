@@ -106,10 +106,54 @@
         return { score: s, annualRatePct: CHADSVASC_ANNUAL_PCT[capped] };
     }
 
+    // ---- HAS-BLED --------------------------------------------------------
+    // Pisters et al., Chest 2010 (Euro Heart Survey): major bleeds per 100
+    // patient-years on anticoagulation, by score. Scores ≥5 extrapolated.
+    // (Ported from the medeval calculator, meds.kevinkeet.com.)
+    var HASBLED_ANNUAL_PCT = { 0: 1.13, 1: 1.02, 2: 1.88, 3: 3.74, 4: 8.70, 5: 12.50 };
+
+    /**
+     * f = { age, sbpOver160, renalImpaired (Cr>2.3 or eGFR<30), liverDisease,
+     *       priorStroke, priorBleed, labileINR, antiplateletOrNSAID, alcohol }
+     */
+    function hasbled(f) {
+        var s = 0;
+        if (f.sbpOver160) s += 1;
+        if (f.renalImpaired) s += 1;
+        if (f.liverDisease) s += 1;
+        if (f.priorStroke) s += 1;
+        if (f.priorBleed) s += 1;
+        if (f.labileINR) s += 1;
+        if (f.age > 65) s += 1;
+        if (f.antiplateletOrNSAID) s += 1;
+        if (f.alcohol) s += 1;
+        return { score: s, annualBleedPct: HASBLED_ANNUAL_PCT[Math.min(5, s)] || 12.5 };
+    }
+
+    // ---- CKD-EPI 2021 (race-free) eGFR ----------------------------------
+    // Inker et al., NEJM 2021. (Ported from the medeval calculator.)
+    function egfrCkdEpi2021(creatinine, age, sex) {
+        if (!creatinine || !age) return null;
+        var female = sex === 'female';
+        var kappa = female ? 0.7 : 0.9;
+        var alpha = female ? -0.241 : -0.302;
+        var r = creatinine / kappa;
+        var e = 142 *
+            Math.pow(Math.min(r, 1), alpha) *
+            Math.pow(Math.max(r, 1), -1.200) *
+            Math.pow(0.9938, age) *
+            (female ? 1.012 : 1);
+        var stage = e >= 90 ? 'G1' : e >= 60 ? 'G2' : e >= 45 ? 'G3a' : e >= 30 ? 'G3b' : e >= 15 ? 'G4' : 'G5';
+        return { egfr: Math.round(e), stage: stage };
+    }
+
     return {
         PCE: PCE,
         pce10y: pce10y,
         CHADSVASC_ANNUAL_PCT: CHADSVASC_ANNUAL_PCT,
-        chadsvasc: chadsvasc
+        chadsvasc: chadsvasc,
+        HASBLED_ANNUAL_PCT: HASBLED_ANNUAL_PCT,
+        hasbled: hasbled,
+        egfrCkdEpi2021: egfrCkdEpi2021
     };
 });

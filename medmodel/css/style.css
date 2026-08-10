@@ -337,6 +337,58 @@ input[type="radio"]:focus-visible, input[type="checkbox"]:focus-visible {
 .rep-reasons { margin: 8px 0 0; padding-left: 18px; font-size: 13px; color: var(--ink-soft); }
 .rep-reasons li { margin-bottom: 4px; }
 
+/* provenance chips */
+.prov-chip {
+    display: inline-flex; align-items: center;
+    font-size: 11px; font-weight: 700; letter-spacing: .05em;
+    border-radius: 999px; padding: 3px 10px;
+}
+.prov-chip.p-deep { color: var(--accent); border: 1.5px solid var(--accent); background: var(--accent-soft); }
+.prov-chip.p-lift { color: var(--ink-faint); border: 1.5px dashed var(--rule-strong); background: var(--card-inset); }
+.prov-chip.p-symp { color: var(--caution); border: 1.5px solid var(--caution); background: var(--caution-soft); }
+.prov-dot { color: var(--accent); margin-right: 5px; }
+
+/* regimen view */
+.rg-list { display: flex; flex-direction: column; gap: 7px; }
+.rg-row {
+    display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr);
+    gap: 6px 14px; align-items: center;
+    text-align: left; font: inherit; cursor: pointer;
+    border: 1px solid var(--rule); border-radius: 5px;
+    background: var(--card); color: var(--ink); padding: 9px 12px;
+}
+.rg-row:hover, .rg-row:focus-visible { border-color: var(--accent); }
+@media (max-width: 760px) { .rg-row { grid-template-columns: 1fr; } }
+.rg-name { font-weight: 700; font-size: 13.5px; }
+.rg-name .rg-ind { display: block; font-weight: 400; font-size: 12px; color: var(--ink-faint); }
+.rg-flags { display: block; margin-top: 3px; }
+.rg-flag {
+    display: inline-block; font-size: 10.5px; font-weight: 700; letter-spacing: .04em;
+    border-radius: 3px; padding: 1px 6px; margin-right: 5px;
+}
+.rg-flag.f-red { color: var(--harm); background: var(--harm-soft); }
+.rg-flag.f-amber { color: var(--caution); background: var(--caution-soft); }
+.rg-flag.f-grey { color: var(--ink-faint); background: var(--card-inset); }
+.rg-nums { font-size: 12.5px; color: var(--ink-soft); display: flex; flex-direction: column; gap: 2px; }
+.rg-nums .rg-benefit { color: var(--benefit); font-weight: 600; }
+.rg-nums .rg-harm { color: var(--harm); }
+.rg-bar-wrap { display: flex; align-items: center; gap: 9px; }
+.rg-bar { flex: 1; height: 12px; background: var(--card-inset); border: 1px solid var(--rule); border-radius: 3px; overflow: hidden; }
+.rg-fill { height: 100%; min-width: 2px; }
+.rg-fill.benefit { background: var(--benefit); }
+.rg-fill.harm { background: var(--harm); }
+.rg-net { font-family: var(--mono); font-variant-numeric: tabular-nums; font-weight: 700; font-size: 13.5px; min-width: 52px; text-align: right; }
+.rg-net.benefit { color: var(--benefit); }
+.rg-net.harm { color: var(--harm); }
+.rg-symp {
+    display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+    text-align: left; font: inherit; font-weight: 600; font-size: 13px; cursor: pointer;
+    border: 1px dashed var(--rule-strong); border-radius: 5px;
+    background: var(--card-inset); color: var(--ink); padding: 8px 12px;
+}
+.rg-symp span { font-weight: 400; color: var(--ink-faint); }
+.rg-symp:hover, .rg-symp:focus-visible { border-color: var(--accent); }
+
 /* footer */
 .mm-foot {
     margin-top: 34px; padding-top: 14px; border-top: 1px solid var(--rule);

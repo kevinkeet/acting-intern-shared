@@ -6,7 +6,7 @@
 <title>MedModel — what will this medication actually do for this patient?</title>
 <meta name="description" content="An evidence-based model that adjusts RCT benefit estimates for the patient in front of you: baseline risk, competing mortality, time-to-benefit, and adherence — plus harms and treatment burden.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>">
-<link rel="stylesheet" href="css/style.css?v=20260809">
+<link rel="stylesheet" href="css/style.css?v=20260810">
 </head>
 <body>
 <div class="mm-shell">
@@ -14,7 +14,7 @@
     <header class="mm-masthead">
         <div>
             <h1><span class="mm-word">MedModel</span> — what will this medication actually do for <em>this</em> patient?</h1>
-            <p class="mm-tagline">Trial results describe trial patients. This model starts from the RCT evidence and adjusts it — for your patient's baseline risk, competing mortality, time-to-benefit, and real-world adherence — then shows the harms and the day-to-day burden next to it.</p>
+            <p class="mm-tagline">Trial results describe trial patients. This model starts from the RCT evidence — the 60-medication database behind meds.kevinkeet.com plus deep-verified trial entries — and adjusts it for your patient's baseline risk, competing mortality, time-to-benefit, and real-world adherence, then shows the harms and the day-to-day burden next to it.</p>
         </div>
         <nav>
             <a href="methods.html">Methods &amp; evidence</a>
@@ -38,6 +38,10 @@
                                 <button type="button" data-sex="male" aria-pressed="false">Male</button>
                             </div>
                         </div>
+                        <div class="field">
+                            <label for="pt-cr">Creatinine</label>
+                            <input type="number" id="pt-cr" min="0.3" max="12" step="0.1" placeholder="optional">
+                        </div>
                     </div>
 
                     <div class="field">
@@ -60,10 +64,29 @@
                 </div>
             </section>
 
+            <section class="panel" aria-label="View">
+                <div class="panel-head"><h2>View</h2></div>
+                <div class="panel-body">
+                    <div class="seg" role="group" aria-label="View">
+                        <button type="button" data-view="single" aria-pressed="true">One medication</button>
+                        <button type="button" data-view="regimen" aria-pressed="false">Regimen review</button>
+                    </div>
+                    <p class="hint">Regimen review ranks every therapy that applies to this patient by severity-weighted net benefit.</p>
+                </div>
+            </section>
+
             <section class="panel" aria-label="Medication">
                 <div class="panel-head"><h2>The medication</h2><span class="kicker">Step 2</span></div>
                 <div class="panel-body">
-                    <div class="med-list" id="med-list"></div>
+                    <div class="field">
+                        <label for="med-select">Medication (★ = verified deep entry)</label>
+                        <select id="med-select"></select>
+                        <p class="hint">Catalog: 60 medications from meds.kevinkeet.com plus MedModel treatment strategies.</p>
+                    </div>
+                    <div class="field" id="ind-wrap" hidden>
+                        <label for="ind-select">Indication</label>
+                        <select id="ind-select"></select>
+                    </div>
                 </div>
             </section>
 
@@ -97,10 +120,12 @@
     </footer>
 </div>
 
-<script src="js/engine.js?v=20260809"></script>
-<script src="js/data/lifetables.js?v=20260809"></script>
-<script src="js/data/riskmodels.js?v=20260809"></script>
-<script src="js/data/medications.js?v=20260809"></script>
-<script src="js/app.js?v=20260809"></script>
+<script src="js/engine.js?v=20260810"></script>
+<script src="js/data/lifetables.js?v=20260810"></script>
+<script src="js/data/riskmodels.js?v=20260810"></script>
+<script src="js/data/medications.js?v=20260810"></script>
+<script src="js/data/medeval-database.js?v=20260810"></script>
+<script src="js/services/lift.js?v=20260810"></script>
+<script src="js/app.js?v=20260810"></script>
 </body>
 </html>

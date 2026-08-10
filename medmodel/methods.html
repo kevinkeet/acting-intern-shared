@@ -6,7 +6,7 @@
 <title>MedModel — Methods &amp; Evidence</title>
 <meta name="description" content="The full model: formulas, calibration, and the evidence behind every adjustment — baseline risk, competing mortality, time-to-benefit, adherence, harms, and burden.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>">
-<link rel="stylesheet" href="css/style.css?v=20260809">
+<link rel="stylesheet" href="css/style.css?v=20260810">
 </head>
 <body>
 <div class="mm-shell doc">
@@ -30,6 +30,16 @@
         </ul>
         <p>MedModel makes those four corrections explicitly, in a fixed order, and shows its work as a step-by-step waterfall so each adjustment can be inspected — and challenged.</p>
 
+        <span class="eyebrow">The data</span>
+        <h2>Two datasets, one model</h2>
+        <p>MedModel runs on a merged evidence base with explicit provenance:</p>
+        <ul>
+            <li><strong>Breadth — the meds.kevinkeet.com database</strong> (imported verbatim as <span style="font-family:var(--mono);font-size:13px">js/data/medeval-database.js</span>): 60 medications with per-indication NNT/RRR/timeframe entries from landmark trials, serious-harm NNHs, a purpose taxonomy (preventive / disease-modifying / symptomatic / replacement), burden tiers with descriptions, annual costs, monitoring, and contraindication lists.</li>
+            <li><strong>Depth — MedModel's verified entries</strong> (12, marked ★ in the app): for the major preventive classes, hand-curated trial demographics, confidence intervals, time-to-benefit values from the TTB literature, harm-scaling rules, and full citations, each checked against primary sources.</li>
+        </ul>
+        <p>A lift layer (<span style="font-family:var(--mono);font-size:13px">js/services/lift.js</span>) converts any database entry into engine form. An outcome published as {RRR, NNT over T years} implies, in its own trial population, ARR<sub>T</sub> = 1/NNT and a control-arm risk R₀<sub>T</sub> = ARR<sub>T</sub>/RRR, hence an annual control hazard −ln(1−R₀<sub>T</sub>)/T and HR = 1−RRR. The engine then individualizes exactly as it does for deep entries. Where a deep entry exists for the same drug-indication pair, it takes precedence; everything else is labeled <em>"lifted from meds.kevinkeet.com"</em> and carries class-level defaults for what the upstream rows don't record (time-to-benefit ramp, in-trial adherence ~85%, approximate trial mean age) — the defaults table with sources is at the top of lift.js. DOAC stroke effects are published upstream versus warfarin; the lift composes them against no-treatment via warfarin's RRR of 64% (Hart 2007): 1−RRR<sub>net</sub> = 0.36 × HR<sub>vs warfarin</sub>.</p>
+        <p><strong>What deliberately does not lift:</strong> symptomatic and replacement medicines (responder rates like "50% pain reduction" are not preventable events), and outcomes with no baseline anchor. Those render as an honest non-model card — felt benefit versus harms and burden — rather than being forced through prevention math.</p>
+
         <span class="eyebrow">The model</span>
         <h2>Structure: a discrete-time competing-hazards model</h2>
         <p>For each scenario the engine simulates monthly cycles over the chosen horizon. While alive and event-free, a patient faces two hazards: the index outcome (e.g., major vascular event) and death from other causes. Cumulative incidence is accumulated cause-specifically:</p>
@@ -45,7 +55,9 @@
             <li><strong>Statins:</strong> RR 0.78 (95% CI 0.76–0.80) per 1.0 mmol/L LDL reduction, with no significant heterogeneity across five strata of baseline 5-year risk (CTT, Lancet 2010 [7]; low-risk analysis, Lancet 2012 [8]).</li>
             <li><strong>BP lowering:</strong> RR 0.80 (0.77–0.83) for major CV events per 10 mmHg SBP, consistent across baseline BP, prior CVD, and comorbidity (Ettehad, Lancet 2016 [9]; BPLTTC, Lancet 2021 [10]).</li>
         </ul>
-        <p>Baseline risk sources, in order of preference: a validated multivariable equation where one exists (Pooled Cohort Equations for primary-prevention ASCVD [11], implemented exactly and verified against the guideline's published worked examples; CHA₂DS₂-VASc with the Friberg 2012 Swedish-cohort untreated event rates for AF [12]); otherwise the trial control-arm rate anchored to a user-selected risk stratum with transparent multipliers.</p>
+        <p>Baseline risk sources, in order of preference: a validated multivariable equation where one exists (Pooled Cohort Equations for primary-prevention ASCVD [11], implemented exactly and verified against the guideline's published worked examples; CHA₂DS₂-VASc with the Friberg 2012 Swedish-cohort untreated event rates for AF [12]); otherwise the trial control-arm rate anchored to a user-selected risk stratum with transparent multipliers. Renal function uses the race-free CKD-EPI 2021 creatinine equation (Inker, NEJM 2021 [59]), verified against hand-computed values; an eGFR below 30 auto-sets the CKD flag, harm scaling, and contraindication checks.</p>
+        <h3 style="margin-top:18px">Bleeding on antithrombotics: HAS-BLED, dynamically</h3>
+        <p>For anticoagulants, static bleeding NNHs are replaced by a patient-specific estimate: the HAS-BLED score (Pisters, Chest 2010 [60]) maps to an annual major-bleed rate on warfarin (1.13 → 12.5%/y across scores 0–5), multiplied by an agent factor from the pivotal vs-warfarin trials (apixaban 0.69, dabigatran 0.94, rivaroxaban ~1.04, edoxaban 0.80; intracranial factors ~0.4–0.7, DOAC class RR 0.48 [61]). The excess versus <em>no</em> antithrombotic is taken as ~55% of the on-drug rate (anticoagulation roughly doubles major bleeding; est., stated on the card), with ~12% of warfarin major bleeds intracranial. The uncontrolled-hypertension criterion is approximated as absent, and labile INR is proxied by poor expected adherence for warfarin only — both noted limitations.</p>
 
         <h3>2 · Competing mortality and prognosis</h3>
         <p>Other-cause mortality follows a Gompertz hazard h(a) = A·e<sup>B·a</sup> — the classical law of adult mortality, with rates doubling roughly every 8 years — anchored by sex to the NCHS US life tables (q<sub>65</sub>, q<sub>85</sub>) and validated in the test suite against published remaining life expectancies (2022 tables: e<sub>65</sub> 17.5 y men / 20.2 y women) [13].</p>
@@ -96,6 +108,14 @@
             <tr><td>Interaction potential</td><td>low +0 · moderate +0.5 · high +1.0</td></tr>
         </table></div>
 
+        <span class="eyebrow">Comparing across a regimen</span>
+        <h2>The regimen-review ranking</h2>
+        <p>The regimen view scores every therapy applicable to the patient on one scale so they can be compared. Per 1000 patients over the chosen horizon:</p>
+        <div class="formula">
+            net = Σ<sub>outcomes</sub> ARR·w<sub>outcome</sub>·1000 − Σ<sub>harms</sub> excess·w<sub>harm</sub>·1000 − burden<sub>tier</sub>·H·1000·0.2
+        </div>
+        <p>The event counts (ARR, harm excess) come from the competing-hazards engine — fully individualized. The severity weights <em>w</em> are the QALY-utility estimates from the meds.kevinkeet.com engine (death 1.0, disabling stroke 0.7, ICH 0.6, hip fracture 0.5, MACE 0.35, major bleed 0.15, severe hypoglycemia 0.05…), and the burden term uses its annual decrements (low 0.01 / moderate 0.03 / high 0.06 QALY), tempered ×0.2 so burden breaks ties rather than overruling hard outcomes. Three honesty rules: therapies matching a contraindication are scored but <em>held out</em> of the ranking; symptomatic/replacement medicines are listed separately, unranked; and every row exposes its arithmetic (benefit, harm, burden components). The weights are point-estimate utilities, not measured preferences — the ranking is a screen that orders the conversation, and each row links to the full workup.</p>
+
         <span class="eyebrow">Trust, but verify</span>
         <h2>Calibration and validation</h2>
         <p>The repository ships a test suite (<span style="font-family:var(--mono);font-size:13px">medmodel/test/engine.test.js</span>, run with node) that asserts:</p>
@@ -117,6 +137,8 @@
             <li>Confidence intervals are displayed but not propagated through the simulation; the waterfall shows point estimates.</li>
             <li>Race in the PCE is a cohort calibration variable, not biology; the 2023 PREVENT equations (race-free) are the natural upgrade path.</li>
             <li>Trial-population values (mean ages, adherence, some control rates) are curated from the sources cited in each entry; a handful (marked "est.") are informed estimates awaiting a primary-source pass.</li>
+            <li>Lifted entries inherit the upstream database's NNT/NNH curation (described there as "reasonable estimates" for some rows) plus class-default TTB and adherence values. The 12 deep entries got a primary-source verification pass; extending that pass across the other 48 — starting with the heart-failure block, whose numbers drive the regimen ranking hardest — is the highest-value next step.</li>
+            <li>Regimen severity weights are utility conventions, not elicited patient preferences; two patients can rationally order the same regimen differently. Use the ranking to structure the conversation, not to end it.</li>
         </ul>
 
         <span class="eyebrow">Bibliography</span>
@@ -181,6 +203,10 @@
             <li>Boyd CM, et al. Clinical practice guidelines and quality of care for older patients with multiple comorbid diseases. JAMA 2005;294:716–24.</li>
             <li>SPRINT Research Group. A randomized trial of intensive versus standard blood-pressure control. N Engl J Med 2015;373:2103–16.</li>
             <li>McMurray JJV, et al. Dapagliflozin in patients with heart failure and reduced ejection fraction (DAPA-HF). N Engl J Med 2019;381:1995–2008.</li>
+            <li>Inker LA, et al. New creatinine- and cystatin C–based equations to estimate GFR without race (CKD-EPI 2021). N Engl J Med 2021;385:1737–49.</li>
+            <li>Pisters R, et al. A novel user-friendly score (HAS-BLED) to assess 1-year risk of major bleeding in patients with atrial fibrillation. Chest 2010;138:1093–100.</li>
+            <li>Ruff CT, et al. Comparison of the efficacy and safety of new oral anticoagulants with warfarin (meta-analysis of RE-LY, ROCKET-AF, ARISTOTLE, ENGAGE AF). Lancet 2014;383:955–62.</li>
+            <li>The meds.kevinkeet.com medication database (medeval) — upstream source of the 60-medication catalog, purpose taxonomy, severity weights, burden tiers, costs, and contraindication lists.</li>
         </ol>
 
         <p><a class="backlink" href="index.html">← Back to the model</a></p>
