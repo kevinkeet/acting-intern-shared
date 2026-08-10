@@ -14248,6 +14248,9 @@ body.assessment-dock-open { --arail: 440px; }
 }
 .assessment-score-circle.pass { border-color: #48bb78; }
 .assessment-score-circle.fail { border-color: #e53e3e; }
+/* Study build: results carry no pass/fail verdict — neutral ring + badge. */
+.assessment-score-circle.neutral { border-color: #3182ce; }
+.assessment-results-title .badge.complete { background: #bee3f8; color: #2a4365; }
 .assessment-score-pct {
     font-size: 32px;
     font-weight: 700;

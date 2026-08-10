@@ -86,10 +86,10 @@ const AssessmentResults = {
         // Stash for per-prompt transcript lookup later in the render tree.
         this._aiLog = aiLog;
         const overallPct = Math.round(((attempt.total_score || 0) * 100));
-        const passingPct = caseDef.meta.passingOverallScorePct || 70;
-        const passed = overallPct >= passingPct;
+        // No pass/fail framing anywhere: this is a research instrument, not an
+        // exam. Participants see their percentage, never a threshold verdict.
         const statusBadge = attempt.status === 'completed'
-            ? (passed ? '<span class="badge pass">PASS</span>' : '<span class="badge fail">FAIL</span>')
+            ? '<span class="badge complete">COMPLETED</span>'
             : `<span class="badge incomplete">${this._escape(attempt.status.toUpperCase())}</span>`;
 
         root.innerHTML = `
@@ -107,12 +107,11 @@ const AssessmentResults = {
                 </div>
 
                 <div class="assessment-results-score-card">
-                    <div class="assessment-score-circle ${passed ? 'pass' : 'fail'}">
+                    <div class="assessment-score-circle neutral">
                         <div class="assessment-score-pct">${overallPct}%</div>
                         <div class="assessment-score-label">Overall</div>
                     </div>
                     <div class="assessment-results-score-detail">
-                        <div>Passing threshold: <strong>${passingPct}%</strong></div>
                         <div>Status: <strong>${this._escape(attempt.status)}</strong></div>
                     </div>
                 </div>

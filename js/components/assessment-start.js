@@ -267,10 +267,6 @@ const AssessmentStart = {
                     </div>
                     <div class="assessment-case-card-meta">
                         <span>${(m.assessments || []).length} assessment points</span>
-                        <span>&middot;</span>
-                        <span>~${m.totalTimeLimitMinutes || '?'} min total</span>
-                        <span>&middot;</span>
-                        <span>Pass at ${m.passingOverallScorePct || 70}%</span>
                     </div>
                     ${m.source ? `<div class="assessment-case-card-source">Test case &middot; ${this._escape(m.source)}</div>` : ''}
                     ${m.warning ? `<div class="assessment-case-card-warning">${this._escape(m.warning)}</div>` : ''}

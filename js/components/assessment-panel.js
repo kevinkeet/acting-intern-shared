@@ -201,6 +201,12 @@ const AssessmentPanel = {
 
     _initResizers(dock, handle) {
         this._restoreSizes(dock);
+        // Pointer CAPTURE is load-bearing: without it, releasing the mouse
+        // outside the window (easy during a fast drag) means pointerup never
+        // fires — the drag stays armed and body.assessment-resizing leaves both
+        // panes with pointer-events:none, so the rail feels dead until reload.
+        // Capturing routes move/up/cancel to the handle no matter where the
+        // pointer goes.
         let dragging = false;
         const move = (e) => {
             if (!dragging) return;
@@ -208,12 +214,11 @@ const AssessmentPanel = {
             const px = this._clampRail(window.innerWidth - e.clientX);
             document.body.style.setProperty('--arail', px + 'px');
         };
-        const up = () => {
+        const up = (e) => {
             if (!dragging) return;
             dragging = false;
             document.body.classList.remove('assessment-resizing');
-            window.removeEventListener('pointermove', move);
-            window.removeEventListener('pointerup', up);
+            try { if (e && e.pointerId != null) handle.releasePointerCapture(e.pointerId); } catch (err) { /* already released */ }
             const cur = parseInt(document.body.style.getPropertyValue('--arail'), 10);
             if (cur) this._saveSize('assessment-rail-width', cur);
         };
@@ -221,9 +226,12 @@ const AssessmentPanel = {
             e.preventDefault();
             dragging = true;
             document.body.classList.add('assessment-resizing');
-            window.addEventListener('pointermove', move);
-            window.addEventListener('pointerup', up);
+            try { handle.setPointerCapture(e.pointerId); } catch (err) { /* capture unsupported */ }
         });
+        handle.addEventListener('pointermove', move);
+        handle.addEventListener('pointerup', up);
+        handle.addEventListener('pointercancel', up);
+        window.addEventListener('blur', up);
         handle.addEventListener('dblclick', () => {
             document.body.style.removeProperty('--arail');
             try { localStorage.removeItem('assessment-rail-width'); } catch (e) { /* ignore */ }
@@ -245,12 +253,11 @@ const AssessmentPanel = {
             dock.classList.add('split-custom');
             dock.style.setProperty('--abody-h', Math.round(h) + 'px');
         };
-        const up = () => {
+        const up = (e) => {
             if (!dragging) return;
             dragging = false;
             document.body.classList.remove('assessment-resizing');
-            window.removeEventListener('pointermove', move);
-            window.removeEventListener('pointerup', up);
+            try { if (e && e.pointerId != null) handle.releasePointerCapture(e.pointerId); } catch (err) { /* already released */ }
             const cur = parseInt(dock.style.getPropertyValue('--abody-h'), 10);
             if (cur) this._saveSize('assessment-body-height', cur);
         };
@@ -258,9 +265,12 @@ const AssessmentPanel = {
             e.preventDefault();
             dragging = true;
             document.body.classList.add('assessment-resizing');
-            window.addEventListener('pointermove', move);
-            window.addEventListener('pointerup', up);
+            try { handle.setPointerCapture(e.pointerId); } catch (err) { /* capture unsupported */ }
         });
+        handle.addEventListener('pointermove', move);
+        handle.addEventListener('pointerup', up);
+        handle.addEventListener('pointercancel', up);
+        window.addEventListener('blur', up);
         handle.addEventListener('dblclick', () => {
             dock.classList.remove('split-custom');
             dock.style.removeProperty('--abody-h');
