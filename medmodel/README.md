@@ -4,6 +4,12 @@ Standalone, no-build web app (same conventions as the rest of this repo: plain
 HTML/JS/CSS, browser globals, cache-busted script tags). Lives entirely under
 `medmodel/`; not linked from the main simulator navigation.
 
+> **Deployment note:** the canonical public deployment of this app is the
+> `kevinkeet/medeval` repo, which serves it at meds.kevinkeet.com (original
+> calculator preserved there under `/legacy/`). This copy is the teaching-
+> simulator sibling; the files are structured identically — port meaningful
+> changes across.
+
 **What it does:** starts from RCT evidence and adjusts the expected absolute
 benefit for the patient in front of you — baseline risk → competing mortality →
 time-to-benefit → adherence — then shows harms (patient-scaled, immediate) and
