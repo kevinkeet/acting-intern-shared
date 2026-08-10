@@ -3,26 +3,41 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MedModel — what will this medication actually do for this patient?</title>
-<meta name="description" content="An evidence-based model that adjusts RCT benefit estimates for the patient in front of you: baseline risk, competing mortality, time-to-benefit, and adherence — plus harms and treatment burden.">
+<title>MedBenefit — what will this medication actually do for this patient?</title>
+<meta name="description" content="Patient-centered medication benefit, harm & burden: RCT evidence adjusted for the individual — baseline risk, competing mortality, time-to-benefit, adherence — with goals of care, a current-medication review, and honest uncertainty.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>">
-<link rel="stylesheet" href="css/style.css?v=20260810">
+<link rel="stylesheet" href="css/style.css?v=20260810b">
 </head>
 <body>
 <div class="mm-shell">
 
     <header class="mm-masthead">
         <div>
-            <h1><span class="mm-word">MedModel</span> — what will this medication actually do for <em>this</em> patient?</h1>
-            <p class="mm-tagline">Trial results describe trial patients. This model starts from the RCT evidence — the 60-medication database behind meds.kevinkeet.com plus deep-verified trial entries — and adjusts it for your patient's baseline risk, competing mortality, time-to-benefit, and real-world adherence, then shows the harms and the day-to-day burden next to it.</p>
+            <h1><span class="mm-word">MedBenefit</span> — what will this medication actually do for <em>this</em> patient?</h1>
+            <p class="mm-tagline">Trial results describe trial patients. This tool starts from the RCT evidence behind 60 common medications and adjusts it for the person in front of you — baseline risk, competing mortality, time-to-benefit, real-world adherence — then weighs harms, burden, and <em>your goals of care</em>. Everything runs in your browser; nothing is stored or sent anywhere.</p>
         </div>
         <nav>
             <a href="methods.html">Methods &amp; evidence</a>
+            <a href="legacy/index.html">Legacy calculator</a>
         </nav>
     </header>
 
     <div class="mm-cols">
         <aside>
+            <section class="panel" aria-label="EMR import">
+                <div class="panel-head"><h2>Quick import from records</h2><span class="kicker">optional</span></div>
+                <div class="panel-body">
+                    <p class="hint" style="margin-top:0">Have an AI-enabled EMR or chart text? Copy the extraction prompt, run it there, then paste the JSON back here.</p>
+                    <div style="display:flex;gap:8px;margin:8px 0">
+                        <button type="button" class="btn-sm" id="emr-copy">Copy extraction prompt</button>
+                        <button type="button" class="btn-sm" id="emr-clear">Clear</button>
+                    </div>
+                    <textarea id="emr-paste" class="emr-paste" rows="3" placeholder="Paste EMR-AI JSON (or structured note text) here…"></textarea>
+                    <button type="button" class="btn-sm btn-go" id="emr-extract">Extract &amp; fill</button>
+                    <p class="hint" id="emr-status" aria-live="polite"></p>
+                </div>
+            </section>
+
             <section class="panel" aria-label="Patient">
                 <div class="panel-head"><h2>The patient</h2><span class="kicker">Step 1</span></div>
                 <div class="panel-body">
@@ -39,20 +54,83 @@
                             </div>
                         </div>
                         <div class="field">
-                            <label for="pt-cr">Creatinine</label>
-                            <input type="number" id="pt-cr" min="0.3" max="12" step="0.1" placeholder="optional">
+                            <label for="pt-race">Race</label>
+                            <select id="pt-race">
+                                <option value="white">White</option>
+                                <option value="black">Black</option>
+                                <option value="hispanic">Hispanic</option>
+                                <option value="asian">Asian</option>
+                                <option value="other" selected>Other</option>
+                            </select>
                         </div>
                     </div>
 
-                    <div class="field">
+                    <details class="intake" open>
+                        <summary>Vitals &amp; labs</summary>
+                        <div class="inline-fields">
+                            <div class="field"><label for="pt-sbp">SBP</label><input type="number" id="pt-sbp" min="80" max="240" value="138"></div>
+                            <div class="field"><label for="pt-wt">Weight kg</label><input type="number" id="pt-wt" min="30" max="250" placeholder="—"></div>
+                            <div class="field"><label for="pt-ht">Height cm</label><input type="number" id="pt-ht" min="120" max="220" placeholder="—"></div>
+                        </div>
+                        <div class="inline-fields" style="margin-top:8px">
+                            <div class="field"><label for="pt-tc">Total chol</label><input type="number" id="pt-tc" min="100" max="400" value="200"></div>
+                            <div class="field"><label for="pt-hdl">HDL</label><input type="number" id="pt-hdl" min="15" max="120" value="50"></div>
+                            <div class="field"><label for="pt-ldl">LDL</label><input type="number" id="pt-ldl" min="30" max="300" placeholder="—"></div>
+                        </div>
+                        <div class="inline-fields" style="margin-top:8px">
+                            <div class="field"><label for="pt-cr">Creatinine</label><input type="number" id="pt-cr" min="0.3" max="12" step="0.1" placeholder="—"></div>
+                            <div class="field"><label for="pt-egfr">eGFR (if known)</label><input type="number" id="pt-egfr" min="5" max="150" placeholder="auto"></div>
+                            <div class="field"><label for="pt-a1c">A1c %</label><input type="number" id="pt-a1c" min="4" max="15" step="0.1" placeholder="—"></div>
+                        </div>
+                        <div class="check-grid" style="margin-top:8px">
+                            <label><input type="checkbox" id="pt-bptx" checked><span>On BP treatment</span></label>
+                            <label><input type="checkbox" id="pt-smoker"><span>Current smoker</span></label>
+                        </div>
+                    </details>
+
+                    <details class="intake">
+                        <summary>Heart</summary>
+                        <div class="inline-fields">
+                            <div class="field"><label for="pt-ef">EF % (if known)</label><input type="number" id="pt-ef" min="5" max="80" placeholder="—"></div>
+                            <div class="field" style="flex:1.6"><label for="pt-nyha">HF symptoms</label>
+                                <select id="pt-nyha">
+                                    <option value="0" selected>No heart failure</option>
+                                    <option value="1">NYHA I — no limitation</option>
+                                    <option value="2">NYHA II — mild limitation</option>
+                                    <option value="3">NYHA III — moderate limitation</option>
+                                    <option value="4">NYHA IV — severe limitation</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="check-grid" id="cond-cardiac" style="margin-top:8px"></div>
+                    </details>
+
+                    <details class="intake">
+                        <summary>Diabetes</summary>
+                        <div class="field"><label for="pt-dm">Status</label>
+                            <select id="pt-dm">
+                                <option value="none" selected>No diabetes</option>
+                                <option value="prediabetes">Prediabetes</option>
+                                <option value="type2">Type 2 diabetes</option>
+                                <option value="type1">Type 1 diabetes</option>
+                            </select>
+                        </div>
+                    </details>
+
+                    <details class="intake">
+                        <summary>Bleeding risk</summary>
+                        <div class="check-grid" id="cond-bleeding"></div>
+                    </details>
+
+                    <details class="intake">
+                        <summary>Other conditions</summary>
+                        <div class="check-grid" id="cond-other"></div>
+                    </details>
+
+                    <div class="field" style="margin-top:14px">
                         <span class="flabel">Overall health for their age</span>
                         <div class="radio-cards" id="health-cards"></div>
-                        <p class="hint">Levels are calibrated to the top-quartile / median / bottom-quartile life-expectancy framework of Walter &amp; Covinsky (JAMA 2001).</p>
-                    </div>
-
-                    <div class="field">
-                        <span class="flabel">Conditions (drive risk scores, harm scaling &amp; prognosis)</span>
-                        <div class="check-grid" id="cond-grid"></div>
+                        <p class="hint">Calibrated to the top-quartile / median / bottom-quartile life-expectancy framework of Walter &amp; Covinsky (JAMA 2001).</p>
                     </div>
 
                     <div class="field">
@@ -64,24 +142,64 @@
                 </div>
             </section>
 
-            <section class="panel" aria-label="View">
-                <div class="panel-head"><h2>View</h2></div>
+            <section class="panel" aria-label="Goals of care">
+                <div class="panel-head"><h2>Goals of care</h2><span class="kicker">Step 2</span></div>
                 <div class="panel-body">
-                    <div class="seg" role="group" aria-label="View">
-                        <button type="button" data-view="single" aria-pressed="true">One medication</button>
-                        <button type="button" data-view="regimen" aria-pressed="false">Regimen review</button>
-                    </div>
-                    <p class="hint">Regimen review ranks every therapy that applies to this patient by severity-weighted net benefit.</p>
+                    <p class="hint" style="margin-top:0">On a spectrum from comfort-focused to aggressive prevention, where does this patient fall?</p>
+                    <div class="radio-cards" id="goc-cards"></div>
+                    <details class="intake" style="margin-top:10px">
+                        <summary>Additional preferences</summary>
+                        <div class="field"><label for="pref-horizon">How far ahead do they think about health benefits?</label>
+                            <select id="pref-horizon">
+                                <option value="1">Mostly day-to-day / short term</option>
+                                <option value="2">1–2 years ahead</option>
+                                <option value="5" selected>3–5 years ahead</option>
+                                <option value="10">10+ years — long-term planning</option>
+                            </select>
+                        </div>
+                        <div class="field"><label for="pref-pills">Feelings about taking multiple medications</label>
+                            <select id="pref-pills">
+                                <option value="low">Strongly prefers fewer medications</option>
+                                <option value="moderate" selected>Okay with medications that help</option>
+                                <option value="high">Number of medications doesn't bother them</option>
+                            </select>
+                        </div>
+                        <div class="field"><label for="pref-cost">Medication cost sensitivity</label>
+                            <select id="pref-cost">
+                                <option value="high">Very important — cost is a major factor</option>
+                                <option value="moderate" selected>Somewhat important</option>
+                                <option value="low">Not a significant factor</option>
+                            </select>
+                        </div>
+                        <div class="field"><label for="pref-monitoring">Tolerance for monitoring (labs, visits)</label>
+                            <select id="pref-monitoring">
+                                <option value="low">Wants to minimize appointments and tests</option>
+                                <option value="moderate" selected>Can do reasonable monitoring</option>
+                                <option value="high">Fine with frequent monitoring</option>
+                            </select>
+                        </div>
+                    </details>
                 </div>
             </section>
 
-            <section class="panel" aria-label="Medication">
-                <div class="panel-head"><h2>The medication</h2><span class="kicker">Step 2</span></div>
+            <section class="panel" aria-label="Current medications">
+                <div class="panel-head"><h2>Current medications</h2><span class="kicker">Step 3</span></div>
                 <div class="panel-body">
-                    <div class="field">
-                        <label for="med-select">Medication (★ = verified deep entry)</label>
+                    <p class="hint" style="margin-top:0">Tick what the patient already takes — the review scores each one and looks for gaps and deprescribing candidates.</p>
+                    <div id="current-meds"></div>
+                </div>
+            </section>
+
+            <section class="panel" aria-label="View">
+                <div class="panel-head"><h2>View</h2><span class="kicker">Step 4</span></div>
+                <div class="panel-body">
+                    <div class="seg" role="group" aria-label="View">
+                        <button type="button" data-view="review" aria-pressed="true">Med review</button>
+                        <button type="button" data-view="single" aria-pressed="false">One medication</button>
+                    </div>
+                    <div class="field" style="margin-top:12px">
+                        <label for="med-select">Deep-dive medication (★ = verified deep entry)</label>
                         <select id="med-select"></select>
-                        <p class="hint">Catalog: 60 medications from meds.kevinkeet.com plus MedModel treatment strategies.</p>
                     </div>
                     <div class="field" id="ind-wrap" hidden>
                         <label for="ind-select">Indication</label>
@@ -91,12 +209,12 @@
             </section>
 
             <section class="panel" aria-label="Baseline risk" id="baseline-panel" hidden>
-                <div class="panel-head"><h2>Baseline risk</h2><span class="kicker">Step 3</span></div>
+                <div class="panel-head"><h2>Baseline risk</h2></div>
                 <div class="panel-body" id="baseline-body"></div>
             </section>
 
             <section class="panel" aria-label="Horizon">
-                <div class="panel-head"><h2>Time horizon</h2><span class="kicker">Step 4</span></div>
+                <div class="panel-head"><h2>Time horizon</h2></div>
                 <div class="panel-body">
                     <div class="seg" role="group" aria-label="Horizon">
                         <button type="button" data-horizon="1" aria-pressed="false">1 y</button>
@@ -104,28 +222,28 @@
                         <button type="button" data-horizon="5" aria-pressed="true">5 y</button>
                         <button type="button" data-horizon="10" aria-pressed="false">10 y</button>
                     </div>
-                    <p class="hint">Numbers below are cumulative over this horizon, capped by the patient's chance of surviving it.</p>
+                    <p class="hint">Defaults to the patient's own planning horizon from Goals of care; numbers are cumulative over it, capped by survival.</p>
                 </div>
             </section>
         </aside>
 
         <main id="results" aria-live="polite">
-            <div class="panel"><div class="results-empty">Choose a medication to see individualized numbers.</div></div>
+            <div class="panel"><div class="results-empty">Enter the patient to see their med review.</div></div>
         </main>
     </div>
 
     <footer class="mm-foot">
         <p id="foot-disclaimer"></p>
-        <p>Built as an educational companion to the Acting Intern clinical simulator. Model, parameters, and every citation: <a href="methods.html">Methods &amp; evidence</a>.</p>
+        <p>MedBenefit merges the original meds.kevinkeet.com calculator (its database, goals-of-care framework, and safety checks — still at <a href="legacy/index.html">legacy</a>) with a competing-hazards adjustment engine. Model, parameters, and every citation: <a href="methods.html">Methods &amp; evidence</a>.</p>
     </footer>
 </div>
 
-<script src="js/engine.js?v=20260810"></script>
-<script src="js/data/lifetables.js?v=20260810"></script>
-<script src="js/data/riskmodels.js?v=20260810"></script>
-<script src="js/data/medications.js?v=20260810"></script>
-<script src="js/data/medeval-database.js?v=20260810"></script>
-<script src="js/services/lift.js?v=20260810"></script>
-<script src="js/app.js?v=20260810"></script>
+<script src="js/engine.js?v=20260810b"></script>
+<script src="js/data/lifetables.js?v=20260810b"></script>
+<script src="js/data/riskmodels.js?v=20260810b"></script>
+<script src="js/data/medications.js?v=20260810b"></script>
+<script src="js/data/medeval-database.js?v=20260810b"></script>
+<script src="js/services/lift.js?v=20260810b"></script>
+<script src="js/app.js?v=20260810b"></script>
 </body>
 </html>

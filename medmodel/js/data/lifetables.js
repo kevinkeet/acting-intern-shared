@@ -63,6 +63,11 @@
         { id: 'cancer',   label: 'Metastatic solid cancer',                hr: 4.0, source: 'SEER distant-stage survival; highly cancer-dependent (est.)' }
     ];
 
+    // When NYHA class is known, it replaces the flat HF multiplier with a
+    // graded one (mortality rises steeply with class — registry gradients,
+    // e.g., MAGGIC; rounded estimates).
+    var NYHA_HF_MULT = { 1: 1.4, 2: 1.6, 3: 2.3, 4: 3.4 };
+
     var MAX_TOTAL_MULT = 8; // cap on healthMult × condition HRs
 
     function totalMultiplier(healthId, conditionIds) {
@@ -100,6 +105,7 @@
     return {
         HEALTH_LEVELS: HEALTH_LEVELS,
         CONDITIONS: CONDITIONS,
+        NYHA_HF_MULT: NYHA_HF_MULT,
         MAX_TOTAL_MULT: MAX_TOTAL_MULT,
         totalMultiplier: totalMultiplier,
         WALTER_COVINSKY: WALTER_COVINSKY

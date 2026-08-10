@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MedModel — Methods &amp; Evidence</title>
+<title>MedBenefit — Methods &amp; Evidence</title>
 <meta name="description" content="The full model: formulas, calibration, and the evidence behind every adjustment — baseline risk, competing mortality, time-to-benefit, adherence, harms, and burden.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>">
-<link rel="stylesheet" href="css/style.css?v=20260810">
+<link rel="stylesheet" href="css/style.css?v=20260810b">
 </head>
 <body>
 <div class="mm-shell doc">
     <header class="mm-masthead">
         <div>
-            <h1><span class="mm-word">MedModel</span> — Methods &amp; Evidence</h1>
+            <h1><span class="mm-word">MedBenefit</span> — Methods &amp; Evidence</h1>
             <p class="mm-tagline">Every adjustment in the model, the math it uses, and the literature that justifies it. Written to be argued with.</p>
         </div>
         <nav><a href="index.html">← Back to the model</a></nav>
@@ -107,6 +107,18 @@
             <tr><td>Cost tier</td><td>$ +0 · $$ +0.75 · $$$ +1.5</td></tr>
             <tr><td>Interaction potential</td><td>low +0 · moderate +0.5 · high +1.0</td></tr>
         </table></div>
+
+        <span class="eyebrow">The consultation layer</span>
+        <h2>Goals of care, preferences, and the recommendation ladder</h2>
+        <p>The decision layer is ported intact from the original meds.kevinkeet.com application and re-powered by the engine's numbers:</p>
+        <ul>
+            <li><strong>Goals of care set the bar.</strong> The four-option spectrum (Comfort-Focused / Selective / Balanced / Proactive) maps to a net-benefit threshold a therapy must clear to be <em>recommended</em>: 3.0 / 1.0 / 0.3 / 0.0 QALYs per 100 patients per year — the original framework's numbers, applied to the severity-weighted benefit−harm balance (burden and cost act as modifiers, as upstream, not as part of the thresholded quantity). This operationalizes the "goals of care" arm of the Holmes framework [5].</li>
+            <li><strong>Preferences modulate burden and cost.</strong> A stated preference for fewer medications bumps a therapy's burden tier; cost sensitivity charges expensive drugs; monitoring intolerance penalizes monitoring-heavy regimens (all ported from the original engine).</li>
+            <li><strong>Beers / elderly safety can override.</strong> The original <em>checkElderlySafety</em> logic (AGS Beers Criteria 2023 basis) runs on every therapy: fall-risk, cognition, sedation, hypoglycemia, HF-worsening, and narrow-therapeutic-window flags scale with age, frailty, fall history, and dementia; a high-severity flag in a frail patient forces "avoid," and Beers-listed drugs are capped at "caution" tiers.</li>
+            <li><strong>The recommendation ladder</strong> (strongly recommended → recommended → consider → marginal → caution (Beers) → not recommended, plus contraindication hold-outs) reproduces the original tiers, now with every number individualized by the competing-hazards model.</li>
+            <li><strong>The synthesis</strong> closes the review: every current and candidate therapy grouped into start / discuss / continue / reconsider-or-deprescribe / verify, each line carrying its severity-weighted net per 1000 over the chosen horizon. Candidate generation is strictly indication-gated by the entered conditions (no antidepressants without depression), de-duplicated to the best entry per drug class, and never includes contraindicated therapies in the ranked groups.</li>
+            <li><strong>EMR quick-import</strong> (ported): a copyable extraction prompt produces a JSON schema the page parses fully client-side — nothing leaves the browser.</li>
+        </ul>
 
         <span class="eyebrow">Comparing across a regimen</span>
         <h2>The regimen-review ranking</h2>

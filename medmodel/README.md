@@ -1,4 +1,4 @@
-# MedModel — individualized medication benefit, harm & burden
+# MedBenefit (MedModel) — individualized medication benefit, harm & burden
 
 Standalone, no-build web app (same conventions as the rest of this repo: plain
 HTML/JS/CSS, browser globals, cache-busted script tags). Lives entirely under

@@ -381,9 +381,133 @@
         return hits;
     }
 
+    // ------------------------------------------------------------------
+    // Goals of care — ported from the original meds.kevinkeet.com app.
+    // The threshold is the net benefit (QALYs per 100 patients per YEAR)
+    // a therapy must clear to be recommended for this patient. The app
+    // converts to its per-1000-over-horizon units via thr × 10 × H.
+    // ------------------------------------------------------------------
+    var GOC = [
+        { value: 1, id: 'comfort', name: 'Comfort-Focused', threshold: 3.0,
+          summary: 'Quality of life now. Minimize medications; only very large, proven benefits are worth it.' },
+        { value: 2, id: 'selective', name: 'Selective', threshold: 1.0,
+          summary: 'High-value treatments only — clear, substantial benefit; quality of evidence matters.' },
+        { value: 3, id: 'balanced', name: 'Balanced', threshold: 0.3,
+          summary: 'Reasonable prevention with attention to burden; guidelines, but personalized.' },
+        { value: 4, id: 'proactive', name: 'Proactive', threshold: 0.0,
+          summary: 'Maximize prevention — willing to accept burden for any proven benefit.' }
+    ];
+
+    // ------------------------------------------------------------------
+    // Beers / elderly safety — ported from the original engine
+    // (AGS Beers Criteria 2023 basis; data lives on the database entries as
+    // beers_criteria / elderly_caution).
+    // ctx = { age, frail, fallRisk, dementia, hf }
+    // ------------------------------------------------------------------
+    function elderlySafety(medevalId, ctx) {
+        var med = DB[medevalId];
+        if (!med) return { beers: null, warnings: [], severity: null, avoid: false };
+        var isElderly = ctx.age >= 65, isVeryElderly = ctx.age >= 75;
+        var out = { beers: null, warnings: [], severity: null, avoid: false };
+
+        if (med.beers_criteria && med.beers_criteria.listed && isElderly) {
+            out.beers = {
+                concern: med.beers_criteria.concern,
+                recommendation: med.beers_criteria.recommendation,
+                strength: med.beers_criteria.strength,
+                severity: med.beers_criteria.strength === 'strong' ? 'high' : 'moderate'
+            };
+        }
+        var c = med.elderly_caution;
+        if (c) {
+            if (c.fall_risk && (isElderly || ctx.fallRisk)) {
+                out.warnings.push({ type: 'falls', message: 'Increases fall risk',
+                    severity: (isVeryElderly || ctx.fallRisk || ctx.frail) ? 'high' : 'moderate' });
+            }
+            if (c.cognitive_impairment && (isElderly || ctx.dementia)) {
+                out.warnings.push({ type: 'cognition', message: 'May cause or worsen cognitive impairment',
+                    severity: ctx.dementia ? 'high' : 'moderate' });
+            }
+            if (c.sedation && isElderly) {
+                out.warnings.push({ type: 'sedation', message: 'Sedation / CNS depression',
+                    severity: (isVeryElderly || ctx.frail) ? 'high' : 'moderate' });
+            }
+            if (c.hypoglycemia_risk && isElderly) {
+                out.warnings.push({ type: 'hypoglycemia', message: 'High severe-hypoglycemia risk in older adults',
+                    severity: (isVeryElderly || ctx.frail || ctx.dementia) ? 'high' : 'moderate' });
+            }
+            if (c.avoid_in_hf && ctx.hf) {
+                out.warnings.push({ type: 'hf', message: 'May worsen heart failure', severity: 'high' });
+            }
+            if (c.narrow_therapeutic_window && isElderly) {
+                out.warnings.push({ type: 'toxicity', message: 'Narrow therapeutic window — toxicity risk in older adults', severity: 'high' });
+            }
+        }
+        var sev = null;
+        out.warnings.forEach(function (w) { if (w.severity === 'high') sev = 'high'; else if (!sev) sev = 'moderate'; });
+        if (out.beers && out.beers.severity === 'high') sev = 'high';
+        out.severity = sev;
+        out.avoid = !!(ctx.frail && sev === 'high');
+        return out;
+    }
+
+    // ------------------------------------------------------------------
+    // Recommendation ladder — ported from the original engine, driven by the
+    // merged model's numbers. netAnnualPer100 is the severity-weighted net in
+    // the original's units (QALYs / 100 patients / year).
+    // ------------------------------------------------------------------
+    function recommend(opts) {
+        var g = GOC[(opts.goc || 3) - 1];
+        var net = opts.netAnnualPer100;
+        var safety = opts.safety || { severity: null, beers: null, avoid: false };
+        var isElderly = opts.age >= 65;
+
+        if (opts.contraHit) return { tier: 'held-out', text: 'Possible contraindication — verify first' };
+        if (net < 0) return { tier: 'not-recommended', text: 'Expected harms outweigh benefits' };
+        if (safety.avoid) return { tier: 'caution-elderly', text: 'Avoid in frail patients — high adverse-event risk (Beers Criteria)' };
+        if (safety.beers && safety.severity === 'high' && isElderly) {
+            return net >= Math.max(g.threshold, 1.0)
+                ? { tier: 'caution-elderly', text: 'Benefit exists, but Beers Criteria medication — discuss safer alternatives' }
+                : { tier: 'not-recommended', text: 'Beers Criteria medication with limited benefit here — avoid' };
+        }
+        if (safety.beers && isElderly) {
+            return net >= g.threshold
+                ? { tier: 'caution-elderly', text: 'Beers Criteria medication — lowest dose, monitor closely' }
+                : { tier: 'marginal', text: 'Beers Criteria medication with limited benefit — consider alternatives' };
+        }
+        if (net >= g.threshold) {
+            if (net >= 3.0) return { tier: 'strong', text: 'High net benefit — strongly recommended' };
+            if (safety.severity === 'high' && isElderly) return { tier: 'consider', text: 'Good benefit — use caution in older adults, monitor closely' };
+            if (opts.highBurden && (opts.goc || 3) <= 2) return { tier: 'consider', text: 'Good benefit but high burden — discuss' };
+            if (opts.annualCost > 3000 && opts.costSensitivity === 'high') return { tier: 'consider', text: 'Good benefit but high cost — discuss alternatives' };
+            return { tier: 'recommended', text: 'Net benefit meets this patient\'s goals' };
+        }
+        return net > 0
+            ? { tier: 'marginal', text: 'Benefit below the ' + g.name.toLowerCase() + ' threshold' }
+            : { tier: 'not-recommended', text: 'No net benefit expected' };
+    }
+
+    // Preference-modulated burden (ported): low pill tolerance bumps the
+    // tier; cost sensitivity and monitoring intolerance add penalty.
+    function effectiveBurden(item, prefs) {
+        prefs = prefs || {};
+        var order = ['low', 'moderate', 'high'];
+        var idx = Math.max(0, order.indexOf(item.burdenTier || 'moderate'));
+        if (prefs.pills === 'low') idx = Math.min(2, idx + 1);
+        var penalty = BURDEN_PENALTIES[order[idx]];
+        if (prefs.cost === 'high' && item.annualCost > 2000) penalty += 0.005;
+        else if (prefs.cost === 'moderate' && item.annualCost > 5000) penalty += 0.003;
+        if (prefs.monitoring === 'low' && /monitor|INR|blood test|lab|potassium|creatinine/i.test(item.monitoring || '')) penalty += 0.003;
+        return { tier: order[idx], penalty: penalty };
+    }
+
     return {
         OUTCOME_WEIGHTS: OUTCOME_WEIGHTS,
         BURDEN_PENALTIES: BURDEN_PENALTIES,
+        GOC: GOC,
+        elderlySafety: elderlySafety,
+        recommend: recommend,
+        effectiveBurden: effectiveBurden,
         AGENT_BLEED_FACTORS: AGENT_BLEED_FACTORS,
         WARFARIN_RRR_VS_NONE: WARFARIN_RRR_VS_NONE,
         DEFAULT_TRIAL_ADHERENCE: DEFAULT_TRIAL_ADHERENCE,

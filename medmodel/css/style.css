@@ -389,6 +389,93 @@ input[type="radio"]:focus-visible, input[type="checkbox"]:focus-visible {
 .rg-symp span { font-weight: 400; color: var(--ink-faint); }
 .rg-symp:hover, .rg-symp:focus-visible { border-color: var(--accent); }
 
+/* intake accordions */
+details.intake { border: 1px solid var(--rule); border-radius: 5px; margin-top: 10px; background: var(--card-inset); }
+details.intake > summary {
+    cursor: pointer; list-style: none; padding: 8px 11px;
+    font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+    color: var(--ink-soft);
+}
+details.intake > summary::before { content: "▸ "; color: var(--accent); }
+details.intake[open] > summary::before { content: "▾ "; }
+details.intake > *:not(summary) { margin-left: 11px; margin-right: 11px; }
+details.intake > *:last-child { margin-bottom: 11px; }
+details.intake .check-grid label { font-size: 12.5px; }
+.cm-count { font-weight: 400; color: var(--accent); text-transform: none; letter-spacing: 0; }
+
+/* EMR import */
+.emr-paste {
+    width: 100%; font-family: var(--mono); font-size: 12px;
+    color: var(--ink); background: var(--card-inset);
+    border: 1px solid var(--rule); border-radius: 4px; padding: 8px; resize: vertical;
+}
+.btn-sm {
+    font: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer;
+    color: var(--accent); background: var(--card-inset);
+    border: 1px solid var(--rule-strong); border-radius: 4px; padding: 6px 10px;
+}
+.btn-sm:hover, .btn-sm:focus-visible { border-color: var(--accent); }
+.btn-sm.btn-go { color: var(--card); background: var(--accent); border-color: var(--accent); margin-top: 8px; }
+
+/* goals of care */
+.goc-badge {
+    display: inline-flex; font-size: 13px; font-weight: 800; letter-spacing: .05em;
+    border-radius: 999px; padding: 5px 14px; border: 2px solid currentColor;
+}
+.goc-comfort { color: var(--harm); background: var(--harm-soft); }
+.goc-selective { color: var(--caution); background: var(--caution-soft); }
+.goc-balanced { color: var(--accent); background: var(--accent-soft); }
+.goc-proactive { color: var(--benefit); background: var(--benefit-soft); }
+
+/* recommendation tiers (original ladder) */
+.tier {
+    display: inline-block; font-size: 10.5px; font-weight: 800; letter-spacing: .05em;
+    text-transform: uppercase; border-radius: 3px; padding: 2px 7px; margin-left: 8px;
+    vertical-align: 1px;
+}
+.t-strong { color: var(--card); background: var(--benefit); }
+.t-rec { color: var(--benefit); background: var(--benefit-soft); border: 1px solid var(--benefit); }
+.t-consider { color: var(--accent); background: var(--accent-soft); border: 1px solid var(--accent); }
+.t-marginal { color: var(--ink-faint); background: var(--card-inset); border: 1px solid var(--rule-strong); }
+.t-caution { color: var(--caution); background: var(--caution-soft); border: 1px solid var(--caution); }
+.t-not { color: var(--harm); background: var(--harm-soft); border: 1px solid var(--harm); }
+
+/* synthesis */
+.syn-panel { border-width: 2px; border-color: var(--rule-strong); }
+.syn-group { margin-top: 14px; padding-left: 12px; border-left: 4px solid var(--rule-strong); }
+.syn-group.sg-start { border-left-color: var(--benefit); }
+.syn-group.sg-discuss { border-left-color: var(--accent); }
+.syn-group.sg-keep { border-left-color: var(--rule-strong); }
+.syn-group.sg-stop { border-left-color: var(--caution); }
+.syn-group.sg-verify { border-left-color: var(--harm); }
+.syn-title { font-size: 11.5px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 5px; }
+.syn-line {
+    display: block; width: 100%; text-align: left; font: inherit; font-size: 13.5px;
+    color: var(--ink-soft); background: none; border: none; cursor: pointer;
+    padding: 4px 6px; border-radius: 4px; line-height: 1.5;
+}
+.syn-line:hover, .syn-line:focus-visible { background: var(--card-inset); }
+.syn-line strong { color: var(--ink); }
+.syn-line .syn-ind { color: var(--ink-faint); font-size: 12.5px; }
+.syn-pos { color: var(--benefit); font-weight: 700; font-family: var(--mono); }
+.syn-neg { color: var(--harm); font-weight: 700; font-family: var(--mono); }
+
+/* risk dashboard tiles */
+.risk-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.risk-tile {
+    border: 1px solid var(--rule); border-left-width: 4px; border-radius: 5px;
+    background: var(--card); padding: 9px 12px;
+}
+.risk-tile.low { border-left-color: var(--benefit); }
+.risk-tile.moderate { border-left-color: var(--caution); }
+.risk-tile.high { border-left-color: var(--harm); }
+.risk-tile .rt-label { font-size: 10.5px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--ink-faint); }
+.risk-tile .rt-value { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 21px; font-weight: 700; margin: 2px 0; }
+.risk-tile.low .rt-value { color: var(--benefit); }
+.risk-tile.moderate .rt-value { color: var(--caution); }
+.risk-tile.high .rt-value { color: var(--harm); }
+.risk-tile .rt-note { font-size: 11.5px; color: var(--ink-soft); line-height: 1.4; }
+
 /* footer */
 .mm-foot {
     margin-top: 34px; padding-top: 14px; border-top: 1px solid var(--rule);

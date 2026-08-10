@@ -94,5 +94,41 @@ console.log('\n— Contraindication matching —');
     check('eGFR 24 trips egfr_below_30 only', hits.length === 1 && /eGFR <30/.test(hits[0]), JSON.stringify(hits));
 }
 
+console.log('\n— Goals-of-care thresholds & recommendation ladder (ported) —');
+{
+    check('4 GOC levels with original thresholds', Lift.GOC.length === 4 &&
+        Lift.GOC[0].threshold === 3.0 && Lift.GOC[1].threshold === 1.0 &&
+        Lift.GOC[2].threshold === 0.3 && Lift.GOC[3].threshold === 0.0);
+    const base = { age: 70, frail: false, safety: { severity: null, beers: null, avoid: false }, highBurden: false, annualCost: 100, costSensitivity: 'moderate', contraHit: false };
+    check('net 5 → strongly recommended', Lift.recommend(Object.assign({}, base, { netAnnualPer100: 5, goc: 3 })).tier === 'strong');
+    check('net 0.5 fails comfort threshold', Lift.recommend(Object.assign({}, base, { netAnnualPer100: 0.5, goc: 1 })).tier === 'marginal');
+    check('net 0.5 passes proactive threshold', Lift.recommend(Object.assign({}, base, { netAnnualPer100: 0.5, goc: 4 })).tier === 'recommended');
+    check('negative net → not recommended', Lift.recommend(Object.assign({}, base, { netAnnualPer100: -1, goc: 4 })).tier === 'not-recommended');
+    check('contraindication → held out', Lift.recommend(Object.assign({}, base, { netAnnualPer100: 5, goc: 3, contraHit: true })).tier === 'held-out');
+    check('high burden + selective goals → consider', Lift.recommend(Object.assign({}, base, { netAnnualPer100: 1.5, goc: 2, highBurden: true })).tier === 'consider');
+    check('expensive + cost-sensitive → consider', Lift.recommend(Object.assign({}, base, { netAnnualPer100: 1.5, goc: 3, annualCost: 6000, costSensitivity: 'high' })).tier === 'consider');
+}
+
+console.log('\n— Beers / elderly safety (ported checkElderlySafety) —');
+{
+    const frail80 = Lift.elderlySafety('gabapentin', { age: 80, frail: true, fallRisk: false, dementia: false, hf: false });
+    check('gabapentin at 80 + frail → high severity', frail80.severity === 'high', JSON.stringify(frail80.warnings));
+    check('… and avoid-in-frail fires', frail80.avoid === true);
+    const young = Lift.elderlySafety('gabapentin', { age: 50, frail: false, fallRisk: false, dementia: false, hf: false });
+    check('gabapentin at 50 → no warnings', young.warnings.length === 0 && !young.beers);
+    const glip = Lift.elderlySafety('glipizide', { age: 78, frail: false, fallRisk: false, dementia: false, hf: false });
+    check('glipizide at 78 flags hypoglycemia/Beers', !!(glip.beers || glip.warnings.length), JSON.stringify(glip));
+}
+
+console.log('\n— Preference-modulated burden (ported) —');
+{
+    const item = { burdenTier: 'moderate', annualCost: 6000, monitoring: 'INR weekly' };
+    const eff = Lift.effectiveBurden(item, { pills: 'low', cost: 'high', monitoring: 'low' });
+    check('low pill tolerance bumps tier to high', eff.tier === 'high');
+    check('cost + monitoring intolerance add penalty', eff.penalty > Lift.BURDEN_PENALTIES.high, 'got ' + eff.penalty);
+    const eff2 = Lift.effectiveBurden(item, { pills: 'moderate', cost: 'low', monitoring: 'high' });
+    check('neutral prefs keep base tier/penalty', eff2.tier === 'moderate' && eff2.penalty === Lift.BURDEN_PENALTIES.moderate);
+}
+
 console.log(failures === 0 ? '\nAll lift checks passed.' : `\n${failures} FAILURES`);
 process.exit(failures ? 1 : 0);
