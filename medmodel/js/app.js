@@ -337,10 +337,14 @@
         var list = [];
         if (isAnticoag) {
             var hb = hasbledFor(item.key);
-            var excessMajor = (hb.annualBleedPct / 100) * item.bleedFactors.major * 0.55;
+            var majorFactor = (state.age >= 75 && item.bleedFactors.majorElderly)
+                ? item.bleedFactors.majorElderly : item.bleedFactors.major;
+            var excessMajor = (hb.annualBleedPct / 100) * majorFactor * 0.55;
             var excessIch = (hb.annualBleedPct / 100) * 0.12 * item.bleedFactors.ich;
             [['Major bleeding (excess vs no anticoagulant)', excessMajor, 0.15,
-              'HAS-BLED ' + hb.score + ' → ' + hb.annualBleedPct + '%/y on warfarin (Pisters 2010) × agent factor ' + item.bleedFactors.major + '; ~55% attributable vs none (est.)'],
+              'HAS-BLED ' + hb.score + ' → ' + hb.annualBleedPct + '%/y on warfarin (Pisters 2010) × agent factor ' + majorFactor +
+              (majorFactor !== item.bleedFactors.major ? ' (age ≥75 — Eikelboom Circulation 2011: dabigatran\'s bleeding advantage reverses in the very old)' : '') +
+              '; ~55% attributable vs none (est.)'],
              ['Intracranial hemorrhage (excess)', excessIch, 0.6,
               '≈12% of major bleeds are intracranial; agent ICH factor ' + item.bleedFactors.ich + ' (Ruff 2014)']]
             .forEach(function (row) {
@@ -522,6 +526,13 @@
             annualCost: res.item.annualCost || 0, costSensitivity: state.prefs.cost,
             contraHit: out.contraHits.length > 0
         });
+        // Coherence: a positive tier must never sit beside a negative
+        // displayed net. The ladder's threshold is benefit−harm (original
+        // framework); if burden/cost then eat the whole margin, say so.
+        var netAll = benefitScore - harmScore - burdenPenalty;
+        if (netAll <= 0 && ['strong', 'recommended', 'consider'].indexOf(reco.tier) >= 0) {
+            reco = { tier: 'marginal', text: 'Benefit−harm passes the threshold, but burden and cost consume the margin for this patient' };
+        }
 
         var flags = [];
         if (out.rep.level === 'outside') flags.push({ cls: 'f-red', txt: 'outside evidence' });
@@ -707,15 +718,34 @@
         }
         currentRows.forEach(decorateCo);
 
-        // ---- candidates: positive tiers, not taken, class not covered; best in class ----
+        // ---- candidates: not taken, indication applies, therapeutic slot
+        //      not already covered (covered slots become SWITCH suggestions
+        //      when the alternative clearly outscores the current member) ----
+        var coveredSlots = {}, currentSlotBest = {};
+        currentItems.forEach(function (item) {
+            coveredSlots[Lift.therapeuticSlot(item)] = item.name;
+        });
+        currentRows.forEach(function (s) {
+            var sl = Lift.therapeuticSlot(s.cand.item);
+            if (!currentSlotBest[sl] || s.net > currentSlotBest[sl].net) {
+                currentSlotBest[sl] = { net: s.net, name: s.cand.item.name };
+            }
+        });
+        // A drug for "hypertension" is only a sensible NEW suggestion when
+        // the pressure is actually above goal; current BP meds still get
+        // reviewed (they are what's keeping it controlled).
+        var bpUncontrolled = state.sbp >= 140;
+
         var candidates = [];
         CATALOG.forEach(function (item) {
             if (state.currentMeds[item.key]) return;
-            if (currentClasses[item.drugClass] && !item.isStrategy) return;
             item.indications.forEach(function (ind) {
-                if (!inds[ind.id] && !state.regimenAdded[item.key + '.' + ind.id] &&
+                var manuallyAdded = state.regimenAdded[item.key + '.' + ind.id];
+                if (!inds[ind.id] && !manuallyAdded &&
                     !(item.isStrategy && ((ind.deepId === 'bp-standard' || ind.deepId === 'bp-intensive') && inds.hypertension || ind.deepId === 'tight-glucose' && has('diabetes')))) return;
                 if (!ind.outcomes.length && !ind.deepId) return;
+                if (!manuallyAdded && /hypertension/.test(ind.id) && !bpUncontrolled) return;
+                if (!manuallyAdded && item.isStrategy && (ind.deepId === 'bp-standard' || ind.deepId === 'bp-intensive') && !bpUncontrolled) return;
                 var s = scoreEntry({ key: item.key, indId: ind.id, item: item, ind: ind });
                 if (s) { decorateCo(s); candidates.push(s); }
             });
@@ -727,14 +757,59 @@
                 s.out.contraHits = s.out.contraHits.concat(['combination: ' + s.coDemoted.text]);
             }
         });
-        var bestByClass = {};
+        // Best per therapeutic slot (thiazide-type, RAAS blockade,
+        // anticoagulation… — alternatives never appear side by side).
+        var bestBySlot = {};
         candidates.forEach(function (s) {
-            var cls = s.cand.item.drugClass;
-            if (!bestByClass[cls] || s.net > bestByClass[cls].net) bestByClass[cls] = s;
+            var sl = Lift.therapeuticSlot(s.cand.item);
+            var cur = bestBySlot[sl];
+            // Prefer higher net; within ±15 points prefer the deep-verified
+            // entry over a lifted estimate. Lifted rows carry no CIs, use
+            // class-default TTBs and NNT-inverted control rates — a verified
+            // entry at similar net is the epistemically safer pick (e.g.,
+            // apixaban over lifted dabigatran in the anticoagulation slot).
+            if (!cur) { bestBySlot[sl] = s; return; }
+            var diff = s.net - cur.net;
+            var deepMargin = 15;
+            if (s.res.mode === cur.res.mode) {
+                if (diff > 0) bestBySlot[sl] = s;
+            } else if (s.res.mode === 'deep') {
+                if (diff > -deepMargin) bestBySlot[sl] = s;
+            } else {
+                if (diff > deepMargin) bestBySlot[sl] = s;
+            }
         });
-        var candRows = Object.keys(bestByClass).map(function (k) { return bestByClass[k]; })
-            .filter(function (s) { return !s.out.contraHits.length; })
+        // Debug surface (inspectable in devtools; also used by tests)
+        window.__mbCandidates = candidates.map(function (s) {
+            return { key: s.cand.key, ind: s.cand.indId, mode: s.res.mode, net: +s.net.toFixed(1), tier: s.reco.tier, slot: Lift.therapeuticSlot(s.cand.item) };
+        });
+
+        var SWITCH_MARGIN = 5; // net points a switch must gain to be worth raising
+        var candRows = [], switchRows = [];
+        Object.keys(bestBySlot).forEach(function (sl) {
+            var s = bestBySlot[sl];
+            if (s.out.contraHits.length) { candRows.push(s); return; } // heldOut partition below
+            if (coveredSlots[sl]) {
+                var incumbent = currentSlotBest[sl] || { net: 0, name: coveredSlots[sl] };
+                // Comparative entries (e.g., ARNI, trialed AGAINST an ACEi)
+                // already measure the incremental value of switching — they
+                // clear the bar on their own net, not the incumbent's.
+                var incumbentBar = Lift.COMPARATIVE_TO_SLOT[s.cand.item.key] === sl
+                    ? 0 : Math.max(incumbent.net, 0);
+                if (s.net > incumbentBar + SWITCH_MARGIN &&
+                    ['strong', 'recommended', 'consider'].indexOf(s.reco.tier) >= 0) {
+                    s.switchFrom = incumbent.name;
+                    s.switchGain = s.net - incumbentBar;
+                    s.flags.unshift({ cls: 'f-amber', txt: 'switch from ' + incumbent.name.toLowerCase() });
+                    switchRows.push(s);
+                }
+                return; // covered slot, no clear gain → not offered
+            }
+            candRows.push(s);
+        });
+        candRows = candRows.filter(function (s) { return !s.out.contraHits.length; })
             .sort(function (a, b) { return b.net - a.net; });
+        switchRows.sort(function (a, b) { return b.net - a.net; });
         // Held-out: one row per medication (its best-scoring indication)
         var heldByKey = {};
         candidates.filter(function (s) { return s.out.contraHits.length; })
@@ -795,12 +870,17 @@
                 : '<p class="subline">Tick the patient\'s current medications in the left rail to review them.</p>') +
             '</div></div>' +
 
+            // switch suggestions (same slot, clearly better)
+            (switchRows.length ? '<div class="panel"><div class="panel-head"><h2>Consider switching within class</h2><span class="kicker">clear gain over the current agent</span></div>' +
+                '<div class="panel-body"><div class="rg-list">' + switchRows.map(function (s) { return rgRowHtml(s, maxAbs, false); }).join('') + '</div>' +
+                '<p class="wf-caption">Same therapeutic slot as something already taken, but the model scores it clearly higher (≥5 net points). A switch conversation, not an addition.</p></div></div>' : '') +
+
             // candidates
-            '<div class="panel"><div class="panel-head"><h2>Worth considering — best in each class</h2><span class="kicker">not currently taken</span></div>' +
+            '<div class="panel"><div class="panel-head"><h2>Worth considering — best in each therapeutic slot</h2><span class="kicker">not currently taken</span></div>' +
             '<div class="panel-body">' +
             (candRows.length
                 ? '<div class="rg-list">' + candRows.map(function (s) { return rgRowHtml(s, maxAbs, false); }).join('') + '</div>'
-                : '<p class="subline">No additional positive-benefit therapies found for this profile.</p>') +
+                : '<p class="subline">No additional positive-benefit therapies found for this profile' + (state.sbp < 140 && (has('htn') || state.bpTreated) ? ' (BP is at goal — no additional BP agents proposed)' : '') + '.</p>') +
             '<div class="field" style="margin-top:14px"><label for="rg-add">Add any therapy to the comparison</label>' +
             '<select id="rg-add"><option value="">— choose —</option>' +
             CATALOG.map(function (item) {
@@ -817,7 +897,7 @@
             (heldOut.length ? '<div class="panel"><div class="panel-head"><h2>Held out — possible contraindication</h2><span class="kicker">verify before comparing</span></div>' +
                 '<div class="panel-body"><div class="rg-list">' + heldOut.map(function (s) { return rgRowHtml(s, maxAbs, false); }).join('') + '</div></div></div>' : '') +
 
-            synthesisPanel(currentRows, currentSymp, candRows, heldOut, g) +
+            synthesisPanel(currentRows, currentSymp, candRows, switchRows, heldOut, g, currentItems) +
 
             '<p class="wf-caption" style="margin:14px 4px">Net score = Σ(events prevented ×severity) − Σ(harms ×severity) − burden, per 1000 over ' + state.horizon + ' y; recommendation tiers apply the goals-of-care threshold to the benefit−harm balance in the original framework\'s units. Every number is a model output — click any row to inspect the assumptions. <a href="methods.html">Methods</a>.</p>';
 
@@ -839,11 +919,50 @@
     }
 
     // ------------------------------------------------------------------
+    // Anticoagulation check: the explicit CHA₂DS₂-VASc vs HAS-BLED heuristic
+    // clinicians apply, layered on top of the per-drug arithmetic.
+    // ------------------------------------------------------------------
+    function afAdvisor(currentItems, startRows, switchRows) {
+        if (!has('afib')) return null;
+        var cv = R.chadsvasc({
+            age: state.age, sex: state.sex, chf: has('hf') || state.nyha > 0,
+            htn: has('htn') || state.bpTreated, diabetes: has('diabetes'),
+            priorStroke: has('priorStroke'), vascular: has('vascular')
+        });
+        var hb = hasbledFor(null);
+        var isOac = function (i) { return /DOAC|Vitamin K Antagonist/i.test(i.drugClass); };
+        var onOAC = currentItems.some(isOac);
+        var oacOffered = startRows.concat(switchRows).some(function (s) { return isOac(s.cand.item); });
+        var onAntiplt = has('antiplatelet') || currentItems.some(function (i) { return /Antiplatelet/i.test(i.drugClass); });
+        var threshold = state.sex === 'female' ? 3 : 2;
+
+        var stance;
+        if (cv.score >= threshold && hb.score < 3) stance = 'anticoagulation is clearly favored';
+        else if (cv.score >= threshold) stance = 'anticoagulation is still usually favored — address the modifiable bleeding risks (BP, antiplatelets/NSAIDs, alcohol)';
+        else stance = 'the decision is individualized at this stroke risk';
+
+        var lines = [];
+        lines.push('CHA₂DS₂-VASc <strong>' + cv.score + '</strong> (≈' + cv.annualRatePct + '%/y stroke untreated) vs HAS-BLED <strong>' + hb.score + '</strong> (≈' + hb.annualBleedPct + '%/y major bleed on OAC) — ' + stance + '.');
+        if (!onOAC && cv.score >= threshold) {
+            lines.push(oacOffered
+                ? 'This patient is <strong>not anticoagulated</strong> — starting the anticoagulant above is the single most consequential action on this page.'
+                : 'This patient is <strong>not anticoagulated</strong> — review the anticoagulation entries above.');
+        }
+        if (onOAC && cv.score >= threshold && hb.score < 3) {
+            lines.push('Already anticoagulated — clearly appropriate to continue.');
+        }
+        if ((onOAC || oacOffered) && onAntiplt) {
+            lines.push('<strong>Hold the antiplatelet/NSAID</strong> alongside anticoagulation unless there is a recent stent or ACS (AFIRE NEJM 2019) — stopping it also removes a HAS-BLED point, so the bleeding estimate above improves further.');
+        }
+        return lines;
+    }
+
+    // ------------------------------------------------------------------
     // Synthesis — the bottom line. Groups every therapy by action, using
     // the severity-weighted net (benefit − harms), the burden/cost-adjusted
     // score, the goals-of-care threshold, contraindications, and Beers.
     // ------------------------------------------------------------------
-    function synthesisPanel(currentRows, currentSymp, candRows, heldOut, g) {
+    function synthesisPanel(currentRows, currentSymp, candRows, switchRows, heldOut, g, currentItems) {
         var H = state.horizon;
         function line(s, extra) {
             return '<button type="button" class="syn-line" data-key="' + esc(s.cand.key) + '" data-ind="' + esc(s.cand.indId) + '">' +
@@ -851,7 +970,7 @@
                 'net <span class="' + (s.net >= 0 ? 'syn-pos' : 'syn-neg') + '">' + (s.net >= 0 ? '+' : '') + s.net.toFixed(1) + '/1000</span> over ' + H + ' y' +
                 (extra ? ' · ' + extra : ' · ' + esc(s.reco.text)) + '</button>';
         }
-        var start = candRows.filter(function (s) { return (s.reco.tier === 'strong' || s.reco.tier === 'recommended') && !s.coDemoted; });
+        var start = candRows.filter(function (s) { return (s.reco.tier === 'strong' || s.reco.tier === 'recommended') && !s.coDemoted && s.net > 0; });
         var discuss = candRows.filter(function (s) { return s.reco.tier === 'consider' || s.reco.tier === 'caution-elderly'; });
         var keep = currentRows.filter(function (s) { return ['strong', 'recommended', 'consider'].indexOf(s.reco.tier) >= 0 && !s.coDemoted; });
         var reconsider = currentRows.filter(function (s) { return ['marginal', 'not-recommended', 'caution-elderly', 'co-flag'].indexOf(s.reco.tier) >= 0 || s.coDemoted; });
@@ -861,6 +980,8 @@
             if (!rows.length) return '';
             return '<div class="syn-group ' + cls + '"><div class="syn-title">' + title + '</div>' + rows.join('') + '</div>';
         }
+
+        var afLines = afAdvisor(currentItems || [], start, switchRows);
 
         var summaryBits = [];
         if (start.length) summaryBits.push('<strong>' + start.length + '</strong> to start');
@@ -874,7 +995,12 @@
             '<p class="headline" style="font-size:17px">' +
             (summaryBits.length ? 'For this patient: ' + summaryBits.join(', ') + '.' : 'Enter conditions and current medications for a bottom line.') +
             (biggest ? ' The single biggest win is <strong>' + esc(biggest.cand.item.name) + '</strong> (net +' + biggest.net.toFixed(1) + ' severity-weighted points per 1000).' : '') + '</p>' +
+            (afLines ? '<div class="syn-group sg-start"><div class="syn-title">Anticoagulation check (CHA₂DS₂-VASc vs HAS-BLED)</div>' +
+                afLines.map(function (l) { return '<div class="syn-line" style="cursor:default">' + l + '</div>'; }).join('') + '</div>' : '') +
             group('Start — clears the ' + g.name.toLowerCase() + ' threshold after harms, burden & cost', 'sg-start', start.map(function (s) { return line(s); })) +
+            group('Switch within class', 'sg-discuss', switchRows.map(function (s) {
+                return line(s, 'instead of ' + esc(s.switchFrom) + ' (gain ≈ +' + s.switchGain.toFixed(1) + ')');
+            })) +
             group('Worth a conversation', 'sg-discuss', discuss.map(function (s) { return line(s); })) +
             group('Continue', 'sg-keep', keep.map(function (s) { return line(s); })) +
             group('Reconsider or deprescribe', 'sg-stop', reconsider.map(function (s) { return line(s); })

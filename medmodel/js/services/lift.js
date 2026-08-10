@@ -101,13 +101,22 @@
     // major bleeding: ARISTOTLE 0.69 (apixaban), RE-LY 0.94 (dabigatran 150),
     // ROCKET ~1.04 (rivaroxaban), ENGAGE 0.80 (edoxaban); ICH factors ~0.4–0.5
     // (Ruff 2014 class RR 0.48).
+    // majorElderly: dabigatran's extracranial bleeding advantage reverses at
+    // ≥75 (Eikelboom, Circulation 2011 — RE-LY age interaction), the main
+    // reason practice favors apixaban in the very old.
     var AGENT_BLEED_FACTORS = {
         warfarin:    { major: 1.0,  ich: 1.0 },
         apixaban:    { major: 0.69, ich: 0.42 },
-        dabigatran:  { major: 0.94, ich: 0.40 },
+        dabigatran:  { major: 0.94, ich: 0.40, majorElderly: 1.2 },
         rivaroxaban: { major: 1.04, ich: 0.67 },
         edoxaban:    { major: 0.80, ich: 0.47 }
     };
+
+    // Entries whose trial effect is measured AGAINST the standard agent in
+    // their own slot (not vs placebo/no-treatment): their net is already the
+    // incremental value of switching, so switch suggestions compare it to
+    // zero, not to the incumbent's absolute net.
+    var COMPARATIVE_TO_SLOT = { sacubitril_valsartan: 'RAAS blockade' };
 
     // Outcome-key → presentation metadata
     var OUTCOME_LABELS = {
@@ -447,6 +456,29 @@
         }
     ];
 
+    // ------------------------------------------------------------------
+    // Therapeutic slots: drugs that occupy the same prescribing niche and
+    // should be offered as alternatives (or switches), never side by side.
+    // Broader than drugClass — thiazide & thiazide-like, ACEi & ARB & ARNI,
+    // warfarin & DOACs, oral & IV antiresorptives, maintenance inhalers.
+    // ------------------------------------------------------------------
+    var SLOT_RULES = [
+        { match: /ACE Inhibitor|\bARB\b|ARNI/i, slot: 'RAAS blockade' },
+        { match: /Thiazide/i, slot: 'Thiazide-type diuretic' },
+        { match: /DOAC|Vitamin K Antagonist/i, slot: 'Anticoagulation' },
+        { match: /Bisphosphonate|Denosumab|RANK Ligand|RANKL/i, slot: 'Antiresorptive' },
+        { match: /Corticosteroid|LABA|LAMA|Inhal/i, slot: 'Maintenance inhaler' },
+        { match: /Loop Diuretic/i, slot: 'Loop diuretic' },
+        { match: /Statin/i, slot: 'Statin' }
+    ];
+    function therapeuticSlot(item) {
+        var cls = item.drugClass || '';
+        for (var i = 0; i < SLOT_RULES.length; i++) {
+            if (SLOT_RULES[i].match.test(cls)) return SLOT_RULES[i].slot;
+        }
+        return cls;
+    }
+
     /**
      * Check one medication against a set of co-medications (catalog items).
      * Returns matched rules with whether THIS med is the demoted side.
@@ -643,6 +675,8 @@
         GOC_CLASS_MULT: GOC_CLASS_MULT,
         outcomeClass: outcomeClass,
         gocWeight: gocWeight,
+        therapeuticSlot: therapeuticSlot,
+        COMPARATIVE_TO_SLOT: COMPARATIVE_TO_SLOT,
         cotherapyCheck: cotherapyCheck,
         liftedHarmMultiplier: liftedHarmMultiplier,
         affDurationMultiplier: affDurationMultiplier,

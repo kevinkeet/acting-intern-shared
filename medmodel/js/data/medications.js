@@ -313,8 +313,8 @@
         baseline: { type: 'chadsvasc' },
         outcome: { label: 'Ischemic stroke or systemic embolism', shortLabel: 'strokes', includesDeath: false },
         effect: {
-            hr: 0.32, ci: [0.25, 0.42],
-            source: 'Derived vs no antithrombotic two ways: warfarin RRR 64% (Hart 2007) × ARISTOTLE HR 0.79 → 0.28; AVERROES HR 0.45 vs aspirin × aspirin RRR ~20% → 0.36. Model uses the midpoint, 0.32',
+            hr: 0.284, ci: [0.22, 0.37],
+            source: 'Derived vs no antithrombotic as warfarin RRR 64% (Hart 2007) × ARISTOTLE HR 0.79 — the same composition used for the other DOAC entries, so within-slot comparisons are like-for-like. The AVERROES chain (HR 0.45 vs aspirin × aspirin RRR ~20%) gives 0.36, reflected in the CI',
             note: 'ARISTOTLE: stroke/SE 1.27 vs 1.60%/y (vs warfarin), major bleeding LOWER than warfarin (2.13 vs 3.09%/y), mortality HR 0.89.'
         },
         ttb: { rampYears: 0, displayYears: 0,

@@ -94,6 +94,27 @@ console.log('\n— Contraindication matching —');
     check('eGFR 24 trips egfr_below_30 only', hits.length === 1 && /eGFR <30/.test(hits[0]), JSON.stringify(hits));
 }
 
+console.log('\n— Therapeutic slots —');
+{
+    const item = k => cat.find(c => c.key === k);
+    check('HCTZ and chlorthalidone share the thiazide slot',
+        Lift.therapeuticSlot(item('hydrochlorothiazide')) === Lift.therapeuticSlot(item('chlorthalidone')));
+    check('ACEi, ARB, and ARNI share the RAAS slot',
+        Lift.therapeuticSlot(item('lisinopril')) === Lift.therapeuticSlot(item('losartan')) &&
+        Lift.therapeuticSlot(item('losartan')) === Lift.therapeuticSlot(item('sacubitril_valsartan')));
+    check('warfarin and DOACs share the anticoagulation slot',
+        Lift.therapeuticSlot(item('warfarin')) === Lift.therapeuticSlot(item('apixaban')));
+    check('alendronate, zoledronic acid, and denosumab share the antiresorptive slot',
+        Lift.therapeuticSlot(item('alendronate')) === Lift.therapeuticSlot(item('zoledronic_acid')) &&
+        Lift.therapeuticSlot(item('alendronate')) === Lift.therapeuticSlot(item('denosumab')));
+    check('statin and ezetimibe are different slots (add-on, not alternative)',
+        Lift.therapeuticSlot(item('atorvastatin')) !== Lift.therapeuticSlot(item('ezetimibe')));
+    check('ARNI marked comparative to the RAAS slot',
+        Lift.COMPARATIVE_TO_SLOT.sacubitril_valsartan === 'RAAS blockade');
+    check('dabigatran carries the elderly bleeding factor (Eikelboom)',
+        Lift.AGENT_BLEED_FACTORS.dabigatran.majorElderly === 1.2);
+}
+
 console.log('\n— Goals-of-care thresholds & recommendation ladder (ported) —');
 {
     check('4 GOC levels with original thresholds', Lift.GOC.length === 4 &&
