@@ -6,7 +6,7 @@
 <title>MedBenefit — what will this medication actually do for this patient?</title>
 <meta name="description" content="Patient-centered medication benefit, harm & burden: RCT evidence adjusted for the individual — baseline risk, competing mortality, time-to-benefit, adherence — with goals of care, a current-medication review, and honest uncertainty.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>">
-<link rel="stylesheet" href="css/style.css?v=20260810b">
+<link rel="stylesheet" href="css/style.css?v=20260810c">
 </head>
 <body>
 <div class="mm-shell">
@@ -24,6 +24,14 @@
 
     <div class="mm-cols">
         <aside>
+            <section class="panel" aria-label="Example patients">
+                <div class="panel-head"><h2>Example patients</h2><span class="kicker">try one</span></div>
+                <div class="panel-body">
+                    <div class="ex-chips" id="example-chips"></div>
+                    <p class="hint" id="example-story" hidden></p>
+                </div>
+            </section>
+
             <section class="panel" aria-label="EMR import">
                 <div class="panel-head"><h2>Quick import from records</h2><span class="kicker">optional</span></div>
                 <div class="panel-body">
@@ -238,12 +246,13 @@
     </footer>
 </div>
 
-<script src="js/engine.js?v=20260810b"></script>
-<script src="js/data/lifetables.js?v=20260810b"></script>
-<script src="js/data/riskmodels.js?v=20260810b"></script>
-<script src="js/data/medications.js?v=20260810b"></script>
-<script src="js/data/medeval-database.js?v=20260810b"></script>
-<script src="js/services/lift.js?v=20260810b"></script>
-<script src="js/app.js?v=20260810b"></script>
+<script src="js/engine.js?v=20260810c"></script>
+<script src="js/data/lifetables.js?v=20260810c"></script>
+<script src="js/data/riskmodels.js?v=20260810c"></script>
+<script src="js/data/medications.js?v=20260810c"></script>
+<script src="js/data/medeval-database.js?v=20260810c"></script>
+<script src="js/data/examples.js?v=20260810c"></script>
+<script src="js/services/lift.js?v=20260810c"></script>
+<script src="js/app.js?v=20260810c"></script>
 </body>
 </html>

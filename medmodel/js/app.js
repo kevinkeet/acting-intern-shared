@@ -695,9 +695,8 @@
         CATALOG.forEach(function (item) {
             if (state.currentMeds[item.key]) return;
             if (item.purpose !== 'symptomatic' && item.purpose !== 'replacement') return;
-            item.indications.forEach(function (ind) {
-                if (inds[ind.id]) sympCands.push({ item: item, ind: ind, safety: Lift.elderlySafety(item.key, beersCtx()) });
-            });
+            var ind = item.indications.find(function (i) { return inds[i.id]; });
+            if (ind) sympCands.push({ item: item, ind: ind, safety: Lift.elderlySafety(item.key, beersCtx()) });
         });
 
         function sympRow(x) {
@@ -1061,6 +1060,25 @@
         current_medications: '[array of generic names, e.g. "atorvastatin", "apixaban", "metformin"]'
     }, null, 2) + '\n\nUse null for unknown values. Extract from the most recent available data.';
 
+    function resetState() {
+        state.age = 76; state.sex = 'female'; state.race = 'other';
+        state.sbp = 138; state.weightKg = null; state.heightCm = null;
+        state.totalChol = 200; state.hdl = 50; state.ldl = null; state.a1c = null;
+        state.creatinine = null; state.egfrOverride = null;
+        state.bpTreated = true; state.smoker = false;
+        state.ef = null; state.nyha = 0;
+        state.diabetesStatus = 'none';
+        state.conditions = {};
+        state.health = 'average'; state.adherence = 'typical';
+        state.goc = 3;
+        state.prefs = { pills: 'moderate', cost: 'moderate', monitoring: 'moderate' };
+        state.horizon = 5;
+        state.selection = null;
+        state.anchored = {};
+        state.currentMeds = {};
+        state.regimenAdded = {};
+    }
+
     function applyExtracted(d) {
         var n = 0;
         function num(v) { var x = parseFloat(v); return isFinite(x) ? x : null; }
@@ -1100,6 +1118,17 @@
         if (o.frailty) { state.health = 'poor'; n++; }
         if (d.overall_health && ['excellent', 'good', 'average', 'fair', 'poor'].indexOf(d.overall_health) >= 0) { state.health = d.overall_health; n++; }
         if (d.adherence && ['high', 'typical', 'low'].indexOf(d.adherence) >= 0) { state.adherence = d.adherence; n++; }
+        if (d.goals_of_care >= 1 && d.goals_of_care <= 4) { state.goc = d.goals_of_care; n++; }
+        var pr = d.preferences || {};
+        ['pill_burden', 'cost_sensitivity', 'monitoring_tolerance'].forEach(function (k, i) {
+            var key = ['pills', 'cost', 'monitoring'][i];
+            if (pr[k] && ['low', 'moderate', 'high'].indexOf(pr[k]) >= 0) { state.prefs[key] = pr[k]; n++; }
+        });
+        if (d.time_horizon_years) {
+            var th = num(d.time_horizon_years);
+            state.horizon = th <= 1 ? 1 : th <= 2 ? 2 : th <= 7 ? 5 : 10;
+            n++;
+        }
         (d.current_medications || []).forEach(function (m) {
             var key = String(m).toLowerCase().replace(/[^a-z0-9_]/g, '_');
             if (catalogItem(key)) { state.currentMeds[key] = true; n++; }
@@ -1341,29 +1370,63 @@
         });
     }
 
+    function loadExample(ex) {
+        resetState();
+        applyExtracted(ex.data);
+        state.view = 'review';
+        syncViewSeg();
+        syncFormFromState();
+        document.querySelectorAll('[data-example]').forEach(function (b) {
+            b.setAttribute('aria-pressed', String(b.dataset.example === ex.id));
+        });
+        var story = $('#example-story');
+        if (story) { story.textContent = ex.story; story.hidden = false; }
+        update();
+    }
+
+    function renderExampleChips() {
+        var wrap = $('#example-chips');
+        if (!wrap || !window.ExamplePatients) return;
+        wrap.innerHTML = '';
+        window.ExamplePatients.forEach(function (ex) {
+            var btn = el('<button type="button" class="ex-chip" data-example="' + ex.id + '" aria-pressed="false"><strong>' + esc(ex.name) + '</strong><span>' + esc(ex.blurb) + '</span></button>');
+            btn.addEventListener('click', function () { loadExample(ex); });
+            wrap.appendChild(btn);
+        });
+    }
+
     function syncFormFromState() {
-        $('#pt-age').value = state.age;
+        function set(id, v) { $('#' + id).value = v == null ? '' : v; }
+        set('pt-age', state.age);
         document.querySelectorAll('[data-sex]').forEach(function (b) {
             b.setAttribute('aria-pressed', String(b.dataset.sex === state.sex));
         });
-        $('#pt-race').value = state.race;
-        $('#pt-sbp').value = state.sbp;
-        if (state.weightKg) $('#pt-wt').value = state.weightKg;
-        if (state.heightCm) $('#pt-ht').value = state.heightCm;
-        $('#pt-tc').value = state.totalChol;
-        $('#pt-hdl').value = state.hdl;
-        if (state.ldl) $('#pt-ldl').value = state.ldl;
-        if (state.creatinine) $('#pt-cr').value = state.creatinine;
-        if (state.egfrOverride) $('#pt-egfr').value = state.egfrOverride;
-        if (state.a1c) $('#pt-a1c').value = state.a1c;
+        set('pt-race', state.race);
+        set('pt-sbp', state.sbp);
+        set('pt-wt', state.weightKg);
+        set('pt-ht', state.heightCm);
+        set('pt-tc', state.totalChol);
+        set('pt-hdl', state.hdl);
+        set('pt-ldl', state.ldl);
+        set('pt-cr', state.creatinine);
+        set('pt-egfr', state.egfrOverride);
+        set('pt-a1c', state.a1c);
         $('#pt-bptx').checked = state.bpTreated;
         $('#pt-smoker').checked = state.smoker;
-        if (state.ef != null) $('#pt-ef').value = state.ef;
-        $('#pt-nyha').value = String(state.nyha);
-        $('#pt-dm').value = state.diabetesStatus;
+        set('pt-ef', state.ef);
+        set('pt-nyha', String(state.nyha));
+        set('pt-dm', state.diabetesStatus);
+        set('pref-pills', state.prefs.pills);
+        set('pref-cost', state.prefs.cost);
+        set('pref-monitoring', state.prefs.monitoring);
+        set('pref-horizon', String(state.horizon === 1 ? 1 : state.horizon === 2 ? 2 : state.horizon === 10 ? 10 : 5));
+        document.querySelectorAll('[data-horizon]').forEach(function (b) {
+            b.setAttribute('aria-pressed', String(parseInt(b.dataset.horizon, 10) === state.horizon));
+        });
         renderConditions();
         renderHealthCards();
         renderAdherenceCards();
+        renderGocCards();
         renderCurrentMeds();
     }
 
@@ -1465,6 +1528,7 @@
         });
 
         wireEmr();
+        renderExampleChips();
         renderHealthCards();
         renderAdherenceCards();
         renderGocCards();
