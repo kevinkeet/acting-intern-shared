@@ -64,6 +64,7 @@ const AssessmentStart = {
             this._loadCaseList(),
         ]);
         this._renderResume(resume);
+        this._renderHowItWorks();
         this._renderCaseList(cases);
     },
 
@@ -217,6 +218,28 @@ const AssessmentStart = {
             )
         );
         return metas;
+    },
+
+    /**
+     * Compact 3-step "what to expect" strip above the case list, so the
+     * resident knows the shape of the task before the first case opens.
+     * The full spatial tour runs inside the runner (AssessmentOrientation).
+     */
+    _renderHowItWorks() {
+        const root = document.getElementById('assessment-case-list');
+        if (!root || document.getElementById('assessment-how-strip')) return;
+        const strip = document.createElement('div');
+        strip.id = 'assessment-how-strip';
+        strip.className = 'assessment-how-strip';
+        strip.innerHTML = `
+            <div class="assessment-how-step"><span class="assessment-how-num">1</span>
+                <div><strong>Review the chart</strong><br>Open the case your proctor names. Read the patient's chart like a real EHR — notes, labs, imaging. The chart holds everything you need.</div></div>
+            <div class="assessment-how-step"><span class="assessment-how-num">2</span>
+                <div><strong>Answer in your own words</strong><br>Questions appear on the right. Free text, no length requirement, no time limit. You cannot return to a submitted answer.</div></div>
+            <div class="assessment-how-step"><span class="assessment-how-num">3</span>
+                <div><strong>AI assistant available</strong><br>An AI assistant sits below the answer box. Using it is optional and up to you — work the way you normally would.</div></div>
+        `;
+        root.parentElement.insertBefore(strip, root);
     },
 
     _renderCaseList(cases) {

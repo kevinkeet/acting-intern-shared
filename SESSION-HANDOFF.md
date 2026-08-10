@@ -6,7 +6,7 @@ Living status doc so work can resume in a fresh session. Repo:
 ## How the app works (fast facts)
 - Vanilla HTML/JS/CSS, **no build system**. `index.html` loads all scripts; `js/router.js` hash routing.
 - **Two git remotes — push BOTH after every commit:** `git push origin main && git push shared main`.
-- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260722n`**.
+- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260722o`**.
 - **Access gate password:** `0slerian` → PBKDF2 → decrypts the embedded Anthropic key into localStorage. Never log/commit the decrypted key.
 - **The shared Anthropic API key repeatedly runs OUT OF CREDITS** (Opus runs burn it fast). When it does, the live assessment (chat + grading) is DOWN. Only the user can top it up.
 - **Supabase** project (`piwoinyrlicvndpsmtde`) auto-pauses on free tier; resume from the dashboard before use.
@@ -210,6 +210,19 @@ Two drag handles, both persisted to localStorage and both resettable by double-c
 never swallowed by the textarea or the chat panel underneath.
 Verified live at 20260722n: dock width actually changed 340px -> 300px AND `.main-container` margin-right followed (340px -> 300px), persisted;
 split 376px, `.split-custom` applied and persisted; double-click cleared both localStorage keys and the class.
+
+## NEW-USER ORIENTATION (pilot readiness)
+- **`js/components/assessment-orientation.js`** — 5-step spotlight tour of the runner (chart → question/answer
+  → AI Assistant → timer/pause → resize handles). Auto-shows ONCE per browser (localStorage key
+  `assessment-orientation-seen`), replayable from the **? button** in the assessment bar. Esc/arrow keys work.
+  Missing targets are skipped, so partial mounts can't strand it.
+- **`assessment-start.js `_renderHowItWorks()`** — 3-step "what to expect" strip above the case list
+  (review chart → answer free-text, no time limit, no going back → AI assistant available).
+- **NEUTRALITY RULE:** both surfaces DESCRIBE the AI assistant ("using it is optional and up to you — work the
+  way you normally would") — never encourage its use; a nudge would bias the trial's measured behaviour.
+- Verified live at 20260722o: auto-shows for a fresh participant, all 5 steps advance, closes on the last,
+  does NOT re-show after navigating away and back, ? button replays. NOTE: the spotlight animates (0.25s) —
+  screenshots taken mid-transition look misplaced; wait for settle before judging geometry.
 
 ## PENDING / NEXT
 1. **Cleanup pass — DONE.** `assessment-results.js._renderRubric` now prefers `scoringRubric.rubricText` (falls back to essential/bonus only when there's no scoringRubric). Deleted the stale `rubric` block from all 22 points-graded prompts (PAT003–007). PAT002 keeps its 5 essential/bonus rubrics (they ARE its grader). `admin-dashboard.js` does not render rubrics. Final: PAT003=5, PAT004=8, PAT005=7, PAT006=4, PAT007=6 scoringRubrics, 0 legacy blocks; PAT002=5 legacy.

@@ -40,6 +40,8 @@ const AssessmentPanel = {
         this._startTicker();
         this._attachEngineListener();
         this._attachUnloadGuard();
+        // First-run guided tour (once per browser; replay via the ? button).
+        if (typeof AssessmentOrientation !== 'undefined') AssessmentOrientation.maybeShow();
     },
 
     // ── draft autosave ──────────────────────────────────────────────────
@@ -306,6 +308,9 @@ const AssessmentPanel = {
                     ${isPaused ? '<span class="assessment-paused-pill">PAUSED</span>' : ''}
                 </div>
                 <div class="assessment-bar-actions">
+                    <button class="assessment-bar-btn" id="assessment-help-btn" title="How this works — replay the orientation tour">
+                        <i data-lucide="circle-help" class="lucide-inline"></i>
+                    </button>
                     <button class="btn btn-sm" id="assessment-pause-btn" title="${isPaused ? 'Resume' : 'Pause'}">
                         ${isPaused ? '<i data-lucide="play" class="lucide-inline"></i>' : '<i data-lucide="pause" class="lucide-inline"></i>'}
                     </button>
@@ -321,6 +326,10 @@ const AssessmentPanel = {
         `;
         App.refreshIcons();
         document.getElementById('assessment-pause-btn').addEventListener('click', () => this._togglePause());
+        const helpBtn = document.getElementById('assessment-help-btn');
+        if (helpBtn) helpBtn.addEventListener('click', () => {
+            if (typeof AssessmentOrientation !== 'undefined') AssessmentOrientation.show();
+        });
         document.getElementById('assessment-abandon-btn').addEventListener('click', () => this._confirmAbandon());
         this._renderSyncPill(); // bar re-render wipes the pill — restore it
     },
