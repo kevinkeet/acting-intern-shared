@@ -250,6 +250,10 @@
             label: meta.label,
             shortLabel: meta.shortLabel,
             includesDeath: meta.includesDeath,
+            // Recurrent outcomes (flares, exacerbations) are counted as
+            // expected events over alive person-time, not first-event CIF —
+            // first-event counting structurally undervalues symptom prevention.
+            recurrent: /gout_flares|exacerbations/.test(outcomeKey),
             hr: 1 - rrr,
             rrDerivation: DOAC_IDS[medevalId] && baselineType === 'chadsvasc'
                 ? 'vs no antithrombotic: warfarin RRR 64% (Hart 2007) composed with trial effect vs warfarin'
@@ -382,6 +386,137 @@
     }
 
     // ------------------------------------------------------------------
+    // Goal-conditional severity weights.
+    // The base QALY weights are averages; goals of care should reorder what
+    // *kind* of outcome matters, not just demand more of everything. A
+    // comfort-focused patient values symptom-freedom and function over
+    // longevity (Fried NEJM 2002: most seriously ill elders decline
+    // treatment whose outcome is survival with severe impairment); a
+    // proactive patient weights survival up. Multipliers by outcome class:
+    // ------------------------------------------------------------------
+    var OUTCOME_CLASS = {
+        fatal: /^(death|cv_death|all_cause_mortality|mortality|mi_fatal|fatal_bleeding|cv_mortality)$/,
+        disabling: /stroke|hip_fracture|intracranial|blindness|amputation|eskd|esrd|dialysis|cognitive|limb_events/,
+        symptomatic: /hosp|exacerbation|gout|hypoglycemia|vertebral|nonvertebral|falls|pain|symptom|congestion|gi_bleeding|dka|aki|hyperkalemia|pneumonia|angioedema|pancreatitis|rhabdo|diarrhea|genital|gmi|volume|weight|myopathy|sams|major_bleed|majorbleed|bleeding/i
+    };
+    // rows: [comfort, selective, balanced, proactive]
+    var GOC_CLASS_MULT = {
+        fatal:        [0.50, 0.80, 1.00, 1.15],
+        disabling:    [1.15, 1.05, 1.00, 1.00],
+        symptomatic:  [1.75, 1.25, 1.00, 0.85],
+        intermediate: [0.85, 0.95, 1.00, 1.05]
+    };
+    function outcomeClass(key) {
+        if (OUTCOME_CLASS.fatal.test(key)) return 'fatal';
+        if (OUTCOME_CLASS.disabling.test(key)) return 'disabling';
+        if (OUTCOME_CLASS.symptomatic.test(key)) return 'symptomatic';
+        return 'intermediate';
+    }
+    /** Severity weight for an outcome under this patient's goals of care. */
+    function gocWeight(key, goc, baseOverride) {
+        var base = baseOverride != null ? baseOverride
+            : (OUTCOME_WEIGHTS[key] != null ? OUTCOME_WEIGHTS[key] : 0.05);
+        var mult = GOC_CLASS_MULT[outcomeClass(String(key))][(goc || 3) - 1];
+        return base * mult;
+    }
+
+    // ------------------------------------------------------------------
+    // Co-therapy rules — the combinatorial reasoning single-drug scoring
+    // can't see. Evaluated against the current-medication list.
+    // ------------------------------------------------------------------
+    var COTHERAPY_RULES = [
+        {
+            a: /Antiplatelet/i, b: /DOAC|Vitamin K Antagonist/i, demote: 'a', severity: 'red',
+            text: 'Antiplatelet + anticoagulant: without a recent stent or ACS, adding an antiplatelet to an anticoagulant mostly adds bleeding (AFIRE NEJM 2019) — usually stop the antiplatelet.'
+        },
+        {
+            a: /ACE Inhibitor/i, b: /\bARB\b|ARNI/i, demote: 'a', severity: 'red', neverCombine: true,
+            text: 'ACEi + ARB/ARNI: more AKI and hyperkalemia without outcome benefit (ONTARGET NEJM 2008); ARNI additionally requires a 36-hour ACEi washout.'
+        },
+        {
+            a: /Sulfonylurea/i, b: /Insulin/i, demote: 'a', severity: 'amber',
+            text: 'Sulfonylurea + insulin: additive severe-hypoglycemia risk with no added outcome benefit — usually stop the sulfonylurea when basal insulin starts.'
+        },
+        {
+            a: /Vitamin K Antagonist/i, b: /DOAC/i, demote: 'a', severity: 'red', neverCombine: true,
+            text: 'Two anticoagulants together: bleeding risk compounds with no added protection.'
+        },
+        {
+            aId: 'omeprazole', bId: 'clopidogrel', demote: 'a', severity: 'amber',
+            text: 'Omeprazole blunts clopidogrel activation via CYP2C19 (FDA warning) — pantoprazole avoids the interaction.'
+        }
+    ];
+
+    /**
+     * Check one medication against a set of co-medications (catalog items).
+     * Returns matched rules with whether THIS med is the demoted side.
+     */
+    function cotherapyCheck(item, coItems) {
+        var hits = [];
+        COTHERAPY_RULES.forEach(function (r) {
+            function side(x) {
+                if (r.aId && x.key === r.aId) return 'a';
+                if (r.bId && x.key === r.bId) return 'b';
+                if (r.a && r.a.test(x.drugClass || '')) return 'a';
+                if (r.b && r.b.test(x.drugClass || '')) return 'b';
+                return null;
+            }
+            var mySide = side(item);
+            if (!mySide) return;
+            var otherSide = mySide === 'a' ? 'b' : 'a';
+            var partner = coItems.find(function (c) { return c.key !== item.key && side(c) === otherSide; });
+            if (partner) {
+                hits.push({
+                    text: r.text, severity: r.severity,
+                    demoted: r.demote === mySide,
+                    neverCombine: !!r.neverCombine,
+                    partner: partner.name
+                });
+            }
+        });
+        return hits;
+    }
+
+    // ------------------------------------------------------------------
+    // Patient scaling for LIFTED harms (ported from the original engine's
+    // adjustNnhForPatient — the deep entries carry their own curated rules).
+    // ctx = { age, egfr (nullable), diabetes, prediabetes, dementia }
+    // ------------------------------------------------------------------
+    function liftedHarmMultiplier(harmId, ctx) {
+        var mult = 1, why = [];
+        var eg = ctx.egfr;
+        if (/hyperkalemia/.test(harmId)) {
+            if (eg != null && eg < 30) { mult *= 3.3; why.push('eGFR <30 (ported eGFR scaling)'); }
+            else if (eg != null && eg < 45) { mult *= 2.0; why.push('eGFR 30–44'); }
+            else if (eg != null && eg < 60) { mult *= 1.4; why.push('eGFR 45–59'); }
+            if (ctx.diabetes) { mult *= 1.25; why.push('diabetes'); }
+        }
+        if (/^aki$|_aki/.test(harmId)) {
+            if (eg != null && eg < 30) { mult *= 2.5; why.push('eGFR <30'); }
+            else if (eg != null && eg < 45) { mult *= 1.7; why.push('eGFR 30–44'); }
+        }
+        if (/hypoglycemia/.test(harmId)) {
+            if (ctx.age >= 75) { mult *= 1.7; why.push('age ≥75 impairs counter-regulation'); }
+            if (eg != null && eg < 45) { mult *= 1.4; why.push('reduced renal clearance'); }
+            if (ctx.dementia) { mult *= 1.5; why.push('impaired self-rescue with dementia'); }
+        }
+        if (/new_onset_diabetes/.test(harmId) && ctx.prediabetes) {
+            mult *= 2.0; why.push('prediabetes');
+        }
+        return { mult: mult, why: why };
+    }
+
+    // Atypical femoral fracture risk by years on bisphosphonate
+    // (Black NEJM 2020 duration gradient; ~1.74/10k py overall reference).
+    function affDurationMultiplier(years) {
+        if (years == null) return { mult: 1, why: null };
+        if (years < 3) return { mult: 0.4, why: '<3 y of use (AFF risk is very low early)' };
+        if (years < 5) return { mult: 1.0, why: '3–5 y of use' };
+        if (years < 8) return { mult: 2.5, why: '5–8 y of use (AFF risk rising — Black NEJM 2020)' };
+        return { mult: 7.0, why: '≥8 y of use (AFF risk ~7× the overall average)' };
+    }
+
+    // ------------------------------------------------------------------
     // Goals of care — ported from the original meds.kevinkeet.com app.
     // The threshold is the net benefit (QALYs per 100 patients per YEAR)
     // a therapy must clear to be recommended for this patient. The app
@@ -505,6 +640,12 @@
         OUTCOME_WEIGHTS: OUTCOME_WEIGHTS,
         BURDEN_PENALTIES: BURDEN_PENALTIES,
         GOC: GOC,
+        GOC_CLASS_MULT: GOC_CLASS_MULT,
+        outcomeClass: outcomeClass,
+        gocWeight: gocWeight,
+        cotherapyCheck: cotherapyCheck,
+        liftedHarmMultiplier: liftedHarmMultiplier,
+        affDurationMultiplier: affDurationMultiplier,
         elderlySafety: elderlySafety,
         recommend: recommend,
         effectiveBurden: effectiveBurden,

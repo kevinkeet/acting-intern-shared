@@ -120,6 +120,18 @@
             <li><strong>EMR quick-import</strong> (ported): a copyable extraction prompt produces a JSON schema the page parses fully client-side — nothing leaves the browser.</li>
         </ul>
 
+        <span class="eyebrow">Where arithmetic meets clinical judgment</span>
+        <h2>Six refinements from the gut-check review</h2>
+        <p>Comparing the model's outputs against clinical judgment on the example patients surfaced six places where the arithmetic was missing a mechanism a clinician uses implicitly. All six are now in the model:</p>
+        <ul>
+            <li><strong>Goals of care reorder the severity weights, not just the threshold.</strong> A comfort-focused patient does not simply demand more benefit — they value <em>different</em> benefit (Fried NEJM 2002: most seriously ill elders decline treatment whose payoff is survival with severe impairment). Outcomes are classed as fatal / disabling / symptomatic / intermediate, and the goals selection multiplies their weights: Comfort ×0.5 survival, ×1.15 disabling, ×1.75 symptomatic; Proactive ×1.15 survival, ×0.85 symptomatic. The active weighting is printed in the goals banner.</li>
+            <li><strong>Co-therapy rules add the combinatorial layer single-drug scoring can't see.</strong> Antiplatelet + anticoagulant (AFIRE 2019 — the antiplatelet is usually the one to stop), ACEi + ARB/ARNI (ONTARGET — never combine), sulfonylurea + basal insulin (additive hypoglycemia), double anticoagulation, and omeprazole + clopidogrel (CYP2C19). Demoted members of a pair move to "reconsider"; forbidden candidate combinations are held out.</li>
+            <li><strong>Recurrent outcomes are counted as expected events, not first events.</strong> Gout flares and COPD/asthma exacerbations recur; first-event cumulative incidence caps them at one per patient and structurally undervalues symptom prevention — precisely the benefit comfort-focused weighting is meant to protect. The engine now integrates hazard over alive person-time for outcomes flagged recurrent ("repeats counted" in the UI).</li>
+            <li><strong>Lifted harms now scale to the patient.</strong> The original engine's eGFR/age adjustments are ported onto every database entry that lacks curated rules: hyperkalemia ×3.3 below eGFR 30 (×2.0 at 30–44, ×1.25 with diabetes), AKI ×2.5/×1.7 by eGFR, severe hypoglycemia ×1.7 at ≥75 / ×1.4 with reduced clearance / ×1.5 with dementia, statin diabetes ×2 with prediabetes.</li>
+            <li><strong>Bisphosphonate duration matters.</strong> A years-on-therapy input scales atypical-femoral-fracture risk along the Black NEJM 2020 gradient (×0.4 under 3 y → ×7 at ≥8 y) and raises a drug-holiday flag at ≥5 years.</li>
+            <li><strong>Correlated comorbidities no longer multiply naively.</strong> A patient rated "poor health for age" is largely rated that way <em>because of</em> the conditions listed, so condition hazard ratios are damped by an exponent that shrinks as the health level already encodes illness (full weight at excellent; ~×0.2 at poor), with diminishing weight per additional condition and a per-level ceiling. This lifted the frail example's median survival from an implausible 0.8 years to ~1.4 — closer to clinical expectation — and keeps deprescribing arithmetic honest rather than exaggerated.</li>
+        </ul>
+
         <span class="eyebrow">Comparing across a regimen</span>
         <h2>The regimen-review ranking</h2>
         <p>The regimen view scores every therapy applicable to the patient on one scale so they can be compared. Per 1000 patients over the chosen horizon:</p>
@@ -150,7 +162,9 @@
             <li>Race in the PCE is a cohort calibration variable, not biology; the 2023 PREVENT equations (race-free) are the natural upgrade path.</li>
             <li>Trial-population values (mean ages, adherence, some control rates) are curated from the sources cited in each entry; a handful (marked "est.") are informed estimates awaiting a primary-source pass.</li>
             <li>Lifted entries inherit the upstream database's NNT/NNH curation (described there as "reasonable estimates" for some rows) plus class-default TTB and adherence values. The 12 deep entries got a primary-source verification pass; extending that pass across the other 48 — starting with the heart-failure block, whose numbers drive the regimen ranking hardest — is the highest-value next step.</li>
-            <li>Regimen severity weights are utility conventions, not elicited patient preferences; two patients can rationally order the same regimen differently. Use the ranking to structure the conversation, not to end it.</li>
+            <li>Regimen severity weights are utility conventions, not elicited patient preferences. Goals of care now reorder them by outcome class (see the gut-check refinements), but individual elicitation ("how bad would a major bleed be for <em>you</em>?") remains the honest upgrade. Use the ranking to structure the conversation, not to end it.</li>
+            <li>The co-therapy rule set covers the highest-yield combinations only; it is not an interaction checker.</li>
+            <li>The comorbidity damping exponents and ceilings are calibration judgments (validated against clinical expectation, not outcomes data) — as is the ×0.2 burden tempering.</li>
         </ul>
 
         <span class="eyebrow">Bibliography</span>

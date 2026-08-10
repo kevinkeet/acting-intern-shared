@@ -68,16 +68,47 @@
     // e.g., MAGGIC; rounded estimates).
     var NYHA_HF_MULT = { 1: 1.4, 2: 1.6, 3: 2.3, 4: 3.4 };
 
-    var MAX_TOTAL_MULT = 8; // cap on healthMult × condition HRs
+    var MAX_TOTAL_MULT = 8; // absolute cap on the combined hazard multiplier
+
+    // Comorbidity hazards correlate with each other and with the chosen
+    // overall-health level (a person rated "poor for their age" is largely
+    // being rated that way BECAUSE of the listed conditions). Naive
+    // multiplication double-counts and produces implausibly short survival
+    // in the multimorbid. Two corrections:
+    //   1. condition HRs are damped by an exponent that shrinks as the
+    //      health level already encodes illness (poor → conditions add
+    //      little new information), with diminishing weight for each
+    //      additional condition (sorted largest-first);
+    //   2. conditions can raise the level's hazard by at most a per-level
+    //      ceiling factor.
+    var LEVEL_HR_EXPONENT = { excellent: 1.0, good: 0.9, average: 0.7, fair: 0.45, poor: 0.2 };
+    var LEVEL_CONDITION_CEILING = { excellent: 3.5, good: 3.0, average: 2.4, fair: 1.8, poor: 1.4 };
+    var ORDER_DECAY = [1, 0.75, 0.55, 0.4, 0.3];
+
+    /**
+     * Combine a health level with a list of raw mortality hazard ratios
+     * (from conditions, NYHA class, eGFR, …) into one damped multiplier.
+     */
+    function combinedMultiplier(healthId, hrList) {
+        var level = HEALTH_LEVELS.find(function (h) { return h.id === healthId; }) || HEALTH_LEVELS[2];
+        var exp = LEVEL_HR_EXPONENT[level.id] != null ? LEVEL_HR_EXPONENT[level.id] : 0.7;
+        var hrs = (hrList || []).filter(function (h) { return h && h > 1; })
+            .sort(function (a, b) { return b - a; });
+        var condMult = 1;
+        hrs.forEach(function (hr, i) {
+            var decay = ORDER_DECAY[Math.min(i, ORDER_DECAY.length - 1)];
+            condMult *= Math.pow(hr, exp * decay);
+        });
+        condMult = Math.min(condMult, LEVEL_CONDITION_CEILING[level.id] || 2.4);
+        return Math.min(level.mult * condMult, MAX_TOTAL_MULT);
+    }
 
     function totalMultiplier(healthId, conditionIds) {
-        var level = HEALTH_LEVELS.find(function (h) { return h.id === healthId; }) || HEALTH_LEVELS[2];
-        var m = level.mult;
-        (conditionIds || []).forEach(function (id) {
+        var hrs = (conditionIds || []).map(function (id) {
             var c = CONDITIONS.find(function (x) { return x.id === id; });
-            if (c) m *= c.hr;
-        });
-        return Math.min(m, MAX_TOTAL_MULT);
+            return c ? c.hr : null;
+        }).filter(Boolean);
+        return combinedMultiplier(healthId, hrs);
     }
 
     // Reference: remaining life expectancy quartiles by age (years), from
@@ -107,6 +138,7 @@
         CONDITIONS: CONDITIONS,
         NYHA_HF_MULT: NYHA_HF_MULT,
         MAX_TOTAL_MULT: MAX_TOTAL_MULT,
+        combinedMultiplier: combinedMultiplier,
         totalMultiplier: totalMultiplier,
         WALTER_COVINSKY: WALTER_COVINSKY
     };

@@ -137,8 +137,11 @@
         var hrEffFull = effectiveHR(opts.hr, opts.patientAdherence, opts.trialAdherence);
 
         var sU = 1, sT = 1;       // alive & event-free
-        var cifU = 0, cifT = 0;   // cumulative incidence of the event
-        var aliveT = 1;           // alive regardless of event (treated arm, other-cause only)
+        var cifU = 0, cifT = 0;   // cumulative incidence of FIRST event
+        var evU = 0, evT = 0;     // expected event COUNT (recurrent outcomes:
+                                  // person stays at risk after an event, so
+                                  // integrate hazard over alive person-time)
+        var aliveT = 1;           // alive regardless of event (other-cause only)
         var series = [];
 
         for (var m = 1; m <= steps; m++) {
@@ -160,6 +163,8 @@
             cifT += sT * pT * (1 - pOth / 2);
             sU *= (1 - pU) * (1 - pOth);
             sT *= (1 - pT) * (1 - pOth);
+            evU += aliveT * h0 * DT;
+            evT += aliveT * hT * DT;
             aliveT *= (1 - pOth);
 
             if (m % 12 === 0 || m === steps) {
@@ -172,6 +177,9 @@
             cifTreated: cifT,
             arr: cifU - cifT,
             nnt: (cifU - cifT) > 1e-9 ? 1 / (cifU - cifT) : Infinity,
+            eventsUntreated: evU,
+            eventsTreated: evT,
+            eventsPrevented: evU - evT,
             aliveAtHorizon: aliveT,
             hrEffective: hrEffFull,
             series: series
@@ -299,6 +307,9 @@
             cifTreated: avg(a.cifTreated, b.cifTreated),
             arr: arr,
             nnt: arr > 1e-9 ? 1 / arr : Infinity,
+            eventsUntreated: avg(a.eventsUntreated || 0, b.eventsUntreated || 0),
+            eventsTreated: avg(a.eventsTreated || 0, b.eventsTreated || 0),
+            eventsPrevented: avg(a.eventsPrevented || 0, b.eventsPrevented || 0),
             aliveAtHorizon: avg(a.aliveAtHorizon, b.aliveAtHorizon),
             hrEffective: a.hrEffective,
             series: series

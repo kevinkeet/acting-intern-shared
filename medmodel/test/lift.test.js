@@ -120,6 +120,58 @@ console.log('\n— Beers / elderly safety (ported checkElderlySafety) —');
     check('glipizide at 78 flags hypoglycemia/Beers', !!(glip.beers || glip.warnings.length), JSON.stringify(glip));
 }
 
+console.log('\n— Goal-conditional severity weights —');
+{
+    check('balanced = base weights', Lift.gocWeight('mortality', 3) === 1.0 && Lift.gocWeight('gout_flares', 3) === 0.02);
+    check('comfort halves survival weight', approx(Lift.gocWeight('mortality', 1), 0.5, 1e-9));
+    check('comfort upweights symptomatic 1.75×', approx(Lift.gocWeight('gout_flares', 1), 0.035, 1e-9));
+    check('comfort upweights disabling stroke', approx(Lift.gocWeight('stroke', 1), 0.4 * 1.15, 1e-9));
+    check('proactive upweights survival', approx(Lift.gocWeight('mortality', 4), 1.15, 1e-9));
+    check('severe hypoglycemia classed symptomatic', Lift.outcomeClass('severe_hypoglycemia') === 'symptomatic');
+    check('ICH classed disabling', Lift.outcomeClass('intracranial_bleeding') === 'disabling');
+    check('baseOverride honored', approx(Lift.gocWeight('unknown_thing', 3, 0.2), 0.2, 1e-9));
+}
+
+console.log('\n— Co-therapy rules —');
+{
+    const item = k => cat.find(c => c.key === k);
+    const aspOnWarf = Lift.cotherapyCheck(item('aspirin'), [item('warfarin'), item('metformin')]);
+    check('aspirin + warfarin → demote aspirin (AFIRE)', aspOnWarf.length === 1 && aspOnWarf[0].demoted === true, JSON.stringify(aspOnWarf));
+    const warfSide = Lift.cotherapyCheck(item('warfarin'), [item('aspirin')]);
+    check('warfarin side flagged but not demoted', warfSide.length === 1 && warfSide[0].demoted === false);
+    const arbOnAcei = Lift.cotherapyCheck(item('losartan'), [item('lisinopril')]);
+    check('ARB + ACEi → never-combine', arbOnAcei.length === 1 && arbOnAcei[0].neverCombine === true, JSON.stringify(arbOnAcei.map(h => h.text.slice(0, 30))));
+    const suOnInsulin = Lift.cotherapyCheck(item('glipizide'), [item('insulin_basal')]);
+    check('sulfonylurea + insulin → demote SU', suOnInsulin.length === 1 && suOnInsulin[0].demoted === true);
+    const clean = Lift.cotherapyCheck(item('atorvastatin'), [item('warfarin'), item('lisinopril')]);
+    check('statin has no co-therapy hits', clean.length === 0);
+}
+
+console.log('\n— Lifted harm scaling (ported eGFR/age rules) —');
+{
+    const hyperK = Lift.liftedHarmMultiplier('hyperkalemia_severe', { age: 76, egfr: 28, diabetes: true });
+    check('hyperkalemia at eGFR 28 + DM ≈ ×4.1', approx(hyperK.mult, 3.3 * 1.25, 0.01), 'got ' + hyperK.mult);
+    const hypo = Lift.liftedHarmMultiplier('severe_hypoglycemia', { age: 87, egfr: 26, dementia: true });
+    check('hypoglycemia 87yo/CKD/dementia ≈ ×3.6', approx(hypo.mult, 1.7 * 1.4 * 1.5, 0.01), 'got ' + hypo.mult);
+    const none = Lift.liftedHarmMultiplier('pneumonia_copd', { age: 87, egfr: 26 });
+    check('unrelated harm unscaled', none.mult === 1);
+    check('AFF duration: <3y ×0.4, ≥8y ×7', Lift.affDurationMultiplier(2).mult === 0.4 && Lift.affDurationMultiplier(9).mult === 7.0);
+    check('AFF duration: unknown → ×1', Lift.affDurationMultiplier(null).mult === 1);
+}
+
+console.log('\n— Correlated-comorbidity damping (lifetables) —');
+{
+    const L2 = require(path.join(__dirname, '..', 'js', 'data', 'lifetables.js'));
+    const poorAlone = L2.combinedMultiplier('poor', []);
+    const poorStacked = L2.combinedMultiplier('poor', [3.0, 2.5]);
+    check('poor + CKD4 + dementia ≤ poor × 1.4 ceiling', poorStacked <= poorAlone * 1.4 + 1e-9, 'got ' + poorStacked.toFixed(2) + ' vs alone ' + poorAlone);
+    check('…but still worse than poor alone', poorStacked > poorAlone);
+    const exHf = L2.combinedMultiplier('excellent', [1.8]);
+    check('excellent + HF ≈ 0.55 × 1.8 (full weight when level is healthy)', approx(exHf, 0.55 * 1.8, 0.02), 'got ' + exHf.toFixed(2));
+    const avgStack = L2.combinedMultiplier('average', [3.0, 2.5, 2.0]);
+    check('average + 3 conditions capped at ×2.4 ceiling', avgStack <= 2.4 + 1e-9, 'got ' + avgStack.toFixed(2));
+}
+
 console.log('\n— Preference-modulated burden (ported) —');
 {
     const item = { burdenTier: 'moderate', annualCost: 6000, monitoring: 'INR weekly' };

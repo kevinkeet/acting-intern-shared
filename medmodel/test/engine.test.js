@@ -131,6 +131,25 @@ console.log('\n— Waterfall consistency —');
 }
 
 // ---------------------------------------------------------------------------
+console.log('\n— Recurrent-event counting —');
+{
+    // High-frequency outcome (flares at 0.5/y): expected events must exceed
+    // first-event CIF, and the treated arm must show proportional reduction.
+    const s = M.runScenario({
+        horizonYears: 2, annualEventHazard: 0.5, hr: 0.6, ttbYears: 0.5,
+        patientAdherence: 0.85, trialAdherence: 0.85,
+        age: 70, sex: 'male', healthMult: 1
+    });
+    check('expected events > first-event CIF for frequent outcomes',
+        s.eventsUntreated > s.cifUntreated * 1.2,
+        `events ${s.eventsUntreated.toFixed(2)} vs CIF ${s.cifUntreated.toFixed(2)}`);
+    check('recurrent prevention positive and > CIF-based ARR',
+        s.eventsPrevented > s.arr, `evPrev ${s.eventsPrevented.toFixed(2)} vs arr ${s.arr.toFixed(2)}`);
+    check('events ≈ hazard × alive-time (sanity: <1.0/y per person)',
+        s.eventsUntreated < 0.5 * 2 + 0.01);
+}
+
+// ---------------------------------------------------------------------------
 console.log('\n— Harm model —');
 {
     const harm = M.runHarm({ horizonYears: 5, excessAnnualRate: 0.002, multiplier: 2, patientAdherence: 0.9, age: 80, sex: 'male', healthMult: 1.7 });

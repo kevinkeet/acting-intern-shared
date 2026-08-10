@@ -19,7 +19,7 @@
             id: 'eleanor',
             name: 'Eleanor, 81',
             blurb: 'Robust and independent — wants everything that works',
-            story: 'Eleanor Vance, 81 — walks two miles daily, gardens, runs her book club. AF and osteoporosis on treatment, blood pressure controlled. She manages a pill organizer flawlessly, has good insurance, and tells you plainly: "I plan to be at my great-granddaughter\'s graduation."',
+            story: 'Eleanor Vance, 81 — walks two miles daily, gardens, runs her book club. AF and osteoporosis on treatment (alendronate since 2019), blood pressure controlled. She manages a pill organizer flawlessly, has good insurance, and tells you plainly: "I plan to be at my great-granddaughter\'s graduation."',
             data: {
                 demographics: { age: 81, sex: 'female', race: 'white' },
                 vitals: { systolic_bp: 128 },
@@ -32,6 +32,7 @@
                 goals_of_care: 4,
                 preferences: { pill_burden: 'high', cost_sensitivity: 'low', monitoring_tolerance: 'high' },
                 time_horizon_years: 10,
+                bisphosphonate_years: 6,
                 current_medications: ['apixaban', 'atorvastatin', 'amlodipine', 'alendronate']
             }
         },

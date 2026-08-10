@@ -69,6 +69,7 @@
         goc: 3,
         prefs: { pills: 'moderate', cost: 'moderate', monitoring: 'moderate' },
         horizon: 5,
+        bisphosphonateYears: null,
         view: 'review',
         selection: null,
         anchored: {},
@@ -120,17 +121,21 @@
     function frailish() { return state.health === 'fair' || state.health === 'poor'; }
 
     function healthMult() {
-        var ids = Object.keys(state.conditions).filter(function (id) { return state.conditions[id]; })
-            .filter(function (id) { return ['dementia', 'copdO2', 'ckd45', 'cancer'].indexOf(id) >= 0; });
-        var m = L.totalMultiplier(state.health, ids);
-        // HF: NYHA-graded multiplier when class known, else flat HF factor
+        // All mortality hazard ratios go through the correlation-damped
+        // combiner in lifetables.js (a "poor for age" rating already encodes
+        // much of what the condition list re-describes).
+        var hrs = [];
+        ['dementia', 'copdO2', 'ckd45', 'cancer'].forEach(function (id) {
+            if (!state.conditions[id]) return;
+            var c = L.CONDITIONS.find(function (x) { return x.id === id; });
+            if (c) hrs.push(c.hr);
+        });
         if (has('hf') || state.nyha > 0) {
-            var hfMult = state.nyha > 0 ? (L.NYHA_HF_MULT[state.nyha] || 1.6) : 1.8;
-            m = Math.min(L.MAX_TOTAL_MULT, m * hfMult);
+            hrs.push(state.nyha > 0 ? (L.NYHA_HF_MULT[state.nyha] || 1.6) : 1.8);
         }
         var eg = egfr();
-        if (!has('ckd45') && eg && eg.egfr < 30) m = Math.min(L.MAX_TOTAL_MULT, m * 3.0);
-        return m;
+        if (!has('ckd45') && eg && eg.egfr < 30) hrs.push(3.0);
+        return L.combinedMultiplier(state.health, hrs);
     }
 
     function beersCtx() {
@@ -349,12 +354,27 @@
                 });
             });
         }
+        var eg = egfr();
         (med.harms || []).forEach(function (h) {
             if (isAnticoag && /bleed|ich|intracranial/i.test(h.id)) return;
             var mult = 1, why = [];
             (h.scaling || []).forEach(function (s) {
                 if (matchWhen(s.when)) { mult *= s.mult; why.push(s.why); }
             });
+            // Lifted entries carry no curated scaling — apply the ported
+            // eGFR/age/prediabetes rules from the original engine.
+            if (!(h.scaling || []).length) {
+                var auto = Lift.liftedHarmMultiplier(h.id, {
+                    age: state.age, egfr: eg ? eg.egfr : null,
+                    diabetes: has('diabetes'), prediabetes: has('prediabetes'), dementia: has('dementia')
+                });
+                if (auto.mult !== 1) { mult *= auto.mult; why = why.concat(auto.why); }
+            }
+            // Atypical femoral fracture risk depends on years of use
+            if (/aff|atypical_femur/.test(h.id) && state.bisphosphonateYears != null) {
+                var dur = Lift.affDurationMultiplier(state.bisphosphonateYears);
+                if (dur.mult !== 1) { mult *= dur.mult; if (dur.why) why.push(dur.why); }
+            }
             var res = E.runHarm({
                 horizonYears: state.horizon, excessAnnualRate: h.excessAnnualRate, multiplier: mult,
                 patientAdherence: adhValue(), age: state.age, sex: state.sex, healthMult: healthMult()
@@ -465,19 +485,27 @@
         var out = computeSingle(res);
         var H = state.horizon;
 
-        var primaryWeight = res.mode === 'lifted'
-            ? res.outcomes[0].weight
-            : (Lift.OUTCOME_WEIGHTS[guessWeightKey(out.med)] != null ? Lift.OUTCOME_WEIGHTS[guessWeightKey(out.med)] : 0.35);
-        var benefitScore = out.wf.final.arr * primaryWeight * 1000;
+        // Severity weights, re-ordered by this patient's goals of care
+        // (comfort upweights symptomatic outcomes and downweights survival;
+        // proactive the reverse — see methods).
+        var primaryKey = res.mode === 'lifted' ? res.outcomes[0].key : guessWeightKey(out.med);
+        var primaryBase = res.mode === 'lifted' ? res.outcomes[0].weight
+            : (Lift.OUTCOME_WEIGHTS[primaryKey] != null ? Lift.OUTCOME_WEIGHTS[primaryKey] : 0.35);
+        // Recurrent outcomes (flares, exacerbations) count expected events,
+        // not just the first one — otherwise symptom prevention is undervalued.
+        var primaryRecurrent = res.mode === 'lifted' && !!res.outcomes[0].recurrent;
+        var primaryEffect = primaryRecurrent ? out.wf.final.eventsPrevented : out.wf.final.arr;
+        var benefitScore = primaryEffect * Lift.gocWeight(primaryKey, state.goc, primaryBase) * 1000;
         if (res.mode === 'lifted' && res.outcomes.length > 1) {
             res.outcomes.slice(1).forEach(function (o) {
-                benefitScore += quickOutcome(o, currentAnchoredMult(res)).arr * o.weight * 1000;
+                var s2 = quickOutcome(o, currentAnchoredMult(res));
+                benefitScore += (o.recurrent ? s2.eventsPrevented : s2.arr) * Lift.gocWeight(o.key, state.goc, o.weight) * 1000;
             });
         }
         var harmScore = 0;
         out.harms.forEach(function (h) {
-            var w = h.def.weight != null ? h.def.weight : (h.def.severity === 'serious' ? 0.3 : h.def.severity === 'moderate' ? 0.08 : 0.02);
-            harmScore += h.cif * w * 1000;
+            var base = h.def.weight != null ? h.def.weight : (h.def.severity === 'serious' ? 0.3 : h.def.severity === 'moderate' ? 0.08 : 0.02);
+            harmScore += h.cif * Lift.gocWeight(h.def.id, state.goc, base) * 1000;
         });
 
         var eff = res.item.medevalId ? Lift.effectiveBurden(res.item, state.prefs)
@@ -504,12 +532,16 @@
         out.safety.warnings.slice(0, 2).forEach(function (w) {
             flags.push({ cls: w.severity === 'high' ? 'f-red' : 'f-amber', txt: w.message.toLowerCase() });
         });
+        if (/Bisphosphonate/i.test(res.item.drugClass) && state.bisphosphonateYears >= 5) {
+            flags.push({ cls: 'f-amber', txt: '≥5 y — drug-holiday assessment due' });
+        }
 
         return {
             cand: cand, res: res, out: out,
             benefitScore: benefitScore, harmScore: harmScore, burdenPenalty: burdenPenalty,
             net: benefitScore - harmScore - burdenPenalty,
             netAnnualPer100: netAnnualPer100,
+            metricArr: primaryEffect, primaryRecurrent: primaryRecurrent,
             reco: reco, flags: flags, burdenTier: eff.tier
         };
     }
@@ -571,6 +603,7 @@
             'consider': ['t-consider', 'Consider'],
             'marginal': ['t-marginal', 'Marginal'],
             'caution-elderly': ['t-caution', 'Caution (Beers)'],
+            'co-flag': ['t-caution', 'Combination issue'],
             'not-recommended': ['t-not', 'Not recommended'],
             'held-out': ['t-not', 'Verify contraindication']
         };
@@ -587,7 +620,7 @@
             tierChip(s.reco) +
             '<span class="rg-ind">' + esc(s.cand.ind.label) + ' · ' + esc(s.reco.text) + '</span>' +
             (flags ? '<span class="rg-flags">' + flags + '</span>' : '') + '</div>' +
-            '<div class="rg-nums"><span class="rg-benefit">' + fmt1000(s.out.wf.final.arr) + '/1000 ' + esc(s.res.mode === 'lifted' ? s.res.outcomes[0].shortLabel : s.out.med.outcome.shortLabel) + ' (+' + s.benefitScore.toFixed(1) + ')</span>' +
+            '<div class="rg-nums"><span class="rg-benefit">' + fmt1000(s.metricArr != null ? s.metricArr : s.out.wf.final.arr) + '/1000 ' + esc(s.res.mode === 'lifted' ? s.res.outcomes[0].shortLabel : s.out.med.outcome.shortLabel) + (s.primaryRecurrent ? ' (repeats counted)' : '') + ' (+' + s.benefitScore.toFixed(1) + ')</span>' +
             '<span class="rg-harm">' + (s.harmScore > 0.05 ? 'harms −' + s.harmScore.toFixed(1) : 'minimal harms') + ' · burden −' + s.burdenPenalty.toFixed(0) + '</span></div>' +
             '<div class="rg-bar-wrap"><div class="rg-bar"><div class="rg-fill ' + barCls + '" style="width:' + w.toFixed(1) + '%"></div></div>' +
             '<span class="rg-net ' + (s.net >= 0 ? 'benefit' : 'harm') + '">' + (s.net >= 0 ? '+' : '') + s.net.toFixed(1) + '</span></div>' +
@@ -656,6 +689,24 @@
         });
         currentRows.sort(function (a, b) { return b.net - a.net; });
 
+        // ---- co-therapy rules (the combinatorial layer) ----
+        var currentItems = Object.keys(state.currentMeds).filter(function (k) { return state.currentMeds[k]; })
+            .map(catalogItem).filter(Boolean);
+        function decorateCo(s) {
+            var hits = Lift.cotherapyCheck(s.cand.item, currentItems);
+            if (!hits.length) return;
+            s.coHits = hits;
+            var demoted = hits.find(function (h) { return h.demoted; });
+            hits.forEach(function (h) {
+                s.flags.unshift({ cls: h.severity === 'red' ? 'f-red' : 'f-amber', txt: 'with ' + h.partner.toLowerCase() });
+            });
+            if (demoted) {
+                s.coDemoted = demoted;
+                s.reco = { tier: 'co-flag', text: demoted.text };
+            }
+        }
+        currentRows.forEach(decorateCo);
+
         // ---- candidates: positive tiers, not taken, class not covered; best in class ----
         var candidates = [];
         CATALOG.forEach(function (item) {
@@ -666,8 +717,15 @@
                     !(item.isStrategy && ((ind.deepId === 'bp-standard' || ind.deepId === 'bp-intensive') && inds.hypertension || ind.deepId === 'tight-glucose' && has('diabetes')))) return;
                 if (!ind.outcomes.length && !ind.deepId) return;
                 var s = scoreEntry({ key: item.key, indId: ind.id, item: item, ind: ind });
-                if (s) candidates.push(s);
+                if (s) { decorateCo(s); candidates.push(s); }
             });
+        });
+        // A candidate that must not be combined with a current medication is
+        // held out (e.g., an ARB while on an ACEi; aspirin while on a DOAC).
+        candidates.forEach(function (s) {
+            if (s.coDemoted && (s.coDemoted.neverCombine || s.coDemoted.severity === 'red')) {
+                s.out.contraHits = s.out.contraHits.concat(['combination: ' + s.coDemoted.text]);
+            }
         });
         var bestByClass = {};
         candidates.forEach(function (s) {
@@ -717,6 +775,10 @@
             '<p class="subline" style="margin-top:8px">To be <strong>recommended</strong> for this patient, a therapy needs a net benefit of at least <strong>' + g.threshold.toFixed(1) + ' QALYs per 100 patients per year</strong> (goals-of-care threshold from the original meds.kevinkeet.com framework)' +
             (state.prefs.cost === 'high' ? ' · cost matters to this patient' : '') +
             (state.prefs.pills === 'low' ? ' · prefers fewer medications (burden weighted up)' : '') + '.</p>' +
+            '<p class="subline">Outcome weighting under <strong>' + g.name + '</strong> goals: survival ×' + Lift.GOC_CLASS_MULT.fatal[state.goc - 1].toFixed(2) +
+            ' · disabling events ×' + Lift.GOC_CLASS_MULT.disabling[state.goc - 1].toFixed(2) +
+            ' · symptomatic events ×' + Lift.GOC_CLASS_MULT.symptomatic[state.goc - 1].toFixed(2) +
+            ' — goals reorder <em>what kind</em> of outcome matters, not just how much (<a href="methods.html">methods</a>).</p>' +
             '</div></div>' +
 
             // risk dashboard
@@ -789,10 +851,10 @@
                 'net <span class="' + (s.net >= 0 ? 'syn-pos' : 'syn-neg') + '">' + (s.net >= 0 ? '+' : '') + s.net.toFixed(1) + '/1000</span> over ' + H + ' y' +
                 (extra ? ' · ' + extra : ' · ' + esc(s.reco.text)) + '</button>';
         }
-        var start = candRows.filter(function (s) { return s.reco.tier === 'strong' || s.reco.tier === 'recommended'; });
+        var start = candRows.filter(function (s) { return (s.reco.tier === 'strong' || s.reco.tier === 'recommended') && !s.coDemoted; });
         var discuss = candRows.filter(function (s) { return s.reco.tier === 'consider' || s.reco.tier === 'caution-elderly'; });
-        var keep = currentRows.filter(function (s) { return ['strong', 'recommended', 'consider'].indexOf(s.reco.tier) >= 0; });
-        var reconsider = currentRows.filter(function (s) { return ['marginal', 'not-recommended', 'caution-elderly'].indexOf(s.reco.tier) >= 0; });
+        var keep = currentRows.filter(function (s) { return ['strong', 'recommended', 'consider'].indexOf(s.reco.tier) >= 0 && !s.coDemoted; });
+        var reconsider = currentRows.filter(function (s) { return ['marginal', 'not-recommended', 'caution-elderly', 'co-flag'].indexOf(s.reco.tier) >= 0 || s.coDemoted; });
         var sympFlagged = currentSymp.filter(function (x) { return x.safety.severity === 'high' || x.safety.beers; });
 
         function group(title, cls, rows) {
@@ -922,12 +984,15 @@
         var med = out.med, wf = out.wf, fin = wf.final;
         var H = state.horizon;
 
+        var recurrentPrimary = res.mode === 'lifted' && !!res.outcomes[0].recurrent;
         var benefitPhrase = med.outcome.shortLabel === 'deaths' || med.outcome.shortLabel === 'CV deaths'
             ? '<span class="hl-benefit">' + fmt1000(fin.arr) + ' fewer die</span>'
-            : '<span class="hl-benefit">' + fmt1000(fin.arr) + ' avoid ' + esc(med.outcome.shortLabel) + '</span>';
+            : recurrentPrimary
+                ? '<span class="hl-benefit">' + fmt1000(fin.eventsPrevented) + ' fewer ' + esc(med.outcome.shortLabel) + '</span>'
+                : '<span class="hl-benefit">' + fmt1000(fin.arr) + ' avoid ' + esc(med.outcome.shortLabel) + '</span>';
         var headline =
-            'Of <strong>1000 patients like this</strong> taking <span class="hl-med">' + esc(med.name) + '</span> for ' + H + ' years, about ' +
-            benefitPhrase + (med.outcome.shortLabel === 'deaths' ? ' within the horizon' : ' who would otherwise have had them') + '.';
+            (recurrentPrimary ? 'Across' : 'Of') + ' <strong>1000 patients like this</strong> taking <span class="hl-med">' + esc(med.name) + '</span> for ' + H + ' years, about ' +
+            benefitPhrase + (med.outcome.shortLabel === 'deaths' ? ' within the horizon' : recurrentPrimary ? ' occur (repeat episodes counted)' : ' who would otherwise have had them') + '.';
 
         var flags = '';
         if (out.contraHits.length) flags += '<div class="flagline f-danger"><span class="fl-icon">✕</span><div><strong>Possible contraindication:</strong> ' + out.contraHits.map(esc).join(' · ') + '.</div></div>';
@@ -960,8 +1025,10 @@
 
         var nntStrip =
             '<div class="nnt-strip">' +
-            '<div class="stat"><span class="s-val benefit">' + fmtNNT(fin.nnt) + '</span><span class="s-lab">NNT over ' + H + ' y</span></div>' +
-            '<div class="stat"><span class="s-val benefit">' + fmt1000(fin.arr) + '</span><span class="s-lab">prevented / 1000</span></div>' +
+            '<div class="stat"><span class="s-val benefit">' + fmtNNT(fin.nnt) + '</span><span class="s-lab">NNT' + (recurrentPrimary ? ' (first event)' : '') + ' over ' + H + ' y</span></div>' +
+            (recurrentPrimary
+                ? '<div class="stat"><span class="s-val benefit">' + fmt1000(fin.eventsPrevented) + '</span><span class="s-lab">' + esc(med.outcome.shortLabel) + ' prevented / 1000 (repeats counted)</span></div>'
+                : '<div class="stat"><span class="s-val benefit">' + fmt1000(fin.arr) + '</span><span class="s-lab">prevented / 1000</span></div>') +
             '<div class="stat"><span class="s-val">' + fmtPct(fin.aliveAtHorizon, 0) + '</span><span class="s-lab">alive at ' + H + ' y (other causes)</span></div>' +
             '<div class="stat"><span class="s-val">' + out.life.le.toFixed(1) + ' y</span><span class="s-lab">life expectancy</span></div>' +
             '</div>';
@@ -1057,6 +1124,7 @@
         other_conditions: { hypertension_treated: '[t/f]', current_smoker: '[t/f]', copd: '[t/f]', dementia: '[t/f]', active_cancer: '[t/f]', frailty: '[t/f]', osteoporosis: '[t/f]', gout: '[t/f]', asthma: '[t/f]', neuropathy: '[t/f]', hypothyroidism: '[t/f]', depression: '[t/f]' },
         overall_health: '[excellent|good|average|fair|poor — vs age peers]',
         adherence: '[high|typical|low]',
+        bisphosphonate_years: '[number, if on a bisphosphonate]',
         current_medications: '[array of generic names, e.g. "atorvastatin", "apixaban", "metformin"]'
     }, null, 2) + '\n\nUse null for unknown values. Extract from the most recent available data.';
 
@@ -1073,6 +1141,7 @@
         state.goc = 3;
         state.prefs = { pills: 'moderate', cost: 'moderate', monitoring: 'moderate' };
         state.horizon = 5;
+        state.bisphosphonateYears = null;
         state.selection = null;
         state.anchored = {};
         state.currentMeds = {};
@@ -1129,6 +1198,7 @@
             state.horizon = th <= 1 ? 1 : th <= 2 ? 2 : th <= 7 ? 5 : 10;
             n++;
         }
+        if (num(d.bisphosphonate_years) != null) { state.bisphosphonateYears = num(d.bisphosphonate_years); n++; }
         (d.current_medications || []).forEach(function (m) {
             var key = String(m).toLowerCase().replace(/[^a-z0-9_]/g, '_');
             if (catalogItem(key)) { state.currentMeds[key] = true; n++; }
@@ -1263,16 +1333,40 @@
             });
             html += '</div></details>';
         });
+        html += '<div class="field" id="bisph-years-wrap" style="margin-top:10px" hidden>' +
+            '<label for="bisph-years">Years on bisphosphonate</label>' +
+            '<input type="number" id="bisph-years" min="0" max="30" step="1" placeholder="—">' +
+            '<p class="hint">AFF risk rises with duration; ≥5 years triggers a drug-holiday flag (Black NEJM 2020).</p></div>';
         wrap.innerHTML = html;
         wrap.querySelectorAll('[data-cm]').forEach(function (inp) {
             inp.addEventListener('change', function () {
                 if (this.checked) state.currentMeds[this.dataset.cm] = true;
                 else delete state.currentMeds[this.dataset.cm];
                 updateCmCounts();
+                syncBisphYears();
                 update();
             });
         });
+        var by = wrap.querySelector('#bisph-years');
+        if (by) by.addEventListener('input', function () {
+            var v = parseFloat(this.value);
+            state.bisphosphonateYears = isFinite(v) ? v : null;
+            update();
+        });
         updateCmCounts();
+        syncBisphYears();
+    }
+    function syncBisphYears() {
+        var wrapEl = $('#bisph-years-wrap');
+        if (!wrapEl) return;
+        var onBisph = Object.keys(state.currentMeds).some(function (k) {
+            if (!state.currentMeds[k]) return false;
+            var item = catalogItem(k);
+            return item && /Bisphosphonate/i.test(item.drugClass);
+        });
+        wrapEl.hidden = !onBisph;
+        var inp = $('#bisph-years');
+        if (inp) inp.value = state.bisphosphonateYears == null ? '' : state.bisphosphonateYears;
     }
     function updateCmCounts() {
         document.querySelectorAll('.cm-count').forEach(function (span) {
