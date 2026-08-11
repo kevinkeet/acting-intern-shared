@@ -6,7 +6,7 @@ Living status doc so work can resume in a fresh session. Repo:
 ## How the app works (fast facts)
 - Vanilla HTML/JS/CSS, **no build system**. `index.html` loads all scripts; `js/router.js` hash routing.
 - **Two git remotes — push BOTH after every commit:** `git push origin main && git push shared main`.
-- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260722p`**.
+- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260722r`**.
 - **Access gate password:** `0slerian` → PBKDF2 → decrypts the embedded Anthropic key into localStorage. Never log/commit the decrypted key.
 - **The shared Anthropic API key repeatedly runs OUT OF CREDITS** (Opus runs burn it fast). When it does, the live assessment (chat + grading) is DOWN. Only the user can top it up.
 - **Supabase** project (`piwoinyrlicvndpsmtde`) auto-pauses on free tier; resume from the dashboard before use.
@@ -235,6 +235,20 @@ split 376px, `.split-custom` applied and persisted; double-click cleared both lo
   left both panes `pointer-events:none` (rail felt dead until reload). Both handles now use
   `setPointerCapture` with `pointercancel` + window `blur` as recovery paths. Verified live: drag armed →
   pointercancel clears it; blur clears it.
+
+## DEMO MODE (?demo) — public interface tour without study cases
+- **actingintern.com/?demo** flips that browser to a DEMO build: patient list, default patient, and assessment
+  list all show ONLY **PAT002 Sandoval (the NEJM case)** — none of the five study cases are listed anywhere.
+  Persists via localStorage `demo-mode` (so plain actingintern.com stays demo in that browser until reset).
+- **actingintern.com/?studymode** restores the study build (clears `demo-mode` AND `all-modes-unlocked`).
+- Not a security boundary (same access gate + password; anyone who knows ?studymode can flip back) — per Kevin,
+  "doesn't have to be super top secret." It's a clean door for letting people feel the interface.
+- Demo attempts are inherently separable in the data: they're `case_id = PAT002`, never a study case.
+- **Boot-order gotcha (was a real bug):** URL flags were parsed only in `ModeManager.init()`, which App.init
+  calls AFTER loading the default patient and patient index — so `?demo` took effect one reload late.
+  `_syncUnlockFromUrl()` now ALSO runs at script parse time (mode-manager loads 4th, before data-loader).
+- Verified live both ways at 20260722r: cold `?demo` boots straight into Sandoval with case list = [PAT002];
+  `?studymode` restores PAT003–007.
 
 ## PENDING / NEXT
 1. **Cleanup pass — DONE.** `assessment-results.js._renderRubric` now prefers `scoringRubric.rubricText` (falls back to essential/bonus only when there's no scoringRubric). Deleted the stale `rubric` block from all 22 points-graded prompts (PAT003–007). PAT002 keeps its 5 essential/bonus rubrics (they ARE its grader). `admin-dashboard.js` does not render rubrics. Final: PAT003=5, PAT004=8, PAT005=7, PAT006=4, PAT007=6 scoringRubrics, 0 legacy blocks; PAT002=5 legacy.

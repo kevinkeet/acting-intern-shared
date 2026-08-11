@@ -59,8 +59,11 @@ class DataLoader {
         // switcher, nav) — e.g. cases withheld from the current study build.
         // Their data still loads by id if referenced directly (past attempts,
         // results pages), so nothing breaks retroactively.
+        const demo = (typeof DemoMode !== 'undefined' && DemoMode.isActive());
         this.patientIndex = Object.assign({}, raw, {
-            patients: (raw.patients || []).filter((p) => !p.hidden),
+            // Demo build: ONLY the public NEJM case, hidden flag notwithstanding.
+            // Study build: everything not flagged hidden.
+            patients: (raw.patients || []).filter((p) => demo ? p.id === 'PAT002' : !p.hidden),
         });
         return this.patientIndex;
     }

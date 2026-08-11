@@ -17,7 +17,9 @@ const AssessmentData = (() => {
 
     // List of cases offered. Add new caseIds here as they're scaffolded.
     // PAT002 (Sandoval) withheld from the current study build — re-add to offer it again.
+    // In DEMO mode (?demo) the offer flips: ONLY PAT002, never the study five.
     const CASE_IDS = ['PAT003', 'PAT004', 'PAT005', 'PAT006', 'PAT007'];
+    const DEMO_CASE_IDS = ['PAT002'];
 
     // Per-case diagnosis reveal (used on the results page only).
     // Lives in code rather than the JSON so it can't accidentally leak via
@@ -126,7 +128,8 @@ const AssessmentData = (() => {
 
     function listCases() {
         // Lazy load case metadata to keep the manifest cheap.
-        return CASE_IDS.map((id) => ({ caseId: id }));
+        const ids = (typeof DemoMode !== 'undefined' && DemoMode.isActive()) ? DEMO_CASE_IDS : CASE_IDS;
+        return ids.map((id) => ({ caseId: id }));
     }
 
     async function loadCaseMeta(caseId) {

@@ -56,13 +56,31 @@ const ModeManager = (function () {
     // load with ?studymode to lock it back down.
     const UNLOCK_KEY = 'all-modes-unlocked';
 
+    // Demo mode: visiting ?demo flips this browser to a DEMO build — the
+    // patient list and assessment list show ONLY the public NEJM case
+    // (PAT002 Sandoval) and none of the five study cases. For letting people
+    // feel the interface without exposing study content. Not a security
+    // boundary (?studymode restores the study build), just a clean door.
+    const DEMO_KEY = 'demo-mode';
+
     function _syncUnlockFromUrl() {
         try {
             const q = new URLSearchParams(window.location.search);
             if (q.has('allmodes')) localStorage.setItem(UNLOCK_KEY, '1');
-            if (q.has('studymode')) localStorage.removeItem(UNLOCK_KEY);
+            if (q.has('studymode')) { localStorage.removeItem(UNLOCK_KEY); localStorage.removeItem(DEMO_KEY); }
+            if (q.has('demo')) localStorage.setItem(DEMO_KEY, '1');
         } catch (e) { /* ignore */ }
     }
+
+    window.DemoMode = {
+        isActive() { try { return localStorage.getItem(DEMO_KEY) === '1'; } catch (e) { return false; } },
+    };
+
+    // Parse the URL flags NOW, at script load — not only in init(). App.init
+    // loads the default patient and builds the patient index BEFORE calling
+    // ModeManager.init(), so a flag parsed only there arrives one boot late
+    // (?demo appeared to need a second reload to take effect).
+    _syncUnlockFromUrl();
 
     function isStudyLocked() {
         try { return localStorage.getItem(UNLOCK_KEY) !== '1'; } catch (e) { return true; }
