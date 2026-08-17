@@ -6,7 +6,7 @@ Living status doc so work can resume in a fresh session. Repo:
 ## How the app works (fast facts)
 - Vanilla HTML/JS/CSS, **no build system**. `index.html` loads all scripts; `js/router.js` hash routing.
 - **Two git remotes — push BOTH after every commit:** `git push origin main && git push shared main`.
-- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260722r`**.
+- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260722s`**.
 - **Access gate password:** `0slerian` → PBKDF2 → decrypts the embedded Anthropic key into localStorage. Never log/commit the decrypted key.
 - **The shared Anthropic API key repeatedly runs OUT OF CREDITS** (Opus runs burn it fast). When it does, the live assessment (chat + grading) is DOWN. Only the user can top it up.
 - **Supabase** project (`piwoinyrlicvndpsmtde`) auto-pauses on free tier; resume from the dashboard before use.
@@ -249,6 +249,21 @@ split 376px, `.split-custom` applied and persisted; double-click cleared both lo
   `_syncUnlockFromUrl()` now ALSO runs at script parse time (mode-manager loads 4th, before data-loader).
 - Verified live both ways at 20260722r: cold `?demo` boots straight into Sandoval with case list = [PAT002];
   `?studymode` restores PAT003–007.
+
+## FEEDBACK NOW REACHES THE STUDY TEAM (migration 006 APPLIED live 2026-08-17)
+- **Was:** the feedback widget stored feedback ONLY in the participant's browser localStorage — pilot feedback
+  would never have been seen. **Now:** every widget Submit also INSERTs into `public.feedback` (participant
+  code, attempt_id when one is active, page, typed/dictated, text, UA). localStorage remains the offline copy;
+  failed writes queue in `feedback-unsynced` and retry on the next submit.
+- **RLS:** INSERT is code-scoped (`participant_code = participant_code()` header check, pattern from 004);
+  SELECT is admin-only (`is_study_admin()`, 005). No API UPDATE/DELETE.
+- **Where Kevin reads it: `#/admin/feedback`** — new Feedback tab in the admin console (newest first, links to
+  the attempt when one was active).
+- Verified end-to-end at 20260722s: widget submit under SAMPLE-RES1 → `synced:true`, empty unsynced queue, and
+  the row visible server-side (code, page `#/assessment/start`, method `typed`).
+- ALSO this session (2026-08-11..17): **all 72 test attempts deleted** (backups in `zz_backup_*_20260811`,
+  RLS-locked); one full sample resident run (PAT003, code SAMPLE-RES1, 94%, 2 real AI asks) left in the DB as
+  the only attempt — delete or filter by code before real enrollment. Sample export files delivered to Kevin.
 
 ## PENDING / NEXT
 1. **Cleanup pass — DONE.** `assessment-results.js._renderRubric` now prefers `scoringRubric.rubricText` (falls back to essential/bonus only when there's no scoringRubric). Deleted the stale `rubric` block from all 22 points-graded prompts (PAT003–007). PAT002 keeps its 5 essential/bonus rubrics (they ARE its grader). `admin-dashboard.js` does not render rubrics. Final: PAT003=5, PAT004=8, PAT005=7, PAT006=4, PAT007=6 scoringRubrics, 0 legacy blocks; PAT002=5 legacy.

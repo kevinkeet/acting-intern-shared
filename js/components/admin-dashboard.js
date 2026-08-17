@@ -389,6 +389,7 @@ const AdminDashboard = {
             { key: 'attempts', href: '#/admin/attempts', label: 'Attempts', icon: 'list' },
             { key: 'analytics', href: '#/admin/analytics', label: 'AI-usage analytics', icon: 'bar-chart-2' },
             { key: 'export', href: '#/admin/export', label: 'Export', icon: 'download' },
+            { key: 'feedback', href: '#/admin/feedback', label: 'Feedback', icon: 'message-square-text' },
         ];
         return `
             <div class="admin-topbar">
@@ -891,6 +892,47 @@ const AdminDashboard = {
         const sepIdx = chunk.indexOf(sep);
         if (sepIdx !== -1) return chunk.slice(sepIdx + sep.length).trim();
         return chunk;
+    },
+
+    // ══════════════════════════════════════════════════════════════════════
+    // VIEW — PARTICIPANT FEEDBACK (widget submissions, migration 006)
+    // ══════════════════════════════════════════════════════════════════════
+
+    async renderFeedback() {
+        const root = document.getElementById('main-content');
+        if (!root) return;
+        root.innerHTML = `<div class="admin-page"><div class="loading">Loading…</div></div>`;
+        if (!(await this._requireAdmin(root))) return;
+
+        const sb = this._adminClient();
+        const { data, error } = await sb.from('feedback')
+            .select('*').order('created_at', { ascending: false }).limit(500);
+        const rows = data || [];
+        root.innerHTML = `
+            <div class="admin-page">
+                ${this._renderAdminNav('feedback')}
+                <div class="admin-header">
+                    <h1>Participant feedback</h1>
+                    <div class="admin-header-stats"><span>${rows.length} entr${rows.length === 1 ? 'y' : 'ies'}</span></div>
+                </div>
+                ${error ? `<div class="admin-error">Could not load feedback: ${this._escape(error.message)}.
+                    If the table is missing, apply supabase/migrations/006_feedback_table.sql.</div>` : ''}
+                ${!error && !rows.length ? `<div class="admin-empty">No feedback yet. Entries appear here the moment a participant hits Submit in the feedback widget.</div>` : ''}
+                <div class="admin-feedback-list">
+                    ${rows.map((r) => `
+                        <div class="admin-feedback-item">
+                            <div class="admin-feedback-meta">
+                                <strong>${this._escape(r.participant_code || '?')}</strong>
+                                <span>${this._escape((r.created_at || '').replace('T', ' ').slice(0, 16))}</span>
+                                <span>${this._escape(r.page || '')}</span>
+                                <span>${this._escape(r.method || '')}</span>
+                                ${r.attempt_id ? `<a href="#/admin/attempts/${r.attempt_id}">attempt →</a>` : ''}
+                            </div>
+                            <div class="admin-feedback-text">${this._escape(r.feedback_text || '')}</div>
+                        </div>`).join('')}
+                </div>
+            </div>`;
+        App.refreshIcons();
     },
 
     // ══════════════════════════════════════════════════════════════════════

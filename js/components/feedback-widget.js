@@ -264,6 +264,11 @@ const FeedbackWidget = {
 
         this.feedbackEntries.push(entry);
         this.saveEntries();
+        // Also send to the study database (migration 006) so the team actually
+        // sees pilot feedback — localStorage alone never leaves this browser.
+        // Fire-and-forget: a failed write keeps the local copy and is retried
+        // on the next submit via the unsynced queue.
+        this._syncToServer(entry);
 
         // Clear
         this._finalTranscript = '';
@@ -285,6 +290,62 @@ const FeedbackWidget = {
         if (this.isMinimized) {
             setTimeout(() => this.close(), 800);
         }
+    },
+
+    // ==================== Server sync (migration 006) ====================
+
+    async _syncToServer(entry) {
+        try {
+            if (typeof SupabaseSync === 'undefined' || typeof UserCode === 'undefined') return;
+            const code = UserCode.get && UserCode.get();
+            const sb = SupabaseSync.getClient && SupabaseSync.getClient();
+            if (!sb || !code) return;    // no code entered yet — local copy only
+            const attempt = (typeof AssessmentEngine !== 'undefined' && AssessmentEngine.isActive && AssessmentEngine.isActive())
+                ? AssessmentEngine.getCurrent() : null;
+            const attemptId = attempt && attempt.attempt && !String(attempt.attempt.id).startsWith('local-')
+                ? attempt.attempt.id : null;
+            const row = {
+                participant_code: code,
+                attempt_id: attemptId,
+                page: entry.page,
+                method: entry.method,
+                feedback_text: entry.text,
+                user_agent: entry.userAgent,
+            };
+            const { error } = await sb.from('feedback').insert(row);
+            if (error) {
+                this._queueUnsynced(row);
+            } else {
+                entry.synced = true;
+                this.saveEntries();
+                this._flushUnsynced();
+            }
+        } catch (e) {
+            /* offline etc. — local copy is intact */
+        }
+    },
+
+    _queueUnsynced(row) {
+        try {
+            const q = JSON.parse(localStorage.getItem('feedback-unsynced') || '[]');
+            q.push(row);
+            localStorage.setItem('feedback-unsynced', JSON.stringify(q.slice(-50)));
+        } catch (e) { /* ignore */ }
+    },
+
+    async _flushUnsynced() {
+        try {
+            const q = JSON.parse(localStorage.getItem('feedback-unsynced') || '[]');
+            if (!q.length) return;
+            const sb = SupabaseSync.getClient && SupabaseSync.getClient();
+            if (!sb) return;
+            const rest = [];
+            for (const row of q) {
+                const { error } = await sb.from('feedback').insert(row);
+                if (error) rest.push(row);
+            }
+            localStorage.setItem('feedback-unsynced', JSON.stringify(rest));
+        } catch (e) { /* ignore */ }
     },
 
     // ==================== Voice Dictation ====================

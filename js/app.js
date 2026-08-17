@@ -243,6 +243,7 @@ const App = {
             .on('/admin/attempts', () => AdminDashboard.renderList())
             .on('/admin/analytics', () => AdminDashboard.renderAnalytics())
             .on('/admin/export', () => AdminDashboard.renderExport())
+            .on('/admin/feedback', () => AdminDashboard.renderFeedback())
             .on('/admin/attempts/:id', (params) => AdminDashboard.renderDetail(params.id));
 
         // Refresh sidebar entries when auth state changes (Assessment + Admin links).
