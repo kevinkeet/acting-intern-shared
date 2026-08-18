@@ -244,21 +244,20 @@ const AssessmentChatbot = (() => {
             .join(' · ');
 
         _root.innerHTML = `
-            <div class="acb-header">
-                <div class="acb-header-title">
-                    <i data-lucide="message-square" class="lucide-inline"></i>
-                    Assessment Chatbot
-                </div>
-                <div class="acb-context-summary">
-                    <div class="acb-context-line">
-                        <strong>Context:</strong> ${_escape(windowDef.label)}
-                    </div>
-                    <div class="acb-context-line acb-context-types">${_escape(typeLabels)}</div>
-                    <button class="acb-change-context-btn">
-                        <i data-lucide="sliders-horizontal" class="lucide-inline"></i>
-                        Change context
-                    </button>
-                </div>
+            <!-- Chat-state header is deliberately SLIM: the big branded banner
+                 earns its space on the setup screen (discoverability), but once
+                 the resident is chatting every vertical pixel belongs to the
+                 conversation. One row: name, current context (ellipsized,
+                 full detail in the tooltip), and a small Change button. -->
+            <div class="acb-header acb-header-slim">
+                <i data-lucide="sparkles" class="lucide-inline"></i>
+                <span class="acb-slim-title">AI Assistant</span>
+                <span class="acb-context-inline" title="Context: ${_escape(windowDef.label)} — ${_escape(typeLabels)}">
+                    ${_escape(windowDef.label)} · ${_escape(typeLabels)}
+                </span>
+                <button class="acb-change-context-btn" title="Change what the assistant can see">
+                    <i data-lucide="sliders-horizontal" class="lucide-inline"></i>
+                </button>
             </div>
             <div class="acb-messages" id="acb-messages"></div>
             <div class="acb-composer">

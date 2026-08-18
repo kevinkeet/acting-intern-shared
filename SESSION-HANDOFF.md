@@ -6,7 +6,7 @@ Living status doc so work can resume in a fresh session. Repo:
 ## How the app works (fast facts)
 - Vanilla HTML/JS/CSS, **no build system**. `index.html` loads all scripts; `js/router.js` hash routing.
 - **Two git remotes — push BOTH after every commit:** `git push origin main && git push shared main`.
-- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260722t`**.
+- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260722u`**.
 - **Access gate password:** `0slerian` → PBKDF2 → decrypts the embedded Anthropic key into localStorage. Never log/commit the decrypted key.
 - **The shared Anthropic API key repeatedly runs OUT OF CREDITS** (Opus runs burn it fast). When it does, the live assessment (chat + grading) is DOWN. Only the user can top it up.
 - **Supabase** project (`piwoinyrlicvndpsmtde`) auto-pauses on free tier; resume from the dashboard before use.
@@ -279,6 +279,12 @@ split 376px, `.split-custom` applied and persisted; double-click cleared both lo
   scripted run crosses AP1→AP2, tab responsive, typing + further submits work.
 - Cleanup note: repro attempts under codes CRASHREPRO/CRASHREPRO2 + earlier SAMPLE-RES1 are in prod — purge
   test rows before enrollment.
+## CHATBOT BANNER SLIMMED (pilot feedback)
+Chat-state header collapsed from the 4-element block (title + Context line + data-type line + Change-context
+button, ~110px) to ONE 49px row: sparkles + "AI Assistant" + ellipsized context string (full detail in the
+tooltip) + icon-only Change button. The big cyan banner remains ONLY on the setup screen, where it earns its
+discoverability keep. Verified live: slim class applied when chatting, Change button returns to setup.
+
 ## PENDING / NEXT
 1. **Cleanup pass — DONE.** `assessment-results.js._renderRubric` now prefers `scoringRubric.rubricText` (falls back to essential/bonus only when there's no scoringRubric). Deleted the stale `rubric` block from all 22 points-graded prompts (PAT003–007). PAT002 keeps its 5 essential/bonus rubrics (they ARE its grader). `admin-dashboard.js` does not render rubrics. Final: PAT003=5, PAT004=8, PAT005=7, PAT006=4, PAT007=6 scoringRubrics, 0 legacy blocks; PAT002=5 legacy.
 2. **Live-verify the rubric-fidelity fixes — DONE (2026-07-22)** except one piece: verified live that the PAT004 3-part IVC split (Q5a 5 / Q5b 3 / Q5c 3 / Q6 8) renders and flows end-to-end; PAT005 AP2-Q4→Q4b→AP3 flows; **PAT005 AP3 at anchor 7/05 shows NOTE010 (6/25) and hides NOTE008 (7/19 transplant) + NOTE009**; AP3 stem shows the pre-transplant rewrite. Point totals re-verified from data: 36/71/27/23/78.5, 0 legacy rubric blocks on PAT003–007. PAT003 points-path grading confirmed statically (grader branches on `scoringRubric.rubricText`, present on all 5 Qs) — **an actual end-to-end grade call still needs the access gate unlocked + API credits** (tooling can't enter the password).

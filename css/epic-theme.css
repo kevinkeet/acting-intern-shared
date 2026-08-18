@@ -16660,3 +16660,35 @@ body.tutor-standalone {
 .admin-feedback-meta { display: flex; gap: 14px; font-size: 12px; color: #64748b; margin-bottom: 6px; flex-wrap: wrap; }
 .admin-feedback-meta strong { color: #1a5276; }
 .admin-feedback-text { font-size: 13.5px; color: #1a202c; white-space: pre-wrap; line-height: 1.5; }
+
+/* Slim chat-state header for the assessment chatbot: one row, ~34px, vs the
+   full setup banner. The context string ellipsizes; hover shows the tooltip. */
+.acb-header.acb-header-slim {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-top-width: 2px;
+}
+.acb-header-slim .acb-slim-title { font-size: 13px; font-weight: 700; flex: 0 0 auto; }
+.acb-header-slim .acb-context-inline {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: 11px;
+    opacity: 0.85;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.acb-header-slim .acb-change-context-btn {
+    flex: 0 0 auto;
+    background: rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #f7fafc;
+    border-radius: 6px;
+    padding: 4px 7px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+}
+.acb-header-slim .acb-change-context-btn:hover { background: rgba(255,255,255,0.25); }
