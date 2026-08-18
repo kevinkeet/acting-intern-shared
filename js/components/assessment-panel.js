@@ -651,8 +651,16 @@ const AssessmentPanel = {
                 // page is on screen so the newly-unlocked notes/labs/imaging
                 // appear immediately instead of looking stale until the
                 // resident happens to navigate.
-                try { if (window.router && router.handleRoute) router.handleRoute(); } catch (e) { /* ignore */ }
-                App.showToast('New information has been added to the chart.', 'info', 5000);
+                // DEFERRED (setTimeout 0), never synchronously: handleRoute()
+                // re-runs renderActive(), which re-subscribes this very
+                // listener — doing that inside the engine's emit froze the
+                // tab in an infinite loop at every AP transition (pilot bug,
+                // participant 1295). The engine also snapshots its listener
+                // set now; keep both defenses.
+                setTimeout(() => {
+                    try { if (window.router && router.handleRoute) router.handleRoute(); } catch (e) { /* ignore */ }
+                    App.showToast('New information has been added to the chart.', 'info', 5000);
+                }, 0);
             } else if (event === 'sync-status') {
                 this._pendingWrites = payload && payload.pending ? payload.pending : 0;
                 this._renderSyncPill();

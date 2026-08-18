@@ -68,7 +68,11 @@ const AssessmentEngine = (() => {
     }
 
     function _emit(event, payload) {
-        for (const fn of _listeners) {
+        // Iterate a SNAPSHOT: for..of over the live Set visits values added
+        // during iteration, so a listener that re-subscribes mid-emit (the
+        // panel's renderActive does) would be visited again in the same pass —
+        // an infinite loop that froze pilot browsers at every AP transition.
+        for (const fn of Array.from(_listeners)) {
             try { fn(event, payload); } catch (e) { /* ignore */ }
         }
     }
