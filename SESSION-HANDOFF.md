@@ -6,7 +6,7 @@ Living status doc so work can resume in a fresh session. Repo:
 ## How the app works (fast facts)
 - Vanilla HTML/JS/CSS, **no build system**. `index.html` loads all scripts; `js/router.js` hash routing.
 - **Two git remotes — push BOTH after every commit:** `git push origin main && git push shared main`.
-- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260722u`**.
+- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260722v`**.
 - **Access gate password:** `0slerian` → PBKDF2 → decrypts the embedded Anthropic key into localStorage. Never log/commit the decrypted key.
 - **The shared Anthropic API key repeatedly runs OUT OF CREDITS** (Opus runs burn it fast). When it does, the live assessment (chat + grading) is DOWN. Only the user can top it up.
 - **Supabase** project (`piwoinyrlicvndpsmtde`) auto-pauses on free tier; resume from the dashboard before use.
@@ -284,6 +284,17 @@ Chat-state header collapsed from the 4-element block (title + Context line + dat
 button, ~110px) to ONE 49px row: sparkles + "AI Assistant" + ellipsized context string (full detail in the
 tooltip) + icon-only Change button. The big cyan banner remains ONLY on the setup screen, where it earns its
 discoverability keep. Verified live: slim class applied when chatting, Change button returns to setup.
+
+## PARTICIPANTS SEE NO SCORES (study decision 2026-08-19)
+Driven by pilot feedback (1295: 25-27% "feels demoralizing... I used AI and felt my answers [were good]").
+The participant results page now shows: a checkmark "Submitted / Your responses have been recorded for the
+study", their own answers, their AI transcript, and time used. REMOVED from the participant surface: overall
+percentage, per-AP and per-question scores, score breakdowns, grader notes (they carry point counts), and the
+RUBRIC display (it is the answer key — the delayed-control arm sits the same cases later; contamination risk).
+Scores are still computed and stored; the ADMIN console shows everything unchanged. Verified by rendering the
+template against a scored stub and grepping the output: no %, no points, no rubric, no notes; answers and
+time remain. NOTE for the group/SAP: what participants are shown is an administration-protocol decision —
+record it in the protocol; the delayed-control arm's later exposure makes rubric secrecy load-bearing.
 
 ## PENDING / NEXT
 1. **Cleanup pass — DONE.** `assessment-results.js._renderRubric` now prefers `scoringRubric.rubricText` (falls back to essential/bonus only when there's no scoringRubric). Deleted the stale `rubric` block from all 22 points-graded prompts (PAT003–007). PAT002 keeps its 5 essential/bonus rubrics (they ARE its grader). `admin-dashboard.js` does not render rubrics. Final: PAT003=5, PAT004=8, PAT005=7, PAT006=4, PAT007=6 scoringRubrics, 0 legacy blocks; PAT002=5 legacy.

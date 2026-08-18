@@ -85,9 +85,14 @@ const AssessmentResults = {
     _renderReport(root, { attempt, responses, aiLog, caseDef, diagnosis }) {
         // Stash for per-prompt transcript lookup later in the render tree.
         this._aiLog = aiLog;
-        const overallPct = Math.round(((attempt.total_score || 0) * 100));
-        // No pass/fail framing anywhere: this is a research instrument, not an
-        // exam. Participants see their percentage, never a threshold verdict.
+        // PARTICIPANTS SEE NO SCORES AT ALL (study decision, 2026-08-19, after
+        // pilot feedback that rubric-normed percentages read as demoralizing).
+        // These Delphi rubrics credit breadth, so strong focused answers land
+        // near 25% by construction — the number misleads more than it informs.
+        // Scores are still computed, stored, and fully visible in the admin
+        // console; only this participant-facing surface hides them. The rubric
+        // itself is hidden too: it is the answer key, and the delayed-control
+        // arm sits the same cases later (contamination risk).
         const statusBadge = attempt.status === 'completed'
             ? '<span class="badge complete">COMPLETED</span>'
             : `<span class="badge incomplete">${this._escape(attempt.status.toUpperCase())}</span>`;
@@ -108,10 +113,11 @@ const AssessmentResults = {
 
                 <div class="assessment-results-score-card">
                     <div class="assessment-score-circle neutral">
-                        <div class="assessment-score-pct">${overallPct}%</div>
-                        <div class="assessment-score-label">Overall</div>
+                        <div class="assessment-score-pct"><i data-lucide="check" class="lucide-inline"></i></div>
+                        <div class="assessment-score-label">Submitted</div>
                     </div>
                     <div class="assessment-results-score-detail">
+                        <div>Your responses have been recorded for the study.</div>
                         <div>Status: <strong>${this._escape(attempt.status)}</strong></div>
                     </div>
                 </div>
@@ -155,7 +161,7 @@ const AssessmentResults = {
 
     _renderAssessmentBlock(ap, responses) {
         const apScore = this._computeAssessmentScore(ap, responses);
-        const apScorePct = apScore === null ? '—' : Math.round(apScore * 100) + '%';
+        const apScorePct = '';   // participant surface shows no scores
 
         return `
             <div class="assessment-results-ap">
@@ -187,8 +193,9 @@ const AssessmentResults = {
 
     _renderPromptCard(prompt, responses) {
         const r = responses.find((rr) => rr.prompt_id === prompt.id);
-        const scoreStr = (r && typeof r.score === 'number') ? Math.round(r.score * 100) + '%' : '—';
-        const breakdown = (r && r.score_breakdown) || {};
+        // No numeric score, no breakdown, no grader notes, no rubric on the
+        // participant surface — notes and rubric both carry point values, and
+        // the rubric is the answer key. Admin console shows everything.
         const transcript = this._renderTranscriptForPrompt(prompt.id);
 
         return `
@@ -196,7 +203,7 @@ const AssessmentResults = {
                 <div class="assessment-prompt-result-header">
                     <span class="assessment-prompt-result-id">${this._escape(prompt.id)}</span>
                     <span class="assessment-prompt-result-type">${this._escape(this._labelForType(prompt.type))}</span>
-                    <span class="assessment-prompt-result-score">${scoreStr}</span>
+
                 </div>
                 <div class="assessment-prompt-result-question">${this._escape(prompt.question || '')}</div>
 
@@ -214,15 +221,7 @@ const AssessmentResults = {
 
                 ${transcript}
 
-                ${this._renderBreakdown(breakdown)}
 
-                ${r && r.grader_notes ? `
-                    <div class="assessment-prompt-result-notes">
-                        <strong>Grader notes:</strong> ${this._escape(r.grader_notes)}
-                    </div>
-                ` : ''}
-
-                ${this._renderRubric(prompt)}
             </div>
         `;
     },
