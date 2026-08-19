@@ -60,10 +60,14 @@ class DataLoader {
         // Their data still loads by id if referenced directly (past attempts,
         // results pages), so nothing breaks retroactively.
         const demo = (typeof DemoMode !== 'undefined' && DemoMode.isActive());
+        // Unlocked (?allmodes) browsers see EVERYTHING, including hidden
+        // patients — that's Kevin's dev/demo view (Morrison + simulation live
+        // there). Study-locked browsers hide the flagged patients; demo
+        // browsers see only the public NEJM case.
+        const unlocked = (typeof ModeManager !== 'undefined' && ModeManager.isStudyLocked && !ModeManager.isStudyLocked());
         this.patientIndex = Object.assign({}, raw, {
-            // Demo build: ONLY the public NEJM case, hidden flag notwithstanding.
-            // Study build: everything not flagged hidden.
-            patients: (raw.patients || []).filter((p) => demo ? p.id === 'PAT002' : !p.hidden),
+            patients: (raw.patients || []).filter((p) =>
+                demo ? p.id === 'PAT002' : (unlocked ? true : !p.hidden)),
         });
         return this.patientIndex;
     }
