@@ -278,6 +278,37 @@ const AssessmentPanel = {
         });
     },
 
+    // Blocking notice on every timepoint transition. States the new in-case
+    // date and that the chart changed; the resident must acknowledge it.
+    _showTimeJumpNotice() {
+        const cur = AssessmentEngine.getCurrent();
+        const ap = cur && cur.assessment;
+        if (!ap) return;
+        let dateStr = '';
+        try {
+            const anchor = ap.anchorDate || (ap.chartGate && ap.chartGate.includeBeforeOrEqualDate);
+            if (anchor) dateStr = new Date(anchor).toLocaleDateString('en-US',
+                { month: 'numeric', day: 'numeric', year: 'numeric' });
+        } catch (e) { /* date is decorative */ }
+        const prior = document.getElementById('assessment-timejump');
+        if (prior) prior.remove();
+        const el = document.createElement('div');
+        el.id = 'assessment-timejump';
+        el.innerHTML = `
+            <div class="atj-backdrop"></div>
+            <div class="atj-card" role="alertdialog" aria-label="Time has passed">
+                <div class="atj-icon"><i data-lucide="clock-arrow-up" class="lucide-inline"></i></div>
+                <h3>Time has passed in this case</h3>
+                <p>${dateStr ? `It is now <strong>${dateStr}</strong>. ` : ''}The chart has been updated with
+                   new notes, results, and orders from the interval. <strong>Re-review the chart</strong> —
+                   the next questions are asked as of this new date.</p>
+                <button class="btn btn-primary" id="atj-continue">Review the updated chart</button>
+            </div>`;
+        document.body.appendChild(el);
+        el.querySelector('#atj-continue').addEventListener('click', () => el.remove());
+        App.refreshIcons();
+    },
+
     _switchRailTab(tab) {
         const dock = document.getElementById('assessment-dock');
         if (!dock) return;
@@ -659,7 +690,11 @@ const AssessmentPanel = {
                 // set now; keep both defenses.
                 setTimeout(() => {
                     try { if (window.router && router.handleRoute) router.handleRoute(); } catch (e) { /* ignore */ }
-                    App.showToast('New information has been added to the chart.', 'info', 5000);
+                    // A toast was too easy to miss (pilot feedback: "it was not
+                    // immediately obvious that there was passage of time between
+                    // questions"). A time jump now gets a blocking interstitial
+                    // the resident must dismiss.
+                    this._showTimeJumpNotice();
                 }, 0);
             } else if (event === 'sync-status') {
                 this._pendingWrites = payload && payload.pending ? payload.pending : 0;

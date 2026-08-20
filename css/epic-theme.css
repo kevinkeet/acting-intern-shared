@@ -16692,3 +16692,16 @@ body.tutor-standalone {
     align-items: center;
 }
 .acb-header-slim .acb-change-context-btn:hover { background: rgba(255,255,255,0.25); }
+
+/* Timepoint-transition interstitial */
+#assessment-timejump { position: fixed; inset: 0; z-index: 3200; }
+#assessment-timejump .atj-backdrop { position: absolute; inset: 0; background: rgba(15,23,42,0.55); }
+#assessment-timejump .atj-card {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    width: 420px; max-width: 90vw; background: #fff; border-radius: 12px;
+    box-shadow: 0 16px 50px rgba(0,0,0,0.35); padding: 22px 26px; text-align: center;
+    border-top: 4px solid #dd6b20;
+}
+#assessment-timejump .atj-icon { font-size: 26px; color: #dd6b20; margin-bottom: 6px; }
+#assessment-timejump h3 { margin: 0 0 8px; font-size: 17px; color: #1a202c; }
+#assessment-timejump p { margin: 0 0 16px; font-size: 13.5px; line-height: 1.55; color: #334155; text-align: left; }

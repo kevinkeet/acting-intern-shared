@@ -101,12 +101,13 @@ const AssessmentStart = {
                             <input type="checkbox" id="assessment-consent-check">
                             <span>I have read the above and agree to participate.</span>
                         </label>
-                        <label class="assessment-consent-code-label" for="assessment-access-code">Access code</label>
+                        <label class="assessment-consent-code-label" for="assessment-access-code">Your participant code</label>
                         <p class="assessment-consent-code-help">
-                            Enter the code provided for the study (3–32 characters: letters, digits, <code>_</code>, <code>-</code>).
-                            Your results are saved under this code.
+                            The personal study code you were given (usually a short number, e.g. 4217) —
+                            <strong>not the site password you typed a moment ago</strong>. Your results are
+                            saved under this code. If you weren't given one, ask your session coordinator.
                         </p>
-                        <input type="text" id="assessment-access-code" placeholder="your-access-code"
+                        <input type="text" id="assessment-access-code" placeholder="e.g. 4217"
                             spellcheck="false" autocapitalize="off" maxlength="32" autocomplete="off">
                         <div id="assessment-consent-error" class="assessment-consent-error" aria-live="polite"></div>
                         <button type="submit" id="assessment-consent-continue" class="btn btn-primary">

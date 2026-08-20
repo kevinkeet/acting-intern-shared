@@ -15,8 +15,15 @@ const Vitals = {
             const data = await dataLoader.loadVitals();
             let vitals = data.vitals || [];
 
-            // If simulation is running, prepend current simulated vitals
-            if (SimulationEngine.isRunning || SimulationEngine.getState()) {
+            // If simulation is running, prepend current simulated vitals.
+            // NEVER during an assessment: stale simulation state from an old
+            // session injected a wall-clock-dated row badged LIVE into the
+            // case's 2027 flowsheet (pilot feedback, participant 1295) —
+            // and the row bypasses the chart gate entirely.
+            const gated = (typeof AssessmentChartGate !== 'undefined'
+                && AssessmentChartGate.isActive && AssessmentChartGate.isActive())
+                || document.body.classList.contains('in-assessment');
+            if (!gated && (SimulationEngine.isRunning || SimulationEngine.getState())) {
                 const simVitals = SimulationEngine.getCurrentVitals();
                 if (simVitals) {
                     simVitals.isSimulated = true;

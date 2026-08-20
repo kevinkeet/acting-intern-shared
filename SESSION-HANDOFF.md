@@ -6,7 +6,7 @@ Living status doc so work can resume in a fresh session. Repo:
 ## How the app works (fast facts)
 - Vanilla HTML/JS/CSS, **no build system**. `index.html` loads all scripts; `js/router.js` hash routing.
 - **Two git remotes — push BOTH after every commit:** `git push origin main && git push shared main`.
-- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260722w`**.
+- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260722x`**.
 - **Access gate password:** `0slerian` → PBKDF2 → decrypts the embedded Anthropic key into localStorage. Never log/commit the decrypted key.
 - **The shared Anthropic API key repeatedly runs OUT OF CREDITS** (Opus runs burn it fast). When it does, the live assessment (chat + grading) is DOWN. Only the user can top it up.
 - **Supabase** project (`piwoinyrlicvndpsmtde`) auto-pauses on free tier; resume from the dashboard before use.
@@ -301,6 +301,19 @@ The patient-list filter is now lock-aware: demo → PAT002 only; study-locked (d
 excluded; **?allmodes-unlocked → ALL patients including PAT001 Morrison** (simulation + AI Assistant live
 there). ?studymode still relocks everything. Verified live: unlocked browser lists PAT001-007, all 3 modes,
 Morrison loads with sim controls (#sim-controls) + AI panel mounted.
+
+## PILOT FEEDBACK ROUND 2 FIXED (1295's three items, 2026-08-20)
+1. **Vitals wall-clock leak:** stale SimulationEngine state injected a real-date row badged LIVE into gated
+   charts (bypassing the chart gate). vitals.js now skips sim-row injection whenever the chart gate is active
+   or body.in-assessment. Verified: planted fake sim state + active PAT005 gate → no LIVE row.
+2. **Consent code field:** relabeled "Your participant code", help text now says "usually a short number,
+   e.g. 4217 — NOT the site password you typed a moment ago", placeholder "e.g. 4217". (Someone had started
+   an attempt under code '0slerian' — the site password. That junk attempt + 8019's are still in the DB.)
+3. **Time transitions:** the missable toast is now a BLOCKING interstitial (#assessment-timejump) on every
+   AP advance: "Time has passed in this case — it is now <anchor date>. Re-review the chart." Must be
+   dismissed. Verified live at PAT005 AP1→AP2 ("It is now 4/30/2027"), dismisses cleanly.
+NOTE: 1295's third feedback item (misses grading; suggests a 60-100% rescale or majority-point rubric) is a
+PROTOCOL question — parked for the Monday group, not implemented.
 
 ## PENDING / NEXT
 1. **Cleanup pass — DONE.** `assessment-results.js._renderRubric` now prefers `scoringRubric.rubricText` (falls back to essential/bonus only when there's no scoringRubric). Deleted the stale `rubric` block from all 22 points-graded prompts (PAT003–007). PAT002 keeps its 5 essential/bonus rubrics (they ARE its grader). `admin-dashboard.js` does not render rubrics. Final: PAT003=5, PAT004=8, PAT005=7, PAT006=4, PAT007=6 scoringRubrics, 0 legacy blocks; PAT002=5 legacy.
