@@ -100,7 +100,7 @@ const AssessmentChatbot = (() => {
         }
 
         _mountRoot();
-        _renderSetup();
+        _renderWelcome();
         _active = true;
         LOG('Activated for attempt', attemptId);
     }
@@ -148,6 +148,34 @@ const AssessmentChatbot = (() => {
         _root.id = 'assessment-chatbot-panel';
         _root.className = 'assessment-chatbot-panel';
         document.body.appendChild(_root);
+    }
+
+    // ── Welcome phase render ───────────────────────────────────────────
+    // Pilot users didn't recognize the chatbot was there: the panel opened
+    // straight into the context-picker, which reads as a settings form, not
+    // an invitation. The first thing they see is now a single unmistakable
+    // "Start AI Chat" state; clicking it leads to the context picker, then
+    // chat. Wording stays NEUTRAL (visible, not pushy) — how much they use
+    // the AI is the study's measured behaviour.
+
+    function _renderWelcome() {
+        if (!_root) return;
+        _phase = 'welcome';
+        _root.innerHTML = `
+            <div class="acb-welcome">
+                <div class="acb-welcome-icon"><i data-lucide="sparkles"></i></div>
+                <h3 class="acb-welcome-title">AI Chat</h3>
+                <p class="acb-welcome-sub">An AI assistant is available for this case.
+                   It can discuss the chart data you choose to share with it.</p>
+                <button class="btn btn-primary acb-welcome-start" id="acb-welcome-start">
+                    <i data-lucide="message-circle" class="lucide-inline"></i>
+                    Start AI Chat
+                </button>
+                <p class="acb-welcome-hint">Optional — use it as much or as little as you like.</p>
+            </div>`;
+        const b = _root.querySelector('#acb-welcome-start');
+        if (b) b.addEventListener('click', () => _renderSetup());
+        if (typeof App !== 'undefined' && App.refreshIcons) App.refreshIcons();
     }
 
     // ── Setup phase render ─────────────────────────────────────────────
