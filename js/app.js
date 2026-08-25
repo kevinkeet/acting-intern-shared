@@ -255,6 +255,7 @@ const App = {
         window.addEventListener('hashchange', () => setTimeout(() => this._syncBrowseChat(), 80));
         setTimeout(() => this._syncBrowseChat(), 600);
         setTimeout(() => this._maybeShowEntryChooser(), 400);
+        setTimeout(() => this._mountHomeButton(), 500);
         // Initial render once nav exists.
         setTimeout(() => this._refreshAssessmentNav(), 100);
 
@@ -277,6 +278,32 @@ const App = {
      *   typing the URL — that route renders the admin sign-in gate — which is
      *   how the PI gets in the first time.
      */
+    /**
+     * Home button for demo and full-site browsers: returns to the entry
+     * chooser. Deliberately NOT shown in study-participant mode — residents
+     * taking the assessment have no business switching builds mid-study.
+     */
+    _mountHomeButton() {
+        let mode = null;
+        try { mode = localStorage.getItem('entry-mode'); } catch (e) { return; }
+        if (mode !== 'demo' && mode !== 'full') return;
+        if (document.getElementById('entry-home-btn')) return;
+        const headerRight = document.querySelector('.header-right');
+        if (!headerRight) return;
+        const btn = document.createElement('button');
+        btn.id = 'entry-home-btn';
+        btn.className = 'header-home-btn';
+        btn.innerHTML = '<i data-lucide="home" class="lucide-inline"></i> Home';
+        btn.title = 'Back to the start screen (choose Demo / Study / Full site)';
+        btn.addEventListener('click', () => {
+            try { localStorage.removeItem('entry-mode'); } catch (e) { /* ignore */ }
+            location.hash = '';
+            location.reload();
+        });
+        headerRight.insertBefore(btn, headerRight.firstChild);
+        this.refreshIcons();
+    },
+
     /**
      * First-visit entry chooser: three doors onto the three builds. A visit
      * with an explicit URL flag (?demo/?studymode/?allmodes) records the

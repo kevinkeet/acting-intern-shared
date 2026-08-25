@@ -16810,3 +16810,20 @@ body.tutor-standalone {
 #entry-chooser .ec-option:hover { border-color: #0369a1; background: #f0f9ff; }
 #entry-chooser .ec-option strong { display: block; font-size: 15px; color: #0f172a; margin-bottom: 2px; }
 #entry-chooser .ec-option span { font-size: 12.5px; color: #475569; line-height: 1.45; }
+
+/* Header Home button (demo + full-site modes only) */
+.header-home-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #f7fafc;
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-right: 10px;
+}
+.header-home-btn:hover { background: rgba(255, 255, 255, 0.22); }
