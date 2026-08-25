@@ -254,6 +254,7 @@ const App = {
         window.addEventListener('admin:auth-change', () => this._refreshAssessmentNav());
         window.addEventListener('hashchange', () => setTimeout(() => this._syncBrowseChat(), 80));
         setTimeout(() => this._syncBrowseChat(), 600);
+        setTimeout(() => this._maybeShowEntryChooser(), 400);
         // Initial render once nav exists.
         setTimeout(() => this._refreshAssessmentNav(), 100);
 
@@ -277,12 +278,74 @@ const App = {
      *   how the PI gets in the first time.
      */
     /**
+     * First-visit entry chooser: three doors onto the three builds. A visit
+     * with an explicit URL flag (?demo/?studymode/?allmodes) records the
+     * choice and skips the chooser; ?choose re-opens it. Each pick sets the
+     * relevant flags and reloads so patient lists / default patient / modes
+     * all boot consistently.
+     */
+    _maybeShowEntryChooser() {
+        try { if (localStorage.getItem('entry-mode')) return; } catch (e) { return; }
+        if (document.getElementById('entry-chooser')) return;
+        const el = document.createElement('div');
+        el.id = 'entry-chooser';
+        el.innerHTML = `
+            <div class="ec-backdrop"></div>
+            <div class="ec-card">
+                <h2>Welcome to Acting Intern</h2>
+                <p class="ec-sub">How would you like to use the site?</p>
+                <button class="ec-option" data-mode="demo">
+                    <strong>Demo</strong>
+                    <span>Try the interface with a practice case (Maria Sandoval) — chart, questions, and the AI assistant. No study data.</span>
+                </button>
+                <button class="ec-option" data-mode="pilot">
+                    <strong>Study participant</strong>
+                    <span>Take the assessment with your participant code — the real study cases.</span>
+                </button>
+                <button class="ec-option" data-mode="full">
+                    <strong>Full site</strong>
+                    <span>Everything: all patients (including the Robert Morrison simulation), AI Assistant and Tutor modes.</span>
+                </button>
+            </div>`;
+        document.body.appendChild(el);
+        el.querySelectorAll('.ec-option').forEach((b) => b.addEventListener('click', () => {
+            const mode = b.getAttribute('data-mode');
+            try {
+                localStorage.setItem('entry-mode', mode);
+                if (mode === 'demo') {
+                    localStorage.setItem('demo-mode', '1');
+                    localStorage.removeItem('all-modes-unlocked');
+                } else if (mode === 'pilot') {
+                    localStorage.removeItem('demo-mode');
+                    localStorage.removeItem('all-modes-unlocked');
+                    localStorage.setItem('app-mode', 'assessment');
+                } else {
+                    localStorage.removeItem('demo-mode');
+                    localStorage.setItem('all-modes-unlocked', '1');
+                    localStorage.removeItem('app-mode');   // let the 3-mode chooser show
+                }
+            } catch (e) { /* storage unavailable — just proceed */ }
+            location.hash = (mode === 'full') ? '' : '#/assessment/start';
+            location.reload();
+        }));
+    },
+
+    /**
      * Browse-mode AI chat: whenever the user is in assessment mode on a chart
      * page with NO active run, the chatbot floats bottom-right (launcher →
      * panel). During a run the dock owns the panel; on admin/assessment routes
      * it stays out of the way. Browse chat is not study-logged (no attempt).
      */
     _syncBrowseChat() {
+        // Also sweep up a stale run dock: abandoning/finishing a case left
+        // body.assessment-dock-open behind, which squeezed every later page
+        // (the consent card rendered half-width against a phantom rail).
+        const running = (typeof AssessmentEngine !== 'undefined') && AssessmentEngine.isActive && AssessmentEngine.isActive();
+        if (!running) {
+            document.body.classList.remove('assessment-dock-open');
+            const stale = document.getElementById('assessment-dock');
+            if (stale) stale.remove();
+        }
         if (typeof AssessmentChatbot === 'undefined' || !AssessmentChatbot.mountFloating) return;
         const h = location.hash || '';
         const assessMode = (typeof ModeManager !== 'undefined') && ModeManager.get && ModeManager.get() === 'assessment';

@@ -66,9 +66,10 @@ const ModeManager = (function () {
     function _syncUnlockFromUrl() {
         try {
             const q = new URLSearchParams(window.location.search);
-            if (q.has('allmodes')) localStorage.setItem(UNLOCK_KEY, '1');
-            if (q.has('studymode')) { localStorage.removeItem(UNLOCK_KEY); localStorage.removeItem(DEMO_KEY); }
-            if (q.has('demo')) localStorage.setItem(DEMO_KEY, '1');
+            if (q.has('allmodes')) { localStorage.setItem(UNLOCK_KEY, '1'); localStorage.setItem('entry-mode', 'full'); }
+            if (q.has('studymode')) { localStorage.removeItem(UNLOCK_KEY); localStorage.removeItem(DEMO_KEY); localStorage.setItem('entry-mode', 'pilot'); }
+            if (q.has('demo')) { localStorage.setItem(DEMO_KEY, '1'); localStorage.setItem('entry-mode', 'demo'); }
+            if (q.has('choose')) localStorage.removeItem('entry-mode');
         } catch (e) { /* ignore */ }
     }
 

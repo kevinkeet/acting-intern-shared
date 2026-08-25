@@ -6,7 +6,7 @@ Living status doc so work can resume in a fresh session. Repo:
 ## How the app works (fast facts)
 - Vanilla HTML/JS/CSS, **no build system**. `index.html` loads all scripts; `js/router.js` hash routing.
 - **Two git remotes — push BOTH after every commit:** `git push origin main && git push shared main`.
-- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260723c`**.
+- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260723d`**.
 - **Access gate password:** `0slerian` → PBKDF2 → decrypts the embedded Anthropic key into localStorage. Never log/commit the decrypted key.
 - **The shared Anthropic API key repeatedly runs OUT OF CREDITS** (Opus runs burn it fast). When it does, the live assessment (chat + grading) is DOWN. Only the user can top it up.
 - **Supabase** project (`piwoinyrlicvndpsmtde`) auto-pauses on free tier; resume from the dashboard before use.
@@ -339,6 +339,20 @@ study-logged** (logger requires an active attempt) — deliberate; noted for the
 Gotcha found while building: the panel's creation helper is `_mountRoot()` (I first guessed `_ensureRoot` —
 silent failure). Verified live at 20260723c: launcher on chart-review/labs, persists across tabs, minimize
 works, dock takes over in a run.
+
+## ENTRY CHOOSER (first-visit front door) + STALE-DOCK FIX
+- **actingintern.com now opens with a 3-door chooser** for brand-new browsers: **Demo** (Sandoval practice
+  case), **Study participant** (locked study build → #/assessment/start), **Full site** (?allmodes-equivalent:
+  all patients incl. Morrison, all 3 AI modes). Choice persists as localStorage `entry-mode`; each pick sets
+  the underlying flags (demo-mode / all-modes-unlocked / app-mode) and reloads for a consistent boot.
+- URL flags still work and now RECORD the choice (skip the chooser): ?demo→demo, ?studymode→pilot,
+  ?allmodes→full. **?choose** clears entry-mode and re-opens the chooser. Session slips/emails can therefore
+  deep-link participants straight past the chooser with ?studymode.
+- **Stale-dock bug fixed** (visible in Kevin's screenshot as a half-width consent card): abandoning/finishing
+  a case left `body.assessment-dock-open` + the dock element behind, squeezing every later page against a
+  phantom rail. `_syncBrowseChat` now sweeps both whenever no run is active.
+- Verified live at 20260723d: fresh browser → chooser with all 3 options; pilot→PAT003-007 @ start; demo→
+  PAT002 only; full→unlocked, PAT001-007; stale dock/class removed.
 
 ## PENDING / NEXT
 1. **Cleanup pass — DONE.** `assessment-results.js._renderRubric` now prefers `scoringRubric.rubricText` (falls back to essential/bonus only when there's no scoringRubric). Deleted the stale `rubric` block from all 22 points-graded prompts (PAT003–007). PAT002 keeps its 5 essential/bonus rubrics (they ARE its grader). `admin-dashboard.js` does not render rubrics. Final: PAT003=5, PAT004=8, PAT005=7, PAT006=4, PAT007=6 scoringRubrics, 0 legacy blocks; PAT002=5 legacy.

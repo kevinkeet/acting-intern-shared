@@ -16791,3 +16791,22 @@ body.tutor-standalone {
     z-index: 5;
 }
 .acb-float-min:hover { background: rgba(255, 255, 255, 0.35); }
+
+/* Entry chooser — three doors onto demo / study / full builds */
+#entry-chooser { position: fixed; inset: 0; z-index: 2800; }
+#entry-chooser .ec-backdrop { position: absolute; inset: 0; background: rgba(15, 23, 42, 0.6); }
+#entry-chooser .ec-card {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 470px; max-width: 92vw; background: #fff; border-radius: 14px;
+    box-shadow: 0 18px 60px rgba(0, 0, 0, 0.35); padding: 26px 28px;
+}
+#entry-chooser h2 { margin: 0 0 4px; font-size: 20px; color: #0f172a; }
+#entry-chooser .ec-sub { margin: 0 0 16px; font-size: 13.5px; color: #64748b; }
+#entry-chooser .ec-option {
+    display: block; width: 100%; text-align: left; background: #f8fafc;
+    border: 1px solid #cbd5e0; border-radius: 10px; padding: 13px 16px;
+    margin-bottom: 10px; cursor: pointer; font-family: inherit;
+}
+#entry-chooser .ec-option:hover { border-color: #0369a1; background: #f0f9ff; }
+#entry-chooser .ec-option strong { display: block; font-size: 15px; color: #0f172a; margin-bottom: 2px; }
+#entry-chooser .ec-option span { font-size: 12.5px; color: #475569; line-height: 1.45; }
