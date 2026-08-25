@@ -252,7 +252,6 @@ const App = {
         // The admin dashboard owns its own Supabase client/session (see
         // admin-dashboard.js) so it emits its own event.
         window.addEventListener('admin:auth-change', () => this._refreshAssessmentNav());
-        this._mountAiCue();
         // Initial render once nav exists.
         setTimeout(() => this._refreshAssessmentNav(), 100);
 
@@ -275,24 +274,6 @@ const App = {
      *   typing the URL — that route renders the admin sign-in gate — which is
      *   how the PI gets in the first time.
      */
-    /**
-     * Floating cue on pre-assessment pages: people browsing the chart before
-     * beginning a case saw NO trace of the AI assistant (it lives in the run
-     * dock) and concluded there wasn't one — seen live in a screen-shared
-     * demo. Hidden automatically while the dock is open (CSS) and outside
-     * assessment mode.
-     */
-    _mountAiCue() {
-        if (document.getElementById('assessment-ai-cue')) return;
-        const el = document.createElement('button');
-        el.id = 'assessment-ai-cue';
-        el.innerHTML = '<i data-lucide="sparkles" class="lucide-inline"></i>' +
-            '<span><strong>AI Chat</strong> is part of the assessment — begin a case to use it</span>';
-        el.addEventListener('click', () => { location.hash = '#/assessment/start'; });
-        document.body.appendChild(el);
-        this.refreshIcons();
-    },
-
     async _refreshAssessmentNav() {
         const sidebar = document.getElementById('sidebar');
         if (!sidebar) return;

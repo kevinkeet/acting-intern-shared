@@ -6,7 +6,7 @@ Living status doc so work can resume in a fresh session. Repo:
 ## How the app works (fast facts)
 - Vanilla HTML/JS/CSS, **no build system**. `index.html` loads all scripts; `js/router.js` hash routing.
 - **Two git remotes — push BOTH after every commit:** `git push origin main && git push shared main`.
-- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260722z`**.
+- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260723a`**.
 - **Access gate password:** `0slerian` → PBKDF2 → decrypts the embedded Anthropic key into localStorage. Never log/commit the decrypted key.
 - **The shared Anthropic API key repeatedly runs OUT OF CREDITS** (Opus runs burn it fast). When it does, the live assessment (chat + grading) is DOWN. Only the user can top it up.
 - **Supabase** project (`piwoinyrlicvndpsmtde`) auto-pauses on free tier; resume from the dashboard before use.
@@ -318,9 +318,9 @@ PROTOCOL question — parked for the Monday group, not implemented.
 ## AI CHAT DISCOVERABILITY, ROUND 3 (screen-share evidence, 2026-08-25)
 A screen-shared demo showed a user browsing the CHART from #/assessment/start with NO trace of AI anywhere —
 the chatbot only exists inside a run. Two changes:
-1. **Pre-assessment cue** (`#assessment-ai-cue`, app.js `_mountAiCue`): fixed bottom-right pill on every
-   assessment-mode page while no dock is open — "AI Chat is part of the assessment — begin a case to use it";
-   clicking goes to #/assessment/start. CSS-hidden the moment the run dock opens.
+1. ~~Pre-assessment cue pill~~ — built, then REMOVED same day at Kevin's call ("pushing it too much"): a
+   floating always-on pill crossed from discoverability into promotion. Do not re-add. The in-run welcome
+   (below) is the sanctioned level of prominence.
 2. **Chatbot welcome state** (`_renderWelcome` in assessment-chatbot.js): the panel no longer opens on the
    context-picker form (read as settings, not chat). First view is now a centered "AI Chat" + big
    "Start AI Chat" button + "Optional — use it as much or as little as you like"; click → context picker →
