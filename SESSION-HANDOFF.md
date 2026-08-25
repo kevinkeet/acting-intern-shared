@@ -6,7 +6,7 @@ Living status doc so work can resume in a fresh session. Repo:
 ## How the app works (fast facts)
 - Vanilla HTML/JS/CSS, **no build system**. `index.html` loads all scripts; `js/router.js` hash routing.
 - **Two git remotes — push BOTH after every commit:** `git push origin main && git push shared main`.
-- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260723h`**.
+- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260723i`**.
 - **Access gate password:** `0slerian` → PBKDF2 → decrypts the embedded Anthropic key into localStorage. Never log/commit the decrypted key.
 - **The shared Anthropic API key repeatedly runs OUT OF CREDITS** (Opus runs burn it fast). When it does, the live assessment (chat + grading) is DOWN. Only the user can top it up.
 - **Supabase** project (`piwoinyrlicvndpsmtde`) auto-pauses on free tier; resume from the dashboard before use.
@@ -374,6 +374,20 @@ navigation.js, which safely no-ops now — it guards on the element) and the rig
 (patient-header.js: name + demographics + `.patient-switcher-btn`). The left one is deleted from index.html;
 the right banner is now the single switcher. Verified at 20260723h: left picker gone; in the study build the
 banner switcher opens with all 5 patients; full site shows Morrison alone.
+
+## AI COWORKER STALL FIXED (naming + root cause)
+**Naming:** the full-site assistant = **"AI Coworker"** (its codebase name, ai-coworker.js); the assessment's
+stripped-down one = **"AI Chat"** (assessment-chatbot.js). Use these consistently.
+**Kevin's Level-6 "Building memory document" stall (203/373, no error shown):** the Deep Learn level runner
+IS try/caught — but `claude-api.js` had NO request timeout, so one hung connection never settled and the
+catch never fired: eternal spinner. Fix: `_timedFetch` (AbortController, 300s default) now wraps all three
+fetch sites in claude-api.js — hangs become ordinary errors that existing handlers surface as retryable
+toasts ("Level N failed — retry"). Deep-learn progress persists (`_saveDeepLearnState`), so after a timeout
+the user reloads and hits Continue Learning.
+Also: `loadProcedures`/`loadOrders` are now optional (study patients lack those files — was throwing 404
+noise from the coworker's ingest on PAT003).
+Verified at 20260723i: helper aborts with the timeout message; normal Haiku call works; PAT003 procedures
+returns empty instead of throwing.
 
 ## PENDING / NEXT
 1. **Cleanup pass — DONE.** `assessment-results.js._renderRubric` now prefers `scoringRubric.rubricText` (falls back to essential/bonus only when there's no scoringRubric). Deleted the stale `rubric` block from all 22 points-graded prompts (PAT003–007). PAT002 keeps its 5 essential/bonus rubrics (they ARE its grader). `admin-dashboard.js` does not render rubrics. Final: PAT003=5, PAT004=8, PAT005=7, PAT006=4, PAT007=6 scoringRubrics, 0 legacy blocks; PAT002=5 legacy.

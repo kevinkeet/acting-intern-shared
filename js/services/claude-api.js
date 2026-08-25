@@ -71,6 +71,28 @@ const ClaudeAPI = {
     },
 
     /**
+     * fetch with a hard timeout. Without this, one hung connection made every
+     * AI surface spin forever with NO error — the Deep Learn 'Building memory
+     * document' stall was exactly this: the level runner's try/catch never
+     * fired because the promise never settled. A timeout converts hangs into
+     * ordinary retryable errors that existing handlers already surface.
+     */
+    async _timedFetch(options, timeoutMs = 300000) {
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+        try {
+            return await fetch(this._getEndpoint(), { ...options, signal: ctrl.signal });
+        } catch (err) {
+            if (err && err.name === 'AbortError') {
+                throw new Error(`AI request timed out after ${Math.round(timeoutMs / 1000)}s — the service did not respond. Please retry.`);
+            }
+            throw err;
+        } finally {
+            clearTimeout(timer);
+        }
+    },
+
+    /**
      * Send a message to Claude and get a response.
      * @param {string} systemPrompt
      * @param {Array}  messages
@@ -95,7 +117,7 @@ const ClaudeAPI = {
         }
 
         try {
-            const response = await fetch(this._getEndpoint(), {
+            const response = await this._timedFetch({
                 method: 'POST',
                 headers: this._getHeaders(),
                 body: JSON.stringify(body)
@@ -213,7 +235,7 @@ const ClaudeAPI = {
         // Allow callers (e.g., the grader) to pin temperature for reproducibility.
         if (typeof req.temperature === 'number') singleBody.temperature = req.temperature;
 
-        const response = await fetch(this._getEndpoint(), {
+        const response = await this._timedFetch({
             method: 'POST',
             headers: this._getHeaders(),
             body: JSON.stringify(singleBody)
@@ -260,7 +282,7 @@ const ClaudeAPI = {
         };
         if (typeof req.temperature === 'number') body.temperature = req.temperature;
 
-        const response = await fetch(this._getEndpoint(), {
+        const response = await this._timedFetch({
             method: 'POST',
             headers: this._getHeaders(),
             body: JSON.stringify(body),

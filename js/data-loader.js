@@ -275,7 +275,8 @@ class DataLoader {
      */
     async loadProcedures(patientId = this.currentPatientId) {
         const baseUrl = this.getBaseUrl();
-        return await this.fetchJSON(`${baseUrl}/${patientId}/procedures/index.json`);
+        // Optional: study patients have no procedures file (PAT003-007).
+        return await this.fetchJSON(`${baseUrl}/${patientId}/procedures/index.json`).catch(() => ({ procedures: [] }));
     }
 
     /**
@@ -283,7 +284,8 @@ class DataLoader {
      */
     async loadOrders(patientId = this.currentPatientId) {
         const baseUrl = this.getBaseUrl();
-        return await this.fetchJSON(`${baseUrl}/${patientId}/orders/index.json`);
+        // Optional: some patients have no orders file.
+        return await this.fetchJSON(`${baseUrl}/${patientId}/orders/index.json`).catch(() => ({ orders: [] }));
     }
 
     /**
