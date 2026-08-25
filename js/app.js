@@ -252,6 +252,8 @@ const App = {
         // The admin dashboard owns its own Supabase client/session (see
         // admin-dashboard.js) so it emits its own event.
         window.addEventListener('admin:auth-change', () => this._refreshAssessmentNav());
+        window.addEventListener('hashchange', () => setTimeout(() => this._syncBrowseChat(), 80));
+        setTimeout(() => this._syncBrowseChat(), 600);
         // Initial render once nav exists.
         setTimeout(() => this._refreshAssessmentNav(), 100);
 
@@ -274,6 +276,22 @@ const App = {
      *   typing the URL — that route renders the admin sign-in gate — which is
      *   how the PI gets in the first time.
      */
+    /**
+     * Browse-mode AI chat: whenever the user is in assessment mode on a chart
+     * page with NO active run, the chatbot floats bottom-right (launcher →
+     * panel). During a run the dock owns the panel; on admin/assessment routes
+     * it stays out of the way. Browse chat is not study-logged (no attempt).
+     */
+    _syncBrowseChat() {
+        if (typeof AssessmentChatbot === 'undefined' || !AssessmentChatbot.mountFloating) return;
+        const h = location.hash || '';
+        const assessMode = (typeof ModeManager !== 'undefined') && ModeManager.get && ModeManager.get() === 'assessment';
+        const runActive = (typeof AssessmentEngine !== 'undefined') && AssessmentEngine.isActive && AssessmentEngine.isActive();
+        const chartish = !h.startsWith('#/admin') && !h.startsWith('#/assessment');
+        if (assessMode && !runActive && chartish) AssessmentChatbot.mountFloating();
+        else AssessmentChatbot.unmountFloating();
+    },
+
     async _refreshAssessmentNav() {
         const sidebar = document.getElementById('sidebar');
         if (!sidebar) return;

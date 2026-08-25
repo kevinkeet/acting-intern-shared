@@ -6,7 +6,7 @@ Living status doc so work can resume in a fresh session. Repo:
 ## How the app works (fast facts)
 - Vanilla HTML/JS/CSS, **no build system**. `index.html` loads all scripts; `js/router.js` hash routing.
 - **Two git remotes — push BOTH after every commit:** `git push origin main && git push shared main`.
-- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260723a`**.
+- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260723c`**.
 - **Access gate password:** `0slerian` → PBKDF2 → decrypts the embedded Anthropic key into localStorage. Never log/commit the decrypted key.
 - **The shared Anthropic API key repeatedly runs OUT OF CREDITS** (Opus runs burn it fast). When it does, the live assessment (chat + grading) is DOWN. Only the user can top it up.
 - **Supabase** project (`piwoinyrlicvndpsmtde`) auto-pauses on free tier; resume from the dashboard before use.
@@ -327,6 +327,18 @@ the chatbot only exists inside a run. Two changes:
    chat. Wording deliberately neutral (visible, not pushy).
 Verified live at 20260722z: cue on chart page pre-run with correct text; cue hidden in run; welcome shows;
 Start click opens the picker (7 window options).
+
+## BROWSE-MODE FLOATING AI CHAT (no active run)
+Kevin: chart pages outside a run (e.g. default Nguyen #/chart-review) had no AI chat at all. Now: in
+assessment mode with NO active attempt, on chart routes (not /admin, not /assessment), the chatbot floats
+bottom-right — launcher pill "AI Chat" → expands to the same welcome → context → chat panel; minimize (–)
+returns to the pill. `AssessmentChatbot.mountFloating()/unmountFloating()` + `App._syncBrowseChat()` on
+hashchange. During a run the dock owns the panel (floating class stripped in `_attachChatbot`); activate()
+resets chat state at case start, so browse-chat history never bleeds into a run. **Browse chat is NOT
+study-logged** (logger requires an active attempt) — deliberate; noted for the group.
+Gotcha found while building: the panel's creation helper is `_mountRoot()` (I first guessed `_ensureRoot` —
+silent failure). Verified live at 20260723c: launcher on chart-review/labs, persists across tabs, minimize
+works, dock takes over in a run.
 
 ## PENDING / NEXT
 1. **Cleanup pass — DONE.** `assessment-results.js._renderRubric` now prefers `scoringRubric.rubricText` (falls back to essential/bonus only when there's no scoringRubric). Deleted the stale `rubric` block from all 22 points-graded prompts (PAT003–007). PAT002 keeps its 5 essential/bonus rubrics (they ARE its grader). `admin-dashboard.js` does not render rubrics. Final: PAT003=5, PAT004=8, PAT005=7, PAT006=4, PAT007=6 scoringRubrics, 0 legacy blocks; PAT002=5 legacy.

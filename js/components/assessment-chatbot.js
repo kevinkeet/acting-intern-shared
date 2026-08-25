@@ -25,6 +25,7 @@ const AssessmentChatbot = (() => {
 
     let _phase = 'setup';       // 'setup' | 'chat'
     let _config = null;         // { windowKey, dataTypes: [] } once configured
+    let _floatCollapsed = true; // browse-mode floating widget starts as a launcher
     let _messages = [];         // [{role:'user'|'assistant'|'divider', content, promptId?}]
     let _isWaiting = false;
     let _currentPromptId = null;  // tracks the prompt the resident is on
@@ -150,6 +151,56 @@ const AssessmentChatbot = (() => {
         document.body.appendChild(_root);
     }
 
+    // ── Browse-mode floating widget ────────────────────────────────────
+    // Outside a run (chart browsing, demo visitors) the chatbot floats
+    // bottom-right: a small launcher that expands to the same
+    // welcome → context → chat flow. NOT LOGGED to the study (the logger
+    // requires an active attempt) — browse chat is a convenience surface.
+    // When a case begins, activate() resets state and the panel moves into
+    // the run dock; the floating class is stripped there.
+
+    function mountFloating() {
+        _mountRoot();
+        if (_root.closest('#assessment-dock')) return;      // in a run — never float
+        if (_root.classList.contains('acb-floating')) return;
+        _root.classList.add('acb-floating', 'acb-collapsed');
+        _floatCollapsed = true;
+        _renderFloatLauncher();
+    }
+
+    function unmountFloating() {
+        if (!_root || !_root.classList.contains('acb-floating')) return;
+        _root.classList.remove('acb-floating', 'acb-collapsed');
+        _root.innerHTML = '';
+    }
+
+    function _renderFloatLauncher() {
+        if (!_root) return;
+        _root.classList.add('acb-collapsed');
+        _root.innerHTML = `
+            <button class="acb-float-launcher" id="acb-float-launcher">
+                <i data-lucide="sparkles" class="lucide-inline"></i> AI Chat
+            </button>`;
+        const b = _root.querySelector('#acb-float-launcher');
+        if (b) b.addEventListener('click', () => {
+            _floatCollapsed = false;
+            _root.classList.remove('acb-collapsed');
+            if (_config && _messages.length) _renderChat();
+            else _renderWelcome();
+        });
+        if (typeof App !== 'undefined' && App.refreshIcons) App.refreshIcons();
+    }
+
+    function _decorateFloating() {
+        if (!_root || !_root.classList.contains('acb-floating') || _floatCollapsed) return;
+        const btn = document.createElement('button');
+        btn.className = 'acb-float-min';
+        btn.title = 'Minimize';
+        btn.textContent = '–';
+        btn.addEventListener('click', () => { _floatCollapsed = true; _renderFloatLauncher(); });
+        _root.appendChild(btn);
+    }
+
     // ── Welcome phase render ───────────────────────────────────────────
     // Pilot users didn't recognize the chatbot was there: the panel opened
     // straight into the context-picker, which reads as a settings form, not
@@ -175,6 +226,7 @@ const AssessmentChatbot = (() => {
             </div>`;
         const b = _root.querySelector('#acb-welcome-start');
         if (b) b.addEventListener('click', () => _renderSetup());
+        _decorateFloating();
         if (typeof App !== 'undefined' && App.refreshIcons) App.refreshIcons();
     }
 
@@ -258,6 +310,7 @@ const AssessmentChatbot = (() => {
 
         const cancelBtn = _root.querySelector('.acb-cancel-btn');
         if (cancelBtn) cancelBtn.addEventListener('click', () => _renderChat());
+        _decorateFloating();
     }
 
     // ── Chat phase render ──────────────────────────────────────────────
@@ -318,6 +371,7 @@ const AssessmentChatbot = (() => {
                 _sendMessage();
             }
         });
+        _decorateFloating();
     }
 
     function _renderMessages() {
@@ -761,6 +815,8 @@ const AssessmentChatbot = (() => {
         activate,
         deactivate,
         isActive,
+        mountFloating,
+        unmountFloating,
     };
 })();
 

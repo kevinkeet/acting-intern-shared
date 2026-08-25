@@ -151,6 +151,7 @@ const AssessmentPanel = {
         const content = document.getElementById('assessment-rail-content');
         const cb = document.getElementById('assessment-chatbot-panel');
         if (content && cb) {
+            cb.classList.remove('acb-floating', 'acb-collapsed');
             if (cb.parentElement !== content) content.appendChild(cb);
             if (!content.querySelector('.assessment-dock-resize-y')) {
                 const hy = document.createElement('div');
