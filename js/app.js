@@ -349,10 +349,13 @@ const App = {
                 } else {
                     localStorage.removeItem('demo-mode');
                     localStorage.setItem('all-modes-unlocked', '1');
-                    localStorage.removeItem('app-mode');   // let the 3-mode chooser show
+                    // Land directly in AI Assistant mode on the chart — showing
+                    // ModeManager's 3-mode chooser here was a second chooser in
+                    // a row (duplicative; the top-bar switcher covers it).
+                    localStorage.setItem('app-mode', 'assistant');
                 }
             } catch (e) { /* storage unavailable — just proceed */ }
-            location.hash = (mode === 'full') ? '' : '#/assessment/start';
+            location.hash = (mode === 'full') ? '#/chart-review' : '#/assessment/start';
             location.reload();
         }));
     },
