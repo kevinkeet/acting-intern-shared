@@ -60,14 +60,14 @@ class DataLoader {
         // Their data still loads by id if referenced directly (past attempts,
         // results pages), so nothing breaks retroactively.
         const demo = (typeof DemoMode !== 'undefined' && DemoMode.isActive());
-        // Unlocked (?allmodes) browsers see EVERYTHING, including hidden
-        // patients — that's Kevin's dev/demo view (Morrison + simulation live
-        // there). Study-locked browsers hide the flagged patients; demo
-        // browsers see only the public NEJM case.
+        // Three disjoint worlds: demo → only the public NEJM case; full-site
+        // (unlocked) → ONLY Robert Morrison (the simulation/AI-assistant demo
+        // patient — study cases must not leak through this door); study build
+        // → the five study cases (hidden patients excluded).
         const unlocked = (typeof ModeManager !== 'undefined' && ModeManager.isStudyLocked && !ModeManager.isStudyLocked());
         this.patientIndex = Object.assign({}, raw, {
             patients: (raw.patients || []).filter((p) =>
-                demo ? p.id === 'PAT002' : (unlocked ? true : !p.hidden)),
+                demo ? p.id === 'PAT002' : (unlocked ? p.id === 'PAT001' : !p.hidden)),
         });
         return this.patientIndex;
     }

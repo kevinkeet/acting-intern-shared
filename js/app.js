@@ -86,8 +86,9 @@ const App = {
         FeedbackWidget.init();
         AICoworker.init();
 
-        // Load default patient (the demo build has exactly one patient)
+        // Load default patient (demo and full-site builds each have exactly one)
         if (typeof DemoMode !== 'undefined' && DemoMode.isActive()) this.defaultPatientId = 'PAT002';
+        else if (typeof ModeManager !== 'undefined' && ModeManager.isStudyLocked && !ModeManager.isStudyLocked()) this.defaultPatientId = 'PAT001';
         try {
             await this.loadPatient(this.defaultPatientId);
             this.isInitialized = true;

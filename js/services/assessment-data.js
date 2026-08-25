@@ -128,7 +128,12 @@ const AssessmentData = (() => {
 
     function listCases() {
         // Lazy load case metadata to keep the manifest cheap.
-        const ids = (typeof DemoMode !== 'undefined' && DemoMode.isActive()) ? DEMO_CASE_IDS : CASE_IDS;
+        const demo = (typeof DemoMode !== 'undefined' && DemoMode.isActive());
+        const unlocked = (typeof ModeManager !== 'undefined' && ModeManager.isStudyLocked && !ModeManager.isStudyLocked());
+        // Full-site (unlocked) browsers get NO assessment cases: that door is
+        // Morrison + the assistant/tutor; study cases live behind the study
+        // build only. Use the Study door (or ?studymode) to take/test cases.
+        const ids = demo ? DEMO_CASE_IDS : (unlocked ? [] : CASE_IDS);
         return ids.map((id) => ({ caseId: id }));
     }
 
