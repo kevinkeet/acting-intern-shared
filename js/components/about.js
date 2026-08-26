@@ -23,6 +23,17 @@ const About = {
      * Called once from app init.
      */
     checkFirstVisit() {
+        // NEVER auto-show in the study or demo builds: a first-time
+        // participant already faces password → entry chooser → consent+code,
+        // and this legacy modal (Sign In / Create Account / 'PHI-free
+        // playground') read as an ACCOUNT WALL that contradicted the consent
+        // flow — the likely cause of pilot entry bounces. It only ever
+        // auto-shows on the full-site door now; elsewhere it stays reachable
+        // via the ABOUT button.
+        try {
+            const entry = localStorage.getItem('entry-mode');
+            if (entry !== 'full') return;
+        } catch (e) { return; }
         // If user is already logged in via Supabase, skip the modal
         if (typeof SupabaseSync !== 'undefined' && SupabaseSync.isAuthenticated()) {
             console.log('🔐 User already authenticated — skipping About modal');
