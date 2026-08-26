@@ -6,7 +6,7 @@ Living status doc so work can resume in a fresh session. Repo:
 ## How the app works (fast facts)
 - Vanilla HTML/JS/CSS, **no build system**. `index.html` loads all scripts; `js/router.js` hash routing.
 - **Two git remotes — push BOTH after every commit:** `git push origin main && git push shared main`.
-- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260723i`**.
+- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260723j`**.
 - **Access gate password:** `0slerian` → PBKDF2 → decrypts the embedded Anthropic key into localStorage. Never log/commit the decrypted key.
 - **The shared Anthropic API key repeatedly runs OUT OF CREDITS** (Opus runs burn it fast). When it does, the live assessment (chat + grading) is DOWN. Only the user can top it up.
 - **Supabase** project (`piwoinyrlicvndpsmtde`) auto-pauses on free tier; resume from the dashboard before use.
@@ -388,6 +388,49 @@ Also: `loadProcedures`/`loadOrders` are now optional (study patients lack those 
 noise from the coworker's ingest on PAT003).
 Verified at 20260723i: helper aborts with the timeout message; normal Haiku call works; PAT003 procedures
 returns empty instead of throwing.
+
+## FIRST-VISIT FUNNEL FIXED + WALKTHROUGH (2026-08-26, cache 20260723j) — READ FIRST ON RESUME
+**The bounce bug was found:** first-time visitors (and ONLY first-timers — cookied browsers skip it via
+`about-seen`) hit the legacy About modal (Sign In / Create Account / "PHI-free playground") right on top of
+the consent page — an apparent account wall. Pilots 2874/6773/6713 all hit it; that's the best explanation
+for the 3 zero-answer bounces. FIXED: `about.js checkFirstVisit()` auto-shows ONLY when entry-mode='full';
+ABOUT button still opens it anywhere. Verified clean live funnel: password → 3-door chooser → consent+code →
+case list ("what to expect" strip, Begin buttons). **Re-invite 2874/6773/6713 to retry.**
+
+## CURRENT STATE SNAPSHOT (2026-08-26)
+- **Live cache version 20260723j**, deployed to actingintern.com (GitHub Pages, push both remotes!).
+- **Entry doors:** 3-door chooser on first visit; entry-mode ∈ demo|pilot|full in localStorage. demo=Sandoval
+  only; pilot=study build PAT003-007; full=Morrison ONLY + AI Coworker/Tutor, lands #/chart-review assistant
+  mode, no assessment cases. URL flags: ?demo ?studymode ?allmodes (each records entry-mode), ?choose reopens.
+  Home button in header (demo+full only) returns to chooser.
+- **Naming:** full-site assistant = "AI Coworker" (ai-coworker.js); assessment's = "AI Chat"
+  (assessment-chatbot.js: welcome "Start AI Chat" → context picker → chat; slim header in chat; floating
+  launcher on chart pages when no run active — NOT study-logged).
+- **API client has a 300s timeout** (`ClaudeAPI._timedFetch`) — fixed the Coworker Deep Learn eternal-spinner.
+- **Participants see NO scores/rubrics/grader notes** (results = "Submitted" + own answers + AI transcript).
+  Timer counts up, no limits. Timepoint transitions show a blocking interstitial.
+- **PILOT DATA (all of it so far):** 1295 = full battery (25/27/59/65/17%) + 4 feedback items (all acted on);
+  2874, 6773, 6713 = zero-answer bounces (now explained, see above); 8019 = stalled at 2 answers; 4873 = new
+  8/25, PAT005 1 answer + 1 AI ask, unfinished; codes 1234/0000 = demo dabblers.
+- **JUNK TO PURGE before enrollment** (test_attempts by user_code): 0slerian, 1234, 0000, SAMPLE-RES1,
+  CRASHREPRO, CRASHREPRO2, CUECHK, CUEGONE, FLOATCHK, BANNERCHK, PROM1/2, UITEST*, RESZ*, SEQ*, NOPASS,
+  WALKTHRU (client-only, no rows), FIX3CHK, CUEGONE — plus the feedback row from SAMPLE-RES1. Backups of the
+  pre-8/11 purge live in zz_backup_*_20260811 (RLS-locked).
+- **MONITORING:** `public.pilot_pulse()` RPC (migration 007, applied) returns aggregate counts/timestamps;
+  callable with the public anon key (it's in index.html). The in-session Monitor polling it DIES with the
+  session — on resume, either re-arm the same 30-min curl loop (state file pattern in scratchpad) or set up a
+  scheduled cloud check. Query details via the admin console page's `AdminDashboard._adminClient()` in a
+  FRESH Chrome tab (old tabs freeze via Memory Saver — always open a new tab).
+- **Admin console:** actingintern.com/#/admin/attempts|analytics|export|feedback. Admins: kevinkeet@gmail.com
+  + kkeet@stanford.edu (Supabase Auth; migration 005). Feedback pipeline live (migration 006).
+- **COORDINATION DOCS (Google Drive, MACY RCT folder):** Master Overview doc; Coordinator Workflow (final,
+  incl. site access/passwords, Raj's email-volunteer model, Noreen Vijil/Blackhawk payment pipeline — PTA
+  string still pending from Ronald Sol/Brandi); Research Coordinator JD (10 hrs/wk, Mon 2pm PST meetings).
+  Stanford gift-card process is in persistent memory (reference_stanford_gift_cards.md).
+- **OPEN ITEMS:** Macy PTA string + Blackhawk-to-external-emails (Noreen); randomization procedure in
+  writing (Raj/QSU); payment-claim form on completion screen (offered, not built); per-site roster decision;
+  purge junk data; CHA workshop 9/8 — recruitment email imminent; consider gating the Full-site door during
+  enrollment (contamination-by-curiosity).
 
 ## PENDING / NEXT
 1. **Cleanup pass — DONE.** `assessment-results.js._renderRubric` now prefers `scoringRubric.rubricText` (falls back to essential/bonus only when there's no scoringRubric). Deleted the stale `rubric` block from all 22 points-graded prompts (PAT003–007). PAT002 keeps its 5 essential/bonus rubrics (they ARE its grader). `admin-dashboard.js` does not render rubrics. Final: PAT003=5, PAT004=8, PAT005=7, PAT006=4, PAT007=6 scoringRubrics, 0 legacy blocks; PAT002=5 legacy.
