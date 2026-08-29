@@ -28,9 +28,9 @@ const AICoworker = {
     apiKey: null,
     apiEndpoint: '/api/claude',
     backendAvailable: false,
-    model: 'claude-sonnet-4-6',
-    analysisModel: 'claude-sonnet-4-6', // Sonnet 4.6 — fast + high quality (default)
-    dictationModel: 'claude-sonnet-4-6', // Sonnet 4.6 for dictation synthesis
+    model: 'claude-sonnet-5',
+    analysisModel: 'claude-sonnet-5', // Sonnet 5 — fast + high quality (default)
+    dictationModel: 'claude-sonnet-5', // Sonnet 5 for dictation synthesis
 
     // Current mode config (synced from AIModeConfig)
     get mode_config() {
@@ -40,10 +40,9 @@ const AICoworker = {
     // Available models for the settings picker
     availableModels: [
         { id: 'claude-haiku-4-5-20251001', label: 'Haiku 4.5', description: 'Fastest, good for structured tasks' },
-        { id: 'claude-sonnet-4-5-20250929', label: 'Sonnet 4.5', description: 'Balanced quality and speed' },
-        { id: 'claude-sonnet-4-6', label: 'Sonnet 4.6', description: 'Fast + high quality (default)' },
-        { id: 'claude-opus-4-6', label: 'Opus 4.6', description: 'Slower, highest quality' },
-        { id: 'claude-opus-4-7', label: 'Opus 4.7', description: 'Slowest, latest flagship' }
+        { id: 'claude-sonnet-4-6', label: 'Sonnet 4.6', description: 'Previous default' },
+        { id: 'claude-sonnet-5', label: 'Sonnet 5', description: 'Fast + high quality (default)' },
+        { id: 'claude-opus-5', label: 'Opus 5', description: 'Slower, highest quality' }
     ],
 
     // Longitudinal Clinical Document
@@ -249,8 +248,12 @@ const AICoworker = {
             const pid = patientId || window.dataLoader?.currentPatientId || 'PAT001';
             console.log(`Initializing longitudinal document for patient ${pid}...`);
 
-            // Try to load from localStorage first
-            const savedDoc = this.loadLongitudinalDoc(pid);
+            // Try to load from localStorage first; fall back to the shipped
+            // pre-computed seed so first load doesn't wait on live API calls
+            let savedDoc = this.loadLongitudinalDoc(pid);
+            if (!savedDoc) {
+                savedDoc = await this._applyAiSeed(pid);
+            }
             if (savedDoc) {
                 console.log('Loaded longitudinal document from localStorage');
                 this.longitudinalDoc = savedDoc;
@@ -365,6 +368,38 @@ const AICoworker = {
             return doc;
         } catch (error) {
             console.warn('Failed to load longitudinal document:', error.message);
+            return null;
+        }
+    },
+
+    /**
+     * Apply the shipped AI seed (data/patients/<pid>/ai-seed.json): a
+     * pre-computed Level-1 deep learn + first analysis, so a brand-new
+     * browser gets an instantly populated panel instead of waiting on
+     * live API calls. Writes the same localStorage keys a real learn
+     * would, then loads through the normal deserialize path — so
+     * "Continue Learning" resumes at Level 2 and "Re-Analyze" replaces
+     * the seeded assessment exactly as if the user had run Level 1 here.
+     * Missing seed file (404) is fine: returns null and the doc builds
+     * from scratch as before.
+     */
+    async _applyAiSeed(pid) {
+        try {
+            const resp = await fetch(`data/patients/${pid}/ai-seed.json`);
+            if (!resp.ok) return null;
+            const seed = await resp.json();
+            if (!seed || !seed.longitudinalDoc) return null;
+            localStorage.setItem(`longitudinalDoc_${pid}`, JSON.stringify(seed.longitudinalDoc));
+            if (seed.deepLearn) {
+                localStorage.setItem(`deepLearn_${pid}`, JSON.stringify(seed.deepLearn));
+            }
+            // Panel snapshot (categorizedActions etc. live only in panel state,
+            // not in the longitudinal doc) — applied by hydrateFromMemory below.
+            if (seed.panel) this._seedPanel = seed.panel;
+            console.log(`🌱 Applied pre-computed AI seed for ${pid} (generated ${seed.generated || 'unknown'})`);
+            return this.loadLongitudinalDoc(pid);
+        } catch (e) {
+            console.warn('AI seed unavailable, building from scratch:', e.message);
             return null;
         }
     },
@@ -504,7 +539,26 @@ const AICoworker = {
             }
         }
 
-        if (mem.patientSummary || narrative.trajectoryAssessment || memDoc) {
+        // Apply the shipped panel snapshot (from ai-seed.json). These fields —
+        // categorizedActions, clinicalSummary, keyConsiderations — live only in
+        // panel state, never in the longitudinal doc, so without this a seeded
+        // first load shows empty Suggested Actions categories.
+        if (this._seedPanel) {
+            const p = this._seedPanel;
+            this._seedPanel = null;
+            if (p.categorizedActions && !this.state.categorizedActions) this.state.categorizedActions = p.categorizedActions;
+            if (p.clinicalSummary && !this.state.clinicalSummary) this.state.clinicalSummary = p.clinicalSummary;
+            if (p.keyConsiderations && this.state.keyConsiderations.length === 0) this.state.keyConsiderations = p.keyConsiderations;
+            if (p.summary && !this.state.summary) this.state.summary = p.summary;
+            if (p.thinking && !this.state.thinking) this.state.thinking = p.thinking;
+            if (p.aiOneLiner && !this.state.aiOneLiner) this.state.aiOneLiner = p.aiOneLiner;
+            if (p.problemList && this.state.problemList.length === 0) this.state.problemList = p.problemList;
+            if (p.suggestedActions && this.state.suggestedActions.length === 0) this.state.suggestedActions = p.suggestedActions;
+            this.saveState();
+            console.log('🌱 Panel snapshot applied from AI seed');
+        }
+
+        if (mem.patientSummary || narrative.trajectoryAssessment || memDoc || this.state.categorizedActions) {
             console.log('🧠 Panel state hydrated from AI memory');
             this.render();
         }
@@ -2885,7 +2939,14 @@ const AICoworker = {
      * Render suggested actions — 6 always-visible categories with specific LLM items.
      */
     renderSuggestedActions(isThinking) {
-        const actions = this.state.categorizedActions;
+        // The incremental (memory-document) refresh doesn't produce
+        // categorizedActions — only flat pendingItems (state.suggestedActions).
+        // Without this fallback, every post-Learn analysis leaves the section
+        // showing empty category headers.
+        let actions = this.state.categorizedActions;
+        if (!actions && this.state.suggestedActions && this.state.suggestedActions.length > 0) {
+            actions = this._categorizeSuggestions(this.state.suggestedActions);
+        }
         const collapsed = this.isSectionCollapsed('actions');
         const chevron = collapsed ? '&#9654;' : '&#9660;';
 
@@ -2998,6 +3059,28 @@ const AICoworker = {
 
         html += '</div></div>';
         return html;
+    },
+
+    /**
+     * Sort flat suggestion items (memory-doc pendingItems) into the same
+     * buckets categorizedActions uses, so the per-category execution paths
+     * (order form, nurse chat) work on them unchanged.
+     */
+    _categorizeSuggestions(items) {
+        const buckets = { communication: [], labs: [], imaging: [], medications: [], other: [] };
+        const texts = items.map(i => (typeof i === 'string' ? i : i.text || '')).filter(Boolean);
+        const labRe = /\b(lab|bmp|cmp|bnp|cbc|troponin|inr|a1c|hba1c|tsh|creatinine|potassium|sodium|chem|panel|urinalysis|cultures?|recheck.*(level|value))\b/i;
+        const imgRe = /\b(echo(cardiogram)?|cxr|chest x-?ray|x-?ray|ct\b|mri|ultrasound|doppler|imaging|ekg|ecg)\b/i;
+        const medRe = /\b(dose|dosing|mg\b|uptitrat|titrat|hold\b|stop\b|discontinue|resume|restart|prescrib|medication|diuretic|furosemide|anticoagula|doac|warfarin|insulin|metformin|carvedilol|entresto|spironolactone)\b/i;
+        const commRe = /\b(discuss|counsel|educat|reinforc|call|contact|ask|tell|notify|referral|refer\b|dietitian|follow-?up visit|schedule|shared decision)\b/i;
+        texts.forEach(t => {
+            if (imgRe.test(t)) buckets.imaging.push(t);
+            else if (labRe.test(t)) buckets.labs.push(t);
+            else if (medRe.test(t)) buckets.medications.push(t);
+            else if (commRe.test(t)) buckets.communication.push(t);
+            else buckets.other.push(t);
+        });
+        return buckets;
     },
 
     /**
@@ -5652,12 +5735,15 @@ Format your response as JSON:
     loadModelPreferences() {
         // Map deprecated model IDs to current equivalents
         const modelMigrations = {
-            'claude-sonnet-4-20250514': 'claude-sonnet-4-6',
-            'claude-sonnet-4-5-20250514': 'claude-sonnet-4-6',
-            'claude-sonnet-4-6-20250627': 'claude-sonnet-4-6',
-            'claude-haiku-3-5-20241022': 'claude-sonnet-4-6',
-            'claude-opus-4-20250514': 'claude-opus-4-6',
-            'claude-opus-4-6-20250627': 'claude-opus-4-6'
+            'claude-sonnet-4-20250514': 'claude-sonnet-5',
+            'claude-sonnet-4-5-20250514': 'claude-sonnet-5',
+            'claude-sonnet-4-5-20250929': 'claude-sonnet-5',
+            'claude-sonnet-4-6-20250627': 'claude-sonnet-5',
+            'claude-haiku-3-5-20241022': 'claude-sonnet-5',
+            'claude-opus-4-20250514': 'claude-opus-5',
+            'claude-opus-4-6-20250627': 'claude-opus-5',
+            'claude-opus-4-6': 'claude-opus-5',
+            'claude-opus-4-7': 'claude-opus-5'
         };
 
         let savedChat = localStorage.getItem('ai-model-chat');
@@ -8624,7 +8710,7 @@ RULES:
         }
 
         // Level 1 uses the user's analysis model setting
-        const level1Model = this.analysisModel || 'claude-sonnet-4-6';
+        const level1Model = this.analysisModel || 'claude-sonnet-5';
         console.log(`🧠 Deep Learn Level 1: Sending ${chartContext.length} chars to ${level1Model}`);
 
         // Stage: Analyzing

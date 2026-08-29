@@ -24,10 +24,10 @@
 - `css/epic-theme.css` — All styles, EPIC-inspired design system
 
 ## Anthropic Model IDs
-- `claude-sonnet-4-6` (default, no date suffix)
-- `claude-opus-4-6` (no date suffix)
-- `claude-haiku-4-5-20251001` (has date suffix)
-- `claude-sonnet-4-5-20250929` (has date suffix)
+- `claude-sonnet-5` (default, no date suffix)
+- `claude-opus-5` (no date suffix; used by edu-tutor)
+- `claude-sonnet-4-6` (previous default, still selectable)
+- `claude-haiku-4-5-20251001` (has date suffix; assessment chatbot + dictation parse)
 
 ## Dev Server
 - `npx http-server -p 8080 -c-1` or use the launch.json config `ehr-dev`

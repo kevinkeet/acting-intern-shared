@@ -18,8 +18,8 @@ const EduTutor = (function () {
     'use strict';
 
     // ── Config ─────────────────────────────────────────────────────────
-    const ANSWER_MODEL = 'claude-opus-4-8';
-    const TEACHING_MODEL = 'claude-opus-4-8';
+    const ANSWER_MODEL = 'claude-opus-5';
+    const TEACHING_MODEL = 'claude-opus-5';
     const ANSWER_MAX_TOKENS = 1000;
     const TEACHING_MAX_TOKENS = 700;
 

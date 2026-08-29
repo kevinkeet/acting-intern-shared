@@ -301,7 +301,7 @@ const AmbientScribe = {
                 method: 'POST',
                 headers: hdrs,
                 body: JSON.stringify({
-                    model: AICoworker.analysisModel || 'claude-sonnet-4-6',
+                    model: AICoworker.analysisModel || 'claude-sonnet-5',
                     max_tokens: 2048,
                     system: systemPrompt,
                     messages: [{ role: 'user', content: userMessage }]

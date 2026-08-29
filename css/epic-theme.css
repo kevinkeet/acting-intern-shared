@@ -7480,6 +7480,9 @@ body.access-gate-active { overflow: hidden; }
 .copilot-thinking-banner {
     display: flex;
     flex-direction: column;
+    /* The panel body is a flex column; without this the banner gets crushed
+       to ~26px (overflow:hidden hides the stages + progress bar). */
+    flex-shrink: 0;
     padding: 14px 16px 10px;
     background: linear-gradient(135deg, #eff6ff, #dbeafe, #eff6ff);
     background-size: 200% 200%;
@@ -13619,6 +13622,7 @@ body.access-gate-active { overflow: hidden; }
 .learning-stages {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: 6px;
     padding: 4px 0;
     font-size: 10px;

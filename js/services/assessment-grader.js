@@ -13,8 +13,8 @@
  */
 
 const AssessmentGrader = (() => {
-    const GRADER_MODEL = 'claude-sonnet-4-6';
-    const SAMPLE_MODEL = 'claude-sonnet-4-6';
+    const GRADER_MODEL = 'claude-sonnet-5';
+    const SAMPLE_MODEL = 'claude-sonnet-5';
 
     // ── Grading reliability (important for the RCT primary endpoint) ──
     // LLM-as-judge scores are noisy. We pin a low temperature for stability

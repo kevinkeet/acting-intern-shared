@@ -5,7 +5,7 @@
  */
 
 const ClaudeAPI = {
-    model: 'claude-sonnet-4-6',
+    model: 'claude-sonnet-5',
     maxTokens: 1024,
 
     // Set by AICoworker.detectBackend()

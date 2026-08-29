@@ -1,12 +1,39 @@
 # Acting Intern — Session Handoff / Working Doc
 
+## LATEST (2026-08-29, cache 20260723k): AI seed + banner fix + Claude 5 models
+- **AI Coworker pre-seeding**: `data/patients/PAT001/ai-seed.json` (~600KB) ships a pre-computed
+  Level-1 deep learn + first analysis for Morrison. On first load with no saved memory,
+  `AICoworker._applyAiSeed(pid)` (called from `initializeLongitudinalDocument`) writes
+  `longitudinalDoc_PAT001` + `deepLearn_PAT001` to localStorage, then loads via the normal
+  deserialize path → panel is instantly populated (one-liner, clinical summary, 9 problems w/ plans,
+  20 suggested actions), learn bar shows Level 1 done with **Continue Learning** (→ Level 2) and
+  **Re-Analyze** buttons. Zero API calls on first load (verified via network log on cleared storage).
+  Regenerate the seed after chart-data changes: run a fresh Level 1 + Re-Analyze in the browser, then
+  export `localStorage longitudinalDoc_PAT001` + `deepLearn_PAT001` into the JSON (top-level keys
+  `longitudinalDoc`, `deepLearn`, `generated`).
+- **Learning-banner squish fixed**: `#assistant-tab-body` is a flex column; `.copilot-thinking-banner`
+  had default flex-shrink:1 + overflow:hidden → crushed to ~26px. Fix: `flex-shrink:0` (+ stages wrap).
+- **Suggested Actions fixed (pre-existing bug)**: after Deep Learn exists, Re-Analyze uses the
+  incremental memory-doc refresh whose schema has NO categorizedActions — so the Suggested Actions
+  section showed empty category headers forever. Fix: `_categorizeSuggestions()` keyword-sorts the
+  flat pendingItems into the communication/labs/imaging/medications/other buckets whenever
+  `state.categorizedActions` is null. Click paths verified: labs/other → agentic copilot chat
+  ("Help me: ..."), communication → patient/nurse chat pre-filled, orders w/ orderData → OrderEntry.
+  `_applyAiSeed` also supports an optional `seed.panel` snapshot (categorizedActions etc.) applied in
+  `hydrateFromMemory`.
+- **Models updated to Claude 5**: default/analysis/dictation/grader/scribe → `claude-sonnet-5`;
+  edu-tutor → `claude-opus-5`; settings picker now Haiku 4.5 / Sonnet 4.6 / Sonnet 5 (default) /
+  Opus 5, with localStorage migrations for retired IDs. **Assessment chatbot stays
+  `claude-haiku-4-5-20251001` on purpose — it is the study intervention; do not change mid-study
+  without Kevin's sign-off.** Note: grader model changed pre-enrollment (pilot scores not comparable).
+
 Living status doc so work can resume in a fresh session. Repo:
 `/Users/kevinkeet/Documents/Claude applications folder/synthetic-ehr` (actingintern.com, GitHub Pages).
 
 ## How the app works (fast facts)
 - Vanilla HTML/JS/CSS, **no build system**. `index.html` loads all scripts; `js/router.js` hash routing.
 - **Two git remotes — push BOTH after every commit:** `git push origin main && git push shared main`.
-- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260723j`**.
+- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260723k`**.
 - **Access gate password:** `0slerian` → PBKDF2 → decrypts the embedded Anthropic key into localStorage. Never log/commit the decrypted key.
 - **The shared Anthropic API key repeatedly runs OUT OF CREDITS** (Opus runs burn it fast). When it does, the live assessment (chat + grading) is DOWN. Only the user can top it up.
 - **Supabase** project (`piwoinyrlicvndpsmtde`) auto-pauses on free tier; resume from the dashboard before use.
