@@ -15,3 +15,8 @@ Thumbs.db
 # Environment
 .env
 .env.local
+
+# local-only
+.claude/worktrees/
+*.bak
+COGNITIVE-INITIATIVE.doc
