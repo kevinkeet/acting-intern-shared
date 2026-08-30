@@ -142,12 +142,20 @@ const ClaudeAPI = {
     /**
      * Send a message and get just the text content
      */
+    /**
+     * Extract the text from a response content array. Claude 5 models emit
+     * adaptive-thinking blocks before the text block, so content[0] is NOT
+     * reliably the text — always filter by type.
+     */
+    textFrom(content) {
+        return (content || []).filter(b => b.type === 'text' && b.text).map(b => b.text).join('');
+    },
+
     async chat(systemPrompt, messages) {
         const response = await this.sendMessage(systemPrompt, messages);
 
-        if (response.content && response.content.length > 0) {
-            return response.content[0].text;
-        }
+        const text = this.textFrom(response.content);
+        if (text) return text;
 
         throw new Error('Invalid response format from API');
     },
@@ -232,6 +240,14 @@ const ClaudeAPI = {
             system: req.systemPrompt,
             messages: [{ role: 'user', content: req.userMessage }]
         };
+        // Structured outputs: schema-constrained decoding (guaranteed-valid JSON).
+        // effort medium keeps adaptive thinking from eating max_tokens.
+        if (req.outputSchema) {
+            singleBody.output_config = {
+                format: { type: 'json_schema', schema: req.outputSchema },
+                effort: 'medium'
+            };
+        }
         // Allow callers (e.g., the grader) to pin temperature for reproducibility.
         if (typeof req.temperature === 'number') singleBody.temperature = req.temperature;
 
@@ -247,9 +263,8 @@ const ClaudeAPI = {
         }
 
         const data = await response.json();
-        if (data.content && data.content.length > 0) {
-            return data.content[0].text;
-        }
+        const text = this.textFrom(data.content);
+        if (text) return text;
         throw new Error('Invalid response format');
     },
 

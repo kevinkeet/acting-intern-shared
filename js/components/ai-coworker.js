@@ -531,10 +531,8 @@ const AICoworker = {
             }
             // Restore suggested actions from pending items
             if (memDoc.pendingItems && Array.isArray(memDoc.pendingItems) && this.state.suggestedActions.length === 0) {
-                this.state.suggestedActions = memDoc.pendingItems.map((item, idx) => ({
-                    id: 'hydrated_pending_' + idx,
-                    text: item
-                }));
+                this.state.suggestedActions = memDoc.pendingItems.map((item, idx) =>
+                    this._normalizeSuggestion(item, 'hydrated_pending_', idx));
                 console.log(`🧠 Restored ${this.state.suggestedActions.length} suggested actions from memoryDocument`);
             }
         }
@@ -1840,6 +1838,9 @@ const AICoworker = {
         // ===== SECTION 2: CLINICAL SUMMARY (3 sentences) =====
         if (sections.clinicalSummary) html += this.renderClinicalSummary(isThinking);
 
+        // What changed at the last analysis (from the memory document)
+        html += this._renderChangesSinceReview();
+
         // ===== SECTION 3: PROBLEM LIST =====
         if (sections.problemList) html += this.renderProblemList();
 
@@ -2161,6 +2162,24 @@ const AICoworker = {
     /**
      * Render deep learn between-levels state — collapsible design
      */
+    /**
+     * Compact "Since last review" block — the changesSinceLastReview list the
+     * last analysis reported. Reads straight from the memory document so it
+     * survives reloads with no extra state plumbing.
+     */
+    _renderChangesSinceReview() {
+        const changes = this.longitudinalDoc?.aiMemory?.memoryDocument?.changesSinceLastReview;
+        if (!Array.isArray(changes) || changes.length === 0) return '';
+        let html = '<div class="copilot-section changes-section">';
+        html += '<div class="copilot-section-header"><i data-lucide="history" class="lucide-inline"></i> Since Last Review</div>';
+        html += '<div class="copilot-section-body"><ul class="changes-list">';
+        changes.slice(0, 6).forEach(c => {
+            html += `<li>${this.escapeHtml(String(c))}</li>`;
+        });
+        html += '</ul></div></div>';
+        return html;
+    },
+
     _renderDeepLearnBetweenLevels(progress) {
         const pct = progress.percentComplete;
         const hasAnalysis = !!(this.state.aiOneLiner || this.state.problemList?.length > 0);
@@ -2210,6 +2229,11 @@ const AICoworker = {
                 });
                 html += `<button class="dl-kb-btn" onclick="AICoworker.toggleMemoryViewer()" title="View Knowledge Base">View KB</button>`;
                 html += '</div>';
+            }
+
+            // The AI's own statement of what it has and hasn't read yet
+            if (memDoc.coverage) {
+                html += `<div class="dl-coverage" title="What the AI has reviewed so far">${this.escapeHtml(memDoc.coverage)}</div>`;
             }
         }
 
@@ -3008,6 +3032,7 @@ const AICoworker = {
                     }
 
                     const hasOrder = typeof item === 'object' && item.orderType && item.orderData;
+                    const urgentCls = (typeof item === 'object' && item.urgency === 'urgent') ? ' action-urgent' : '';
                     const isMedChange = this._isMedChangeAction(text);
                     const isComm = cat.key === 'communication';
                     const actionId = `action_${cat.key}_${idx}`;
@@ -3024,28 +3049,28 @@ const AICoworker = {
 
                     if (hasOrder && !isMedChange) {
                         // New order → opens OrderEntry
-                        html += `<div class="action-item action-executable" onclick="AICoworker.executeAction('${actionId}')">`;
+                        html += `<div class="action-item action-executable${urgentCls}" onclick="AICoworker.executeAction('${actionId}')">`;
                         html += `<span class="action-text">${this.escapeHtml(text)}</span>`;
                         html += evidenceHtml;
                         html += `<span class="action-execute-icon" title="Open order form">&#9654;</span>`;
                         html += `</div>`;
                     } else if (isComm) {
                         // Communication → opens patient/nurse chat
-                        html += `<div class="action-item action-chat" onclick="AICoworker.executeAction('${actionId}')">`;
+                        html += `<div class="action-item action-chat${urgentCls}" onclick="AICoworker.executeAction('${actionId}')">`;
                         html += `<span class="action-text">${this.escapeHtml(text)}</span>`;
                         html += evidenceHtml;
                         html += `<span class="action-chat-icon" title="Open chat">&#128172;</span>`;
                         html += `</div>`;
                     } else if (isMedChange) {
                         // Med change (hold/stop/increase) → nurse chat
-                        html += `<div class="action-item action-chat" onclick="AICoworker.executeAction('${actionId}')">`;
+                        html += `<div class="action-item action-chat${urgentCls}" onclick="AICoworker.executeAction('${actionId}')">`;
                         html += `<span class="action-text">${this.escapeHtml(text)}</span>`;
                         html += evidenceHtml;
                         html += `<span class="action-chat-icon" title="Tell nurse">&#128105;&#8205;&#9877;</span>`;
                         html += `</div>`;
                     } else {
                         // Fallback
-                        html += `<div class="action-item" onclick="AICoworker.executeAction('${actionId}')">`;
+                        html += `<div class="action-item${urgentCls}" onclick="AICoworker.executeAction('${actionId}')">`;
                         html += `<span class="action-text">${this.escapeHtml(text)}</span>`;
                         html += evidenceHtml;
                         html += `</div>`;
@@ -3062,24 +3087,56 @@ const AICoworker = {
     },
 
     /**
+     * Normalize a pendingItems entry (legacy string OR structured object)
+     * into the suggestedActions shape the panel renders and executes.
+     */
+    _normalizeSuggestion(item, idPrefix, idx) {
+        if (typeof item === 'string') return { id: idPrefix + idx, text: item };
+        return {
+            id: idPrefix + idx,
+            text: item.text || String(item),
+            category: item.category || null,
+            urgency: item.urgency || null,
+            evidence: item.evidence || '',
+            orderType: item.orderType || null,
+            // The structured-output schema carries orderData as a JSON string
+            orderData: (function (od) {
+                if (od && typeof od === 'object') return od;
+                if (typeof od === 'string' && od.trim().startsWith('{')) {
+                    try { return JSON.parse(od); } catch (e) { return null; }
+                }
+                return null;
+            })(item.orderData)
+        };
+    },
+
+    /**
      * Sort flat suggestion items (memory-doc pendingItems) into the same
      * buckets categorizedActions uses, so the per-category execution paths
      * (order form, nurse chat) work on them unchanged.
      */
     _categorizeSuggestions(items) {
         const buckets = { communication: [], labs: [], imaging: [], medications: [], other: [] };
-        const texts = items.map(i => (typeof i === 'string' ? i : i.text || '')).filter(Boolean);
         const labRe = /\b(lab|bmp|cmp|bnp|cbc|troponin|inr|a1c|hba1c|tsh|creatinine|potassium|sodium|chem|panel|urinalysis|cultures?|recheck.*(level|value))\b/i;
         const imgRe = /\b(echo(cardiogram)?|cxr|chest x-?ray|x-?ray|ct\b|mri|ultrasound|doppler|imaging|ekg|ecg)\b/i;
         const medRe = /\b(dose|dosing|mg\b|uptitrat|titrat|hold\b|stop\b|discontinue|resume|restart|prescrib|medication|diuretic|furosemide|anticoagula|doac|warfarin|insulin|metformin|carvedilol|entresto|spironolactone)\b/i;
         const commRe = /\b(discuss|counsel|educat|reinforc|call|contact|ask|tell|notify|referral|refer\b|dietitian|follow-?up visit|schedule|shared decision)\b/i;
-        texts.forEach(t => {
-            if (imgRe.test(t)) buckets.imaging.push(t);
-            else if (labRe.test(t)) buckets.labs.push(t);
-            else if (medRe.test(t)) buckets.medications.push(t);
-            else if (commRe.test(t)) buckets.communication.push(t);
-            else buckets.other.push(t);
+        items.forEach(item => {
+            const obj = typeof item === 'string' ? { text: item } : item;
+            const t = obj.text || '';
+            if (!t) return;
+            // Trust the model's own category when it gave a valid one;
+            // keyword-guess only for legacy flat strings
+            if (obj.category && buckets[obj.category]) { buckets[obj.category].push(obj); return; }
+            if (imgRe.test(t)) buckets.imaging.push(obj);
+            else if (labRe.test(t)) buckets.labs.push(obj);
+            else if (medRe.test(t)) buckets.medications.push(obj);
+            else if (commRe.test(t)) buckets.communication.push(obj);
+            else buckets.other.push(obj);
         });
+        // Urgent items first within each bucket
+        Object.values(buckets).forEach(list => list.sort((a, b) =>
+            (b.urgency === 'urgent' ? 1 : 0) - (a.urgency === 'urgent' ? 1 : 0)));
         return buckets;
     },
 
@@ -5614,10 +5671,8 @@ Format your response as JSON:
                 this.state.summary = data.summary;
             }
             if (data.suggestedActions && Array.isArray(data.suggestedActions)) {
-                this.state.suggestedActions = data.suggestedActions.map((action, idx) => ({
-                    id: 'refresh_action_' + idx,
-                    text: typeof action === 'string' ? action : action.text
-                }));
+                this.state.suggestedActions = data.suggestedActions.map((action, idx) =>
+                    this._normalizeSuggestion(action, 'refresh_action_', idx));
             }
             // Parse new clinical fields
             if (data.oneLiner) this.state.aiOneLiner = data.oneLiner;
@@ -6664,7 +6719,16 @@ ${ctx.dictationHistory.length > 0
                     system: systemPrompt,
                     messages: [
                         { role: 'user', content: userMessage }
-                    ]
+                    ],
+                    // Structured outputs: server-side schema-constrained decoding.
+                    // Claude 5 removed assistant prefill; this is the replacement —
+                    // the response is guaranteed valid JSON matching the schema.
+                    // effort medium keeps adaptive thinking (disabling it produced
+                    // hollow documents) while capping its token spend so the
+                    // constrained JSON isn't truncated by max_tokens.
+                    ...(options && options.outputSchema
+                        ? { output_config: { format: { type: 'json_schema', schema: options.outputSchema }, effort: 'medium' } }
+                        : {})
                 })
             });
 
@@ -6693,7 +6757,12 @@ ${ctx.dictationHistory.length > 0
                 this.lastApiCall.error = `Response was not JSON: ${preview}`;
                 throw new Error(`API returned non-JSON response (possible CORS or proxy error). Preview: ${preview}`);
             }
-            const responseText = data.content?.[0]?.text;
+            // content[0] may be a thinking block (adaptive thinking) — collect
+            // the text blocks rather than assuming position 0
+            const responseText = (data.content || [])
+                .filter(b => b.type === 'text' && b.text)
+                .map(b => b.text)
+                .join('');
             if (!responseText) {
                 this.lastApiCall.error = 'Empty response from API';
                 throw new Error('API returned empty or malformed response');
@@ -6759,7 +6828,10 @@ ${ctx.dictationHistory.length > 0
                     max_tokens: maxTokens || 1024,
                     stream: true,
                     system: systemPrompt,
-                    messages: [{ role: 'user', content: userMessage }]
+                    messages: [{ role: 'user', content: userMessage }],
+                    ...(options && options.outputSchema
+                        ? { output_config: { format: { type: 'json_schema', schema: options.outputSchema }, effort: 'medium' } }
+                        : {})
                 })
             });
 
@@ -6923,7 +6995,7 @@ RULES:
 
             // Use streaming for real-time progressive updates (dictation stays on Sonnet for quality)
             const response = await this.callLLMStreaming(
-                systemPrompt, userMessage, 4096,
+                systemPrompt, userMessage, 8192,
                 { model: this.dictationModel }, onChunk
             );
 
@@ -7191,12 +7263,13 @@ RULES:
                     prompt.systemPrompt,
                     prompt.userMessage,
                     prompt.maxTokens,
-                    { model: this.analysisModel },
+                    { model: this.analysisModel, outputSchema: prompt.outputSchema },
                     onIncChunk
                 );
                 // Streaming complete — clean up
 
                 const memoryDoc = this._parseJSONResponse(response);
+                if (memoryDoc) delete memoryDoc.reasoning; // scratchpad — never stored
                 if (memoryDoc && memoryDoc.patientOverview) {
                     // Update memory document
                     this.longitudinalDoc.aiMemory.memoryDocument = memoryDoc;
@@ -7215,10 +7288,8 @@ RULES:
                         }));
                     }
                     if (memoryDoc.pendingItems) {
-                        this.state.suggestedActions = memoryDoc.pendingItems.map((item, idx) => ({
-                            id: 'refresh_pending_' + idx,
-                            text: item
-                        }));
+                        this.state.suggestedActions = memoryDoc.pendingItems.map((item, idx) =>
+                            this._normalizeSuggestion(item, 'refresh_pending_', idx));
                     }
                     if (memoryDoc.safetyProfile?.criticalValues) {
                         const flags = memoryDoc.safetyProfile.criticalValues.map(cv => ({
@@ -7351,7 +7422,7 @@ RULES:
 
             // Use streaming for progressive display
             const response = await this.callLLMStreaming(
-                systemPrompt, userMessage, 4096,
+                systemPrompt, userMessage, 8192,
                 { model: this.analysisModel }, onRefreshChunk
             );
             if (refreshThrottleTimer) { clearTimeout(refreshThrottleTimer); refreshThrottleTimer = null; }
@@ -8725,7 +8796,7 @@ RULES:
                 prompt.systemPrompt,
                 prompt.userMessage,
                 prompt.maxTokens,
-                { model: level1Model }
+                { model: level1Model, outputSchema: prompt.outputSchema }
             );
         } catch (apiErr) {
             console.error('Level 1 API call failed:', apiErr.message, 'Context size:', chartContext.length, 'chars');
@@ -8774,6 +8845,9 @@ RULES:
             };
             App.showToast(cause + ' Click Redo Level 1 to retry.', 'warning');
         }
+
+        // The reasoning field is a model scratchpad — never store or display it
+        delete memoryDoc.reasoning;
 
         // Validate and fill missing fields — ensure all 7 top-level fields exist
         if (!memoryDoc.clinicalGestalt) {
@@ -8907,6 +8981,13 @@ RULES:
             dl._stage = 'analyzing';
             this.render();
             const extractions = await this._batchExtract(loadedItems);
+
+            // Nothing extracted from a non-empty batch means the extraction
+            // calls failed — bail WITHOUT marking items processed, so the
+            // level can be retried instead of silently "learning" nothing.
+            if (extractions.length === 0 && loadedItems.length > 0) {
+                throw new Error(`Extraction produced no data for ${loadedItems.length} items — level not marked complete, click Continue Learning to retry`);
+            }
 
             // Step 3: Sonnet synthesis
             dl._stage = 'synthesizing';
@@ -9069,7 +9150,8 @@ RULES:
                 systemPrompt: prompt.systemPrompt,
                 userMessage: prompt.userMessage,
                 model: this.analysisModel,
-                maxTokens: prompt.maxTokens
+                maxTokens: prompt.maxTokens,
+                outputSchema: prompt.outputSchema
             });
         }
 
@@ -9092,10 +9174,15 @@ RULES:
                         allExtractions.push(...parsed.documents);
                     } else if (parsed) {
                         allExtractions.push(parsed);
+                    } else {
+                        // A silent null here once zeroed out an entire level's learning
+                        console.warn(`Extraction batch ${idx} returned unparseable text (${(r.result || '').length} chars):`, (r.result || '').slice(0, 120));
                     }
                 } catch (e) {
                     console.warn(`Haiku extraction batch ${idx} parse failed`);
                 }
+            } else {
+                console.warn(`Extraction batch ${idx} API call failed:`, r.error || 'unknown');
             }
         });
 
@@ -9122,13 +9209,14 @@ RULES:
             prompt.systemPrompt,
             prompt.userMessage,
             prompt.maxTokens,
-            { model: this.dictationModel }
+            { model: this.dictationModel, outputSchema: prompt.outputSchema }
         );
 
         const updatedMemory = this._parseJSONResponse(response);
         if (!updatedMemory) {
             throw new Error('Could not parse updated memory from synthesis response');
         }
+        delete updatedMemory.reasoning; // scratchpad — never stored
 
         // Ensure all required fields exist — carry forward from current if missing
         if (!updatedMemory.clinicalGestalt) updatedMemory.clinicalGestalt = currentMemory.clinicalGestalt || '';
@@ -9293,10 +9381,8 @@ RULES:
 
         // Build pending items as suggested actions
         if (memoryDoc.pendingItems && Array.isArray(memoryDoc.pendingItems)) {
-            this.state.suggestedActions = memoryDoc.pendingItems.map((item, idx) => ({
-                id: 'learn_pending_' + idx,
-                text: item
-            }));
+            this.state.suggestedActions = memoryDoc.pendingItems.map((item, idx) =>
+                this._normalizeSuggestion(item, 'learn_pending_', idx));
         }
 
         this.state.lastUpdated = new Date().toISOString();
@@ -9483,7 +9569,7 @@ RULES:
                 }
             );
 
-            const text = response.content[0].text.trim();
+            const text = ClaudeAPI.textFrom(response.content).trim();
             const result = JSON.parse(text);
 
             // Merge encounterNarrative

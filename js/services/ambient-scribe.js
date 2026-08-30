@@ -309,8 +309,9 @@ const AmbientScribe = {
             });
 
             var data = await response.json();
-            if (data.content && data.content[0] && data.content[0].text) {
-                this._parseExtractionResponse(data.content[0].text);
+            const scribeText = (data.content || []).filter(b => b.type === 'text' && b.text).map(b => b.text).join('');
+            if (scribeText) {
+                this._parseExtractionResponse(scribeText);
             }
 
             this.lastExtractedIndex = this.rawChunks.length;

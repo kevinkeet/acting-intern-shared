@@ -11,6 +11,127 @@
  * - A response format that includes memory-update fields for write-back
  */
 
+// =====================================================
+// SHARED MEMORY-DOCUMENT PROMPT FRAGMENTS
+// Every memory-document prompt (Learn, Level 1, Synthesis, Refresh) uses the
+// same structured pendingItems shape so the panel and OrderEntry can execute
+// actions from any path. Edit here, not in four places.
+// =====================================================
+
+const MEMORY_PENDING_SPEC = `"pendingItems": [
+        {"text": "One discrete action starting with a definitive verb (Order/Give/Ask/Hold/Repeat/Consult/Schedule)", "category": "communication|labs|imaging|medications|other", "urgency": "urgent|routine", "evidence": "Why + source, citing chart item IDs when the data shows them (e.g. 'LAB214 1/28/26: Cr 2.03 rising; NOTE055 discharge plan')", "orderType": "lab|imaging|medication|consult|nursing — ONLY for a discrete NEW order, otherwise omit", "orderData": "ONLY with orderType — see order shapes in rules"}
+    ]`;
+
+const MEMORY_ACTION_RULES = `- pendingItems are ACTIONS, not observations. Each = one thing you could say to one person in one sentence. Never start with "Consider", "Evaluate", "Monitor", or "Assess" — be definitive.
+- category: communication (ask patient/nurse, counseling), labs, imaging, medications (new orders AND changes), other (consults, nursing, referrals, follow-ups).
+- urgency: "urgent" ONLY for same-day, safety-relevant items; everything else "routine".
+- evidence: one line — the chart finding that justifies the action. Cite chart item IDs (NOTE###, LAB###, IMG###) whenever they appear in the source data, so the physician can verify.
+- orderType + orderData ONLY for discrete NEW orders the physician could sign right now. orderData is a JSON object ENCODED AS A STRING (e.g. "{\\"name\\": \\"BNP\\", ...}"), with these shapes:
+  * lab: {"name": exact test e.g. "Basic Metabolic Panel"|"BNP"|"Complete Blood Count", "specimen": "Blood|Urine", "priority": "Routine|Urgent|STAT", "indication": "..."}
+  * imaging: {"modality": "X-Ray|CT|MRI|Ultrasound|Echo", "bodyPart": "...", "contrast": "Without contrast|With contrast", "priority": "Routine|Urgent|STAT", "indication": "..."}
+  * medication (NEW meds only): {"name": "...", "dose": "...", "route": "PO|IV|SC|Inhaled", "frequency": "Once|Daily|BID|TID|PRN", "indication": "..."}
+  * consult: {"specialty": "...", "priority": "Routine|Urgent", "reason": "..."}
+  * Changes to EXISTING meds (hold/stop/discontinue/increase/decrease) get NO orderType — they route to the nurse.
+- Anchor every "recent", "current", or "today" statement to the most recent DATED entries in the chart data. Do not assume the real-world date is the chart's date.
+- reasoning comes FIRST in your output: think there before writing the rest of the document. It is a scratchpad and is not shown to the physician.`;
+
+// JSON Schema for the memory document, enforced server-side via structured
+// outputs (output_config.format). Claude 5 models removed assistant prefill;
+// this is the replacement — the API constrains decoding to this schema, so
+// responses are ALWAYS valid JSON (no preamble, no fences, no parse retries).
+// Keep in sync with MEMORY_PENDING_SPEC above.
+// orderData is a JSON-encoded STRING in the schema (parsed client-side in
+// _normalizeSuggestion). A 5-way anyOf of object shapes here made the server's
+// compiled grammar too large ("compiled grammar is too large" 400).
+const ORDER_DATA_SHAPES = { anyOf: [{ type: 'string' }, { type: 'null' }] };
+
+const MEMORY_DOC_SCHEMA = {
+    type: 'object',
+    properties: {
+        reasoning: { type: 'string' },
+        clinicalGestalt: { type: 'string' },
+        patientOverview: { type: 'string' },
+        safetyProfile: {
+            type: 'object',
+            properties: {
+                allergies: { type: 'array', items: { type: 'object', properties: { substance: { type: 'string' }, reaction: { type: 'string' }, severity: { type: 'string' }, implications: { type: 'string' } }, required: ['substance', 'reaction'], additionalProperties: false } },
+                contraindications: { type: 'array', items: { type: 'string' } },
+                criticalValues: { type: 'array', items: { type: 'string' } },
+                renalDosing: { type: 'array', items: { type: 'string' } },
+                interactions: { type: 'array', items: { type: 'string' } }
+            },
+            required: ['allergies', 'contraindications', 'criticalValues'],
+            additionalProperties: false
+        },
+        problemAnalysis: {
+            type: 'array',
+            items: { type: 'object', properties: { problem: { type: 'string' }, status: { type: 'string' }, trajectory: { type: 'string' }, keyData: { type: 'array', items: { type: 'string' } }, plan: { type: 'string' }, timeline: { type: 'string' }, medRationale: { type: 'string' } }, required: ['problem', 'status', 'plan'], additionalProperties: false }
+        },
+        medicationRationale: {
+            type: 'array',
+            items: { type: 'object', properties: { name: { type: 'string' }, indication: { type: 'string' }, rationale: { type: 'string' }, monitoring: { type: 'string' } }, required: ['name', 'indication'], additionalProperties: false }
+        },
+        labTrends: {
+            type: 'object',
+            properties: {
+                key_values: { type: 'array', items: { type: 'object', properties: { test: { type: 'string' }, values: { type: 'array', items: { type: 'object', properties: { date: { type: 'string' }, value: { type: 'string' }, flag: { type: 'string' } }, required: ['date', 'value'], additionalProperties: false } }, trend: { type: 'string' }, significance: { type: 'string' } }, required: ['test', 'values'], additionalProperties: false } }
+            },
+            required: ['key_values'],
+            additionalProperties: false
+        },
+        pendingItems: {
+            type: 'array',
+            items: {
+                type: 'object',
+                properties: {
+                    text: { type: 'string' },
+                    category: { type: 'string', enum: ['communication', 'labs', 'imaging', 'medications', 'other'] },
+                    urgency: { type: 'string', enum: ['urgent', 'routine'] },
+                    evidence: { type: 'string' },
+                    orderType: { anyOf: [{ type: 'string', enum: ['lab', 'imaging', 'medication', 'consult', 'nursing'] }, { type: 'null' }] },
+                    orderData: ORDER_DATA_SHAPES
+                },
+                required: ['text', 'category', 'urgency', 'evidence'],
+                additionalProperties: false
+            }
+        },
+        changesSinceLastReview: { type: 'array', items: { type: 'string' } },
+        coverage: { type: 'string' }
+    },
+    required: ['reasoning', 'clinicalGestalt', 'patientOverview', 'safetyProfile', 'problemAnalysis', 'medicationRationale', 'labTrends', 'pendingItems', 'changesSinceLastReview', 'coverage'],
+    additionalProperties: false
+};
+
+// Schema for the per-document extraction pass (deep learn levels 2+).
+const EXTRACTION_SCHEMA = {
+    type: 'object',
+    properties: {
+        documents: {
+            type: 'array',
+            items: {
+                type: 'object',
+                properties: {
+                    documentId: { type: 'string' },
+                    documentType: { type: 'string' },
+                    date: { type: 'string' },
+                    author: { type: 'string' },
+                    key_findings: { type: 'array', items: { type: 'string' } },
+                    problems_mentioned: { type: 'array', items: { type: 'string' } },
+                    medication_changes: { type: 'array', items: { type: 'object', properties: { drug: { type: 'string' }, action: { type: 'string' }, dose: { type: 'string' }, reason: { type: 'string' } }, required: ['drug', 'action'], additionalProperties: false } },
+                    lab_values: { type: 'array', items: { type: 'object', properties: { test: { type: 'string' }, value: { type: 'string' }, unit: { type: 'string' }, flag: { type: 'string' } }, required: ['test', 'value'], additionalProperties: false } },
+                    vital_signs: { type: 'array', items: { type: 'object', properties: { type: { type: 'string' }, value: { type: 'string' } }, required: ['type', 'value'], additionalProperties: false } },
+                    action_items: { type: 'array', items: { type: 'string' } },
+                    safety_concerns: { type: 'array', items: { type: 'string' } }
+                },
+                required: ['documentId', 'key_findings'],
+                additionalProperties: false
+            }
+        }
+    },
+    required: ['documents'],
+    additionalProperties: false
+};
+
 class ContextAssembler {
     constructor(workingMemory) {
         this.workingMemory = workingMemory; // WorkingMemoryAssembler
@@ -817,6 +938,7 @@ This memory document must be thorough enough that you can answer clinical questi
 Read the chart carefully and produce this EXACT JSON structure:
 
 {
+    "reasoning": "2-4 sentences of clinical reasoning — what stands out, what worries you, what is unresolved. Scratchpad, not shown to the physician.",
     "patientOverview": "3-4 paragraph comprehensive mental model. Include: demographics, chief complaint, HPI, key PMH with clinical qualifiers (EF%, baseline Cr, A1c, NYHA class), social/functional status, and current clinical trajectory. Write as a clinician would think about this patient.",
     "problemAnalysis": [
         {
@@ -837,15 +959,16 @@ Read the chart carefully and produce this EXACT JSON structure:
     "medicationRationale": [
         {"name": "Med name + dose + frequency", "indication": "What it's for", "rationale": "Why this specific med/dose — clinical reasoning"}
     ],
-    "pendingItems": ["Pending results, decisions, follow-ups, questions to resolve"],
-    "clinicalGestalt": "One-line clinical gestalt — what is the story of this patient right now?"
+    ${MEMORY_PENDING_SPEC},
+    "clinicalGestalt": "One-line clinical gestalt — what is the story of this patient right now?",
+    "coverage": "One line: which parts of the chart this memory does and does NOT yet cover (e.g. 'Full chart read; imaging reports summarized from impressions only')"
 }
 
 RULES:
 - problemAnalysis: Include ALL active problems, ordered by acuity. Include clinical qualifiers (EF%, baseline Cr, etc.)
 - safetyProfile: Be EXHAUSTIVE — this is safety-critical. Include cross-reactivity implications (e.g., PCN allergy → avoid cephalosporins in severe cases)
 - medicationRationale: Include EVERY current medication with reasoning. If the reason is unclear from the chart, note that.
-- pendingItems: Include anything that needs follow-up, is awaited, or is unresolved
+${MEMORY_ACTION_RULES}
 - clinicalGestalt: This is the "elevator pitch" — what would you tell a covering physician?
 
 Respond with ONLY the JSON, no preamble or markdown fences.`;
@@ -857,7 +980,8 @@ Respond with ONLY the JSON, no preamble or markdown fences.`;
             userMessage,
             // 16384 = generous headroom for full memory document on complex multi-level
             // patients. Opus only uses what it needs; extra space costs nothing unless used.
-            maxTokens: 16384
+            maxTokens: 24000,
+            outputSchema: MEMORY_DOC_SCHEMA
         };
     }
 
@@ -876,19 +1000,23 @@ RULES:
 - Update any values, statuses, or trajectories that have changed based on new data
 - Add new problems, findings, or orders that weren't in your memory
 - Update pendingItems (remove resolved items, add new pending items)
-- If new data contradicts your memory, update your memory and note the change
+- If new data contradicts your memory, update your memory and record it in changesSinceLastReview
 - Keep the same JSON structure
+${MEMORY_ACTION_RULES}
 
 Respond with the COMPLETE updated memory document as JSON. Output fields in this EXACT order. No preamble or markdown fences.
 
 {
+    "reasoning": "2-4 sentences: what changed since last review and what matters most right now. Scratchpad, not shown to the physician.",
     "clinicalGestalt": "One-sentence clinical gestalt — the 10-second handoff",
     "patientOverview": "2-3 paragraph overview with PMH qualifiers",
-    "problemAnalysis": [{"problem": "Name", "status": "active", "trajectory": "stable", "keyData": [...], "plan": "...", "timeline": "..."}],
+    "problemAnalysis": [{"problem": "Name", "status": "active", "trajectory": "stable", "keyData": ["cite chart item IDs where shown"], "plan": "...", "timeline": "..."}],
     "safetyProfile": {"allergies": [...], "contraindications": [...], "criticalValues": [...], "renalDosing": [...]},
     "medicationRationale": [{"name": "Med+dose", "indication": "...", "rationale": "...", "monitoring": "..."}],
     "labTrends": {"key_values": [{"test": "Name", "values": [...], "trend": "stable", "significance": "..."}]},
-    "pendingItems": ["..."]
+    ${MEMORY_PENDING_SPEC},
+    "changesSinceLastReview": ["Each substantive change vs your prior memory — one line each, with the data behind it. Empty array if nothing changed."],
+    "coverage": "One line: which parts of the chart this memory does and does NOT yet cover"
 }`;
 
         const userMessage = refreshContext;
@@ -899,7 +1027,8 @@ Respond with the COMPLETE updated memory document as JSON. Output fields in this
             // 16384 = generous headroom for the full memory document. Grows as the AI
             // learns more levels (more problems, deeper history). Extra space costs
             // nothing unless used; 4096 was too tight and caused truncated JSON.
-            maxTokens: 16384
+            maxTokens: 24000,
+            outputSchema: MEMORY_DOC_SCHEMA
         };
     }
 
@@ -920,27 +1049,31 @@ CRITICAL: You MUST populate ALL 7 top-level fields. Even if data is limited, pro
 Respond with ONLY valid JSON (no markdown fences, no preamble). Fields in this EXACT order:
 
 {
-    "clinicalGestalt": "One sentence — the 10-second handoff. E.g. '73M HFrEF EF35% CKD3b on GDMT, stable outpatient, recent mood concerns'",
+    "reasoning": "2-4 sentences of clinical reasoning — what stands out, what worries you, what is unresolved. Scratchpad, not shown to the physician.",
+    "clinicalGestalt": "One sentence — the 10-second handoff. E.g. '68F COPD GOLD III on triple inhaler therapy, T2DM, stable, unintentional weight loss under evaluation'",
     "patientOverview": "2-3 paragraphs: demographics + PMH with qualifiers (EF%, Cr baseline, A1c, NYHA class), social/functional, current trajectory",
     "safetyProfile": {
         "allergies": [{"substance": "X", "reaction": "Y", "severity": "severe", "implications": "Avoid class X"}],
-        "contraindications": ["ACE-I (angioedema hx)", "NSAIDs (CKD+HF)"],
+        "contraindications": ["Drug or class (reason from THIS chart)"],
         "criticalValues": ["Current critical labs if any"],
         "renalDosing": ["Meds needing renal adjustment"]
     },
     "problemAnalysis": [
-        {"problem": "HFrEF", "status": "active", "trajectory": "stable", "keyData": ["EF 35%", "BNP 433"], "plan": "Continue GDMT (Entresto, Carvedilol, Spironolactone, Furosemide)", "timeline": "Dx 2019, last admission 9/2025"}
+        {"problem": "COPD, GOLD III", "status": "active", "trajectory": "stable", "keyData": ["FEV1 42% (PFT 3/2025)", "2 exacerbations past year — cite item IDs where shown, e.g. NOTE014"], "plan": "Continue triple inhaler therapy; pulmonology follow-up", "timeline": "Dx 2018, last exacerbation 11/2025"}
     ],
     "medicationRationale": [
-        {"name": "Entresto 97/103mg BID", "indication": "HFrEF", "rationale": "PARADIGM-HF: mortality benefit in HFrEF", "monitoring": "K+, Cr, BP"}
+        {"name": "Tiotropium 18mcg inhaled daily", "indication": "COPD maintenance", "rationale": "LAMA — reduces exacerbations and improves FEV1", "monitoring": "Inhaler technique, urinary retention"}
     ],
     "labTrends": {
         "key_values": [
-            {"test": "Creatinine", "values": [{"date": "1/28/26", "value": "1.96", "flag": "H"}], "trend": "stable", "significance": "CKD3b baseline"}
+            {"test": "Hemoglobin A1c", "values": [{"date": "1/12/26", "value": "7.8", "flag": "H"}], "trend": "stable", "significance": "T2DM control above goal"}
         ]
     },
-    "pendingItems": ["Unresolved items, follow-ups, pending results"]
+    ${MEMORY_PENDING_SPEC},
+    "coverage": "One line: what this Level-1 read covered vs what remains unreviewed (e.g. 'Critical foundation only — 15 of 373 items; older notes, most imaging, and full lab history not yet reviewed')"
 }
+
+NOTE: The example values above describe a DIFFERENT, fictional patient. Every value in YOUR output must come from the chart data below — never from the examples.
 
 RULES:
 - Be CONCISE. Use abbreviations (HFrEF, CKD3b, T2DM, AFib, GDMT, etc.)
@@ -948,7 +1081,7 @@ RULES:
 - medicationRationale: ALL current meds. One line per med.
 - labTrends: Top 8-10 clinically significant labs. Include recent values with flags.
 - safetyProfile: ALWAYS include allergies and major contraindications.
-- pendingItems: Outstanding follow-ups, pending orders, items needing attention.
+${MEMORY_ACTION_RULES}
 - This is a WORKING clinical document that will be used as the AI's knowledge base for answering questions and suggesting actions. Make it useful.`;
 
         return {
@@ -956,7 +1089,8 @@ RULES:
             userMessage: `Chart data for review:\n\n${chartContext}`,
             // 16384 = generous headroom for Level 1's full memory document.
             // Opus only uses what it needs; truncation here breaks the demo.
-            maxTokens: 16384
+            maxTokens: 24000,
+            outputSchema: MEMORY_DOC_SCHEMA
         };
     }
 
@@ -999,7 +1133,11 @@ Respond with ONLY the JSON, no preamble.`;
         return {
             systemPrompt,
             userMessage: `DOCUMENT METADATA: ${documentMeta}\n\nDOCUMENT CONTENT:\n${documentText}`,
-            maxTokens: 2048
+            // 2048 starved the extraction once adaptive thinking (Claude 5)
+            // started counting against max_tokens — text came back truncated
+            // and parsed to null, silently yielding 0 extractions
+            maxTokens: 8000,
+            outputSchema: EXTRACTION_SCHEMA
         };
     }
 
@@ -1028,8 +1166,9 @@ MERGE RULES:
 - PRESERVE everything from current memory that isn't contradicted
 - NEVER remove information unless it's clearly superseded (e.g., old med dose replaced by new dose)
 
-OUTPUT SCHEMA — you MUST return ALL 7 top-level fields:
+OUTPUT SCHEMA — you MUST return ALL top-level fields:
 {
+    "reasoning": "2-3 sentences: what the new extractions add or change. Scratchpad, not shown to the physician.",
     "clinicalGestalt": "One sentence handoff summary",
     "patientOverview": "2-3 paragraph overview with PMH qualifiers",
     "safetyProfile": {
@@ -1049,8 +1188,11 @@ OUTPUT SCHEMA — you MUST return ALL 7 top-level fields:
             {"test": "Name", "values": [{"date": "D", "value": "V", "flag": "H|L|normal"}], "trend": "stable|rising|falling", "significance": "..."}
         ]
     },
-    "pendingItems": ["..."]
+    ${MEMORY_PENDING_SPEC},
+    "changesSinceLastReview": ["What the newly read documents added or changed — one line each. Empty array if nothing substantive."],
+    "coverage": "One line: how much of the chart you have now read and what remains (you have read ${processedCount}/${totalItems} items)"
 }
+${MEMORY_ACTION_RULES}
 
 Respond with ONLY the complete updated JSON, no preamble or markdown fences.`;
 
@@ -1063,7 +1205,8 @@ ${JSON.stringify(extractions, null, 2)}`;
         return {
             systemPrompt,
             userMessage,
-            maxTokens: 16384
+            maxTokens: 24000,
+            outputSchema: MEMORY_DOC_SCHEMA
         };
     }
 

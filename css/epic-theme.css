@@ -16831,3 +16831,28 @@ body.tutor-standalone {
     margin-right: 10px;
 }
 .header-home-btn:hover { background: rgba(255, 255, 255, 0.22); }
+
+/* Structured suggested actions: urgency + evidence-linked items */
+.action-item.action-urgent {
+    border-left: 3px solid #dc2626;
+    background: rgba(220, 38, 38, 0.06);
+}
+.action-item.action-urgent .action-text { font-weight: 600; }
+
+/* "Since last review" changes section */
+.changes-section .changes-list {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 12px;
+    line-height: 1.45;
+}
+.changes-section .changes-list li { margin: 3px 0; }
+
+/* Deep-learn coverage line — the AI's own statement of what it hasn't read */
+.dl-coverage {
+    font-size: 10.5px;
+    color: #8a94a6;
+    font-style: italic;
+    margin: 4px 0 2px;
+    line-height: 1.35;
+}

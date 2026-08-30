@@ -692,8 +692,9 @@ Respond with ONLY valid JSON, no markdown fences:
             });
 
             const data = await response.json();
-            if (data.content && data.content[0] && data.content[0].text) {
-                let text = data.content[0].text.trim();
+            const parseText = (data.content || []).filter(b => b.type === 'text' && b.text).map(b => b.text).join('');
+            if (parseText) {
+                let text = parseText.trim();
                 text = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '');
                 const parsed = JSON.parse(text);
                 const orders = parsed.orders || [parsed];

@@ -1,6 +1,44 @@
 # Acting Intern — Session Handoff / Working Doc
 
-## LATEST (2026-08-29, cache 20260723k): AI seed + banner fix + Claude 5 models
+## LATEST (2026-08-29, cache 20260723l): AI reasoning overhaul — structured actions, schema-forced JSON
+Implemented the 5 improvements Kevin approved ("implement them all"):
+1. **Structured suggested actions**: memory-doc pendingItems are now objects
+   {text, category, urgency, evidence, orderType, orderData(JSON-string)} — schema in
+   `MEMORY_PENDING_SPEC` + `MEMORY_DOC_SCHEMA` (context-assembler.js, shared by Learn/Level-1/
+   Synthesis/Refresh prompts). Evidence cites chart item IDs. `_normalizeSuggestion()` handles
+   legacy strings AND parses string orderData. Urgent items sort first + red-border styling
+   (.action-urgent). Executable orders now open OrderEntry prefilled from Learn/Re-Analyze
+   (previously only the dictation path could).
+2. **Schema-forced JSON (replaces prefill)**: Claude 5 REMOVED assistant prefill (400). Memory-doc
+   calls now use structured outputs — `output_config: {format: {type:'json_schema', schema},
+   effort:'medium'}` in callLLM/callLLMStreaming when `options.outputSchema` set. GOTCHAS learned:
+   (a) a 5-way anyOf of orderData object shapes → "compiled grammar too large" 400 — orderData is
+   a JSON-encoded STRING in the schema instead; (b) thinking:{disabled} → hollow all-empty docs;
+   (c) default (high-effort) adaptive thinking eats max_tokens → truncated JSON. effort:'medium' +
+   maxTokens 24000 is the working combo. Schema includes a discarded `reasoning` scratchpad field
+   FIRST (deleted before storing).
+3. **Provenance**: prompts instruct citing item IDs (NOTE###/LAB###/IMG###) in keyData/evidence.
+4. **changesSinceLastReview + coverage** fields in the memory doc; rendered as the
+   "Since Last Review" panel section (`_renderChangesSinceReview`) and a coverage line in the
+   between-levels learn card (.dl-coverage).
+5. **De-Morrison'd prompt examples** (fictional 68F COPD patient) + explicit "example values are a
+   DIFFERENT patient" note + date-anchor rule (anchor "recent/today" to dated chart entries).
+Legacy full-refresh/dictation streaming maxTokens 4096→8192 (fallback was truncating).
+Seed regenerated with structured actions (18 pending, 10 with orderData, 4 urgent).
+**Claude 5 migration landmines found & fixed while testing (READ IF TOUCHING API CALLS):**
+- `content[0].text` is WRONG on Claude 5 — adaptive thinking emits a thinking block FIRST, so
+  content[0] has no .text. Fixed everywhere via `ClaudeAPI.textFrom(content)` (filters text blocks):
+  claude-api chat/_singleChat, ai-coworker callLLM + digest, ambient-scribe, dictation-widget.
+  This had silently broken deep-learn Levels 2+ ("Haiku extraction: 0 document extractions").
+- Extraction maxTokens 2048 also starved by thinking → 8000 + EXTRACTION_SCHEMA (structured
+  outputs) in buildHaikuExtractionPrompt; _singleChat supports req.outputSchema.
+- Level runner now THROWS if extraction returns 0 for a non-empty batch instead of marking items
+  processed (was silent data loss — items "learned" with nothing extracted).
+- Deep-learn pipeline validated end-to-end on Sonnet 5: Level 1 ✓, incremental refresh ✓ (18/18
+  structured actions, BNP order opened OrderEntry prefilled), Level 2 ✓ (30/30 extractions,
+  synthesis merged: problems 9→14, meds 11→14).
+
+## Previous (2026-08-29, cache 20260723k): AI seed + banner fix + Claude 5 models
 - **AI Coworker pre-seeding**: `data/patients/PAT001/ai-seed.json` (~600KB) ships a pre-computed
   Level-1 deep learn + first analysis for Morrison. On first load with no saved memory,
   `AICoworker._applyAiSeed(pid)` (called from `initializeLongitudinalDocument`) writes
@@ -33,7 +71,7 @@ Living status doc so work can resume in a fresh session. Repo:
 ## How the app works (fast facts)
 - Vanilla HTML/JS/CSS, **no build system**. `index.html` loads all scripts; `js/router.js` hash routing.
 - **Two git remotes — push BOTH after every commit:** `git push origin main && git push shared main`.
-- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260723k`**.
+- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260723l`**.
 - **Access gate password:** `0slerian` → PBKDF2 → decrypts the embedded Anthropic key into localStorage. Never log/commit the decrypted key.
 - **The shared Anthropic API key repeatedly runs OUT OF CREDITS** (Opus runs burn it fast). When it does, the live assessment (chat + grading) is DOWN. Only the user can top it up.
 - **Supabase** project (`piwoinyrlicvndpsmtde`) auto-pauses on free tier; resume from the dashboard before use.
