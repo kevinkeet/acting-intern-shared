@@ -37,6 +37,15 @@ const AssessmentLogger = (() => {
         return SupabaseSync.client || null;
     }
 
+    // query_text is capped at 20K, but the participant's QUESTION lives at the
+    // END of the transcript (after the chart context). Head-slicing kept the
+    // context and threw away the question in 51 of the first 59 pilot rows —
+    // keep the tail instead.
+    function _capQuery(text) {
+        if (!text || text.length <= 20000) return text;
+        return '…[context head truncated]…\n' + text.slice(-(20000 - 30));
+    }
+
     function _serializeMessages(messages) {
         // Compress to a readable string for storage.
         if (!messages) return '';
@@ -184,7 +193,7 @@ const AssessmentLogger = (() => {
                         assessment_id: ctx.assessmentId || null,
                         prompt_id: ctx.promptId || null,
                         interaction_type: 'ask',
-                        query_text: queryText.slice(0, 20000),
+                        query_text: _capQuery(queryText),
                         response_text: _extractResponseText(response).slice(0, 20000),
                         tool_name: null,
                         context_size_chars: contextSize,
@@ -206,7 +215,7 @@ const AssessmentLogger = (() => {
                         assessment_id: ctx.assessmentId || null,
                         prompt_id: ctx.promptId || null,
                         interaction_type: 'ask_error',
-                        query_text: queryText.slice(0, 20000),
+                        query_text: _capQuery(queryText),
                         response_text: String(err.message || err).slice(0, 2000),
                         tool_name: null,
                         context_size_chars: contextSize,
@@ -232,7 +241,7 @@ const AssessmentLogger = (() => {
                         assessment_id: ctx.assessmentId || null,
                         prompt_id: ctx.promptId || null,
                         interaction_type: 'ask',
-                        query_text: queryText.slice(0, 20000),
+                        query_text: _capQuery(queryText),
                         response_text: (text || '').slice(0, 20000),
                         tool_name: null,
                         context_size_chars: contextSize,
@@ -255,7 +264,7 @@ const AssessmentLogger = (() => {
                         assessment_id: ctx.assessmentId || null,
                         prompt_id: ctx.promptId || null,
                         interaction_type: 'ask_error',
-                        query_text: queryText.slice(0, 20000),
+                        query_text: _capQuery(queryText),
                         response_text: String(err.message || err).slice(0, 2000),
                         tool_name: null,
                         context_size_chars: contextSize,

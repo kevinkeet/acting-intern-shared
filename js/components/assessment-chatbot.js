@@ -473,6 +473,10 @@ const AssessmentChatbot = (() => {
             if (typeof AssessmentLogger !== 'undefined' && AssessmentLogger.attachMetadata) {
                 AssessmentLogger.attachMetadata({
                     source: 'assessment_chatbot',
+                    // The typed question by itself — query_text holds the whole
+                    // transcript (context first) and gets truncated, so this is
+                    // the reliable place for analysis to read what was asked.
+                    user_question: text.slice(0, 2000),
                     chatbot_setup: {
                         windowKey: _config.windowKey,
                         dataTypes: _config.dataTypes.slice().sort(),

@@ -191,7 +191,14 @@ const AssessmentEngine = (() => {
             current_assessment: firstApId,
             current_prompt: firstPrompt ? firstPrompt.id : null,
             time_used_seconds: 0,
-            metadata: { version: apMeta.version || null },
+            metadata: {
+                version: apMeta.version || null,
+                // Which door the participant came through, and from where —
+                // lets the analysis separate demo dabbles and localhost tests
+                // from real study attempts without guessing by case ID.
+                entry_mode: (function () { try { return localStorage.getItem('entry-mode'); } catch (e) { return null; } })(),
+                origin: (typeof location !== 'undefined' ? location.hostname : null)
+            },
         };
 
         const sb = _sb();
@@ -381,6 +388,7 @@ const AssessmentEngine = (() => {
         _aiSamples = new Map();
         _pendingGrades = new Set();
         _lastAdvanceAt = Date.now();
+        _promptShownAt = Date.now();
         _isPaused = false;
 
         await _activatePerCase(caseId, _attempt.current_assessment);
@@ -416,6 +424,7 @@ const AssessmentEngine = (() => {
             if (r.ai_sample_output) _aiSamples.set(r.prompt_id, r.ai_sample_output);
         }
         _lastAdvanceAt = Date.now();
+        _promptShownAt = Date.now();
         _isPaused = false;
         await _activatePerCase(_attempt.case_id, _attempt.current_assessment);
         _flushQueue().catch(() => {});
@@ -587,6 +596,10 @@ const AssessmentEngine = (() => {
 
     // ── timing ─────────────────────────────────────────────────────────
 
+    // When the current prompt was first shown — resets on every cursor move.
+    // Feeds assessment_responses.time_spent_seconds (was hardcoded 0 in pilot).
+    let _promptShownAt = null;
+
     function _accrueTime() {
         if (!_attempt || _isPaused) return;
         if (!_lastAdvanceAt) { _lastAdvanceAt = Date.now(); return; }
@@ -688,7 +701,7 @@ const AssessmentEngine = (() => {
             assessment_id: cur.assessment.id,
             prompt_id: prompt.id,
             response_text: text,
-            time_spent_seconds: 0,    // (could compute per-prompt later)
+            time_spent_seconds: _promptShownAt ? Math.max(0, Math.floor((Date.now() - _promptShownAt) / 1000)) : 0,
             ai_sample_output: aiSample || null,
         });
         if (draft) _responses.set(prompt.id, draft);
@@ -749,6 +762,7 @@ const AssessmentEngine = (() => {
         const nextPromptIdx = idx.pIdx + 1;
         if (nextPromptIdx < (ap.prompts || []).length) {
             const nextPrompt = ap.prompts[nextPromptIdx];
+            _promptShownAt = Date.now();
             await _flushAttempt({ current_prompt: nextPrompt.id });
             _emit('cursor-moved', { promptId: nextPrompt.id });
             return { atEnd: false, nextPromptId: nextPrompt.id, sameAssessment: true };
@@ -768,6 +782,7 @@ const AssessmentEngine = (() => {
             if (anchor) AssessmentChartGate.advance(anchor);
             AssessmentChartGate.resetVisibleSections();
             _lastAdvanceAt = Date.now();
+            _promptShownAt = Date.now();
             _emit('assessment-advanced', { newAssessmentId: nextAp.id });
             return { atEnd: false, nextAssessmentId: nextAp.id, nextPromptId: nextPrompt ? nextPrompt.id : null };
         }

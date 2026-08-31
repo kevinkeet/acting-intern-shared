@@ -1,6 +1,21 @@
 # Acting Intern — Session Handoff / Working Doc
 
-## LATEST (2026-08-30, cache 20260723m): scenario box unsquished (pilot feedback 0663)
+## LATEST (2026-08-30, cache 20260723n): instrumentation fixes from pilot-behavior analysis
+Behavioral analysis of 9 real pilot users (15 attempts) found 3 measurement gaps, all fixed + verified:
+1. **Per-answer timing**: `time_spent_seconds` was hardcoded 0 on all 81 pilot responses. Engine now
+   tracks `_promptShownAt` (reset on every cursor move/start/resume) and stamps the real delta.
+2. **AI question was being truncated away**: `query_text` (full transcript, context first) is capped
+   at 20K and 51/59 pilot rows hit it — head-slicing kept context, dropped the participant's question.
+   Now: `_capQuery` keeps the TAIL, and the chatbot attaches the raw typed question as
+   `metadata.user_question` (read it via `metadata->>'user_question'` — no schema change needed).
+3. **Attempt provenance**: `test_attempts.metadata` now carries `entry_mode` (demo/pilot/full) and
+   `origin` (hostname) — separates demo dabbles and localhost tests from study data. NOTE: localhost
+   testing DOES write to prod Supabase (discovered via my own RESZCHK row).
+Analysis-side reminders: dedup restarts by (user_code,case_id)→latest/completed; junk purge before
+enrollment. Pilot phenotypes: 1295=light consulter (1-4 asks/case, hand-typed ~300ch answers);
+4782=AI-driven (14-15 asks/case, pasted markdown answers, 2 cases completed 8/30 evening).
+
+## Previous (2026-08-30, cache 20260723m): scenario box unsquished (pilot feedback 0663)
 Pilot 0663 (demo door, 8/30): "the 'scenario' tab is really tiny and I can't change the size of it."
 `.assessment-scenario-body` was capped at 3.2em/11.5px. Now 12.5px, max-height 12em — every shipped
 brief (longest 407 chars) renders in full with no scroll. Same-day fix, shipped 8/30.
@@ -81,7 +96,7 @@ Living status doc so work can resume in a fresh session. Repo:
 ## How the app works (fast facts)
 - Vanilla HTML/JS/CSS, **no build system**. `index.html` loads all scripts; `js/router.js` hash routing.
 - **Two git remotes — push BOTH after every commit:** `git push origin main && git push shared main`.
-- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260723m`**.
+- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260723n`**.
 - **Access gate password:** `0slerian` → PBKDF2 → decrypts the embedded Anthropic key into localStorage. Never log/commit the decrypted key.
 - **The shared Anthropic API key repeatedly runs OUT OF CREDITS** (Opus runs burn it fast). When it does, the live assessment (chat + grading) is DOWN. Only the user can top it up.
 - **Supabase** project (`piwoinyrlicvndpsmtde`) auto-pauses on free tier; resume from the dashboard before use.
