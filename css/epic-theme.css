@@ -14046,12 +14046,13 @@ body.assessment-dock-open { --arail: 440px; }
     margin-bottom: 4px;
 }
 .assessment-scenario-body {
-    font-size: 11.5px;
+    font-size: 12.5px;
     color: #2d3748;
-    line-height: 1.4;
-    /* Orientation text, read once — cap it tight so the answer box and the
-       assistant both stay on screen. Scrolls if the stub runs long. */
-    max-height: 3.2em;
+    line-height: 1.45;
+    /* Pilot feedback (0663): the 2-line cap read as "really tiny" with no way
+       to enlarge it. Every shipped brief fits inside 12em, so show the whole
+       thing; the cap is only a safety net if a longer brief ever ships. */
+    max-height: 12em;
     overflow-y: auto;
 }
 .assessment-prompt-card {
