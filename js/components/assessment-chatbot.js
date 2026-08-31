@@ -27,6 +27,7 @@ const AssessmentChatbot = (() => {
     let _config = null;         // { windowKey, dataTypes: [] } once configured
     let _floatCollapsed = true; // browse-mode floating widget starts as a launcher
     let _messages = [];         // [{role:'user'|'assistant'|'divider', content, promptId?}]
+    let _currentApId = null;    // tracks assessment-phase changes for chart-update dividers
     let _isWaiting = false;
     let _currentPromptId = null;  // tracks the prompt the resident is on
     let _engineUnsub = null;
@@ -134,9 +135,15 @@ const AssessmentChatbot = (() => {
         if (_messages.length === 0) return;
         const apId = cur?.assessment?.id || '';
         const title = cur?.assessment?.title || '';
+        const apChanged = apId && apId !== _currentApId;
+        _currentApId = apId;
         _messages.push({
             role: 'divider',
-            content: `Now on ${newPromptId}` + (title ? ` — ${apId}: ${title}` : ''),
+            content: apChanged
+                // A new assessment phase means the chart has moved forward in
+                // time — say so, so the transcript shows why context changed.
+                ? `Time has passed — chart updated. Now on ${newPromptId}` + (title ? ` — ${apId}: ${title}` : '')
+                : `Now on ${newPromptId}` + (title ? ` — ${apId}: ${title}` : ''),
         });
         if (_phase === 'chat') _renderMessages();
     }
@@ -524,7 +531,21 @@ const AssessmentChatbot = (() => {
         const windowDef = TIME_WINDOWS.find((w) => w.key === _config.windowKey) || TIME_WINDOWS[2];
         const anchorIso = (AssessmentChartGate.getAnchor && AssessmentChartGate.getAnchor()) || new Date().toISOString();
         const anchor = Date.parse(anchorIso);
-        const from = anchor - (windowDef.days * 86400000);
+        let from = anchor - (windowDef.days * 86400000);
+        // Mid-case time jumps advance the anchor; a purely relative window
+        // would then slide PAST the case's original presentation and the
+        // chatbot would "forget the case" (pilot report, 8/31). Floor the
+        // window at what was visible at the FIRST timepoint, so advancing
+        // time only ever ADDS data.
+        try {
+            const cd = AssessmentEngine.getCaseDef && AssessmentEngine.getCaseDef();
+            const ap0 = cd && cd.assessments && cd.assessments[0];
+            const startIso = ap0 && ((ap0.chartGate && ap0.chartGate.includeBeforeOrEqualDate) || ap0.anchorDate);
+            const caseStart = startIso ? Date.parse(startIso) : NaN;
+            if (!Number.isNaN(caseStart)) {
+                from = Math.min(from, caseStart - (windowDef.days * 86400000));
+            }
+        } catch (e) { /* keep the relative window */ }
 
         const inWindow = (item) => {
             if (windowDef.key === 'all') return true;

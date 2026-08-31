@@ -1,6 +1,16 @@
 # Acting Intern — Session Handoff / Working Doc
 
-## LATEST (2026-08-30, cache 20260723n): instrumentation fixes from pilot-behavior analysis
+## LATEST (2026-08-31, cache 20260723o): second-hand pilot feedback — chatbot amnesia + family history
+Second-hand report (likely 4782, second case = PAT004): (a) "chatbot forgot the case after the
+mid-case update" — ROOT CAUSE: the AI Chat context window is relative to the chart anchor, and the
+AP time jump (PAT004 jumps 31 days) slid a 7/30-day window past the original presentation. FIX:
+window floor in `_buildContextBlock` — from = min(anchor-win, caseStart-win), so advancing time only
+ADDS data; AP-transition divider now says "Time has passed — chart updated." (b) "family history
+missing" — study patients (PAT003-007) use a nested shape {relation, vital, conditions:[...]} that
+the FamilyHistory page rendered as "undefined" rows; renderer now normalizes both shapes (PAT002
+flat shape regression-checked). Both verified in preview against PAT004.
+
+## Previous (2026-08-30, cache 20260723n): instrumentation fixes from pilot-behavior analysis
 Behavioral analysis of 9 real pilot users (15 attempts) found 3 measurement gaps, all fixed + verified:
 1. **Per-answer timing**: `time_spent_seconds` was hardcoded 0 on all 81 pilot responses. Engine now
    tracks `_promptShownAt` (reset on every cursor move/start/resume) and stamps the real delta.
@@ -96,7 +106,7 @@ Living status doc so work can resume in a fresh session. Repo:
 ## How the app works (fast facts)
 - Vanilla HTML/JS/CSS, **no build system**. `index.html` loads all scripts; `js/router.js` hash routing.
 - **Two git remotes — push BOTH after every commit:** `git push origin main && git push shared main`.
-- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260723n`**.
+- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260723o`**.
 - **Access gate password:** `0slerian` → PBKDF2 → decrypts the embedded Anthropic key into localStorage. Never log/commit the decrypted key.
 - **The shared Anthropic API key repeatedly runs OUT OF CREDITS** (Opus runs burn it fast). When it does, the live assessment (chat + grading) is DOWN. Only the user can top it up.
 - **Supabase** project (`piwoinyrlicvndpsmtde`) auto-pauses on free tier; resume from the dashboard before use.

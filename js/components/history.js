@@ -151,7 +151,34 @@ const FamilyHistory = {
 
         try {
             const data = await dataLoader.loadFamilyHistory();
-            const history = data.familyHistory || [];
+            // Two shapes exist: flat rows {relationship, condition, ageAtOnset,
+            // deceased, notes} (PAT001/002) and nested {relation, vital,
+            // conditions: [{condition, ageOnset, notes}]} (PAT003-007). The
+            // nested shape rendered as "undefined" rows (pilot report, 8/31).
+            const history = [];
+            (data.familyHistory || []).forEach(item => {
+                if (Array.isArray(item.conditions)) {
+                    const status = item.vital || (item.deceased ? 'Deceased' : 'Living');
+                    if (item.conditions.length === 0) {
+                        history.push({ relationship: item.relation || item.relationship || '', condition: '(no conditions documented)', ageAtOnset: null, statusText: status, notes: item.notes || '' });
+                    }
+                    item.conditions.forEach(c => history.push({
+                        relationship: item.relation || item.relationship || '',
+                        condition: c.condition || c.name || '',
+                        ageAtOnset: c.ageOnset || c.ageAtOnset || null,
+                        statusText: status,
+                        notes: c.notes || ''
+                    }));
+                } else {
+                    history.push({
+                        relationship: item.relationship || item.relation || '',
+                        condition: item.condition || '',
+                        ageAtOnset: item.ageAtOnset || null,
+                        statusText: item.deceased ? ('Deceased' + (item.ageAtDeath ? ` (${item.ageAtDeath})` : '')) : 'Living',
+                        notes: item.notes || ''
+                    });
+                }
+            });
 
             content.innerHTML = `
                 <div class="section-header">
@@ -184,10 +211,7 @@ const FamilyHistory = {
                                             <td>${item.condition}</td>
                                             <td>${item.ageAtOnset || '-'}</td>
                                             <td>
-                                                ${item.deceased ?
-                                                    `<span style="color: #666;">Deceased${item.ageAtDeath ? ` (${item.ageAtDeath})` : ''}</span>` :
-                                                    '<span style="color: #38a169;">Living</span>'
-                                                }
+                                                <span style="color: ${/deceased/i.test(item.statusText) ? '#666' : '#38a169'};">${item.statusText}</span>
                                             </td>
                                             <td style="font-size: 11px; color: #666;">${item.notes || '-'}</td>
                                         </tr>
