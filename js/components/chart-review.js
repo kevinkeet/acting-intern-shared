@@ -135,7 +135,7 @@ const ChartReview = {
                         <div class="empty-state">
                             <div class="empty-state-text">No active problems</div>
                         </div>
-                    ` : problems.slice(0, 8).map(p => `
+                    ` : problems.map(p => `
                         <div class="problem-item">
                             <div class="problem-name">${p.name}</div>
                             <div class="problem-meta">
@@ -166,7 +166,7 @@ const ChartReview = {
                         <div class="empty-state">
                             <div class="empty-state-text">No active medications</div>
                         </div>
-                    ` : medications.slice(0, 8).map(m => `
+                    ` : medications.map(m => `
                         <div class="med-item">
                             <div class="med-name">${m.name}</div>
                             <div class="med-details">${m.dose} ${m.route} ${m.frequency}</div>

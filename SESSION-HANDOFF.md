@@ -1,6 +1,17 @@
 # Acting Intern — Session Handoff / Working Doc
 
-## LATEST (2026-09-01, cache 20260723s): demo-door escape hatch — pilots were doing Sandoval
+## LATEST (2026-09-01, cache 20260723t): Eduardo's pilot feedback (email via Kevin)
+Fixed same-day: (1) LOW lab flags were BLUE (read as benign) — all abnormal flags now red family
+like Epic (--status-low/-bg + 3 hardcoded blues; H/L letter still shows direction). (2) Dashboard
+card counts said N but displayed max 8 (slice cap removed; widget body scrolls all items — his exact
+repro: PAT003 15 problems/9 meds). NOT changed: contrast-allergy "inconsistency" he reported is
+actually documented canon (Hopkins 13-7-1 premed protocol in allergy notes + both CT reports —
+IMG004 title + IMG001 body); chart density made him miss it, which is realistic. Open design Qs for
+Kevin: per-answer length guidance (current stance: deliberate "no length requirement" on start page;
+ambiguity is partly the measurement); question-pasting into chatbot (intentionally permitted +
+instrumented — user_question capture makes it analyzable).
+
+## PREVIOUS (2026-09-01, cache 20260723s): demo-door escape hatch — pilots were doing Sandoval
 Kevin: "I want the 5 main cases piloted." Coded pilots (6773/0663/4217) landed on the DEMO door and
 did/attempted Sandoval thinking it was the study; entry-mode persists so they'd never re-see the
 chooser. Fix: yellow banner on the demo assessment-start page ("Sandoval is a demo case — not the
@@ -135,7 +146,7 @@ Living status doc so work can resume in a fresh session. Repo:
 ## How the app works (fast facts)
 - Vanilla HTML/JS/CSS, **no build system**. `index.html` loads all scripts; `js/router.js` hash routing.
 - **Two git remotes — push BOTH after every commit:** `git push origin main && git push shared main`.
-- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260723s`**.
+- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260723t`**.
 - **Access gate password:** `0slerian` → PBKDF2 → decrypts the embedded Anthropic key into localStorage. Never log/commit the decrypted key.
 - **The shared Anthropic API key repeatedly runs OUT OF CREDITS** (Opus runs burn it fast). When it does, the live assessment (chat + grading) is DOWN. Only the user can top it up.
 - **Supabase** project (`piwoinyrlicvndpsmtde`) auto-pauses on free tier; resume from the dashboard before use.

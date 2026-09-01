@@ -27,10 +27,13 @@
     /* Status Colors */
     --status-critical: #c53030;
     --status-critical-bg: #fed7d7;
-    --status-high: #dd6b20;
-    --status-high-bg: #feebc8;
-    --status-low: #2b6cb0;
-    --status-low-bg: #bee3f8;
+    /* Abnormal labs are RED in both directions, like Epic — pilot feedback:
+       blue "low" flags (e.g. Hgb 10.5) read as benign/informational. The H/L
+       letter conveys direction; color conveys "abnormal". */
+    --status-high: #c53030;
+    --status-high-bg: #fed7d7;
+    --status-low: #c53030;
+    --status-low-bg: #fed7d7;
     --status-normal: #38a169;
     --status-normal-bg: #c6f6d5;
 
@@ -4656,7 +4659,7 @@ body.access-gate-active { overflow: hidden; }
 }
 
 .vital-val.low {
-    color: #93c5fd;
+    color: #fca5a5;
 }
 
 .vital-val.high {
@@ -5196,8 +5199,8 @@ body.access-gate-active { overflow: hidden; }
 }
 
 .abnormal-result.low {
-    background: #eff6ff;
-    color: #1d4ed8;
+    background: #fef2f2;
+    color: #b91c1c;
 }
 
 .lab-normal {
@@ -5291,7 +5294,7 @@ body.access-gate-active { overflow: hidden; }
 }
 
 .lab-results-table tr.low {
-    background: #eff6ff;
+    background: #fef2f2;
 }
 
 .result-value {
@@ -5307,7 +5310,7 @@ body.access-gate-active { overflow: hidden; }
 }
 
 .lab-results-table tr.low .result-flag {
-    color: #1d4ed8;
+    color: #b91c1c;
 }
 
 /* Simulation Debrief Modal */
