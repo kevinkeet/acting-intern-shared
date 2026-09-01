@@ -13,7 +13,7 @@
   ],
   "passingOverallScorePct": 70,
   "description": "A 2-stage case following Marcus Bell, a previously healthy 43-year-old man who presents with an essentially unprovoked pulmonary embolism and extensive DVT and is incidentally found to have a 17 cm liver mass with portal-vein thrombus, concerning for malignancy. The case tests competing-risk reasoning: how long to anticoagulate before biopsying the lesion, how to handle a DOAC around an invasive procedure, when (not) to bridge, and — after a recurrent PE occurs during the peri-procedural anticoagulation hold — whether an IVC filter is indicated.",
-  "warning": "Set aside uninterrupted time to work through the case. There is no time limit — your elapsed time is recorded, but you will not be cut off. Pausing is permitted.",
+  "warning": "No time limit — your elapsed time is recorded but nothing cuts you off, and pausing is fine. Your answers save as you go.",
   "instructions": "You are caring for this patient across two points in time. Review the chart, then respond to each clinical question. Your responses are graded against a rubric; the case's intended teaching points are revealed at the end.",
   "originalDiscussants": "Allyson Pishko, Brett Carroll, Jeff Weinstein",
   "finalizedBy": "Zahir Kanjee"

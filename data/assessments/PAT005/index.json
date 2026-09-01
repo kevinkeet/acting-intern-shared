@@ -14,7 +14,7 @@
   ],
   "passingOverallScorePct": 70,
   "description": "A 3-stage case following Sarah Whitlock, a 50-year-old woman with decompensated alcohol-related cirrhosis (hepatic encephalopathy, diuretic-refractory ascites, and right hepatic hydrothorax) who is referred for therapeutic drainage. The case centers on iatrogenic harm from prophylactic blood products (an elevated INR in cirrhosis does not predict procedural bleeding, and prophylactic FFP causes volume overload), cross-system communication when a community provider's protocol diverges from the evidence, and PleurX-vs-TIPS decision-making in a transplant candidate. A non-evidence-based practice is documented in the chart — the resident must recognize and resist it rather than propagate it.",
-  "warning": "Set aside uninterrupted time to work through the case. There is no time limit — your elapsed time is recorded, but you will not be cut off. Pausing is permitted.",
+  "warning": "No time limit — your elapsed time is recorded but nothing cuts you off, and pausing is fine. Your answers save as you go.",
   "instructions": "You are caring for a real patient across three timepoints. Review the chart, then respond to each clinical question. Your responses are graded against a rubric; the case's intended teaching points are revealed at the end.",
   "originalDiscussants": "Allyson Pishko, Brett Carroll, Jeff Weinstein",
   "finalizedBy": "Adam Rodman"

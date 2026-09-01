@@ -13,7 +13,7 @@
   ],
   "passingOverallScorePct": 70,
   "description": "A 2-stage perioperative case following Dorothy Pierce, a 72-year-old woman with poorly-controlled hypertension and type 2 diabetes who develops new atrial fibrillation after an urgent open cholecystectomy for perforated cholecystitis. The case tests management of new perioperative/subclinical atrial fibrillation: distinguishing transient post-operative AF from incident paroxysmal AF, risk-stratifying for stroke (CHA2DS2-VASc) and bleeding in a borderline patient who has just had major surgery, choosing an anticoagulant, and designing an ambulatory monitoring strategy that matches an infrequent, asymptomatic arrhythmia.",
-  "warning": "Set aside uninterrupted time to work through the case. There is no time limit — your elapsed time is recorded, but you will not be cut off. Pausing is permitted.",
+  "warning": "No time limit — your elapsed time is recorded but nothing cuts you off, and pausing is fine. Your answers save as you go.",
   "instructions": "You are evaluating a real patient across two timepoints in her hospital course. Review the chart, then respond to each clinical question. Your responses are graded against a rubric; the case's intended teaching points are revealed at the end.",
   "originalDiscussants": "Nick Villano, Jason Matos, Greg Katz, Pooja Jagadish",
   "finalizedBy": "Eric Strong"

@@ -117,8 +117,8 @@ const AssessmentResults = {
                         <div class="assessment-score-label">Submitted</div>
                     </div>
                     <div class="assessment-results-score-detail">
-                        <div>Your responses have been recorded for the study.</div>
-                        <div>Status: <strong>${this._escape(attempt.status)}</strong></div>
+                        <div><strong>Case complete — thank you!</strong> Your responses have been recorded for the study.</div>
+                        <div>Each case stands alone: you can start another now, or come back any time — your code remembers what you've finished.</div>
                     </div>
                 </div>
 
@@ -130,7 +130,7 @@ const AssessmentResults = {
                 </div>
 
                 <div class="assessment-results-footer">
-                    <button class="btn" onclick="router.navigate('/assessment/start')">Back to assessments</button>
+                    <button class="btn btn-primary" onclick="router.navigate('/assessment/start')">See remaining cases</button>
                     <button class="btn" onclick="router.navigate('/chart-review')">Go to chart</button>
                 </div>
             </div>

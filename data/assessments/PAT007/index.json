@@ -14,7 +14,7 @@
   ],
   "passingOverallScorePct": 70,
   "description": "A 3-stage ICU case following Janet Brooks, a 55-year-old woman with alcohol-related cirrhosis who presents with involuntary weight loss, suffers a variceal hemorrhage requiring emergent TIPS, and then develops persistent fevers and refractory shock. An exhaustive infectious workup is negative, yet the team — anchored on occult infection — keeps escalating antibiotics as she deteriorates toward a comfort-measures decision. After antibiotics are stopped she unexpectedly recovers: the cause was a drug fever and drug-associated neurotoxicity that was never fully considered. The case tests cognitive humility and anti-anchoring: keeping a broad (non-infectious) differential, being willing to stop a presumed-necessary therapy, and avoiding irreversible decisions while a reversible, unconsidered diagnosis remains.",
-  "warning": "Set aside uninterrupted time to work through the case. There is no time limit — your elapsed time is recorded, but you will not be cut off. Pausing is permitted.",
+  "warning": "No time limit — your elapsed time is recorded but nothing cuts you off, and pausing is fine. Your answers save as you go.",
   "instructions": "You are caring for a real patient across three timepoints. Review the chart, then respond to each clinical question. Your responses are graded against a rubric; the case's intended teaching points are revealed at the end.",
   "originalDiscussants": "Wendy Stead, Emily Rubin",
   "finalizedBy": "Jason Hom"

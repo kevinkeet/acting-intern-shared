@@ -1,6 +1,24 @@
 # Acting Intern — Session Handoff / Working Doc
 
-## LATEST (2026-08-31, cache 20260723o): second-hand pilot feedback — chatbot amnesia + family history
+## LATEST (2026-09-01, cache 20260723q): anti-daunting funnel redesign + study-door steering
+Kevin's word-of-mouth pilot feedback: "seems daunting... they sit down, get overwhelmed, give up."
+Fixes (all verified in preview with 4782's real code):
+- **Stale scary copy removed**: start page said "dedicate at least 90 minutes uninterrupted",
+  "each stage has its own time limit" (false), "you will see your scoring report" (false).
+  Rewritten as "Good to know": one case at a time (~30-45 min), no time limits, saves as you go,
+  chart moves forward in time. Consent copy reframed the same way. Per-case data warnings
+  (data/assessments/*/index.json, no cache-bust needed) also softened.
+- **Progress + chunking on the case list**: "You've completed X of 5" line; numbered cases with
+  ~30-45 min chips; ✓ Completed badges (per-code query via _loadMyCompletions); first uncompleted
+  case highlighted with "Start here"; results page now says "Case complete — thank you!" with a
+  "See remaining cases" CTA.
+- **Entry chooser**: Study participant door now first + highlighted (ec-primary), copy says
+  pilot testers should pick it; Demo explicitly "Not one of the study cases". Fixed ?choose loop
+  (flag persisted through the post-pick reload and wiped entry-mode).
+- Study-case pilot coverage as of 9/1: PAT003 ×2, PAT004 ×2, PAT005/6/7 ×1 each (1295 only) —
+  Kevin wants the 5 main cases piloted; demo completions (6773) don't count toward that.
+
+## Previous (2026-08-31, cache 20260723o): second-hand pilot feedback — chatbot amnesia + family history
 Second-hand report (likely 4782, second case = PAT004): (a) "chatbot forgot the case after the
 mid-case update" — ROOT CAUSE: the AI Chat context window is relative to the chart anchor, and the
 AP time jump (PAT004 jumps 31 days) slid a 7/30-day window past the original presentation. FIX:
@@ -106,7 +124,7 @@ Living status doc so work can resume in a fresh session. Repo:
 ## How the app works (fast facts)
 - Vanilla HTML/JS/CSS, **no build system**. `index.html` loads all scripts; `js/router.js` hash routing.
 - **Two git remotes — push BOTH after every commit:** `git push origin main && git push shared main`.
-- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260723o`**.
+- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260723q`**.
 - **Access gate password:** `0slerian` → PBKDF2 → decrypts the embedded Anthropic key into localStorage. Never log/commit the decrypted key.
 - **The shared Anthropic API key repeatedly runs OUT OF CREDITS** (Opus runs burn it fast). When it does, the live assessment (chat + grading) is DOWN. Only the user can top it up.
 - **Supabase** project (`piwoinyrlicvndpsmtde`) auto-pauses on free tier; resume from the dashboard before use.

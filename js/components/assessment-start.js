@@ -45,12 +45,12 @@ const AssessmentStart = {
                 </div>
 
                 <div class="assessment-start-policy">
-                    <h3>Before you begin</h3>
+                    <h3>Good to know</h3>
                     <ul>
-                        <li>Plan to dedicate at least 90 minutes uninterrupted. Pausing is permitted, but it stops the timer.</li>
-                        <li>Each stage of the case has its own time limit. The chart and your responses are saved as you go.</li>
-                        <li>The chart reflects the patient's status at the current point in time. Newer encounters appear as the case progresses.</li>
-                        <li>At the end of the case you will see your scoring report and the case's true diagnosis.</li>
+                        <li><strong>One case at a time.</strong> Each case is a self-contained exercise of about 30–45 minutes. Doing one case per sitting is completely fine — come back for the others whenever suits you.</li>
+                        <li><strong>No time limits.</strong> Nothing counts down and nothing auto-submits. Take the time you need.</li>
+                        <li><strong>Your work saves as you go.</strong> If you get interrupted or close the tab, entering your code brings you right back to where you stopped.</li>
+                        <li><strong>The chart moves forward in time</strong> as the case progresses — a banner tells you whenever new information has arrived.</li>
                     </ul>
                 </div>
             </div>
@@ -58,14 +58,15 @@ const AssessmentStart = {
         App.refreshIcons();
         this._renderUserCodeStrip();
 
-        // In parallel: check resume + load case list
-        const [resume, cases] = await Promise.all([
+        // In parallel: check resume + load case list + this code's completions
+        const [resume, cases, doneCaseIds] = await Promise.all([
             AssessmentEngine.getAttemptIdForResume(),
             this._loadCaseList(),
+            this._loadMyCompletions(),
         ]);
         this._renderResume(resume);
         this._renderHowItWorks();
-        this._renderCaseList(cases);
+        this._renderCaseList(cases, doneCaseIds);
     },
 
     /**
@@ -84,9 +85,11 @@ const AssessmentStart = {
                         <p>You are invited to take part in an educational research study examining how
                         physicians use AI tools to reason through clinical cases. Participation is voluntary.</p>
                         <ul>
-                            <li><strong>What you'll do:</strong> work through one or more simulated clinical
-                            cases, using the built-in AI assistant as you see fit, and submit written answers.
-                            Plan for roughly 30–90 minutes of uninterrupted time.</li>
+                            <li><strong>What you'll do:</strong> work through simulated clinical cases —
+                            one case at a time, each about 30–45 minutes — using the built-in AI assistant
+                            as you see fit, and submit written answers. You do NOT need to do everything in
+                            one sitting: your progress saves automatically, and your code brings you back
+                            to wherever you left off.</li>
                             <li><strong>What is recorded:</strong> your written responses, your scores, and a
                             complete log of your interactions with the AI assistant (your messages and its
                             replies). This is the data the study analyzes.</li>
@@ -209,6 +212,26 @@ const AssessmentStart = {
         }
     },
 
+    /**
+     * Case IDs this participant code has already completed — powers the
+     * per-case checkmarks and the "X of N done" progress line, so a
+     * returning pilot sees momentum instead of the same wall of cases.
+     */
+    async _loadMyCompletions() {
+        try {
+            const code = (typeof UserCode !== 'undefined') ? UserCode.get() : null;
+            const sb = (typeof SupabaseSync !== 'undefined') ? SupabaseSync.getClient() : null;
+            if (!code || !sb) return [];
+            const { data, error } = await sb
+                .from('test_attempts')
+                .select('case_id,status')
+                .eq('user_code', code)
+                .eq('status', 'completed');
+            if (error) return [];
+            return [...new Set((data || []).map((a) => a.case_id))];
+        } catch (e) { return []; }
+    },
+
     async _loadCaseList() {
         const ids = AssessmentData.listCases().map((c) => c.caseId);
         const metas = await Promise.all(
@@ -243,14 +266,27 @@ const AssessmentStart = {
         root.parentElement.insertBefore(strip, root);
     },
 
-    _renderCaseList(cases) {
+    _renderCaseList(cases, doneCaseIds) {
         const container = document.getElementById('assessment-case-list');
         if (!container) return;
         if (!cases.length) {
             container.innerHTML = '<div class="empty-state-text">No assessment cases are configured.</div>';
             return;
         }
-        container.innerHTML = cases.map((entry) => {
+        const done = new Set(doneCaseIds || []);
+        const okCases = cases.filter((e) => e.ok);
+        const doneCount = okCases.filter((e) => done.has(e.m.caseId)).length;
+        // First not-yet-completed case gets the visually primary "start here" CTA
+        const nextEntry = okCases.find((e) => !done.has(e.m.caseId));
+
+        let progressHtml = '';
+        if (okCases.length > 1) {
+            progressHtml = doneCount > 0
+                ? `<div class="assessment-progress-line">You've completed <strong>${doneCount} of ${okCases.length}</strong> cases${doneCount >= okCases.length ? ' — all done, thank you!' : ' — each one helps, do the rest whenever suits you.'}</div>`
+                : `<div class="assessment-progress-line">${okCases.length} cases, each about 30–45 minutes. <strong>Doing just one is a great start</strong> — they can be done in any sitting, in any order.</div>`;
+        }
+
+        container.innerHTML = progressHtml + cases.map((entry, i) => {
             if (!entry.ok) {
                 return `
                     <div class="assessment-case-card error">
@@ -260,19 +296,22 @@ const AssessmentStart = {
             }
             const m = entry.m;
             const isScaffold = (m.status === 'scaffold');
+            const isDone = done.has(m.caseId);
+            const isNext = nextEntry && nextEntry.m.caseId === m.caseId;
             return `
-                <div class="assessment-case-card">
+                <div class="assessment-case-card${isDone ? ' case-done' : ''}${isNext ? ' case-next' : ''}">
                     <div class="assessment-case-card-header">
-                        <h3>${this._escape(this._cardTitle(m))}</h3>
+                        <h3>Case ${i + 1}: ${this._escape(this._cardTitle(m))}</h3>
+                        ${isDone ? '<span class="assessment-case-tag done">&#10003; Completed</span>' : ''}
                         ${isScaffold ? '<span class="assessment-case-tag scaffold">SCAFFOLD</span>' : ''}
                     </div>
                     <div class="assessment-case-card-meta">
-                        <span>${(m.assessments || []).length} assessment points</span>
+                        <span>${(m.assessments || []).length} timepoint${(m.assessments || []).length === 1 ? '' : 's'} &middot; ~30&ndash;45 min</span>
                     </div>
                     ${m.source ? `<div class="assessment-case-card-source">Test case &middot; ${this._escape(m.source)}</div>` : ''}
                     ${m.warning ? `<div class="assessment-case-card-warning">${this._escape(m.warning)}</div>` : ''}
-                    <button class="btn btn-primary" onclick="AssessmentStart.beginCase('${m.caseId}')">
-                        Begin Assessment
+                    <button class="btn ${isDone ? '' : 'btn-primary'}" onclick="AssessmentStart.beginCase('${m.caseId}')">
+                        ${isDone ? 'Do again' : (isNext ? 'Start here' : 'Begin case')}
                     </button>
                 </div>
             `;

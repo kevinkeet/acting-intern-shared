@@ -14,6 +14,6 @@
   ],
   "passingOverallScorePct": 70,
   "description": "A 3-stage clinical case following Maria Sandoval, a 22-year-old patient with a complex multi-system illness that evolves over 14 months. Adapted from a published clinical case report.",
-  "warning": "Set aside uninterrupted time to work through the case. There is no time limit — your elapsed time is recorded, but you will not be cut off. Pausing is permitted.",
+  "warning": "No time limit — your elapsed time is recorded but nothing cuts you off, and pausing is fine. Your answers save as you go.",
   "instructions": "You are evaluating a real patient. Review the chart and respond to each clinical question. Your responses are graded against a rubric; the diagnosis is revealed at the end."
 }

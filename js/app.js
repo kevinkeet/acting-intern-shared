@@ -322,13 +322,13 @@ const App = {
             <div class="ec-card">
                 <h2>Welcome to Acting Intern</h2>
                 <p class="ec-sub">How would you like to use the site?</p>
+                <button class="ec-option ec-primary" data-mode="pilot">
+                    <strong>Study participant</strong>
+                    <span>Here with a participant code — or piloting the study for us? <strong>This is the one to pick.</strong> These are the real study cases.</span>
+                </button>
                 <button class="ec-option" data-mode="demo">
                     <strong>Demo</strong>
-                    <span>Try the interface with a practice case (Maria Sandoval) — chart, questions, and the AI assistant. No study data.</span>
-                </button>
-                <button class="ec-option" data-mode="pilot">
-                    <strong>Study participant</strong>
-                    <span>Take the assessment with your participant code — the real study cases.</span>
+                    <span>Practice case only (Maria Sandoval) — try the interface and AI. Not one of the study cases.</span>
                 </button>
                 <button class="ec-option" data-mode="full">
                     <strong>Full site</strong>
@@ -356,7 +356,10 @@ const App = {
                     localStorage.setItem('app-mode', 'assistant');
                 }
             } catch (e) { /* storage unavailable — just proceed */ }
-            location.hash = (mode === 'full') ? '#/chart-review' : '#/assessment/start';
+            // Drop the query string on reload: a lingering ?choose flag would
+            // clear entry-mode again at parse and re-show this chooser.
+            const dest = (mode === 'full') ? '#/chart-review' : '#/assessment/start';
+            location.href = location.pathname + dest;
             location.reload();
         }));
     },
