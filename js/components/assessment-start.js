@@ -25,8 +25,20 @@ const AssessmentStart = {
         // If Supabase happens to be signed in, attempts persist centrally; if
         // not, attempts run in-memory and results are viewable in this tab
         // session only.
+        // Demo-door visitors see only Sandoval and can mistake her for the
+        // study — several coded pilots did exactly that. Give them a one-click
+        // path to the real study cases.
+        const inDemo = (function () { try { return localStorage.getItem('entry-mode') === 'demo'; } catch (e) { return false; } })();
+        const demoSwitchHtml = inDemo ? `
+            <div class="demo-switch-banner">
+                <strong>You're in the practice version.</strong> Maria Sandoval is a demo case — she is <em>not</em> one of the study cases.
+                If you're here to pilot the study, switch over:
+                <button class="btn btn-primary" id="demo-switch-study-btn">Go to the study cases</button>
+            </div>` : '';
+
         root.innerHTML = `
             <div class="assessment-start-page">
+                ${demoSwitchHtml}
                 <div class="assessment-start-hero">
                     <h1>Assessment Mode</h1>
                     <p class="assessment-start-tagline">
@@ -55,6 +67,22 @@ const AssessmentStart = {
                 </div>
             </div>
         `;
+        const switchBtn = document.getElementById('demo-switch-study-btn');
+        if (switchBtn) switchBtn.addEventListener('click', () => {
+            try {
+                localStorage.setItem('entry-mode', 'pilot');
+                localStorage.removeItem('demo-mode');
+                localStorage.removeItem('all-modes-unlocked');
+                localStorage.setItem('app-mode', 'assessment');
+            } catch (e) { /* proceed anyway */ }
+            // location.replace with the bare pathname drops any ?demo flag —
+            // crucial, because URL flags re-record entry-mode at script parse
+            // and would immediately undo the switch. No explicit reload():
+            // removing the query string forces a full navigation by itself,
+            // and racing a reload() re-applies the old URL first.
+            location.replace(location.pathname + '#/assessment/start');
+        });
+
         App.refreshIcons();
         this._renderUserCodeStrip();
 

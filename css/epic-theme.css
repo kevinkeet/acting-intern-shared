@@ -16886,3 +16886,20 @@ body.tutor-standalone {
     padding: 2px 8px;
     border-radius: 10px;
 }
+
+/* Demo-door escape hatch: coded pilots kept doing Sandoval thinking it was the study */
+.demo-switch-banner {
+    background: #fefce8;
+    border: 1px solid #facc15;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 0 0 18px;
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: #713f12;
+}
+.demo-switch-banner .btn {
+    display: inline-block;
+    margin-left: 10px;
+    vertical-align: baseline;
+}

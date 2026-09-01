@@ -1,6 +1,17 @@
 # Acting Intern — Session Handoff / Working Doc
 
-## LATEST (2026-09-01, cache 20260723q): anti-daunting funnel redesign + study-door steering
+## LATEST (2026-09-01, cache 20260723s): demo-door escape hatch — pilots were doing Sandoval
+Kevin: "I want the 5 main cases piloted." Coded pilots (6773/0663/4217) landed on the DEMO door and
+did/attempted Sandoval thinking it was the study; entry-mode persists so they'd never re-see the
+chooser. Fix: yellow banner on the demo assessment-start page ("Sandoval is a demo case — not the
+study") with a one-click "Go to the study cases" switch (sets pilot mode, strips ?demo via
+location.replace(pathname) — do NOT add reload(), the race re-applies the URL flag).
+Also this session: per-case time quote 30-45 → 10-20 min (all 4 spots). Completion #10: 8019 resumed
+after 13 days and finished PAT003 (~14.5 min case time) — BUT their rows have secs=0/no user_question:
+they resumed in a stale pre-fix tab. Long-lived open tabs bypass deployed fixes; consider a version
+check + reload prompt if this recurs.
+
+## PREVIOUS (2026-09-01, cache 20260723q): anti-daunting funnel redesign + study-door steering
 Kevin's word-of-mouth pilot feedback: "seems daunting... they sit down, get overwhelmed, give up."
 Fixes (all verified in preview with 4782's real code):
 - **Stale scary copy removed**: start page said "dedicate at least 90 minutes uninterrupted",
@@ -124,7 +135,7 @@ Living status doc so work can resume in a fresh session. Repo:
 ## How the app works (fast facts)
 - Vanilla HTML/JS/CSS, **no build system**. `index.html` loads all scripts; `js/router.js` hash routing.
 - **Two git remotes — push BOTH after every commit:** `git push origin main && git push shared main`.
-- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260723r`**.
+- **Cache busting:** every `<script>/<link>` in `index.html` uses `?v=YYYYMMDD[suffix]`. Bump it (search/replace all + `window.__CACHE_V`) whenever you change **JS or CSS**. **Data JSON under `data/` is NOT cache-busted** — edits take effect on reload. Current version: **`20260723s`**.
 - **Access gate password:** `0slerian` → PBKDF2 → decrypts the embedded Anthropic key into localStorage. Never log/commit the decrypted key.
 - **The shared Anthropic API key repeatedly runs OUT OF CREDITS** (Opus runs burn it fast). When it does, the live assessment (chat + grading) is DOWN. Only the user can top it up.
 - **Supabase** project (`piwoinyrlicvndpsmtde`) auto-pauses on free tier; resume from the dashboard before use.
