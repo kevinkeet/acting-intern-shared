@@ -47,7 +47,7 @@ const AssessmentStart = {
                 <div class="assessment-start-policy">
                     <h3>Good to know</h3>
                     <ul>
-                        <li><strong>One case at a time.</strong> Each case is a self-contained exercise of about 30–45 minutes. Doing one case per sitting is completely fine — come back for the others whenever suits you.</li>
+                        <li><strong>One case at a time.</strong> Each case is a self-contained exercise of about 10–20 minutes. Doing one case per sitting is completely fine — come back for the others whenever suits you.</li>
                         <li><strong>No time limits.</strong> Nothing counts down and nothing auto-submits. Take the time you need.</li>
                         <li><strong>Your work saves as you go.</strong> If you get interrupted or close the tab, entering your code brings you right back to where you stopped.</li>
                         <li><strong>The chart moves forward in time</strong> as the case progresses — a banner tells you whenever new information has arrived.</li>
@@ -86,7 +86,7 @@ const AssessmentStart = {
                         physicians use AI tools to reason through clinical cases. Participation is voluntary.</p>
                         <ul>
                             <li><strong>What you'll do:</strong> work through simulated clinical cases —
-                            one case at a time, each about 30–45 minutes — using the built-in AI assistant
+                            one case at a time, each about 10–20 minutes — using the built-in AI assistant
                             as you see fit, and submit written answers. You do NOT need to do everything in
                             one sitting: your progress saves automatically, and your code brings you back
                             to wherever you left off.</li>
@@ -283,7 +283,7 @@ const AssessmentStart = {
         if (okCases.length > 1) {
             progressHtml = doneCount > 0
                 ? `<div class="assessment-progress-line">You've completed <strong>${doneCount} of ${okCases.length}</strong> cases${doneCount >= okCases.length ? ' — all done, thank you!' : ' — each one helps, do the rest whenever suits you.'}</div>`
-                : `<div class="assessment-progress-line">${okCases.length} cases, each about 30–45 minutes. <strong>Doing just one is a great start</strong> — they can be done in any sitting, in any order.</div>`;
+                : `<div class="assessment-progress-line">${okCases.length} cases, each about 10–20 minutes. <strong>Doing just one is a great start</strong> — they can be done in any sitting, in any order.</div>`;
         }
 
         container.innerHTML = progressHtml + cases.map((entry, i) => {
@@ -306,7 +306,7 @@ const AssessmentStart = {
                         ${isScaffold ? '<span class="assessment-case-tag scaffold">SCAFFOLD</span>' : ''}
                     </div>
                     <div class="assessment-case-card-meta">
-                        <span>${(m.assessments || []).length} timepoint${(m.assessments || []).length === 1 ? '' : 's'} &middot; ~30&ndash;45 min</span>
+                        <span>${(m.assessments || []).length} timepoint${(m.assessments || []).length === 1 ? '' : 's'} &middot; ~10&ndash;20 min</span>
                     </div>
                     ${m.source ? `<div class="assessment-case-card-source">Test case &middot; ${this._escape(m.source)}</div>` : ''}
                     ${m.warning ? `<div class="assessment-case-card-warning">${this._escape(m.warning)}</div>` : ''}
