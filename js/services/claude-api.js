@@ -249,7 +249,12 @@ const ClaudeAPI = {
             };
         }
         // Allow callers (e.g., the grader) to pin temperature for reproducibility.
-        if (typeof req.temperature === 'number') singleBody.temperature = req.temperature;
+        // Claude 5 models REJECT sampling params with a 400 — sending
+        // temperature to sonnet-5/opus-5 silently zeroed every grade for
+        // three days (grader catch recorded score 0). Never send it there.
+        const modelForBody = singleBody.model || '';
+        const isClaude5 = /^claude-(sonnet|opus|fable|mythos)-5/.test(modelForBody);
+        if (typeof req.temperature === 'number' && !isClaude5) singleBody.temperature = req.temperature;
 
         const response = await this._timedFetch({
             method: 'POST',
@@ -295,7 +300,7 @@ const ClaudeAPI = {
             messages: [{ role: 'user', content: req.userMessage }],
             tools: [tool],
         };
-        if (typeof req.temperature === 'number') body.temperature = req.temperature;
+        if (typeof req.temperature === 'number' && !/^claude-(sonnet|opus|fable|mythos)-5/.test(body.model || '')) body.temperature = req.temperature;
 
         const response = await this._timedFetch({
             method: 'POST',

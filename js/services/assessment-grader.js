@@ -141,7 +141,9 @@ const AssessmentGrader = (() => {
             WARN('grade call failed:', err.message);
             return {
                 ok: false,
-                score: 0,
+                // null, not 0 — a failed grade must stay distinguishable from
+                // a genuinely zero-scoring answer (and re-gradeable later)
+                score: null,
                 breakdown: { essential_hit: [], essential_missed: ['(grader call failed)'], bonus_hit: [], red_flags_triggered: [] },
                 notes: 'Grader call failed: ' + err.message,
                 raw: '',
@@ -188,7 +190,7 @@ const AssessmentGrader = (() => {
             });
         } catch (err) {
             WARN('points grade call failed:', err.message);
-            return { ok: false, score: 0, breakdown: { awarded: [], missed: ['(grader call failed)'] }, notes: 'Grader call failed: ' + err.message, raw: '' };
+            return { ok: false, score: null, breakdown: { awarded: [], missed: ['(grader call failed)'] }, notes: 'Grader call failed: ' + err.message, raw: '' };
         }
 
         const parsed = _parseGraderResponse(raw);
