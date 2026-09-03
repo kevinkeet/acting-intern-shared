@@ -45,12 +45,7 @@ const NotesList = {
                             <div class="notes-filter">
                                 <select id="note-type-filter" onchange="NotesList.applyFilters()">
                                     <option value="all">All Types</option>
-                                    <option value="Progress Note">Progress Note</option>
-                                    <option value="H&P">H&P</option>
-                                    <option value="Consult">Consult</option>
-                                    <option value="Discharge Summary">Discharge Summary</option>
-                                    <option value="Procedure Note">Procedure Note</option>
-                                    <option value="Telephone Encounter">Telephone Encounter</option>
+                                    ${this._typeOptions()}
                                 </select>
                                 <select id="note-date-filter" onchange="NotesList.applyFilters()">
                                     <option value="all">All Time</option>
@@ -121,6 +116,20 @@ const NotesList = {
     /**
      * Apply filters to notes list
      */
+    /**
+     * Type options built from the notes actually present. The old hardcoded
+     * list ("Progress Note", "H&P", ...) never matched the study patients'
+     * richer type names, so any selection showed "No Notes Found"
+     * (pilot bug report 6718, 9/3).
+     */
+    _typeOptions() {
+        const types = [...new Set(this.notes.map(n => n.type).filter(Boolean))].sort();
+        return types.map(t => {
+            const esc = String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+            return `<option value="${esc}">${esc}</option>`;
+        }).join('');
+    },
+
     applyFilters() {
         const typeFilter = document.getElementById('note-type-filter')?.value || 'all';
         const dateFilter = document.getElementById('note-date-filter')?.value || 'all';
@@ -134,11 +143,26 @@ const NotesList = {
                 return false;
             }
 
-            // Date filter
+            // Date filter — anchored to the CASE's timeline, not the real-world
+            // clock. Cases are dated in the future (e.g. 2027), so ranges
+            // computed from today's date passed every note and the filter did
+            // nothing (pilot bug report 6718, 9/3).
             if (dateFilter !== 'all') {
-                const { startDate } = DateUtils.getDateRange(dateFilter);
-                if (new Date(note.date) < startDate) {
-                    return false;
+                const days = { last7days: 7, last30days: 30, last90days: 90, last1year: 365 }[dateFilter];
+                if (days) {
+                    let anchorIso = null;
+                    try {
+                        if (typeof AssessmentChartGate !== 'undefined' && AssessmentChartGate.getAnchor) {
+                            anchorIso = AssessmentChartGate.getAnchor();
+                        }
+                    } catch (e) { /* fall through */ }
+                    if (!anchorIso && this.notes.length) {
+                        anchorIso = this.notes.map(n => n.date).filter(Boolean).sort().slice(-1)[0];
+                    }
+                    const anchorMs = anchorIso ? Date.parse(anchorIso) : Date.now();
+                    if (Date.parse(note.date) < anchorMs - days * 86400000) {
+                        return false;
+                    }
                 }
             }
 

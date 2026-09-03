@@ -1,6 +1,12 @@
 # Acting Intern — Session Handoff / Working Doc
 
-## LATEST (2026-09-02, cache 20260723u): GRADER WAS ZEROING ALL SCORES since the Claude 5 upgrade
+## LATEST (2026-09-03, cache 20260723v): notes filters fixed (pilot 6718 bug report)
+6718 (study door, PAT003, feedback 9/3): note TYPE filter always showed "No Notes Found" (hardcoded
+generic options vs the study patients' rich type names — now built dynamically from the loaded
+notes) and the TIME filter did nothing (ranges computed from real-world today vs 2027 case dates —
+now anchored to the chart-gate anchor, falling back to newest note). Verified on PAT003.
+
+## PREVIOUS (2026-09-02, cache 20260723u): GRADER WAS ZEROING ALL SCORES since the Claude 5 upgrade
 Sonnet 5 rejects `temperature` (400: "deprecated for this model"); the grader pinned temperature 0
 and its catch recorded score 0 — every grade 8/29→9/2 (25 responses: 4782×2 cases, 8893, 6773 demo,
 8019's resumed answers) was a silent fake zero. FIXED: _singleChat/webSearchChat strip temperature
