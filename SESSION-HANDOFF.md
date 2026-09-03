@@ -1,6 +1,19 @@
 # Acting Intern — Session Handoff / Working Doc
 
-## LATEST (2026-09-01, cache 20260723t): Eduardo's pilot feedback (email via Kevin)
+## LATEST (2026-09-02, cache 20260723u): GRADER WAS ZEROING ALL SCORES since the Claude 5 upgrade
+Sonnet 5 rejects `temperature` (400: "deprecated for this model"); the grader pinned temperature 0
+and its catch recorded score 0 — every grade 8/29→9/2 (25 responses: 4782×2 cases, 8893, 6773 demo,
+8019's resumed answers) was a silent fake zero. FIXED: _singleChat/webSearchChat strip temperature
+for /^claude-(sonnet|opus|fable|mythos)-5/; grader failures now store score NULL (distinguishable +
+re-gradeable). ALL 25 RE-GRADED 9/2 via browser runner (notes tagged "[re-graded 9/2...]") and
+attempt totals recomputed. GOTCHA: admin role RLS is READ-ONLY — writes must go through a
+code-scoped client (x-participant-code header). One row still ungraded: 6773 demo AP3-Q2 (grade
+failed twice; score null). Re-graded totals: 8893 PAT003=.195/PAT004=.352/PAT005=.407 (full 3-case
+battery!), 4782 PAT003=.306/PAT004=.324, 8019 PAT003=.528, 6773 demo=.048.
+Power-calc context: SAP §5 assumes SD 11.6% for 3-case mean; observed person-level SD ≈10pts (n=4,
+CI huge) — corroborates, cannot justify changing.
+
+## PREVIOUS (2026-09-01, cache 20260723t): Eduardo's pilot feedback (email via Kevin)
 Fixed same-day: (1) LOW lab flags were BLUE (read as benign) — all abnormal flags now red family
 like Epic (--status-low/-bg + 3 hardcoded blues; H/L letter still shows direction). (2) Dashboard
 card counts said N but displayed max 8 (slice cap removed; widget body scrolls all items — his exact
