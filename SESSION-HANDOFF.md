@@ -1,6 +1,15 @@
 # Acting Intern — Session Handoff / Working Doc
 
-## LATEST (2026-09-03, cache 20260723v): notes filters fixed (pilot 6718 bug report)
+## LATEST (2026-09-07): PAT003 MICU labs added (pilot 6718 question)
+6718 asked whether labs should exist after Nguyen's MICU admission. Notes cited 2/17-2/18 values
+(Cr 2.6 peak, WBC 14.2, lactate 1.4, lipase 612, P/F 140) that had no lab panels. Added LAB010
+(HD3 2/17) + LAB011 (HD4 2/18 with ABG) matching note canon exactly — fidelity fix, no new clinical
+info. Data files aren't cache-busted; live on next Pages deploy. Kevin approved 9/7.
+Pilot milestones: ALL FIVE study cases now completed on current build (4537 blitzed 4 cases in
+~45 min on 9/4 — first PAT006/007 completions; 6718 completed PAT006 9/5 at 52.1%, best score yet,
+now on PAT007 — one case from a full-battery sweep). 20 completions / 7 participants.
+
+## PREVIOUS (2026-09-03, cache 20260723v): notes filters fixed (pilot 6718 bug report)
 6718 (study door, PAT003, feedback 9/3): note TYPE filter always showed "No Notes Found" (hardcoded
 generic options vs the study patients' rich type names — now built dynamically from the loaded
 notes) and the TIME filter did nothing (ranges computed from real-world today vs 2027 case dates —
