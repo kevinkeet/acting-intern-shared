@@ -327,6 +327,20 @@ const AssessmentPanel = {
         document.body.classList.remove('assessment-dock-open');
     },
 
+    // Typical whole-case minutes from the pilot (medians, Sep 2026). Shown as
+    // an expectation, never a limit. Pilots asked for a sense of how long a
+    // case takes and how far along they are; a gentle pace cue nudges faster.
+    _typicalMinutes(caseId) {
+        return ({ PAT003: 18, PAT004: 20, PAT005: 18, PAT006: 12, PAT007: 15 })[caseId] || 15;
+    },
+
+    _casePosition(cur) {
+        const all = cur.caseDef.assessments.flatMap((a) => a.prompts || []);
+        let before = 0;
+        for (let i = 0; i < cur.indexes.apIdx; i++) before += (cur.caseDef.assessments[i].prompts || []).length;
+        return { index1: before + cur.indexes.pIdx + 1, total: all.length };
+    },
+
     _renderBar() {
         const cur = AssessmentEngine.getCurrent();
         if (!cur) return;
@@ -339,6 +353,7 @@ const AssessmentPanel = {
         // never a countdown, and never auto-submit.
         const timeElapsed = AssessmentEngine.getTimeUsedSeconds();
         const isPaused = AssessmentEngine.isPaused();
+        const pos = this._casePosition(cur);
 
         const bar = document.getElementById('assessment-bar');
         if (!bar) return;
@@ -362,7 +377,9 @@ const AssessmentPanel = {
                 </div>
             </div>
             <div class="assessment-bar-meta">
-                <span class="assessment-bar-context" title="${this._escape(ap.title || ap.id)}">${total > 1 ? `AP ${apIndex1}/${total} · ` : ''}${this._escape(ap.title || ap.id)} · Prompt ${promptIdx1}/${promptCount}</span>
+                <span class="assessment-bar-context" title="${this._escape(ap.title || ap.id)}"><strong>Question ${pos.index1} of ${pos.total}</strong>${total > 1 ? ` · Timepoint ${apIndex1} of ${total}` : ''}</span>
+                <div class="assessment-progress-track" title="${pos.index1 - 1} of ${pos.total} answered"><div class="assessment-progress-fill" style="width:${Math.round(100 * (pos.index1 - 1) / Math.max(1, pos.total))}%"></div></div>
+                <div class="assessment-pace" id="assessment-pace">${this._paceText(timeElapsed, cur.caseDef.id || cur.attempt.case_id)}</div>
                 <div class="assessment-progress-dots">${this._renderProgressDots(cur)}</div>
             </div>
         `;
@@ -452,7 +469,7 @@ const AssessmentPanel = {
                 <div class="assessment-prompt-question">${this._escape(prompt.question || '(no question)')}</div>
                 ${aiSampleHtml}
                 <textarea class="assessment-response-input" id="assessment-response-input"
-                          placeholder="Type your response here…"
+                          placeholder="A few sentences is plenty — there's no length requirement. Type your response here…"
                           rows="6">${this._escape(existingText)}</textarea>
                 <div class="assessment-response-controls">
                     <div class="assessment-response-meta">
@@ -628,6 +645,14 @@ const AssessmentPanel = {
         }
     },
 
+    _paceText(elapsedSec, caseId) {
+        const typical = this._typicalMinutes(caseId);
+        const mins = elapsedSec / 60;
+        if (mins < typical * 0.75) return `most people finish in about ${typical} min`;
+        if (mins < typical) return `most people are wrapping up around now`;
+        return `past the typical ${typical} min — short answers are fine, keep moving`;
+    },
+
     _startTicker() {
         this._stopTicker();
         this._expiredHandled = false;
@@ -635,7 +660,17 @@ const AssessmentPanel = {
             const t = document.getElementById('assessment-timer-text');
             if (!t) return;
             // Count UP. Time is recorded for analysis but never cuts anyone off.
-            t.textContent = this._fmtTime(AssessmentEngine.getTimeUsedSeconds());
+            const secs = AssessmentEngine.getTimeUsedSeconds();
+            t.textContent = this._fmtTime(secs);
+            const pace = document.getElementById('assessment-pace');
+            if (pace && secs % 15 === 0) {
+                const cur = AssessmentEngine.getCurrent();
+                if (cur) {
+                    const typical = this._typicalMinutes(cur.caseDef.id || cur.attempt.case_id);
+                    pace.textContent = this._paceText(secs, cur.caseDef.id || cur.attempt.case_id);
+                    pace.classList.toggle('over', secs / 60 >= typical);
+                }
+            }
         }, 1000);
     },
 

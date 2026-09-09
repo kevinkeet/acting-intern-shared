@@ -16906,3 +16906,27 @@ body.tutor-standalone {
     margin-left: 10px;
     vertical-align: baseline;
 }
+
+/* Pace cue next to the elapsed timer (pilot feedback: "how long will this take?") */
+.assessment-pace {
+    font-size: 11px;
+    font-weight: 500;
+    color: #64748b;
+    margin: 0 0 4px;
+    line-height: 1.3;
+}
+.assessment-pace.over { color: #b45309; }
+/* Whole-case progress bar under "Question N of M" */
+.assessment-progress-track {
+    height: 4px;
+    background: #e2e8f0;
+    border-radius: 2px;
+    overflow: hidden;
+    margin: 4px 0 6px;
+}
+.assessment-progress-fill {
+    height: 100%;
+    background: #2563eb;
+    border-radius: 2px;
+    transition: width .4s ease;
+}

@@ -1,6 +1,17 @@
 # Acting Intern — Session Handoff / Working Doc
 
-## LATEST (2026-09-07): PAT003 MICU labs added (pilot 6718 question)
+## LATEST (2026-09-09, cache 20260723w): progress + pace cues (pilot feedback: "how long / how far")
+Dock now shows whole-case **"Question N of M · Timepoint a of b"** + thin progress bar + a pace line
+under it from pilot per-case medians (`_typicalMinutes`: 003=18, 004=20, 005=18, 006=12, 007=15,
+default 15): "<75% typical → most people finish in about N min" / "wrapping up around now" /
+"past the typical N min — short answers are fine, keep moving" (amber). Ticker refreshes it every
+15 s. Answer box placeholder: "A few sentences is plenty — there's no length requirement." (uniform
+across questions — addresses Eduardo's length ask without leaking rubric weight). NOTE: pace cue
+lives on its own line — the timer row is too narrow and clipped it.
+Pilot: 8893 completed all 5 study cases (9/9) — first full sweep on current build; 21 completions
+across 6 genuine pilots; report rev 2 published (excludes 2874/6713/4217/0663/4873/6773).
+
+## PREVIOUS (2026-09-07): PAT003 MICU labs added (pilot 6718 question)
 6718 asked whether labs should exist after Nguyen's MICU admission. Notes cited 2/17-2/18 values
 (Cr 2.6 peak, WBC 14.2, lactate 1.4, lipase 612, P/F 140) that had no lab panels. Added LAB010
 (HD3 2/17) + LAB011 (HD4 2/18 with ABG) matching note canon exactly — fidelity fix, no new clinical
