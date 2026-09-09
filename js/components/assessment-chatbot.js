@@ -63,7 +63,7 @@ const AssessmentChatbot = (() => {
     ];
 
     const MAX_CONTEXT_CHARS = 60000;     // soft cap before truncation
-    const MAX_RESPONSE_TOKENS = 1024;    // soft ceiling on length (a concise reply fits easily)
+    const MAX_RESPONSE_TOKENS = 2048;    // 1024 cut replies off mid-thought (pilot 8893, 9 Sep)
     const CHATBOT_MODEL = 'claude-haiku-4-5-20251001';  // fast + cheap; matches the chatbot's "answer concisely" UX
     // BLANK system prompt by design. The assessment AI must be maximally
     // construct-neutral: no framing, no verbosity nudge, no reasoning/ethics

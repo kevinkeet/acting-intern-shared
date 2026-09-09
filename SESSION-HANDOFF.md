@@ -1,6 +1,20 @@
 # Acting Intern — Session Handoff / Working Doc
 
-## LATEST (2026-09-09, cache 20260723w): progress + pace cues (pilot feedback: "how long / how far")
+## LATEST (2026-09-09 PM, cache 20260723x): ANSWER LEAK closed — encounter status revealed outcomes
+Pilot 6718 (PAT007 AP2): encounter "status" text showed the whole ICU course incl. discharge 5/30 —
+the date gate passes an encounter by START date, so retrospective status text leaked outcomes at
+every timepoint. PAT004 ENC001 leaked "Discharged 7/11 on apixaban" at AP1 (the anticoagulation
+decision IS a question). Fix: `_sanitizeEncounter` in assessment-chart-gate — if dischargeDate/end
+> anchor OR status/disposition/outcome/summary text contains any M/D[/YYYY] date > anchor (year-less
+dates read in the anchor year), status becomes "In progress (admitted M/D/YYYY)" and outcome fields
+are stripped. Applies to loadEncounters + loadEncounter, so UI and AI context both see the redaction.
+Verified all 5 cases at AP1. Also: chatbot MAX_RESPONSE_TOKENS 1024→2048 (pilot 8893: replies
+"stopped mid-thought"). 8893's other feedback (wants AI to weigh evidence not recommend; orders
+don't produce results as time advances; copy-paste temptation grows with fatigue) = instrument
+notes for Kevin, no change. Pilot: 6718 completed PAT007 → SECOND full five-case sweep; 22
+completions.
+
+## PREVIOUS (2026-09-09, cache 20260723w): progress + pace cues (pilot feedback: "how long / how far")
 Dock now shows whole-case **"Question N of M · Timepoint a of b"** + thin progress bar + a pace line
 under it from pilot per-case medians (`_typicalMinutes`: 003=18, 004=20, 005=18, 006=12, 007=15,
 default 15): "<75% typical → most people finish in about N min" / "wrapping up around now" /

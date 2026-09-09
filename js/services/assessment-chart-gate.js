@@ -64,6 +64,40 @@ const AssessmentChartGate = (() => {
         return arr.filter(_passesGate);
     }
 
+    // An encounter can START before the anchor yet carry a retrospective
+    // status written after it ("Discharged 7/11 on apixaban", "made CMO at
+    // 2 weeks, then unexpectedly recovered"). The date gate lets the
+    // encounter through, and the status hands the participant the case's
+    // outcome (pilot report 6718, 9 Sep). Redact any outcome text that
+    // reaches past the anchor and present the encounter as still open.
+    function _sanitizeEncounter(enc) {
+        if (!enc || typeof enc !== 'object' || !_anchorMs) return enc;
+        const endIso = enc.dischargeDate || enc.endDate || enc.end || null;
+        const endMs = endIso ? Date.parse(endIso) : NaN;
+        const endsAfterAnchor = !Number.isNaN(endMs) && endMs > _anchorMs;
+        const anchorYear = new Date(_anchorMs).getUTCFullYear();
+        const textAfterAnchor = (txt) => {
+            if (!txt) return false;
+            // M/D/YYYY, or year-less M/D ("as of 6/14") read in the anchor's year
+            const re = /\b(\d{1,2})\/(\d{1,2})(?:\/(20\d\d))?\b/g;
+            let m;
+            while ((m = re.exec(String(txt))) !== null) {
+                const y = m[3] || String(anchorYear);
+                const ms = Date.parse(`${y}-${m[1].padStart(2, '0')}-${m[2].padStart(2, '0')}T00:00:00Z`);
+                if (!Number.isNaN(ms) && ms > _anchorMs) return true;
+            }
+            return false;
+        };
+        const leaky = endsAfterAnchor ||
+            ['status', 'disposition', 'outcome', 'summary', 'hospitalCourse'].some((k) => textAfterAnchor(enc[k]));
+        if (!leaky) return enc;
+        const out = { ...enc };
+        const started = enc.date ? new Date(enc.date).toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: 'numeric' }) : null;
+        out.status = started ? `In progress (admitted ${started})` : 'In progress';
+        ['disposition', 'outcome', 'summary', 'hospitalCourse', 'dischargeDate', 'endDate', 'end', 'dischargeDisposition', 'lengthOfStay'].forEach((k) => { if (k in out) delete out[k]; });
+        return out;
+    }
+
     function _markSection(name) {
         _visibleSections.add(name);
     }
@@ -188,7 +222,8 @@ const AssessmentChartGate = (() => {
         wrap('loadEncounters', (data) => {
             _markSection('encounters');
             if (!data) return data;
-            return { ...data, encounters: _filterArray(data.encounters) };
+            const list = _filterArray(data.encounters);
+            return { ...data, encounters: Array.isArray(list) ? list.map(_sanitizeEncounter) : list };
         });
         wrap('loadEncounter', (data) => {
             _markSection('encounters');
@@ -198,6 +233,7 @@ const AssessmentChartGate = (() => {
                 err.code = 'GATED';
                 throw err;
             }
+            data = _sanitizeEncounter(data);
             return data;
         });
 
