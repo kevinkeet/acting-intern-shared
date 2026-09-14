@@ -1,5 +1,13 @@
 # Acting Intern — Session Handoff / Working Doc
 
+## Pilot update 2026-09-11 (seen 9/14): two pilots, 8 completions in one afternoon
+2874 — the Aug-19 zero-answer bouncer — returned after 23 days and swept ALL FIVE cases in ~2 h
+(6–10 min/case, 55–108-char answers, 0–6 AI queries; scores 14/23/33/44/20%) → 3rd full sweep,
+thinnest engagement ("minimalist blitzer"). NEW 7815 did a full 3-case battery (003 33%, 004 31%,
+005 59%; 17/16/39 min; 6–7 q/case; pasted-length answers on PAT005). Both study door. Post-leak-fix
+PAT004 scores (23%, 31%) sit inside the prior 25–35% range → leak fix didn't visibly move it.
+Totals: 32 completions; sweeps = 8893, 6718, 2874. Report rev 2 predates this — needs a rev 3.
+
 ## LATEST (2026-09-13, cache 20260723y): "un-charted orders are pending" convention (pilot 8893)
 8893: "odd to say I'd get an echo, then time moves forward and I don't have one." Fixed-chart design
 is unchanged; the convention is now stated in two places: the time-jump interstitial gets a second
