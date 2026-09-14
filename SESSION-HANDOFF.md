@@ -8,7 +8,15 @@ thinnest engagement ("minimalist blitzer"). NEW 7815 did a full 3-case battery (
 PAT004 scores (23%, 31%) sit inside the prior 25–35% range → leak fix didn't visibly move it.
 Totals: 32 completions; sweeps = 8893, 6718, 2874. Report rev 2 predates this — needs a rev 3.
 
-## LATEST (2026-09-13, cache 20260723y): "un-charted orders are pending" convention (pilot 8893)
+## LATEST (2026-09-14, cache 20260723z): PAT007 daily labs + study-complete screen (pilot feedback)
+
+- **PAT007 (Brooks) labs filled in.** Pilot: "need more WBC data, trend of labs, CBC differential; several days in ICU without daily labs unlikely." Was 3 inpatient draws in 27 days. Now 18 panels: LAB004 (5/2 PM post-MTP/TIPS), LAB005–008 (5/3–5/6 daily), LAB009–013 (5/8–5/16 q2d incl. CSF, repeat ascites, fungal studies), LAB014 (5/20 pre-CMO), LAB015–016 (5/22, 5/24 recovery), LAB017 (5/28 transfer). Every CBC now has a differential (ANC/lymph/mono/eos abs + eos %), bands early; eosinophils trend 1% → 9% → 2%. LAB001/002/003 enriched; old "Eosinophils (% of WBC)" renamed to "CBC — Eosinophils (%)". Interpretations before 5/24 never name drug fever (anchoring trap preserved). Chart gate reveals by collectedDate, so TP1 sees ≤5/6, TP2 ≤5/18.
+- **Reference-range lookup fixed site-wide**: `LabUtils.getRef()` strips the panel prefix ("CBC — WBC" → WBC) and matches case-insensitively; getFlag/getUnit/getReferenceRange/formatValue and lab-trending use it. Trending now shows the normal band + flags for every patient (was blank for all prefixed names).
+- **Study-complete screen** (Kevin: "on completion of all cases: thank you, payment info, exit"). `AssessmentResults._studyStatus()` counts completed cases for the code vs `AssessmentData.listCases()`. When all done: the results page swaps the "Submitted" card for `_renderStudyCompleteCard` (thank you, payment paragraph with NO amount — $50 vs $100 unresolved — code, kkeet@stanford.edu) and the footer becomes a single **Exit** (Go to chart / See remaining cases gone). New routes `#/assessment/complete` (standalone screen; redirects to start if not all done) and `#/assessment/exit`. `exitStudy()` clears UserCode + sessionStorage and shows "You're all done — close this window." Landing page progress line gets a "Finish and exit" button when all cases are done.
+- **Not changed (Kevin's call):** AI assistant context defaults stay 30d / notes+labs. Still open from the same feedback: imaging modality filter has no ECG option; every ECG "View Image" shows the AF strip (PAT006 sinus tracings wrong) — see pilot feedback scoping 9/14.
+- Verified on localhost (study door, code 6718): complete screen, finish button, exit, PAT007 labs table + trending band.
+
+## PREVIOUS (2026-09-13, cache 20260723y): "un-charted orders are pending" convention (pilot 8893)
 8893: "odd to say I'd get an echo, then time moves forward and I don't have one." Fixed-chart design
 is unchanged; the convention is now stated in two places: the time-jump interstitial gets a second
 paragraph (.atj-convention: chart shows what the team actually did; treat anything you ordered that

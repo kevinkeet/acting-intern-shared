@@ -1,170 +1,139 @@
 {
-  "id": "LAB001",
-  "name": "Admission Labs",
-  "collectedDate": "2027-05-02T15:30:00.000Z",
-  "resultedDate": "2027-05-02T16:30:00.000Z",
-  "orderedBy": "Dr. Olivia Reyes (Emergency Department)",
-  "facility": "UPMC — ED Lab",
-  "specimen": "Serum + plasma + ascitic fluid",
+  "id": "LAB014",
+  "name": "MICU AM Labs HD19 — Day of Goals-of-Care Transition",
+  "collectedDate": "2027-05-20T06:00:00.000Z",
+  "resultedDate": "2027-05-20T07:10:00.000Z",
+  "orderedBy": "Dr. Lena Park (MICU)",
+  "facility": "UPMC — ICU Lab",
+  "specimen": "Serum + plasma",
   "status": "Final",
   "results": [
     {
       "name": "CBC — WBC",
-      "value": "12.0",
+      "value": "11.3",
       "unit": "K/uL",
       "referenceRange": "4.5-11.0",
       "flag": "high"
     },
     {
       "name": "CBC — Neutrophils (absolute)",
-      "value": "9.4",
+      "value": "7.1",
       "unit": "K/uL",
       "referenceRange": "1.8-7.7",
-      "flag": "high"
+      "flag": "normal"
     },
     {
       "name": "CBC — Lymphocytes (absolute)",
-      "value": "1.6",
+      "value": "2.1",
       "unit": "K/uL",
       "referenceRange": "1.0-4.8",
       "flag": "normal"
     },
     {
       "name": "CBC — Monocytes (absolute)",
-      "value": "0.8",
+      "value": "1.2",
       "unit": "K/uL",
       "referenceRange": "0.2-0.8",
-      "flag": "normal"
+      "flag": "high"
     },
     {
       "name": "CBC — Eosinophils (absolute)",
-      "value": "0.2",
+      "value": "1.0",
       "unit": "K/uL",
       "referenceRange": "0.0-0.5",
-      "flag": "normal"
+      "flag": "high"
     },
     {
       "name": "CBC — Eosinophils (%)",
-      "value": "2",
+      "value": "9",
       "unit": "%",
       "referenceRange": "0-4",
-      "flag": "normal"
+      "flag": "high"
     },
     {
       "name": "CBC — Hemoglobin",
-      "value": "8.6",
+      "value": "9.1",
       "unit": "g/dL",
       "referenceRange": "12.0-15.5",
       "flag": "low"
     },
     {
       "name": "CBC — Platelets",
-      "value": "80",
+      "value": "60",
       "unit": "K/uL",
       "referenceRange": "150-400",
       "flag": "low"
     },
     {
       "name": "CMP — Sodium",
-      "value": "132",
+      "value": "133",
       "unit": "mmol/L",
       "referenceRange": "135-145",
       "flag": "low"
     },
     {
       "name": "CMP — Potassium",
-      "value": "4.3",
+      "value": "4.2",
       "unit": "mmol/L",
       "referenceRange": "3.5-5.0",
       "flag": "normal"
     },
     {
       "name": "CMP — Bicarbonate",
-      "value": "21",
+      "value": "18",
       "unit": "mmol/L",
       "referenceRange": "22-28",
       "flag": "low"
     },
     {
       "name": "CMP — BUN",
-      "value": "28",
+      "value": "46",
       "unit": "mg/dL",
       "referenceRange": "7-20",
       "flag": "high"
     },
     {
       "name": "CMP — Creatinine",
-      "value": "1.4",
+      "value": "2.5",
       "unit": "mg/dL",
       "referenceRange": "0.5-1.1",
-      "flag": "high",
-      "interpretation": "Baseline unknown."
+      "flag": "high"
     },
     {
       "name": "CMP — Total bilirubin",
-      "value": "4.2",
+      "value": "9.6",
       "unit": "mg/dL",
       "referenceRange": "0.1-1.2",
       "flag": "high"
     },
     {
       "name": "CMP — AST",
-      "value": "50",
+      "value": "47",
       "unit": "U/L",
       "referenceRange": "10-40",
       "flag": "high"
     },
     {
       "name": "CMP — ALT",
-      "value": "60",
+      "value": "43",
       "unit": "U/L",
       "referenceRange": "7-56",
-      "flag": "high"
-    },
-    {
-      "name": "CMP — Albumin",
-      "value": "2.5",
-      "unit": "g/dL",
-      "referenceRange": "3.5-5.0",
-      "flag": "low"
+      "flag": "normal"
     },
     {
       "name": "Coag — INR",
-      "value": "1.9",
+      "value": "2.6",
       "unit": "",
       "referenceRange": "0.8-1.2",
       "flag": "high"
     },
     {
       "name": "Lactate",
-      "value": "2.2",
+      "value": "2.7",
       "unit": "mmol/L",
       "referenceRange": "0.5-2.0",
       "flag": "high"
-    },
-    {
-      "name": "Ascitic fluid — PMN count",
-      "value": "86",
-      "unit": "cells/uL",
-      "referenceRange": "<250",
-      "flag": "normal",
-      "interpretation": "Below the 250 threshold — NEGATIVE for spontaneous bacterial peritonitis."
-    },
-    {
-      "name": "Ascitic fluid — Gram stain",
-      "value": "No organisms seen",
-      "unit": "",
-      "referenceRange": "No organisms",
-      "flag": "normal"
-    },
-    {
-      "name": "Ascitic fluid — SAAG",
-      "value": ">1.1",
-      "unit": "g/dL",
-      "referenceRange": "—",
-      "flag": "abnormal",
-      "interpretation": "Consistent with portal hypertension."
     }
   ],
-  "interpretation": "Decompensated cirrhosis (hyperbilirubinemia, hypoalbuminemia, elevated INR, thrombocytopenia) with anemia. Estimated MELD-Na ~25 at admission. Diagnostic paracentesis NEGATIVE for SBP (86 PMN, no organisms). Mild leukocytosis and lactate in the setting of the acute illness/bleed."
+  "interpretation": "Morning labs before the family meeting outcome was enacted. WBC 11.3; eosinophils 9% (1.0 K/uL). Lactate 2.7 on two vasopressors. Bilirubin 9.6, INR 2.6, creatinine 2.5 (MELD ~40). Antibiotics and vasopressors were discontinued later this day as part of the transition to comfort measures; no further labs were planned."
 }

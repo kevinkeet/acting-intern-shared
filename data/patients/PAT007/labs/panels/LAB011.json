@@ -1,0 +1,231 @@
+{
+  "id": "LAB011",
+  "name": "MICU AM Labs HD11 — Broad Source Workup (CSF, Repeat Ascites)",
+  "collectedDate": "2027-05-12T06:00:00.000Z",
+  "resultedDate": "2027-05-12T07:10:00.000Z",
+  "orderedBy": "Dr. Lena Park (MICU)",
+  "facility": "UPMC — ICU Lab + Microbiology",
+  "specimen": "Serum + plasma + CSF + ascitic fluid + blood cultures",
+  "status": "Final",
+  "results": [
+    {
+      "name": "CBC — WBC",
+      "value": "11.2",
+      "unit": "K/uL",
+      "referenceRange": "4.5-11.0",
+      "flag": "high"
+    },
+    {
+      "name": "CBC — Neutrophils (absolute)",
+      "value": "7.6",
+      "unit": "K/uL",
+      "referenceRange": "1.8-7.7",
+      "flag": "normal"
+    },
+    {
+      "name": "CBC — Lymphocytes (absolute)",
+      "value": "1.9",
+      "unit": "K/uL",
+      "referenceRange": "1.0-4.8",
+      "flag": "normal"
+    },
+    {
+      "name": "CBC — Monocytes (absolute)",
+      "value": "1.0",
+      "unit": "K/uL",
+      "referenceRange": "0.2-0.8",
+      "flag": "high"
+    },
+    {
+      "name": "CBC — Eosinophils (absolute)",
+      "value": "0.8",
+      "unit": "K/uL",
+      "referenceRange": "0.0-0.5",
+      "flag": "high"
+    },
+    {
+      "name": "CBC — Eosinophils (%)",
+      "value": "7",
+      "unit": "%",
+      "referenceRange": "0-4",
+      "flag": "high"
+    },
+    {
+      "name": "CBC — Hemoglobin",
+      "value": "8.9",
+      "unit": "g/dL",
+      "referenceRange": "12.0-15.5",
+      "flag": "low"
+    },
+    {
+      "name": "CBC — Platelets",
+      "value": "62",
+      "unit": "K/uL",
+      "referenceRange": "150-400",
+      "flag": "low"
+    },
+    {
+      "name": "CMP — Sodium",
+      "value": "134",
+      "unit": "mmol/L",
+      "referenceRange": "135-145",
+      "flag": "low"
+    },
+    {
+      "name": "CMP — Potassium",
+      "value": "3.9",
+      "unit": "mmol/L",
+      "referenceRange": "3.5-5.0",
+      "flag": "normal"
+    },
+    {
+      "name": "CMP — Bicarbonate",
+      "value": "18",
+      "unit": "mmol/L",
+      "referenceRange": "22-28",
+      "flag": "low"
+    },
+    {
+      "name": "CMP — BUN",
+      "value": "42",
+      "unit": "mg/dL",
+      "referenceRange": "7-20",
+      "flag": "high"
+    },
+    {
+      "name": "CMP — Creatinine",
+      "value": "2.3",
+      "unit": "mg/dL",
+      "referenceRange": "0.5-1.1",
+      "flag": "high"
+    },
+    {
+      "name": "CMP — Total bilirubin",
+      "value": "8.4",
+      "unit": "mg/dL",
+      "referenceRange": "0.1-1.2",
+      "flag": "high"
+    },
+    {
+      "name": "CMP — AST",
+      "value": "52",
+      "unit": "U/L",
+      "referenceRange": "10-40",
+      "flag": "high"
+    },
+    {
+      "name": "CMP — ALT",
+      "value": "48",
+      "unit": "U/L",
+      "referenceRange": "7-56",
+      "flag": "normal"
+    },
+    {
+      "name": "CMP — Albumin",
+      "value": "2.2",
+      "unit": "g/dL",
+      "referenceRange": "3.5-5.0",
+      "flag": "low"
+    },
+    {
+      "name": "Coag — INR",
+      "value": "2.5",
+      "unit": "",
+      "referenceRange": "0.8-1.2",
+      "flag": "high"
+    },
+    {
+      "name": "Lactate",
+      "value": "2.4",
+      "unit": "mmol/L",
+      "referenceRange": "0.5-2.0",
+      "flag": "high"
+    },
+    {
+      "name": "Procalcitonin",
+      "value": "0.31",
+      "unit": "ng/mL",
+      "referenceRange": "<0.5",
+      "flag": "normal"
+    },
+    {
+      "name": "CSF — WBC",
+      "value": "2 cells/uL",
+      "unit": "",
+      "referenceRange": "0-5",
+      "flag": "normal"
+    },
+    {
+      "name": "CSF — RBC",
+      "value": "4 cells/uL",
+      "unit": "",
+      "referenceRange": "0",
+      "flag": "normal"
+    },
+    {
+      "name": "CSF — Protein",
+      "value": "38 mg/dL",
+      "unit": "",
+      "referenceRange": "15-45",
+      "flag": "normal"
+    },
+    {
+      "name": "CSF — Glucose",
+      "value": "62 mg/dL",
+      "unit": "",
+      "referenceRange": "40-70",
+      "flag": "normal"
+    },
+    {
+      "name": "CSF — Gram stain",
+      "value": "No organisms seen",
+      "unit": "",
+      "referenceRange": "No organisms",
+      "flag": "normal"
+    },
+    {
+      "name": "CSF — culture",
+      "value": "Pending",
+      "unit": "",
+      "referenceRange": "No growth",
+      "flag": "normal"
+    },
+    {
+      "name": "Ascitic fluid — PMN count (repeat paracentesis)",
+      "value": "28 cells/uL",
+      "unit": "",
+      "referenceRange": "<250",
+      "flag": "normal",
+      "interpretation": "Negative for spontaneous bacterial peritonitis."
+    },
+    {
+      "name": "Ascitic fluid — culture (5/5)",
+      "value": "No growth (final)",
+      "unit": "",
+      "referenceRange": "No growth",
+      "flag": "normal"
+    },
+    {
+      "name": "Ascitic fluid — culture (5/12)",
+      "value": "Pending",
+      "unit": "",
+      "referenceRange": "No growth",
+      "flag": "normal"
+    },
+    {
+      "name": "Blood cultures (5/7)",
+      "value": "No growth (final, 5 days)",
+      "unit": "",
+      "referenceRange": "No growth",
+      "flag": "normal"
+    },
+    {
+      "name": "Blood cultures x2 sets (5/11)",
+      "value": "Pending",
+      "unit": "",
+      "referenceRange": "No growth",
+      "flag": "normal"
+    }
+  ],
+  "interpretation": "Day 9 of vancomycin + meropenem with persistent fevers and rising pressor requirement. WBC 11.2, not rising; peripheral eosinophils 7% (0.8 K/uL). Lumbar puncture: normal CSF (2 WBC, protein 38, glucose 62, no organisms). Repeat paracentesis again negative for SBP. All blood cultures to date without growth. Procalcitonin 0.31. MELD components worsening: bilirubin 8.4, INR 2.5, creatinine 2.3."
+}

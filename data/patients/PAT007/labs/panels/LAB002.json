@@ -17,6 +17,42 @@
       "interpretation": "Within reference range; unchanged from prior despite the persistent fevers."
     },
     {
+      "name": "CBC — Neutrophils (absolute)",
+      "value": "7.0",
+      "unit": "K/uL",
+      "referenceRange": "1.8-7.7",
+      "flag": "normal"
+    },
+    {
+      "name": "CBC — Lymphocytes (absolute)",
+      "value": "2.0",
+      "unit": "K/uL",
+      "referenceRange": "1.0-4.8",
+      "flag": "normal"
+    },
+    {
+      "name": "CBC — Monocytes (absolute)",
+      "value": "1.2",
+      "unit": "K/uL",
+      "referenceRange": "0.2-0.8",
+      "flag": "high"
+    },
+    {
+      "name": "CBC — Eosinophils (absolute)",
+      "value": "0.77",
+      "unit": "K/uL",
+      "referenceRange": "0.0-0.5",
+      "flag": "high"
+    },
+    {
+      "name": "CBC — Eosinophils (%)",
+      "value": "7",
+      "unit": "%",
+      "referenceRange": "0-4",
+      "flag": "high",
+      "interpretation": "Mild peripheral eosinophilia."
+    },
+    {
       "name": "CBC — Hemoglobin",
       "value": "9.0",
       "unit": "g/dL",
@@ -80,14 +116,6 @@
       "unit": "",
       "referenceRange": "No growth",
       "flag": "normal"
-    },
-    {
-      "name": "Eosinophils (% of WBC)",
-      "value": "7",
-      "unit": "%",
-      "referenceRange": "0-4",
-      "flag": "high",
-      "interpretation": "Mild peripheral eosinophilia."
     }
   ],
   "interpretation": "After ~2 weeks, MELD ~40 (worsening bilirubin, INR, creatinine). Blood cultures with no growth to date; procalcitonin within reference range; WBC within reference range. A mild peripheral eosinophilia is present (7%). Fevers and a two-pressor requirement are ongoing."

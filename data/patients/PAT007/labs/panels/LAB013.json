@@ -1,170 +1,188 @@
 {
-  "id": "LAB001",
-  "name": "Admission Labs",
-  "collectedDate": "2027-05-02T15:30:00.000Z",
-  "resultedDate": "2027-05-02T16:30:00.000Z",
-  "orderedBy": "Dr. Olivia Reyes (Emergency Department)",
-  "facility": "UPMC — ED Lab",
-  "specimen": "Serum + plasma + ascitic fluid",
+  "id": "LAB013",
+  "name": "MICU AM Labs HD15 — Fungal Studies Negative",
+  "collectedDate": "2027-05-16T06:00:00.000Z",
+  "resultedDate": "2027-05-16T07:10:00.000Z",
+  "orderedBy": "Dr. Lena Park (MICU)",
+  "facility": "UPMC — ICU Lab + Microbiology",
+  "specimen": "Serum + plasma + microbiology",
   "status": "Final",
   "results": [
     {
       "name": "CBC — WBC",
-      "value": "12.0",
+      "value": "11.1",
       "unit": "K/uL",
       "referenceRange": "4.5-11.0",
       "flag": "high"
     },
     {
       "name": "CBC — Neutrophils (absolute)",
-      "value": "9.4",
+      "value": "7.2",
       "unit": "K/uL",
       "referenceRange": "1.8-7.7",
-      "flag": "high"
+      "flag": "normal"
     },
     {
       "name": "CBC — Lymphocytes (absolute)",
-      "value": "1.6",
+      "value": "2.0",
       "unit": "K/uL",
       "referenceRange": "1.0-4.8",
       "flag": "normal"
     },
     {
       "name": "CBC — Monocytes (absolute)",
-      "value": "0.8",
+      "value": "1.1",
       "unit": "K/uL",
       "referenceRange": "0.2-0.8",
-      "flag": "normal"
+      "flag": "high"
     },
     {
       "name": "CBC — Eosinophils (absolute)",
-      "value": "0.2",
+      "value": "0.9",
       "unit": "K/uL",
       "referenceRange": "0.0-0.5",
-      "flag": "normal"
+      "flag": "high"
     },
     {
       "name": "CBC — Eosinophils (%)",
-      "value": "2",
+      "value": "8",
       "unit": "%",
       "referenceRange": "0-4",
-      "flag": "normal"
+      "flag": "high"
     },
     {
       "name": "CBC — Hemoglobin",
-      "value": "8.6",
+      "value": "9.0",
       "unit": "g/dL",
       "referenceRange": "12.0-15.5",
       "flag": "low"
     },
     {
       "name": "CBC — Platelets",
-      "value": "80",
+      "value": "61",
       "unit": "K/uL",
       "referenceRange": "150-400",
       "flag": "low"
     },
     {
       "name": "CMP — Sodium",
-      "value": "132",
+      "value": "134",
       "unit": "mmol/L",
       "referenceRange": "135-145",
       "flag": "low"
     },
     {
       "name": "CMP — Potassium",
-      "value": "4.3",
+      "value": "4.0",
       "unit": "mmol/L",
       "referenceRange": "3.5-5.0",
       "flag": "normal"
     },
     {
       "name": "CMP — Bicarbonate",
-      "value": "21",
+      "value": "18",
       "unit": "mmol/L",
       "referenceRange": "22-28",
       "flag": "low"
     },
     {
       "name": "CMP — BUN",
-      "value": "28",
+      "value": "45",
       "unit": "mg/dL",
       "referenceRange": "7-20",
       "flag": "high"
     },
     {
       "name": "CMP — Creatinine",
-      "value": "1.4",
+      "value": "2.4",
       "unit": "mg/dL",
       "referenceRange": "0.5-1.1",
-      "flag": "high",
-      "interpretation": "Baseline unknown."
+      "flag": "high"
     },
     {
       "name": "CMP — Total bilirubin",
-      "value": "4.2",
+      "value": "9.3",
       "unit": "mg/dL",
       "referenceRange": "0.1-1.2",
       "flag": "high"
     },
     {
       "name": "CMP — AST",
-      "value": "50",
+      "value": "48",
       "unit": "U/L",
       "referenceRange": "10-40",
       "flag": "high"
     },
     {
       "name": "CMP — ALT",
-      "value": "60",
+      "value": "44",
       "unit": "U/L",
       "referenceRange": "7-56",
-      "flag": "high"
+      "flag": "normal"
     },
     {
       "name": "CMP — Albumin",
-      "value": "2.5",
+      "value": "2.2",
       "unit": "g/dL",
       "referenceRange": "3.5-5.0",
       "flag": "low"
     },
     {
       "name": "Coag — INR",
-      "value": "1.9",
+      "value": "2.6",
       "unit": "",
       "referenceRange": "0.8-1.2",
       "flag": "high"
     },
     {
       "name": "Lactate",
-      "value": "2.2",
+      "value": "2.5",
       "unit": "mmol/L",
       "referenceRange": "0.5-2.0",
       "flag": "high"
     },
     {
-      "name": "Ascitic fluid — PMN count",
-      "value": "86",
-      "unit": "cells/uL",
-      "referenceRange": "<250",
-      "flag": "normal",
-      "interpretation": "Below the 250 threshold — NEGATIVE for spontaneous bacterial peritonitis."
-    },
-    {
-      "name": "Ascitic fluid — Gram stain",
-      "value": "No organisms seen",
-      "unit": "",
-      "referenceRange": "No organisms",
+      "name": "Procalcitonin",
+      "value": "0.3",
+      "unit": "ng/mL",
+      "referenceRange": "<0.5",
       "flag": "normal"
     },
     {
-      "name": "Ascitic fluid — SAAG",
-      "value": ">1.1",
-      "unit": "g/dL",
-      "referenceRange": "—",
-      "flag": "abnormal",
-      "interpretation": "Consistent with portal hypertension."
+      "name": "1,3-beta-D-glucan",
+      "value": "<31",
+      "unit": "pg/mL",
+      "referenceRange": "<60",
+      "flag": "normal"
+    },
+    {
+      "name": "Fungal blood cultures (5/14)",
+      "value": "No growth at 48 h",
+      "unit": "",
+      "referenceRange": "No growth",
+      "flag": "normal"
+    },
+    {
+      "name": "Blood cultures (5/11)",
+      "value": "No growth (final, 5 days)",
+      "unit": "",
+      "referenceRange": "No growth",
+      "flag": "normal"
+    },
+    {
+      "name": "CSF — culture (5/12)",
+      "value": "No growth (final)",
+      "unit": "",
+      "referenceRange": "No growth",
+      "flag": "normal"
+    },
+    {
+      "name": "Ascitic fluid — culture (5/12)",
+      "value": "No growth (final)",
+      "unit": "",
+      "referenceRange": "No growth",
+      "flag": "normal"
     }
   ],
-  "interpretation": "Decompensated cirrhosis (hyperbilirubinemia, hypoalbuminemia, elevated INR, thrombocytopenia) with anemia. Estimated MELD-Na ~25 at admission. Diagnostic paracentesis NEGATIVE for SBP (86 PMN, no organisms). Mild leukocytosis and lactate in the setting of the acute illness/bleed."
+  "interpretation": "Day 13 of vancomycin + meropenem. Persistent fevers and two vasopressors. WBC 11.1, unchanged; eosinophils 8%. Beta-D-glucan negative; fungal cultures without growth at 48 hours; every bacterial culture from the admission has finalized with no growth. Procalcitonin 0.30. Bilirubin 9.3, INR 2.6, creatinine 2.4, albumin 2.2."
 }

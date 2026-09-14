@@ -1,6 +1,13 @@
 {
   "panels": [
     {
+      "id": "LAB017",
+      "name": "ICU Transfer Labs",
+      "collectedDate": "2027-05-28T06:00:00.000Z",
+      "orderedBy": "Dr. Lena Park (MICU)",
+      "preview": "Transfer: WBC 7.2 (eos 2%), lactate 1.0, Cr 1.2, bili 4.6, INR 1.7, plt 95, ammonia 45."
+    },
+    {
       "id": "LAB003",
       "name": "Recovery Labs (after antibiotic cessation)",
       "collectedDate": "2027-05-26T06:00:00.000Z",
@@ -8,11 +15,102 @@
       "preview": "Improving across the board after antibiotics stopped: WBC normalized (7.8), lactate cleared, bilirubin and INR improving, creatinine recovering, off vasopressors. Cultures (final) all no growth."
     },
     {
+      "id": "LAB016",
+      "name": "MICU AM Labs — Continued Recovery",
+      "collectedDate": "2027-05-24T06:00:00.000Z",
+      "orderedBy": "Dr. Lena Park (MICU)",
+      "preview": "Recovering: WBC 8.7, eos 4%, lactate 1.2, Cr 1.6, bili 6.5, INR 2.0, plt 74. Fungal cultures final no growth."
+    },
+    {
+      "id": "LAB015",
+      "name": "Labs Resumed — Unexpected Clinical Improvement",
+      "collectedDate": "2027-05-22T06:00:00.000Z",
+      "orderedBy": "Dr. Lena Park (MICU)",
+      "preview": "Off antibiotics/pressors ~36 h and improving: WBC 9.6, eos 6%, lactate 1.6, Cr 1.9, bili 7.8, INR 2.2."
+    },
+    {
+      "id": "LAB014",
+      "name": "MICU AM Labs HD19 — Day of Goals-of-Care Transition",
+      "collectedDate": "2027-05-20T06:00:00.000Z",
+      "orderedBy": "Dr. Lena Park (MICU)",
+      "preview": "Last labs before comfort measures: WBC 11.3, eos 9%, lactate 2.7, bili 9.6, INR 2.6, Cr 2.5 (MELD ~40)."
+    },
+    {
       "id": "LAB002",
       "name": "ICU Labs — Persistent Fevers / Worsening (Day ~16)",
       "collectedDate": "2027-05-18T06:00:00.000Z",
       "orderedBy": "Dr. Lena Park (MICU)",
       "preview": "Worsening: bilirubin 9.5, INR 2.6, Cr 2.4, Na 134 → MELD ~40. WBC 11.0, lactate mildly up. Blood cultures x multiple sets NO GROWTH; procalcitonin 0.3 (within range). Eosinophils 7%. Fevers ongoing."
+    },
+    {
+      "id": "LAB013",
+      "name": "MICU AM Labs HD15 — Fungal Studies Negative",
+      "collectedDate": "2027-05-16T06:00:00.000Z",
+      "orderedBy": "Dr. Lena Park (MICU)",
+      "preview": "HD15: all cultures final no growth; beta-D-glucan negative; PCT 0.30. WBC 11.1, eos 8%. Bili 9.3, INR 2.6, Cr 2.4."
+    },
+    {
+      "id": "LAB012",
+      "name": "MICU AM Labs HD13 — ID Consult; Fungal Studies Sent",
+      "collectedDate": "2027-05-14T06:00:00.000Z",
+      "orderedBy": "Dr. Lena Park (MICU)",
+      "preview": "ID consult day: WBC 11.4 flat, eos 8%. CSF/ascitic/blood cultures all no growth. Fungal cultures + beta-D-glucan sent. Bili 9.0, INR 2.6, Cr 2.4. Vanc trough 18."
+    },
+    {
+      "id": "LAB011",
+      "name": "MICU AM Labs HD11 — Broad Source Workup (CSF, Repeat Ascites)",
+      "collectedDate": "2027-05-12T06:00:00.000Z",
+      "orderedBy": "Dr. Lena Park (MICU)",
+      "preview": "Broad workup day: normal CSF, repeat ascites negative for SBP, all blood cultures negative, PCT 0.31. WBC 11.2 (not rising), eos 7%. Bili 8.4, INR 2.5, Cr 2.3."
+    },
+    {
+      "id": "LAB010",
+      "name": "MICU AM Labs HD9",
+      "collectedDate": "2027-05-10T06:00:00.000Z",
+      "orderedBy": "Dr. Lena Park (MICU)",
+      "preview": "HD9: WBC 11.7 (falling despite fevers), eos 4%, lactate 2.5, Cr 2.1, bili 7.3, INR 2.4, ammonia 88. 5/7 cultures no growth at 72 h; PCT 0.30."
+    },
+    {
+      "id": "LAB009",
+      "name": "MICU AM Labs HD7 — Vancomycin Trough",
+      "collectedDate": "2027-05-08T06:00:00.000Z",
+      "orderedBy": "Dr. Lena Park (MICU)",
+      "preview": "HD7: WBC 12.4, eos 3%, Cr 2.0, bili 6.6, INR 2.3, lactate 2.3. Vanc trough 17. 5/4 blood cultures final no growth; 5/7 sets pending."
+    },
+    {
+      "id": "LAB008",
+      "name": "MICU AM Labs HD5",
+      "collectedDate": "2027-05-06T06:00:00.000Z",
+      "orderedBy": "Dr. Lena Park (MICU)",
+      "preview": "HD5: WBC 13.1 (plateau), eos 2%, lactate 2.4, Cr 1.8, bili 5.9. Blood cultures no growth at 48 h; urine culture final negative; PCT 0.36."
+    },
+    {
+      "id": "LAB007",
+      "name": "MICU AM Labs HD4 — On Norepinephrine; Repeat Paracentesis",
+      "collectedDate": "2027-05-05T06:00:00.000Z",
+      "orderedBy": "Dr. Lena Park (MICU)",
+      "preview": "Still febrile on norepinephrine: WBC 13.9, lactate 3.1, Cr 1.7. Repeat paracentesis negative for SBP (42 PMN). Cultures no growth at 24 h."
+    },
+    {
+      "id": "LAB006",
+      "name": "MICU AM Labs HD3 — New Fevers; Cultures Drawn",
+      "collectedDate": "2027-05-04T06:00:00.000Z",
+      "orderedBy": "Dr. Lena Park (MICU)",
+      "preview": "First febrile day: WBC 13.6 (ANC 10.9, bands 5%), lactate 2.9, procalcitonin 0.42 (within range). Blood/urine cultures sent; UA bland. Eos 1%."
+    },
+    {
+      "id": "LAB005",
+      "name": "MICU AM Labs HD2 — Post-TIPS",
+      "collectedDate": "2027-05-03T06:00:00.000Z",
+      "orderedBy": "Dr. Lena Park (MICU)",
+      "preview": "Hgb stable 8.7 post-transfusion, lactate cleared to 1.9, bilirubin 5.0 (up post-TIPS), ammonia 82, Cr 1.5."
+    },
+    {
+      "id": "LAB004",
+      "name": "Post-Transfusion / Post-TIPS Labs (evening of admission)",
+      "collectedDate": "2027-05-02T22:30:00.000Z",
+      "orderedBy": "Dr. Lena Park (MICU)",
+      "preview": "After MTP and TIPS: Hgb 8.4, plt 74, INR 2.0, fibrinogen 160, lactate 3.4 (resuscitating), BUN 34 with the bleed. WBC 14.2 with left shift."
     },
     {
       "id": "LAB001",
@@ -29,6 +127,6 @@
       "preview": "Initial outpatient evaluation of weight loss: mild anemia (Hgb 10.8), normal TSH, AFP mildly elevated (18, nonspecific in cirrhosis), HbA1c normal. Liver imaging pending at the time of acute presentation."
     }
   ],
-  "totalResults": 4,
+  "totalResults": 18,
   "lastUpdated": "2027-05-28"
 }

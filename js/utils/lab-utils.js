@@ -87,12 +87,32 @@ const LabUtils = {
         'Specific Gravity': { range: [1.005, 1.030], unit: '' }
     },
 
+
+    /**
+     * Resolve a result name to a referenceRanges key. Patient panels name
+     * results with a panel prefix ("CBC — WBC", "CMP — Total bilirubin");
+     * the table is keyed by bare names ("WBC", "Total Bilirubin"). Try the
+     * exact key, then the text after the last " — " / " - " separator,
+     * case-insensitively. Returns the ref object or null.
+     */
+    getRef(testName) {
+        if (!testName) return null;
+        const direct = this.referenceRanges[testName];
+        if (direct) return direct;
+        if (!this._lcIndex) {
+            this._lcIndex = {};
+            for (const k of Object.keys(this.referenceRanges)) this._lcIndex[k.toLowerCase()] = this.referenceRanges[k];
+        }
+        const bare = String(testName).split(/\s[—–-]\s/).pop().trim().toLowerCase();
+        return this._lcIndex[String(testName).toLowerCase()] || this._lcIndex[bare] || null;
+    },
+
     /**
      * Get flag for a lab result
      * Returns: 'critical-high', 'critical-low', 'high', 'low', or null
      */
     getFlag(testName, value) {
-        const ref = this.referenceRanges[testName];
+        const ref = this.getRef(testName);
         if (!ref || value === null || value === undefined) return null;
 
         const numValue = parseFloat(value);
@@ -134,7 +154,7 @@ const LabUtils = {
      * Get reference range string for display
      */
     getReferenceRange(testName) {
-        const ref = this.referenceRanges[testName];
+        const ref = this.getRef(testName);
         if (!ref) return '';
         return `${ref.range[0]} - ${ref.range[1]}`;
     },
@@ -143,7 +163,7 @@ const LabUtils = {
      * Get unit for a test
      */
     getUnit(testName) {
-        const ref = this.referenceRanges[testName];
+        const ref = this.getRef(testName);
         return ref ? ref.unit : '';
     },
 
@@ -156,7 +176,7 @@ const LabUtils = {
         if (isNaN(numValue)) return value;
 
         // Determine decimal places based on test
-        const ref = this.referenceRanges[testName];
+        const ref = this.getRef(testName);
         if (!ref) return numValue.toString();
 
         // Use 1 decimal place for most tests

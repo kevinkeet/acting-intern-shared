@@ -24,6 +24,7 @@ const AssessmentResults = {
 
         try {
             const data = await this._fetchAll(attemptId);
+            data.studyDone = await this._studyStatus();
             this._renderReport(root, data);
         } catch (err) {
             console.error('render results failed', err);
@@ -82,7 +83,103 @@ const AssessmentResults = {
         return { attempt, responses, aiLog, caseDef, diagnosis };
     },
 
-    _renderReport(root, { attempt, responses, aiLog, caseDef, diagnosis }) {
+    /**
+     * Has this participant code completed every configured study case?
+     * Same query the landing page uses for its checkmarks. Returns
+     * { allDone, doneCount, total, code } — allDone is false whenever we
+     * cannot tell (no code, no database), so the normal results render.
+     */
+    async _studyStatus() {
+        const out = { allDone: false, doneCount: 0, total: 0, code: null };
+        try {
+            const code = (typeof UserCode !== 'undefined') ? UserCode.get() : null;
+            const sb = (typeof SupabaseSync !== 'undefined') ? SupabaseSync.getClient() : null;
+            const ids = AssessmentData.listCases().map((c) => c.caseId);
+            out.code = code;
+            out.total = ids.length;
+            if (!code || !sb || !ids.length) return out;
+            const { data, error } = await sb
+                .from('test_attempts')
+                .select('case_id,status')
+                .eq('user_code', code)
+                .eq('status', 'completed');
+            if (error) return out;
+            const done = new Set((data || []).map((a) => a.case_id));
+            out.doneCount = ids.filter((id) => done.has(id)).length;
+            out.allDone = out.doneCount >= ids.length;
+        } catch (e) { /* fall through: not done */ }
+        return out;
+    },
+
+    /**
+     * Study-complete card: thank you + payment information + exit. Shown in
+     * place of the per-case "Submitted" card once every case is completed,
+     * and on its own at #/assessment/complete (reachable from the landing
+     * page once everything is done). No amount is stated — the gift-card
+     * value is set in the recruitment materials, not here.
+     */
+    _renderStudyCompleteCard(status) {
+        const code = status && status.code ? this._escape(status.code) : null;
+        const n = status && status.total ? status.total : 0;
+        return `
+            <div class="assessment-study-complete">
+                <div class="assessment-study-complete-icon"><i data-lucide="party-popper" class="lucide-inline"></i></div>
+                <div class="assessment-study-complete-body">
+                    <h2>Thank you — you've finished the study assessment.</h2>
+                    <p>All ${n ? `<strong>${n}</strong> ` : ''}cases are complete and your answers have been recorded. There is nothing else to submit.</p>
+                    <h3>About your payment</h3>
+                    <p>Participants who complete the assessment receive an Amazon e-gift card. The study coordinator confirms completion from your participant code and sends the card by email to the address you enrolled with, usually within about a week.</p>
+                    ${code ? `<p class="assessment-study-complete-code">Your participant code: <strong>${code}</strong> — keep it in case you need to reference it.</p>` : ''}
+                    <p class="assessment-study-complete-contact">Questions about the study or your payment: <a href="mailto:kkeet@stanford.edu">kkeet@stanford.edu</a></p>
+                </div>
+            </div>
+        `;
+    },
+
+    /** #/assessment/complete — the study-complete screen on its own. */
+    async renderStudyComplete() {
+        const root = document.getElementById('main-content');
+        if (!root) return;
+        root.innerHTML = `<div class="assessment-results-page"><div class="loading">One moment…</div></div>`;
+        const status = await this._studyStatus();
+        if (!status.allDone) {
+            // Not actually finished (or cannot verify) — send them to the case list.
+            router.navigate('/assessment/start');
+            return;
+        }
+        root.innerHTML = `
+            <div class="assessment-results-page">
+                ${this._renderStudyCompleteCard(status)}
+                <div class="assessment-results-footer">
+                    <button class="btn btn-primary" onclick="AssessmentResults.exitStudy()">Exit</button>
+                </div>
+            </div>
+        `;
+        App.refreshIcons();
+    },
+
+    /**
+     * Exit: forget the participant code on this browser and show a final
+     * page. Answers are already saved; a returning participant re-enters
+     * their code from the landing page.
+     */
+    exitStudy() {
+        try { if (typeof UserCode !== 'undefined') UserCode.clear(); } catch (e) { /* ignore */ }
+        try { sessionStorage.clear(); } catch (e) { /* ignore */ }
+        const root = document.getElementById('main-content');
+        if (!root) return;
+        root.innerHTML = `
+            <div class="assessment-results-page">
+                <div class="assessment-study-exit">
+                    <h2>You're all done.</h2>
+                    <p>Thank you for taking part. You can close this window now.</p>
+                </div>
+            </div>
+        `;
+        try { location.hash = '#/assessment/exit'; } catch (e) { /* ignore */ }
+    },
+
+    _renderReport(root, { attempt, responses, aiLog, caseDef, diagnosis, studyDone }) {
         // Stash for per-prompt transcript lookup later in the render tree.
         this._aiLog = aiLog;
         // PARTICIPANTS SEE NO SCORES AT ALL (study decision, 2026-08-19, after
@@ -93,6 +190,7 @@ const AssessmentResults = {
         // console; only this participant-facing surface hides them. The rubric
         // itself is hidden too: it is the answer key, and the delayed-control
         // arm sits the same cases later (contamination risk).
+        const allDone = !!(studyDone && studyDone.allDone && attempt.status === 'completed');
         const statusBadge = attempt.status === 'completed'
             ? '<span class="badge complete">COMPLETED</span>'
             : `<span class="badge incomplete">${this._escape(attempt.status.toUpperCase())}</span>`;
@@ -111,6 +209,7 @@ const AssessmentResults = {
                     </div>
                 </div>
 
+                ${allDone ? this._renderStudyCompleteCard(studyDone) : `
                 <div class="assessment-results-score-card">
                     <div class="assessment-score-circle neutral">
                         <div class="assessment-score-pct"><i data-lucide="check" class="lucide-inline"></i></div>
@@ -120,7 +219,7 @@ const AssessmentResults = {
                         <div><strong>Case complete — thank you!</strong> Your responses have been recorded for the study.</div>
                         <div>Each case stands alone: you can start another now, or come back any time — your code remembers what you've finished.</div>
                     </div>
-                </div>
+                </div>`}
 
                 ${diagnosis ? this._renderDiagnosisBox(diagnosis) : ''}
 
@@ -130,8 +229,10 @@ const AssessmentResults = {
                 </div>
 
                 <div class="assessment-results-footer">
-                    <button class="btn btn-primary" onclick="router.navigate('/assessment/start')">See remaining cases</button>
-                    <button class="btn" onclick="router.navigate('/chart-review')">Go to chart</button>
+                    ${allDone
+                        ? `<button class="btn btn-primary" onclick="AssessmentResults.exitStudy()">Exit</button>`
+                        : `<button class="btn btn-primary" onclick="router.navigate('/assessment/start')">See remaining cases</button>
+                    <button class="btn" onclick="router.navigate('/chart-review')">Go to chart</button>`}
                 </div>
             </div>
         `;

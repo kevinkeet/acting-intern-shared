@@ -14469,6 +14469,38 @@ body.assessment-dock-open { --arail: 440px; }
     color: #1a202c;
     line-height: 1.4;
 }
+/* Study-complete screen (all cases done): thank you + payment info + exit */
+.assessment-study-complete {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    padding: 24px;
+    background: #f0fff4;
+    border: 1px solid #9ae6b4;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+.assessment-study-complete-icon {
+    flex: 0 0 56px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #fff;
+    border: 4px solid #48bb78;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #2f855a;
+}
+.assessment-study-complete-icon .lucide-inline { width: 28px; height: 28px; }
+.assessment-study-complete-body h2 { margin: 0 0 8px; font-size: 20px; color: #22543d; }
+.assessment-study-complete-body h3 { margin: 16px 0 4px; font-size: 14px; text-transform: uppercase; letter-spacing: .04em; color: #2f855a; }
+.assessment-study-complete-body p { margin: 0 0 8px; line-height: 1.5; max-width: 70ch; }
+.assessment-study-complete-code { font-size: 15px; }
+.assessment-study-complete-contact { color: #4a5568; font-size: 13px; }
+.assessment-study-exit { text-align: center; padding: 60px 20px; }
+.assessment-study-exit h2 { margin: 0 0 8px; }
+.assessment-finish-btn { margin-left: 12px; vertical-align: middle; }
 .assessment-results-footer {
     margin-top: 24px;
     display: flex;

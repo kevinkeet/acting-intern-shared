@@ -86,7 +86,7 @@ const LabTrending = {
         }
 
         // Get reference range
-        const ref = LabUtils.referenceRanges[testName];
+        const ref = LabUtils.getRef(testName);
         const unit = LabUtils.getUnit(testName);
 
         // Render chart and data table
