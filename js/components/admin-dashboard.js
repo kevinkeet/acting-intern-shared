@@ -402,9 +402,36 @@ const AdminDashboard = {
                 <div class="admin-session">
                     <span class="admin-session-email" title="Signed-in study admin">${this._escape(email)}${this._adminRole ? ` · ${this._escape(this._adminRole)}` : ''}</span>
                     <button class="btn btn-sm" onclick="AdminDashboard.refresh()">Refresh</button>
+                    <button class="btn btn-sm" onclick="AdminDashboard.changePassword()">Change password</button>
                     <button class="btn btn-sm" onclick="AdminDashboard.signOut()">Sign out</button>
                 </div>
             </div>`;
+    },
+
+    /**
+     * Let the signed-in admin set a new password for their own account.
+     * Uses the current session (supabase.auth.updateUser), so no email or
+     * recovery link is involved. Nothing about the password is logged.
+     */
+    async changePassword() {
+        const sb = await this._adminClient();
+        if (!sb || !this._session || !this._session.user) {
+            alert('Sign in first.');
+            return;
+        }
+        const p1 = prompt('New password (at least 10 characters):');
+        if (p1 === null) return;
+        if (p1.length < 10) { alert('Please use at least 10 characters.'); return; }
+        const p2 = prompt('Type the new password again:');
+        if (p2 === null) return;
+        if (p1 !== p2) { alert('The two entries did not match. Nothing changed.'); return; }
+        try {
+            const { error } = await sb.auth.updateUser({ password: p1 });
+            if (error) throw error;
+            alert('Password changed. Use the new one next time you sign in.');
+        } catch (err) {
+            alert('Could not change the password: ' + (err && err.message ? err.message : 'unknown error'));
+        }
     },
 
     /** Warn when a query errored, or when everything came back empty. */

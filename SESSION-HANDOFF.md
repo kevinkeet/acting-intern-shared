@@ -8,7 +8,10 @@ thinnest engagement ("minimalist blitzer"). NEW 7815 did a full 3-case battery (
 PAT004 scores (23%, 31%) sit inside the prior 25–35% range → leak fix didn't visibly move it.
 Totals: 32 completions; sweeps = 8893, 6718, 2874. Report rev 2 predates this — needs a rev 3.
 
-## LATEST (2026-09-14, cache 20260723z): PAT007 daily labs + study-complete screen (pilot feedback)
+## LATEST (2026-09-14 PM, cache 20260723A): admin "Change password" button
+- Admin topbar now has **Change password** → `AdminDashboard.changePassword()` (two prompts, ≥10 chars, `sb.auth.updateUser({password})` on the live session; nothing logged). Added because the two coordinators (Heaven, Anastasia) were created in Supabase with placeholder passwords and the console had no way to change them. Their `admin_roles` rows are granted by SQL in the Supabase SQL editor (INSERT … SELECT id FROM auth.users WHERE email IN (…)).
+
+## PREVIOUS (2026-09-14, cache 20260723z): PAT007 daily labs + study-complete screen (pilot feedback)
 
 - **PAT007 (Brooks) labs filled in.** Pilot: "need more WBC data, trend of labs, CBC differential; several days in ICU without daily labs unlikely." Was 3 inpatient draws in 27 days. Now 18 panels: LAB004 (5/2 PM post-MTP/TIPS), LAB005–008 (5/3–5/6 daily), LAB009–013 (5/8–5/16 q2d incl. CSF, repeat ascites, fungal studies), LAB014 (5/20 pre-CMO), LAB015–016 (5/22, 5/24 recovery), LAB017 (5/28 transfer). Every CBC now has a differential (ANC/lymph/mono/eos abs + eos %), bands early; eosinophils trend 1% → 9% → 2%. LAB001/002/003 enriched; old "Eosinophils (% of WBC)" renamed to "CBC — Eosinophils (%)". Interpretations before 5/24 never name drug fever (anchoring trap preserved). Chart gate reveals by collectedDate, so TP1 sees ≤5/6, TP2 ≤5/18.
 - **Reference-range lookup fixed site-wide**: `LabUtils.getRef()` strips the panel prefix ("CBC — WBC" → WBC) and matches case-insensitively; getFlag/getUnit/getReferenceRange/formatValue and lab-trending use it. Trending now shows the normal band + flags for every patient (was blank for all prefixed names).
