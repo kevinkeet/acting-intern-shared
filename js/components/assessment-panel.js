@@ -303,6 +303,9 @@ const AssessmentPanel = {
                 <p>${dateStr ? `It is now <strong>${dateStr}</strong>. ` : ''}The chart has been updated with
                    new notes, results, and orders from the interval. <strong>Re-review the chart</strong> —
                    the next questions are asked as of this new date.</p>
+                <p class="atj-convention">The chart shows what the team actually did, which may differ from what
+                   you recommended. Treat anything you ordered that isn't in the chart as <strong>not done</strong>
+                   or still pending, and answer from the chart as it stands.</p>
                 <button class="btn btn-primary" id="atj-continue">Review the updated chart</button>
             </div>`;
         document.body.appendChild(el);
@@ -459,6 +462,7 @@ const AssessmentPanel = {
                 <div class="assessment-scenario">
                     <div class="assessment-scenario-label">SCENARIO</div>
                     <div class="assessment-scenario-body">${this._escape(ap.scenarioBrief || '')}</div>
+                    ${cur.indexes.apIdx > 0 ? `<div class="assessment-scenario-convention">Anything you ordered earlier that isn't in the chart should be treated as not done or still pending — answer from the chart as it stands.</div>` : ''}
                 </div>
             ` : ''}
             <div class="assessment-prompt-card">

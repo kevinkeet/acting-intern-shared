@@ -16930,3 +16930,22 @@ body.tutor-standalone {
     border-radius: 2px;
     transition: width .4s ease;
 }
+
+/* "Treat un-charted orders as pending" convention (pilot 8893) */
+#assessment-timejump .atj-convention {
+    font-size: 13px;
+    color: #475569;
+    background: #f8fafc;
+    border-left: 3px solid #94a3b8;
+    padding: 8px 12px;
+    margin: 10px 0 14px;
+    border-radius: 4px;
+}
+.assessment-scenario-convention {
+    margin-top: 8px;
+    padding-top: 6px;
+    border-top: 1px dashed #e9c9a3;
+    font-size: 11.5px;
+    color: #7c4a12;
+    line-height: 1.4;
+}

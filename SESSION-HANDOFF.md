@@ -1,6 +1,14 @@
 # Acting Intern — Session Handoff / Working Doc
 
-## LATEST (2026-09-09 PM, cache 20260723x): ANSWER LEAK closed — encounter status revealed outcomes
+## LATEST (2026-09-13, cache 20260723y): "un-charted orders are pending" convention (pilot 8893)
+8893: "odd to say I'd get an echo, then time moves forward and I don't have one." Fixed-chart design
+is unchanged; the convention is now stated in two places: the time-jump interstitial gets a second
+paragraph (.atj-convention: chart shows what the team actually did; treat anything you ordered that
+isn't charted as not done / pending; answer from the chart as it stands) and every timepoint ≥2
+scenario box carries a one-line reminder (.assessment-scenario-convention). Verified on PAT004 AP2.
+Watch re-armed after session restart (bz3zsgkw1).
+
+## PREVIOUS (2026-09-09 PM, cache 20260723x): ANSWER LEAK closed — encounter status revealed outcomes
 Pilot 6718 (PAT007 AP2): encounter "status" text showed the whole ICU course incl. discharge 5/30 —
 the date gate passes an encounter by START date, so retrospective status text leaked outcomes at
 every timepoint. PAT004 ENC001 leaked "Discharged 7/11 on apixaban" at AP1 (the anticoagulation
