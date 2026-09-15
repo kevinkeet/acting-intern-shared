@@ -97,7 +97,9 @@
                 <div class="access-gate-brand">Acting Intern</div>
                 <h1 id="access-gate-title" class="access-gate-title">Enter access password</h1>
                 <p class="access-gate-sub">
-                    This is a private demo. Ask the person who shared the link for the password.
+                    ${(function(){ try { return localStorage.getItem('entry-mode') === 'pilot'; } catch (e) { return false; } })()
+                        ? 'Study participants: open the link in your study email — it unlocks this page for you. If you have no link, ask your study coordinator for the site password.'
+                        : 'This is a private demo. Ask the person who shared the link for the password.'}
                 </p>
                 <form id="access-gate-form" autocomplete="off">
                     <input
@@ -256,8 +258,49 @@
         return true;
     }
 
+    // ?pw=… (or ?key=…) in the link unlocks the gate silently — the study
+    // emails carry the site password inside the link so residents never type
+    // it. The parameter is stripped from the address bar either way.
+    function linkPassword() {
+        try {
+            const q = new URLSearchParams(window.location.search);
+            const pw = (q.get('pw') || q.get('key') || '').trim();
+            if (q.has('pw') || q.has('key')) {
+                q.delete('pw'); q.delete('key');
+                const qs = q.toString();
+                const clean = window.location.pathname + (qs ? '?' + qs : '') + window.location.hash;
+                history.replaceState(null, '', clean);
+            }
+            return pw;
+        } catch (e) { return ''; }
+    }
+
+    async function tryLinkUnlock(pw) {
+        try {
+            const cfg = window.ACCESS_CONFIG;
+            const apiKey = await tryDecrypt(pw, cfg);
+            if (!apiKey || !apiKey.startsWith('sk-ant-')) return false;
+            if (!localStorage.getItem(STORAGE_KEY_API)) localStorage.setItem(STORAGE_KEY_API, apiKey);
+            localStorage.setItem(STORAGE_KEY_GRANTED, 'gate');
+            _configureApiClient(localStorage.getItem(STORAGE_KEY_API) || apiKey);
+            clearAttempts();
+            return true;
+        } catch (e) { return false; }
+    }
+
     function init() {
+        const pw = linkPassword();
         if (!shouldGate()) return;
+        if (pw) {
+            // Gate stays hidden while the link password is checked; only a
+            // wrong/expired link password shows the modal.
+            tryLinkUnlock(pw).then((ok) => { if (!ok) init2(); });
+            return;
+        }
+        init2();
+    }
+
+    function init2() {
         if (document.body) {
             mount();
         } else {
