@@ -1361,7 +1361,15 @@ const AdminDashboard = {
                 return `${d.getUTCFullYear()}-${p(d.getUTCMonth() + 1)}-${p(d.getUTCDate())} ${p(d.getUTCHours())}:${p(d.getUTCMinutes())}:${p(d.getUTCSeconds())}`;
             };
             const askTurns = data.aiLog.filter((r) => r.interaction_type === 'ask' || r.interaction_type === 'ask_error');
-            const queryText = (t) => (t.metadata && t.metadata.user_question) || this._extractUserText(t.query_text || '');
+            // Clean question text is logged in metadata since 2026-09-02; for
+            // older rows the serialized transcript may not contain a user
+            // marker, in which case the fallback returns chart context — drop it.
+            const queryText = (t) => {
+                if (t.metadata && t.metadata.user_question) return t.metadata.user_question;
+                const x = this._extractUserText(t.query_text || '');
+                if (!x || /PATIENT CHART CONTEXT|^## PATIENT HEADER/.test(x) || x.length > 800) return '';
+                return x;
+            };
 
             const attempts = data.attempts
                 .filter((a) => STUDY.has(a.case_id) && /^\d{4}$/.test(String(a.user_code || '')))
@@ -1412,7 +1420,7 @@ const AdminDashboard = {
                     ]);
                 }
             }
-            this._download(`redcap-import-${this._stamp()}.csv`, this._toCsv(headers, rows), 'text/csv;charset=utf-8');
+            this._download(`redcap-import-${this._stamp()}.csv`, this._toCsv(headers, rows, { bom: false }), 'text/csv;charset=utf-8');
             this._exportStatus(`Downloaded ${rows.length} rows (${attempts.length} case instances, ${rows.length - attempts.length} answers) for ${caseInst.size} participant codes.`);
         } catch (err) {
             this._exportStatus('Export failed: ' + err.message);
@@ -1592,10 +1600,12 @@ const AdminDashboard = {
         return '"' + String(v).replace(/"/g, '""') + '"';
     },
 
-    _toCsv(headers, rows) {
+    _toCsv(headers, rows, opts) {
         const lines = [headers.map((h) => this._csvCell(h)).join(',')];
         for (const row of rows) lines.push(row.map((c) => this._csvCell(c)).join(','));
-        return '﻿' + lines.join('\r\n') + '\r\n';
+        // BOM helps Excel read UTF-8; machine importers (REDCap) get none.
+        const bom = (opts && opts.bom === false) ? '' : '﻿';
+        return bom + lines.join('\r\n') + '\r\n';
     },
 
     _download(filename, text, mime) {
