@@ -266,9 +266,11 @@
             const q = new URLSearchParams(window.location.search);
             const pw = (q.get('pw') || q.get('key') || '').trim();
             if (q.has('pw') || q.has('key')) {
-                q.delete('pw'); q.delete('key');
-                const qs = q.toString();
-                const clean = window.location.pathname + (qs ? '?' + qs : '') + window.location.hash;
+                // Strip only the password parameter; keep the rest of the
+                // query exactly as written (so ?studymode stays ?studymode).
+                const kept = window.location.search.replace(/^\?/, '').split('&')
+                    .filter((kv) => kv && !/^(pw|key)=/.test(kv));
+                const clean = window.location.pathname + (kept.length ? '?' + kept.join('&') : '') + window.location.hash;
                 history.replaceState(null, '', clean);
             }
             return pw;
