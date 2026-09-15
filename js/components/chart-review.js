@@ -21,6 +21,11 @@ const ChartReview = {
                 dataLoader.loadAllergies().catch(() => ({ allergies: [] }))
             ]);
 
+            // The route may have moved on while the data loaded (e.g. boot
+            // switched to /assessment/start). Never paint over another view.
+            const h = window.location.hash || '#/chart-review';
+            if (!/^#\/?(chart-review)?(\?.*)?$/.test(h)) return;
+
             content.innerHTML = `
                 ${this.renderAssessmentCTA()}
 

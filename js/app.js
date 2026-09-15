@@ -107,6 +107,16 @@ const App = {
         let _mode = null;
         if (typeof ModeManager !== 'undefined') {
             _mode = ModeManager.init();
+            // Study deployment with no stored mode: there is nothing to choose,
+            // so pick Assessment NOW, before the router runs. Choosing it after
+            // router.init() let the default chart-review render (async) finish
+            // after the route had already moved to /assessment/start and paint
+            // the chart over the consent + participant-code page — the first
+            // thing a new participant saw after the site password.
+            if (!_mode && !_onAdminRoute && ModeManager.isStudyLocked && ModeManager.isStudyLocked()) {
+                ModeManager.set('assessment', { navigate: false });
+                _mode = 'assessment';
+            }
             // If a mode is already chosen and we booted with no/default route,
             // land on that mode's home instead of the chart-review default.
             if (_mode && !_onAdminRoute
