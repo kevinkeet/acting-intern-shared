@@ -26,6 +26,9 @@ const Grading = {
     async _load(force) {
         if (this._items && !force) return;
         const sb = await this._sb();
+        // Hand out any newly completed attempts before reading the queue
+        // (balanced across the current roster; existing assignments are kept).
+        try { await sb.rpc('assign_pending_grading'); } catch (e) { /* pre-010 database */ }
         const [q, g] = await Promise.all([
             sb.rpc('grading_queue'),
             sb.from('human_grades').select('*'),

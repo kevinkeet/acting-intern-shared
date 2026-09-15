@@ -8,7 +8,11 @@ thinnest engagement ("minimalist blitzer"). NEW 7815 did a full 3-case battery (
 PAT004 scores (23%, 31%) sit inside the prior 25–35% range → leak fix didn't visibly move it.
 Totals: 32 completions; sweeps = 8893, 6718, 2874. Report rev 2 predates this — needs a rev 3.
 
-## LATEST (2026-09-15 PM, cache 20260723H): two-of-n grader assignment (migration 009)
+## LATEST (2026-09-15 PM, cache 20260723I): STORED grader assignments (migration 010 supersedes 009)
+- Kevin wants to add graders later without re-dealing. `grading_assignments` table (attempt_id, grader_id); `assign_pending_grading()` gives every completed study attempt two roster graders, fewest-assigned first (random tie-break), never touching existing rows; called on queue load and adjudication load. `grading_queue()` = own assignments (admins/TEST see all). `grading_assignment_list()` for admins. 009's hash functions dropped. Manual reassignment = edit the table in Supabase.
+- **Run 010 in the SQL editor** (Kevin). If 009 was never run, 010 alone is enough.
+
+## PREVIOUS (2026-09-15 PM, cache 20260723H): two-of-n grader assignment (migration 009)
 - Kevin's design: 3 graders, every answer scored by 2 → each grader does 2/3. `supabase/migrations/009_grading_assignment.sql`: `grader_slot(uid)` (roster order by granted_at, TEST excluded), `grader_count()`, `excluded_slot(attempt)` = md5(attempt_id) mod n + 1 (NULL when n ≤ 2 → everyone grades everything), `grading_queue()` filters to the caller's share (admins/TEST graders see all), `grading_assignments()` for admins. Assignment is per ATTEMPT so a grader sees a participant's whole case; queue sort key groups an attempt's answers together.
 - Adjudication view: per-slot done counts, "Slots" column (assigned pair), Score A/B with slot tags; export notes prefixed "[slot n]". Two scores = the first two roster grades by slot order.
 - **Must run 009 in the Supabase SQL editor** (loaded in Kevin's tab 15 Sep PM).

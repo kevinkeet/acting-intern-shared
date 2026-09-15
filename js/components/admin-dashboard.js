@@ -445,18 +445,23 @@ const AdminDashboard = {
             if (g.status === 'submitted') perGrader[slot]++;
         }
         for (const list of byResp.values()) list.sort((x, y) => x.slot - y.slot);
-        let assignments = new Map();
+        const assigned = new Map();     // attempt_id -> [slot numbers]
+        const perGraderAssigned = slots.map(() => 0);
         try {
-            const asg = await sb.rpc('grading_assignments');
-            if (!asg.error) assignments = new Map((asg.data || []).map((x) => [x.attempt_id, x.excluded_slot]));
-        } catch (e) { /* migration 009 not applied yet: no assignment info */ }
+            await sb.rpc('assign_pending_grading');
+            const asg = await sb.rpc('grading_assignment_list');
+            if (!asg.error) for (const x of asg.data || []) {
+                const slot = slots.indexOf(x.grader_id);
+                if (slot < 0) continue;
+                if (!assigned.has(x.attempt_id)) assigned.set(x.attempt_id, []);
+                assigned.get(x.attempt_id).push(slot + 1);
+                perGraderAssigned[slot]++;
+            }
+            for (const l of assigned.values()) l.sort((a, b) => a - b);
+        } catch (e) { /* migration 010 not applied yet */ }
         const n = slots.length;
-        const pairFor = (attemptId) => {
-            const ex = assignments.get(attemptId);
-            const all = slots.map((_, i) => i + 1);
-            return (ex == null) ? all : all.filter((s) => s !== ex);
-        };
-        return { roster: roster.data || [], slots, byResp, perGrader, pairFor, n, adj: new Map((adj.data || []).map((a) => [a.response_id, a])) };
+        const pairFor = (attemptId) => assigned.get(attemptId) || [];
+        return { roster: roster.data || [], slots, byResp, perGrader, perGraderAssigned, pairFor, n, adj: new Map((adj.data || []).map((a) => [a.response_id, a])) };
     },
 
     async renderGrading() {
@@ -505,7 +510,7 @@ const AdminDashboard = {
                     <h1>Grading &amp; adjudication</h1>
                     <div class="admin-header-stats">
                         <span>${rows.length} answers, each graded by two of ${gr.n} graders</span>
-                        ${gr.roster.map((r, i) => `<span>&middot; slot ${i + 1} ${gr.perGrader[i]} done</span>`).join('')}
+                        ${gr.roster.map((r, i) => `<span>&middot; slot ${i + 1}: ${gr.perGrader[i]} answers done</span>`).join('')}
                         <span>&middot; both ${both.length}</span>
                         <span>&middot; exact agreement ${both.length ? Math.round(100 * exact / both.length) : 0}%</span>
                         <span>&middot; ${disagree.length} differ by &gt;25% of max</span>
@@ -515,7 +520,7 @@ const AdminDashboard = {
                     <div class="admin-card-title">Graders</div>
                     <div class="admin-card-body">
                         ${gr.roster.length ? gr.roster.map((r, i) => `Slot ${i + 1}: <b>${slotLabel(i)}</b>`).join(' &nbsp;·&nbsp; ') : 'No roster graders yet.'}
-                        <div class="admin-export-help">Slots follow the order the grader role was granted in admin_roles (notes = display name; a note starting TEST marks a practice grader with no slot). Each participant's case is assigned to two slots, chosen deterministically from the attempt id, so every grader carries ${gr.n >= 3 ? Math.round(200 / gr.n) + '%' : 'all'} of the answers and each answer gets exactly two scores. Graders sign in at <code>actingintern.com/grade</code>. Final points below feed the REDCap export (ar_final_points); when blank, the export uses the mean of the two graders.</div>
+                        <div class="admin-export-help">Every completed case is assigned to two graders, always the two with the fewest cases so far (${gr.roster.map((r, i) => `slot ${i + 1}: ${gr.perGraderAssigned[i]} cases`).join(', ') || 'no roster yet'}). Assignments are stored, so a grader added later simply starts receiving new cases; nothing already assigned moves. Slots are the order the grader role was granted (admin_roles.notes = display name; a note starting TEST marks a practice grader with no slot). Graders sign in at <code>actingintern.com/grade</code>. Final points below feed the REDCap export (ar_final_points); when blank, the export uses the mean of the two scores.</div>
                     </div>
                 </div>
                 <div class="grading-filter">
