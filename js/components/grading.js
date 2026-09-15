@@ -97,7 +97,6 @@ const Grading = {
                     <span class="grading-progress"><b>${done}</b> of ${total} graded</span>
                     <span class="admin-session-email">${AdminDashboard._escape(email)}</span>
                     <button class="btn btn-sm" onclick="AdminDashboard.changePassword()">Change password</button>
-                    <button class="btn btn-sm" onclick="AdminDashboard.signOut()">Sign out</button>
                 </div>
             </div>`;
     },

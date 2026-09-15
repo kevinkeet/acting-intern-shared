@@ -8,7 +8,13 @@ thinnest engagement ("minimalist blitzer"). NEW 7815 did a full 3-case battery (
 PAT004 scores (23%, 31%) sit inside the prior 25–35% range → leak fix didn't visibly move it.
 Totals: 32 completions; sweeps = 8893, 6718, 2874. Report rev 2 predates this — needs a rev 3.
 
-## LATEST (2026-09-15, cache 20260723D): blinded human grading (migration 008)
+## LATEST (2026-09-15 PM, cache 20260723G): standalone staff layout + header sign-in chip
+- `body.mode-staff` (App._syncStaffMode on hashchange) for `#/admin*` and `#/grade*`: hides sidebar, patient banner, allergy strip, chart search, chatbot; logo reads "Acting Intern · Study console"; admin-page becomes a card on a grey ground. Routes unchanged.
+- Header chip (App._mountAuthChip): email + role + Sign out for admin/proctor/grader sessions; mounted from `_verifyAdmin` success and `admin:auth-change`. Sign out removed from the admin/grading topbars (Change password stays).
+- Bug fixed: `AssessmentChatbot.unmountFloating` now removes the element (it used to leave a blank 420px docked `<aside>` on admin pages after visiting /grade). Browse chat never mounts on `#/grade`.
+- Admin nav: "Adjudication" (#/admin/grading) + "Grade answers" (#/grade).
+
+## PREVIOUS (2026-09-15, cache 20260723D): blinded human grading (migration 008)
 - **Migration 008** (`supabase/migrations/008_human_grading.sql`): role `grader` in admin_roles; `is_study_grader()`; tables `human_grades` (per grader per response; RLS own rows + admin read) and `grade_adjudications` (admin); SECURITY DEFINER `grading_queue()` returns ONLY response_id/case/prompt/response_text + per-caller md5 sort key for completed study-case attempts with 4-digit codes; `grader_roster()` (admin) gives slot order by granted_at. **Must be run in the Supabase SQL editor by Kevin.**
 - **Graders**: `actingintern.com/grade` (→ `#/grade`, `js/components/grading.js`). Same Supabase Auth login; `_verifyAdmin` now returns role 'grader' (isGrader); `_requireAdmin` refuses graders with a link to the queue. Queue = progress per case + "Grade next"; item page = question, answer, rubric parsed into a checklist (`Grading.parseRubric`: bullet lines → items, trailing ": N" = points, cap at maxPoints), points box (auto-sum, editable), notes, Save & next. Graders never see codes/arms/dates/auto scores.
 - **Admin → Grading** (`#/admin/grading`, `renderGrading`): G1/G2 points per answer, Δ, auto points, final points input → `grade_adjudications`. Filters: disagreements (>25% of max), both-graded-not-adjudicated, both, all. Slot 1/2 = grader role grant order; admin_roles.notes = display name.

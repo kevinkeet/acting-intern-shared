@@ -133,6 +133,7 @@ const AdminDashboard = {
                 this._isAdmin = true;
                 this._isGrader = false;
                 this._adminRole = data.role;
+                if (typeof App !== 'undefined' && App._mountAuthChip) App._mountAuthChip();
                 return { ok: true, role: data.role };
             }
             if (data.role === 'grader') {
@@ -140,6 +141,7 @@ const AdminDashboard = {
                 this._isAdmin = false;
                 this._isGrader = true;
                 this._adminRole = 'grader';
+                if (typeof App !== 'undefined' && App._mountAuthChip) App._mountAuthChip();
                 return { ok: true, role: 'grader' };
             }
             this._isAdmin = false;
@@ -574,7 +576,6 @@ const AdminDashboard = {
                     <span class="admin-session-email" title="Signed-in study admin">${this._escape(email)}${this._adminRole ? ` · ${this._escape(this._adminRole)}` : ''}</span>
                     <button class="btn btn-sm" onclick="AdminDashboard.refresh()">Refresh</button>
                     <button class="btn btn-sm" onclick="AdminDashboard.changePassword()">Change password</button>
-                    <button class="btn btn-sm" onclick="AdminDashboard.signOut()">Sign out</button>
                 </div>
             </div>`;
     },
