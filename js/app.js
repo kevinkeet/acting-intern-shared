@@ -259,7 +259,8 @@ const App = {
         // The admin dashboard owns its own Supabase client/session (see
         // admin-dashboard.js) so it emits its own event.
         window.addEventListener('admin:auth-change', () => this._refreshAssessmentNav());
-        window.addEventListener('hashchange', () => setTimeout(() => this._syncBrowseChat(), 80));
+        window.addEventListener('hashchange', () => { this._syncStaffMode(); setTimeout(() => this._syncBrowseChat(), 80); });
+        this._syncStaffMode();
         setTimeout(() => this._syncBrowseChat(), 600);
         setTimeout(() => this._maybeShowEntryChooser(), 400);
         setTimeout(() => this._mountHomeButton(), 500);
@@ -409,6 +410,26 @@ const App = {
      * panel). During a run the dock owns the panel; on admin/assessment routes
      * it stays out of the way. Browse chat is not study-logged (no attempt).
      */
+    /**
+     * Staff pages (admin console, grading) stand on their own: no patient
+     * banner, allergy strip, chart sidebar or chart search. The routes are
+     * unchanged; only the chrome around them switches. body.mode-staff drives
+     * the CSS; the header logo swaps to the console name.
+     */
+    _syncStaffMode() {
+        const h = location.hash || '';
+        const staff = h.startsWith('#/admin') || h.startsWith('#/grade');
+        document.body.classList.toggle('mode-staff', staff);
+        const logo = document.querySelector('.top-header .logo');
+        if (logo) {
+            if (!logo.dataset.chartHtml) logo.dataset.chartHtml = logo.innerHTML;
+            logo.innerHTML = staff
+                ? '<i data-lucide="clipboard-check" class="lucide-inline"></i> Acting Intern · Study console'
+                : logo.dataset.chartHtml;
+            this.refreshIcons();
+        }
+    },
+
     _syncBrowseChat() {
         // Also sweep up a stale run dock: abandoning/finishing a case left
         // body.assessment-dock-open behind, which squeezed every later page
