@@ -22,9 +22,11 @@ const ChartReview = {
             ]);
 
             // The route may have moved on while the data loaded (e.g. boot
-            // switched to /assessment/start). Never paint over another view.
+            // switched to /assessment/start). Never paint over the consent /
+            // case-list / staff views. During an assessment run the hash is
+            // /assessment/run and the engine renders the chart here — allowed.
             const h = window.location.hash || '#/chart-review';
-            if (!/^#\/?(chart-review)?(\?.*)?$/.test(h)) return;
+            if (/^#\/(assessment\/(start|complete|exit)|admin|grade)/.test(h)) return;
 
             content.innerHTML = `
                 ${this.renderAssessmentCTA()}
