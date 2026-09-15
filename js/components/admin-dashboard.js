@@ -1577,7 +1577,11 @@ const AdminDashboard = {
                 'ar_auto_points', 'ar_auto_notes',
                 'ar_grader1_points', 'ar_grader1_notes', 'ar_grader2_points', 'ar_grader2_notes',
                 'ar_final_points', 'ar_grading_complete', 'assessment_response_complete',
+                'platform_cases_completed', 'platform_complete', 'platform_complete_date',
             ];
+            // Trial battery: a participant is "platform complete" once this many
+            // distinct study cases are completed (3 in the trial per Pilot Report rev 4).
+            const BATTERY_SIZE = 3;
             const blank = (n) => Array(n).fill('');
             const rows = [];
             const caseInst = new Map();
@@ -1594,7 +1598,7 @@ const AdminDashboard = {
                     a.time_used_seconds || 0, resps.length, turnsForAttempt.length,
                     (a.total_score === null || a.total_score === undefined) ? '' : Math.round(Number(a.total_score) * 100),
                     2,
-                    ...blank(19),
+                    ...blank(22),
                 ]);
                 for (const r of resps) {
                     const ri = (respInst.get(rec) || 0) + 1; respInst.set(rec, ri);
@@ -1623,8 +1627,23 @@ const AdminDashboard = {
                         p2 == null ? '' : p2, gnote(hg.g2),
                         finalPts == null ? '' : finalPts, gradingDone,
                         gradingDone ? 2 : 0,
+                        ...blank(3),
                     ]);
                 }
+            }
+            // One non-repeating row per participant: platform completion summary
+            // (Platform Tracking instrument). REDCap's completion alert keys on it.
+            const byRec = this._groupBy(attempts, (a) => String(a.user_code));
+            for (const [rec, list] of byRec) {
+                const done = list.filter((a) => a.status === 'completed' || a.status === 'complete');
+                const distinct = new Set(done.map((a) => a.case_id));
+                const last = done.map((a) => a.completed_at).filter(Boolean).sort().pop();
+                const complete = distinct.size >= BATTERY_SIZE;
+                rows.push([
+                    rec, '', '',
+                    ...blank(headers.length - 6),
+                    distinct.size, complete ? 1 : 0, complete && last ? fmt(last) : '',
+                ]);
             }
             this._download(`redcap-import-${this._stamp()}.csv`, this._toCsv(headers, rows, { bom: false }), 'text/csv;charset=utf-8');
             this._exportStatus(`Downloaded ${rows.length} rows (${attempts.length} case instances, ${rows.length - attempts.length} answers) for ${caseInst.size} participant codes.`);
