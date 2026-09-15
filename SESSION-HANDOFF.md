@@ -8,7 +8,12 @@ thinnest engagement ("minimalist blitzer"). NEW 7815 did a full 3-case battery (
 PAT004 scores (23%, 31%) sit inside the prior 25–35% range → leak fix didn't visibly move it.
 Totals: 32 completions; sweeps = 8893, 6718, 2874. Report rev 2 predates this — needs a rev 3.
 
-## LATEST (2026-09-14 PM, cache 20260723A): admin "Change password" button
+## LATEST (2026-09-14 evening, cache 20260723C): REDCap import export + /admin redirect
+- **REDCap project built**: Stanford REDCap PID 36093 (8 instruments, randomization module with `arm`/`site`, survey enabled, repeating assessment_case/assessment_response). Dictionary + allocation CSVs in ~/Downloads and memory.
+- **Admin → Export → "Download REDCap import CSV"** (`AdminDashboard.exportRedcapCsv`): one `assessment_case` instance per attempt + one `assessment_response` per answer, **record_id = participant code** (study cases, 4-digit codes only; UITEST/demo skipped). No BOM (`_toCsv(…, {bom:false})`). AI-question column uses `metadata.user_question`; pre-Sep-2 rows without it are blanked rather than dumping chart context. Import in REDCap via Data Import Tool with "blank values overwrite" OFF; records must exist (coordinators create the record when they assign the code).
+- **actingintern.com/admin** now works: `admin/index.html` forwards to `#/admin/attempts`.
+
+## PREVIOUS (2026-09-14 PM, cache 20260723A): admin "Change password" button
 - Admin topbar now has **Change password** → `AdminDashboard.changePassword()` (two prompts, ≥10 chars, `sb.auth.updateUser({password})` on the live session; nothing logged). Added because the two coordinators (Heaven, Anastasia) were created in Supabase with placeholder passwords and the console had no way to change them. Their `admin_roles` rows are granted by SQL in the Supabase SQL editor (INSERT … SELECT id FROM auth.users WHERE email IN (…)).
 
 ## PREVIOUS (2026-09-14, cache 20260723z): PAT007 daily labs + study-complete screen (pilot feedback)
