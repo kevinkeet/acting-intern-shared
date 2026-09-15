@@ -247,7 +247,10 @@ const App = {
             .on('/admin/analytics', () => AdminDashboard.renderAnalytics())
             .on('/admin/export', () => AdminDashboard.renderExport())
             .on('/admin/feedback', () => AdminDashboard.renderFeedback())
-            .on('/admin/attempts/:id', (params) => AdminDashboard.renderDetail(params.id));
+            .on('/admin/attempts/:id', (params) => AdminDashboard.renderDetail(params.id))
+            .on('/admin/grading', () => AdminDashboard.renderGrading())
+            .on('/grade', () => Grading.renderQueue())
+            .on('/grade/:id', (params) => Grading.renderItem(params.id));
 
         // Refresh sidebar entries when auth state changes (Assessment + Admin links).
         window.addEventListener('supabase:auth-state-change', () => this._refreshAssessmentNav());
@@ -413,6 +416,11 @@ const App = {
                 <span class="nav-icon"><i data-lucide="shield"></i></span>
                 Admin
             </a>
+            <a href="#/grade" class="nav-item assessment-admin-link" data-section="grade"
+               id="assessment-grade-link" style="display:none;">
+                <span class="nav-icon"><i data-lucide="check-square"></i></span>
+                Grading
+            </a>
         `;
         sidebar.appendChild(section);
         this.refreshIcons();
@@ -426,12 +434,19 @@ const App = {
             const link = document.getElementById('assessment-admin-link');
             if (link) link.style.display = '';
         };
+        const showGradeLink = () => {
+            const link = document.getElementById('assessment-grade-link');
+            if (link) link.style.display = '';
+        };
         if (typeof AdminDashboard !== 'undefined') {
             if (AdminDashboard.isAdmin && AdminDashboard.isAdmin()) {
-                showAdminLink();
+                showAdminLink(); showGradeLink();
+            } else if (AdminDashboard.isGrader && AdminDashboard.isGrader()) {
+                showGradeLink();
             } else if (AdminDashboard.probeAdmin) {
                 try {
-                    if (await AdminDashboard.probeAdmin()) showAdminLink();
+                    if (await AdminDashboard.probeAdmin()) { showAdminLink(); showGradeLink(); }
+                    else if (AdminDashboard.probeGrader && await AdminDashboard.probeGrader()) showGradeLink();
                 } catch (e) {
                     /* non-fatal */
                 }

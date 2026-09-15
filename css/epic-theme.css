@@ -14501,6 +14501,49 @@ body.assessment-dock-open { --arail: 440px; }
 .assessment-study-exit { text-align: center; padding: 60px 20px; }
 .assessment-study-exit h2 { margin: 0 0 8px; }
 .assessment-finish-btn { margin-left: 12px; vertical-align: middle; }
+/* Human grading (migration 008) */
+.grading-progress { font-family: ui-monospace, monospace; font-size: 12px; margin-right: 10px; }
+.grading-intro { max-width: 70ch; font-size: 13.5px; line-height: 1.5; }
+.grading-blind { color: #2f855a; }
+.grading-actions { margin: 14px 0 18px; }
+.grading-done { color: #2f855a; font-weight: 600; }
+.grading-case-table { max-width: 520px; }
+.grading-case-table .admin-bar { width: 160px; }
+.grading-list { margin-top: 18px; font-size: 12.5px; }
+.grading-list ol { columns: 2; column-gap: 24px; }
+.grading-item-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 12px 0 14px; flex-wrap: wrap; }
+.grading-item-title { font-size: 16px; font-weight: 600; }
+.grading-item-title .pill { font-size: 11px; margin-left: 6px; }
+.grading-cols { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 24px; }
+@media (max-width: 900px) { .grading-cols { grid-template-columns: 1fr; } }
+.grading-col h3 { margin: 0 0 6px; font-size: 13px; text-transform: uppercase; letter-spacing: .04em; color: #4a5568; }
+.grading-question { font-size: 15px; line-height: 1.5; margin: 0 0 18px; }
+.grading-answer { white-space: pre-wrap; font-size: 14px; line-height: 1.55; background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px 14px; max-height: 60vh; overflow: auto; }
+.grading-max { font-weight: 400; text-transform: none; letter-spacing: 0; color: #718096; font-size: 12px; margin-left: 8px; }
+.grading-rubric-notes { font-size: 12.5px; color: #4a5568; background: #fffaf0; border: 1px solid #feebc8; border-radius: 6px; padding: 8px 10px; margin-bottom: 10px; line-height: 1.5; }
+.grading-checklist { display: flex; flex-direction: column; gap: 4px; }
+.grading-crit { display: grid; grid-template-columns: 18px 34px 1fr; gap: 8px; align-items: start; padding: 6px 8px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 13.5px; line-height: 1.4; cursor: pointer; }
+.grading-crit:hover { background: #f7fafc; }
+.grading-crit input { margin-top: 3px; }
+.grading-crit-pts { font-family: ui-monospace, monospace; font-size: 12px; color: #718096; text-align: right; padding-right: 4px; }
+.grading-score-row { display: flex; align-items: center; gap: 10px; margin: 14px 0 10px; font-size: 14px; }
+.grading-score-row input { width: 80px; font-size: 16px; padding: 4px 8px; }
+.grading-hint { font-size: 12px; color: #718096; }
+.grading-notes-label { display: block; font-size: 13px; }
+.grading-notes-label textarea { display: block; width: 100%; margin-top: 4px; font: inherit; font-size: 13px; padding: 6px 8px; }
+.grading-save-row { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
+.grading-status { font-size: 12.5px; color: #2f855a; }
+.grading-filter { margin: 12px 0; display: flex; gap: 6px; align-items: center; font-size: 13px; flex-wrap: wrap; }
+.grading-adj-table td { vertical-align: top; font-size: 13px; }
+.grading-adj-key { font-family: ui-monospace, monospace; font-size: 12px; white-space: nowrap; }
+.grading-adj-answer { max-width: 520px; }
+.grading-adj-answer summary { cursor: pointer; }
+.grading-adj-full { white-space: pre-wrap; margin: 6px 0; padding: 8px; background: #f7fafc; border-radius: 4px; }
+.grading-adj-note { font-size: 12.5px; margin: 4px 0; }
+.grading-adj-rubric pre { white-space: pre-wrap; font-size: 12px; background: #fffaf0; padding: 8px; border-radius: 4px; }
+.grading-adj-diff { color: #c53030; font-weight: 700; }
+.grading-adj-auto { color: #718096; }
+.grading-adj-input { width: 70px; }
 .admin-export-help { margin-top: 8px; font-size: 12px; color: #4a5568; line-height: 1.5; }
 .assessment-results-footer {
     margin-top: 24px;

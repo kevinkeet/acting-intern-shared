@@ -131,10 +131,19 @@ const AdminDashboard = {
             }
             if (data.role === 'admin' || data.role === 'proctor') {
                 this._isAdmin = true;
+                this._isGrader = false;
                 this._adminRole = data.role;
                 return { ok: true, role: data.role };
             }
+            if (data.role === 'grader') {
+                // Faculty graders: blinded grading pages only (see grading.js).
+                this._isAdmin = false;
+                this._isGrader = true;
+                this._adminRole = 'grader';
+                return { ok: true, role: 'grader' };
+            }
             this._isAdmin = false;
+            this._isGrader = false;
             return { ok: false, reason: 'wrong_role', role: data.role };
         } catch (err) {
             this._isAdmin = false;
@@ -144,6 +153,7 @@ const AdminDashboard = {
 
     /** Synchronous accessor used by App._refreshAssessmentNav(). */
     isAdmin() { return !!this._isAdmin; },
+    isGrader() { return !!this._isGrader; },
 
     /**
      * Async probe for the sidebar: restore the session, check the role, and
@@ -154,10 +164,20 @@ const AdminDashboard = {
             await this._ensureAuth();
             if (!this._session) return false;
             const v = await this._verifyAdmin();
-            return !!v.ok;
+            return !!v.ok && v.role !== 'grader';
         } catch (err) {
             return false;
         }
+    },
+
+    /** Sidebar probe for the Grading link: true for graders and admins. */
+    async probeGrader() {
+        try {
+            await this._ensureAuth();
+            if (!this._session) return false;
+            const v = await this._verifyAdmin();
+            return !!v.ok && (v.role === 'grader' || v.role === 'admin');
+        } catch (err) { return false; }
     },
 
     async signOut() {
@@ -193,6 +213,19 @@ const AdminDashboard = {
             this._renderDenied(root, v);
             return false;
         }
+        if (v.role === 'grader') {
+            root.innerHTML = `
+                <div class="admin-page">
+                    <div class="admin-gate">
+                        <div class="admin-gate-icon"><i data-lucide="check-square"></i></div>
+                        <h1>Grader account</h1>
+                        <p class="admin-gate-note">Your account is set up for grading, not for the admin console.</p>
+                        <p><a class="btn btn-primary" href="#/grade">Go to the grading queue</a></p>
+                    </div>
+                </div>`;
+            App.refreshIcons();
+            return false;
+        }
         return true;
     },
 
@@ -214,12 +247,13 @@ const AdminDashboard = {
         App.refreshIcons();
     },
 
-    _renderLogin(root) {
+    _renderLogin(root, opts) {
+        opts = opts || {};
         root.innerHTML = `
             <div class="admin-page">
                 <div class="admin-gate">
                     <div class="admin-gate-icon"><i data-lucide="shield"></i></div>
-                    <h1>Study admin sign-in</h1>
+                    <h1>${this._escape(opts.title || 'Study admin sign-in')}</h1>
                     <p class="admin-gate-note">
                         Participants never sign in — they use a participant code. This page is for
                         the study PI / proctors and requires a Supabase Auth account listed in
@@ -380,6 +414,141 @@ const AdminDashboard = {
     },
 
     // ══════════════════════════════════════════════════════════════════════
+    // VIEW — GRADING / ADJUDICATION (migration 008)
+    // ══════════════════════════════════════════════════════════════════════
+
+    /**
+     * Load everything the adjudication view and the REDCap export need:
+     * grader roster (slot order = grant order), every human_grades row, and
+     * adjudications. Admin-only (RLS).
+     */
+    async _loadGrading() {
+        const sb = this._adminClient();
+        const [roster, grades, adj] = await Promise.all([
+            sb.rpc('grader_roster'),
+            sb.from('human_grades').select('*'),
+            sb.from('grade_adjudications').select('*'),
+        ]);
+        if (roster.error) throw new Error('grader_roster: ' + roster.error.message);
+        if (grades.error) throw new Error('human_grades: ' + grades.error.message);
+        if (adj.error) throw new Error('grade_adjudications: ' + adj.error.message);
+        const slots = (roster.data || []).map((r) => r.grader_id);
+        const byResp = new Map();
+        for (const g of grades.data || []) {
+            const slot = slots.indexOf(g.grader_id);
+            if (slot < 0) continue; // an admin's own practice grades are not counted
+            if (!byResp.has(g.response_id)) byResp.set(g.response_id, {});
+            byResp.get(g.response_id)['g' + (slot + 1)] = g;
+        }
+        return { roster: roster.data || [], slots, byResp, adj: new Map((adj.data || []).map((a) => [a.response_id, a])) };
+    },
+
+    async renderGrading() {
+        const root = document.getElementById('main-content');
+        if (!root) return;
+        root.innerHTML = `<div class="admin-page"><div class="loading">Loading…</div></div>`;
+        if (!(await this._requireAdmin(root))) return;
+        let data, gr;
+        try {
+            data = await this._fetchAll();
+            await this._loadCaseDefs(data.attempts.map((a) => a.case_id));
+            gr = await this._loadGrading();
+        } catch (err) {
+            root.innerHTML = `<div class="admin-page">${this._renderAdminNav('grading')}<div class="empty-state-text">${this._escape(err.message)}<br><small>If the tables are missing, run supabase/migrations/008_human_grading.sql.</small></div></div>`;
+            App.refreshIcons();
+            return;
+        }
+        const attemptById = new Map(data.attempts.map((a) => [a.id, a]));
+        const STUDY = new Set(['PAT003', 'PAT004', 'PAT005', 'PAT006', 'PAT007']);
+        const rows = data.responses
+            .map((r) => ({ r, a: attemptById.get(r.attempt_id) || {} }))
+            .filter(({ a }) => a.status === 'completed' && STUDY.has(a.case_id) && /^\d{4}$/.test(String(a.user_code || '')))
+            .map(({ r, a }) => {
+                const g = gr.byResp.get(r.id) || {};
+                const adj = gr.adj.get(r.id);
+                const p1 = g.g1 ? Number(g.g1.points) : null;
+                const p2 = g.g2 ? Number(g.g2.points) : null;
+                const diff = (p1 != null && p2 != null) ? Math.abs(p1 - p2) : null;
+                const prompt = this._findPrompt(a.case_id, r.assessment_id, r.prompt_id);
+                const max = prompt && prompt.scoringRubric ? prompt.scoringRubric.maxPoints : null;
+                const auto = (r.score == null || max == null) ? null : Math.round(Number(r.score) * Number(max) * 100) / 100;
+                return { r, a, g, adj, p1, p2, diff, max, auto, prompt };
+            });
+        const nGraded1 = rows.filter((x) => x.p1 != null).length;
+        const nGraded2 = rows.filter((x) => x.p2 != null).length;
+        const both = rows.filter((x) => x.diff != null);
+        const disagree = both.filter((x) => x.max && x.diff / x.max > 0.25);
+        const exact = both.filter((x) => x.diff === 0).length;
+        const filter = this._gradingFilter || 'disagree';
+        const shown = (filter === 'all' ? rows : filter === 'both' ? both : filter === 'unadj' ? both.filter((x) => !x.adj) : disagree)
+            .slice().sort((x, y) => (y.diff || 0) - (x.diff || 0));
+        const slotLabel = (i) => gr.roster[i] ? this._escape(gr.roster[i].notes || gr.roster[i].email || `Grader ${i + 1}`) : `Grader ${i + 1} (not yet assigned)`;
+        root.innerHTML = `
+            <div class="admin-page">
+                ${this._renderAdminNav('grading')}
+                <div class="admin-header">
+                    <h1>Grading &amp; adjudication</h1>
+                    <div class="admin-header-stats">
+                        <span>${rows.length} answers to grade</span>
+                        <span>&middot; G1 ${nGraded1} done</span>
+                        <span>&middot; G2 ${nGraded2} done</span>
+                        <span>&middot; both ${both.length}</span>
+                        <span>&middot; exact agreement ${both.length ? Math.round(100 * exact / both.length) : 0}%</span>
+                        <span>&middot; ${disagree.length} differ by &gt;25% of max</span>
+                    </div>
+                </div>
+                <div class="admin-card">
+                    <div class="admin-card-title">Graders</div>
+                    <div class="admin-card-body">
+                        Slot 1: <b>${slotLabel(0)}</b> &nbsp;·&nbsp; Slot 2: <b>${slotLabel(1)}</b>
+                        <div class="admin-export-help">Slots follow the order the grader role was granted in admin_roles (notes column = display name). Graders sign in at <code>actingintern.com/grade</code>. Final points below feed the REDCap export (ar_final_points); when blank, the export uses the mean of the two graders.</div>
+                    </div>
+                </div>
+                <div class="grading-filter">
+                    Show:
+                    <button class="btn btn-sm ${filter === 'disagree' ? 'btn-primary' : ''}" onclick="AdminDashboard._gradingFilter='disagree';AdminDashboard.renderGrading()">Disagreements</button>
+                    <button class="btn btn-sm ${filter === 'unadj' ? 'btn-primary' : ''}" onclick="AdminDashboard._gradingFilter='unadj';AdminDashboard.renderGrading()">Both graded, not adjudicated</button>
+                    <button class="btn btn-sm ${filter === 'both' ? 'btn-primary' : ''}" onclick="AdminDashboard._gradingFilter='both';AdminDashboard.renderGrading()">Both graded</button>
+                    <button class="btn btn-sm ${filter === 'all' ? 'btn-primary' : ''}" onclick="AdminDashboard._gradingFilter='all';AdminDashboard.renderGrading()">All</button>
+                </div>
+                <table class="admin-table grading-adj-table">
+                    <thead><tr><th>Case · prompt</th><th>Answer</th><th>Max</th><th>G1</th><th>G2</th><th>Δ</th><th>Auto</th><th>Final</th><th></th></tr></thead>
+                    <tbody>
+                    ${shown.length ? shown.map((x) => `
+                        <tr id="adj-${x.r.id}">
+                            <td class="grading-adj-key">${this._escape(x.a.case_id)}<br>${this._escape(x.r.prompt_id)}</td>
+                            <td class="grading-adj-answer"><details><summary>${this._escape(String(x.r.response_text || '').slice(0, 90))}${(x.r.response_text || '').length > 90 ? '…' : ''}</summary><div class="grading-adj-full">${this._escape(x.r.response_text || '')}</div>${x.g.g1 && x.g.g1.notes ? `<div class="grading-adj-note"><b>G1:</b> ${this._escape(x.g.g1.notes)}</div>` : ''}${x.g.g2 && x.g.g2.notes ? `<div class="grading-adj-note"><b>G2:</b> ${this._escape(x.g.g2.notes)}</div>` : ''}${x.prompt && x.prompt.scoringRubric ? `<details class="grading-adj-rubric"><summary>Rubric</summary><pre>${this._escape(x.prompt.scoringRubric.rubricText || '')}</pre></details>` : ''}</details></td>
+                            <td>${x.max == null ? '—' : x.max}</td>
+                            <td>${x.p1 == null ? '—' : x.p1}</td>
+                            <td>${x.p2 == null ? '—' : x.p2}</td>
+                            <td class="${x.diff != null && x.max && x.diff / x.max > 0.25 ? 'grading-adj-diff' : ''}">${x.diff == null ? '—' : x.diff}</td>
+                            <td class="grading-adj-auto">${x.auto == null ? '—' : x.auto}</td>
+                            <td><input type="number" step="0.5" min="0" max="${x.max == null ? '' : x.max}" class="grading-adj-input" id="adjin-${x.r.id}" value="${x.adj && x.adj.final_points != null ? x.adj.final_points : ''}"></td>
+                            <td><button class="btn btn-sm" onclick="AdminDashboard.saveAdjudication('${x.r.id}')">Save</button><span class="grading-status" id="adjst-${x.r.id}">${x.adj ? '✓' : ''}</span></td>
+                        </tr>`).join('') : '<tr><td colspan="9" class="admin-tx-noai">Nothing to show for this filter.</td></tr>'}
+                    </tbody>
+                </table>
+            </div>`;
+        App.refreshIcons();
+    },
+
+    async saveAdjudication(responseId) {
+        const sb = this._adminClient();
+        const inp = document.getElementById('adjin-' + responseId);
+        const st = document.getElementById('adjst-' + responseId);
+        if (!inp) return;
+        if (inp.value === '') { st.textContent = 'enter points'; return; }
+        st.textContent = '…';
+        const { error } = await sb.from('grade_adjudications').upsert({
+            response_id: responseId,
+            final_points: Number(inp.value),
+            adjudicator_id: this._session.user.id,
+            updated_at: new Date().toISOString(),
+        }, { onConflict: 'response_id' });
+        st.textContent = error ? ('failed: ' + error.message) : '✓';
+    },
+
+    // ══════════════════════════════════════════════════════════════════════
     // SHARED CHROME
     // ══════════════════════════════════════════════════════════════════════
 
@@ -390,6 +559,7 @@ const AdminDashboard = {
             { key: 'analytics', href: '#/admin/analytics', label: 'AI-usage analytics', icon: 'bar-chart-2' },
             { key: 'export', href: '#/admin/export', label: 'Export', icon: 'download' },
             { key: 'feedback', href: '#/admin/feedback', label: 'Feedback', icon: 'message-square-text' },
+            { key: 'grading', href: '#/admin/grading', label: 'Grading', icon: 'scale' },
         ];
         return `
             <div class="admin-topbar">
@@ -1371,6 +1541,8 @@ const AdminDashboard = {
                 return x;
             };
 
+            let gr = null;
+            try { gr = await this._loadGrading(); } catch (e) { gr = null; /* grading tables absent: export without human scores */ }
             const attempts = data.attempts
                 .filter((a) => STUDY.has(a.case_id) && /^\d{4}$/.test(String(a.user_code || '')))
                 .sort((a, b) => String(a.user_code).localeCompare(String(b.user_code)) || String(a.started_at || '').localeCompare(String(b.started_at || '')));
@@ -1382,7 +1554,9 @@ const AdminDashboard = {
                 'ac_time_used_seconds', 'ac_prompts_answered', 'ac_ai_turns', 'ac_auto_score_pct', 'assessment_case_complete',
                 'ar_case_id', 'ar_prompt_id', 'ar_prompt_type', 'ar_max_points', 'ar_question_text', 'ar_response_text',
                 'ar_time_spent_seconds', 'ar_submitted_at', 'ar_ai_turns', 'ar_ai_all_queries',
-                'ar_auto_points', 'ar_auto_notes', 'assessment_response_complete',
+                'ar_auto_points', 'ar_auto_notes',
+                'ar_grader1_points', 'ar_grader1_notes', 'ar_grader2_points', 'ar_grader2_notes',
+                'ar_final_points', 'ar_grading_complete', 'assessment_response_complete',
             ];
             const blank = (n) => Array(n).fill('');
             const rows = [];
@@ -1400,7 +1574,7 @@ const AdminDashboard = {
                     a.time_used_seconds || 0, resps.length, turnsForAttempt.length,
                     (a.total_score === null || a.total_score === undefined) ? '' : Math.round(Number(a.total_score) * 100),
                     2,
-                    ...blank(13),
+                    ...blank(19),
                 ]);
                 for (const r of resps) {
                     const ri = (respInst.get(rec) || 0) + 1; respInst.set(rec, ri);
@@ -1409,6 +1583,12 @@ const AdminDashboard = {
                     const maxPoints = prompt && prompt.scoringRubric ? prompt.scoringRubric.maxPoints : '';
                     const frac = (r.score === null || r.score === undefined) ? null : Number(r.score);
                     const autoPoints = (frac === null || maxPoints === '' || maxPoints === undefined) ? '' : Math.round(frac * Number(maxPoints) * 100) / 100;
+                    const hg = gr ? (gr.byResp.get(r.id) || {}) : {};
+                    const adj = gr ? gr.adj.get(r.id) : null;
+                    const p1 = hg.g1 ? Number(hg.g1.points) : null;
+                    const p2 = hg.g2 ? Number(hg.g2.points) : null;
+                    let finalPts = adj && adj.final_points != null ? Number(adj.final_points) : (p1 != null && p2 != null ? Math.round((p1 + p2) * 50) / 100 : null);
+                    const gradingDone = finalPts != null ? 1 : 0;
                     rows.push([
                         rec, 'assessment_response', ri,
                         ...blank(10),
@@ -1416,7 +1596,11 @@ const AdminDashboard = {
                         (prompt && prompt.question) || '', r.response_text || '',
                         r.time_spent_seconds || '', fmt(r.submitted_at), turns.length,
                         turns.map(queryText).filter(Boolean).join('\n'),
-                        autoPoints, r.grader_notes || '', 0,
+                        autoPoints, r.grader_notes || '',
+                        p1 == null ? '' : p1, hg.g1 ? (hg.g1.notes || '') : '',
+                        p2 == null ? '' : p2, hg.g2 ? (hg.g2.notes || '') : '',
+                        finalPts == null ? '' : finalPts, gradingDone,
+                        gradingDone ? 2 : 0,
                     ]);
                 }
             }

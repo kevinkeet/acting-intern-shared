@@ -8,7 +8,14 @@ thinnest engagement ("minimalist blitzer"). NEW 7815 did a full 3-case battery (
 PAT004 scores (23%, 31%) sit inside the prior 25–35% range → leak fix didn't visibly move it.
 Totals: 32 completions; sweeps = 8893, 6718, 2874. Report rev 2 predates this — needs a rev 3.
 
-## LATEST (2026-09-14 evening, cache 20260723C): REDCap import export + /admin redirect
+## LATEST (2026-09-15, cache 20260723D): blinded human grading (migration 008)
+- **Migration 008** (`supabase/migrations/008_human_grading.sql`): role `grader` in admin_roles; `is_study_grader()`; tables `human_grades` (per grader per response; RLS own rows + admin read) and `grade_adjudications` (admin); SECURITY DEFINER `grading_queue()` returns ONLY response_id/case/prompt/response_text + per-caller md5 sort key for completed study-case attempts with 4-digit codes; `grader_roster()` (admin) gives slot order by granted_at. **Must be run in the Supabase SQL editor by Kevin.**
+- **Graders**: `actingintern.com/grade` (→ `#/grade`, `js/components/grading.js`). Same Supabase Auth login; `_verifyAdmin` now returns role 'grader' (isGrader); `_requireAdmin` refuses graders with a link to the queue. Queue = progress per case + "Grade next"; item page = question, answer, rubric parsed into a checklist (`Grading.parseRubric`: bullet lines → items, trailing ": N" = points, cap at maxPoints), points box (auto-sum, editable), notes, Save & next. Graders never see codes/arms/dates/auto scores.
+- **Admin → Grading** (`#/admin/grading`, `renderGrading`): G1/G2 points per answer, Δ, auto points, final points input → `grade_adjudications`. Filters: disagreements (>25% of max), both-graded-not-adjudicated, both, all. Slot 1/2 = grader role grant order; admin_roles.notes = display name.
+- **REDCap export** now fills ar_grader1/2_points+notes, ar_final_points (adjudicated, else mean of both), ar_grading_complete, and marks the response instrument complete when final exists.
+- To add a grader: Supabase Auth → create user; SQL `INSERT INTO admin_roles (user_id, role, notes) SELECT id,'grader','Dr. X' FROM auth.users WHERE email='…'`.
+
+## PREVIOUS (2026-09-14 evening, cache 20260723C): REDCap import export + /admin redirect
 - **REDCap project built**: Stanford REDCap PID 36093 (8 instruments, randomization module with `arm`/`site`, survey enabled, repeating assessment_case/assessment_response). Dictionary + allocation CSVs in ~/Downloads and memory.
 - **Admin → Export → "Download REDCap import CSV"** (`AdminDashboard.exportRedcapCsv`): one `assessment_case` instance per attempt + one `assessment_response` per answer, **record_id = participant code** (study cases, 4-digit codes only; UITEST/demo skipped). No BOM (`_toCsv(…, {bom:false})`). AI-question column uses `metadata.user_question`; pre-Sep-2 rows without it are blanked rather than dumping chart context. Import in REDCap via Data Import Tool with "blank values overwrite" OFF; records must exist (coordinators create the record when they assign the code).
 - **actingintern.com/admin** now works: `admin/index.html` forwards to `#/admin/attempts`.
