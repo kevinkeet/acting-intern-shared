@@ -108,6 +108,7 @@ AS $$
     SELECT ar.user_id, u.email::text, ar.granted_at, ar.notes
     FROM public.admin_roles ar JOIN auth.users u ON u.id = ar.user_id
     WHERE public.is_study_admin() AND ar.role = 'grader'
+      AND coalesce(ar.notes, '') NOT ILIKE 'TEST%'   -- test graders never occupy a slot
     ORDER BY ar.granted_at;
 $$;
 REVOKE ALL ON FUNCTION public.grader_roster() FROM PUBLIC;
@@ -115,3 +116,23 @@ GRANT EXECUTE ON FUNCTION public.grader_roster() TO authenticated;
 
 -- Verify:
 -- SELECT proname FROM pg_proc WHERE proname IN ('is_study_grader','grading_queue','grader_roster');
+
+-- ---------------------------------------------------------------------------
+-- Role grants (run after the Auth users exist). Notes = display name; a note
+-- starting with TEST marks a practice grader who never occupies slot 1/2.
+-- Existing admins (e.g. coordinators) keep their admin role and can still grade.
+-- ---------------------------------------------------------------------------
+INSERT INTO public.admin_roles (user_id, role, notes)
+SELECT u.id, 'grader', v.note
+FROM (VALUES
+    ('vpnair@stanford.edu',            'Vishnu Nair'),
+    ('jkoshy@bidmc.harvard.edu',       'TEST — Jacob Koshy'),
+    ('raj.mehta.md@adventhealth.com',  'TEST — Raj Mehta'),
+    ('pjain@challiance.org',           'TEST — Priyank Jain')
+) AS v(email, note)
+JOIN auth.users u ON lower(u.email) = v.email
+ON CONFLICT (user_id) DO NOTHING;
+
+SELECT u.email, ar.role, ar.notes, ar.granted_at
+FROM public.admin_roles ar JOIN auth.users u ON u.id = ar.user_id
+ORDER BY ar.granted_at;
