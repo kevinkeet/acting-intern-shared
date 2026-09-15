@@ -1307,6 +1307,10 @@ const AdminDashboard = {
                 </div>
                 ${this._rlsNotice(data)}
                 <div class="admin-export-grid">
+                    ${this._card('REDCap import CSV',
+                        'Assessment Case + Assessment Response instances for REDCap project 36093. Record ID = participant code. Study cases, 4-digit codes only.',
+                        `<button class="btn btn-primary" onclick="AdminDashboard.exportRedcapCsv()">Download REDCap import CSV</button>
+                         <div class="admin-export-help">Then in REDCap: Data Import Tool &rarr; upload this file &rarr; leave "blank values overwrite" OFF &rarr; review &rarr; Import. Records must already exist with the participant code as Record ID.</div>`)}
                     ${this._card('Responses CSV (flat)',
                         'One row per answered question, joined to its attempt and its AI-usage summary. This is the analysis-ready file.',
                         `<button class="btn btn-primary" onclick="AdminDashboard.exportResponsesCsv()">Download responses CSV</button>`)}
@@ -1331,6 +1335,88 @@ const AdminDashboard = {
     _exportStatus(msg) {
         const el = document.getElementById('admin-export-status');
         if (el) el.textContent = msg;
+    },
+
+    /**
+     * REDCap import file for the study's REDCap project (PID 36093):
+     * one `assessment_case` repeating instance per attempt and one
+     * `assessment_response` instance per answer, keyed by the participant
+     * code as the REDCap record ID. Only the five study cases and genuine
+     * 4-digit codes are exported (UITEST-/demo runs are skipped). Both
+     * instruments share one file; REDCap ignores the blank columns as long
+     * as "allow blank values to overwrite" stays off at import time.
+     */
+    async exportRedcapCsv() {
+        this._exportStatus('Building REDCap import…');
+        try {
+            const data = await this._fetchAll();
+            await this._loadCaseDefs(data.attempts.map((a) => a.case_id));
+            const STUDY = new Set(['PAT003', 'PAT004', 'PAT005', 'PAT006', 'PAT007']);
+            const STATUS = { completed: 1, in_progress: 2, abandoned: 3 };
+            const fmt = (iso) => {
+                if (!iso) return '';
+                const d = new Date(iso);
+                if (isNaN(d)) return '';
+                const p = (n) => String(n).padStart(2, '0');
+                return `${d.getUTCFullYear()}-${p(d.getUTCMonth() + 1)}-${p(d.getUTCDate())} ${p(d.getUTCHours())}:${p(d.getUTCMinutes())}:${p(d.getUTCSeconds())}`;
+            };
+            const askTurns = data.aiLog.filter((r) => r.interaction_type === 'ask' || r.interaction_type === 'ask_error');
+            const queryText = (t) => (t.metadata && t.metadata.user_question) || this._extractUserText(t.query_text || '');
+
+            const attempts = data.attempts
+                .filter((a) => STUDY.has(a.case_id) && /^\d{4}$/.test(String(a.user_code || '')))
+                .sort((a, b) => String(a.user_code).localeCompare(String(b.user_code)) || String(a.started_at || '').localeCompare(String(b.started_at || '')));
+            const respByAttempt = this._groupBy(data.responses, (r) => r.attempt_id);
+
+            const headers = [
+                'record_id', 'redcap_repeat_instrument', 'redcap_repeat_instance',
+                'ac_case_id', 'ac_attempt_id', 'ac_status', 'ac_started_at', 'ac_completed_at',
+                'ac_time_used_seconds', 'ac_prompts_answered', 'ac_ai_turns', 'ac_auto_score_pct', 'assessment_case_complete',
+                'ar_case_id', 'ar_prompt_id', 'ar_prompt_type', 'ar_max_points', 'ar_question_text', 'ar_response_text',
+                'ar_time_spent_seconds', 'ar_submitted_at', 'ar_ai_turns', 'ar_ai_all_queries',
+                'ar_auto_points', 'ar_auto_notes', 'assessment_response_complete',
+            ];
+            const blank = (n) => Array(n).fill('');
+            const rows = [];
+            const caseInst = new Map();
+            const respInst = new Map();
+            for (const a of attempts) {
+                const rec = String(a.user_code);
+                const ci = (caseInst.get(rec) || 0) + 1; caseInst.set(rec, ci);
+                const resps = (respByAttempt.get(a.id) || []).slice()
+                    .sort((x, y) => String(x.submitted_at || '').localeCompare(String(y.submitted_at || '')));
+                const turnsForAttempt = askTurns.filter((t) => t.attempt_id === a.id);
+                rows.push([
+                    rec, 'assessment_case', ci,
+                    a.case_id, a.id, STATUS[a.status] || '', fmt(a.started_at), fmt(a.completed_at),
+                    a.time_used_seconds || 0, resps.length, turnsForAttempt.length,
+                    (a.total_score === null || a.total_score === undefined) ? '' : Math.round(Number(a.total_score) * 100),
+                    2,
+                    ...blank(13),
+                ]);
+                for (const r of resps) {
+                    const ri = (respInst.get(rec) || 0) + 1; respInst.set(rec, ri);
+                    const prompt = this._findPrompt(a.case_id, r.assessment_id, r.prompt_id);
+                    const turns = turnsForAttempt.filter((t) => t.prompt_id === r.prompt_id);
+                    const maxPoints = prompt && prompt.scoringRubric ? prompt.scoringRubric.maxPoints : '';
+                    const frac = (r.score === null || r.score === undefined) ? null : Number(r.score);
+                    const autoPoints = (frac === null || maxPoints === '' || maxPoints === undefined) ? '' : Math.round(frac * Number(maxPoints) * 100) / 100;
+                    rows.push([
+                        rec, 'assessment_response', ri,
+                        ...blank(10),
+                        a.case_id, r.prompt_id, (prompt && prompt.type) || '', maxPoints,
+                        (prompt && prompt.question) || '', r.response_text || '',
+                        r.time_spent_seconds || '', fmt(r.submitted_at), turns.length,
+                        turns.map(queryText).filter(Boolean).join('\n'),
+                        autoPoints, r.grader_notes || '', 0,
+                    ]);
+                }
+            }
+            this._download(`redcap-import-${this._stamp()}.csv`, this._toCsv(headers, rows), 'text/csv;charset=utf-8');
+            this._exportStatus(`Downloaded ${rows.length} rows (${attempts.length} case instances, ${rows.length - attempts.length} answers) for ${caseInst.size} participant codes.`);
+        } catch (err) {
+            this._exportStatus('Export failed: ' + err.message);
+        }
     },
 
     async exportResponsesCsv() {
