@@ -177,8 +177,12 @@ const AssessmentChatbot = (() => {
 
     function unmountFloating() {
         if (!_root || !_root.classList.contains('acb-floating')) return;
-        _root.classList.remove('acb-floating', 'acb-collapsed');
-        _root.innerHTML = '';
+        // Remove the element outright. Stripping the floating classes used to
+        // leave an empty <aside> behind, which the base panel CSS rendered as a
+        // blank 420px docked column on admin/grading pages.
+        _root.remove();
+        _root = null;
+        _floatCollapsed = true;
     }
 
     function _renderFloatLauncher() {

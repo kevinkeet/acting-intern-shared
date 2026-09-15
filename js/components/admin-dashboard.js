@@ -559,7 +559,8 @@ const AdminDashboard = {
             { key: 'analytics', href: '#/admin/analytics', label: 'AI-usage analytics', icon: 'bar-chart-2' },
             { key: 'export', href: '#/admin/export', label: 'Export', icon: 'download' },
             { key: 'feedback', href: '#/admin/feedback', label: 'Feedback', icon: 'message-square-text' },
-            { key: 'grading', href: '#/admin/grading', label: 'Grading', icon: 'scale' },
+            { key: 'grading', href: '#/admin/grading', label: 'Adjudication', icon: 'scale' },
+            { key: 'grade', href: '#/grade', label: 'Grade answers', icon: 'check-square' },
         ];
         return `
             <div class="admin-topbar">

@@ -255,6 +255,7 @@ const App = {
         // Refresh sidebar entries when auth state changes (Assessment + Admin links).
         window.addEventListener('supabase:auth-state-change', () => this._refreshAssessmentNav());
         window.addEventListener('supabase:auth-ready', () => this._refreshAssessmentNav());
+        window.addEventListener('admin:auth-change', () => this._mountAuthChip());
         // The admin dashboard owns its own Supabase client/session (see
         // admin-dashboard.js) so it emits its own event.
         window.addEventListener('admin:auth-change', () => this._refreshAssessmentNav());
@@ -289,6 +290,39 @@ const App = {
      * chooser. Deliberately NOT shown in study-participant mode — residents
      * taking the assessment have no business switching builds mid-study.
      */
+    /**
+     * Header chip for staff sessions (admin / proctor / grader): who is signed
+     * in, their role, and a Sign out button. Participants never see it — they
+     * use a code, not a login. Re-rendered on every admin:auth-change.
+     */
+    _mountAuthChip() {
+        const headerRight = document.querySelector('.header-right');
+        if (!headerRight) return;
+        const old = document.getElementById('header-auth-chip');
+        if (old) old.remove();
+        if (typeof AdminDashboard === 'undefined') return;
+        const s = AdminDashboard._session;
+        const role = AdminDashboard._adminRole;
+        if (!s || !s.user || !role) return;
+        const chip = document.createElement('span');
+        chip.id = 'header-auth-chip';
+        chip.className = 'header-auth-chip';
+        const home = role === 'grader' ? '#/grade' : '#/admin/attempts';
+        const email = String(s.user.email || '');
+        chip.innerHTML = `
+            <a class="header-auth-who" href="${home}" title="Signed in as ${email.replace(/"/g, '&quot;')}">
+                <i data-lucide="user" class="lucide-inline"></i>
+                <span class="header-auth-email"></span>
+                <span class="header-auth-role"></span>
+            </a>
+            <button class="header-auth-out" type="button" title="Sign out">Sign out</button>`;
+        chip.querySelector('.header-auth-email').textContent = email;
+        chip.querySelector('.header-auth-role').textContent = role;
+        chip.querySelector('.header-auth-out').addEventListener('click', () => AdminDashboard.signOut());
+        headerRight.insertBefore(chip, headerRight.firstChild);
+        this.refreshIcons();
+    },
+
     _mountHomeButton() {
         let mode = null;
         try { mode = localStorage.getItem('entry-mode'); } catch (e) { return; }
@@ -389,7 +423,7 @@ const App = {
         const h = location.hash || '';
         const assessMode = (typeof ModeManager !== 'undefined') && ModeManager.get && ModeManager.get() === 'assessment';
         const runActive = (typeof AssessmentEngine !== 'undefined') && AssessmentEngine.isActive && AssessmentEngine.isActive();
-        const chartish = !h.startsWith('#/admin') && !h.startsWith('#/assessment');
+        const chartish = !h.startsWith('#/admin') && !h.startsWith('#/assessment') && !h.startsWith('#/grade');
         if (assessMode && !runActive && chartish) AssessmentChatbot.mountFloating();
         else AssessmentChatbot.unmountFloating();
     },
@@ -438,6 +472,7 @@ const App = {
             const link = document.getElementById('assessment-grade-link');
             if (link) link.style.display = '';
         };
+        this._mountAuthChip();
         if (typeof AdminDashboard !== 'undefined') {
             if (AdminDashboard.isAdmin && AdminDashboard.isAdmin()) {
                 showAdminLink(); showGradeLink();
