@@ -8,7 +8,12 @@ thinnest engagement ("minimalist blitzer"). NEW 7815 did a full 3-case battery (
 PAT004 scores (23%, 31%) sit inside the prior 25–35% range → leak fix didn't visibly move it.
 Totals: 32 completions; sweeps = 8893, 6718, 2874. Report rev 2 predates this — needs a rev 3.
 
-## LATEST (2026-09-15 PM, cache 20260723G): standalone staff layout + header sign-in chip
+## LATEST (2026-09-15 PM, cache 20260723H): two-of-n grader assignment (migration 009)
+- Kevin's design: 3 graders, every answer scored by 2 → each grader does 2/3. `supabase/migrations/009_grading_assignment.sql`: `grader_slot(uid)` (roster order by granted_at, TEST excluded), `grader_count()`, `excluded_slot(attempt)` = md5(attempt_id) mod n + 1 (NULL when n ≤ 2 → everyone grades everything), `grading_queue()` filters to the caller's share (admins/TEST graders see all), `grading_assignments()` for admins. Assignment is per ATTEMPT so a grader sees a participant's whole case; queue sort key groups an attempt's answers together.
+- Adjudication view: per-slot done counts, "Slots" column (assigned pair), Score A/B with slot tags; export notes prefixed "[slot n]". Two scores = the first two roster grades by slot order.
+- **Must run 009 in the Supabase SQL editor** (loaded in Kevin's tab 15 Sep PM).
+
+## PREVIOUS (2026-09-15 PM, cache 20260723G): standalone staff layout + header sign-in chip
 - `body.mode-staff` (App._syncStaffMode on hashchange) for `#/admin*` and `#/grade*`: hides sidebar, patient banner, allergy strip, chart search, chatbot; logo reads "Acting Intern · Study console"; admin-page becomes a card on a grey ground. Routes unchanged.
 - Header chip (App._mountAuthChip): email + role + Sign out for admin/proctor/grader sessions; mounted from `_verifyAdmin` success and `admin:auth-change`. Sign out removed from the admin/grading topbars (Change password stays).
 - Bug fixed: `AssessmentChatbot.unmountFloating` now removes the element (it used to leave a blank 420px docked `<aside>` on admin pages after visiting /grade). Browse chat never mounts on `#/grade`.
