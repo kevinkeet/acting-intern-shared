@@ -70,6 +70,14 @@ const ModeManager = (function () {
             if (q.has('studymode')) { localStorage.removeItem(UNLOCK_KEY); localStorage.removeItem(DEMO_KEY); localStorage.setItem('entry-mode', 'pilot'); }
             if (q.has('demo')) { localStorage.setItem(DEMO_KEY, '1'); localStorage.setItem('entry-mode', 'demo'); }
             if (q.has('choose')) localStorage.removeItem('entry-mode');
+            // ?code=1234 — participant code carried in the link REDCap gives
+            // each resident, so the consent page's code box is prefilled and
+            // there is one less thing to mistype. Same format rule as UserCode.
+            const code = (q.get('code') || '').trim();
+            if (code && /^[A-Za-z0-9_-]{3,32}$/.test(code)) {
+                localStorage.setItem('user-code', code);
+                localStorage.setItem('user-code-from-link', '1');
+            }
         } catch (e) { /* ignore */ }
     }
 

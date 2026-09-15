@@ -150,10 +150,17 @@ const AssessmentStart = {
         `;
         if (typeof App !== 'undefined' && App.refreshIcons) App.refreshIcons();
 
-        // Prefill an existing code if one is already stored.
+        // Prefill an existing code if one is already stored (including one
+        // carried in the ?code= link from REDCap).
         const codeInput = document.getElementById('assessment-access-code');
         if (codeInput && typeof UserCode !== 'undefined' && UserCode.get && UserCode.get()) {
             codeInput.value = UserCode.get();
+            let fromLink = false;
+            try { fromLink = localStorage.getItem('user-code-from-link') === '1'; } catch (e) { /* ignore */ }
+            if (fromLink) {
+                const help = document.querySelector('.assessment-consent-code-help');
+                if (help) help.innerHTML = 'Your participant code was filled in from the link in your study email. Check that it matches the code in that email, then continue.';
+            }
         }
         const form = document.getElementById('assessment-consent-form');
         if (form) {
