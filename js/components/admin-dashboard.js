@@ -435,14 +435,28 @@ const AdminDashboard = {
         if (grades.error) throw new Error('human_grades: ' + grades.error.message);
         if (adj.error) throw new Error('grade_adjudications: ' + adj.error.message);
         const slots = (roster.data || []).map((r) => r.grader_id);
-        const byResp = new Map();
+        const byResp = new Map();       // response_id -> [grade rows from roster graders, by slot]
+        const perGrader = slots.map(() => 0);
         for (const g of grades.data || []) {
             const slot = slots.indexOf(g.grader_id);
-            if (slot < 0) continue; // an admin's own practice grades are not counted
-            if (!byResp.has(g.response_id)) byResp.set(g.response_id, {});
-            byResp.get(g.response_id)['g' + (slot + 1)] = g;
+            if (slot < 0) continue; // admins' and TEST graders' practice grades are not counted
+            if (!byResp.has(g.response_id)) byResp.set(g.response_id, []);
+            byResp.get(g.response_id).push({ ...g, slot: slot + 1 });
+            if (g.status === 'submitted') perGrader[slot]++;
         }
-        return { roster: roster.data || [], slots, byResp, adj: new Map((adj.data || []).map((a) => [a.response_id, a])) };
+        for (const list of byResp.values()) list.sort((x, y) => x.slot - y.slot);
+        let assignments = new Map();
+        try {
+            const asg = await sb.rpc('grading_assignments');
+            if (!asg.error) assignments = new Map((asg.data || []).map((x) => [x.attempt_id, x.excluded_slot]));
+        } catch (e) { /* migration 009 not applied yet: no assignment info */ }
+        const n = slots.length;
+        const pairFor = (attemptId) => {
+            const ex = assignments.get(attemptId);
+            const all = slots.map((_, i) => i + 1);
+            return (ex == null) ? all : all.filter((s) => s !== ex);
+        };
+        return { roster: roster.data || [], slots, byResp, perGrader, pairFor, n, adj: new Map((adj.data || []).map((a) => [a.response_id, a])) };
     },
 
     async renderGrading() {
@@ -466,7 +480,8 @@ const AdminDashboard = {
             .map((r) => ({ r, a: attemptById.get(r.attempt_id) || {} }))
             .filter(({ a }) => a.status === 'completed' && STUDY.has(a.case_id) && /^\d{4}$/.test(String(a.user_code || '')))
             .map(({ r, a }) => {
-                const g = gr.byResp.get(r.id) || {};
+                const list = gr.byResp.get(r.id) || [];
+                const g = { g1: list[0] || null, g2: list[1] || null, pair: gr.pairFor(a.id) };
                 const adj = gr.adj.get(r.id);
                 const p1 = g.g1 ? Number(g.g1.points) : null;
                 const p2 = g.g2 ? Number(g.g2.points) : null;
@@ -476,8 +491,6 @@ const AdminDashboard = {
                 const auto = (r.score == null || max == null) ? null : Math.round(Number(r.score) * Number(max) * 100) / 100;
                 return { r, a, g, adj, p1, p2, diff, max, auto, prompt };
             });
-        const nGraded1 = rows.filter((x) => x.p1 != null).length;
-        const nGraded2 = rows.filter((x) => x.p2 != null).length;
         const both = rows.filter((x) => x.diff != null);
         const disagree = both.filter((x) => x.max && x.diff / x.max > 0.25);
         const exact = both.filter((x) => x.diff === 0).length;
@@ -491,9 +504,8 @@ const AdminDashboard = {
                 <div class="admin-header">
                     <h1>Grading &amp; adjudication</h1>
                     <div class="admin-header-stats">
-                        <span>${rows.length} answers to grade</span>
-                        <span>&middot; G1 ${nGraded1} done</span>
-                        <span>&middot; G2 ${nGraded2} done</span>
+                        <span>${rows.length} answers, each graded by two of ${gr.n} graders</span>
+                        ${gr.roster.map((r, i) => `<span>&middot; slot ${i + 1} ${gr.perGrader[i]} done</span>`).join('')}
                         <span>&middot; both ${both.length}</span>
                         <span>&middot; exact agreement ${both.length ? Math.round(100 * exact / both.length) : 0}%</span>
                         <span>&middot; ${disagree.length} differ by &gt;25% of max</span>
@@ -502,8 +514,8 @@ const AdminDashboard = {
                 <div class="admin-card">
                     <div class="admin-card-title">Graders</div>
                     <div class="admin-card-body">
-                        Slot 1: <b>${slotLabel(0)}</b> &nbsp;·&nbsp; Slot 2: <b>${slotLabel(1)}</b>
-                        <div class="admin-export-help">Slots follow the order the grader role was granted in admin_roles (notes column = display name). Graders sign in at <code>actingintern.com/grade</code>. Final points below feed the REDCap export (ar_final_points); when blank, the export uses the mean of the two graders.</div>
+                        ${gr.roster.length ? gr.roster.map((r, i) => `Slot ${i + 1}: <b>${slotLabel(i)}</b>`).join(' &nbsp;·&nbsp; ') : 'No roster graders yet.'}
+                        <div class="admin-export-help">Slots follow the order the grader role was granted in admin_roles (notes = display name; a note starting TEST marks a practice grader with no slot). Each participant's case is assigned to two slots, chosen deterministically from the attempt id, so every grader carries ${gr.n >= 3 ? Math.round(200 / gr.n) + '%' : 'all'} of the answers and each answer gets exactly two scores. Graders sign in at <code>actingintern.com/grade</code>. Final points below feed the REDCap export (ar_final_points); when blank, the export uses the mean of the two graders.</div>
                     </div>
                 </div>
                 <div class="grading-filter">
@@ -514,20 +526,21 @@ const AdminDashboard = {
                     <button class="btn btn-sm ${filter === 'all' ? 'btn-primary' : ''}" onclick="AdminDashboard._gradingFilter='all';AdminDashboard.renderGrading()">All</button>
                 </div>
                 <table class="admin-table grading-adj-table">
-                    <thead><tr><th>Case · prompt</th><th>Answer</th><th>Max</th><th>G1</th><th>G2</th><th>Δ</th><th>Auto</th><th>Final</th><th></th></tr></thead>
+                    <thead><tr><th>Case · prompt</th><th>Answer</th><th>Max</th><th>Slots</th><th>Score A</th><th>Score B</th><th>Δ</th><th>Auto</th><th>Final</th><th></th></tr></thead>
                     <tbody>
                     ${shown.length ? shown.map((x) => `
                         <tr id="adj-${x.r.id}">
                             <td class="grading-adj-key">${this._escape(x.a.case_id)}<br>${this._escape(x.r.prompt_id)}</td>
-                            <td class="grading-adj-answer"><details><summary>${this._escape(String(x.r.response_text || '').slice(0, 90))}${(x.r.response_text || '').length > 90 ? '…' : ''}</summary><div class="grading-adj-full">${this._escape(x.r.response_text || '')}</div>${x.g.g1 && x.g.g1.notes ? `<div class="grading-adj-note"><b>G1:</b> ${this._escape(x.g.g1.notes)}</div>` : ''}${x.g.g2 && x.g.g2.notes ? `<div class="grading-adj-note"><b>G2:</b> ${this._escape(x.g.g2.notes)}</div>` : ''}${x.prompt && x.prompt.scoringRubric ? `<details class="grading-adj-rubric"><summary>Rubric</summary><pre>${this._escape(x.prompt.scoringRubric.rubricText || '')}</pre></details>` : ''}</details></td>
+                            <td class="grading-adj-answer"><details><summary>${this._escape(String(x.r.response_text || '').slice(0, 90))}${(x.r.response_text || '').length > 90 ? '…' : ''}</summary><div class="grading-adj-full">${this._escape(x.r.response_text || '')}</div>${x.g.g1 && x.g.g1.notes ? `<div class="grading-adj-note"><b>Slot ${x.g.g1.slot}:</b> ${this._escape(x.g.g1.notes)}</div>` : ''}${x.g.g2 && x.g.g2.notes ? `<div class="grading-adj-note"><b>Slot ${x.g.g2.slot}:</b> ${this._escape(x.g.g2.notes)}</div>` : ''}${x.prompt && x.prompt.scoringRubric ? `<details class="grading-adj-rubric"><summary>Rubric</summary><pre>${this._escape(x.prompt.scoringRubric.rubricText || '')}</pre></details>` : ''}</details></td>
                             <td>${x.max == null ? '—' : x.max}</td>
-                            <td>${x.p1 == null ? '—' : x.p1}</td>
-                            <td>${x.p2 == null ? '—' : x.p2}</td>
+                            <td class="grading-adj-key">${x.g.pair.join('+')}</td>
+                            <td>${x.p1 == null ? '—' : `${x.p1}<small class="grading-adj-slot"> s${x.g.g1.slot}</small>`}</td>
+                            <td>${x.p2 == null ? '—' : `${x.p2}<small class="grading-adj-slot"> s${x.g.g2.slot}</small>`}</td>
                             <td class="${x.diff != null && x.max && x.diff / x.max > 0.25 ? 'grading-adj-diff' : ''}">${x.diff == null ? '—' : x.diff}</td>
                             <td class="grading-adj-auto">${x.auto == null ? '—' : x.auto}</td>
                             <td><input type="number" step="0.5" min="0" max="${x.max == null ? '' : x.max}" class="grading-adj-input" id="adjin-${x.r.id}" value="${x.adj && x.adj.final_points != null ? x.adj.final_points : ''}"></td>
                             <td><button class="btn btn-sm" onclick="AdminDashboard.saveAdjudication('${x.r.id}')">Save</button><span class="grading-status" id="adjst-${x.r.id}">${x.adj ? '✓' : ''}</span></td>
-                        </tr>`).join('') : '<tr><td colspan="9" class="admin-tx-noai">Nothing to show for this filter.</td></tr>'}
+                        </tr>`).join('') : '<tr><td colspan="10" class="admin-tx-noai">Nothing to show for this filter.</td></tr>'}
                     </tbody>
                 </table>
             </div>`;
@@ -1585,10 +1598,12 @@ const AdminDashboard = {
                     const maxPoints = prompt && prompt.scoringRubric ? prompt.scoringRubric.maxPoints : '';
                     const frac = (r.score === null || r.score === undefined) ? null : Number(r.score);
                     const autoPoints = (frac === null || maxPoints === '' || maxPoints === undefined) ? '' : Math.round(frac * Number(maxPoints) * 100) / 100;
-                    const hg = gr ? (gr.byResp.get(r.id) || {}) : {};
+                    const list = gr ? (gr.byResp.get(r.id) || []) : [];
+                    const hg = { g1: list[0] || null, g2: list[1] || null };
                     const adj = gr ? gr.adj.get(r.id) : null;
                     const p1 = hg.g1 ? Number(hg.g1.points) : null;
                     const p2 = hg.g2 ? Number(hg.g2.points) : null;
+                    const gnote = (g) => g ? `[slot ${g.slot}] ${g.notes || ''}`.trim() : '';
                     let finalPts = adj && adj.final_points != null ? Number(adj.final_points) : (p1 != null && p2 != null ? Math.round((p1 + p2) * 50) / 100 : null);
                     const gradingDone = finalPts != null ? 1 : 0;
                     rows.push([
@@ -1599,8 +1614,8 @@ const AdminDashboard = {
                         r.time_spent_seconds || '', fmt(r.submitted_at), turns.length,
                         turns.map(queryText).filter(Boolean).join('\n'),
                         autoPoints, r.grader_notes || '',
-                        p1 == null ? '' : p1, hg.g1 ? (hg.g1.notes || '') : '',
-                        p2 == null ? '' : p2, hg.g2 ? (hg.g2.notes || '') : '',
+                        p1 == null ? '' : p1, gnote(hg.g1),
+                        p2 == null ? '' : p2, gnote(hg.g2),
                         finalPts == null ? '' : finalPts, gradingDone,
                         gradingDone ? 2 : 0,
                     ]);

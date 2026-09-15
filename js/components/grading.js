@@ -122,7 +122,7 @@ const Grading = {
                 <div class="admin-header"><h1>Grading queue</h1></div>
                 <div class="grading-intro">
                     <p>Each item shows one participant's answer to one question, with the rubric as a checklist. Tick the criteria the answer earns, adjust the points if the rubric caps or branches, add a note if useful, and save. You can return to any item later.</p>
-                    <p class="grading-blind">You are blind to who wrote the answer, which arm they are in, and how anyone else scored it. Items are in a shuffled order unique to you.</p>
+                    <p class="grading-blind">You are blind to who wrote the answer, which arm they are in, and how anyone else scored it. Every answer is scored by two graders; the ${this._items.length} items below are your share, in a shuffled order unique to you, with each case's answers kept together.</p>
                 </div>
                 <div class="grading-actions">
                     ${next ? `<a class="btn btn-primary" href="#/grade/${next}">Grade next item</a>` : `<span class="grading-done">All items graded — thank you.</span>`}
