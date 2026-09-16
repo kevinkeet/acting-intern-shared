@@ -643,7 +643,7 @@ const AssessmentPanel = {
         // Keep any half-typed answer, then tear the run down WITHOUT changing
         // the attempt's status (engine.stop leaves it in_progress in the DB),
         // so the case list offers "Continue where I left off".
-        try { if (typeof this._saveDraft === 'function') await this._saveDraft(); } catch (e) { /* best effort */ }
+        try { if (typeof this._saveDraftLocal === 'function') this._saveDraftLocal(); } catch (e) { /* best effort */ }
         try { AssessmentEngine.stop(); } catch (e) { /* ignore */ }
         location.hash = '#/assessment/start';
         if (typeof App !== 'undefined' && App.showToast) App.showToast('Progress saved. Continue any time from the case list.', 'info');
