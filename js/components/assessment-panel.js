@@ -374,8 +374,8 @@ const AssessmentPanel = {
                     <button class="btn btn-sm" id="assessment-pause-btn" title="${isPaused ? 'Resume' : 'Pause'}">
                         ${isPaused ? '<i data-lucide="play" class="lucide-inline"></i>' : '<i data-lucide="pause" class="lucide-inline"></i>'}
                     </button>
-                    <button class="btn btn-sm" id="assessment-abandon-btn" title="Abandon attempt">
-                        <i data-lucide="x-octagon" class="lucide-inline"></i>
+                    <button class="btn btn-sm" id="assessment-leave-btn" title="Leave for now — your progress is saved and you can resume from the case list">
+                        <i data-lucide="log-out" class="lucide-inline"></i>
                     </button>
                 </div>
             </div>
@@ -392,7 +392,7 @@ const AssessmentPanel = {
         if (helpBtn) helpBtn.addEventListener('click', () => {
             if (typeof AssessmentOrientation !== 'undefined') AssessmentOrientation.show();
         });
-        document.getElementById('assessment-abandon-btn').addEventListener('click', () => this._confirmAbandon());
+        document.getElementById('assessment-leave-btn').addEventListener('click', () => this._leaveForNow());
         this._renderSyncPill(); // bar re-render wipes the pill — restore it
     },
 
@@ -633,6 +633,16 @@ const AssessmentPanel = {
             AssessmentEngine.pause();
         }
         this._renderBar();
+    },
+
+    // Leave the case without discarding anything. Answers already saved
+    // stay saved; the case list shows a Continue card. (Pilots read the old
+    // "Abandon" button as "you will lose your progress" — they never did,
+    // but the wording said otherwise.)
+    _leaveForNow() {
+        try { if (AssessmentEngine.pause && !AssessmentEngine.isPaused()) AssessmentEngine.pause(); } catch (e) { /* ignore */ }
+        location.hash = '#/assessment/start';
+        if (typeof App !== 'undefined' && App.showToast) App.showToast('Progress saved. Continue any time from the case list.', 'info');
     },
 
     async _confirmAbandon() {

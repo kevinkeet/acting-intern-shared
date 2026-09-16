@@ -42,17 +42,22 @@ const PatientHeader = {
         const age = DateUtils.calculateAge(patient.dateOfBirth);
         const dob = DateUtils.formatDate(patient.dateOfBirth);
 
-        banner.innerHTML = `
-            <div class="patient-info-banner">
-                <div class="patient-primary-row">
-                    <span class="patient-name">${patient.lastName}, ${patient.firstName} ${patient.middleName || ''}</span>
+        // Study build: one patient per case, chosen by the assessment — the
+        // switcher is meaningless there (pilots clicked it and nothing
+        // useful happened). Demo / full site keep it.
+        const studyLocked = (typeof ModeManager !== 'undefined' && ModeManager.isStudyLocked && ModeManager.isStudyLocked());
+        const switcherHtml = studyLocked ? '' : `
                     <button class="patient-switcher-btn"
                             onclick="PatientHeader.toggleSwitcher(event)"
                             title="Switch patient"
                             aria-haspopup="true"
                             aria-expanded="${this._switcherOpen ? 'true' : 'false'}">
                         <span class="patient-switcher-chevron">&#9662;</span>
-                    </button>
+                    </button>`;
+        banner.innerHTML = `
+            <div class="patient-info-banner">
+                <div class="patient-primary-row">
+                    <span class="patient-name">${patient.lastName}, ${patient.firstName} ${patient.middleName || ''}</span>${switcherHtml}
                     <span class="patient-mrn">MRN: ${patient.mrn}</span>
                 </div>
                 <div class="patient-secondary-row">
@@ -64,7 +69,7 @@ const PatientHeader = {
                     <span>${patient.preferredLanguage}</span>
                     ` : ''}
                 </div>
-                ${this._switcherOpen ? this._renderSwitcherMenu() : ''}
+                ${(this._switcherOpen && !studyLocked) ? this._renderSwitcherMenu() : ''}
             </div>
         `;
     },

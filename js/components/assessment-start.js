@@ -360,7 +360,7 @@ const AssessmentStart = {
         slot.innerHTML = `
             <div class="assessment-resume-card">
                 <div>
-                    <strong>You have an in-progress attempt.</strong>
+                    <strong>Your progress is saved.</strong> You have a case in progress — pick up exactly where you left off.
                     <div class="assessment-resume-meta">
                         Case ${this._escape(resume.case_id)} &middot;
                         Started ${this._escape(new Date(resume.started_at).toLocaleString())} &middot;
@@ -368,8 +368,8 @@ const AssessmentStart = {
                     </div>
                 </div>
                 <div class="assessment-resume-actions">
-                    <button class="btn btn-primary" onclick="AssessmentStart.resumeAttempt('${resume.id}')">Resume</button>
-                    <button class="btn" onclick="AssessmentStart.confirmAbandon('${resume.id}')">Abandon</button>
+                    <button class="btn btn-primary" onclick="AssessmentStart.resumeAttempt('${resume.id}')">Continue where I left off</button>
+                    <a href="#" class="assessment-resume-startover" onclick="AssessmentStart.confirmAbandon('${resume.id}'); return false;" title="Discard this attempt and start the case from the beginning">Start this case over</a>
                 </div>
             </div>
         `;
@@ -402,7 +402,7 @@ const AssessmentStart = {
     },
 
     async confirmAbandon(attemptId) {
-        if (!confirm('Abandon this attempt? It will be marked as abandoned and you can start fresh.')) return;
+        if (!confirm('Start this case over? Your answers so far will be discarded and the case restarts from the beginning. (To keep your progress, use Continue instead.)')) return;
         try {
             // Need to resume first so engine knows the attempt, then abandon.
             await AssessmentEngine.resume(attemptId);
