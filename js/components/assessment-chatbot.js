@@ -63,7 +63,7 @@ const AssessmentChatbot = (() => {
     ];
 
     const MAX_CONTEXT_CHARS = 60000;     // soft cap before truncation
-    const MAX_RESPONSE_TOKENS = 2048;    // 1024 cut replies off mid-thought (pilot 8893, 9 Sep)
+    const MAX_RESPONSE_TOKENS = 4096;    // 1024 cut replies off mid-thought (pilot 8893, 9 Sep); 2048 still did (Kevin, 17 Sep)
     const CHATBOT_MODEL = 'claude-haiku-4-5-20251001';  // fast + cheap; matches the chatbot's "answer concisely" UX
     // BLANK system prompt by design. The assessment AI must be maximally
     // construct-neutral: no framing, no verbosity nudge, no reasoning/ethics
@@ -509,6 +509,12 @@ const AssessmentChatbot = (() => {
                     .join('\n');
             }
             if (!replyText) replyText = '(The chatbot returned an empty response.)';
+            // A reply that stopped because it hit the length cap is cut off
+            // mid-sentence with no sign that anything is missing. Say so, and
+            // tell the resident how to get the rest.
+            if (response && response.stop_reason === 'max_tokens') {
+                replyText += '\n\n*(Reply reached the length limit. Ask it to continue if you want the rest.)*';
+            }
 
             _messages.push({ role: 'assistant', content: replyText });
         } catch (err) {
