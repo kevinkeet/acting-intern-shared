@@ -11,7 +11,7 @@
     },
     {
       "id": "NOTE008",
-      "type": "MICU Progress Note — Unexpected Recovery",
+      "type": "MICU Progress Note",
       "date": "2027-05-24T08:00:00.000Z",
       "author": "Dr. Lena Park (MICU)",
       "department": "Medical Intensive Care Unit",
@@ -47,7 +47,7 @@
     },
     {
       "id": "NOTE004",
-      "type": "MICU Daily Progress Note (broad workup)",
+      "type": "MICU Daily Progress Note",
       "date": "2027-05-12T07:30:00.000Z",
       "author": "Dr. Lena Park (MICU)",
       "department": "Medical Intensive Care Unit",
@@ -56,7 +56,7 @@
     },
     {
       "id": "NOTE003",
-      "type": "MICU Daily Progress Note (post-TIPS)",
+      "type": "MICU Daily Progress Note",
       "date": "2027-05-05T07:30:00.000Z",
       "author": "Dr. Lena Park (MICU)",
       "department": "Medical Intensive Care Unit",
@@ -83,7 +83,7 @@
     },
     {
       "id": "NOTE_HX_002",
-      "type": "Hepatology Clinic Note — Weight-Loss Workup",
+      "type": "Hepatology Clinic Note",
       "date": "2027-04-10T10:00:00.000Z",
       "author": "Dr. Rachel Imani (Hepatology)",
       "department": "Hepatology",
@@ -101,7 +101,7 @@
     },
     {
       "id": "NOTE011",
-      "type": "MICU Daily Progress Note (antibiotics broadened)",
+      "type": "MICU Daily Progress Note",
       "date": "2027-05-07T07:30:00.000Z",
       "author": "Dr. Lena Park (MICU)",
       "department": "Medical Intensive Care Unit",
