@@ -513,7 +513,7 @@ const AssessmentChatbot = (() => {
             // mid-sentence with no sign that anything is missing. Say so, and
             // tell the resident how to get the rest.
             if (response && response.stop_reason === 'max_tokens') {
-                replyText += '\n\n*(Reply reached the length limit. Ask it to continue if you want the rest.)*';
+                replyText += '\n\n(Reply reached the length limit. Ask it to continue if you want the rest.)';
             }
 
             _messages.push({ role: 'assistant', content: replyText });
