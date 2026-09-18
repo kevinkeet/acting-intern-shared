@@ -21,11 +21,12 @@
       "dose": "Per pharmacy (level-guided)",
       "route": "IV",
       "frequency": "Per levels",
-      "startDate": "2027-05-04",
+      "startDate": "2027-05-07",
       "prescriber": "MICU",
-      "indication": "Empiric broad-spectrum coverage for presumed sepsis (post-TIPS fevers/hypotension)",
+      "indication": "Empiric broad-spectrum coverage for persistent post-TIPS fevers and hypotension despite ceftriaxone (presumed sepsisn)",
       "instructions": "Broadened empirically when she developed fevers and pressor requirement.",
-      "pharmacy": "Hospital"
+      "pharmacy": "Hospital",
+      "notes": ""
     },
     {
       "id": "MED003",
@@ -34,12 +35,12 @@
       "dose": "1 g",
       "route": "IV",
       "frequency": "Q8H (renally adjusted)",
-      "startDate": "2027-05-04",
+      "startDate": "2027-05-07",
       "prescriber": "MICU",
       "indication": "Empiric broad-spectrum coverage for presumed sepsis",
       "instructions": "Broadened empirically with the fevers; continued despite a negative infectious workup.",
       "pharmacy": "Hospital",
-      "notes": "Renally dose-adjusted given AKI. (Beta-lactams are continued through the prolonged fever course.)"
+      "notes": "Renally dose-adjusted given AKI."
     },
     {
       "id": "MED004",

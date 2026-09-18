@@ -75,7 +75,7 @@
       "date": "2027-05-04",
       "diagnosedBy": "MICU",
       "priority": "High",
-      "notes": "Post-TIPS hypotension requiring vasopressors, presumed septic; empiric broad-spectrum antibiotics started. Infectious workup in progress."
+      "notes": "Post-TIPS hypotension requiring norepinephrine, presumed septic; cultures sent; ceftriaxone continued with a low threshold to broaden coverage. Infectious workup in progress."
     },
     {
       "id": "PRB008",
@@ -86,7 +86,7 @@
       "date": "2027-05-04",
       "diagnosedBy": "MICU",
       "priority": "High",
-      "notes": "High fevers beginning after the TIPS. Cultures drawn; empiric broad-spectrum antibiotics. Source not yet identified."
+      "notes": "High fevers beginning after the TIPS. Cultures drawn; on ceftriaxone; broader coverage under consideration. Source not yet identified."
     },
     {
       "id": "PRB009",

@@ -61,7 +61,7 @@
       "author": "Dr. Lena Park (MICU)",
       "department": "Medical Intensive Care Unit",
       "encounter": "ENC001",
-      "preview": "Post-TIPS. New high fevers and hypotension requiring norepinephrine; somnolent and not waking despite weaning sedation. Presumed sepsis: blood cultures drawn, antibiotics broadened to vancomycin + meropenem. Infectious workup initiated."
+      "preview": "Post-TIPS. New high fevers and hypotension requiring norepinephrine; somnolent and not waking despite weaning sedation. Presumed sepsis: blood cultures drawn; ceftriaxone continued for now with a low threshold to broaden broadened to vancomycin + meropenem. Infectious workup initiated."
     },
     {
       "id": "NOTE002",
@@ -98,6 +98,15 @@
       "department": "Primary Care",
       "encounter": "ENC_HX_001",
       "preview": "Early report of fatigue and decreased appetite with some weight loss in a patient with known cirrhosis and ongoing alcohol use. Alcohol-cessation counseling; hepatology follow-up arranged."
+    },
+    {
+      "id": "NOTE011",
+      "type": "MICU Daily Progress Note (antibiotics broadened)",
+      "date": "2027-05-07T07:30:00.000Z",
+      "author": "Dr. Lena Park (MICU)",
+      "department": "Medical Intensive Care Unit",
+      "encounter": "ENC001",
+      "preview": "Post-TIPS day ~4: fevers and pressor requirement persist despite ceftriaxone; cultures no growth to date, no localizing source. Empiric coverage broadened to vancomycin + meropenem; source evaluation continues."
     }
   ],
   "lastUpdated": "2027-05-28",

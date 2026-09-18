@@ -1,0 +1,10 @@
+{
+  "id": "NOTE011",
+  "type": "MICU Daily Progress Note (antibiotics broadened)",
+  "date": "2027-05-07T07:30:00.000Z",
+  "author": "Dr. Lena Park (MICU)",
+  "department": "Medical Intensive Care Unit",
+  "encounter": "ENC001",
+  "content": "MICU DAILY PROGRESS NOTE — UPMC\nDate: 5/7/2027 (post-TIPS day ~4)\n\nSUBJECTIVE/EVENTS: Fevers persist (Tmax 39.4 C) and she remains on norepinephrine at a stable dose. No further bleeding. Still not waking despite sedation being held.\n\nDATA: Blood cultures from 5/4 and 5/5: no growth to date. Urine culture: no growth. Repeat ascitic fluid (5/5): PMN below threshold, culture pending. Chest X-ray without a new infiltrate. Lines inspected without erythema.\n\nASSESSMENT/PLAN:\n#Persistent fevers + pressor requirement despite 48-72 h of ceftriaxone — presumed sepsis without a localized source. BROADEN empiric coverage to VANCOMYCIN + MEROPENEM (renally adjusted). Continue source evaluation; consider cross-sectional imaging if no improvement.\n#Persistent unresponsiveness — hepatic encephalopathy (TIPS-precipitated) vs critical illness; continue lactulose; neurology input if no change.\n#Cirrhosis / post-variceal-bleed — serial labs; MELD trending up.",
+  "attestation": "Electronically signed by Dr. Lena Park, MD (MICU). 5/7/2027."
+}
