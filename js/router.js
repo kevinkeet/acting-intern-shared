@@ -70,6 +70,25 @@ class Router {
             SimulationScoreTracker.trackChartNavigation(path);
         }
 
+        // Study-build chrome. `study-build` (site locked to the study door)
+        // hides the Feedback and About buttons everywhere; `assessment-lobby`
+        // (case list / thank-you / exit pages) hides the patient header,
+        // allergy banner, chart search and chart sidebar, which belong to a
+        // case, not to the landing page a resident arrives on.
+        try {
+            const locked = (typeof ModeManager !== 'undefined' && ModeManager.isStudyLocked && ModeManager.isStudyLocked());
+            const lobby = /^\/assessment\/(start|complete|exit)(\/|$)/.test(path);
+            document.body.classList.toggle('study-build', !!locked);
+            document.body.classList.toggle('assessment-lobby', !!lobby);
+            const logo = document.querySelector('.top-header .logo');
+            if (logo) {
+                if (lobby && !logo.dataset.chartLabel) logo.dataset.chartLabel = logo.innerHTML;
+                if (lobby) logo.innerHTML = '<i data-lucide="clipboard-list" class="lucide-inline"></i> Acting Intern — TEACH-AI study';
+                else if (logo.dataset.chartLabel) logo.innerHTML = logo.dataset.chartLabel;
+                if (typeof App !== 'undefined' && App.refreshIcons) App.refreshIcons();
+            }
+        } catch (e) { /* cosmetic */ }
+
         // Update active nav item
         document.querySelectorAll('.nav-item').forEach(item => {
             const itemPath = item.getAttribute('href')?.slice(1);

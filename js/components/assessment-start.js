@@ -282,7 +282,7 @@ const AssessmentStart = {
         if (okCases.length > 1) {
             progressHtml = doneCount > 0
                 ? `<div class="assessment-progress-line">You've completed <strong>${doneCount} of ${okCases.length}</strong> cases${doneCount >= okCases.length ? ' — all done, thank you! <button class="btn btn-primary assessment-finish-btn" onclick="router.navigate(\'/assessment/complete\')">Finish and exit</button>' : ' — each one helps, do the rest whenever suits you.'}</div>`
-                : `<div class="assessment-progress-line">${okCases.length} cases, each about 10–20 minutes. <strong>Doing just one is a great start</strong> — they can be done in any sitting, in any order.</div>`;
+                : `<div class="assessment-progress-line">${okCases.length} cases, each about 10–20 minutes. They can be done in any sitting, in any order.</div>`;
         }
 
         container.innerHTML = progressHtml + cases.map((entry, i) => {

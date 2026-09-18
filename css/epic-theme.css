@@ -17046,3 +17046,18 @@ body.tutor-standalone {
 /* Resume card: "start over" is deliberately quiet — continuing is the default. */
 .assessment-resume-startover { font-size: 12px; color: var(--text-muted, #6b7280); text-decoration: underline; margin-left: 12px; white-space: nowrap; }
 .assessment-resume-startover:hover { color: #b91c1c; }
+
+/* ============================================
+   Study build chrome (set by router.handleRoute)
+   ============================================ */
+/* Study build: no Feedback, no About, anywhere. */
+body.study-build .header-about-link,
+body.study-build #feedback-trigger-btn,
+body.study-build #feedback-panel,
+body.study-build #feedback-bar { display: none !important; }
+/* Case list / thank-you / exit pages: no chart chrome at all. */
+body.assessment-lobby .top-header .keyboard-hint,
+body.assessment-lobby #patient-banner,
+body.assessment-lobby #allergy-banner,
+body.assessment-lobby #sidebar { display: none !important; }
+body.assessment-lobby .content { margin-left: 0 !important; }
