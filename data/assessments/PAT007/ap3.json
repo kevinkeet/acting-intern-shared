@@ -2,12 +2,12 @@
   "id": "AP3",
   "order": 3,
   "title": "Timepoint 3 — Negative workup, worsening, family raises comfort measures",
-  "anchorDate": "2027-05-18T23:59:59Z",
+  "anchorDate": "2027-05-18T12:00:00Z",
   "timeLimitMinutes": 12,
   "scenarioBrief": "Now we jump ahead about two weeks. Ms. Brooks remains critically ill in the ICU despite treatment, and her workup has continued. Her family has asked to meet with you today (5/18/2027). The chart is updated with the interval ICU course and workup results. Please review the chart and answer the questions below.",
   "chartGate": {
-    "includeBeforeOrEqualDate": "2027-05-18T23:59:59Z",
-    "_notes": "TP3 visibility: everything from TP2 PLUS the negative workup (CT, repeat paracentesis, LP, serial cultures), the ICU progress note continuing/broadening antibiotics, the ID consult (infection-anchored), and the palliative-care family-meeting note (CMO deliberation only). The transition-to-comfort note, the recovery, and the drug-fever recognition are NOT yet visible."
+    "includeBeforeOrEqualDate": "2027-05-18T12:00:00Z",
+    "_notes": "TP3 visibility: everything from TP2 PLUS the negative workup (CT, repeat paracentesis, LP, serial cultures), the 5/7 and 5/12 ICU progress notes, the ID consult (infection-anchored), and the 5/18 06:00 labs/vitals. The anchor is NOON 5/18 so the 15:00 palliative-care family-meeting note is NOT yet visible: the brief says the family has asked to meet today, and Q4 asks what goes into the comfort-care decision before that meeting is charted (Kevin, 17 Sep 2026). The transition-to-comfort note (5/20), the recovery, and the drug-fever recognition are not visible either."
   },
   "prompts": [
     {
