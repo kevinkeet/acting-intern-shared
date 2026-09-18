@@ -1565,7 +1565,11 @@ const AdminDashboard = {
 
             let gr = null;
             try { gr = await this._loadGrading(); } catch (e) { gr = null; /* grading tables absent: export without human scores */ }
-            const attempts = data.attempts
+            // REDCap import must carry ONLY real participants. Codes are the
+            // four-digit REDCap record ids; anything else (UITEST-*, pilot
+            // practice codes, site-password typos) would CREATE a record on
+            // import. Filter here so the coordinator can import the file as-is.
+            const attempts = data.attempts.filter((a) => /^\d{4}$/.test(String(a.user_code || '').trim()))
                 .filter((a) => STUDY.has(a.case_id) && /^\d{4}$/.test(String(a.user_code || '')))
                 .sort((a, b) => String(a.user_code).localeCompare(String(b.user_code)) || String(a.started_at || '').localeCompare(String(b.started_at || '')));
             const respByAttempt = this._groupBy(data.responses, (r) => r.attempt_id);
