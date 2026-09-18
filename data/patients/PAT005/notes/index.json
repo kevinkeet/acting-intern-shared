@@ -52,7 +52,7 @@
       "author": "Dr. Marcus Hale (Hepatology)",
       "department": "Hepatology",
       "encounter": "ENC002",
-      "preview": "Interval visit. Ascites/hydrothorax recurring quickly; tolerating weekly outpatient drainage close to home given the 90-minute distance. Plan: continue weekly local thoracentesis/paracentesis; proceed with transplant evaluation. (No mention of the local transfusion protocol — managed at the outside site.)"
+      "preview": "Interval visit. Ascites/hydrothorax recurring quickly; tolerating weekly outpatient drainage close to home given the 90-minute distance. Plan: continue weekly local thoracentesis/paracentesis; proceed with transplant evaluation."
     },
     {
       "id": "NOTE003",
@@ -65,7 +65,7 @@
     },
     {
       "id": "NOTE002",
-      "type": "Interventional Radiology Procedure Note (TP1)",
+      "type": "Interventional Radiology Procedure Note",
       "date": "2027-03-10T17:00:00.000Z",
       "author": "Dr. Sameer Iqbal (Interventional Radiology)",
       "department": "Interventional Radiology",
@@ -74,7 +74,7 @@
     },
     {
       "id": "NOTE001",
-      "type": "ED Visit Note (TP1)",
+      "type": "ED Visit Note",
       "date": "2027-03-10T13:30:00.000Z",
       "author": "Dr. Olivia Reyes (Emergency Medicine)",
       "department": "Emergency Department",

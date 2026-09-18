@@ -37,7 +37,10 @@
     "restrictions": "None followed.",
     "supplements": "None."
   },
-  "exercise": { "frequency": "Minimal.", "intensity": "Sedentary." },
+  "exercise": {
+    "frequency": "Minimal.",
+    "intensity": "Sedentary."
+  },
   "functionalStatus": {
     "adls": "Independent at baseline; declined with recent illness.",
     "iadls": "Variable; some difficulty managing appointments and medications.",
@@ -59,5 +62,5 @@
     "anxietyScreening": "Not formally screened this admission.",
     "support": "Sister Carol (primary); adult children re-engaging."
   },
-  "notes": "55-year-old woman with active alcohol use disorder and decompensated cirrhosis, presenting with 3 months of involuntary weight loss. Socially isolated with recently reconciling family; her sister becomes the surrogate decision-maker. The social/family context matters most at the goals-of-care timepoint — and the case's core lesson (avoiding premature, irreversible decisions while a reversible, unconsidered diagnosis remains) plays out against that backdrop."
+  "notes": "55-year-old woman with ongoing alcohol use and decompensated cirrhosis. Socially isolated; she has recently begun reconciling with her family, and her sister is her closest contact and would act as her surrogate decision-maker."
 }

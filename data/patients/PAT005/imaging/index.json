@@ -31,7 +31,7 @@
       "id": "IMG002",
       "date": "2027-03-10T13:45:00.000Z",
       "modality": "X-Ray",
-      "description": "Chest X-Ray — PA/lateral (TP1)",
+      "description": "Chest X-Ray — PA/lateral",
       "facility": "University Medical Center — ED",
       "radiologist": "Dr. Helen Cho",
       "preview": "Moderate-to-large RIGHT pleural effusion with associated basilar atelectasis. No focal consolidation. Pattern consistent with hepatic hydrothorax. Left lung clear."
@@ -40,7 +40,7 @@
       "id": "IMG001",
       "date": "2027-03-10T13:40:00.000Z",
       "modality": "Ultrasound",
-      "description": "Abdominal Ultrasound with Doppler (TP1)",
+      "description": "Abdominal Ultrasound with Doppler",
       "facility": "University Medical Center — ED",
       "radiologist": "Dr. Helen Cho",
       "preview": "Coarse, nodular cirrhotic liver with splenomegaly and large-volume ascites. Patent portal vein (hepatopetal flow). No focal liver lesion. Findings of portal hypertension."

@@ -781,6 +781,12 @@ const AssessmentEngine = (() => {
             const anchor = (nextAp.chartGate && nextAp.chartGate.includeBeforeOrEqualDate) || nextAp.anchorDate;
             if (anchor) AssessmentChartGate.advance(anchor);
             AssessmentChartGate.resetVisibleSections();
+            // The chart search index was built at case start; rebuild it so
+            // Ctrl+K finds the records that just became visible.
+            try {
+                const pid = (typeof dataLoader !== 'undefined') ? dataLoader.currentPatientId : null;
+                if (pid && typeof SearchUtils !== 'undefined' && SearchUtils.buildSearchIndex) SearchUtils.buildSearchIndex(pid);
+            } catch (e) { /* search is a convenience */ }
             _lastAdvanceAt = Date.now();
             _promptShownAt = Date.now();
             _emit('assessment-advanced', { newAssessmentId: nextAp.id });

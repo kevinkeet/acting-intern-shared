@@ -94,6 +94,15 @@ const AssessmentChartGate = (() => {
         const out = { ...enc };
         const started = enc.date ? new Date(enc.date).toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: 'numeric' }) : null;
         out.status = started ? `In progress (admitted ${started})` : 'In progress';
+        // Diagnoses added with hindsight ("Ultimately: …", "recognized after
+        // …", or carrying a date past the anchor) hand over the outcome.
+        if (Array.isArray(out.diagnoses)) {
+            out.diagnoses = out.diagnoses.filter((dx) => {
+                const s = String(dx || '');
+                if (/\b(ultimately|in retrospect|eventually|recognized after|later found)\b/i.test(s)) return false;
+                return !textAfterAnchor(s);
+            });
+        }
         ['disposition', 'outcome', 'summary', 'hospitalCourse', 'dischargeDate', 'endDate', 'end', 'dischargeDisposition', 'lengthOfStay'].forEach((k) => { if (k in out) delete out[k]; });
         return out;
     }

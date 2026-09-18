@@ -9,7 +9,7 @@
       "date": "2024-03-01",
       "diagnosedBy": "Dr. Rachel Imani (Hepatology)",
       "priority": "High",
-      "notes": "Decompensated with portal hypertension, varices, ascites. Active alcohol use (not in remission). MELD rose sharply during this admission (to ~40 at the peak of her ICU illness)."
+      "notes": "Decompensated with portal hypertension, varices, and ascites. Active alcohol use (not in remission). MELD rising during this admission."
     },
     {
       "id": "PRB002",
@@ -20,7 +20,7 @@
       "date": "2027-02-01",
       "diagnosedBy": "Dr. Steven Lowe (PCP) / Hepatology",
       "priority": "Medium",
-      "notes": "Three months of unintentional weight loss preceding this admission. Differential remains open (progression of cirrhosis/anorexia, malignancy including HCC given cirrhosis + smoking + maternal breast cancer, malabsorption, depression/poor intake). Workup initiated; no etiology established at the time of the acute presentation."
+      "notes": "Three months of unintentional weight loss preceding this admission. Differential remains open (progression of cirrhosis/anorexia, malignancy including HCC given cirrhosis + smoking + maternal breast cancer, malabsorption, depression/poor intake). Outpatient workup was initiated in April; no etiology established yet."
     },
     {
       "id": "PRB003",
@@ -75,7 +75,7 @@
       "date": "2027-05-04",
       "diagnosedBy": "MICU",
       "priority": "High",
-      "notes": "Post-TIPS hypotension requiring vasopressors, presumed septic and treated empirically with broad-spectrum antibiotics. NOTE: despite an extensive infectious workup, NO source was identified (see fevers problem and the negative culture/imaging/CSF studies)."
+      "notes": "Post-TIPS hypotension requiring vasopressors, presumed septic; empiric broad-spectrum antibiotics started. Infectious workup in progress."
     },
     {
       "id": "PRB008",
@@ -86,7 +86,7 @@
       "date": "2027-05-04",
       "diagnosedBy": "MICU",
       "priority": "High",
-      "notes": "High fevers beginning after the TIPS, persisting despite escalating broad-spectrum antibiotics. Blood cultures NGTD, repeat paracentesis negative for SBP, CT chest/abdomen/pelvis with no abscess, lumbar puncture with normal CSF. An infectious source has not been found."
+      "notes": "High fevers beginning after the TIPS. Cultures drawn; empiric broad-spectrum antibiotics. Source not yet identified."
     },
     {
       "id": "PRB009",
@@ -97,7 +97,7 @@
       "date": "2027-05-04",
       "diagnosedBy": "MICU / Neurology consult",
       "priority": "High",
-      "notes": "Somnolent/unresponsive after the procedure and not improving despite weaning sedation. Differential includes hepatic encephalopathy (which TIPS can precipitate/worsen), critical illness, and other (medication-related) causes. Normal CSF; imaging without an acute structural cause."
+      "notes": "Somnolent/unresponsive after the procedure and not improving with weaning of sedation. Hepatic encephalopathy (which TIPS can precipitate or worsen) and critical illness under consideration; evaluation ongoing."
     },
     {
       "id": "PRB010",
@@ -108,7 +108,7 @@
       "date": "2027-05-04",
       "diagnosedBy": "MICU / Nephrology",
       "priority": "High",
-      "notes": "Worsening creatinine during the ICU course, contributing to a rising MELD (peak ~40). Multifactorial (shock, hepatorenal physiology)."
+      "notes": "Worsening creatinine since the bleed and shock. Multifactorial (hypotension, hepatorenal physiology)."
     },
     {
       "id": "PRB011",

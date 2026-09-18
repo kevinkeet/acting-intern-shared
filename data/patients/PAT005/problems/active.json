@@ -53,7 +53,7 @@
       "date": "2027-02-12",
       "diagnosedBy": "Dr. Marcus Hale (Hepatology)",
       "priority": "High",
-      "notes": "Recent hepatology attempts to increase furosemide and spironolactone to control the hydrothorax produced worsening creatinine, hyperkalemia, and hyponatremia — i.e., she does NOT tolerate higher diuretic doses. This is why she was referred for mechanical drainage (para/thora) rather than further diuresis."
+      "notes": "Recent hepatology attempts to increase furosemide and spironolactone to control the hydrothorax produced worsening creatinine, hyperkalemia, and hyponatremia — i.e., she does NOT tolerate higher diuretic doses. This is why hepatology referred her for consideration of mechanical drainage rather than further diuresis."
     },
     {
       "id": "PRB006",
@@ -85,7 +85,7 @@
       "date": "2027-04-28",
       "diagnosedBy": "Dr. Lena Park (Garrett Regional Medical Center)",
       "priority": "High",
-      "notes": "Acute bilateral pulmonary edema requiring intubation; extubated the next day after IV diuresis. Occurred during the period of weekly outpatient thora/para (during which she received 4 units FFP plus albumin per session for an elevated INR). Added to the problem list after the 4/2027 ICU admission."
+      "notes": "Acute bilateral pulmonary edema requiring intubation at an outside hospital (Garrett Regional, 4/28/2027); extubated the next day after IV diuresis and discharged home 4/30 at baseline. Occurred the evening after a weekly outpatient drainage session."
     },
     {
       "id": "PRB009",
