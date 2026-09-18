@@ -1565,12 +1565,15 @@ const AdminDashboard = {
 
             let gr = null;
             try { gr = await this._loadGrading(); } catch (e) { gr = null; /* grading tables absent: export without human scores */ }
-            // REDCap import must carry ONLY real participants. Codes are the
-            // four-digit REDCap record ids; anything else (UITEST-*, pilot
-            // practice codes, site-password typos) would CREATE a record on
-            // import. Filter here so the coordinator can import the file as-is.
-            const attempts = data.attempts.filter((a) => /^\d{4}$/.test(String(a.user_code || '').trim()))
-                .filter((a) => STUDY.has(a.case_id) && /^\d{4}$/.test(String(a.user_code || '')))
+            // REDCap import must carry ONLY real participants: a four-digit
+            // code AND an attempt started after launch. Pilot codes are also
+            // four digits, and their REDCap records are gone, so importing
+            // them would CREATE records. Everything before the cutoff is
+            // pilot or test data.
+            const LAUNCH_CUTOFF_MS = Date.parse('2026-09-18T00:00:00Z');
+            const attempts = data.attempts
+                .filter((a) => STUDY.has(a.case_id) && /^\d{4}$/.test(String(a.user_code || '').trim())
+                    && !Number.isNaN(Date.parse(a.started_at)) && Date.parse(a.started_at) >= LAUNCH_CUTOFF_MS)
                 .sort((a, b) => String(a.user_code).localeCompare(String(b.user_code)) || String(a.started_at || '').localeCompare(String(b.started_at || '')));
             const respByAttempt = this._groupBy(data.responses, (r) => r.attempt_id);
 
