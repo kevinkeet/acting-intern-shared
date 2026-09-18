@@ -29,8 +29,8 @@
     },
     {
       "id": "NOTE006",
-      "type": "Interventional Radiology Consult — Drainage Strategy",
-      "date": "2027-04-29T14:00:00.000Z",
+      "type": "Interventional Radiology E-Consult — Drainage Strategy",
+      "date": "2027-04-30T18:00:00.000Z",
       "author": "Dr. Sameer Iqbal (Interventional Radiology)",
       "department": "Interventional Radiology",
       "encounter": "ENC002",
@@ -38,12 +38,12 @@
     },
     {
       "id": "NOTE005",
-      "type": "MICU Admission H&P + Hospital Course",
-      "date": "2027-04-28T19:30:00.000Z",
-      "author": "Dr. Lena Park (MICU) / Dr. Daniel Okafor (Medicine)",
-      "department": "Medical Intensive Care Unit",
+      "type": "Discharge Summary — Outside Hospital",
+      "date": "2027-04-30T16:00:00.000Z",
+      "author": "Dr. Lena Park (Hospitalist, Garrett Regional Medical Center)",
+      "department": "Hospital Medicine — Garrett Regional Medical Center (outside records)",
       "encounter": "ENC002",
-      "preview": "Acute hypoxemic respiratory failure → intubation. CXR bilateral pulmonary edema; BNP markedly elevated; troponin negative; afebrile, no leukocytosis; echo with preserved EF. Treated with IV furosemide, extubated POD#1, discharged 4/30. Records note she had been receiving 4 units FFP plus albumin at each weekly outpatient drainage session."
+      "preview": "Outside-hospital discharge summary (Garrett Regional, 4/28–4/30): acute bilateral pulmonary edema with hypoxemic respiratory failure the evening after a weekly drainage session (facility protocol: 4 u FFP + albumin for INR 2.0). Intubated, diuresed, extubated 4/29, home 4/30 at baseline. BNP 920, troponin negative, afebrile, echo normal EF. Plans to continue weekly drainage under the same protocol unless University advises otherwise."
     },
     {
       "id": "NOTE004",

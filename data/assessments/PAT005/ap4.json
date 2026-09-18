@@ -1,0 +1,31 @@
+{
+  "id": "AP4",
+  "order": 4,
+  "title": "Timepoint 4 — Drainage needs resolved (still awaiting transplant)",
+  "anchorDate": "2027-07-05T23:59:59Z",
+  "timeLimitMinutes": 4,
+  "scenarioBrief": "Now we jump ahead about two months. Ms. Whitlock is seen in follow-up today (7/5/2027), and her need for drainage procedures has changed markedly. The chart is updated with the interval records. Please review the chart and answer the questions below.",
+  "chartGate": {
+    "includeBeforeOrEqualDate": "2027-07-05T23:59:59Z",
+    "_notes": "TP3 visibility: the full chart through early July — TP1/TP2 records PLUS the transplant evaluation/listing note and the interval hepatology note documenting improvement after stopping FFP and placing the PleurX (off scheduled drainage, Na improved to 130). The transplant itself (7/19) and the post-transplant clinic note are NOT yet visible — this timepoint is deliberately pre-transplant."
+  },
+  "prompts": [
+    {
+      "id": "AP4-Q5",
+      "order": 1,
+      "type": "reasoning",
+      "question": "Her need for paracentesis and thoracentesis has dropped away almost entirely. What are the possible reasons for this adjustment in her drainage needs?",
+      "expectedResponseFormat": "free_text",
+      "minLength": 0,
+      "weight": 3,
+      "sourceQuestion": "Question 5 (TP3)",
+      "scoringRubric": {
+        "maxPoints": 3,
+        "rubricText": "Total 3 points. Three of the five of the following (1 each up to 3):\n- Reduction in total volume of blood products\n- Changed alcohol intake\n- Improved adherence to diuretics\n- Improved nutrition\n- Less salt in diet\nAPPLICABLE MAXIMUM: 3."
+      }
+    }
+  ],
+  "totalWeight": 0.4,
+  "passingScorePct": 70,
+  "_scenarioBriefRemoved": "Orientation stub only: names the time jump, the reason for the encounter/presenting problem, and that the chart is updated. The clinical picture, workup results and conclusions are NOT summarized — the resident must piece them together from the chart. Trigger facts verified discoverable at/before this anchor date. Original full brief in git history."
+}

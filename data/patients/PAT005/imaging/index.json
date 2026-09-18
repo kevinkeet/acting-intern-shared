@@ -13,8 +13,8 @@
       "id": "IMG004",
       "date": "2027-04-28T20:00:00.000Z",
       "modality": "Echocardiogram",
-      "description": "Transthoracic Echocardiogram — MICU",
-      "facility": "University Cardiology",
+      "description": "Transthoracic Echocardiogram — outside hospital ICU",
+      "facility": "Garrett Regional Medical Center — Cardiology (outside records)",
       "radiologist": "Dr. Brett Carroll",
       "preview": "Preserved LV systolic function (EF 60%), no regional wall-motion abnormality, no significant valvular disease, normal RV. No primary cardiac explanation for the acute pulmonary edema."
     },
@@ -22,8 +22,8 @@
       "id": "IMG003",
       "date": "2027-04-28T18:45:00.000Z",
       "modality": "X-Ray",
-      "description": "Chest X-Ray — portable AP (MICU presentation)",
-      "facility": "University Medical Center — ED",
+      "description": "Chest X-Ray — portable AP (outside hospital ED)",
+      "facility": "Garrett Regional Medical Center — ED Radiology (outside records)",
       "radiologist": "Dr. Helen Cho",
       "preview": "Diffuse BILATERAL alveolar/interstitial pulmonary edema with vascular congestion. Different from her prior unilateral transudative effusion — an acute volume-overload pattern."
     },

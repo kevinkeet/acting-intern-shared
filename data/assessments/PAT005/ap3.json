@@ -1,31 +1,59 @@
 {
   "id": "AP3",
   "order": 3,
-  "title": "Timepoint 3 — Drainage needs resolved (still awaiting transplant)",
-  "anchorDate": "2027-07-05T23:59:59Z",
-  "timeLimitMinutes": 4,
-  "scenarioBrief": "Now we jump ahead about two months. Ms. Whitlock is seen in follow-up today (7/5/2027), and her need for drainage procedures has changed markedly. The chart is updated with the interval records. Please review the chart and answer the questions below.",
+  "title": "Timepoint 3 — After an ICU admission for flash pulmonary edema; drainage strategy",
+  "anchorDate": "2027-04-30T23:59:59Z",
+  "timeLimitMinutes": 10,
+  "scenarioBrief": "Now we jump ahead one week. Ms. Whitlock was admitted to the hospital near her home with acute shortness of breath and required intensive care. She has just been discharged (4/30/2027), and the outside-hospital discharge summary and records have arrived. The chart is updated with those records. Please review the chart and answer the questions below.",
   "chartGate": {
-    "includeBeforeOrEqualDate": "2027-07-05T23:59:59Z",
-    "_notes": "TP3 visibility: the full chart through early July — TP1/TP2 records PLUS the transplant evaluation/listing note and the interval hepatology note documenting improvement after stopping FFP and placing the PleurX (off scheduled drainage, Na improved to 130). The transplant itself (7/19) and the post-transplant clinic note are NOT yet visible — this timepoint is deliberately pre-transplant."
+    "includeBeforeOrEqualDate": "2027-04-30T23:59:59Z",
+    "_notes": "TP3 visibility: everything from TP2 PLUS the outside-hospital discharge summary (Garrett Regional Medical Center, 4/28–4/30: flash pulmonary edema after a drainage session with FFP; BNP up, troponin negative, afebrile, normal echo), the outside CXR/echo/labs, and the University IR e-consult (4/30) that lists PleurX vs TIPS without deciding."
   },
   "prompts": [
     {
-      "id": "AP3-Q5",
+      "id": "AP3-Q3",
       "order": 1,
-      "type": "reasoning",
-      "question": "Her need for paracentesis and thoracentesis has dropped away almost entirely. What are the possible reasons for this adjustment in her drainage needs?",
+      "type": "communication",
+      "question": "After her ICU admission for flash pulmonary edema, you call her radiologist to ask that he stop giving FFP during her procedures. How would you approach that conversation?",
       "expectedResponseFormat": "free_text",
       "minLength": 0,
-      "weight": 3,
-      "sourceQuestion": "Question 5 (TP3)",
+      "weight": 4,
+      "sourceQuestion": "Question 2 (TP2): approach to the radiologist conversation",
       "scoringRubric": {
-        "maxPoints": 3,
-        "rubricText": "Total 3 points. Three of the five of the following (1 each up to 3):\n- Reduction in total volume of blood products\n- Changed alcohol intake\n- Improved adherence to diuretics\n- Improved nutrition\n- Less salt in diet\nAPPLICABLE MAXIMUM: 3."
+        "maxPoints": 4,
+        "rubricText": "Total 4 points (measured out of the 7 elements below; 1 each up to 4).\nFour of the seven of the following communication elements: 4 points\n- Assume positive intent\n- Thank the proceduralist\n- Ask him why he is doing it\n- Explain the facts of the case\n- Request that they stop\n- Explain the negative outcome\n- Consider the medium of conversation (email vs phone)\nAPPLICABLE MAXIMUM: 4."
+      }
+    },
+    {
+      "id": "AP3-Q4",
+      "order": 2,
+      "type": "management-decision",
+      "question": "Should a PleurX (indwelling tunneled pleural) catheter be placed to aid in drainage of her pleural effusion? What are the risks and benefits for THIS patient?",
+      "expectedResponseFormat": "free_text",
+      "minLength": 0,
+      "weight": 4,
+      "sourceQuestion": "Question 5 (Aliquot 3): PleurX catheter",
+      "scoringRubric": {
+        "maxPoints": 4,
+        "rubricText": "PleurX catheter — total 4 points.\n- One of the two contingencies pointing to yes: 1 point\n  - If truly diuretic refractory\n  - If not a candidate for TIPS\n- Two of three benefits: 2 points\n  - Reduces the number of procedures\n  - Smaller amount drained more frequently\n  - Can be done at home\n- Increases the likelihood of infection (risk): 1 point\nAPPLICABLE MAXIMUM: 4."
+      }
+    },
+    {
+      "id": "AP3-Q4b",
+      "order": 3,
+      "type": "management-decision",
+      "question": "Should a TIPS be considered to manage her recurrent hydrothorax? What are the risks and benefits for THIS patient?",
+      "expectedResponseFormat": "free_text",
+      "minLength": 0,
+      "weight": 4,
+      "sourceQuestion": "Question 6 (Aliquot 3): TIPS",
+      "scoringRubric": {
+        "maxPoints": 4,
+        "rubricText": "TIPS — total 4 points.\n- Yes, a TIPS should be considered: 1 point\n- Risk of liver failure with an elevated MELD: 1 point\n- Risk of hepatic encephalopathy: 1 point\n- One of the two benefits: 1 point\n  - Improved nutrition\n  - Improved frailty status\nAPPLICABLE MAXIMUM: 4."
       }
     }
   ],
-  "totalWeight": 0.4,
+  "totalWeight": 12,
   "passingScorePct": 70,
   "_scenarioBriefRemoved": "Orientation stub only: names the time jump, the reason for the encounter/presenting problem, and that the chart is updated. The clinical picture, workup results and conclusions are NOT summarized — the resident must piece them together from the chart. Trigger facts verified discoverable at/before this anchor date. Original full brief in git history."
 }

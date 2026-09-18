@@ -49,9 +49,9 @@
       "id": "ORD004",
       "category": "Medication",
       "name": "Furosemide 40 mg IV",
-      "details": "For flash pulmonary edema in the MICU.",
+      "details": "For flash pulmonary edema — outside hospital ICU (Garrett Regional).",
       "priority": "STAT",
-      "orderedBy": "Dr. Lena Park (MICU)",
+      "orderedBy": "Dr. Lena Park (Garrett Regional Medical Center)",
       "status": "Completed",
       "orderDate": "2027-04-28T19:00:00.000Z",
       "completedDate": "2027-04-28T19:10:00.000Z"

@@ -1,10 +1,10 @@
 {
   "id": "LAB002",
-  "name": "MICU Labs — Flash Pulmonary Edema",
+  "name": "Outside Hospital Labs — Garrett Regional ED/ICU",
   "collectedDate": "2027-04-28T19:00:00.000Z",
   "resultedDate": "2027-04-28T19:40:00.000Z",
-  "orderedBy": "Dr. Lena Park (MICU)",
-  "facility": "University Medical Center — ICU Lab",
+  "orderedBy": "Dr. Lena Park (Garrett Regional Medical Center)",
+  "facility": "Garrett Regional Medical Center — Laboratory (outside records)",
   "specimen": "Serum + plasma + ABG",
   "status": "Final",
   "results": [

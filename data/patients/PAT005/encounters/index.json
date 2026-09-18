@@ -19,16 +19,16 @@
       "id": "ENC002",
       "date": "2027-04-28T18:30:00.000Z",
       "dischargeDate": "2027-04-30T12:00:00.000Z",
-      "type": "Inpatient Admission (MICU)",
-      "department": "Medical ICU (University)",
-      "provider": "Dr. Lena Park (MICU attending), Dr. Daniel Okafor (Medicine), Dr. Marcus Hale (Hepatology consult), Dr. Sameer Iqbal (Interventional Radiology consult)",
+      "type": "Outside Hospital Admission (ICU) — Garrett Regional Medical Center",
+      "department": "Garrett Regional Medical Center — ICU / Hospital Medicine (outside records)",
+      "provider": "Dr. Lena Park (Hospital Medicine, Garrett Regional), Dr. R. Sandoval (Critical Care, Garrett Regional)",
       "chiefComplaint": "Acute dyspnea / respiratory distress",
       "diagnoses": [
         "Flash pulmonary edema requiring intubation",
         "Acute hypoxemic respiratory failure",
         "Decompensated cirrhosis with recurrent ascites + hepatic hydrothorax"
       ],
-      "status": "Extubated POD#1; discharged 4/30/2027",
+      "status": "Extubated 4/29; discharged home 4/30/2027 — outside records received",
       "interpreterUsed": "None"
     },
     {
