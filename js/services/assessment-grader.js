@@ -179,23 +179,32 @@ const AssessmentGrader = (() => {
         const systemPrompt = _graderSystemPromptPoints();
         const userMessage = _graderUserMessagePoints({ prompt, responseText });
 
+        // Long rubrics (20+ criteria) against long pasted answers produced
+        // JSON breakdowns that overran the old 1,400-token cap: the reply was
+        // cut mid-object and scored 0, or came back empty ("Invalid response
+        // format"). Give the grader room, and retry once with more if the
+        // JSON still does not parse. A grade that never parses is null, not 0.
+        const call = (maxTokens) => ClaudeAPI._singleChat({
+            systemPrompt,
+            userMessage,
+            model: GRADER_MODEL,
+            maxTokens,
+            temperature: GRADER_TEMPERATURE,
+        });
         let raw = '';
         try {
-            raw = await ClaudeAPI._singleChat({
-                systemPrompt,
-                userMessage,
-                model: GRADER_MODEL,
-                maxTokens: 1400,
-                temperature: GRADER_TEMPERATURE,
-            });
+            raw = await call(4000);
         } catch (err) {
             WARN('points grade call failed:', err.message);
             return { ok: false, score: null, breakdown: { awarded: [], missed: ['(grader call failed)'] }, notes: 'Grader call failed: ' + err.message, raw: '' };
         }
 
-        const parsed = _parseGraderResponse(raw);
+        let parsed = _parseGraderResponse(raw);
         if (!parsed) {
-            return { ok: false, score: 0, breakdown: { awarded: [], missed: ['(grader output unparseable)'] }, notes: 'Grader returned unparseable JSON.', raw };
+            try { raw = await call(8000); parsed = _parseGraderResponse(raw); } catch (err) { WARN('points grade retry failed:', err.message); }
+        }
+        if (!parsed) {
+            return { ok: false, score: null, breakdown: { awarded: [], missed: ['(grader output unparseable)'] }, notes: 'Grader returned unparseable JSON.', raw };
         }
 
         // Trust applicableMax/earnedPoints to derive the normalized score; fall
