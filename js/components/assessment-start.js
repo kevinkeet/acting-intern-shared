@@ -273,6 +273,7 @@ const AssessmentStart = {
             return;
         }
         const done = new Set(doneCaseIds || []);
+        const studyLocked = (typeof ModeManager !== 'undefined' && ModeManager.isStudyLocked && ModeManager.isStudyLocked());
         const okCases = cases.filter((e) => e.ok);
         const doneCount = okCases.filter((e) => done.has(e.m.caseId)).length;
         // First not-yet-completed case gets the visually primary "start here" CTA
@@ -308,9 +309,9 @@ const AssessmentStart = {
                         <span>${this._escape(this._cardTitle(m))} &middot; ${(m.assessments || []).length} timepoint${(m.assessments || []).length === 1 ? '' : 's'} &middot; ~10&ndash;20 min</span>
                     </div>
                     ${m.warning ? `<div class="assessment-case-card-warning">${this._escape(m.warning)}</div>` : ''}
-                    <button class="btn ${isDone ? '' : 'btn-primary'}" onclick="AssessmentStart.beginCase('${m.caseId}')">
+                    ${(isDone && studyLocked) ? '' : `<button class="btn ${isDone ? '' : 'btn-primary'}" onclick="AssessmentStart.beginCase('${m.caseId}')">
                         ${isDone ? 'Do again' : (isNext ? 'Start here' : 'Begin case')}
-                    </button>
+                    </button>`}
                 </div>
             `;
         }).join('');

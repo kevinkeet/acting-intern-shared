@@ -602,8 +602,20 @@ const AssessmentPanel = {
     _renderFinishConfirm() {
         const area = document.getElementById('assessment-prompt-area');
         if (!area) return;
+        // Study participants never see scores, a diagnosis, or a breakdown
+        // (study decision; Kevin, 17 Sep 2026). Finishing a case saves it and
+        // moves straight on to the next case, or to the thank-you page when
+        // the battery is done. The full site (Kevin's sandbox) keeps the
+        // results page for review.
+        const study = (typeof ModeManager !== 'undefined' && ModeManager.isStudyLocked && ModeManager.isStudyLocked());
         const pending = this._gradingPromptIds.size;
-        area.innerHTML = `
+        area.innerHTML = study ? `
+            <div class="assessment-finish-card">
+                <h2>You've finished this case.</h2>
+                <p>Your answers are saved. Click Continue to move on.</p>
+                <button class="btn btn-primary" id="assessment-finish-btn">Continue</button>
+            </div>
+        ` : `
             <div class="assessment-finish-card">
                 <h2>You've finished all prompts.</h2>
                 <p>${pending > 0 ? `${pending} response${pending === 1 ? '' : 's'} ${pending === 1 ? 'is' : 'are'} still being graded.` : 'All responses have been graded.'}</p>
@@ -613,17 +625,35 @@ const AssessmentPanel = {
         `;
         document.getElementById('assessment-finish-btn').addEventListener('click', async () => {
             try {
-                App.showLoading('Finalizing scores…');
+                App.showLoading(study ? 'Saving…' : 'Finalizing scores…');
+                const cur = AssessmentEngine.getCurrent();
+                const thisCase = cur && cur.attempt ? cur.attempt.case_id : null;
                 const { attemptId } = await AssessmentEngine.complete();
                 this._detachUnloadGuard();
                 this._unmountDock();
-                router.navigate('/assessment/results/' + attemptId);
+                if (!study) { router.navigate('/assessment/results/' + attemptId); return; }
+                await this._goToNextCase(thisCase);
             } catch (err) {
                 App.showToast('Could not finalize: ' + err.message, 'error');
             } finally {
                 App.hideLoading();
             }
         });
+    },
+
+    // Next incomplete case in battery order after the one just finished;
+    // otherwise the thank-you page (study) or the case list (demo).
+    async _goToNextCase(justFinishedId) {
+        const ids = AssessmentData.listCases().map((c) => c.caseId);
+        let done = [];
+        try { done = await AssessmentStart._loadMyCompletions(); } catch (e) { done = []; }
+        const doneSet = new Set(done); if (justFinishedId) doneSet.add(justFinishedId);
+        const at = Math.max(0, ids.indexOf(justFinishedId));
+        const ordered = ids.slice(at + 1).concat(ids.slice(0, at));
+        const next = ordered.find((id) => !doneSet.has(id));
+        if (next) { await AssessmentStart.beginCase(next); return; }
+        const demo = (typeof DemoMode !== 'undefined' && DemoMode.isActive());
+        router.navigate(demo ? '/assessment/start' : '/assessment/complete');
     },
 
     _togglePause() {
@@ -663,12 +693,11 @@ const AssessmentPanel = {
         }
     },
 
+    // No pace cue. The earlier "short answers are fine, keep moving" line
+    // nudged residents toward shorter answers, which score worse on the
+    // rubrics (Kevin, 17 Sep 2026). There is no time limit; say nothing.
     _paceText(elapsedSec, caseId) {
-        const typical = this._typicalMinutes(caseId);
-        const mins = elapsedSec / 60;
-        if (mins < typical * 0.75) return `most people finish in about ${typical} min`;
-        if (mins < typical) return `most people are wrapping up around now`;
-        return `past the typical ${typical} min — short answers are fine, keep moving`;
+        return '';
     },
 
     _startTicker() {

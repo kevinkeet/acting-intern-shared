@@ -13,6 +13,13 @@
 const AssessmentResults = {
 
     async render(attemptId) {
+        // Study participants never see results (scores, diagnosis, breakdown).
+        // Admins on the full site still can.
+        try {
+            const study = (typeof ModeManager !== 'undefined' && ModeManager.isStudyLocked && ModeManager.isStudyLocked());
+            const admin = (typeof UserCode !== 'undefined' && UserCode.isAdmin && UserCode.isAdmin());
+            if (study && !admin) { router.navigate('/assessment/start'); return; }
+        } catch (e) { /* fall through */ }
         const root = document.getElementById('main-content');
         if (!root) return;
         if (!attemptId) {
