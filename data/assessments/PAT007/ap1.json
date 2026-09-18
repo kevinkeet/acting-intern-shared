@@ -1,13 +1,13 @@
 {
   "id": "AP1",
   "order": 1,
-  "title": "Timepoint 1 — Admission, variceal bleed/TIPS, and new post-procedure fevers",
-  "anchorDate": "2027-05-06T23:59:59Z",
-  "timeLimitMinutes": 9,
-  "scenarioBrief": "You are the intern caring for Janet Brooks in the ICU. She was admitted on 5/2/2027 with three months of involuntary weight loss, and her course was complicated by a major gastrointestinal bleed requiring an urgent procedure. She is now febrile and requiring a vasopressor. Today is 5/6/2027 and the chart is updated with her admission and ICU course. Please review the chart and answer the questions below.",
+  "title": "Timepoint 1 — Hepatology clinic: involuntary weight loss",
+  "anchorDate": "2027-04-10T09:00:00Z",
+  "timeLimitMinutes": 6,
+  "scenarioBrief": "You are seeing Janet Brooks in hepatology clinic today (4/10/2027). Her primary care physician referred her for about three months of unintentional weight loss and poor appetite, on a background of alcohol-related cirrhosis with ongoing alcohol use. The chart holds her prior records. Please review the chart and answer the question below.",
   "chartGate": {
-    "includeBeforeOrEqualDate": "2027-05-06T23:59:59Z",
-    "_notes": "TP1 visibility: the outpatient weight-loss workup notes/labs, the ED H&P, the ICU admission + EGD/TIPS note, and the early post-TIPS progress note (fevers begin, workup initiated). The later negative results, the ID consult, the CMO deliberation, and the recovery/drug-fever reveal are NOT yet visible."
+    "includeBeforeOrEqualDate": "2027-04-10T09:00:00Z",
+    "_notes": "TP1 visibility: the 2/15 PCP note and her background history ONLY. The 4/10 hepatology note and its labs (10:00) are after the 09:00 anchor, so the weight-loss workup has not been done yet — Q1 asks the resident to plan it (Kevin, 17 Sep 2026: previously asked at 5/06 in the ICU with the workup already charted)."
   },
   "prompts": [
     {
@@ -23,36 +23,9 @@
         "maxPoints": 19,
         "rubricText": "Award points for each appropriate work-up element the resident includes. CAP the total at 19 points.\n- CBC: 1\n- Metabolic panel: 1\n- UA / urine culture: 1\n- CT chest: 1\n- CT abdomen/pelvis: 1\n- Cancer biomarkers: 1\n- A1c: 0.5\n- Cortisol testing: 0.5\n- TSH: 1\n- TB evaluation: 1\n- HIV testing: 1\n- HCV testing: 1\n- Autoimmune serologic testing: 1\n- EGD: 0.5\n- Colonoscopy: 0.5\n- Pap smear: 0.5\n- Mammogram: 0.5\n- Examining dentition: 1\n- Evaluating for dysphagia: 1\n- Screening for food insecurity: 1\n- Screening for depression: 1\n- Screening for dementia: 1\nAPPLICABLE MAXIMUM: 19 (cap the earned total at 19)."
       }
-    },
-    {
-      "id": "AP1-Q2",
-      "order": 2,
-      "type": "management-plan",
-      "question": "What is your approach to evaluating her fevers?",
-      "expectedResponseFormat": "free_text",
-      "minLength": 0,
-      "weight": 14,
-      "sourceQuestion": "Question 2",
-      "scoringRubric": {
-        "maxPoints": 14,
-        "rubricText": "Award 1 point for each of the following the resident includes. CAP the total at 14 points.\n- Repeat blood cultures\n- Repeat paracentesis\n- UA / urine culture\n- Respiratory viral panel\n- Sputum cultures (also acceptable: tracheal aspirate, respiratory culture, bronch/BAL - max 1 point for this line)\n- LP\n- Fungal cultures\n- Imaging (1 point EACH): CT chest, CT abdomen/pelvis, DVT ultrasound, brain MRI\n- HIV/HCV testing (1 point each)\n- Cancer biomarkers\nAPPLICABLE MAXIMUM: 14 (cap the earned total at 14)."
-      }
-    },
-    {
-      "id": "AP1-Q3",
-      "type": "differential",
-      "question": "What is your differential for what could be causing her fevers?",
-      "expectedResponseFormat": "free_text",
-      "minLength": 0,
-      "scoringRubric": {
-        "maxPoints": 11.5,
-        "rubricText": "Award 1 point for each of the following on the differential, except where noted:\n- Drug fever: 1\n- VTE: 1\n- Bacteremia: 1\n- SBP: 1\n- Aspiration pneumonia / pneumonitis: 1\n- Meningitis or encephalitis: 1\n- Ventilator-associated pneumonia (VAP): 1\n- Acalculous cholecystitis: 1\n- CAUTI: 1\n- Occult abscess: 1\n- Viral URI or pneumonia: 1\n- TB: 0.5\nThe following earn 0 points: malignancy, serotonin syndrome, stroke, pancreatitis, ischemic colitis, adrenal insufficiency, polyarticular gout.\nDEDUCT 1 point if the resident names \"transfusion reaction\" as a cause.\nAPPLICABLE MAXIMUM: 11.5 (sum of the positively-scored items). Never report a normalized score below 0 after the deduction."
-      },
-      "weight": 11.5,
-      "order": 3
     }
   ],
-  "totalWeight": 1.4,
+  "totalWeight": 19,
   "passingScorePct": 70,
   "_scenarioBriefRemoved": "Orientation stub only: names the time jump, the reason for the encounter/presenting problem, and that the chart is updated. The clinical picture, workup results and conclusions are NOT summarized — the resident must piece them together from the chart. Trigger facts verified discoverable at/before this anchor date. Original full brief in git history."
 }

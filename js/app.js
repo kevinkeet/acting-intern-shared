@@ -473,14 +473,15 @@ const App = {
         const prior = sidebar.querySelector('.nav-section.assessment-nav-section');
         if (prior) prior.remove();
 
+        const studyLocked = (typeof ModeManager !== 'undefined' && ModeManager.isStudyLocked && ModeManager.isStudyLocked());
         const section = document.createElement('div');
         section.className = 'nav-section assessment-nav-section';
         section.innerHTML = `
-            <div class="nav-section-title">Assessment</div>
+            <div class="nav-section-title">${studyLocked ? 'Study' : 'Assessment'}</div>
             <a href="#/assessment/start" class="nav-item assessment-mode-link" data-section="assessment-start"
                onclick="return App._navigateToAssessment(event)">
                 <span class="nav-icon"><i data-lucide="graduation-cap"></i></span>
-                Assessment
+                ${studyLocked ? 'Your cases' : 'Assessment'}
             </a>
             <a href="#/admin/attempts" class="nav-item assessment-admin-link" data-section="admin"
                id="assessment-admin-link" style="display:none;">

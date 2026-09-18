@@ -9,7 +9,7 @@
       "date": "2024-03-01",
       "diagnosedBy": "Dr. Rachel Imani (Hepatology)",
       "priority": "High",
-      "notes": "Decompensated with portal hypertension, varices, and ascites. Active alcohol use (not in remission). MELD rising during this admission."
+      "notes": "Decompensated with portal hypertension, varices, and ascites. Active alcohol use (not in remission)."
     },
     {
       "id": "PRB002",
@@ -20,7 +20,7 @@
       "date": "2027-02-01",
       "diagnosedBy": "Dr. Steven Lowe (PCP) / Hepatology",
       "priority": "Medium",
-      "notes": "Three months of unintentional weight loss preceding this admission. Differential remains open (progression of cirrhosis/anorexia, malignancy including HCC given cirrhosis + smoking + maternal breast cancer, malabsorption, depression/poor intake). Outpatient workup was initiated in April; no etiology established yet."
+      "notes": "About three months of unintentional weight loss with poor appetite, first reported to primary care in February 2027. Under evaluation."
     },
     {
       "id": "PRB003",

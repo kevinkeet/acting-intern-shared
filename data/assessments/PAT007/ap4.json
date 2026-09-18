@@ -1,0 +1,31 @@
+{
+  "id": "AP4",
+  "order": 4,
+  "title": "Timepoint 4 — Unexpected recovery after antibiotics stopped",
+  "anchorDate": "2027-05-28T23:59:59Z",
+  "timeLimitMinutes": 5,
+  "scenarioBrief": "Now we jump ahead about ten days. After the family meeting, comfort-focused care was begun — and unexpectedly Ms. Brooks improved rather than died. Her family has asked you to explain what happened. Today is 5/28/2027 and the chart is updated. Please review the chart and answer the questions below.",
+  "chartGate": {
+    "includeBeforeOrEqualDate": "2027-05-28T23:59:59Z",
+    "_notes": "TP4 visibility: the complete record, including the transition-to-comfort note, the recovery progress note recognizing drug fever, the recovery labs (normalizing, eosinophilia resolved, cultures final no-growth), and the transfer/course summary with the learning point."
+  },
+  "prompts": [
+    {
+      "id": "AP4-Q5",
+      "order": 1,
+      "type": "communication",
+      "question": "How would you explain this diagnosis — and what happened — to the patient's family?",
+      "expectedResponseFormat": "free_text",
+      "minLength": 0,
+      "weight": 12,
+      "sourceQuestion": "Question 5",
+      "scoringRubric": {
+        "maxPoints": 12,
+        "rubricText": "Maximum 12 points.\n- Provide an apology AND express empathy: 8 points if the response includes BOTH; 4 points if it includes only one.\n- Discussing the nature of drug-induced neurotoxicity: 4 points if ANY of these are included - that drug-induced neurotoxicity is relatively rare (likely contributing to the diagnostic delay); that it is presumed but not confirmed; that ESLD and/or renal dysfunction increases the likelihood of drug toxicities.\nAPPLICABLE MAXIMUM: 12."
+      }
+    }
+  ],
+  "totalWeight": 0.5,
+  "passingScorePct": 70,
+  "_scenarioBriefRemoved": "Orientation stub only: names the time jump, the reason for the encounter/presenting problem, and that the chart is updated. The clinical picture, workup results and conclusions are NOT summarized — the resident must piece them together from the chart. Trigger facts verified discoverable at/before this anchor date. Original full brief in git history."
+}

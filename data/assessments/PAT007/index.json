@@ -4,13 +4,14 @@
   "patientId": "PAT007",
   "source": "Management Reasoning Case 5",
   "version": "0.1.0",
-  "status": "three_timepoint",
-  "_status_notes": "3 timepoints (TP1 admission + variceal bleed/TIPS + post-TIPS fevers; TP2 negative infectious workup, worsening, family raises CMO; TP3 post-CMO unexpected recovery → presumed drug fever). 5 questions. Weights 0.6/0.8/1.0/0.9/0.5 = 3.8 total. Source: Management Case Bank, Case 5 (original discussants Wendy Stead, Emily Rubin; finalized by Jason Hom).",
-  "totalTimeLimitMinutes": 26,
+  "status": "four_timepoint",
+  "_status_notes": "4 timepoints (TP1 hepatology clinic 4/10 — plan the weight-loss evaluation BEFORE it is charted; TP2 5/06 ICU post-TIPS fevers; TP3 5/18 negative workup, worsening, family raises CMO; TP4 5/28 unexpected recovery → presumed drug fever). 5 questions, unchanged. Restructured 17 Sep 2026 (Kevin). Source: Management Case Bank, Case 5 (original discussants Wendy Stead, Emily Rubin; finalized by Jason Hom).",
+  "totalTimeLimitMinutes": 30,
   "assessments": [
     "AP1",
     "AP2",
-    "AP3"
+    "AP3",
+    "AP4"
   ],
   "passingOverallScorePct": 70,
   "description": "A 3-stage ICU case following Janet Brooks, a 55-year-old woman with alcohol-related cirrhosis who presents with involuntary weight loss, suffers a variceal hemorrhage requiring emergent TIPS, and then develops persistent fevers and refractory shock. An exhaustive infectious workup is negative, yet the team — anchored on occult infection — keeps escalating antibiotics as she deteriorates toward a comfort-measures decision. After antibiotics are stopped she unexpectedly recovers: the cause was a drug fever and drug-associated neurotoxicity that was never fully considered. The case tests cognitive humility and anti-anchoring: keeping a broad (non-infectious) differential, being willing to stop a presumed-necessary therapy, and avoiding irreversible decisions while a reversible, unconsidered diagnosis remains.",

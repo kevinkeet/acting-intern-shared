@@ -1,31 +1,45 @@
 {
   "id": "AP3",
   "order": 3,
-  "title": "Timepoint 3 — Unexpected recovery after antibiotics stopped",
-  "anchorDate": "2027-05-28T23:59:59Z",
-  "timeLimitMinutes": 5,
-  "scenarioBrief": "Now we jump ahead about ten days. After the family meeting, comfort-focused care was begun — and unexpectedly Ms. Brooks improved rather than died. Her family has asked you to explain what happened. Today is 5/28/2027 and the chart is updated. Please review the chart and answer the questions below.",
+  "title": "Timepoint 3 — Negative workup, worsening, family raises comfort measures",
+  "anchorDate": "2027-05-18T23:59:59Z",
+  "timeLimitMinutes": 12,
+  "scenarioBrief": "Now we jump ahead about two weeks. Ms. Brooks remains critically ill in the ICU despite treatment, and her workup has continued. Her family has asked to meet with you today (5/18/2027). The chart is updated with the interval ICU course and workup results. Please review the chart and answer the questions below.",
   "chartGate": {
-    "includeBeforeOrEqualDate": "2027-05-28T23:59:59Z",
-    "_notes": "TP3 visibility: the complete record, including the transition-to-comfort note, the recovery progress note recognizing drug fever, the recovery labs (normalizing, eosinophilia resolved, cultures final no-growth), and the transfer/course summary with the learning point."
+    "includeBeforeOrEqualDate": "2027-05-18T23:59:59Z",
+    "_notes": "TP3 visibility: everything from TP2 PLUS the negative workup (CT, repeat paracentesis, LP, serial cultures), the ICU progress note continuing/broadening antibiotics, the ID consult (infection-anchored), and the palliative-care family-meeting note (CMO deliberation only). The transition-to-comfort note, the recovery, and the drug-fever recognition are NOT yet visible."
   },
   "prompts": [
     {
-      "id": "AP3-Q5",
+      "id": "AP3-Q3",
       "order": 1,
-      "type": "communication",
-      "question": "How would you explain this diagnosis — and what happened — to the patient's family?",
+      "type": "management-decision",
+      "question": "What do you do with her antibiotics, and why?",
+      "expectedResponseFormat": "free_text",
+      "minLength": 0,
+      "weight": 10,
+      "sourceQuestion": "Question 3",
+      "scoringRubric": {
+        "maxPoints": 10,
+        "rubricText": "Maximum 10 points (best-answer - award the points for the single best action the resident actually recommends; never sum competing options):\n- Assuming no infectious source after 48-72 h and the patient not improving, STOP antibiotics (all at once or sequentially): 10 points\n- Assuming no source after 48-72 h, de-escalate to SBP prophylaxis: 10 points\n- Assuming no source after 48-72 h and not improving, stop vancomycin but continue meropenem: 10 points\n- Continue empiric vanc/meropenem for 7 days: 5 points\n- Assuming no source after 48-72 h and not improving, change antibiotic classes but stay broad-spectrum: 0 points\n- Continue vanc/meropenem and add micafungin (or similar): 0 points\nAPPLICABLE MAXIMUM: 10."
+      }
+    },
+    {
+      "id": "AP3-Q4",
+      "order": 2,
+      "type": "management-decision",
+      "question": "The family is raising comfort measures after two weeks without improvement. What factors go into your decision about transitioning this patient to comfort-focused care (CMO)?",
       "expectedResponseFormat": "free_text",
       "minLength": 0,
       "weight": 12,
-      "sourceQuestion": "Question 5",
+      "sourceQuestion": "Question 4",
       "scoringRubric": {
         "maxPoints": 12,
-        "rubricText": "Maximum 12 points.\n- Provide an apology AND express empathy: 8 points if the response includes BOTH; 4 points if it includes only one.\n- Discussing the nature of drug-induced neurotoxicity: 4 points if ANY of these are included - that drug-induced neurotoxicity is relatively rare (likely contributing to the diagnostic delay); that it is presumed but not confirmed; that ESLD and/or renal dysfunction increases the likelihood of drug toxicities.\nAPPLICABLE MAXIMUM: 12."
+        "rubricText": "Total 12 points.\n- Patient wishes from prior advance-care-planning discussions/documents, OR preferences of the healthcare proxy if the patient's wishes were unclear: 3 points\n- Overall family preferences: 2 points\n- The patient's ESLD / MELD score: 2 points\n- Whether the patient is a transplant candidate: 2 points\n- Likelihood of meaningful functional recovery: 3 points\nAPPLICABLE MAXIMUM: 12."
       }
     }
   ],
-  "totalWeight": 0.5,
+  "totalWeight": 1.9,
   "passingScorePct": 70,
   "_scenarioBriefRemoved": "Orientation stub only: names the time jump, the reason for the encounter/presenting problem, and that the chart is updated. The clinical picture, workup results and conclusions are NOT summarized — the resident must piece them together from the chart. Trigger facts verified discoverable at/before this anchor date. Original full brief in git history."
 }

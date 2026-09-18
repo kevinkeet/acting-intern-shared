@@ -1,45 +1,44 @@
 {
   "id": "AP2",
   "order": 2,
-  "title": "Timepoint 2 — Negative workup, worsening, family raises comfort measures",
-  "anchorDate": "2027-05-18T23:59:59Z",
-  "timeLimitMinutes": 12,
-  "scenarioBrief": "Now we jump ahead about two weeks. Ms. Brooks remains critically ill in the ICU despite treatment, and her workup has continued. Her family has asked to meet with you today (5/18/2027). The chart is updated with the interval ICU course and workup results. Please review the chart and answer the questions below.",
+  "title": "Timepoint 2 — Admission, variceal bleed/TIPS, and new post-procedure fevers",
+  "anchorDate": "2027-05-06T23:59:59Z",
+  "timeLimitMinutes": 8,
+  "scenarioBrief": "Now we jump ahead about four weeks. Ms. Brooks was admitted on 5/2/2027 with abdominal distension and shortness of breath, and her course was complicated by a major gastrointestinal bleed requiring an urgent procedure. You are the intern caring for her in the ICU; she is now febrile and requiring a vasopressor. Today is 5/6/2027 and the chart is updated with her admission and ICU course. Please review the chart and answer the questions below.",
   "chartGate": {
-    "includeBeforeOrEqualDate": "2027-05-18T23:59:59Z",
-    "_notes": "TP2 visibility: everything from TP1 PLUS the negative workup (CT, repeat paracentesis, LP, serial cultures), the ICU progress note continuing/broadening antibiotics, the ID consult (infection-anchored), and the palliative-care family-meeting note (CMO deliberation only). The transition-to-comfort note, the recovery, and the drug-fever recognition are NOT yet visible."
+    "includeBeforeOrEqualDate": "2027-05-06T23:59:59Z",
+    "_notes": "TP2 visibility: the outpatient weight-loss workup notes/labs, the ED H&P, the ICU admission + EGD/TIPS note, and the early post-TIPS progress note (fevers begin, workup initiated). The later negative results, the ID consult, the CMO deliberation, and the recovery/drug-fever reveal are NOT yet visible."
   },
   "prompts": [
     {
-      "id": "AP2-Q3",
+      "id": "AP2-Q2",
       "order": 1,
-      "type": "management-decision",
-      "question": "What do you do with her antibiotics, and why?",
+      "type": "management-plan",
+      "question": "What is your approach to evaluating her fevers?",
       "expectedResponseFormat": "free_text",
       "minLength": 0,
-      "weight": 10,
-      "sourceQuestion": "Question 3",
+      "weight": 14,
+      "sourceQuestion": "Question 2",
       "scoringRubric": {
-        "maxPoints": 10,
-        "rubricText": "Maximum 10 points (best-answer - award the points for the single best action the resident actually recommends; never sum competing options):\n- Assuming no infectious source after 48-72 h and the patient not improving, STOP antibiotics (all at once or sequentially): 10 points\n- Assuming no source after 48-72 h, de-escalate to SBP prophylaxis: 10 points\n- Assuming no source after 48-72 h and not improving, stop vancomycin but continue meropenem: 10 points\n- Continue empiric vanc/meropenem for 7 days: 5 points\n- Assuming no source after 48-72 h and not improving, change antibiotic classes but stay broad-spectrum: 0 points\n- Continue vanc/meropenem and add micafungin (or similar): 0 points\nAPPLICABLE MAXIMUM: 10."
+        "maxPoints": 14,
+        "rubricText": "Award 1 point for each of the following the resident includes. CAP the total at 14 points.\n- Repeat blood cultures\n- Repeat paracentesis\n- UA / urine culture\n- Respiratory viral panel\n- Sputum cultures (also acceptable: tracheal aspirate, respiratory culture, bronch/BAL - max 1 point for this line)\n- LP\n- Fungal cultures\n- Imaging (1 point EACH): CT chest, CT abdomen/pelvis, DVT ultrasound, brain MRI\n- HIV/HCV testing (1 point each)\n- Cancer biomarkers\nAPPLICABLE MAXIMUM: 14 (cap the earned total at 14)."
       }
     },
     {
-      "id": "AP2-Q4",
-      "order": 2,
-      "type": "management-decision",
-      "question": "The family is raising comfort measures after two weeks without improvement. What factors go into your decision about transitioning this patient to comfort-focused care (CMO)?",
+      "id": "AP2-Q3",
+      "type": "differential",
+      "question": "What is your differential for what could be causing her fevers?",
       "expectedResponseFormat": "free_text",
       "minLength": 0,
-      "weight": 12,
-      "sourceQuestion": "Question 4",
       "scoringRubric": {
-        "maxPoints": 12,
-        "rubricText": "Total 12 points.\n- Patient wishes from prior advance-care-planning discussions/documents, OR preferences of the healthcare proxy if the patient's wishes were unclear: 3 points\n- Overall family preferences: 2 points\n- The patient's ESLD / MELD score: 2 points\n- Whether the patient is a transplant candidate: 2 points\n- Likelihood of meaningful functional recovery: 3 points\nAPPLICABLE MAXIMUM: 12."
-      }
+        "maxPoints": 11.5,
+        "rubricText": "Award 1 point for each of the following on the differential, except where noted:\n- Drug fever: 1\n- VTE: 1\n- Bacteremia: 1\n- SBP: 1\n- Aspiration pneumonia / pneumonitis: 1\n- Meningitis or encephalitis: 1\n- Ventilator-associated pneumonia (VAP): 1\n- Acalculous cholecystitis: 1\n- CAUTI: 1\n- Occult abscess: 1\n- Viral URI or pneumonia: 1\n- TB: 0.5\nThe following earn 0 points: malignancy, serotonin syndrome, stroke, pancreatitis, ischemic colitis, adrenal insufficiency, polyarticular gout.\nDEDUCT 1 point if the resident names \"transfusion reaction\" as a cause.\nAPPLICABLE MAXIMUM: 11.5 (sum of the positively-scored items). Never report a normalized score below 0 after the deduction."
+      },
+      "weight": 11.5,
+      "order": 2
     }
   ],
-  "totalWeight": 1.9,
+  "totalWeight": 25.5,
   "passingScorePct": 70,
   "_scenarioBriefRemoved": "Orientation stub only: names the time jump, the reason for the encounter/presenting problem, and that the chart is updated. The clinical picture, workup results and conclusions are NOT summarized — the resident must piece them together from the chart. Trigger facts verified discoverable at/before this anchor date. Original full brief in git history."
 }
