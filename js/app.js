@@ -430,12 +430,18 @@ const App = {
         const h = location.hash || '';
         const staff = h.startsWith('#/admin') || h.startsWith('#/grade');
         document.body.classList.toggle('mode-staff', staff);
+        // The header logo has one owner (this function): staff console label
+        // on admin/grade, study label on the participant lobby pages (case
+        // list / thank-you / exit), the chart label everywhere else.
+        const lobby = /^#\/assessment\/(start|complete|exit)(\/|$)/.test(h);
         const logo = document.querySelector('.top-header .logo');
         if (logo) {
             if (!logo.dataset.chartHtml) logo.dataset.chartHtml = logo.innerHTML;
             logo.innerHTML = staff
                 ? '<i data-lucide="clipboard-check" class="lucide-inline"></i> Acting Intern · Study console'
-                : logo.dataset.chartHtml;
+                : (lobby
+                    ? '<i data-lucide="clipboard-list" class="lucide-inline"></i> Acting Intern — TEACH-AI study'
+                    : logo.dataset.chartHtml);
             this.refreshIcons();
         }
     },

@@ -473,7 +473,7 @@ const AssessmentPanel = {
                 <div class="assessment-prompt-question">${this._escape(prompt.question || '(no question)')}</div>
                 ${aiSampleHtml}
                 <textarea class="assessment-response-input" id="assessment-response-input"
-                          placeholder="A few sentences is plenty — there's no length requirement. Type your response here…"
+                          placeholder="Type your response here…"
                           rows="6">${this._escape(existingText)}</textarea>
                 <div class="assessment-response-controls">
                     <div class="assessment-response-meta">

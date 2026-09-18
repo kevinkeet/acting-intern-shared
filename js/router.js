@@ -80,13 +80,7 @@ class Router {
             const lobby = /^\/assessment\/(start|complete|exit)(\/|$)/.test(path);
             document.body.classList.toggle('study-build', !!locked);
             document.body.classList.toggle('assessment-lobby', !!lobby);
-            const logo = document.querySelector('.top-header .logo');
-            if (logo) {
-                if (lobby && !logo.dataset.chartLabel) logo.dataset.chartLabel = logo.innerHTML;
-                if (lobby) logo.innerHTML = '<i data-lucide="clipboard-list" class="lucide-inline"></i> Acting Intern — TEACH-AI study';
-                else if (logo.dataset.chartLabel) logo.innerHTML = logo.dataset.chartLabel;
-                if (typeof App !== 'undefined' && App.refreshIcons) App.refreshIcons();
-            }
+            // (The header logo label is owned by App._syncStaffMode.)
         } catch (e) { /* cosmetic */ }
 
         // Update active nav item
