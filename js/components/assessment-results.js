@@ -132,12 +132,10 @@ const AssessmentResults = {
             <div class="assessment-study-complete">
                 <div class="assessment-study-complete-icon"><i data-lucide="party-popper" class="lucide-inline"></i></div>
                 <div class="assessment-study-complete-body">
-                    <h2>Thank you — you've finished the study assessment.</h2>
-                    <p>All ${n ? `<strong>${n}</strong> ` : ''}cases are complete and your answers have been recorded. There is nothing else to submit.</p>
-                    <h3>About your payment</h3>
-                    <p>Participants who complete the assessment receive an Amazon e-gift card. The study coordinator confirms completion from your participant code and sends the card by email to the address you enrolled with, usually within about a week.</p>
-                    ${code ? `<p class="assessment-study-complete-code">Your participant code: <strong>${code}</strong> — keep it in case you need to reference it.</p>` : ''}
-                    <p class="assessment-study-complete-contact">Questions about the study or your payment: <a href="mailto:kkeet@stanford.edu">kkeet@stanford.edu</a></p>
+                    <h2>Thank you for completing the assessment.</h2>
+                    <p>All ${n ? `<strong>${n}</strong> ` : ''}cases are complete and your answers have been recorded. You will receive your Amazon gift card by email in the next few weeks.</p>
+                    ${code ? `<p class="assessment-study-complete-code">Your participant code: <strong>${code}</strong></p>` : ''}
+                    <p class="assessment-study-complete-contact">Questions: <a href="mailto:aperezt@stanford.edu">aperezt@stanford.edu</a></p>
                 </div>
             </div>
         `;
