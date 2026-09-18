@@ -491,7 +491,7 @@ const AdminDashboard = {
                 const p1 = g.g1 ? Number(g.g1.points) : null;
                 const p2 = g.g2 ? Number(g.g2.points) : null;
                 const diff = (p1 != null && p2 != null) ? Math.abs(p1 - p2) : null;
-                const prompt = this._findPrompt(a.case_id, r.assessment_id, r.prompt_id);
+                const prompt = this._findPrompt(a.case_id, r.assessment_id, r.prompt_id, a.started_at);
                 const max = prompt && prompt.scoringRubric ? prompt.scoringRubric.maxPoints : null;
                 const auto = (r.score == null || max == null) ? null : Math.round(Number(r.score) * Number(max) * 100) / 100;
                 return { r, a, g, adj, p1, p2, diff, max, auto, prompt };
@@ -874,7 +874,9 @@ const AdminDashboard = {
                     </div>
                 </div>
                 ${!caseDef ? `<div class="admin-notice">Case definition for <code>${this._escape(attempt.case_id)}</code> could not be loaded, so questions and rubrics are unavailable. Showing raw stored rows.</div>` : ''}
-                ${this._renderTranscript(caseDef, responses, aiLog)}
+                ${this._renderTranscript(caseDef,
+                    responses.map((r) => ({ ...r, prompt_id: this._canonPromptId(attempt.case_id, r.prompt_id, attempt.started_at) })),
+                    aiLog.map((r) => ({ ...r, prompt_id: this._canonPromptId(attempt.case_id, r.prompt_id, attempt.started_at) })))}
             </div>`;
         App.refreshIcons();
     },
@@ -1602,7 +1604,7 @@ const AdminDashboard = {
                 ]);
                 for (const r of resps) {
                     const ri = (respInst.get(rec) || 0) + 1; respInst.set(rec, ri);
-                    const prompt = this._findPrompt(a.case_id, r.assessment_id, r.prompt_id);
+                    const prompt = this._findPrompt(a.case_id, r.assessment_id, r.prompt_id, a.started_at);
                     const turns = turnsForAttempt.filter((t) => t.prompt_id === r.prompt_id);
                     const maxPoints = prompt && prompt.scoringRubric ? prompt.scoringRubric.maxPoints : '';
                     const frac = (r.score === null || r.score === undefined) ? null : Number(r.score);
@@ -1672,7 +1674,7 @@ const AdminDashboard = {
 
             const rows = data.responses.map((r) => {
                 const a = attemptById.get(r.attempt_id) || {};
-                const prompt = this._findPrompt(a.case_id, r.assessment_id, r.prompt_id);
+                const prompt = this._findPrompt(a.case_id, r.assessment_id, r.prompt_id, a.started_at);
                 const turns = askTurns.filter((t) => t.attempt_id === r.attempt_id && t.prompt_id === r.prompt_id);
                 const ctxs = turns.map((t) => Number(t.context_size_chars || 0));
                 const wins = new Set();
@@ -1775,7 +1777,7 @@ const AdminDashboard = {
                 attempts: data.attempts.map((a) => ({
                     ...a,
                     responses: (respByAttempt.get(a.id) || []).map((r) => {
-                        const prompt = this._findPrompt(a.case_id, r.assessment_id, r.prompt_id);
+                        const prompt = this._findPrompt(a.case_id, r.assessment_id, r.prompt_id, a.started_at);
                         return {
                             ...r,
                             question_text: (prompt && prompt.question) || null,
@@ -1797,7 +1799,25 @@ const AdminDashboard = {
         }
     },
 
-    _findPrompt(caseId, assessmentId, promptId) {
+    // Prompt ids were renumbered when Cases 1 and 3 gained a timepoint
+    // (17 Sep 2026). Attempts started before that carry the old ids; map
+    // them so exports and transcripts still find the question and rubric.
+    _LEGACY_PROMPT_IDS: {
+        PAT005: { 'AP2-Q3': 'AP3-Q3', 'AP2-Q4': 'AP3-Q4', 'AP2-Q4b': 'AP3-Q4b', 'AP3-Q5': 'AP4-Q5' },
+        PAT007: { 'AP1-Q2': 'AP2-Q2', 'AP1-Q3': 'AP2-Q3', 'AP2-Q3': 'AP3-Q3', 'AP2-Q4': 'AP3-Q4', 'AP3-Q5': 'AP4-Q5' },
+    },
+    _LEGACY_CUTOFF_MS: Date.parse('2026-09-18T07:00:00Z'),
+
+    _canonPromptId(caseId, promptId, startedAt) {
+        const map = this._LEGACY_PROMPT_IDS[caseId];
+        if (!map || !map[promptId] || !startedAt) return promptId;
+        const ms = Date.parse(startedAt);
+        return (!Number.isNaN(ms) && ms < this._LEGACY_CUTOFF_MS) ? map[promptId] : promptId;
+    },
+
+    _findPrompt(caseId, assessmentId, promptId, startedAt) {
+        const canon = this._canonPromptId(caseId, promptId, startedAt);
+        if (canon !== promptId) { promptId = canon; assessmentId = null; }
         const def = this._caseDefs && this._caseDefs[caseId];
         if (!def || !Array.isArray(def.assessments)) return null;
         for (const ap of def.assessments) {
