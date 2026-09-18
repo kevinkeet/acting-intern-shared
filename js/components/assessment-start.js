@@ -300,14 +300,13 @@ const AssessmentStart = {
             return `
                 <div class="assessment-case-card${isDone ? ' case-done' : ''}${isNext ? ' case-next' : ''}">
                     <div class="assessment-case-card-header">
-                        <h3>Case ${i + 1}: ${this._escape(this._cardTitle(m))}</h3>
+                        <h3>${this._escape(this._caseLabel(m.caseId, i))}</h3>
                         ${isDone ? '<span class="assessment-case-tag done">&#10003; Completed</span>' : ''}
                         ${isScaffold ? '<span class="assessment-case-tag scaffold">SCAFFOLD</span>' : ''}
                     </div>
                     <div class="assessment-case-card-meta">
-                        <span>${(m.assessments || []).length} timepoint${(m.assessments || []).length === 1 ? '' : 's'} &middot; ~10&ndash;20 min</span>
+                        <span>${this._escape(this._cardTitle(m))} &middot; ${(m.assessments || []).length} timepoint${(m.assessments || []).length === 1 ? '' : 's'} &middot; ~10&ndash;20 min</span>
                     </div>
-                    ${m.source ? `<div class="assessment-case-card-source">Test case &middot; ${this._escape(m.source)}</div>` : ''}
                     ${m.warning ? `<div class="assessment-case-card-warning">${this._escape(m.warning)}</div>` : ''}
                     <button class="btn ${isDone ? '' : 'btn-primary'}" onclick="AssessmentStart.beginCase('${m.caseId}')">
                         ${isDone ? 'Do again' : (isNext ? 'Start here' : 'Begin case')}
@@ -326,7 +325,7 @@ const AssessmentStart = {
                 <div>
                     <strong>Your progress is saved.</strong> You have a case in progress — pick up exactly where you left off.
                     <div class="assessment-resume-meta">
-                        Case ${this._escape(resume.case_id)} &middot;
+                        ${this._escape(this._caseLabel(resume.case_id))} &middot;
                         Started ${this._escape(new Date(resume.started_at).toLocaleString())} &middot;
                         Currently at ${this._escape(resume.current_assessment || '—')}
                     </div>
@@ -376,6 +375,16 @@ const AssessmentStart = {
         } catch (err) {
             App.showToast('Could not abandon: ' + err.message, 'error');
         }
+    },
+
+    // "Case 1/2/3" by battery position (AssessmentData.caseLabel); falls back
+    // to the list index when the id is unknown to the battery.
+    _caseLabel(caseId, i) {
+        if (typeof AssessmentData !== 'undefined' && AssessmentData.caseLabel) {
+            const l = AssessmentData.caseLabel(caseId);
+            if (l && l !== caseId) return l;
+        }
+        return (typeof i === 'number') ? 'Case ' + (i + 1) : ('Case ' + (caseId || ''));
     },
 
     // Pre-test card title: the patient name only. The full caseTitle embeds a

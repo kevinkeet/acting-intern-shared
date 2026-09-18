@@ -15,10 +15,13 @@
 const AssessmentData = (() => {
     const BASE = 'data/assessments';
 
-    // List of cases offered. Add new caseIds here as they're scaffolded.
-    // PAT002 (Sandoval) withheld from the current study build — re-add to offer it again.
-    // In DEMO mode (?demo) the offer flips: ONLY PAT002, never the study five.
-    const CASE_IDS = ['PAT003', 'PAT004', 'PAT005', 'PAT006', 'PAT007'];
+    // The study battery, in the order residents see it (Case 1, 2, 3).
+    // Locked 17 Sep 2026 from the pilot report: PAT005 (easiest, pilot mean
+    // 51%), PAT004 (29%), PAT007 (26%), all three whole. PAT003 and PAT006 are
+    // held in reserve; PAT002 (Sandoval) is the demo case only.
+    // In DEMO mode (?demo) the offer flips: ONLY PAT002, never the study cases.
+    const CASE_IDS = ['PAT005', 'PAT004', 'PAT007'];
+    const RESERVE_CASE_IDS = ['PAT003', 'PAT006']; // not offered; kept for later
     const DEMO_CASE_IDS = ['PAT002'];
 
     // Per-case diagnosis reveal (used on the results page only).
@@ -126,6 +129,15 @@ const AssessmentData = (() => {
 
     // ── public ─────────────────────────────────────────────────────────
 
+    // Participant-facing name for a case: "Case 1" … by battery position,
+    // "Practice case" for the demo, else the raw id (admin/reserve).
+    function caseLabel(caseId) {
+        const i = CASE_IDS.indexOf(caseId);
+        if (i >= 0) return 'Case ' + (i + 1);
+        if (DEMO_CASE_IDS.includes(caseId)) return 'Practice case';
+        return caseId || '';
+    }
+
     function listCases() {
         // Lazy load case metadata to keep the manifest cheap.
         const demo = (typeof DemoMode !== 'undefined' && DemoMode.isActive());
@@ -174,6 +186,7 @@ const AssessmentData = (() => {
 
     return {
         listCases,
+        caseLabel,
         loadCaseMeta,
         loadCase,
         loadAssessment,

@@ -199,7 +199,7 @@ const AssessmentResults = {
             <div class="assessment-results-page">
                 <div class="assessment-results-header">
                     <div class="assessment-results-title">
-                        <h1>Results — ${this._escape(caseDef.meta.caseTitle || caseDef.meta.caseId)}</h1>
+                        <h1>${this._escape((AssessmentData.caseLabel ? AssessmentData.caseLabel(caseDef.meta.caseId) : caseDef.meta.caseId) + ' — ' + (caseDef.meta.caseTitle || caseDef.meta.caseId))}</h1>
                         ${statusBadge}
                     </div>
                     <div class="assessment-results-meta">
