@@ -1,0 +1,14 @@
+{
+  "id": "IMG005",
+  "date": "2027-05-05T10:30:00.000Z",
+  "modality": "CT",
+  "description": "CT Abdomen — multiphase liver protocol (HCC surveillance; completes the outpatient weight-loss workup)",
+  "facility": "UPMC Radiology",
+  "status": "Final",
+  "radiologist": "Dr. Helen Cho",
+  "indication": "Alcohol-related cirrhosis with ~3 months of unintentional weight loss and mildly elevated AFP (18). Dedicated multiphase liver imaging was planned at the 4/10 hepatology visit; performed inpatient after TIPS.",
+  "technique": "Multiphase contrast-enhanced CT of the abdomen (late arterial, portal venous, and delayed phases).",
+  "findings": "LIVER: Shrunken, nodular cirrhotic liver with caudate hypertrophy and surface nodularity. No arterial-phase hyperenhancing lesion with portal venous or delayed washout; no enhancing capsule. Two sub-centimeter hypodense foci in segments VI and VII without arterial enhancement or washout, most consistent with cysts or regenerative nodules (LI-RADS 1–2). TIPS in situ and patent, opacifying from the portal vein into the right hepatic vein on the portal venous phase. No portal or hepatic vein thrombosis. No biliary dilation.\nPORTAL HYPERTENSION: Splenomegaly (16 cm), moderate-volume ascites, small gastric and paraesophageal varices (partially decompressed post-TIPS).\nOTHER: Pancreas, adrenals, and kidneys unremarkable. No abdominal or retroperitoneal lymphadenopathy. No peritoneal nodularity or omental mass. Bilateral pleural effusions at the lung bases.",
+  "impression": "1. NO hepatocellular carcinoma: no LI-RADS 4 or 5 observation on dedicated multiphase imaging. Sub-centimeter LI-RADS 1–2 foci only; routine surveillance interval.\n2. Cirrhosis with portal hypertension — splenomegaly, ascites, varices. Patent TIPS.\n3. No intra-abdominal mass or adenopathy to account for the weight loss.",
+  "comparison": "Admission ultrasound 5/2/2027 (IMG001): interval TIPS; otherwise no new findings."
+}

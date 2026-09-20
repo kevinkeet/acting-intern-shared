@@ -1,6 +1,17 @@
 {
   "active": [
     {
+      "id": "ORD_IMG005",
+      "category": "Imaging",
+      "name": "CT Abdomen — multiphase liver protocol",
+      "details": "HCC surveillance for weight loss with elevated AFP; completes the imaging planned at the 4/10 hepatology visit.",
+      "priority": "Routine",
+      "orderedBy": "MICU / Hepatology",
+      "status": "Completed",
+      "orderDate": "2027-05-04T14:00:00.000Z",
+      "completedDate": "2027-05-05T10:30:00.000Z"
+    },
+    {
       "id": "ORD010",
       "category": "Medication",
       "name": "Meropenem 1 g IV q8h (renally adjusted)",

@@ -10,6 +10,15 @@
       "preview": "Cirrhosis, ascites, patent TIPS, bilateral pleural effusions. NO drainable abscess or fluid collection anywhere; no bowel pathology; no occult source of infection identified. No mass/lesion to explain the weight loss within the imaged field."
     },
     {
+      "id": "IMG005",
+      "date": "2027-05-05T10:30:00.000Z",
+      "modality": "CT",
+      "description": "CT Abdomen — multiphase liver protocol (HCC surveillance)",
+      "facility": "UPMC Radiology",
+      "radiologist": "Dr. Helen Cho",
+      "preview": "Dedicated multiphase liver CT completing the outpatient weight-loss workup: NO hepatocellular carcinoma (no LI-RADS 4/5 observation), sub-centimeter LI-RADS 1–2 foci only. Cirrhosis with portal hypertension, patent TIPS. No mass or adenopathy to explain the weight loss."
+    },
+    {
       "id": "IMG004",
       "date": "2027-05-03T09:00:00.000Z",
       "modality": "Ultrasound",

@@ -7,7 +7,7 @@
   "scenarioBrief": "Now we jump ahead about four weeks. Ms. Brooks was admitted on 5/2/2027 with abdominal distension and shortness of breath, and her course was complicated by a major gastrointestinal bleed requiring an urgent procedure. You are the intern caring for her in the ICU; she is now febrile and requiring a vasopressor. Today is 5/6/2027 and the chart is updated with her admission and ICU course. Please review the chart and answer the questions below.",
   "chartGate": {
     "includeBeforeOrEqualDate": "2027-05-06T23:59:59Z",
-    "_notes": "TP2 visibility: the outpatient weight-loss workup notes/labs, the ED H&P, the ICU admission + EGD/TIPS note, and the early post-TIPS progress note (fevers begin, workup initiated). The later negative results, the ID consult, the CMO deliberation, and the recovery/drug-fever reveal are NOT yet visible."
+    "_notes": "TP2 visibility: the outpatient weight-loss workup notes/labs, the ED H&P, the ICU admission + EGD/TIPS note, and the early post-TIPS progress note (fevers begin, workup initiated). The later negative results, the ID consult, the CMO deliberation, and the recovery/drug-fever reveal are NOT yet visible. Also visible from TP2: IMG005 (5/05 multiphase liver CT, no HCC) — closes the loop on the multiphase imaging planned 4/10 so the malignancy question is answered before the fever workup (added 20 Sep 2026 after a model review flagged the study as never completed)."
   },
   "prompts": [
     {
