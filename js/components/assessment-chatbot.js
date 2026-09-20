@@ -64,7 +64,7 @@ const AssessmentChatbot = (() => {
 
     const MAX_CONTEXT_CHARS = 60000;     // soft cap before truncation
     const MAX_RESPONSE_TOKENS = 4096;    // 1024 cut replies off mid-thought (pilot 8893, 9 Sep); 2048 still did (Kevin, 17 Sep)
-    const CHATBOT_MODEL = 'claude-haiku-4-5-20251001';  // fast + cheap; matches the chatbot's "answer concisely" UX
+    const CHATBOT_MODEL = 'claude-sonnet-5';  // switched from Haiku 4.5 on 20 Sep 2026 (Kevin): Haiku gave rubric-wrong answers on Case 1 blood products and Case 2 Q1/Q5a in a 5-question head-to-head; Sonnet 5 ~15 s/reply
     // BLANK system prompt by design. The assessment AI must be maximally
     // construct-neutral: no framing, no verbosity nudge, no reasoning/ethics
     // rules — nothing that could substitute for the participant's own
