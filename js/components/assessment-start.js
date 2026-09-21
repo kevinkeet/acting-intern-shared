@@ -60,7 +60,7 @@ const AssessmentStart = {
                 <div class="assessment-start-policy">
                     <h3>Good to know</h3>
                     <ul>
-                        <li><strong>One case at a time.</strong> Each case is a self-contained exercise of about 10–20 minutes. Doing one case per sitting is completely fine — come back for the others whenever suits you.</li>
+                        <li><strong>One case at a time.</strong> Each case is a self-contained exercise of about 15–20 minutes (about 45 minutes for all three). Doing one case per sitting is completely fine — come back for the others whenever suits you.</li>
                         <li><strong>No time limits.</strong> Nothing counts down and nothing auto-submits. Take the time you need.</li>
                         <li><strong>Your work saves as you go.</strong> If you get interrupted or close the tab, opening your study link again brings you right back to where you stopped. Finish a case on the same device you started it on.</li>
                         <li><strong>The chart moves forward in time</strong> as the case progresses — a banner tells you whenever new information has arrived.</li>
@@ -283,7 +283,7 @@ const AssessmentStart = {
         if (okCases.length > 1) {
             progressHtml = doneCount > 0
                 ? `<div class="assessment-progress-line">You've completed <strong>${doneCount} of ${okCases.length}</strong> cases${doneCount >= okCases.length ? ' — all done, thank you! <button class="btn btn-primary assessment-finish-btn" onclick="router.navigate(\'/assessment/complete\')">Finish and exit</button>' : ' — each one helps, do the rest whenever suits you.'}</div>`
-                : `<div class="assessment-progress-line">${okCases.length} cases, each about 10–20 minutes. They can be done in any sitting, in any order.</div>`;
+                : `<div class="assessment-progress-line">${okCases.length} cases, about 45 minutes in total. They can be done in any sitting, in any order.</div>`;
         }
 
         container.innerHTML = progressHtml + cases.map((entry, i) => {
