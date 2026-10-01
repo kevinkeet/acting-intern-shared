@@ -349,14 +349,22 @@ const AssessmentEngine = (() => {
     async function getAttemptIdForResume() {
         const sb = _sb();
         const userId = _userId();
-        if (!sb || !userId) return null;
-        const { data, error } = await sb
+        const userCode = (typeof UserCode !== 'undefined' && UserCode.get) ? UserCode.get() : null;
+        if (!sb || (!userId && !userCode)) return null;
+        // Residents have no Supabase user: their attempts are keyed by
+        // user_code, and RLS (004) lets them read their own rows via the
+        // x-participant-code header. Before 1 Oct 2026 this only looked at
+        // user_id, so a resident returning on another device or browser was
+        // never offered "Continue where I left off" and restarted the case
+        // (participant 1001 started Case 1 three times).
+        let q = sb
             .from('test_attempts')
             .select('id, case_id, started_at, current_assessment')
-            .eq('user_id', userId)
             .eq('status', 'in_progress')
             .order('started_at', { ascending: false })
             .limit(1);
+        q = userId ? q.eq('user_id', userId) : q.eq('user_code', userCode);
+        const { data, error } = await q;
         if (error) { WARN('getAttemptIdForResume error:', error.message); return null; }
         return (data && data[0]) || null;
     }

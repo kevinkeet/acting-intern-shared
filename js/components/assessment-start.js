@@ -117,7 +117,7 @@ const AssessmentStart = {
                     <form id="assessment-consent-form" autocomplete="off">
                         <label class="assessment-consent-code-label" for="assessment-access-code">Participant code</label>
                         <input type="text" id="assessment-access-code" placeholder="e.g. 1042" inputmode="numeric"
-                            spellcheck="false" autocapitalize="off" maxlength="32" autocomplete="off">
+                            spellcheck="false" autocapitalize="off" maxlength="4" pattern="[0-9]{4}" autocomplete="off">
                         <div id="assessment-consent-error" class="assessment-consent-error" aria-live="polite"></div>
                         <button type="submit" id="assessment-consent-continue" class="btn btn-primary">
                             Continue
@@ -142,10 +142,22 @@ const AssessmentStart = {
         const errEl = document.getElementById('assessment-consent-error');
         const codeInput = document.getElementById('assessment-access-code');
         const show = (m) => { if (errEl) errEl.textContent = m || ''; };
+        const raw = ((codeInput && codeInput.value) || '').trim();
+        // Study participants always have a four-digit REDCap code. Anything
+        // else here is a mistake, most often the site password typed a second
+        // time (an attempt was logged under the password on 30 Sep 2026 and
+        // dropped out of the export). Admins never see this card.
+        if (!/^\d{4}$/.test(raw)) {
+            show(/^[A-Za-z]/.test(raw)
+                ? 'That looks like the site password, not your participant code. Your code is the four-digit number in your study email.'
+                : 'Please enter the four-digit participant code from your study email.');
+            if (codeInput) { codeInput.focus(); codeInput.select(); }
+            return;
+        }
         try {
-            UserCode.set((codeInput && codeInput.value) || '');
+            UserCode.set(raw);
         } catch (err) {
-            show('Please enter the code from your study email (letters and digits only).');
+            show('Please enter the four-digit participant code from your study email.');
             if (codeInput) { codeInput.focus(); codeInput.select(); }
             return;
         }
