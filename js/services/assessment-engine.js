@@ -348,17 +348,39 @@ const AssessmentEngine = (() => {
 
     async function getAttemptIdForResume() {
         const sb = _sb();
+        if (!sb) return null;
         const userId = _userId();
-        if (!sb || !userId) return null;
+        if (userId) {
+            const { data, error } = await sb
+                .from('test_attempts')
+                .select('id, case_id, started_at, current_assessment')
+                .eq('user_id', userId)
+                .eq('status', 'in_progress')
+                .order('started_at', { ascending: false })
+                .limit(1);
+            if (error) { WARN('getAttemptIdForResume error:', error.message); return null; }
+            return (data && data[0]) || null;
+        }
+        // Participants have a code, not a Supabase login. Without this branch
+        // "Leave for now" left them no Continue card, and clicking the case
+        // again started a fresh attempt at question 1. RLS (004) scopes the
+        // read to the x-participant-code header. Skip cases this code already
+        // completed (attempts restarted before this fix are still in_progress)
+        // and cases this build does not list.
+        const code = (typeof UserCode !== 'undefined' && UserCode.get) ? UserCode.get() : null;
+        if (!code) return null;
         const { data, error } = await sb
             .from('test_attempts')
-            .select('id, case_id, started_at, current_assessment')
-            .eq('user_id', userId)
-            .eq('status', 'in_progress')
+            .select('id, case_id, started_at, current_assessment, status')
+            .eq('user_code', code)
+            .in('status', ['in_progress', 'completed'])
             .order('started_at', { ascending: false })
-            .limit(1);
+            .limit(50);
         if (error) { WARN('getAttemptIdForResume error:', error.message); return null; }
-        return (data && data[0]) || null;
+        const rows = data || [];
+        const listed = new Set(AssessmentData.listCases().map((c) => c.caseId));
+        const done = new Set(rows.filter((a) => a.status === 'completed').map((a) => a.case_id));
+        return rows.find((a) => a.status === 'in_progress' && listed.has(a.case_id) && !done.has(a.case_id)) || null;
     }
 
     async function start(caseId) {

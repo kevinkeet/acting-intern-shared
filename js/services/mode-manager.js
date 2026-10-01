@@ -73,10 +73,12 @@ const ModeManager = (function () {
             // ?code=1234 — participant code carried in the link REDCap gives
             // each resident, so the consent page's code box is prefilled and
             // there is one less thing to mistype. Same format rule as UserCode.
+            // The link's code is remembered so the start page can tell a
+            // staff test link (?code=UITEST) from a code typed by hand.
             const code = (q.get('code') || '').trim();
             if (code && /^[A-Za-z0-9_-]{3,32}$/.test(code)) {
                 localStorage.setItem('user-code', code);
-                localStorage.setItem('user-code-from-link', '1');
+                localStorage.setItem('user-code-from-link', code);
             }
         } catch (e) { /* ignore */ }
     }

@@ -12,7 +12,10 @@
  *   UserCode.set(code)            → store after validating
  *   UserCode.clear()              → forget it
  *   UserCode.prompt({reason})     → show modal; resolves to the chosen code,
- *                                   or rejects if user cancels
+ *                                   or rejects if user cancels.
+ *                                   {participant: true} asks for a study
+ *                                   participant code and accepts only those.
+ *   UserCode.isParticipantCode(c) → true for a four-digit study code
  *   UserCode.isAdmin()            → true if the Supabase-authed user is in
  *                                   admin_roles (no code prompt for admins)
  */
@@ -20,6 +23,17 @@
 (() => {
     const STORAGE_KEY = 'user-code';
     const VALIDATION_RE = /^[A-Za-z0-9_-]{3,32}$/;
+    // Study participant codes are the four-digit REDCap record IDs. The REDCap
+    // export and the grading queue keep only codes of this shape, so anything
+    // else a participant types (the site password, a name) is data the study
+    // silently drops. Staff test codes (UITEST…) still pass set() and ?code=
+    // links — that is how they stay out of the export.
+    const PARTICIPANT_RE = /^\d{4}$/;
+    const PARTICIPANT_ERROR = 'Participant codes are four digits (for example 1042) — the number in your study email, not the site password.';
+
+    function isParticipantCode(code) {
+        return typeof code === 'string' && PARTICIPANT_RE.test(code.trim());
+    }
 
     function get() {
         const v = localStorage.getItem(STORAGE_KEY);
@@ -61,26 +75,28 @@
     }
 
     // ── modal ──
-    function _buildModal(reason) {
+    function _buildModal(reason, participant) {
         const overlay = document.createElement('div');
         overlay.id = 'user-code-overlay';
         overlay.innerHTML = `
             <div class="user-code-card" role="dialog" aria-modal="true" aria-labelledby="user-code-title">
                 <div class="user-code-brand">Acting Intern</div>
-                <h1 id="user-code-title" class="user-code-title">Choose your code</h1>
+                <h1 id="user-code-title" class="user-code-title">${participant ? 'Enter your participant code' : 'Choose your code'}</h1>
                 <p class="user-code-sub">
                     ${reason || 'Before you begin, pick a code to identify yourself. Your scores and chatbot interactions will be saved under this code so a proctor can review them later.'}
                 </p>
                 <p class="user-code-rules">
-                    3–32 characters. Letters, digits, <code>_</code>, <code>-</code>. Examples:
-                    <code>DR-ALICE</code>, <code>resident_07</code>, <code>HS_2026_KEVIN</code>.
+                    ${participant
+                        ? 'Four digits, for example <code>1042</code> — the number in your study email. This is <strong>not</strong> the site password.'
+                        : '3–32 characters. Letters, digits, <code>_</code>, <code>-</code>. Examples: <code>DR-ALICE</code>, <code>resident_07</code>, <code>HS_2026_KEVIN</code>.'}
                 </p>
                 <form id="user-code-form" autocomplete="off">
                     <input
                         id="user-code-input"
                         type="text"
-                        placeholder="your-code"
-                        autocomplete="username"
+                        placeholder="${participant ? 'e.g. 1042' : 'your-code'}"
+                        ${participant ? 'inputmode="numeric"' : ''}
+                        autocomplete="${participant ? 'off' : 'username'}"
                         spellcheck="false"
                         autocapitalize="off"
                         autofocus
@@ -111,6 +127,7 @@
 
     function prompt(opts) {
         const reason = opts && opts.reason;
+        const participant = !!(opts && opts.participant);
         return new Promise((resolve, reject) => {
             // If already set, return immediately unless caller asks to force.
             if (!opts?.force) {
@@ -118,7 +135,7 @@
                 if (existing) return resolve(existing);
             }
 
-            const overlay = _buildModal(reason);
+            const overlay = _buildModal(reason, participant);
             document.body.appendChild(overlay);
             document.body.classList.add('user-code-active');
 
@@ -132,6 +149,12 @@
             form.addEventListener('submit', (e) => {
                 e.preventDefault();
                 const value = input.value;
+                if (participant && !isParticipantCode(value)) {
+                    _showError(PARTICIPANT_ERROR);
+                    input.focus();
+                    input.select();
+                    return;
+                }
                 try {
                     const saved = set(value);
                     _dismissModal();
@@ -152,5 +175,8 @@
         });
     }
 
-    window.UserCode = { get, set, clear, prompt, isAdmin };
+    window.UserCode = {
+        get, set, clear, prompt, isAdmin, isParticipantCode,
+        participantCodeError: PARTICIPANT_ERROR,
+    };
 })();

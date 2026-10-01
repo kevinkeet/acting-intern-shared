@@ -16,9 +16,9 @@ const AssessmentStart = {
         // (?code=NNNN, stored by ModeManager). Only a resident who opened the
         // site without their link sees the code box. Admins/proctors skip it.
         const isAdmin = (typeof UserCode !== 'undefined' && UserCode.isAdmin && UserCode.isAdmin());
-        const hasCode = (typeof UserCode !== 'undefined' && UserCode.get && !!UserCode.get());
-        if (!hasCode && !isAdmin) {
-            this._renderCodeEntry(root);
+        const code = (typeof UserCode !== 'undefined' && UserCode.get) ? UserCode.get() : null;
+        if (!isAdmin && (!code || this._isHandTypedNonCode(code))) {
+            this._renderCodeEntry(root, !!code);
             return;
         }
 
@@ -99,20 +99,40 @@ const AssessmentStart = {
     },
 
     /**
-     * Participant-code entry. Only shown when no code is stored — i.e. the
-     * resident opened the site without the link from their study email.
+     * A study-door code that is not a four-digit participant code and did not
+     * come from a ?code= link was typed by hand — residents have entered the
+     * site password here. Such a code is dropped by the REDCap export and the
+     * grading queue, and two people who type the same one share a case list,
+     * so send them back to the code box. Link codes are left alone: that is
+     * how staff run test codes (UITEST…) the export deliberately skips.
+     */
+    _isHandTypedNonCode(code) {
+        if (UserCode.isParticipantCode(code)) return false;
+        try {
+            if (localStorage.getItem('entry-mode') === 'demo') return false;
+            if (localStorage.getItem('user-code-from-link') === code) return false;
+        } catch (e) { /* fall through: ask for the code */ }
+        return true;
+    },
+
+    /**
+     * Participant-code entry. Shown when no code is stored — i.e. the resident
+     * opened the site without the link from their study email — or when the
+     * stored code is not a participant code (`invalidStored`).
      * Consent itself was recorded on the REDCap enrollment page.
      */
-    _renderCodeEntry(root) {
+    _renderCodeEntry(root, invalidStored) {
         root.innerHTML = `
             <div class="assessment-consent-page">
                 <div class="assessment-consent-card">
                     <div class="assessment-consent-brand">Acting Intern — TEACH-AI study</div>
                     <h1>Enter your participant code</h1>
                     <div class="assessment-consent-body">
+                        ${invalidStored ? `<p><strong>The code saved in this browser is not a participant code</strong>,
+                        so your cases can't be recorded under it. Please enter the code from your study email.</p>` : ''}
                         <p>Your participant code is the four-digit number in your study email. <strong>The link in that
                         email fills it in for you</strong>, so the easiest fix is to open that link again. If you
-                        can't find the email, ask your study coordinator.</p>
+                        can't find the email, ask your study coordinator. It is not the site password.</p>
                     </div>
                     <form id="assessment-consent-form" autocomplete="off">
                         <label class="assessment-consent-code-label" for="assessment-access-code">Participant code</label>
@@ -142,11 +162,18 @@ const AssessmentStart = {
         const errEl = document.getElementById('assessment-consent-error');
         const codeInput = document.getElementById('assessment-access-code');
         const show = (m) => { if (errEl) errEl.textContent = m || ''; };
+        const refocus = () => { if (codeInput) { codeInput.focus(); codeInput.select(); } };
+        const value = ((codeInput && codeInput.value) || '').trim();
+        if (!UserCode.isParticipantCode(value)) {
+            show(UserCode.participantCodeError);
+            refocus();
+            return;
+        }
         try {
-            UserCode.set((codeInput && codeInput.value) || '');
+            UserCode.set(value);
         } catch (err) {
-            show('Please enter the code from your study email (letters and digits only).');
-            if (codeInput) { codeInput.focus(); codeInput.select(); }
+            show(err.message);
+            refocus();
             return;
         }
         this.render();
@@ -201,9 +228,11 @@ const AssessmentStart = {
                 try {
                     await UserCode.prompt({
                         force: true,
+                        participant: true,
                         reason: 'Enter the participant code from your study email. Only change this if the code shown was not yours.',
                     });
-                    this._renderUserCodeStrip();
+                    // Whole page: completions and the Continue card belong to the code.
+                    this.render();
                 } catch (err) {
                     /* user cancelled */
                 }
