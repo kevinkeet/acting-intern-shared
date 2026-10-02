@@ -88,14 +88,14 @@ const AssessmentStart = {
         this._renderUserCodeStrip();
 
         // In parallel: check resume + load case list + this code's completions
-        const [resume, cases, doneCaseIds] = await Promise.all([
-            AssessmentEngine.getAttemptIdForResume(),
+        const [resumable, cases, doneCaseIds] = await Promise.all([
+            AssessmentEngine.getResumableAttempts(),
             this._loadCaseList(),
             this._loadMyCompletions(),
         ]);
-        this._renderResume(resume);
+        this._renderResume(resumable[0] || null);
         this._renderHowItWorks();
-        this._renderCaseList(cases, doneCaseIds);
+        this._renderCaseList(cases, doneCaseIds, resumable);
     },
 
     /**
@@ -277,7 +277,7 @@ const AssessmentStart = {
         root.parentElement.insertBefore(strip, root);
     },
 
-    _renderCaseList(cases, doneCaseIds) {
+    _renderCaseList(cases, doneCaseIds, resumable) {
         const container = document.getElementById('assessment-case-list');
         if (!container) return;
         if (!cases.length) {
@@ -285,6 +285,7 @@ const AssessmentStart = {
             return;
         }
         const done = new Set(doneCaseIds || []);
+        const underway = new Set((resumable || []).map((a) => a.case_id));
         const studyLocked = (typeof ModeManager !== 'undefined' && ModeManager.isStudyLocked && ModeManager.isStudyLocked());
         const okCases = cases.filter((e) => e.ok);
         const doneCount = okCases.filter((e) => done.has(e.m.caseId)).length;
@@ -322,7 +323,7 @@ const AssessmentStart = {
                     </div>
                     ${m.warning ? `<div class="assessment-case-card-warning">${this._escape(m.warning)}</div>` : ''}
                     ${(isDone && studyLocked) ? '' : `<button class="btn ${isDone ? '' : 'btn-primary'}" onclick="AssessmentStart.beginCase('${m.caseId}')">
-                        ${isDone ? 'Do again' : (isNext ? 'Start here' : 'Begin case')}
+                        ${isDone ? 'Do again' : (underway.has(m.caseId) ? 'Continue' : (isNext ? 'Start here' : 'Begin case'))}
                     </button>`}
                 </div>
             `;
@@ -352,15 +353,25 @@ const AssessmentStart = {
     },
 
     async beginCase(caseId) {
+        // One start at a time: a double-clicked Continue at the end of a case
+        // used to open the next case twice (two attempts 0.1 s apart).
+        if (this._beginning) return;
+        this._beginning = true;
         try {
             App.showLoading('Starting assessment…');
-            await AssessmentEngine.start(caseId);
+            // A case already under way is picked up, not restarted. Residents
+            // coming back mid-case clicked the case card rather than the
+            // Continue banner and got a fresh, empty attempt.
+            const open = await AssessmentEngine.getAttemptIdForResume(caseId);
+            if (open) await AssessmentEngine.resume(open.id);
+            else await AssessmentEngine.start(caseId);
             router.navigate('/assessment/run');
         } catch (err) {
             console.error('beginCase failed', err);
-            App.showToast('Could not start assessment: ' + err.message, 'error', 5000);
+            App.showToast('Could not start assessment: ' + err.message, 'error', 8000);
         } finally {
             App.hideLoading();
+            this._beginning = false;
         }
     },
 

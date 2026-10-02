@@ -623,7 +623,12 @@ const AssessmentPanel = {
                 <button class="btn btn-primary" id="assessment-finish-btn">Finish &amp; See Results</button>
             </div>
         `;
-        document.getElementById('assessment-finish-btn').addEventListener('click', async () => {
+        const finishBtn = document.getElementById('assessment-finish-btn');
+        finishBtn.addEventListener('click', async () => {
+            // The second click of a double-click used to finish the case twice
+            // and start the next case twice.
+            if (finishBtn.disabled) return;
+            finishBtn.disabled = true;
             try {
                 App.showLoading(study ? 'Saving…' : 'Finalizing scores…');
                 const cur = AssessmentEngine.getCurrent();
@@ -635,6 +640,7 @@ const AssessmentPanel = {
                 await this._goToNextCase(thisCase);
             } catch (err) {
                 App.showToast('Could not finalize: ' + err.message, 'error');
+                finishBtn.disabled = false;
             } finally {
                 App.hideLoading();
             }

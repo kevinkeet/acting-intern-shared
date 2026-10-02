@@ -346,27 +346,76 @@ const AssessmentEngine = (() => {
 
     // ── lifecycle ──────────────────────────────────────────────────────
 
-    async function getAttemptIdForResume() {
+    // Staff browsers must never write under a four-digit study code: that
+    // code belongs to a resident. Residents never sign in, so a Supabase
+    // session marks the browser as staff, and the mark outlives an expired
+    // session. (Kevin's browser still held a rehearsal code after REDCap
+    // reissued that number to a real resident, Oct 2026.)
+    function _isStaffBrowser() {
+        try {
+            if (_userId()) localStorage.setItem('staff-browser', '1');
+            return localStorage.getItem('staff-browser') === '1';
+        } catch (e) { return !!_userId(); }
+    }
+
+    function _assertNotStaffOnParticipantCode(code) {
+        const staff = _isStaffBrowser(); // always evaluated, so the mark is recorded
+        if (staff && code && /^\d{4}$/.test(code)) {
+            throw new Error('This is a staff browser, so it cannot record answers under participant code ' + code
+                + '. Test in a private window with a TEST- code (?code=TEST-yourname).');
+        }
+    }
+
+    // In-progress attempts that can be picked up, newest first, one per case.
+    // An in-progress row is stale once the same case was completed after it
+    // started: the empty twin of a double-clicked Continue, or a restart from
+    // before resume worked by code. Offering a stale row would let a resident
+    // re-enter a case they had already finished.
+    function _pickResumable(rows) {
+        const lastDone = {};
+        for (const r of rows) {
+            if (r.status !== 'completed') continue;
+            const t = Date.parse(r.completed_at || '') || Infinity;
+            if (!(r.case_id in lastDone) || t > lastDone[r.case_id]) lastDone[r.case_id] = t;
+        }
+        const seen = new Set();
+        return rows
+            .filter((r) => r.status === 'in_progress')
+            .sort((a, b) => Date.parse(b.started_at) - Date.parse(a.started_at))
+            .filter((r) => {
+                if (seen.has(r.case_id)) return false;
+                if (r.case_id in lastDone && lastDone[r.case_id] > Date.parse(r.started_at)) return false;
+                seen.add(r.case_id);
+                return true;
+            });
+    }
+
+    async function getResumableAttempts() {
         const sb = _sb();
         const userId = _userId();
         const userCode = (typeof UserCode !== 'undefined' && UserCode.get) ? UserCode.get() : null;
-        if (!sb || (!userId && !userCode)) return null;
+        if (!sb || (!userId && !userCode)) return [];
         // Residents have no Supabase user: their attempts are keyed by
         // user_code, and RLS (004) lets them read their own rows via the
         // x-participant-code header. Before 1 Oct 2026 this only looked at
         // user_id, so a resident returning on another device or browser was
-        // never offered "Continue where I left off" and restarted the case
-        // (participant 1001 started Case 1 three times).
+        // never offered "Continue where I left off" and restarted the case.
         let q = sb
             .from('test_attempts')
-            .select('id, case_id, started_at, current_assessment')
-            .eq('status', 'in_progress')
+            .select('id, case_id, status, started_at, completed_at, current_assessment')
+            .in('status', ['in_progress', 'completed'])
             .order('started_at', { ascending: false })
-            .limit(1);
+            .limit(100);
         q = userId ? q.eq('user_id', userId) : q.eq('user_code', userCode);
         const { data, error } = await q;
-        if (error) { WARN('getAttemptIdForResume error:', error.message); return null; }
-        return (data && data[0]) || null;
+        if (error) { WARN('getResumableAttempts error:', error.message); return []; }
+        return _pickResumable(data || []);
+    }
+
+    // Most recent resumable attempt, optionally for one case only.
+    async function getAttemptIdForResume(caseId) {
+        const list = await getResumableAttempts();
+        return (caseId ? list.find((a) => a.case_id === caseId) : list[0]) || null;
     }
 
     async function start(caseId) {
@@ -385,6 +434,7 @@ const AssessmentEngine = (() => {
                     throw new Error('Cannot start assessment without an identity (Supabase login or user code).');
                 }
             }
+            _assertNotStaffOnParticipantCode(UserCode.get());
         }
 
         // Load case definition first so any error happens before we touch storage.
@@ -419,6 +469,7 @@ const AssessmentEngine = (() => {
             .eq('id', attemptId)
             .single();
         if (error) throw error;
+        _assertNotStaffOnParticipantCode(data.user_code);
         _attempt = data;
         if (_attempt.status !== 'in_progress') {
             throw new Error(`Attempt is ${_attempt.status}, cannot resume.`);
@@ -809,6 +860,8 @@ const AssessmentEngine = (() => {
     return {
         // Lifecycle
         getAttemptIdForResume,
+        getResumableAttempts,
+        _pickResumable,
         start,
         resume,
         stop,
