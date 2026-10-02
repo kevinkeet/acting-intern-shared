@@ -98,7 +98,7 @@ const ChartReview = {
                     <div class="assessment-cta-title">Ready to take the assessment?</div>
                     <div class="assessment-cta-subtitle">
                         Work through ${patientName}'s case as part of her clinical team.
-                        About 30 minutes; pauseable.
+                        About 15–20 minutes; pauseable.
                     </div>
                 </div>
                 <a href="#/assessment/start" class="btn btn-primary assessment-cta-btn">

@@ -16,10 +16,15 @@ const App = {
     _DEFAULT_GATE_ANCHORS: {
         PAT002: '2026-01-12T23:59:59Z',
         PAT003: '2027-04-12T23:59:59Z',
+        // Study cases: exactly the first timepoint's chartGate date. Outside a
+        // run the chart must never show more than a case's opening data. The
+        // old end-of-day / timepoint-2 dates exposed Case 1's IR procedure note
+        // and Case 3's multiphase CT to a resident who left a case at its first
+        // timepoint and pressed Back (found 2 Oct 2026).
         PAT004: '2027-07-10T23:59:59Z',
-        PAT005: '2027-03-10T23:59:59Z',
+        PAT005: '2027-03-10T15:00:00Z',
         PAT006: '2027-06-11T23:59:59Z',
-        PAT007: '2027-05-06T23:59:59Z',
+        PAT007: '2027-04-10T09:00:00Z',
     },
 
     /**
@@ -461,7 +466,11 @@ const App = {
         const assessMode = (typeof ModeManager !== 'undefined') && ModeManager.get && ModeManager.get() === 'assessment';
         const runActive = (typeof AssessmentEngine !== 'undefined') && AssessmentEngine.isActive && AssessmentEngine.isActive();
         const chartish = !h.startsWith('#/admin') && !h.startsWith('#/assessment') && !h.startsWith('#/grade');
-        if (assessMode && !runActive && chartish) AssessmentChatbot.mountFloating();
+        // Study participants get the assistant only inside a run, where every
+        // exchange is logged. Browse chat is for demo visitors and the full site.
+        const studyParticipant = (typeof ModeManager !== 'undefined') && ModeManager.isStudyLocked && ModeManager.isStudyLocked()
+            && !(typeof DemoMode !== 'undefined' && DemoMode.isActive());
+        if (assessMode && !runActive && chartish && !studyParticipant) AssessmentChatbot.mountFloating();
         else AssessmentChatbot.unmountFloating();
     },
 

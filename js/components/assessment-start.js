@@ -354,9 +354,10 @@ const AssessmentStart = {
 
     async beginCase(caseId) {
         // One start at a time: a double-clicked Continue at the end of a case
-        // used to open the next case twice (two attempts 0.1 s apart).
-        if (this._beginning) return;
-        this._beginning = true;
+        // used to open the next case twice (two attempts 0.1 s apart). The
+        // lock lapses after 20 s so a hung request can never strand the page.
+        if (this._beginningAt && Date.now() - this._beginningAt < 20000) return;
+        this._beginningAt = Date.now();
         try {
             App.showLoading('Starting assessment…');
             // A case already under way is picked up, not restarted. Residents
@@ -371,7 +372,7 @@ const AssessmentStart = {
             App.showToast('Could not start assessment: ' + err.message, 'error', 8000);
         } finally {
             App.hideLoading();
-            this._beginning = false;
+            this._beginningAt = 0;
         }
     },
 
