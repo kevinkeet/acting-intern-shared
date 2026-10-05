@@ -1502,7 +1502,7 @@ const AdminDashboard = {
                     ${this._card('REDCap import CSV',
                         'Assessment Case + Assessment Response instances for REDCap project 36093. Record ID = participant code. Study cases, 4-digit codes only.',
                         `<button class="btn btn-primary" onclick="AdminDashboard.exportRedcapCsv()">Download REDCap import CSV</button>
-                         <div class="admin-export-help">Then in REDCap: Data Import Tool &rarr; upload this file &rarr; leave "blank values overwrite" OFF &rarr; review &rarr; Import. Records must already exist with the participant code as Record ID.</div>`)}
+                         <div class="admin-export-help">Then in REDCap: Data Import Tool &rarr; upload this file &rarr; leave "blank values overwrite" OFF &rarr; review &rarr; Import. Records must already exist with the participant code as Record ID. Instance numbers are fixed, so importing a newer export later is safe: Assessment Response 203 = that participant's case attempt 2, question 3. Work filed under a code that is not four digits is left out until it is relabeled.</div>`)}
                     ${this._card('Responses CSV (flat)',
                         'One row per answered question, joined to its attempt and its AI-usage summary. This is the analysis-ready file.',
                         `<button class="btn btn-primary" onclick="AdminDashboard.exportResponsesCsv()">Download responses CSV</button>`)}
@@ -1541,7 +1541,9 @@ const AdminDashboard = {
     async exportRedcapCsv() {
         this._exportStatus('Building REDCap import…');
         try {
-            const data = await this._fetchAll();
+            // Always re-read: a console left open for hours would otherwise
+            // export its cached snapshot and miss anyone who started since.
+            const data = await this._fetchAll(true);
             await this._loadCaseDefs(data.attempts.map((a) => a.case_id));
             const STUDY = new Set(['PAT003', 'PAT004', 'PAT005', 'PAT006', 'PAT007']);
             const STATUS = { completed: 1, in_progress: 2, abandoned: 3 };
@@ -1592,14 +1594,37 @@ const AdminDashboard = {
             // distinct study cases are completed (3 in the trial per Pilot Report rev 4).
             const BATTERY_SIZE = 3;
             const blank = (n) => Array(n).fill('');
+            // Stable instance numbers, so importing a newer export never moves
+            // an answer into another answer's slot (REDCap keeps the old value
+            // when the new file has a blank, so a shifted slot would keep stale
+            // text). Case instance = the attempt's position among this code's
+            // attempts by start time (attempts are only ever appended). Response
+            // instance = case instance x 100 + the question's position in the
+            // case, which also ties each answer to its attempt in REDCap:
+            // 203 = attempt 2, question 3.
+            const promptOrder = (caseId) => {
+                const def = this._caseDefs && this._caseDefs[caseId];
+                const ids = [];
+                for (const ap of (def && def.assessments) || []) for (const p of ap.prompts || []) ids.push(p.id);
+                return ids;
+            };
             const rows = [];
             const caseInst = new Map();
-            const respInst = new Map();
             for (const a of attempts) {
                 const rec = String(a.user_code);
                 const ci = (caseInst.get(rec) || 0) + 1; caseInst.set(rec, ci);
-                const resps = (respByAttempt.get(a.id) || []).slice()
-                    .sort((x, y) => String(x.submitted_at || '').localeCompare(String(y.submitted_at || '')));
+                const order = promptOrder(a.case_id);
+                let spare = 90;   // questions missing from the case definition: 91-99
+                const resps = (respByAttempt.get(a.id) || [])
+                    .slice()
+                    .sort((x, y) => String(x.submitted_at || '').localeCompare(String(y.submitted_at || '')))
+                    .map((r) => {
+                        const pos = order.indexOf(this._canonPromptId(a.case_id, r.prompt_id, a.started_at));
+                        const slot = pos >= 0 ? pos + 1 : ++spare;
+                        if (slot > 99) throw new Error(`Attempt ${a.id} has too many unrecognized questions to number safely.`);
+                        return Object.assign({}, r, { _ri: ci * 100 + slot });
+                    })
+                    .sort((x, y) => x._ri - y._ri);
                 const turnsForAttempt = askTurns.filter((t) => t.attempt_id === a.id);
                 rows.push([
                     rec, 'assessment_case', ci,
@@ -1610,7 +1635,7 @@ const AdminDashboard = {
                     ...blank(22),
                 ]);
                 for (const r of resps) {
-                    const ri = (respInst.get(rec) || 0) + 1; respInst.set(rec, ri);
+                    const ri = r._ri;
                     const prompt = this._findPrompt(a.case_id, r.assessment_id, r.prompt_id, a.started_at);
                     const turns = turnsForAttempt.filter((t) => t.prompt_id === r.prompt_id);
                     const maxPoints = prompt && prompt.scoringRubric ? prompt.scoringRubric.maxPoints : '';
@@ -1655,7 +1680,7 @@ const AdminDashboard = {
                 ]);
             }
             this._download(`redcap-import-${this._stamp()}.csv`, this._toCsv(headers, rows, { bom: false }), 'text/csv;charset=utf-8');
-            this._exportStatus(`Downloaded ${rows.length} rows (${attempts.length} case instances, ${rows.length - attempts.length} answers) for ${caseInst.size} participant codes.`);
+            this._exportStatus(`Downloaded ${rows.length} rows (${attempts.length} case instances, ${rows.length - attempts.length - byRec.size} answers, ${byRec.size} platform summaries) for ${caseInst.size} participant codes.`);
         } catch (err) {
             this._exportStatus('Export failed: ' + err.message);
         }
