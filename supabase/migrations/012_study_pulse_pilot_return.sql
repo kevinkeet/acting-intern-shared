@@ -9,7 +9,9 @@
 --    Never returns a non-four-digit code as text: this function is callable
 --    with the public anon key, and that code was the site password.
 --
--- Idempotent: safe to re-run.
+-- One transaction; idempotent: safe to re-run.
+
+begin;
 
 update public.test_attempts
    set user_code = 'PILOT-0930'
@@ -105,3 +107,5 @@ as $$
 $$;
 revoke all on function public.study_pulse() from public;
 grant execute on function public.study_pulse() to anon, authenticated;
+
+commit;

@@ -1475,19 +1475,16 @@ const AdminDashboard = {
     },
 
     // ══════════════════════════════════════════════════════════════════════
-    // VIEW 4 — EXPORT
-    // ══════════════════════════════════════════════════════════════════════
-
-    // ══════════════════════════════════════════════════════════════════════
     // VIEW — STUDY WINDOWS (migration 011)
     // ══════════════════════════════════════════════════════════════════════
 
     /**
-     * Who may work on the cases, and when. The site does not know arms
-     * (REDCap does), so each enrolled code's site and arm is registered here,
-     * pasted from REDCap; the site's dates then apply: PRE closes at the PRE
-     * deadline, POST opens after the workshop. A code that is not registered
-     * is not restricted, so register enrollments the day they arrive.
+     * Who may work on the cases, and when, by teaching session. The site does
+     * not know arms or sessions (REDCap does), so each enrolled code is
+     * registered here from REDCap's record_id, site, arm and session_date.
+     * PRE closes when the participant's session starts; POST opens when it
+     * ends and stays open two weeks. A code that is not registered is not
+     * restricted, so register enrollments the day they arrive.
      * Admins/proctors only (the admin_* functions check is_study_admin()).
      */
     async renderWindows() {
@@ -1498,15 +1495,16 @@ const AdminDashboard = {
 
         const sb = this._adminClient();
         const [sRes, wRes, data] = await Promise.all([
-            sb.rpc('admin_site_sessions'),
+            sb.rpc('admin_study_sessions'),
             sb.rpc('admin_participant_windows'),
             this._fetchAll(true),
         ]);
         const err = sRes.error || wRes.error;
-        const sites = sRes.data || [];
+        const sessions = sRes.data || [];
         const rows = wRes.data || [];
+        this._windowSessions = sessions;
         const when = (iso) => iso ? new Date(iso).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }) : '—';
-        const siteName = (n) => (sites.find((s) => s.site === n) || {}).name || (n ? 'Site ' + n : '—');
+        const SITE = { 1: 'Stanford', 2: 'BIDMC', 3: 'CHA', 4: 'AdventHealth' };
         const ARM = { 1: 'PRE', 2: 'POST' };
         const state = (r) => r.open ? 'open'
             : (r.opens_at && Date.now() < Date.parse(r.opens_at) ? 'not open yet' : 'closed');
@@ -1522,32 +1520,35 @@ const AdminDashboard = {
                 ${this._renderAdminNav('windows')}
                 <div class="admin-header">
                     <h1>Study windows</h1>
-                    <div class="admin-header-stats"><span>${rows.filter((r) => /^\d{4}$/.test(r.code)).length} registered codes</span></div>
+                    <div class="admin-header-stats"><span>${rows.filter((r) => /^\d{4}$/.test(r.code)).length} registered codes</span>
+                        <span>&middot; ${sessions.length} sessions</span></div>
                 </div>
                 ${err ? `<div class="admin-error">Could not load windows: ${this._escape(err.message)}.
                     If the functions are missing, run supabase/migrations/011_participant_windows.sql.</div>` : ''}
-                <div class="admin-caveat">PRE codes can work on the cases until their site's PRE deadline. POST codes can start only
-                    after their workshop. Both follow the site dates below once the code is registered with its site and arm.
-                    A code that is not registered is not restricted, so register each new enrollment the day it arrives.</div>
+                <div class="admin-caveat">Each participant follows their own teaching session. PRE: the cases close when the session
+                    starts. POST: the cases open when the session ends and stay open for two weeks. A code that is not registered
+                    is not restricted, so register each new enrollment (with its session date) the day it arrives.</div>
                 ${unregistered.length ? `<div class="admin-error">Used the site but not registered (no window applies):
                     <strong>${unregistered.map((c) => this._escape(c)).join(', ')}</strong></div>` : ''}
                 <div class="admin-export-grid">
                     ${this._card('Register enrollments from REDCap',
-                        'One per line: code, site, arm (for example <code>1007, 1, 2</code>), or paste a REDCap CSV export (raw data) with record_id, site and arm columns. Sites: 1 Stanford, 2 BIDMC, 3 CHA, 4 AdventHealth. Arms: 1 PRE, 2 POST. Registering a code again corrects it.',
-                        `<textarea id="windows-paste" rows="6" style="width:100%;font-family:monospace" placeholder="1007, 1, 2"></textarea>
+                        'Paste a REDCap export or report with <code>record_id</code>, <code>site</code>, <code>arm</code> and <code>session_date</code> (raw values or labels), or type one per line: <code>code, site, arm, session date</code> (for example <code>1007, 1, 2, 2026-10-22</code>). Registering a code again corrects it, e.g. after a session change.',
+                        `<textarea id="windows-paste" rows="6" style="width:100%;font-family:monospace" placeholder="1007, 1, 2, 2026-10-22"></textarea>
                          <button class="btn btn-primary" id="windows-register-btn">Register</button>
                          <div class="admin-export-help" id="windows-register-status"></div>`)}
-                    ${this._card('Site dates',
-                        'Set once per site; a moved workshop is a single change (ask Kevin for now).',
+                    ${this._card('Sessions',
+                        'One row per teaching session; a moved session is a single change (ask Kevin for now).',
                         `<table class="admin-table">
-                            <tr><th>Site</th><th>PRE closes</th><th>POST opens</th><th>POST closes</th></tr>
-                            ${sites.map((s) => `<tr><td>${this._escape(s.name)}</td><td>${this._escape(when(s.pre_closes_at))}</td>
-                                <td>${this._escape(when(s.post_opens_at))}</td><td>${this._escape(when(s.post_closes_at))}</td></tr>`).join('')}
+                            <tr><th>Session</th><th>Site</th><th>Starts</th><th>PRE closes</th><th>POST opens</th><th>POST closes</th><th>Codes</th></tr>
+                            ${sessions.map((s) => `<tr><td>${this._escape(s.session_id)}</td><td>${this._escape(SITE[s.site] || s.site)}</td>
+                                <td>${this._escape(when(s.starts_at))}</td><td>${this._escape(when(s.pre_closes))}</td>
+                                <td>${this._escape(when(s.post_opens))}</td><td>${this._escape(when(s.post_closes))}</td>
+                                <td>${this._escape(String(s.participants))}</td></tr>`).join('')}
                          </table>`)}
                 </div>
                 <table class="admin-table">
-                    <tr><th>Code</th><th>Site</th><th>Arm</th><th>Opens</th><th>Closes</th><th>Now</th></tr>
-                    ${rows.map((r) => `<tr><td>${this._escape(r.code)}</td><td>${this._escape(siteName(r.site))}</td>
+                    <tr><th>Code</th><th>Session</th><th>Arm</th><th>Opens</th><th>Closes</th><th>Now</th></tr>
+                    ${rows.map((r) => `<tr><td>${this._escape(r.code)}</td><td>${this._escape(r.session_id || '—')}</td>
                         <td>${this._escape(ARM[r.arm] || '—')}</td><td>${this._escape(when(r.opens_at))}</td>
                         <td>${this._escape(when(r.closes_at))}</td><td>${this._escape(state(r))}</td></tr>`).join('')}
                 </table>
@@ -1557,28 +1558,78 @@ const AdminDashboard = {
         App.refreshIcons();
     },
 
-    // Lines "1007, 1, 2" (code, site, arm) or a REDCap CSV with record_id,
-    // site and arm columns in any order. Returns { rows, errors }.
-    _parseRegistrations(text) {
+    /**
+     * Reads pasted registrations and matches each to a session.
+     *   - REDCap export/report: a header row naming record_id, site, arm and
+     *     session_date (any order, raw codes or labels; extra columns ignored);
+     *   - typed lines: "code, site, arm, YYYY-MM-DD" or "code, SESSIONID, arm".
+     * Cells split on tabs (a copied table), else commas, else spaces.
+     * sessions: [{ session_id, site, tz, starts_at }]. Returns { rows, errors }
+     * with rows = [{ code, session, arm }] ready for admin_register_participants.
+     */
+    _parseRegistrations(text, sessions) {
         const lines = String(text || '').split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
-        const cells = (l) => l.split(/[,;\t]|\s+/).map((c) => c.trim().replace(/^"|"$/g, '')).filter((c) => c !== '');
-        let idx = { code: 0, site: 1, arm: 2 };
+        const cells = (l) => (l.includes('\t') ? l.split('\t') : l.includes(',') ? l.split(',') : l.split(/\s+/))
+            .map((c) => c.trim().replace(/^"|"$/g, '').trim());
+        const siteOf = (v) => {
+            v = String(v || '').toLowerCase();
+            if (/^[1-4]$/.test(v)) return Number(v);
+            if (v.includes('stanford')) return 1;
+            if (v.includes('bidmc') || v.includes('beth israel')) return 2;
+            if (v.includes('cambridge') || v === 'cha') return 3;
+            if (v.includes('adventhealth')) return 4;
+            return null;
+        };
+        const armOf = (v) => {
+            v = String(v || '').toLowerCase();
+            if (v === '1' || v.startsWith('pre')) return 1;
+            if (v === '2' || v.startsWith('post')) return 2;
+            return null;
+        };
+        const dateOf = (v) => {
+            const m = String(v || '').match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/) || null;
+            if (m) return `${m[1]}-${m[2].padStart(2, '0')}-${m[3].padStart(2, '0')}`;
+            const u = String(v || '').match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+            return u ? `${u[3]}-${u[1].padStart(2, '0')}-${u[2].padStart(2, '0')}` : null;
+        };
+        const localDate = (iso, tz) => {
+            try { return new Intl.DateTimeFormat('en-CA', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(iso)); }
+            catch (e) { return null; }
+        };
+        const list = (sessions || []).filter((s) => s.starts_at);
+        const findSession = (site, date) => list.filter((s) => s.site === site && localDate(s.starts_at, s.tz) === date);
+        const ids = new Set((sessions || []).map((s) => String(s.session_id).toUpperCase()));
+
+        let idx = null;
         let body = lines;
         const head = lines.length ? cells(lines[0]).map((h) => h.toLowerCase()) : [];
-        if (head.includes('record_id')) {
-            idx = { code: head.indexOf('record_id'), site: head.indexOf('site'), arm: head.indexOf('arm') };
-            if (idx.site < 0 || idx.arm < 0) return { rows: [], errors: ['The header needs record_id, site and arm columns.'] };
+        if (head.some((h) => h.includes('record_id'))) {
+            const at = (re) => head.findIndex((h) => re.test(h));
+            idx = { code: at(/record_id/), site: at(/\bsite\b/), arm: at(/\barm\b/), date: at(/session_date/) };
+            const missing = Object.entries(idx).filter(([, i]) => i < 0).map(([k]) => (k === 'code' ? 'record_id' : k === 'date' ? 'session_date' : k));
+            if (missing.length) return { rows: [], errors: ['The header is missing: ' + missing.join(', ') + '.'] };
             body = lines.slice(1);
         }
         const rows = [], errors = [];
         for (const l of body) {
             const c = cells(l);
-            const code = c[idx.code], site = c[idx.site], arm = c[idx.arm];
-            if (/^\d{4}$/.test(code || '') && /^[1-4]$/.test(site || '') && /^[12]$/.test(arm || '')) {
-                rows.push({ code, site: Number(site), arm: Number(arm) });
-            } else {
-                errors.push(l);
+            const code = idx ? c[idx.code] : c[0];
+            if (!/^\d{4}$/.test(code || '')) { errors.push(`${l} (no four-digit code)`); continue; }
+            // Typed shortcut: code, SESSIONID, arm
+            if (!idx && c.length === 3 && ids.has(String(c[1]).toUpperCase())) {
+                const arm = armOf(c[2]);
+                if (arm) rows.push({ code, session: String(c[1]).toUpperCase(), arm });
+                else errors.push(`${code} (arm must be 1/PRE or 2/POST)`);
+                continue;
             }
+            const site = siteOf(idx ? c[idx.site] : c[1]);
+            const arm = armOf(idx ? c[idx.arm] : c[2]);
+            const date = dateOf(idx ? c[idx.date] : c[3]);
+            if (!site || !arm) { errors.push(`${code} (needs site and arm)`); continue; }
+            if (!date) { errors.push(`${code} (no session date yet)`); continue; }
+            const match = findSession(site, date);
+            if (match.length !== 1) { errors.push(`${code} (no session on ${date} at that site; add it first)`); continue; }
+            rows.push({ code, session: match[0].session_id, arm });
         }
         return { rows, errors };
     },
@@ -1587,16 +1638,20 @@ const AdminDashboard = {
         const box = document.getElementById('windows-paste');
         const status = document.getElementById('windows-register-status');
         const say = (m) => { if (status) status.textContent = m; };
-        const { rows, errors } = this._parseRegistrations(box ? box.value : '');
-        if (!rows.length) { say(errors.length ? 'Nothing registered. Could not read: ' + errors.join(' | ') : 'Paste at least one line.'); return; }
+        const { rows, errors } = this._parseRegistrations(box ? box.value : '', this._windowSessions || []);
+        if (!rows.length) { say(errors.length ? 'Nothing registered. ' + errors.join('; ') : 'Paste at least one line.'); return; }
         say('Registering…');
         const { data, error } = await this._adminClient().rpc('admin_register_participants', { p_rows: rows });
         if (error) { say('Could not register: ' + error.message); return; }
         const rej = (data && data.rejected) || [];
         say(`Registered ${data ? data.registered : 0}.` + (rej.length ? ` Rejected: ${rej.join(', ')}.` : '')
-            + (errors.length ? ` Skipped unreadable lines: ${errors.join(' | ')}` : ''));
-        setTimeout(() => this.renderWindows(), 1200);
+            + (errors.length ? ` Not registered: ${errors.join('; ')}.` : ''));
+        setTimeout(() => this.renderWindows(), 1500);
     },
+
+    // ══════════════════════════════════════════════════════════════════════
+    // VIEW 4 — EXPORT
+    // ══════════════════════════════════════════════════════════════════════
 
     async renderExport() {
         const root = document.getElementById('main-content');
