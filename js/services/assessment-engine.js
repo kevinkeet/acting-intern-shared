@@ -366,6 +366,54 @@ const AssessmentEngine = (() => {
         }
     }
 
+    // Study windows (participant_windows, migration 011): the study team sets
+    // per code when the cases may be worked on. PRE-arm codes close when
+    // their site's workshop starts, so nobody completes the "before"
+    // assessment after the intervention; a POST code can be held until it
+    // opens. Checked before a case starts or resumes and before each answer
+    // is saved. The database refuses the same writes, so this check is what
+    // turns a silent refusal into a clear message. Any failure of the check
+    // itself (function not deployed, network) counts as open: our own error
+    // must never lock a resident out.
+    let _windowCache = { at: 0, code: null, state: null };
+
+    async function getStudyWindow(force) {
+        const sb = _sb();
+        const code = (typeof UserCode !== 'undefined' && UserCode.get) ? UserCode.get() : null;
+        if (!sb || !code || !sb.rpc) return { open: true };
+        if (!force && _windowCache.state && _windowCache.code === code && Date.now() - _windowCache.at < 60000) {
+            return _windowCache.state;
+        }
+        try {
+            const { data, error } = await sb.rpc('my_study_window');
+            if (error || !data || typeof data !== 'object') return { open: true };
+            _windowCache = { at: Date.now(), code, state: data };
+            return data;
+        } catch (e) {
+            return { open: true };
+        }
+    }
+
+    function studyWindowMessage(w) {
+        const when = (iso) => {
+            try { return new Date(iso).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }); }
+            catch (e) { return String(iso); }
+        };
+        if (w && w.opens_at && w.now && Date.parse(w.now) < Date.parse(w.opens_at)) {
+            return `Your TEACH-AI cases open on ${when(w.opens_at)}, after your program's AI workshop. Please come back then using the link in your study email.`;
+        }
+        return `The time for your TEACH-AI cases ended${w && w.closes_at ? ' on ' + when(w.closes_at) : ''}, so the cases are now closed. Anything you saved before then is kept. Thank you for taking part. Questions: aperezt@stanford.edu`;
+    }
+
+    async function _assertWindowOpen(force) {
+        const w = await getStudyWindow(force);
+        if (w && w.open === false) {
+            const err = new Error(studyWindowMessage(w));
+            err.code = 'WINDOW_CLOSED';
+            throw err;
+        }
+    }
+
     // In-progress attempts that can be picked up, newest first, one per case.
     // An in-progress row is stale once the same case was completed after it
     // started: the empty twin of a double-clicked Continue, or a restart from
@@ -436,6 +484,7 @@ const AssessmentEngine = (() => {
             }
             _assertNotStaffOnParticipantCode(UserCode.get());
         }
+        await _assertWindowOpen(true);
 
         // Load case definition first so any error happens before we touch storage.
         _caseDef = await AssessmentData.loadCase(caseId);
@@ -470,6 +519,7 @@ const AssessmentEngine = (() => {
             .single();
         if (error) throw error;
         _assertNotStaffOnParticipantCode(data.user_code);
+        await _assertWindowOpen(true);
         _attempt = data;
         if (_attempt.status !== 'in_progress') {
             throw new Error(`Attempt is ${_attempt.status}, cannot resume.`);
@@ -745,6 +795,7 @@ const AssessmentEngine = (() => {
         const cur = getCurrent();
         if (!cur || !cur.prompt) throw new Error('No active prompt.');
         if (!text || !text.trim()) throw new Error('Response is empty.');
+        await _assertWindowOpen(false);   // cached for a minute; a stale tab still gets caught
 
         _accrueTime();
 
@@ -861,6 +912,8 @@ const AssessmentEngine = (() => {
         // Lifecycle
         getAttemptIdForResume,
         getResumableAttempts,
+        getStudyWindow,
+        studyWindowMessage,
         _pickResumable,
         start,
         resume,

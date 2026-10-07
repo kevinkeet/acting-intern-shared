@@ -592,6 +592,13 @@ const AssessmentPanel = {
                 this._renderPromptArea();
             }
         } catch (err) {
+            if (err && err.code === 'WINDOW_CLOSED') {
+                // Past this code's study window: keep the button off and say why.
+                App.showToast(err.message, 'info', 10000);
+                if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Cases closed'; }
+                if (status) status.innerHTML = `<span class="assessment-status-error">${this._escape(err.message)}</span>`;
+                return;
+            }
             console.error('submit failed', err);
             App.showToast('Submit failed: ' + err.message, 'error');
             if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Submit & Continue'; }

@@ -22,6 +22,16 @@ const AssessmentStart = {
             return;
         }
 
+        // Outside this code's study window (e.g. a PRE-arm resident after the
+        // workshop): explain, and offer no cases.
+        if (hasCode) {
+            const win = await AssessmentEngine.getStudyWindow(true);
+            if (win && win.open === false) {
+                this._renderWindowClosed(root, win);
+                return;
+            }
+        }
+
         // No auth gate. The site-level password gate already controls access.
         // If Supabase happens to be signed in, attempts persist centrally; if
         // not, attempts run in-memory and results are viewable in this tab
@@ -136,6 +146,29 @@ const AssessmentStart = {
                 this._submitCode();
             });
         }
+    },
+
+    _renderWindowClosed(root, win) {
+        const opensLater = win && win.opens_at && win.now && Date.parse(win.now) < Date.parse(win.opens_at);
+        root.innerHTML = `
+            <div class="assessment-consent-page">
+                <div class="assessment-consent-card">
+                    <div class="assessment-consent-brand">Acting Intern — TEACH-AI study</div>
+                    <h1>${opensLater ? 'Your cases are not open yet' : 'Your cases are closed'}</h1>
+                    <div class="assessment-consent-body">
+                        <p>${this._escape(AssessmentEngine.studyWindowMessage(win))}</p>
+                        <p class="assessment-window-code">Participant code <strong>${this._escape(UserCode.get() || '')}</strong>
+                        &middot; <a href="#" id="window-change-code">not your code?</a></p>
+                    </div>
+                </div>
+            </div>
+        `;
+        const link = document.getElementById('window-change-code');
+        if (link) link.addEventListener('click', (e) => {
+            e.preventDefault();
+            try { UserCode.clear(); } catch (err) { /* ignore */ }
+            this.render();
+        });
     },
 
     _submitCode() {
@@ -368,6 +401,13 @@ const AssessmentStart = {
             else await AssessmentEngine.start(caseId);
             router.navigate('/assessment/run');
         } catch (err) {
+            if (err && err.code === 'WINDOW_CLOSED') {
+                // The window closed while the case list sat open: show the closed page.
+                App.hideLoading();
+                this._beginningAt = 0;
+                this.render();
+                return;
+            }
             console.error('beginCase failed', err);
             App.showToast('Could not start assessment: ' + err.message, 'error', 8000);
         } finally {
