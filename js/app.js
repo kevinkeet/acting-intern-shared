@@ -260,6 +260,7 @@ const App = {
             .on('/assessment/exit', () => AssessmentResults.exitStudy())
             .on('/admin/attempts', () => AdminDashboard.renderList())
             .on('/admin/analytics', () => AdminDashboard.renderAnalytics())
+            .on('/admin/windows', () => AdminDashboard.renderWindows())
             .on('/admin/export', () => AdminDashboard.renderExport())
             .on('/admin/feedback', () => AdminDashboard.renderFeedback())
             .on('/admin/attempts/:id', (params) => AdminDashboard.renderDetail(params.id))
