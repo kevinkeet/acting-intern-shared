@@ -242,14 +242,14 @@ grant execute on function public.admin_register_participants(jsonb) to authentic
 
 -- ── Sessions ─────────────────────────────────────────────────────────────
 -- POST windows default to two weeks after the session (Kevin, 7 Oct 2026).
--- Session end times are assumed one hour after the start until confirmed.
+-- Stanford sessions run 90 minutes (Kevin, 7 Oct 2026).
 insert into public.study_sessions (session_id, site, tz, starts_at, ends_at, pre_closes_at, note) values
     ('CHA1006', 3, 'America/New_York', '2026-10-06 12:00:00-04', '2026-10-06 13:00:00-04', '2026-10-05 23:59:59-04',
         'CHA workshop Tue 6 Oct (clock time approximate). PRE closed at the deadline residents were given, end of Mon 5 Oct ET.'),
-    ('STAN1022', 1, 'America/Los_Angeles', '2026-10-22 10:30:00-07', '2026-10-22 11:30:00-07', null,
-        'Stanford session, Thu 22 Oct 10:30. End time assumed 11:30.'),
-    ('STAN1105', 1, 'America/Los_Angeles', '2026-11-05 10:30:00-08', '2026-11-05 11:30:00-08', null,
-        'Stanford session, Thu 5 Nov 10:30 (to confirm). End time assumed 11:30.'),
+    ('STAN1022', 1, 'America/Los_Angeles', '2026-10-22 10:30:00-07', '2026-10-22 12:00:00-07', null,
+        'Stanford session, Thu 22 Oct 10:30-12:00.'),
+    ('STAN1105', 1, 'America/Los_Angeles', '2026-11-05 10:30:00-08', '2026-11-05 12:00:00-08', null,
+        'Stanford session, Thu 5 Nov 10:30-12:00 (to confirm).'),
     ('BIDMC1110', 2, 'America/New_York', null, null, null, 'BIDMC 10 Nov: set start and end times before outreach.'),
     ('ADVH1118', 4, 'America/New_York', null, null, null, 'AdventHealth Orlando 18 Nov: set start and end times before outreach.')
 on conflict (session_id) do nothing;
