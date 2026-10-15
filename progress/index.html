@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>TEACH-AI progress</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<!-- Study progress for the TEACH-AI team. Opened through a private link (#k=...); counts only.
+     Data: Supabase function study_progress(key), migration 015. -->
+<style>
+  :root { --ink: #2E2D29; --ink2: #6B6862; --ink3: #A6A29C; --line: #DCD8D0; --stone: #F4F2EE; --red: #8C1515; --red-light: #DDB3B3; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #fff; color: var(--ink); font-family: "Source Sans 3", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased; }
+  main { max-width: 920px; margin: 0 auto; padding: 44px 24px 64px; }
+  .rule { width: 48px; height: 4px; background: var(--red); margin-bottom: 18px; }
+  h1 { font-size: 34px; line-height: 1.15; margin: 0 0 6px; letter-spacing: -0.01em; font-weight: 700; }
+  .sub { color: var(--ink2); margin: 0 0 30px; font-size: 16px; }
+  .totals { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 3px solid var(--ink); border-bottom: 1px solid var(--line); margin-bottom: 40px; }
+  .total { padding: 16px 0 18px; }
+  .total .n { font-size: 46px; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+  .total .l { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink2); margin-top: 8px; font-weight: 600; }
+  table { width: 100%; border-collapse: collapse; }
+  th { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink2); text-align: left; font-weight: 600; padding: 0 0 8px; border-bottom: 3px solid var(--ink); }
+  th.num { text-align: right; padding-left: 12px; }
+  td { padding: 16px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  td.num { font-size: 24px; font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; width: 110px; }
+  .site { font-weight: 600; font-size: 19px; }
+  .sess { color: var(--ink2); font-size: 14px; margin-top: 3px; }
+  .sess .tbd { color: var(--ink3); }
+  .bar { height: 8px; background: var(--stone); border-radius: 4px; overflow: hidden; display: flex; margin-top: 12px; max-width: 420px; }
+  .bar .c { background: var(--red); }
+  .bar .s { background: var(--red-light); }
+  .pct { color: var(--ink2); font-size: 13px; margin-top: 6px; }
+  .key { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin: 0 4px 0 10px; vertical-align: -1px; }
+  .note { color: var(--ink2); font-size: 14px; margin-top: 24px; line-height: 1.55; }
+  .note p { margin: 0 0 6px; }
+  .msg { color: var(--ink2); font-size: 17px; padding: 40px 0; }
+  @media (max-width: 640px) {
+    main { padding: 28px 16px 48px; }
+    h1 { font-size: 28px; }
+    .total .n { font-size: 34px; }
+    td.num { font-size: 19px; width: 74px; }
+    th { font-size: 10px; letter-spacing: 0.02em; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <div class="rule"></div>
+  <h1>TEACH-AI enrollment progress</h1>
+  <p class="sub" id="sub">Participants at each site who have enrolled, started the cases, and finished all three.</p>
+  <div id="app"><div class="msg">Loading…</div></div>
+</main>
+<script>
+(function () {
+  var SUPA = 'https://piwoinyrlicvndpsmtde.supabase.co';
+  var ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpd29pbnlybGljdm5kcHNtdGRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ3OTA2MDcsImV4cCI6MjA5MDM2NjYwN30.GykzLsRJQnbQLWFQ7wnFWYah-1I_8HDwRr5CVfkxZU8';
+  var SITES = { 1: 'Stanford', 2: 'BIDMC', 3: 'Cambridge Health Alliance', 4: 'AdventHealth Orlando' };
+  var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  var app = document.getElementById('app');
+
+  function linkKey() {
+    var fromHash = new URLSearchParams(location.hash.replace(/^#/, '')).get('k');
+    return fromHash || new URLSearchParams(location.search).get('k');
+  }
+  function day(iso) { var p = iso.split('-'); return MONTHS[+p[1] - 1] + ' ' + (+p[2]); }
+  function pct(n, d) { return d ? Math.round(100 * n / d) : 0; }
+
+  function render(data) {
+    var sites = data.sites || [];
+    var tot = { enrolled: 0, started: 0, completed: 0 };
+    sites.forEach(function (s) { tot.enrolled += s.enrolled; tot.started += s.started; tot.completed += s.completed; });
+    var html = '<div class="totals">'
+      + '<div class="total"><div class="n">' + tot.enrolled + '</div><div class="l">Enrolled</div></div>'
+      + '<div class="total"><div class="n">' + tot.started + '</div><div class="l">Started</div></div>'
+      + '<div class="total"><div class="n">' + tot.completed + '</div><div class="l">Completed</div></div>'
+      + '</div>';
+    html += '<table><thead><tr><th>Site</th><th class="num">Enrolled</th><th class="num">Started</th><th class="num">Completed</th></tr></thead><tbody>';
+    sites.forEach(function (s) {
+      var sess = (s.sessions || []).map(function (x) { return day(x.date) + (x.time_set ? '' : ' <span class="tbd">(time not set)</span>'); }).join(', ');
+      var c = pct(s.completed, s.enrolled), st = pct(s.started - s.completed, s.enrolled);
+      html += '<tr><td><div class="site">' + (SITES[s.site] || ('Site ' + s.site)) + '</div>'
+        + '<div class="sess">' + (sess ? 'Workshop ' + sess : 'No workshop scheduled') + '</div>'
+        + (s.enrolled ? '<div class="bar" aria-hidden="true"><div class="c" style="width:' + c + '%"></div><div class="s" style="width:' + st + '%"></div></div>'
+          + '<div class="pct">' + c + '% finished all three cases</div>' : '')
+        + '</td><td class="num">' + s.enrolled + '</td><td class="num">' + s.started + '</td><td class="num">' + s.completed + '</td></tr>';
+    });
+    html += '</tbody></table>';
+    var asOf = new Date(data.as_of);
+    html += '<div class="note">'
+      + '<p>Bar: <span class="key" style="background:var(--red)"></span>finished all three cases <span class="key" style="background:var(--red-light)"></span>started, not finished.</p>'
+      + '<p>Enrolled counts participants once they are registered on the study site, under the site of their workshop.'
+      + (data.unregistered_started ? ' ' + data.unregistered_started + ' more ' + (data.unregistered_started === 1 ? 'participant has' : 'participants have') + ' started the cases but ' + (data.unregistered_started === 1 ? 'is' : 'are') + ' not registered yet, so ' + (data.unregistered_started === 1 ? 'is' : 'are') + ' not counted above.' : '')
+      + '</p><p>Counts only: no names, participant codes or study arms. Updated ' + asOf.toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) + '; refreshes every minute.</p></div>';
+    app.innerHTML = html;
+  }
+
+  function load() {
+    var k = linkKey();
+    if (!k) { app.innerHTML = '<div class="msg">This page needs the private link the study team shared.</div>'; return; }
+    fetch(SUPA + '/rest/v1/rpc/study_progress', {
+      method: 'POST',
+      headers: { 'apikey': ANON, 'Authorization': 'Bearer ' + ANON, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ p_key: k })
+    }).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function (data) {
+        if (!data || !data.sites) { app.innerHTML = '<div class="msg">This link is not valid. Ask the study team for the current one.</div>'; return; }
+        render(data);
+      })
+      .catch(function () { if (!app.querySelector('table')) app.innerHTML = '<div class="msg">Could not load the numbers. Try again in a minute.</div>'; });
+  }
+
+  load();
+  setInterval(load, 60000);
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) load(); });
+})();
+</script>
+</body>
+</html>
