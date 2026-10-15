@@ -93,7 +93,7 @@
     var asOf = new Date(data.as_of);
     html += '<div class="note">'
       + '<p>Bar: <span class="key" style="background:var(--red)"></span>finished all three cases <span class="key" style="background:var(--red-light)"></span>started, not finished.</p>'
-      + '<p>Enrolled counts participants once they are registered on the study site, under the site of their workshop.'
+      + '<p>Enrolled counts participants once they are registered on the study site, including those not yet assigned to a workshop.'
       + (data.unregistered_started ? ' ' + data.unregistered_started + ' more ' + (data.unregistered_started === 1 ? 'participant has' : 'participants have') + ' started the cases but ' + (data.unregistered_started === 1 ? 'is' : 'are') + ' not registered yet, so ' + (data.unregistered_started === 1 ? 'is' : 'are') + ' not counted above.' : '')
       + '</p><p>Counts only: no names, participant codes or study arms. Updated ' + asOf.toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) + '; refreshes every minute.</p></div>';
     app.innerHTML = html;

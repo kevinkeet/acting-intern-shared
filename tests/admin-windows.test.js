@@ -28,16 +28,22 @@ check('REDCap report copied as a table (tabs, labels with spaces)', () => assert
         + '1012\tStanford\tPost-session (intervention): cases AFTER the workshop\t2026-10-22\n'
         + '1013\tCambridge Health Alliance\tPre-session (control): cases BEFORE the workshop\t2026-10-06'),
     { rows: [{ code: '1012', session: 'STAN1022', arm: 2 }, { code: '1013', session: 'CHA1006', arm: 1 }], errors: [] }));
-check('missing session date is reported, not registered', () => {
-    const r = parse('record_id,site,arm,session_date\n1014,1,2,');
-    assert.strictEqual(r.rows.length, 0); assert.match(r.errors[0], /no session date yet/);
-});
+check('blank session date registers with site and arm only (no session yet)', () => assert.deepStrictEqual(
+    parse('record_id,site,arm,session_date\n1014,1,2,'), { rows: [{ code: '1014', site: 1, arm: 2 }], errors: [] }));
+check('typed line without a date registers with site and arm only', () => assert.deepStrictEqual(
+    parse('1034, 1, 2\n1036, Stanford, PRE'),
+    { rows: [{ code: '1034', site: 1, arm: 2 }, { code: '1036', site: 1, arm: 1 }], errors: [] }));
+check('"none" as the date takes a code back to no session', () => assert.deepStrictEqual(
+    parse('1009, 1, 2, none'), { rows: [{ code: '1009', session: 'NONE', site: 1, arm: 2 }], errors: [] }));
+check('unreadable date is reported', () => assert.match(parse('1020, 1, 1, next week').errors[0], /not understood/));
 check('date with no session at that site (or session without a time) is reported', () => {
     const r = parse('1015, 1, 1, 2026-10-29\n1016, 2, 2, 2026-11-10');
     assert.strictEqual(r.rows.length, 0); assert.strictEqual(r.errors.length, 2);
     assert.match(r.errors[0], /no session on 2026-10-29/);
 });
-check('header without session_date says what is missing', () => assert.match(parse('record_id,site,arm\n1017,1,1').errors[0], /missing: session_date/));
+check('header without session_date registers with site and arm only', () => assert.deepStrictEqual(
+    parse('record_id,site,arm\n1017,1,1'), { rows: [{ code: '1017', site: 1, arm: 1 }], errors: [] }));
+check('header without arm says what is missing', () => assert.match(parse('record_id,site\n1017,1').errors[0], /missing: arm/));
 check('bad code and bad arm rejected', () => {
     const r = parse('123, 1, 1, 2026-10-22\n1018, 1, 3, 2026-10-22');
     assert.strictEqual(r.rows.length, 0); assert.strictEqual(r.errors.length, 2);

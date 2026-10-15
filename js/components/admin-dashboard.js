@@ -1514,6 +1514,7 @@ const AdminDashboard = {
         const unregistered = [...new Set(data.attempts
             .filter((a) => /^\d{4}$/.test(String(a.user_code || '')) && Date.parse(a.started_at) >= LAUNCH)
             .map((a) => a.user_code))].filter((c) => !known.has(c)).sort();
+        const noSessionYet = rows.filter((r) => /^\d{4}$/.test(r.code) && !r.session_id).length;
 
         root.innerHTML = `
             <div class="admin-page">
@@ -1521,18 +1522,21 @@ const AdminDashboard = {
                 <div class="admin-header">
                     <h1>Study windows</h1>
                     <div class="admin-header-stats"><span>${rows.filter((r) => /^\d{4}$/.test(r.code)).length} registered codes</span>
+                        ${noSessionYet ? `<span>&middot; ${noSessionYet} without a session yet</span>` : ''}
                         <span>&middot; ${sessions.length} sessions</span></div>
                 </div>
                 ${err ? `<div class="admin-error">Could not load windows: ${this._escape(err.message)}.
                     If the functions are missing, run supabase/migrations/011_participant_windows.sql.</div>` : ''}
                 <div class="admin-caveat">Each participant follows their own teaching session. PRE: the cases close when the session
-                    starts. POST: the cases open when the session ends and stay open for two weeks. A code that is not registered
-                    is not restricted, so register each new enrollment (with its session date) the day it arrives.</div>
+                    starts. POST: the cases open when the session ends and stay open for two weeks. Register each new enrollment
+                    the day it arrives. Without a session date (Stanford sign-ups, until they attend a workshop) they count as
+                    enrolled and their cases stay open; after each workshop, register the attendees again with that day's date.
+                    A code that is not registered at all is neither restricted nor counted.</div>
                 ${unregistered.length ? `<div class="admin-error">Used the site but not registered (no window applies):
                     <strong>${unregistered.map((c) => this._escape(c)).join(', ')}</strong></div>` : ''}
                 <div class="admin-export-grid">
                     ${this._card('Register enrollments from REDCap',
-                        'Paste a REDCap export or report with <code>record_id</code>, <code>site</code>, <code>arm</code> and <code>session_date</code> (raw values or labels), or type one per line: <code>code, site, arm, session date</code> (for example <code>1007, 1, 2, 2026-10-22</code>). Registering a code again corrects it, e.g. after a session change.',
+                        'Paste a REDCap export or report with <code>record_id</code>, <code>site</code> and <code>arm</code> (and <code>session_date</code> when known; raw values or labels), or type one per line: <code>code, site, arm, session date</code> (for example <code>1007, 1, 2, 2026-10-22</code>). Leave the date off to register without a session (for example <code>1034, 1, 2</code>); a code that already has a session keeps it. Registering a code again with a date moves it to that session; <code>none</code> as the date takes it back to no session.',
                         `<textarea id="windows-paste" rows="6" style="width:100%;font-family:monospace" placeholder="1007, 1, 2, 2026-10-22"></textarea>
                          <button class="btn btn-primary" id="windows-register-btn">Register</button>
                          <div class="admin-export-help" id="windows-register-status"></div>`)}
@@ -1548,7 +1552,8 @@ const AdminDashboard = {
                 </div>
                 <table class="admin-table">
                     <tr><th>Code</th><th>Session</th><th>Arm</th><th>Opens</th><th>Closes</th><th>Now</th></tr>
-                    ${rows.map((r) => `<tr><td>${this._escape(r.code)}</td><td>${this._escape(r.session_id || '—')}</td>
+                    ${rows.map((r) => `<tr><td>${this._escape(r.code)}</td>
+                        <td>${this._escape(r.session_id || (r.site ? `No session yet (${SITE[r.site] || r.site})` : '—'))}</td>
                         <td>${this._escape(ARM[r.arm] || '—')}</td><td>${this._escape(when(r.opens_at))}</td>
                         <td>${this._escape(when(r.closes_at))}</td><td>${this._escape(state(r))}</td></tr>`).join('')}
                 </table>
@@ -1560,12 +1565,17 @@ const AdminDashboard = {
 
     /**
      * Reads pasted registrations and matches each to a session.
-     *   - REDCap export/report: a header row naming record_id, site, arm and
-     *     session_date (any order, raw codes or labels; extra columns ignored);
-     *   - typed lines: "code, site, arm, YYYY-MM-DD" or "code, SESSIONID, arm".
+     *   - REDCap export/report: a header row naming record_id, site and arm, and
+     *     session_date if known (any order, raw codes or labels; extra columns ignored);
+     *   - typed lines: "code, site, arm, YYYY-MM-DD", "code, SESSIONID, arm",
+     *     "code, site, arm" (no session yet) or "code, site, arm, none".
+     * A row without a session date registers the code with its site and arm only
+     * (migration 017): counted as enrolled, cases open, and a session the code
+     * already has is kept. "none" takes a code back to no session.
      * Cells split on tabs (a copied table), else commas, else spaces.
-     * sessions: [{ session_id, site, tz, starts_at }]. Returns { rows, errors }
-     * with rows = [{ code, session, arm }] ready for admin_register_participants.
+     * sessions: [{ session_id, site, tz, starts_at }]. Returns { rows, errors } with
+     * rows ready for admin_register_participants: { code, session, arm },
+     * { code, site, arm } (no session yet) or { code, session: 'NONE', site, arm }.
      */
     _parseRegistrations(text, sessions) {
         const lines = String(text || '').split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
@@ -1606,7 +1616,7 @@ const AdminDashboard = {
         if (head.some((h) => h.includes('record_id'))) {
             const at = (re) => head.findIndex((h) => re.test(h));
             idx = { code: at(/record_id/), site: at(/\bsite\b/), arm: at(/\barm\b/), date: at(/session_date/) };
-            const missing = Object.entries(idx).filter(([, i]) => i < 0).map(([k]) => (k === 'code' ? 'record_id' : k === 'date' ? 'session_date' : k));
+            const missing = ['code', 'site', 'arm'].filter((k) => idx[k] < 0).map((k) => (k === 'code' ? 'record_id' : k));
             if (missing.length) return { rows: [], errors: ['The header is missing: ' + missing.join(', ') + '.'] };
             body = lines.slice(1);
         }
@@ -1624,9 +1634,12 @@ const AdminDashboard = {
             }
             const site = siteOf(idx ? c[idx.site] : c[1]);
             const arm = armOf(idx ? c[idx.arm] : c[2]);
-            const date = dateOf(idx ? c[idx.date] : c[3]);
+            const rawDate = String((idx ? (idx.date >= 0 ? c[idx.date] : '') : c[3]) || '').trim();
             if (!site || !arm) { errors.push(`${code} (needs site and arm)`); continue; }
-            if (!date) { errors.push(`${code} (no session date yet)`); continue; }
+            if (!rawDate) { rows.push({ code, site, arm }); continue; }                         // no session yet
+            if (/^none$/i.test(rawDate)) { rows.push({ code, session: 'NONE', site, arm }); continue; }
+            const date = dateOf(rawDate);
+            if (!date) { errors.push(`${code} (session date "${rawDate}" not understood)`); continue; }
             const match = findSession(site, date);
             if (match.length !== 1) { errors.push(`${code} (no session on ${date} at that site; add it first)`); continue; }
             rows.push({ code, session: match[0].session_id, arm });
@@ -1644,7 +1657,12 @@ const AdminDashboard = {
         const { data, error } = await this._adminClient().rpc('admin_register_participants', { p_rows: rows });
         if (error) { say('Could not register: ' + error.message); return; }
         const rej = (data && data.rejected) || [];
-        say(`Registered ${data ? data.registered : 0}.` + (rej.length ? ` Rejected: ${rej.join(', ')}.` : '')
+        const noSession = rows.filter((r) => !r.session).length;
+        const cleared = rows.filter((r) => r.session === 'NONE').length;
+        say(`Registered ${data ? data.registered : 0}.`
+            + (noSession ? ` ${noSession} without a session yet (counted as enrolled, cases open; a session they already had is kept).` : '')
+            + (cleared ? ` ${cleared} taken back to no session.` : '')
+            + (rej.length ? ` Rejected: ${rej.join(', ')}.` : '')
             + (errors.length ? ` Not registered: ${errors.join('; ')}.` : ''));
         setTimeout(() => this.renderWindows(), 1500);
     },
