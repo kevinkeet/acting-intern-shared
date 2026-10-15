@@ -1503,11 +1503,14 @@ const AdminDashboard = {
         const sessions = sRes.data || [];
         const rows = wRes.data || [];
         this._windowSessions = sessions;
-        const when = (iso) => iso ? new Date(iso).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }) : '—';
+        // opens_at 'infinity' = a POST code with no session yet (migration 018): locked until registered to one.
+        const waiting = (iso) => String(iso || '').toLowerCase() === 'infinity';
+        const when = (iso) => waiting(iso) ? 'after their workshop'
+            : iso ? new Date(iso).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }) : '—';
         const SITE = { 1: 'Stanford', 2: 'BIDMC', 3: 'CHA', 4: 'AdventHealth' };
         const ARM = { 1: 'PRE', 2: 'POST' };
         const state = (r) => r.open ? 'open'
-            : (r.opens_at && Date.now() < Date.parse(r.opens_at) ? 'not open yet' : 'closed');
+            : (waiting(r.opens_at) || (r.opens_at && Date.now() < Date.parse(r.opens_at)) ? 'not open yet' : 'closed');
         // Codes that have used the site but are not registered (so not restricted).
         const known = new Set(rows.map((r) => r.code));
         const LAUNCH = Date.parse('2026-09-18T00:00:00Z');
@@ -1528,15 +1531,16 @@ const AdminDashboard = {
                 ${err ? `<div class="admin-error">Could not load windows: ${this._escape(err.message)}.
                     If the functions are missing, run supabase/migrations/011_participant_windows.sql.</div>` : ''}
                 <div class="admin-caveat">Each participant follows their own teaching session. PRE: the cases close when the session
-                    starts. POST: the cases open when the session ends and stay open for two weeks. Register each new enrollment
-                    the day it arrives. Without a session date (Stanford sign-ups, until they attend a workshop) they count as
-                    enrolled and their cases stay open; after each workshop, register the attendees again with that day's date.
-                    A code that is not registered at all is neither restricted nor counted.</div>
+                    starts. POST: the cases open when the session ends and stay open for two weeks. New enrollments are
+                    registered without a session (Stanford sign-ups join whichever workshop they attend): they count as enrolled,
+                    PRE cases stay open and POST cases stay locked. After each workshop, register everyone who attended, PRE and
+                    POST, with that day's date: that closes PRE and opens POST. A code that is not registered at all is neither
+                    restricted nor counted.</div>
                 ${unregistered.length ? `<div class="admin-error">Used the site but not registered (no window applies):
                     <strong>${unregistered.map((c) => this._escape(c)).join(', ')}</strong></div>` : ''}
                 <div class="admin-export-grid">
                     ${this._card('Register enrollments from REDCap',
-                        'Paste a REDCap export or report with <code>record_id</code>, <code>site</code> and <code>arm</code> (and <code>session_date</code> when known; raw values or labels), or type one per line: <code>code, site, arm, session date</code> (for example <code>1007, 1, 2, 2026-10-22</code>). Leave the date off to register without a session (for example <code>1034, 1, 2</code>); a code that already has a session keeps it. Registering a code again with a date moves it to that session; <code>none</code> as the date takes it back to no session.',
+                        'Paste a REDCap export or report with <code>record_id</code>, <code>site</code> and <code>arm</code> (and <code>session_date</code> when known; raw values or labels), or type one per line: <code>code, site, arm, session date</code> (for example <code>1007, 1, 2, 2026-10-22</code>). Leave the date off to register without a session (for example <code>1034, 1, 2</code>; PRE stays open, POST stays locked); a code that already has a session keeps it. Registering a code again with a date moves it to that session; <code>none</code> as the date takes it back to no session.',
                         `<textarea id="windows-paste" rows="6" style="width:100%;font-family:monospace" placeholder="1007, 1, 2, 2026-10-22"></textarea>
                          <button class="btn btn-primary" id="windows-register-btn">Register</button>
                          <div class="admin-export-help" id="windows-register-status"></div>`)}

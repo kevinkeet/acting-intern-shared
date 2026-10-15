@@ -149,7 +149,7 @@ const AssessmentStart = {
     },
 
     _renderWindowClosed(root, win) {
-        const opensLater = win && win.opens_at && win.now && Date.parse(win.now) < Date.parse(win.opens_at);
+        const opensLater = AssessmentEngine.windowNotYetOpen(win);
         root.innerHTML = `
             <div class="assessment-consent-page">
                 <div class="assessment-consent-card">

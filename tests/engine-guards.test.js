@@ -91,12 +91,14 @@ async function check(name, fn) {
     const closed = () => ({ data: { open: false, opens_at: null, closes_at: '2026-10-06T03:59:59+00:00', now: '2026-10-07T15:00:00+00:00' }, error: null });
     const notYet = () => ({ data: { open: false, opens_at: '2026-10-22T19:00:00+00:00', closes_at: null, now: '2026-10-07T15:00:00+00:00' }, error: null });
     const open = () => ({ data: { open: true, opens_at: null, closes_at: null }, error: null });
+    const awaitingSession = () => ({ data: { open: false, opens_at: 'infinity', closes_at: null, now: '2026-10-15T22:00:00+00:00' }, error: null });
     const missing = () => ({ data: null, error: { message: 'function public.my_study_window() does not exist' } });
     const down = () => { throw new Error('network down'); };
     const windows = [
         ['window: PRE code after its deadline cannot start', { code: '1005', rpc: closed }, 'start', 'WINDOW_CLOSED'],
         ['window: PRE code after its deadline cannot resume', { code: '1005', rpc: closed }, 'resume', 'WINDOW_CLOSED'],
         ['window: POST code before it opens cannot start', { code: '1002', rpc: notYet }, 'start', 'WINDOW_CLOSED'],
+        ['window: POST code with no session yet cannot start', { code: '1034', rpc: awaitingSession }, 'start', 'WINDOW_CLOSED'],
         ['window: open window -> allowed', { code: '1007', rpc: open }, 'start', 'allowed'],
         ['window: database function missing -> allowed (fail open)', { code: '1007', rpc: missing }, 'start', 'allowed'],
         ['window: network failure -> allowed (fail open)', { code: '1007', rpc: down }, 'start', 'allowed'],
@@ -111,6 +113,10 @@ async function check(name, fn) {
         const { AE } = load();
         assert.match(AE.studyWindowMessage(closed().data), /^The time for your TEACH-AI cases ended on /);
         assert.match(AE.studyWindowMessage(notYet().data), /^Your TEACH-AI cases open on /);
+        assert.match(AE.studyWindowMessage(awaitingSession().data), /^Your TEACH-AI cases open after you attend /);
+        assert.strictEqual(AE.windowNotYetOpen(awaitingSession().data), true);
+        assert.strictEqual(AE.windowNotYetOpen(notYet().data), true);
+        assert.strictEqual(AE.windowNotYetOpen(closed().data), false);
     });
     await check('window: cached for a minute (one database call for two checks)', async () => {
         const l = load({ code: '1007', rpc: open });

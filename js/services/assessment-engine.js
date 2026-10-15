@@ -394,12 +394,24 @@ const AssessmentEngine = (() => {
         }
     }
 
+    // A POST code with no session yet gets opens_at 'infinity' (migration 018):
+    // it opens once the code is registered to the workshop the resident attended.
+    const _waitsForWorkshop = (w) => !!w && String(w.opens_at || '').toLowerCase() === 'infinity';
+
+    function windowNotYetOpen(w) {
+        if (_waitsForWorkshop(w)) return true;
+        return !!(w && w.opens_at && w.now && Date.parse(w.now) < Date.parse(w.opens_at));
+    }
+
     function studyWindowMessage(w) {
         const when = (iso) => {
             try { return new Date(iso).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }); }
             catch (e) { return String(iso); }
         };
-        if (w && w.opens_at && w.now && Date.parse(w.now) < Date.parse(w.opens_at)) {
+        if (_waitsForWorkshop(w)) {
+            return `Your TEACH-AI cases open after you attend your program's AI workshop. You will get an email with your link then.`;
+        }
+        if (windowNotYetOpen(w)) {
             return `Your TEACH-AI cases open on ${when(w.opens_at)}, after your program's AI workshop. Please come back then using the link in your study email.`;
         }
         return `The time for your TEACH-AI cases ended${w && w.closes_at ? ' on ' + when(w.closes_at) : ''}, so the cases are now closed. Anything you saved before then is kept. Thank you for taking part. Questions: aperezt@stanford.edu`;
@@ -914,6 +926,7 @@ const AssessmentEngine = (() => {
         getResumableAttempts,
         getStudyWindow,
         studyWindowMessage,
+        windowNotYetOpen,
         _pickResumable,
         start,
         resume,
