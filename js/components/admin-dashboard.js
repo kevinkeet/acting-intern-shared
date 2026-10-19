@@ -1675,6 +1675,61 @@ const AdminDashboard = {
     // VIEW 4 — EXPORT
     // ══════════════════════════════════════════════════════════════════════
 
+    // Exports carry study participants only (Kevin, 19 Oct 2026): a code
+    // registered on the Windows page (every enrollment is registered from
+    // REDCap) and work started after launch. Pilot codes, staff TEST- runs,
+    // mistyped codes and anything before launch are left out unless the
+    // "include everything" box is ticked; the REDCap import never includes them.
+    EXPORT_LAUNCH_MS: Date.parse('2026-09-18T00:00:00Z'),
+
+    _isParticipantAttempt(a, codes) {
+        const code = String((a && a.user_code) || '').trim();
+        const t = Date.parse((a && a.started_at) || '');
+        return /^\d{4}$/.test(code) && codes.has(code) && !Number.isNaN(t) && t >= this.EXPORT_LAUNCH_MS;
+    },
+
+    async _participantCodes() {
+        const { data, error } = await this._adminClient().rpc('admin_participant_windows');
+        if (error) throw new Error('could not load the registered participants (' + error.message + ')');
+        return new Set((data || []).map((r) => String(r.code || '')).filter((c) => /^\d{4}$/.test(c)));
+    },
+
+    /** Fresh export data, narrowed to study participants unless everything is asked for. */
+    async _exportData(participantsOnly) {
+        const data = await this._fetchAll(true);
+        if (!participantsOnly) return { data, label: 'everything, including pilot and test runs', tag: 'all' };
+        const codes = await this._participantCodes();
+        const attempts = data.attempts.filter((a) => this._isParticipantAttempt(a, codes));
+        const ids = new Set(attempts.map((a) => a.id));
+        const people = new Set(attempts.map((a) => a.user_code)).size;
+        return {
+            data: { ...data, attempts, responses: data.responses.filter((r) => ids.has(r.attempt_id)), aiLog: data.aiLog.filter((t) => ids.has(t.attempt_id)) },
+            label: `${people} study participant${people === 1 ? '' : 's'}`,
+            tag: 'participants',
+        };
+    },
+
+    _exportEverything() {
+        const box = document.getElementById('export-include-all');
+        return !!(box && box.checked);
+    },
+
+    /** Who the participants-only export keeps and leaves out (4-digit codes listed; other labels only counted). */
+    _exportScopeSummary(attempts, codes) {
+        const four = (c) => /^\d{4}$/.test(c);
+        const codeOf = (a) => String(a.user_code || '').trim();
+        const kept = attempts.filter((a) => this._isParticipantAttempt(a, codes));
+        const left = attempts.filter((a) => !this._isParticipantAttempt(a, codes));
+        return {
+            people: new Set(kept.map(codeOf)).size,
+            attempts: kept.length,
+            registered: codes.size,
+            unregistered: [...new Set(left.map(codeOf).filter((c) => four(c) && !codes.has(c)))].sort(),
+            earlyReal: left.filter((a) => codes.has(codeOf(a))).length,
+            otherLabels: left.filter((a) => !four(codeOf(a))).length,
+        };
+    },
+
     async renderExport() {
         const root = document.getElementById('main-content');
         if (!root) return;
@@ -1682,6 +1737,19 @@ const AdminDashboard = {
         if (!(await this._requireAdmin(root))) return;
 
         const data = await this._fetchAll();
+        let scope = null, scopeError = '';
+        try { scope = this._exportScopeSummary(data.attempts, await this._participantCodes()); } catch (e) { scopeError = e.message; }
+        const scopeBody = scope
+            ? `<b>Study participants only.</b> ${scope.people} participants have work on the site (${scope.attempts} case attempts), out of
+               ${scope.registered} registered on the Windows page. Only work started after launch on 18 Sep counts.
+               <div class="admin-export-help">Left out:
+                 ${scope.unregistered.length ? `four-digit codes that are not registered (pilot codes, or an enrollee not registered yet): <b>${scope.unregistered.map((c) => this._escape(c)).join(', ')}</b>.` : 'no unregistered four-digit codes.'}
+                 ${scope.earlyReal ? ` ${scope.earlyReal} test attempts made under real codes before launch.` : ''}
+                 ${scope.otherLabels ? ` ${scope.otherLabels} attempts under staff-test or other labels.` : ''}
+                 If a real enrollee is in that list, register them on the Windows page first.</div>
+               <label style="display:block;margin-top:10px"><input type="checkbox" id="export-include-all"> Include everything (pilot and test runs too). The REDCap import always leaves them out.</label>`
+            : `<div class="admin-error">Could not load the registered participants: ${this._escape(scopeError)}. Participant-only exports need that list.</div>
+               <label style="display:block;margin-top:10px"><input type="checkbox" id="export-include-all"> Include everything (pilot and test runs too).</label>`;
 
         root.innerHTML = `
             <div class="admin-page">
@@ -1696,6 +1764,7 @@ const AdminDashboard = {
                     </div>
                 </div>
                 ${this._rlsNotice(data)}
+                ${this._card('Who is in the export', '', scopeBody)}
                 <div class="admin-export-grid">
                     ${this._card('REDCap import CSV',
                         'Assessment Case + Assessment Response instances for REDCap project 36093. Record ID = participant code. Study cases, 4-digit codes only.',
@@ -1739,9 +1808,10 @@ const AdminDashboard = {
     async exportRedcapCsv() {
         this._exportStatus('Building REDCap import…');
         try {
-            // Always re-read: a console left open for hours would otherwise
-            // export its cached snapshot and miss anyone who started since.
-            const data = await this._fetchAll(true);
+            // Always re-read (a console left open for hours would otherwise
+            // export a stale snapshot), and always participants only: a pilot
+            // code imported into REDCap would CREATE a record.
+            const { data } = await this._exportData(true);
             await this._loadCaseDefs(data.attempts.map((a) => a.case_id));
             const STUDY = new Set(['PAT003', 'PAT004', 'PAT005', 'PAT006', 'PAT007']);
             const STATUS = { completed: 1, in_progress: 2, abandoned: 3 };
@@ -1765,15 +1835,10 @@ const AdminDashboard = {
 
             let gr = null;
             try { gr = await this._loadGrading(); } catch (e) { gr = null; /* grading tables absent: export without human scores */ }
-            // REDCap import must carry ONLY real participants: a four-digit
-            // code AND an attempt started after launch. Pilot codes are also
-            // four digits, and their REDCap records are gone, so importing
-            // them would CREATE records. Everything before the cutoff is
-            // pilot or test data.
-            const LAUNCH_CUTOFF_MS = Date.parse('2026-09-18T00:00:00Z');
+            // data already holds registered participants' post-launch work only
+            // (_exportData); keep the study cases.
             const attempts = data.attempts
-                .filter((a) => STUDY.has(a.case_id) && /^\d{4}$/.test(String(a.user_code || '').trim())
-                    && !Number.isNaN(Date.parse(a.started_at)) && Date.parse(a.started_at) >= LAUNCH_CUTOFF_MS)
+                .filter((a) => STUDY.has(a.case_id))
                 .sort((a, b) => String(a.user_code).localeCompare(String(b.user_code)) || String(a.started_at || '').localeCompare(String(b.started_at || '')));
             const respByAttempt = this._groupBy(data.responses, (r) => r.attempt_id);
 
@@ -1878,7 +1943,7 @@ const AdminDashboard = {
                 ]);
             }
             this._download(`redcap-import-${this._stamp()}.csv`, this._toCsv(headers, rows, { bom: false }), 'text/csv;charset=utf-8');
-            this._exportStatus(`Downloaded ${rows.length} rows (${attempts.length} case instances, ${rows.length - attempts.length - byRec.size} answers, ${byRec.size} platform summaries) for ${caseInst.size} participant codes.`);
+            this._exportStatus(`Downloaded ${rows.length} rows (${attempts.length} case instances, ${rows.length - attempts.length - byRec.size} answers, ${byRec.size} platform summaries) for ${caseInst.size} participant codes (study participants only).`);
         } catch (err) {
             this._exportStatus('Export failed: ' + err.message);
         }
@@ -1887,7 +1952,7 @@ const AdminDashboard = {
     async exportResponsesCsv() {
         this._exportStatus('Building CSV…');
         try {
-            const data = await this._fetchAll();
+            const { data, label, tag } = await this._exportData(!this._exportEverything());
             await this._loadCaseDefs(data.attempts.map((a) => a.case_id));
             const attemptById = new Map(data.attempts.map((a) => [a.id, a]));
             const askTurns = data.aiLog.filter((r) => r.interaction_type === 'ask' || r.interaction_type === 'ask_error');
@@ -1942,8 +2007,8 @@ const AdminDashboard = {
                 ];
             });
 
-            this._download(`acting-intern-responses-${this._stamp()}.csv`, this._toCsv(headers, rows), 'text/csv;charset=utf-8');
-            this._exportStatus(`Downloaded ${rows.length} response rows.`);
+            this._download(`acting-intern-responses-${tag}-${this._stamp()}.csv`, this._toCsv(headers, rows), 'text/csv;charset=utf-8');
+            this._exportStatus(`Downloaded ${rows.length} response rows (${label}).`);
         } catch (err) {
             this._exportStatus('Export failed: ' + err.message);
         }
@@ -1952,7 +2017,7 @@ const AdminDashboard = {
     async exportAiLogCsv() {
         this._exportStatus('Building CSV…');
         try {
-            const data = await this._fetchAll();
+            const { data, label, tag } = await this._exportData(!this._exportEverything());
             const attemptById = new Map(data.attempts.map((a) => [a.id, a]));
             const headers = [
                 'log_id', 'attempt_id', 'user_code', 'case_id', 'timestamp',
@@ -1979,8 +2044,8 @@ const AdminDashboard = {
                     t.metadata ? JSON.stringify(t.metadata) : '',
                 ];
             });
-            this._download(`acting-intern-ai-log-${this._stamp()}.csv`, this._toCsv(headers, rows), 'text/csv;charset=utf-8');
-            this._exportStatus(`Downloaded ${rows.length} AI-log rows.`);
+            this._download(`acting-intern-ai-log-${tag}-${this._stamp()}.csv`, this._toCsv(headers, rows), 'text/csv;charset=utf-8');
+            this._exportStatus(`Downloaded ${rows.length} AI-log rows (${label}).`);
         } catch (err) {
             this._exportStatus('Export failed: ' + err.message);
         }
@@ -1989,7 +2054,7 @@ const AdminDashboard = {
     async exportJson() {
         this._exportStatus('Building JSON…');
         try {
-            const data = await this._fetchAll();
+            const { data, label, tag } = await this._exportData(!this._exportEverything());
             await this._loadCaseDefs(data.attempts.map((a) => a.case_id));
             const respByAttempt = this._groupBy(data.responses, (r) => r.attempt_id);
             const logByAttempt = this._groupBy(data.aiLog, (t) => t.attempt_id);
@@ -1997,6 +2062,7 @@ const AdminDashboard = {
             const payload = {
                 export_version: 1,
                 exported_at: new Date().toISOString(),
+                scope: tag === 'participants' ? 'study participants only (registered codes, work started after 18 Sep 2026)' : 'everything, including pilot and test runs',
                 source: 'Acting Intern — assessment study (test_attempts / assessment_responses / assessment_ai_log)',
                 note: 'Descriptive research export. Question and rubric text are joined in from the static case definitions at export time.',
                 counts: {
@@ -2022,8 +2088,8 @@ const AdminDashboard = {
                     })),
                 })),
             };
-            this._download(`acting-intern-full-${this._stamp()}.json`, JSON.stringify(payload, null, 2), 'application/json');
-            this._exportStatus(`Downloaded ${payload.attempts.length} attempts.`);
+            this._download(`acting-intern-full-${tag}-${this._stamp()}.json`, JSON.stringify(payload, null, 2), 'application/json');
+            this._exportStatus(`Downloaded ${payload.attempts.length} attempts (${label}).`);
         } catch (err) {
             this._exportStatus('Export failed: ' + err.message);
         }
