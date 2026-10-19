@@ -581,7 +581,8 @@ const AdminDashboard = {
             { key: 'export', href: '#/admin/export', label: 'Export', icon: 'download' },
             { key: 'feedback', href: '#/admin/feedback', label: 'Feedback', icon: 'message-square-text' },
             { key: 'grading', href: '#/admin/grading', label: 'Adjudication', icon: 'scale' },
-            { key: 'grade', href: '#/grade', label: 'Grade answers', icon: 'check-square' },
+            { key: 'grade', href: '#/grade', label: 'Study grading', icon: 'check-square' },
+            { key: 'practice', href: '#/grade-practice', label: 'Grading practice', icon: 'graduation-cap' },
         ];
         return `
             <div class="admin-topbar">

@@ -14505,6 +14505,15 @@ body.assessment-dock-open { --arail: 440px; }
 .grading-progress { font-family: ui-monospace, monospace; font-size: 12px; margin-right: 10px; }
 .grading-intro { max-width: 70ch; font-size: 13.5px; line-height: 1.5; }
 .grading-blind { color: #2f855a; }
+/* Which grading area you are in (migration 019): study grading counts, practice never does. */
+.grading-mode { margin: 0 0 16px; padding: 10px 14px; border-radius: 8px; font-size: 13.5px; line-height: 1.45; }
+.grading-mode b { letter-spacing: 0.05em; margin-right: 2px; }
+.grading-mode-real { background: #e8eef6; border: 1px solid #b8c7dc; color: #1f3a5f; }
+.grading-mode-practice { background: #fff4d6; border: 1px solid #f0c75e; color: #6b4a00; }
+.grading-is-practice .grading-answer { border-left: 4px solid #f0c75e; }
+.admin-tab.grading-tab-practice.active { box-shadow: inset 0 -3px 0 #e0a800; }
+.grading-switch { margin-left: 8px; }
+.grading-others { margin-top: 12px; padding: 10px 12px; background: #fffaf0; border: 1px solid #f0d9a0; border-radius: 6px; font-size: 13.5px; }
 .grading-actions { margin: 14px 0 18px; }
 .grading-done { color: #2f855a; font-weight: 600; }
 .grading-case-table { max-width: 520px; }

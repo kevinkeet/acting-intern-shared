@@ -265,8 +265,10 @@ const App = {
             .on('/admin/feedback', () => AdminDashboard.renderFeedback())
             .on('/admin/attempts/:id', (params) => AdminDashboard.renderDetail(params.id))
             .on('/admin/grading', () => AdminDashboard.renderGrading())
-            .on('/grade', () => Grading.renderQueue())
-            .on('/grade/:id', (params) => Grading.renderItem(params.id));
+            .on('/grade', () => Grading.renderQueue('real'))
+            .on('/grade/:id', (params) => Grading.renderItem(params.id, 'real'))
+            .on('/grade-practice', () => Grading.renderQueue('practice'))
+            .on('/grade-practice/:id', (params) => Grading.renderItem(params.id, 'practice'));
 
         // Refresh sidebar entries when auth state changes (Assessment + Admin links).
         window.addEventListener('supabase:auth-state-change', () => this._refreshAssessmentNav());
