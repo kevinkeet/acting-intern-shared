@@ -136,6 +136,30 @@ const Grading = {
         return true;
     },
 
+    /**
+     * 'admin', 'study' or 'practice' for the signed-in account (migration 020),
+     * or null if the database cannot say. Practice accounts (notes "TEST…")
+     * use the practice area only; the database refuses them study answers.
+     */
+    async _kind() {
+        const uid = AdminDashboard._session && AdminDashboard._session.user && AdminDashboard._session.user.id;
+        if (this._kindFor === uid && this._kindValue !== undefined) return this._kindValue;
+        let kind = null;
+        try { const { data, error } = await (await this._sb()).rpc('grader_kind'); if (!error) kind = data || null; } catch (e) { kind = null; }
+        this._kindFor = uid; this._kindValue = kind;
+        return kind;
+    },
+
+    _practiceAccountNotice() {
+        return `
+            <div class="admin-header"><h1>Study grading</h1></div>
+            <div class="grading-intro">
+                <p><b>This is a practice account, so study grading is closed to it.</b> Study answers are graded only by the study's graders.
+                The practice area has the same screens, with answers from the pilot, and you can practise there as much as you like.</p>
+            </div>
+            <div class="grading-actions"><a class="btn btn-primary" href="#/grade-practice">Open the practice area (pilot answers) →</a></div>`;
+    },
+
     _topbar() {
         const email = (AdminDashboard._session && AdminDashboard._session.user && AdminDashboard._session.user.email) || '';
         const done = this._items ? this._items.filter((i) => { const g = this._mine.get(i.response_id); return g && g.status === 'submitted'; }).length : 0;
@@ -165,6 +189,12 @@ const Grading = {
         root.innerHTML = `<div class="admin-page"><div class="loading">Loading…</div></div>`;
         if (!(await this._gate(root))) return;
         const practice = this._mode === 'practice';
+        if (!practice && (await this._kind()) === 'practice') {
+            this._items = []; this._mine = new Map(); this._order = [];
+            root.innerHTML = `<div class="admin-page">${this._topbar()}${this._practiceAccountNotice()}</div>`;
+            App.refreshIcons();
+            return;
+        }
         try { await this._load(true); } catch (err) { root.innerHTML = `<div class="admin-page"><div class="empty-state-text">Could not load the ${practice ? 'practice' : 'grading'} queue: ${AdminDashboard._escape(err.message)}</div></div>`; return; }
 
         const next = this._order.find((id) => { const g = this._mine.get(id); return !g || g.status !== 'submitted'; });
@@ -209,6 +239,12 @@ const Grading = {
         this._setMode(mode);
         root.innerHTML = `<div class="admin-page"><div class="loading">Loading…</div></div>`;
         if (!(await this._gate(root))) return;
+        if (this._mode === 'real' && (await this._kind()) === 'practice') {
+            this._items = []; this._mine = new Map(); this._order = [];
+            root.innerHTML = `<div class="admin-page">${this._topbar()}${this._practiceAccountNotice()}</div>`;
+            App.refreshIcons();
+            return;
+        }
         try { await this._load(); } catch (err) { root.innerHTML = `<div class="admin-page"><div class="empty-state-text">${AdminDashboard._escape(err.message)}</div></div>`; return; }
         const practice = this._mode === 'practice';
         const item = this._items.find((x) => x.response_id === responseId);

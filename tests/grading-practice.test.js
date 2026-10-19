@@ -46,4 +46,27 @@ check('each area keeps its own cache (switching never mixes items)', () => {
     G._setMode('practice'); assert.strictEqual(G._items[0].response_id, 'p');
     G._setMode('real'); assert.strictEqual(G._items[0].response_id, 'r');
 });
-process.exit(fail ? 1 : 0);
+(async () => {
+    let calls = 0;
+    ctx.AdminDashboard._session = { user: { id: 'u-practice', email: 'p@example.org' } };
+    ctx.AdminDashboard._adminClient = () => ({ rpc: async (name) => { calls++; assert.strictEqual(name, 'grader_kind'); return { data: 'practice', error: null }; } });
+    try {
+        G._kindFor = undefined; G._kindValue = undefined;
+        assert.strictEqual(await G._kind(), 'practice');
+        assert.strictEqual(await G._kind(), 'practice');
+        assert.strictEqual(calls, 1, 'grader_kind is asked once per signed-in account');
+        console.log('PASS  a practice account is recognised (asked once per account)');
+    } catch (e) { fail++; console.log('FAIL  practice account recognised -> ' + e.message); }
+    try {
+        ctx.AdminDashboard._adminClient = () => ({ rpc: async () => ({ data: null, error: { message: 'function grader_kind() does not exist' } }) });
+        G._kindFor = undefined; G._kindValue = undefined;
+        assert.strictEqual(await G._kind(), null);
+        console.log('PASS  before migration 020 the page carries on as before (kind unknown)');
+    } catch (e) { fail++; console.log('FAIL  pre-020 fallback -> ' + e.message); }
+    check('practice accounts are told study grading is closed and sent to the practice area', () => {
+        const html = G._practiceAccountNotice();
+        assert.match(html, /practice account, so study grading is closed/);
+        assert.match(html, /href="#\/grade-practice"/);
+    });
+    process.exit(fail ? 1 : 0);
+})();
