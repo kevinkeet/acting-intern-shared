@@ -39,6 +39,8 @@
         brainLines: 24,               // verbatim lines the brain sees
         maxToolRounds: 3,
         wakeWords: /\b(?:hey\s+)?(?:co-?worker|claude)\b[,:]?\s*/i,
+        wakeSettleMs: 900,            // a finished-sounding question waits this long for more words
+        wakeJoinMs: 3500,             // an unfinished one ("Coworker, um...") waits up to this long
     };
 
     const realClock = {
@@ -269,17 +271,59 @@
             emit('line', line);
             touch();
 
-            // Fast path: "Coworker, what was his last potassium?" goes straight to the brain.
+            // Fast path: "Coworker, what was his last potassium?" goes straight to the brain,
+            // once the question sounds finished. Speech arrives in pieces, so "Coworker,
+            // um..." waits for the rest, and a finished-sounding question still waits a
+            // beat in case the doctor keeps going.
             const m = text.match(cfg.wakeWords);
-            if (m && line.speaker !== 'patient') {
-                let q = text.slice(m.index + m[0].length).trim() || text;
-                q = q.charAt(0).toUpperCase() + q.slice(1);
+            const w = pendingWake;
+            if (w && line.speaker === w.speaker && elapsed() - w.lastAt <= cfg.wakeJoinMs) {
+                const rest = m ? text.slice(m.index + m[0].length) : text;
+                w.text = (w.text + ' ' + rest).trim();
+                w.lastAt = elapsed();
                 handledLines.add(line.id);
-                ask(q, { cueLine: line.id, heardAt: line.t, via: 'wake word' });
+                settleWake();
+            } else if (m && line.speaker !== 'patient') {
+                if (w) askWake();   // a new question; the one before goes as it stands
+                pendingWake = { speaker: line.speaker, text: text.slice(m.index + m[0].length).trim(), cue: line, lastAt: elapsed(), timer: null };
+                handledLines.add(line.id);
+                settleWake();
             }
             earQueue.push(line);
             pumpEar();
             return line;
+        }
+
+        // ── the question after a wake word ───────────────────────────────
+        let pendingWake = null;
+        const FILLER = /,?\s*\b(?:uh[- ]huh|mm[- ]hmm|u+m+|u+h+|e+r+m*|a+h+|h+m+|m+h*m+|you know|i mean)\b[,.…]*/gi;
+        const UNFINISHED = /\b(?:and|or|but|so|the|a|an|his|her|their|of|to|for|with|about|on|in|at|from|is|was|are|were|what|what's|whats|how|when|where|which|who|why|should|can|could|would|do|does|did|we|i|he|she|it|any|like|then)[,.…]*$/i;
+        function cleanQuestion(text) {
+            const q = String(text || '').replace(FILLER, ' ').replace(/^[\s,.;:…-]*(?:so|okay|ok|well|like|and)\b[,.]?\s*/i, '').replace(/\s+([,.?!])/g, '$1').replace(/\s+/g, ' ').replace(/^[\s,.;:…-]+/, '').trim();
+            return q ? q.charAt(0).toUpperCase() + q.slice(1) : '';
+        }
+        /** Does it sound like the doctor finished asking? */
+        function soundsDone(text) {
+            const q = cleanQuestion(text);
+            const words = q.split(/\s+/).filter((x) => /[a-z0-9]/i.test(x));
+            if (!words.length) return false;
+            if (/\?\s*$/.test(q)) return true;
+            return words.length >= 3 && !UNFINISHED.test(q) && !/[,…-]\s*$/.test(q);
+        }
+        function settleWake() {
+            const w = pendingWake;
+            if (!w) return;
+            if (w.timer) clock.clearTimeout(w.timer);
+            w.timer = clock.setTimeout(askWake, soundsDone(w.text) ? cfg.wakeSettleMs : cfg.wakeJoinMs);
+        }
+        function askWake() {
+            const w = pendingWake;
+            pendingWake = null;
+            if (!w) return;
+            if (w.timer) clock.clearTimeout(w.timer);
+            const q = cleanQuestion(w.text);
+            if (!q) { emit('suppressed', { reason: 'wake word with no question', text: w.text }); return; }
+            ask(q, { cueLine: w.cue.id, heardAt: w.cue.t, via: 'wake word' });
         }
 
         function pumpEar() {
@@ -373,13 +417,13 @@
                     body.messages = messages;
                     let streamed = '';
                     const res = await modelCall('answer', cfg.brainModel, body, {
-                        onText: (d) => { streamed += d; emit('say-partial', { id, text: streamed, question }); },
+                        onText: (d) => { streamed += d; emit('say-partial', { id, text: streamed, question, via: m.via }); },
                     });
                     if (res.message.stop_reason === 'refusal') { answer = 'I can\'t help with that one.'; break; }
                     const uses = res.message.content.filter((b) => b.type === 'tool_use');
                     if (!uses.length || res.message.stop_reason !== 'tool_use') { answer = res.text.trim(); break; }
                     messages.push({ role: 'assistant', content: res.message.content });
-                    emit('say-partial', { id, text: '', question, status: toolStatus(uses) });
+                    emit('say-partial', { id, text: '', question, via: m.via, status: toolStatus(uses) });
                     const results = await Promise.all(uses.map((u) => runTool(u)));
                     messages.push({ role: 'user', content: results });
                 }
@@ -672,6 +716,8 @@
             if (heartbeatTimer) clock.clearTimeout(heartbeatTimer);
             if (quickTimer) clock.clearTimeout(quickTimer);
             heartbeatTimer = quickTimer = null;
+            if (pendingWake && pendingWake.timer) clock.clearTimeout(pendingWake.timer);
+            pendingWake = null;
             for (const c of aborters) { try { c.abort(); } catch (e) { /* ignore */ } }
             emit('status', { running: false });
         }

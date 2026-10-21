@@ -225,17 +225,25 @@
 .lc-alerts { order: 1; } .lc-take { order: 2; } .lc-tabs { order: 3; } .lc-ask { order: 5; }
 .lc-pane-title { display: none; }
 
-/* said stream: the newest at the top, as plain text (not chat bubbles) */
-.lc-stream { display: flex; flex-direction: column; }
-.lc-item { padding: 10px 0; border-top: 1px solid var(--lc-line); animation: lc-in 200ms var(--lc-ease); }
-.lc-stream > .lc-item:first-child, .lc-stream > .lc-held + .lc-item { border-top: 0; padding-top: 2px; }
+/* conversation: what it heard (plain lines) and what it said (tinted blocks), oldest
+   first, newest at the bottom, with the line being heard right now as a caption */
+.lc-convo { display: flex; flex-direction: column; gap: 5px; font-size: 13px; }
+.lc-item { margin: 3px 0 4px; padding: 7px 10px 8px; border-radius: var(--lc-radius); background: var(--lc-blue-bg); font-size: 14px; animation: lc-in 200ms var(--lc-ease); }
+.lc-item.is-critical { background: var(--lc-red-bg); }
+.lc-item.is-insight { background: var(--lc-amber-bg); }
+.lc-item.is-answer .lc-item-meta > span:first-of-type { color: var(--lc-navy); font-weight: 600; }
+.lc-pin-note { margin-left: 4px; font-size: 12px; font-weight: 500; color: var(--lc-red-ink); }
+.lc-jump {
+    position: sticky; bottom: 6px; display: block; margin: 6px auto 0; padding: 4px 12px; border-radius: 999px;
+    border: 1px solid var(--lc-navy); background: var(--lc-navy); color: var(--lc-navy-ink); font-size: 12px; font-weight: 600; cursor: pointer;
+    box-shadow: 0 2px 8px oklch(0.3 0.03 255 / 0.18);
+}
+.lc-held { margin-top: 10px; }
 .lc-item-meta { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--lc-ink-3); }
 .lc-item-meta svg { width: 13px; height: 13px; }
 .lc-item-meta .is-critical { color: var(--lc-red); }
 .lc-item-meta .is-insight { color: var(--lc-amber); }
 .lc-item.is-critical .lc-item-meta > span:first-of-type { color: var(--lc-red-ink); font-weight: 600; }
-.lc-q { margin: 4px 0 2px; color: var(--lc-ink-2); font-size: 13px; }
-.lc-q::before { content: 'You: '; font-weight: 600; color: var(--lc-ink-3); }
 .lc-a { margin: 3px 0 0; white-space: pre-wrap; color: var(--lc-ink); }
 .lc-a.is-streaming::after { content: ''; display: inline-block; width: 2px; height: 14px; margin-left: 2px; background: var(--lc-ink-3); vertical-align: -2px; animation: lc-blink 900ms steps(1) infinite; }
 @keyframes lc-blink { 50% { opacity: 0; } }
@@ -262,12 +270,13 @@
 .lc-new { animation: lc-flash 1200ms var(--lc-ease); border-radius: 4px; }
 @keyframes lc-flash { from { background: var(--lc-blue-bg); } to { background: transparent; } }
 
-/* heard (transcript) */
-.lc-lines { display: grid; gap: 6px; font-size: 13px; }
-.lc-line { display: grid; grid-template-columns: 54px 1fr; gap: 8px; align-items: baseline; }
+/* heard lines (in the conversation) */
+.lc-line { display: grid; grid-template-columns: 56px 1fr; gap: 8px; align-items: baseline; color: var(--lc-ink-2); }
 .lc-who { font-size: 11px; font-weight: 600; color: var(--lc-ink-3); text-align: right; text-transform: capitalize; }
-.lc-line[data-speaker="doctor"] .lc-who { color: var(--lc-navy); }
-.lc-line.is-interim .lc-said { color: var(--lc-ink-3); }
+.lc-line[data-speaker="doctor"] .lc-who, .lc-line.is-typed .lc-who { color: var(--lc-navy); }
+.lc-line[data-speaker="doctor"] .lc-said { color: var(--lc-ink); }
+.lc-line.is-interim .lc-said { color: var(--lc-ink-3); font-style: italic; }
+.lc-line.is-interim .lc-said::after { content: ' …'; }
 .lc-line.is-flagged .lc-said { text-decoration: underline; text-decoration-color: oklch(0.8 0.09 27); text-decoration-thickness: 2px; text-underline-offset: 3px; }
 
 /* log */

@@ -9,15 +9,15 @@
  *      folded to their first sentence. The only loud thing.
  *   3. My take: what matters most first; its summary and plan on request.
  *      It shrinks to one line while an alert waits.
- *   4. Said | Tracking | Heard | Log:
- *        Said: everything it said (answers, alerts, insights), newest first,
- *              plus thoughts it is holding until asked.
+ *   4. Conversation | Tracking | Log:
+ *        Conversation: what it heard and what it said, in order, newest at the
+ *              bottom, with a live caption of what it is hearing right now and
+ *              the thoughts it is holding until asked.
  *        Tracking: its working memory (facts heard, your thinking, the plan,
- *              what it is watching for).
- *        Heard: the conversation as heard. Log: decisions, calls, cost.
+ *              what it is watching for). Log: decisions, calls, cost.
  *   5. Ask box.
- * When the panel is wide, talk (alerts, Said, ask) sits on the left and
- * thinking (take, tracking, heard, log) on the right.
+ * When the panel is wide, talk (alerts, conversation, ask) sits on the left and
+ * thinking (take, tracking, log) on the right.
  *
  * LiveApp owns the state and calls render*(view) when something changes;
  * refreshTimes() keeps the "2m ago" labels current without re-rendering.
@@ -67,6 +67,24 @@
         return m ? [m[1], t.slice(m[0].length).trim()] : [t, ''];
     };
 
+    // Conversation pieces.
+    const lineHtml = (l, flagged) => '<div class="lc-line' + (flagged ? ' is-flagged' : '') + '" data-speaker="' + esc(l.speaker) + '"><span class="lc-who">' + esc(l.label || l.speaker) + '</span><span class="lc-said">' + esc(l.text) + '</span></div>';
+    const typedHtml = (q) => '<div class="lc-line is-typed" data-speaker="doctor"><span class="lc-who">You</span><span class="lc-said">' + esc(q) + '</span></div>';
+    const interimHtml = (it) => '<div class="lc-line is-interim"' + (it ? '' : ' hidden') + ' data-speaker="' + esc(it ? it.speaker : '') + '"><span class="lc-who">' + esc(it ? it.speaker : '') + '</span><span class="lc-said">' + esc(it ? it.text : '') + '</span></div>';
+    function itemHtml(s, isPinned) {
+        const icon = s.kind === 'critical' ? ICON.alert : s.kind === 'insight' ? ICON.bulb : ICON.chat;
+        const label = s.kind === 'critical' ? 'Safety' : s.kind === 'insight' ? 'Thought' : 'Coworker';
+        const lat = s.latencyMs == null ? '' : (s.kind === 'answer' ? 'answered in ' : 'flagged ') + secs(s.latencyMs) + (s.kind === 'answer' ? '' : ' after it was said');
+        return (s.via === 'typed' && s.question ? typedHtml(s.question) : '')
+            + '<article class="lc-item is-' + esc(s.kind) + (isPinned ? ' is-pinned' : '') + '" data-id="' + esc(s.id) + '">'
+            + '<div class="lc-item-meta">' + icon + '<span>' + label + '</span><span aria-hidden="true">·</span>' + when(s.wallAt, s.t, lat) + '</div>'
+            + (isPinned
+                ? '<p class="lc-a"><b>' + esc(splitLead(s.text)[0]) + '</b> <span class="lc-pin-note">Pinned above</span></p>'
+                : '<p class="lc-a">' + rich(s.text) + '</p>' + (s.why && s.kind !== 'answer' ? '<p class="lc-why">' + esc(s.why) + '</p>' : ''))
+            + (s.error && s.question ? '<button type="button" class="lc-btn" data-act="retry" data-q="' + esc(s.question) + '">Try again</button>' : '')
+            + '</article>';
+    }
+
     const LivePanel = {
         el: null,
         refs: {},
@@ -102,7 +120,7 @@
                 '<div class="lc-body">',
                 '  <div class="lc-left">',
                 '    <div class="lc-alerts" data-ref="alerts"></div>',
-                '    <div class="lc-pane is-active" data-pane="said" role="tabpanel" aria-label="Said"><h3 class="lc-pane-title">Said</h3><div data-ref="said"></div></div>',
+                '    <div class="lc-pane is-active" data-pane="said" role="tabpanel" aria-label="Conversation"><h3 class="lc-pane-title">Conversation</h3><div data-ref="said"></div><button type="button" class="lc-jump" data-act="jump" hidden>Latest ↓</button></div>',
                 '    <form class="lc-ask" data-ref="ask" autocomplete="off">',
                 '      <label class="lc-sr" for="lc-ask-input">Ask the coworker</label>',
                 '      <input id="lc-ask-input" type="text" placeholder="Ask, or say “Coworker, …”" enterkeyhint="send">',
@@ -112,13 +130,11 @@
                 '  <div class="lc-right">',
                 '    <section class="lc-take" data-ref="take" data-open="false" aria-label="My take"></section>',
                 '    <div class="lc-tabs" role="tablist" aria-label="Coworker views">',
-                '      <button type="button" role="tab" data-tab="said" aria-selected="true">Said<span class="lc-count" data-ref="saidCount" hidden></span></button>',
+                '      <button type="button" role="tab" data-tab="said" aria-selected="true">Conversation<span class="lc-count" data-ref="saidCount" hidden></span></button>',
                 '      <button type="button" role="tab" data-tab="tracking" aria-selected="false" tabindex="-1">Tracking</button>',
-                '      <button type="button" role="tab" data-tab="transcript" aria-selected="false" tabindex="-1">Heard</button>',
                 '      <button type="button" role="tab" data-tab="log" aria-selected="false" tabindex="-1">Log</button>',
                 '    </div>',
                 '    <div class="lc-pane" data-pane="tracking" role="tabpanel" aria-label="Tracking"><h3 class="lc-pane-title">Tracking</h3><div data-ref="tracking"></div></div>',
-                '    <div class="lc-pane" data-pane="transcript" role="tabpanel" aria-label="Heard"><h3 class="lc-pane-title">Heard</h3><div data-ref="transcript" class="lc-lines"></div></div>',
                 '    <div class="lc-pane" data-pane="log" role="tabpanel" aria-label="Log"><h3 class="lc-pane-title">Under the hood</h3><div data-ref="log"></div></div>',
                 '  </div>',
                 '</div>',
@@ -164,6 +180,8 @@
                     case 'prime': return h.onPrime && h.onPrime();
                     case 'reset': return h.onReset && h.onReset();
                     case 'classic': return h.onClassic && h.onClassic();
+                    case 'voice-test': return h.onVoiceTest && h.onVoiceTest();
+                    case 'jump': { const pane = this.refs.said.parentElement; pane.scrollTop = pane.scrollHeight; this._jump(false); return undefined; }
                     default: return undefined;
                 }
             });
@@ -171,6 +189,10 @@
                 const t = ev.target;
                 if (t.name && h.onSetting) h.onSetting(t.name, t.type === 'checkbox' ? t.checked : t.value);
             });
+            this.refs.said.parentElement.addEventListener('scroll', (ev) => {
+                const pane = ev.currentTarget;
+                if (pane.scrollHeight - pane.scrollTop - pane.clientHeight < 80) this._jump(false);
+            }, { passive: true });
             this.refs.ask.addEventListener('submit', (ev) => {
                 ev.preventDefault();
                 const q = this.refs.input.value.trim();
@@ -235,7 +257,7 @@
             this.tab = name;
             this.el.querySelectorAll('[role="tab"]').forEach((b) => { const on = b.dataset.tab === name; b.setAttribute('aria-selected', String(on)); b.tabIndex = on ? 0 : -1; });
             this.el.querySelectorAll('.lc-pane').forEach((p) => p.classList.toggle('is-active', p.dataset.pane === name));
-            if (name === 'transcript') { const pane = this.refs.transcript.parentElement; pane.scrollTop = pane.scrollHeight; }
+            if (name === 'said') { const pane = this.refs.said.parentElement; pane.scrollTop = pane.scrollHeight; this._jump(false); }
             if (name === 'said' && this.refs.saidCount) { this.refs.saidCount.hidden = true; this.seenSaid = this._saidTotal || 0; }
             if (this.handlers.onTab) this.handlers.onTab(name);
         },
@@ -381,52 +403,78 @@
                 + (more ? '<div class="lc-take-more">' + more + '</div>' : '');
         },
 
-        // ── said stream ──────────────────────────────────────────────────
-        renderSaid(v) {
+        // ── conversation: what it heard and what it said, in order ──────
+        // Oldest at the top, newest at the bottom (like a chat), with the line
+        // being heard right now as a live caption. Follows the latest unless the
+        // doctor has scrolled up; then a "Latest" button appears.
+        renderSaid(v) { this.renderConversation(v); },
+        renderTranscript(v) { this.renderConversation(v); },
+
+        renderConversation(v) {
             const el = this.refs.said;
+            const pane = el.parentElement;
+            const atBottom = pane.scrollHeight - pane.scrollTop - pane.clientHeight < 80;
             const pinned = new Set((v.alerts || []).map((a) => a.id));
-            const items = (v.said || []).filter((s) => !pinned.has(s.id));
-            this._saidTotal = items.length;
+            const said = v.said || [];          // newest first
+            const lines = v.lines || [];
+            const streaming = Object.entries(v.streaming || {});
             const held = v.held || [];
-            for (const s of v.said || []) {
+            this._saidTotal = said.length;
+            for (const s of said) {             // screen readers hear each new answer or thought once
                 if (s.kind === 'critical' || this._announced.has(s)) continue;
                 this._announced.add(s);
                 this._announce('polite', (s.kind === 'answer' ? 'Answer. ' : 'Thought. ') + s.text);
             }
-            if (!items.length && !held.length && !Object.keys(v.streaming || {}).length) {
+            if (!lines.length && !said.length && !streaming.length && !held.length && !v.interim) {
                 el.innerHTML = '<p class="lc-empty">' + (v.mode === 'lead'
                     ? 'I’ll answer when you ask (say <b>“Coworker, …”</b> or type below), flag anything unsafe, and point out what you might be missing.'
-                    : 'I’ll answer when you ask (say <b>“Coworker, …”</b> or type below) and speak up only for safety issues.') + '</p>';
+                    : 'I’ll answer when you ask (say <b>“Coworker, …”</b> or type below) and speak up only for safety issues.')
+                    + ' What I hear and what I say show up here, in order.</p>';
+                this._lastConvo = 0;
+                this._jump(false);
                 this._updateCount();
                 return;
             }
-            const parts = [];
-            if (held.length) {
-                parts.push('<details class="lc-held"' + (v.heldOpen ? ' open' : '') + '><summary>' + (held.length === 1 ? '1 thought ready if you want it' : held.length + ' thoughts ready if you want them') + '</summary><ul>'
-                    + held.map((x) => '<li><span>' + esc(x.text) + '</span><button type="button" class="lc-btn" data-act="tell" data-topic="' + esc(x.topic) + '">Tell me</button></li>').join('')
-                    + '</ul></details>');
-            }
-            for (const [id, s] of Object.entries(v.streaming || {})) {
-                parts.push('<article class="lc-item is-answer" data-id="' + esc(id) + '">'
-                    + (s.question ? '<p class="lc-q">' + esc(s.question) + '</p>' : '')
-                    + (s.text ? '<p class="lc-a is-streaming">' + esc(s.text) + '</p>' : '<p class="lc-status-line">' + esc(s.status || 'Thinking…') + '</p>')
+            const flagged = new Set(said.filter((s) => s.kind !== 'answer' && s.cueLine).map((s) => s.cueLine));
+            const events = lines.map((l, i) => ({ t: l.t || 0, order: 0, seq: i, html: lineHtml(l, flagged.has(l.id)) }))
+                .concat(said.map((s, i) => ({ t: s.t || 0, order: 1, seq: said.length - i, html: itemHtml(s, pinned.has(s.id)) })));
+            events.sort((a, b) => (a.t - b.t) || (a.order - b.order) || (a.seq - b.seq));
+            const parts = events.map((e) => e.html);
+            for (const [id, st] of streaming) {
+                parts.push((st.via === 'typed' && st.question ? typedHtml(st.question) : '')
+                    + '<article class="lc-item is-answer" data-id="' + esc(id) + '"><div class="lc-item-meta">' + ICON.chat + '<span>Coworker</span></div>'
+                    + (st.text ? '<p class="lc-a is-streaming">' + esc(st.text) + '</p>' : '<p class="lc-status-line">' + esc(st.status || 'Thinking…') + '</p>')
                     + '</article>');
             }
-            for (const s of items) {
-                const icon = s.kind === 'critical' ? ICON.alert : s.kind === 'insight' ? ICON.bulb : ICON.chat;
-                const label = s.kind === 'critical' ? 'Safety' : s.kind === 'insight' ? 'Thought' : 'Answer';
-                const lat = s.latencyMs == null ? '' : (s.kind === 'answer' ? 'answered in ' : 'flagged ') + secs(s.latencyMs) + (s.kind === 'answer' ? '' : ' after it was said');
-                parts.push('<article class="lc-item is-' + esc(s.kind) + '" data-id="' + esc(s.id) + '">'
-                    + '<div class="lc-item-meta">' + icon + '<span>' + label + '</span><span aria-hidden="true">·</span>' + when(s.wallAt, s.t, lat) + '</div>'
-                    + (s.question ? '<p class="lc-q">' + esc(s.question) + '</p>' : '')
-                    + '<p class="lc-a">' + rich(s.text) + '</p>'
-                    + (s.why && s.kind !== 'answer' ? '<p class="lc-why">' + esc(s.why) + '</p>' : '')
-                    + (s.error && s.question ? '<button type="button" class="lc-btn" data-act="retry" data-q="' + esc(s.question) + '">Try again</button>' : '')
-                    + '</article>');
-            }
-            el.innerHTML = '<div class="lc-stream">' + parts.join('') + '</div>';
+            parts.push(interimHtml(v.interim));
+            el.innerHTML = '<div class="lc-convo">' + parts.join('') + '</div>'
+                + (held.length
+                    ? '<details class="lc-held"' + (v.heldOpen ? ' open' : '') + '><summary>' + (held.length === 1 ? '1 thought ready if you want it' : held.length + ' thoughts ready if you want them') + '</summary><ul>'
+                      + held.map((x) => '<li><span>' + esc(x.text) + '</span><button type="button" class="lc-btn" data-act="tell" data-topic="' + esc(x.topic) + '">Tell me</button></li>').join('')
+                      + '</ul></details>'
+                    : '');
+            const count = lines.length + said.length + streaming.length;
+            const grew = count > (this._lastConvo || 0);
+            this._lastConvo = count;
+            if (atBottom || !this._convoShown) { pane.scrollTop = pane.scrollHeight; this._jump(false); }
+            else if (grew) this._jump(true);
+            this._convoShown = true;
             this._updateCount();
         },
+
+        /** Live caption: update only the line being heard right now (several times a second). */
+        setInterim(it) {
+            const el = this.refs.said && this.refs.said.querySelector('.lc-line.is-interim');
+            if (!el) return false;
+            const pane = this.refs.said.parentElement;
+            const atBottom = pane.scrollHeight - pane.scrollTop - pane.clientHeight < 80;
+            el.hidden = !it;
+            if (it) { el.dataset.speaker = it.speaker; el.firstChild.textContent = it.speaker; el.lastChild.textContent = it.text; }
+            if (atBottom) pane.scrollTop = pane.scrollHeight;
+            return true;
+        },
+
+        _jump(show) { const b = this.el && this.el.querySelector('.lc-jump'); if (b) b.hidden = !show; },
 
         /** Fast path while an answer streams in: touch only that item. */
         streamText(id, text, status) {
@@ -476,19 +524,6 @@
                 + (v.memoryNote ? '<p class="lc-empty">' + esc(v.memoryNote) + '</p>' : '');
         },
 
-        // ── heard (transcript) ───────────────────────────────────────────
-        renderTranscript(v) {
-            const el = this.refs.transcript;
-            const lines = v.lines || [];
-            if (!lines.length && !v.interim) { el.innerHTML = '<p class="lc-empty">The conversation appears here as it is heard.</p>'; return; }
-            const flagged = new Set((v.said || []).filter((s) => s.kind !== 'answer' && s.cueLine).map((s) => s.cueLine));
-            const pane = el.parentElement;
-            const nearBottom = pane && (pane.scrollHeight - pane.scrollTop - pane.clientHeight < 60);
-            el.innerHTML = lines.map((l) => '<div class="lc-line' + (flagged.has(l.id) ? ' is-flagged' : '') + '" data-speaker="' + esc(l.speaker) + '"><span class="lc-who">' + esc(l.label || l.speaker) + '</span><span class="lc-said">' + esc(l.text) + '</span></div>').join('')
-                + (v.interim ? '<div class="lc-line is-interim" data-speaker="' + esc(v.interim.speaker) + '"><span class="lc-who">' + esc(v.interim.speaker) + '</span><span class="lc-said">' + esc(v.interim.text) + '</span></div>' : '');
-            if (nearBottom && pane) pane.scrollTop = pane.scrollHeight;
-        },
-
         // ── log ──────────────────────────────────────────────────────────
         renderLog(v) {
             const el = this.refs.log;
@@ -532,7 +567,12 @@
                 '</fieldset>',
                 '<fieldset><legend>When it speaks</legend>',
                 check('chime', 'Chime on safety alerts'),
-                check('speakAloud', 'Read answers and alerts aloud', 'Uses the computer’s voice. Off by default with a patient in the room.'),
+                check('speakAloud', 'Read answers and alerts aloud', v.canSpeak ? 'Uses this computer’s voice. Stops when you start talking; the mic ignores it. Off by default with a patient in the room.' : 'This browser can’t speak.', !v.canSpeak),
+                (v.canSpeak && s.speakAloud
+                    ? '<div class="lc-pop-row lc-voice"><select name="voice" class="lc-btn" aria-label="Voice"><option value="">Best voice' + (v.voices && v.voices[0] ? ' (' + esc(v.voices[0].name) + ')' : '') + '</option>'
+                      + (v.voices || []).slice(0, 25).map((x) => '<option value="' + esc(x.name) + '"' + (s.voice === x.name ? ' selected' : '') + '>' + esc(x.name) + '</option>').join('')
+                      + '</select><button type="button" class="lc-btn" data-act="voice-test">Test</button></div>'
+                    : ''),
                 check('glasses', 'Show them on the G2 glasses', 'Through the glasses bridge, when it is set up.'),
                 '</fieldset>',
                 '<fieldset><legend>Practice</legend><div class="lc-pop-row">',

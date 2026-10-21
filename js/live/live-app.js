@@ -46,7 +46,7 @@
         init() {
             if (this._inited) return;
             this._inited = true;
-            this.settings = Object.assign({ brain: 'claude-sonnet-5-5', mode: null, fast: false, source: 'room', chime: true, speakAloud: false, glasses: false, replaySpeed: 2, classic: false }, this._load());
+            this.settings = Object.assign({ brain: 'claude-sonnet-5-5', mode: null, fast: false, source: 'room', chime: true, speakAloud: false, voice: '', glasses: false, replaySpeed: 2, classic: false }, this._load());
             if (!this.settings.mode) {
                 let old = null;
                 try { old = typeof AIModeConfig !== 'undefined' && AIModeConfig.getMode && AIModeConfig.getMode(); } catch (e) { /* ignore */ }
@@ -54,6 +54,12 @@
             }
             this.view = this._freshView();
             this._fetchHealth();
+            if (typeof LiveVoice !== 'undefined' && LiveVoice.supported()) {
+                LiveVoice.voiceName = this.settings.voice || null;
+                LiveVoice.onError = (reason) => { if (reason === 'not-allowed') this._flash('Click anywhere on the page once so the coworker can speak.'); };
+                // Browsers load their voice list late; refresh the settings when it arrives.
+                window.speechSynthesis.addEventListener('voiceschanged', () => this.request('settings'));
+            }
             const panel = document.getElementById('ai-panel');
             if (!panel) return;
             LivePanel.mount(panel, this._handlers());
@@ -242,7 +248,7 @@
             cw.on('thinking', (p) => { if (p.lane === 'answer' && p.id) askedWall[p.id] = Date.now(); });
             cw.on('line', (l) => {
                 const display = this._pendingLabel || SPEAKER_LABEL[l.speaker] || l.speaker;
-                v.lines.push({ id: l.id, speaker: l.speaker, label: display, text: l.text.replace(/^\((wife|nurse)\)\s*/i, '') });
+                v.lines.push({ id: l.id, t: l.t, speaker: l.speaker, label: display, text: l.text.replace(/^\((wife|nurse)\)\s*/i, '') });
                 this._pendingLabel = null;
                 v.interim = null;
                 if (v.startedAt == null) v.startedAt = Date.now() - l.t;
@@ -253,7 +259,7 @@
             cw.on('take', (t) => { v.take = Object.assign({}, t, { at: Date.now() }); v.takeLoading = false; this.request('take'); });
             cw.on('say-partial', (p) => {
                 const had = !!v.streaming[p.id];
-                v.streaming[p.id] = { text: p.text, status: p.status, question: p.question };
+                v.streaming[p.id] = { text: p.text, status: p.status, question: p.question, via: p.via };
                 if (!had || !LivePanel.streamText(p.id, p.text, p.status, p.question)) this.request('said');
             });
             cw.on('say', (s) => {
@@ -263,7 +269,7 @@
                 const item = Object.assign({}, s, { cueText: cue ? cue.text : '', latencyMs: from ? Date.now() - from : null, wallAt: Date.now() });
                 v.said.unshift(item);
                 if (s.kind === 'critical') { v.alerts.unshift(item); this._chime(); }
-                if (this.settings.speakAloud && (s.kind === 'critical' || s.kind === 'answer')) this._speak(s.text);
+                if (this.settings.speakAloud && (s.kind === 'critical' || s.kind === 'answer')) this._speak(s);
                 if (this.settings.glasses) this._toGlasses(s);
                 this.request('said', 'alerts', 'transcript');
             });
@@ -297,6 +303,7 @@
 
         newEncounter(extraConfig, clock) {
             this.stopListening();
+            if (typeof LiveVoice !== 'undefined') LiveVoice.stop();
             if (!clock) this._stopReplay();
             const keep = { deepgram: this.view.deepgram, memoryNote: this.view.memoryNote };
             this.view = Object.assign(this._freshView(), keep);
@@ -326,6 +333,7 @@
                 onClassic: () => { LivePanel.togglePop(false); this.setEnabled(false); },
                 onSetting: (name, value) => this.setSetting(name, value),
                 onOpenSettings: () => this.request('settings'),
+                onVoiceTest: () => { if (typeof LiveVoice === 'undefined') return; LiveVoice.voiceName = this.settings.voice || null; LiveVoice.stop(); LiveVoice.say('Safety. Hold the heparin drip: black stools and hemoglobin 10.2.', { urgent: true }); },
                 onTab: () => {},
             };
         },
@@ -354,6 +362,15 @@
                 if (was) this.stopListening();
                 this.settings.source = value;
                 if (was) this.startListening();
+            } else if (name === 'speakAloud') {
+                this.settings.speakAloud = !!value;
+                if (typeof LiveVoice !== 'undefined') {
+                    if (value) LiveVoice.say('I\'ll read answers and safety alerts aloud.');   // the click also lets the page speak
+                    else LiveVoice.stop();
+                }
+            } else if (name === 'voice') {
+                this.settings.voice = value || '';
+                if (typeof LiveVoice !== 'undefined') { LiveVoice.voiceName = this.settings.voice || null; LiveVoice.stop(); LiveVoice.say('This is how I sound.'); }
             } else {
                 this.settings[name] = value;
             }
@@ -414,9 +431,10 @@
             const startedAt = Date.now();
             DG.onTranscript = (r) => {
                 if (!this._mic) return;
+                if (this._heardOwnVoice(r.transcript, r.isFinal)) return;
                 if (!r.isFinal) {
                     this.view.interim = { speaker: SPEAKER_LABEL[r.speakerRole] || 'Voice', text: (buf && buf.role === r.speakerRole ? buf.parts.join(' ') + ' ' : '') + r.transcript };
-                    this.request('transcript');
+                    if (!LivePanel.setInterim(this.view.interim)) this.request('transcript');
                     return;
                 }
                 if (buf && buf.role !== r.speakerRole) flush();
@@ -459,11 +477,12 @@
                 let interim = '';
                 for (let i = ev.resultIndex; i < ev.results.length; i++) {
                     const res = ev.results[i];
+                    if (this._heardOwnVoice(res[0].transcript, res.isFinal)) continue;
                     if (res.isFinal) { const t = res[0].transcript.trim(); if (t && this.engine) this.engine.hear({ speaker: 'unknown', text: t }); }
                     else interim += res[0].transcript;
                 }
                 this.view.interim = interim ? { speaker: 'Voice', text: interim } : null;
-                this.request('transcript');
+                if (!LivePanel.setInterim(this.view.interim)) this.request('transcript');
             };
             rec.onerror = (e) => { if (e.error === 'not-allowed') { stopped = true; this._mic = null; this._status('error', 'Microphone blocked', 'Allow the mic for this site'); } };
             rec.onend = () => { if (!stopped && this._mic) { try { rec.start(); } catch (e) { /* ignore */ } } };
@@ -632,13 +651,25 @@
             } catch (e) { /* glasses are optional */ }
         },
 
-        _speak(text) {
+        // Read an answer or a safety alert aloud. A safety alert cuts in ahead of an answer.
+        _speak(s) {
             try {
-                if (!window.speechSynthesis) return;
-                const u = new SpeechSynthesisUtterance(text);
-                u.rate = 1.05;
-                window.speechSynthesis.speak(u);
-            } catch (e) { /* ignore */ }
+                if (typeof LiveVoice === 'undefined') return;
+                LiveVoice.voiceName = this.settings.voice || null;
+                LiveVoice.say((s.kind === 'critical' ? 'Safety. ' : '') + s.text, { urgent: s.kind === 'critical' });
+            } catch (e) { /* speaking is optional */ }
+        },
+
+        /**
+         * While it is speaking, the room mic hears it too. Its own words are dropped
+         * (true); someone else talking over it stops it so it can listen (false).
+         */
+        _heardOwnVoice(text, isFinal) {
+            if (typeof LiveVoice === 'undefined' || !LiveVoice.busy()) return false;
+            if (LiveVoice.isEcho(text)) return true;
+            const words = String(text || '').trim().split(/\s+/).filter(Boolean).length;
+            if (words >= (isFinal ? 1 : 2)) LiveVoice.stop();
+            return false;
         },
 
         // ── rendering ────────────────────────────────────────────────────
@@ -669,15 +700,16 @@
             v.mode = this.settings.mode;
             v.settings = this.settings;
             v.health = this._healthView();
+            v.canSpeak = typeof LiveVoice !== 'undefined' && LiveVoice.supported();
+            v.voices = v.canSpeak ? LiveVoice.voices() : [];
             v.replay = this._replay ? { active: true, finished: !this._replay.playing && this._replay.pos >= this._replay.script.duration_s, playing: this._replay.playing, t: this._replay.playing ? Math.min(this._replay.script.duration_s, ((Date.now() - this._replay.startedWall) * this._replay.speed) / 1000) : this._replay.pos, duration: this._replay.script.duration_s, title: DEMO.title, speed: this._replay.speed } : null;
             try {
                 if (q.has('head')) LivePanel.renderHead(Object.assign({}, v, { status: this._statusView() }));
                 if (q.has('replay')) LivePanel.renderReplay(v);
                 if (q.has('alerts')) LivePanel.renderAlerts(v);
                 if (q.has('take')) LivePanel.renderTake(v);
-                if (q.has('said')) LivePanel.renderSaid(v);
+                if (q.has('said') || q.has('transcript')) LivePanel.renderConversation(v);
                 if (q.has('tracking')) LivePanel.renderTracking(v);
-                if (q.has('transcript')) LivePanel.renderTranscript(v);
                 if (q.has('log')) LivePanel.renderLog(v);
                 if (q.has('settings')) LivePanel.renderSettings(v);
             } catch (e) { console.warn('Live Coworker render:', e); }

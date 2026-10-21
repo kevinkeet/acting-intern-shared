@@ -9883,13 +9883,13 @@ window.updateAIFromRefresh = function(response) {
         if (typeof DemoMode !== 'undefined' && DemoMode.isActive && DemoMode.isActive()) return;
         if (window.__liveCoworkerLoading) return;
         window.__liveCoworkerLoading = true;
-        const LIVE_V = 'L3';
+        const LIVE_V = 'L4';
         const q = '?v=' + (window.__CACHE_V || '') + '-' + LIVE_V;
         const css = document.createElement('link');
         css.rel = 'stylesheet';
         css.href = 'css/live-coworker.css' + q;
         document.head.appendChild(css);
-        ['live-transport', 'live-chart', 'live-memory', 'live-prompts', 'live-core', 'live-panel', 'live-app'].forEach(function (name) {
+        ['live-transport', 'live-chart', 'live-memory', 'live-prompts', 'live-core', 'live-voice', 'live-panel', 'live-app'].forEach(function (name) {
             const s = document.createElement('script');
             s.src = 'js/live/' + name + '.js' + q;
             s.async = false;

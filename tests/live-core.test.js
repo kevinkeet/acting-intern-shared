@@ -109,11 +109,15 @@ const manualClock = () => {
             if (lane === 'answer') return reply('Potassium 4.46 on 1/11/2026.');
             return reply(JSON.stringify(TAKE()));
         });
-        const cw = LiveCore.createCoworker({ transport: t, chart, clock: manualClock() });
+        const clock = manualClock();
+        const cw = LiveCore.createCoworker({ transport: t, chart, clock });
         const said = [];
         cw.on('say', (s) => said.push(s));
         cw.start({ skipPrime: true });
         cw.hear({ speaker: 'doctor', text: 'Coworker, what was his last potassium?' });
+        await cw.idle();
+        assert.strictEqual(said.length, 0, 'waits a beat in case the doctor keeps going');
+        clock.advance(1000);
         await cw.idle();
         assert.strictEqual(said.length, 1);
         assert.strictEqual(said[0].kind, 'answer');
@@ -123,6 +127,43 @@ const manualClock = () => {
         assert.match(ans.body.messages[0].content[0].text, /"What was his last potassium\?"/);
         assert.deepStrictEqual(ans.body.tool_choice, { type: 'auto' });
         cw.stop();
+    });
+
+    const wakeRun = async (pieces) => {
+        const t = fakeTransport((lane) => (lane === 'answer' ? reply('An answer.') : reply(JSON.stringify(lane === 'ear' ? EMPTY_EAR : TAKE()))));
+        const clock = manualClock();
+        const cw = LiveCore.createCoworker({ transport: t, chart, clock });
+        const said = [];
+        cw.on('say', (s) => said.push(s));
+        cw.start({ skipPrime: true });
+        const asked = () => t.log.filter((x) => x.lane === 'answer').map((x) => (x.body.messages[0].content[0].text.match(/just asked you: "([^"]*)"/) || [])[1]);
+        const seen = [];
+        for (const [gapMs, speaker, text] of pieces) {
+            clock.advance(gapMs);
+            await cw.idle();
+            seen.push(asked().length);
+            cw.hear({ speaker, text });
+            await cw.idle();
+        }
+        clock.advance(5000);
+        await cw.idle();
+        cw.stop();
+        return { asked: asked(), seen, said };
+    };
+
+    await check('"Coworker, um..." waits for the rest of the question, then asks it once, without the filler', async () => {
+        const r = await wakeRun([[0, 'doctor', 'Coworker, um,'], [1500, 'doctor', 'what was his, uh, last potassium?']]);
+        assert.deepStrictEqual(r.asked, ['What was his last potassium?']);
+        assert.deepStrictEqual(r.seen, [0, 0], 'nothing asked before the question was finished');
+    });
+
+    await check('a question that trails off ("what about his...") waits for more; a wake word alone asks nothing', async () => {
+        const r = await wakeRun([[0, 'doctor', 'Coworker, what about his'], [2500, 'doctor', 'kidney function lately?']]);
+        assert.deepStrictEqual(r.asked, ['What about his kidney function lately?']);
+        const r2 = await wakeRun([[0, 'doctor', 'Coworker, um']]);
+        assert.deepStrictEqual(r2.asked, []);
+        const r3 = await wakeRun([[0, 'doctor', 'Coworker, thoughts?']]);
+        assert.deepStrictEqual(r3.asked, ['Thoughts?'], 'a short question that ends with a question mark is fine');
     });
 
     await check('a question the ear catches without a wake word is answered', async () => {
