@@ -12,7 +12,7 @@
 (function (root) {
     'use strict';
 
-    const PROMPT_VERSION = 'live-v6';
+    const PROMPT_VERSION = 'live-v8';
 
     // ── Ear (Haiku): fast bookkeeping on every utterance ──────────────────
     const EAR_SYSTEM = [
@@ -162,7 +162,7 @@
 
     const TASK_PRIME = [
         'TASK: The encounter is about to start. Prepare before the doctor walks in.',
-        '- take: your take on this patient from the chart: who he is, what is active, what matters most for today.',
+        '- take: your take on this patient from the chart: who he is, what is active, what matters most for today. Concerns are glanceable phrases of 12 words or fewer.',
         '- watch: up to 8 tripwires for the ear, for safety only: an order or plan that would be dangerous for this patient (name the drugs or classes), a result or finding that would change urgency. Not routine management choices such as diuretic dosing. Each has the alert you would give if it happens. Prefer chart-specific traps over generic ones.',
         '- say: should_say false (nobody is in the room yet).',
         'Use short topic and watch ids in kebab-case (for example "ace-angioedema", "k-trend").',
@@ -170,7 +170,7 @@
 
     const TASK_UPDATE = [
         'TASK: Update your take with everything so far, refresh the watch list, and decide whether anything needs saying now.',
-        '- take.one_liner (25 words or fewer), take.assessment (45 or fewer, aligned with the doctor\'s framing), take.concerns (most important first, at most 5, keep topic ids stable across updates), take.next (at most 4 short items), take.doctor_view (how the doctor sees it, a few words, "" if unknown), take.differs (where you differ and why, or "").',
+        '- take.one_liner (25 words or fewer), take.assessment (45 or fewer, aligned with the doctor\'s framing), take.concerns (most important first, at most 5, each a glanceable phrase of 12 words or fewer with the key number, keep topic ids stable across updates), take.next (at most 4 short items), take.doctor_view (how the doctor sees it, a few words, "" if unknown), take.differs (where you differ and why, or "").',
         '- watch: at most 8 safety tripwires (dangerous orders or plans, urgent findings; not routine management choices); keep the ones still relevant, drop those that no longer apply, add new ones the conversation suggests.',
         '- say: follow the speaking rules for the current mode. should_say false unless a critical item (any mode) or, in Lead, an important insight is not yet said or addressed.',
     ].join('\n');
@@ -184,10 +184,11 @@
         }
         return [
             'TASK: The ear flagged the new lines as possibly critical: "' + reason + '".',
-            'Decide what to do and write the remark you would make (25 words or fewer) with a short why:',
+            'Decide what to do and write the remark you would make (25 words or fewer). why is one plain sentence the doctor can read under "Why?": the chart fact or reasoning behind the remark, not notes about your decision.',
             '- "say" now for an order or plan that is dangerous for this patient (do not wait on those), or for a red flag or critical result the doctor has already heard and moved past or dismissed.',
             '- "wait" for a red flag or worrying result that was just raised and the doctor has not yet had a turn to respond: you will look again after the doctor\'s next words.',
             '- "quiet" if it is not a real safety issue for this patient, it is the reason for the visit, the doctor is already working on it, or it was already said or addressed. Then severity "none".',
+            'severity "critical" means likely serious harm to this patient soon if things go ahead unchanged (a drug he must not get, a dangerous dose, a missed emergency). A precaution or refinement to a reasonable plan is "important", even when it is wise.',
         ].join('\n');
     }
 

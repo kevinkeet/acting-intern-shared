@@ -44,7 +44,7 @@ const opt = {
     memory: argv.memory || 'auto',
     judge: !argv['no-judge'],
     until: argv.until || null,
-    label: argv.label || '',
+    label: argv.label || (argv.dry ? 'dry' : ''),
     fast: !!argv.fast,
     effort: argv.effort ? JSON.parse(argv.effort) : null,
     config: argv.config ? JSON.parse(argv.config) : null,
@@ -145,6 +145,7 @@ async function main() {
     const wall0 = performance.now();
     const fedAt = {};          // script line id -> wall time it was heard
     const toScript = {};       // engine line id (L7) -> script line id (U7)
+    const fedWall = {};        // script line id -> ms after the run started (for latency per expected item)
     const scriptNow = () => (stepMode ? vclock.now() / 1000 : ((performance.now() - runStart) / 1000) * opt.speed);
     let runStart = performance.now();
     const said = [], events = [];
@@ -154,6 +155,7 @@ async function main() {
         const cue = s.cueLine ? (toScript[s.cueLine] || s.cueLine) : null;
         const cueWall = cue && fedAt[cue];
         const rec = Object.assign({}, s, {
+            wallAt: Math.round(performance.now() - wall0),
             cueLine: cue,
             scriptT: +scriptNow().toFixed(1),
             wallLatencyMs: cueWall ? Math.round(performance.now() - cueWall) : null,
@@ -190,6 +192,7 @@ async function main() {
             if (wait > 0) await sleep(wait);
         }
         fedAt[line.id] = performance.now();
+        fedWall[line.id] = Math.round(fedAt[line.id] - wall0);
         log(line.id + ' ' + line.speaker.toUpperCase() + ': ' + line.text);
         const heard = cw.hear({ speaker: line.speaker === 'doctor' ? 'doctor' : line.speaker === 'patient' ? 'patient' : 'other', text: (line.speaker === 'wife' ? '(wife) ' : line.speaker === 'nurse' ? '(nurse) ' : '') + line.text });
         if (heard) toScript[heard.id] = line.id;
@@ -203,7 +206,7 @@ async function main() {
 
     const run = {
         script: script.id, at: new Date().toISOString(), config: { brain: opt.brain, mode: opt.mode, pace: opt.pace, speed: opt.speed, memory: memorySource, fast: opt.fast, prompts: LivePrompts.PROMPT_VERSION, effort: cw.cfg.effort },
-        said, calls: cw.calls, watchAtStart, finalTake: cw.wm.take, finalWatch: cw.wm.watch, facts: cw.wm.facts, thinking: cw.wm.thinking, plan: cw.wm.plan, held: cw.wm.held, events,
+        said, fedWall, calls: cw.calls, watchAtStart, finalTake: cw.wm.take, finalWatch: cw.wm.watch, facts: cw.wm.facts, thinking: cw.wm.thinking, plan: cw.wm.plan, held: cw.wm.held, events,
         wallSeconds: Math.round((performance.now() - wall0) / 1000),
     };
     run.config.mode = opt.mode;

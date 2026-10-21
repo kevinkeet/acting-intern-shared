@@ -29,9 +29,9 @@
         effort: { ear: 'low', answer: 'low', verify: 'low', update: 'low', prime: 'medium', helper: 'medium' },
         maxTokens: { ear: 2000, answer: 6000, verify: 3000, update: 9000, prime: 9000, helper: 3000 },
         earThinking: 'disabled',      // Haiku 5.5 accepts disabled at low..high effort
-        heartbeatMs: 60000,           // think at least this often while things change
+        heartbeatMs: 90000,           // refresh the take this often while things change
         quickLookMs: 20000,           // sooner after something "worth a look"
-        minUpdateGapMs: 45000,        // but never two take updates closer than this (cost)
+        minUpdateGapMs: 60000,        // but never two take updates closer than this (cost)
         insightGapMs: 120000,         // Lead: at most one unprompted insight per 2 minutes
         repeatWindowMs: 15 * 60000,   // never repeat a topic within this window
         recentLines: 12,              // verbatim lines the ear sees as context
@@ -506,7 +506,7 @@
             const beat = () => {
                 heartbeatTimer = clock.setTimeout(() => {
                     if (!running) return;
-                    if (dirtySince != null) update('heartbeat');
+                    if (dirtySince != null && elapsed() - lastUpdateAt >= cfg.minUpdateGapMs) update('heartbeat');
                     beat();
                 }, cfg.heartbeatMs);
             };
@@ -556,7 +556,7 @@
             })().catch(() => { dirtySince = dirtySince == null ? seenUpTo : dirtySince; })
                 .finally(() => {
                     updateBusy = false;
-                    if (updateAgain) { updateAgain = false; update('catch-up'); }
+                    if (updateAgain) { updateAgain = false; scheduleQuickLook(); }
                 });
             return track(p);
         }

@@ -148,6 +148,8 @@
 .lc-take-more { margin-top: 8px; display: grid; gap: 8px; }
 .lc-concerns, .lc-next { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 3px; }
 .lc-concerns li { display: grid; grid-template-columns: 10px 1fr; gap: 6px; align-items: baseline; }
+.lc-concerns li > span:last-child { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.lc-take[data-open="true"] .lc-concerns li > span:last-child { -webkit-line-clamp: unset; }
 .lc-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--lc-ink-3); transform: translateY(-1px); }
 .lc-dot.critical { background: var(--lc-red); }
 .lc-dot.important { background: var(--lc-amber); }

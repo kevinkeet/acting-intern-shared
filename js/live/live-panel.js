@@ -252,7 +252,7 @@
                     : '<p class="lc-take-empty">No take yet. It forms as soon as I read the chart. <button type="button" class="lc-btn lc-btn-quiet" data-act="prime">Read it now</button></p>');
                 return;
             }
-            const concerns = (t.concerns || []).slice(0, 4).map((c) => '<li><span class="lc-dot ' + esc(c.severity) + '" title="' + esc(c.severity) + '"></span><span>' + esc(c.text) + '</span></li>').join('');
+            const concerns = (t.concerns || []).slice(0, 4).map((c) => '<li><span class="lc-dot ' + esc(c.severity) + '" title="' + esc(c.severity) + '"></span><span title="' + esc(c.text) + '">' + esc(c.text) + '</span></li>').join('');
             const next = (t.next || []).map((x) => '<li>' + esc(x) + '</li>').join('');
             const differs = t.differs ? '<p class="lc-differs"><b>Where I differ:</b> ' + esc(t.differs) + '</p>' : '';
             // Follow mode, or a safety alert waiting: one line only (more on request).
@@ -390,7 +390,10 @@
                 return '<div class="' + (c.ok ? '' : 'is-err') + '">' + fmt(c.at) + ' · ' + esc(c.lane) + ' · ' + esc(String(c.model).replace('claude-', '')) + ' · '
                     + (c.ok ? secs(c.ms.total) + ' · ' + Math.round(inTok / 100) / 10 + 'k in (' + (inTok ? Math.round((cached / inTok) * 100) : 0) + '% cached) · ' + (u.output_tokens || 0) + ' out · $' + (c.cost || 0).toFixed(4) + (c.fellBack ? ' · fallback ' + esc(c.servedBy) : '') + (c.refusal ? ' · declined (' + esc(c.refusal) + ')' : '') : 'failed: ' + esc(c.error)) + '</div>';
             }).join('');
-            el.innerHTML = '<table class="lc-table"><thead><tr><th>Lane</th><th>Calls</th><th>Median</th><th>Cost</th></tr></thead><tbody>' + rows
+            const DEC = { say: 'Said', wait: 'Waited', quiet: 'Kept quiet', suppressed: 'Held back' };
+            const decisions = (v.decisions || []).slice(-12).reverse().map((d) => '<li><span class="lc-tag ' + (d.decision === 'say' ? 'critical' : '') + '">' + esc(DEC[d.decision] || d.decision) + (d.followUp ? ' (2nd look)' : '') + '</span><span><b>' + fmt(d.at) + '</b> ' + esc(String(d.reason).slice(0, 140)) + (d.why ? '<br><span class="lc-why">' + esc(String(d.why).slice(0, 200)) + '</span>' : '') + '</span></li>').join('');
+            el.innerHTML = (decisions ? '<div class="lc-group"><h4>Recent decisions</h4><ul>' + decisions + '</ul></div><div class="lc-group"><h4>Calls</h4></div>' : '')
+                + '<table class="lc-table"><thead><tr><th>Lane</th><th>Calls</th><th>Median</th><th>Cost</th></tr></thead><tbody>' + rows
                 + '<tr><td><b>Total</b></td><td><b>' + st.calls + '</b></td><td></td><td><b>$' + st.cost.toFixed(3) + '</b></td></tr></tbody></table>'
                 + '<div class="lc-calls">' + calls + '</div>'
                 + (v.memoryNote ? '<p class="lc-empty">' + esc(v.memoryNote) + '</p>' : '');

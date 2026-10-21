@@ -111,7 +111,8 @@ export function score(script, run, judged) {
         items.push({
             id: e.id, level: e.level, expected, hit: !!hit, late: late ? late.id : null,
             said: hit ? hit.id : null, text: hit ? hit.text : null,
-            latencyMs: hit ? hit.wallLatencyMs : null,
+            // Time from the expected item's own trigger line (not the remark's cue, which can be earlier).
+            latencyMs: hit ? (run.fedWall && run.fedWall[e.cue] != null && hit.wallAt != null ? Math.max(0, hit.wallAt - run.fedWall[e.cue]) : hit.wallLatencyMs) : null,
             scriptDelayS: hit ? Math.max(0, +(hit.scriptT - (cue.t + cue.dur)).toFixed(1)) : null,
         });
     }

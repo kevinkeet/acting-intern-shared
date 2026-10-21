@@ -248,6 +248,10 @@
                 this.request('said', 'alerts', 'transcript');
             });
             cw.on('held', () => { v.held = cw.wm.held.slice(); this.request('said'); });
+            // Decisions (for tuning, in the Log tab): every safety check's verdict, and what was held back.
+            const decide = (d) => { v.decisions = (v.decisions || []).concat([Object.assign({ at: cw.elapsed }, d)]).slice(-40); this.request('log'); };
+            cw.on('verified', (p) => decide({ decision: p.decision, followUp: p.followUp, reason: p.reason, why: (p.out && p.out.why) || '', text: (p.out && p.out.text) || '' }));
+            cw.on('suppressed', (p) => decide({ decision: 'suppressed', reason: p.reason || '', text: p.text || '', why: '' }));
             cw.on('call', () => { v.stats = cw.stats(); v.calls = cw.calls; this.request('log'); });
             cw.on('error', (e) => {
                 if (/prime|update/.test(e.lane)) { v.takeLoading = false; this.request('take'); }
