@@ -172,6 +172,45 @@ const manualClock = () => {
         cw.stop();
     });
 
+    await check('a tripwire and an alarm on the same line make ONE safety check', async () => {
+        const t = fakeTransport((lane) => {
+            if (lane === 'prime') return reply(JSON.stringify(TAKE()));
+            if (lane === 'ear') return reply(JSON.stringify(Object.assign({}, EMPTY_EAR, { watch_hits: ['pcn-anaphylaxis'], alarm: 'possible_critical', alarm_reason: 'Zosyn with penicillin allergy' })));
+            if (lane === 'verify') return reply(JSON.stringify({ should_say: true, severity: 'critical', topic: 'pcn', text: 'Hold the Zosyn: penicillin anaphylaxis.', why: '' }));
+            return reply(JSON.stringify(TAKE()));
+        });
+        const cw = LiveCore.createCoworker({ transport: t, chart, clock: manualClock() });
+        cw.start();
+        await cw.idle();
+        cw.hear({ speaker: 'doctor', text: 'Start Zosyn.' });
+        await cw.idle();
+        const v = t.log.filter((x) => x.lane === 'verify');
+        assert.strictEqual(v.length, 1);
+        assert.match(v[0].body.messages[0].content[0].text, /watch item "pcn-anaphylaxis" fired.*Zosyn with penicillin allergy/s);
+        cw.stop();
+    });
+
+    await check('same topic: a rephrase is suppressed, new and more urgent information gets through', async () => {
+        const texts = [
+            'Black stools with his 2023 ulcer bleed: possible upper GI bleed, check his hemoglobin.',
+            'His black stools and the 2023 ulcer bleed suggest a possible upper GI bleed; check hemoglobin.',
+            'INR 2.3 off warfarin plus hemoglobin down to 10.2: ask about leftover warfarin at home.',
+        ];
+        let i = 0;
+        const t = fakeTransport((lane) => {
+            if (lane === 'ear') return reply(JSON.stringify(Object.assign({}, EMPTY_EAR, { alarm: 'possible_critical', alarm_reason: 'bleeding' })));
+            if (lane === 'verify') return reply(JSON.stringify({ should_say: true, severity: 'critical', topic: 'gi-bleed', text: texts[i++], why: '' }));
+            return reply(JSON.stringify(TAKE()));
+        });
+        const cw = LiveCore.createCoworker({ transport: t, chart, clock: manualClock() });
+        const said = [];
+        cw.on('say', (s) => said.push(s));
+        cw.start({ skipPrime: true });
+        for (const line of ['My stools are black.', 'They have been black for days.', 'INR is 2.3.']) { cw.hear({ speaker: 'doctor', text: line }); await cw.idle(); }
+        assert.deepStrictEqual(said.map((s) => s.text), [texts[0], texts[2]]);
+        cw.stop();
+    });
+
     await check('insights: held in Abreast, spoken in Lead at most once per gap', async () => {
         const TEXTS = ['Consider amiodarone loading for rate control', 'His troponin needs a repeat in six hours', 'Dry weight was 97 kilograms in January notes', 'Ask about leftover warfarin tablets at home'];
         const insight = (topic, i) => reply(JSON.stringify(TAKE({ say: { should_say: true, kind: 'insight', topic, text: TEXTS[i % TEXTS.length], why: 'w' } })));

@@ -188,7 +188,7 @@
                 'PLAN AND ORDERS SAID:',
                 wm.plan.length ? wm.plan.map((x) => '- (' + x.kind + ') ' + x.text).join('\n') : '- (none yet)',
                 'YOUR CURRENT TAKE' + (take ? ' (from ' + mmss(take.t) + ')' : '') + ':',
-                take ? ['- ' + take.one_liner, '- ' + take.assessment].concat(take.concerns.map((c) => '- concern [' + c.topic + ', ' + c.severity + ']: ' + c.text)).join('\n') : '- (none yet)',
+                take ? ['- ' + take.one_liner, '- ' + take.assessment].concat((take.concerns || []).map((c) => '- concern [' + c.topic + ', ' + c.severity + ']: ' + c.text)).join('\n') : '- (none yet)',
                 'WATCH LIST:',
                 wm.watch.length ? wm.watch.map((w) => '- ' + w.id + ' (' + w.severity + '): ' + w.trigger).join('\n') : '- (empty)',
                 'ALREADY SAID (do not repeat):',
@@ -333,12 +333,14 @@
             if (out.to_coworker && out.question && !batch.some((l) => handledLines.has(l.id))) {
                 ask(out.question, { cueLine: lastLine.id, heardAt: lastLine.t, via: 'ear' });
             }
-            // Tripwires and alarms -> the brain decides whether to interrupt.
+            // Tripwires and alarms -> one safety check for these lines; the brain decides whether to interrupt.
+            const reasons = [];
             for (const id of out.watch_hits || []) {
                 const w = wm.watch.find((x) => x.id === id);
-                if (w) verify('watch item "' + w.id + '" fired: ' + w.trigger + ' (prepared alert: ' + w.alert + ')', lastLine, w.id);
+                if (w) reasons.push('watch item "' + w.id + '" fired: ' + w.trigger + ' (prepared alert: ' + w.alert + ')');
             }
-            if (out.alarm === 'possible_critical') verify(out.alarm_reason || 'possible safety issue', lastLine, 'alarm:' + normText(out.alarm_reason).slice(0, 40));
+            if (out.alarm === 'possible_critical') reasons.push(out.alarm_reason || 'possible safety issue');
+            if (reasons.length) verify(reasons.join('; '), lastLine, 'lines:' + batch.map((l) => l.id).join(','));
             if (out.worth_a_look) scheduleQuickLook();
         }
 
@@ -524,10 +526,13 @@
         }
 
         // ── speaking rules ───────────────────────────────────────────────
+        // A repeat is the same point again: nearly the same words, or the same
+        // topic without much new in it. A same-topic remark that says something
+        // substantially new (e.g. a lab result that makes a worry more urgent) passes.
         function alreadySaid(topic, text) {
             const now = elapsed();
             return wm.said.some((s) => s.kind !== 'answer' && now - s.t < cfg.repeatWindowMs
-                && ((topic && s.topic === topic) || overlap(s.text, text) >= 0.6));
+                && (overlap(s.text, text) >= 0.6 || (topic && s.topic === topic && overlap(s.text, text) >= 0.3)));
         }
 
         function consider(c) {
