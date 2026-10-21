@@ -527,7 +527,7 @@
                 check('fast', 'Opus fast mode', 'Up to 2.5× faster output at twice the price.', s.brain !== 'claude-opus-5-5'),
                 '</fieldset>',
                 '<fieldset><legend>Listening</legend>',
-                radio('source', 'room', 'Room mic', v.deepgram ? 'Tells speakers apart (doctor, patient, family).' : 'Not available: the server has no speech key, so the browser’s own recognition is used.'),
+                radio('source', 'room', 'Room mic', v.deepgram ? 'Medical speech model: tells speakers apart and listens for this patient’s drug names.' : 'Not available: the server has no speech key, so the browser’s own recognition is used.'),
                 radio('source', 'browser', 'Browser speech', 'No speaker labels; works without the server.'),
                 '</fieldset>',
                 '<fieldset><legend>When it speaks</legend>',

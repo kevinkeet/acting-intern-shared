@@ -11,6 +11,7 @@
 //   node tools/live/audio-run.mjs                        lab, Sonnet, Abreast (~11 min)
 //   node tools/live/audio-run.mjs --brain=opus --mode=lead
 //   node tools/live/audio-run.mjs --site=http://127.0.0.1:8787   (this checkout via the dev proxy)
+//   node tools/live/audio-run.mjs --mic=general     Deepgram's general model instead of the medical one
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -31,6 +32,7 @@ const script = JSON.parse(fs.readFileSync(SCRIPT, 'utf8'));
 const AUDIO = path.join(ROOT, argv.audio || ('tools/live/runs/audio/' + script.id));
 const brain = BRAINS[argv.brain] || argv.brain || 'claude-sonnet-5-5';
 const mode = argv.mode || 'abreast';
+const mic = argv.mic === 'general' ? 'general' : 'medical';
 const t0 = Date.now();
 const stamp = () => '[' + Math.round((Date.now() - t0) / 1000) + 's]';
 
@@ -52,7 +54,7 @@ async function main() {
     try {
         await page.goto(SITE + '/favicon.svg');
         await page.eval("localStorage.setItem('access-granted','gate'); localStorage.setItem('app-mode','assistant'); localStorage.setItem('ai-panel-collapsed','false'); localStorage.setItem('live-coworker', JSON.stringify({ brain: " + JSON.stringify(brain) + ", mode: " + JSON.stringify(mode) + ", source: 'room', chime: false, speakAloud: false, classic: false })); true");
-        await page.goto(SITE + '/?allmodes#/chart-review');
+        await page.goto(SITE + '/?allmodes' + (mic === 'general' ? '&livemic=general' : '') + '#/chart-review');
         if (!(await page.waitFor("typeof LiveApp !== 'undefined' && !!LiveApp.engine && !!LiveApp.chart && LiveApp.view.deepgram === true", 90000))) throw new Error('live coworker not ready (or no Deepgram on the server)');
         // Fresh encounter; wait for the chart read so the take exists before audio starts.
         await page.eval('LiveApp.newEncounter(); true');
@@ -60,7 +62,7 @@ async function main() {
         const eMic = await page.eval('LiveApp.engine.elapsed');
         await page.eval('LiveApp.startListening().then(() => true)');
         const micState = await page.eval('LiveApp.view.status.state');
-        console.log(stamp(), 'Listening (' + micState + '); audio ' + Math.round(timing.duration_s) + 's, brain ' + brain + ', ' + mode);
+        console.log(stamp(), 'Listening (' + micState + ', ' + mic + ' speech model); audio ' + Math.round(timing.duration_s) + 's, brain ' + brain + ', ' + mode);
         let lastLines = 0;
         const end = Date.now() + (timing.duration_s + 12) * 1000;
         while (Date.now() < end) {
@@ -92,14 +94,14 @@ async function main() {
         });
         // The scorer measures windows against the script's times; use the audio's.
         const audioScript = Object.assign({}, script, { lines: script.lines.map((l) => (lineEnd[l.id] ? Object.assign({}, l, { t: lineEnd[l.id].start, dur: lineEnd[l.id].end - lineEnd[l.id].start }) : l)) });
-        const run = { script: script.id, at: new Date().toISOString(), config: { brain, mode, pace: 'audio', memory: 'site' }, said, calls: d.calls, heard: d.lines, finalTake: d.wm.take, facts: d.wm.facts, thinking: d.wm.thinking, plan: d.wm.plan };
+        const run = { script: script.id, at: new Date().toISOString(), config: { brain, mode, pace: 'audio', memory: 'site', mic }, said, calls: d.calls, heard: d.lines, finalTake: d.wm.take, facts: d.wm.facts, thinking: d.wm.thinking, plan: d.wm.plan };
         const transport = LiveTransport.createTransport({ endpoint: SITE + '/api/claude-full' });
         const judged = argv['no-judge'] ? null : await judge(transport, audioScript, run).catch((e) => ({ out: null, error: e.message }));
         const metrics = score(audioScript, run, judged);
         run.metrics = metrics;
         run.judge = judged;
         const outDir = path.join(ROOT, 'tools/live/runs');
-        const name = run.at.replace(/[:.]/g, '-').slice(0, 19) + '-audio-' + brain.replace('claude-', '') + '-' + mode;
+        const name = run.at.replace(/[:.]/g, '-').slice(0, 19) + '-audio-' + mic + '-' + brain.replace('claude-', '') + '-' + mode;
         fs.writeFileSync(path.join(outDir, name + '.json'), JSON.stringify(run, null, 1));
         console.log('\nHeard ' + d.lines.length + ' lines (script has ' + script.lines.length + '). Speakers: ' + JSON.stringify(d.lines.reduce((m, l) => { m[l.speaker] = (m[l.speaker] || 0) + 1; return m; }, {})));
         console.log(printScore(metrics, name));

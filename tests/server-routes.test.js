@@ -158,5 +158,68 @@ const check = async (name, fn) => {
     });
     await s.stop();
 
+    // Deepgram relay (lab, 21 Oct 2026): a browser may ask for the medical model and
+    // pass key terms; a caller that passes nothing gets the same connection as before.
+    // A fake Deepgram on this machine records what the server asked for.
+    const WS = require('ws');
+    const dgPort = await freePort();
+    const upstream = [];
+    const fakeDeepgram = new WS.Server({ port: dgPort, host: '127.0.0.1' });
+    fakeDeepgram.on('connection', (sock, req) => {
+        const seen = { url: new URL(req.url, 'http://deepgram.local'), auth: req.headers.authorization, audioBytes: 0 };
+        upstream.push(seen);
+        sock.on('message', (data, isBinary) => {
+            if (!isBinary) return;
+            seen.audioBytes += data.length;
+            sock.send(JSON.stringify({ type: 'Results', channel: { alternatives: [{ transcript: 'heard ' + data.length + ' bytes' }] } }));
+        });
+    });
+    const DG_KEY = 'dg-test-not-a-real-key';
+    s = await startServer({ DEEPGRAM_API_KEY: DG_KEY, DEEPGRAM_LISTEN_URL: 'ws://127.0.0.1:' + dgPort + '/v1/listen' });
+    const OLD_PARAMS = 'model=nova-3&diarize=true&punctuate=true&interim_results=true&utterance_end_ms=1500&encoding=linear16&sample_rate=16000&channels=1';
+    // Open the relay, wait for the server's upstream connection, send a little audio, read the reply.
+    const relay = (query) => new Promise((resolve, reject) => {
+        const before = upstream.length;
+        const c = new WS(s.base.replace('http', 'ws') + '/ws/transcribe' + (query || ''));
+        const timer = setTimeout(() => { c.terminate(); reject(new Error('relay timed out')); }, 5000);
+        c.on('error', (e) => { clearTimeout(timer); reject(e); });
+        c.on('open', async () => {
+            await waitFor(() => upstream.length > before, 3000);
+            await new Promise((r) => setTimeout(r, 150));   // the server's side of the upstream is open too
+            c.send(Buffer.alloc(320), { binary: true });
+        });
+        c.on('message', (data) => { clearTimeout(timer); c.close(); resolve({ seen: upstream[upstream.length - 1], reply: JSON.parse(data.toString()) }); });
+    });
+    await check('Deepgram relay: no options connects exactly as before (classic dictation and the scribe unchanged)', async () => {
+        const { seen, reply } = await relay('');
+        assert.strictEqual(seen.url.pathname, '/v1/listen');
+        assert.strictEqual(seen.url.search.slice(1), OLD_PARAMS);
+        assert.strictEqual(seen.auth, 'Token ' + DG_KEY);
+        assert.strictEqual(seen.audioBytes, 320);
+        assert.strictEqual(reply.channel.alternatives[0].transcript, 'heard 320 bytes');
+    });
+    await check('Deepgram relay: model=medical and key terms reach Deepgram as nova-3-medical with keyterm hints', async () => {
+        const { seen } = await relay('?model=medical&keyterm=Entresto&keyterm=sacubitril%20valsartan&keyterm=piperacillin-tazobactam&keyterm=Zosyn');
+        assert.strictEqual(seen.url.searchParams.get('model'), 'nova-3-medical');
+        assert.deepStrictEqual(seen.url.searchParams.getAll('keyterm'), ['Entresto', 'sacubitril valsartan', 'piperacillin-tazobactam', 'Zosyn']);
+        for (const p of ['diarize=true', 'interim_results=true', 'utterance_end_ms=1500', 'encoding=linear16', 'sample_rate=16000']) assert.ok(seen.url.search.includes(p), p);
+        assert.match(s.output(), /browser connected \(nova-3-medical, 4 key terms\)/);
+    });
+    await check('Deepgram relay: unknown models and bad or excess key terms are dropped', async () => {
+        const many = Array.from({ length: 70 }, (_, i) => 'keyterm=drugname' + i).join('&');
+        const { seen } = await relay('?model=nova-2&keyterm=%3Cscript%3E&keyterm=x&keyterm=Zosyn&keyterm=Zosyn&keyterm=' + 'a'.repeat(60) + '&' + many);
+        assert.strictEqual(seen.url.searchParams.get('model'), 'nova-3');
+        const terms = seen.url.searchParams.getAll('keyterm');
+        assert.strictEqual(terms[0], 'Zosyn');
+        assert.strictEqual(terms.filter((t) => t === 'Zosyn').length, 1);
+        assert.ok(!terms.some((t) => /[<>]/.test(t) || t === 'x' || t.length > 40), terms.join(','));
+        assert.ok(terms.length <= 50 && terms.join('').length <= 900, terms.length + ' terms');
+    });
+    await check('Deepgram relay: the server log never shows the speech key', () => {
+        assert.ok(!s.output().includes(DG_KEY));
+    });
+    await s.stop();
+    await new Promise((r) => fakeDeepgram.close(r));
+
     process.exit(fail ? 1 : 0);
 })().catch((e) => { console.log('FAIL  server test crashed -> ' + e.message); process.exit(1); });

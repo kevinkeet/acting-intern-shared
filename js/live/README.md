@@ -35,6 +35,17 @@ meds, problems, labs, vitals, encounters, then the AI long-term memory, about
 memory helper reads the whole Deep Learn record (about 319K tokens for PAT001,
 cached; thinking off, 2 to 5 s per question) and only when the brain asks.
 
+## The room mic
+
+The live coworker's mic asks the server's Deepgram relay for the medical model
+(`nova-3-medical`) and passes up to 50 key terms: the patient's medicines (brand
+and generic), allergies, common inpatient drugs and a few clinical words
+(`LiveChart.speechTerms()`), so "Zosyn" and "pneumonia" are heard as such. The
+relay accepts only `model=medical` and well-formed `keyterm=` values; callers
+that pass nothing (classic dictation, the scribe) connect as before.
+`?livemic=general` (or `audio-run.mjs --mic=general`) uses the general model for
+side-by-side tests.
+
 ## The panel
 
 - Header: mic, what it is doing ("Listening · 2:14", "heard 3s ago"), mode

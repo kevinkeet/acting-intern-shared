@@ -25,9 +25,12 @@ const DeepgramClient = {
     onStateChange: null,   // (state: 'connecting'|'connected'|'disconnected') => {}
 
     /**
-     * Start audio capture and WebSocket connection
+     * Start audio capture and WebSocket connection.
+     * Optional opts (the live coworker uses them; other callers pass nothing):
+     *   model: 'medical' asks the relay for Deepgram's medical model
+     *   keyterms: words to listen for, e.g. the patient's drug names
      */
-    async start() {
+    async start(opts) {
         if (this._active) return;
 
         this.speakerMap = {};
@@ -70,7 +73,10 @@ const DeepgramClient = {
 
             // Open WebSocket to server relay
             const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-            const wsUrl = `${wsProtocol}//${window.location.host}/ws/transcribe`;
+            const query = new URLSearchParams();
+            if (opts && opts.model) query.set('model', opts.model);
+            for (const term of (opts && opts.keyterms) || []) query.append('keyterm', term);
+            const wsUrl = `${wsProtocol}//${window.location.host}/ws/transcribe` + (query.toString() ? '?' + query.toString() : '');
 
             this._ws = new WebSocket(wsUrl);
 

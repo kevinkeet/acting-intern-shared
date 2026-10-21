@@ -260,10 +260,53 @@
             return notes.find((n) => n.id === id) || null;
         };
 
+        /**
+         * Words the speech recognizer should listen for (Deepgram key terms): this
+         * patient's medicines (brand and generic), allergies, common inpatient drugs
+         * and a few clinical words, then past medicines. Brands keep their capitals,
+         * generic names are lowercase. At most `max` terms and 900 characters (the
+         * server enforces the same caps; Deepgram allows 500 tokens in all).
+         */
+        chart.speechTerms = function (max) {
+            const limit = Math.min(max || 50, 50);
+            const out = [];
+            let chars = 0;
+            const add = (raw, keepCase) => {
+                let t = String(raw || '').replace(/\(.*?\)/g, ' ').replace(/\//g, ' ').replace(SALT, '').replace(/\s+drugs?$/i, '').replace(/\s+/g, ' ').trim();
+                if (!/^[A-Za-z0-9][A-Za-z0-9 .'-]{1,39}$/.test(t) || SKIP_TERMS.has(t.toLowerCase())) return;
+                if (!keepCase) t = t.toLowerCase();
+                if (out.some((x) => x.toLowerCase() === t.toLowerCase()) || out.length >= limit || chars + t.length > 900) return;
+                out.push(t);
+                chars += t.length;
+            };
+            const brandAndGeneric = (m) => {
+                const name = String(m.name || '').replace(SALT, '').trim();
+                const generic = String(m.genericName || '').replace(SALT, '').trim();
+                const isBrand = generic && name.toLowerCase() !== generic.toLowerCase();
+                add(name, isBrand);
+                if (isBrand) add(generic, false);
+            };
+            for (const m of chart.meds) brandAndGeneric(m);
+            for (const a of chart.allergies) add(a.substance, false);
+            for (const t of INPATIENT_TERMS) add(t, /^[A-Z]/.test(t));
+            for (const m of chart.pastMeds) brandAndGeneric(m);
+            return out;
+        };
+
         return chart;
     }
 
-    const api = { create, flagFor, noteText, LAB_SYNONYMS };
+    // Salt and release suffixes that are never spoken ("Metoprolol Succinate" -> "Metoprolol").
+    const SALT = /\s+(hcl|hydrochloride|sodium|potassium|calcium|succinate|tartrate|besylate|maleate|mesylate|er|xl|sr)$/i;
+    const SKIP_TERMS = new Set(['acetylsalicylic acid', 'cholecalciferol']);
+    // Drugs and words often said at an admission (brands capitalized). The live-audio test
+    // heard "Zosyn" as nothing and "pneumonia" as "ammonia" with the general model.
+    const INPATIENT_TERMS = ['Zosyn', 'piperacillin-tazobactam', 'vancomycin', 'cefepime', 'ceftriaxone', 'azithromycin',
+        'heparin', 'enoxaparin', 'apixaban', 'diltiazem', 'amiodarone', 'digoxin', 'metoprolol', 'Lasix', 'bumetanide',
+        'potassium chloride', 'nitroglycerin', 'naproxen', 'Aleve', 'ibuprofen', 'pneumonia', 'melena', 'troponin',
+        'BNP', 'INR', 'creatinine', 'TIA'];
+
+    const api = { create, flagFor, noteText, LAB_SYNONYMS, INPATIENT_TERMS };
     if (typeof module !== 'undefined' && module.exports) module.exports = api;
     else root.LiveChart = api;
 })(typeof window !== 'undefined' ? window : globalThis);

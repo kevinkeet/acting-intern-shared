@@ -161,6 +161,29 @@ app.post('/api/claude-full', async (req, res) => {
 // --- Deepgram WebSocket relay ---
 const wss = new WebSocket.Server({ server, path: '/ws/transcribe' });
 
+// A browser may ask for Deepgram's medical model and pass vocabulary hints (drug
+// names) in the URL: /ws/transcribe?model=medical&keyterm=Entresto&keyterm=Zosyn.
+// Anything else is ignored, so a caller that passes nothing gets exactly the
+// connection it always got. Deepgram allows 500 tokens of key terms in all; the
+// caps below stay well under that. (DEEPGRAM_LISTEN_URL exists for the tests.)
+const DEEPGRAM_LISTEN_URL = process.env.DEEPGRAM_LISTEN_URL || 'wss://api.deepgram.com/v1/listen';
+const DEEPGRAM_MODELS = { medical: 'nova-3-medical' };
+function deepgramOptions(reqUrl) {
+    let q;
+    try { q = new URL(reqUrl || '/', 'http://relay.local').searchParams; } catch (e) { q = new URLSearchParams(); }
+    const model = DEEPGRAM_MODELS[q.get('model')] || 'nova-3';
+    const keyterms = [];
+    let chars = 0;
+    for (const raw of q.getAll('keyterm')) {
+        const term = String(raw).replace(/\s+/g, ' ').trim();
+        if (!/^[A-Za-z0-9][A-Za-z0-9 .'\/-]{1,39}$/.test(term) || keyterms.includes(term)) continue;
+        if (keyterms.length >= 50 || chars + term.length > 900) break;
+        keyterms.push(term);
+        chars += term.length;
+    }
+    return { model, keyterms };
+}
+
 wss.on('connection', (browserWs, req) => {
     const dgKey = process.env.DEEPGRAM_API_KEY;
     if (!dgKey) {
@@ -168,11 +191,12 @@ wss.on('connection', (browserWs, req) => {
         return;
     }
 
-    console.log('🎙️ Deepgram relay: browser connected');
+    const { model, keyterms } = deepgramOptions(req.url);
+    console.log('🎙️ Deepgram relay: browser connected (' + model + (keyterms.length ? ', ' + keyterms.length + ' key terms' : '') + ')');
 
     // Open upstream connection to Deepgram
-    const dgUrl = 'wss://api.deepgram.com/v1/listen?' + [
-        'model=nova-3',
+    const dgUrl = DEEPGRAM_LISTEN_URL + '?' + [
+        'model=' + model,
         'diarize=true',
         'punctuate=true',
         'interim_results=true',
@@ -180,7 +204,7 @@ wss.on('connection', (browserWs, req) => {
         'encoding=linear16',
         'sample_rate=16000',
         'channels=1'
-    ].join('&');
+    ].concat(keyterms.map((term) => 'keyterm=' + encodeURIComponent(term))).join('&');
 
     const dgWs = new WebSocket(dgUrl, {
         headers: { 'Authorization': `Token ${dgKey}` }

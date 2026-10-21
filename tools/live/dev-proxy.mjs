@@ -56,8 +56,9 @@ const server = http.createServer((req, res) => {
 
 // Audio relay: browser <-> lab /ws/transcribe
 const wss = new WebSocket.Server({ server, path: '/ws/transcribe' });
-wss.on('connection', (browser) => {
-    const upstream = new WebSocket('wss://' + LAB.host + '/ws/transcribe');
+wss.on('connection', (browser, req) => {
+    // Keep the query (speech model and key terms) on the way to the lab.
+    const upstream = new WebSocket('wss://' + LAB.host + (req.url && req.url.startsWith('/ws/transcribe') ? req.url : '/ws/transcribe'));
     const queue = [];
     upstream.on('open', () => { while (queue.length) upstream.send(queue.shift()); });
     browser.on('message', (data, isBinary) => {

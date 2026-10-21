@@ -437,9 +437,13 @@
                 }
             };
             const restore = () => { DG.onTranscript = prev.onTranscript; DG.onStateChange = prev.onStateChange; };
-            this._mic = { kind: 'room', stop: () => { flush(); restore(); DG.stop(); } };
+            // Deepgram's medical model, listening for this patient's drug names
+            // (?livemic=general keeps the general model, for side-by-side tests).
+            const general = /[?&]livemic=general\b/.test(location.search);
+            const mic = general ? {} : { model: 'medical', keyterms: this.chart && this.chart.speechTerms ? this.chart.speechTerms() : [] };
+            this._mic = { kind: 'room', model: general ? 'general' : 'medical', stop: () => { flush(); restore(); DG.stop(); } };
             this._status('connecting');
-            await DG.start();
+            await DG.start(mic);
             if (this._mic) this._status('listening');
         },
 
