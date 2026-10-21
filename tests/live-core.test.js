@@ -211,6 +211,26 @@ const manualClock = () => {
         cw.stop();
     });
 
+    await check('an order placed in the EHR is logged, planned and safety-checked (no ear call)', async () => {
+        const t = fakeTransport((lane) => {
+            if (lane === 'verify') return reply(JSON.stringify({ should_say: true, severity: 'critical', topic: 'pcn', text: 'Cancel the Zosyn: penicillin anaphylaxis in 1985.', why: '' }));
+            return reply(JSON.stringify(TAKE()));
+        });
+        const cw = LiveCore.createCoworker({ transport: t, chart, clock: manualClock() });
+        const said = [];
+        cw.on('say', (s) => said.push(s));
+        cw.start({ skipPrime: true });
+        const line = cw.order({ name: 'Piperacillin-tazobactam', details: '4.5 g, IV, q6h', priority: 'STAT' });
+        await cw.idle();
+        assert.strictEqual(line.speaker, 'ehr');
+        assert.match(line.text, /Piperacillin-tazobactam 4\.5 g, IV, q6h STAT/);
+        assert.strictEqual(cw.wm.plan[0].kind, 'order');
+        assert.strictEqual(t.log.filter((x) => x.lane === 'ear').length, 0);
+        assert.match(t.log.find((x) => x.lane === 'verify').body.messages[0].content[0].text, /new order was just placed in the EHR: Piperacillin/);
+        assert.strictEqual(said.length, 1);
+        cw.stop();
+    });
+
     await check('insights: held in Abreast, spoken in Lead at most once per gap', async () => {
         const TEXTS = ['Consider amiodarone loading for rate control', 'His troponin needs a repeat in six hours', 'Dry weight was 97 kilograms in January notes', 'Ask about leftover warfarin tablets at home'];
         const insight = (topic, i) => reply(JSON.stringify(TAKE({ say: { should_say: true, kind: 'insight', topic, text: TEXTS[i % TEXTS.length], why: 'w' } })));

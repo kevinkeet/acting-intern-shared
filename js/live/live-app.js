@@ -17,7 +17,7 @@
     const MODE_TO_OLD = { follow: 'reactive', abreast: 'active', lead: 'proactive' };
     const OLD_TO_MODE = { reactive: 'follow', active: 'abreast', proactive: 'lead' };
     const BRAIN_LABEL = { 'claude-sonnet-5-5': 'Sonnet 5.5', 'claude-opus-5-5': 'Opus 5.5' };
-    const SPEAKER_LABEL = { doctor: 'Doctor', patient: 'Patient', other: 'Other', unknown: 'Voice', wife: 'Wife', nurse: 'Nurse' };
+    const SPEAKER_LABEL = { doctor: 'Doctor', patient: 'Patient', other: 'Other', unknown: 'Voice', wife: 'Wife', nurse: 'Nurse', ehr: 'Order' };
 
     const LiveApp = {
         enabled: false,
@@ -85,6 +85,23 @@
                     return orig.apply(this, arguments);
                 };
                 AIPanel._liveWrapped = true;
+            }
+            // Orders placed in the EHR (typed or dictated) get the same safety check
+            // as spoken ones. trackOrder runs only for orders that actually go through.
+            if (typeof SimulationScoreTracker !== 'undefined' && SimulationScoreTracker.trackOrder && !SimulationScoreTracker._liveWrapped) {
+                const origTrack = SimulationScoreTracker.trackOrder;
+                SimulationScoreTracker.trackOrder = function (order) {
+                    const r = origTrack.apply(this, arguments);
+                    try {
+                        if (LiveApp.enabled && LiveApp.engine && order) {
+                            if (!LiveApp.engine.running) LiveApp.onPanelOpen();
+                            LiveApp._pendingLabel = 'EHR order';
+                            LiveApp.engine.order({ name: order.name, details: order.details, priority: order.priority, category: order.category });
+                        }
+                    } catch (e) { console.warn('Live Coworker order hook:', e); }
+                    return r;
+                };
+                SimulationScoreTracker._liveWrapped = true;
             }
             window.addEventListener('patient:loaded', (ev) => {
                 const id = ev && ev.detail && ev.detail.patientId;

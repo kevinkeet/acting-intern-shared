@@ -580,6 +580,21 @@
             emit('status', { running: false });
         }
 
+        /** An order went into the EHR: log it, add it to the plan, and safety-check it. */
+        function order(o) {
+            const what = [o && o.name, o && o.details, o && o.priority && o.priority !== 'Routine' ? o.priority : ''].filter(Boolean).join(' ');
+            if (!what) return null;
+            if (wm.startedAt == null) wm.startedAt = clock.now();
+            const line = { id: 'L' + (++lineSeq), t: elapsed(), speaker: 'ehr', text: 'Order placed in the EHR: ' + what };
+            wm.lines.push(line);
+            emit('line', line);
+            wm.plan.push({ t: elapsed(), text: clip(what, 160), kind: 'order', line: line.id });
+            markDirty();
+            touch();
+            if (running) verify('a new order was just placed in the EHR: ' + what, line, 'order:' + line.id);
+            return line;
+        }
+
         /** The doctor asked for a held thought ("Tell me"). */
         function tell(topic) {
             const h = wm.held.find((x) => x.topic === topic);
@@ -620,7 +635,7 @@
         }
 
         return {
-            on, hear, ask, tell, start, stop, update, prime, idle, stats, setMode, setBrainModel, setSpeed,
+            on, hear, ask, tell, order, start, stop, update, prime, idle, stats, setMode, setBrainModel, setSpeed,
             wm, cfg, calls, renderForBrain, renderForEar, patientHeader,
             get running() { return running; },
             get elapsed() { return elapsed(); },
