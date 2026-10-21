@@ -66,6 +66,20 @@
         return out;
     }
 
+    /** For the Deepgram voice: one sentence per request so the first is heard quickly; tiny ones ("Safety.") ride with the next. */
+    function sentencePieces(text) {
+        const out = [];
+        let carry = '';
+        for (const s of String(text || '').split(/(?<=[.!?])\s+(?=["“(]?[A-Z0-9])/)) {
+            const t = (carry + ' ' + s).trim();
+            if (t.length < 30) { carry = t; continue; }
+            carry = '';
+            if (t.length <= 400) out.push(t); else out.push(...pieces(t));
+        }
+        if (carry) { if (out.length) out[out.length - 1] += ' ' + carry; else out.push(carry); }
+        return out;
+    }
+
     const norm = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9 ]+/g, ' ').split(/\s+/).filter((w) => w.length > 1);
 
     /**
@@ -201,7 +215,7 @@
 
         // ── Deepgram: one request per sentence, the next fetched while this one plays ──
         _sayDeepgram(text, opts) {
-            const chunks = pieces(speakable(text));
+            const chunks = sentencePieces(speakable(text));
             if (!chunks.length) return false;
             if (opts && opts.urgent) this._halt();
             this._dgQueue = (this._dgQueue || []).concat(chunks);
@@ -225,7 +239,7 @@
             return this._fetches.get(text).p;
         },
 
-        _prefetch() { const q = this._dgQueue || []; if (q[0]) this._audioFor(q[0]).catch(() => {}); },
+        _prefetch() { for (const t of (this._dgQueue || []).slice(0, 2)) this._audioFor(t).catch(() => {}); },
 
         _nextDeepgram() {
             const text = (this._dgQueue || []).shift();
@@ -269,7 +283,7 @@
         isEcho(heard) { return isEchoOf(heard, this._spoken.map((x) => x.text).join(' ')); },
     };
 
-    const api = Object.assign(LiveVoice, { speakable, pieces, isEchoOf, rankVoice, DG_VOICES });
+    const api = Object.assign(LiveVoice, { speakable, pieces, sentencePieces, isEchoOf, rankVoice, DG_VOICES });
     if (typeof module !== 'undefined' && module.exports) module.exports = api;
     else root.LiveVoice = api;
 })(typeof window !== 'undefined' ? window : globalThis);
