@@ -89,7 +89,7 @@
     const interimHtml = (it) => '<div class="lc-line is-interim"' + (it ? '' : ' hidden') + ' data-speaker="' + esc(it ? it.speaker : '') + '"><span class="lc-who">' + esc(it ? it.speaker : '') + '</span><span class="lc-said">' + esc(it ? it.text : '') + '</span></div>';
     function itemHtml(s, isPinned) {
         const icon = s.kind === 'critical' ? ICON.alert : s.kind === 'insight' ? ICON.bulb : ICON.chat;
-        const label = s.kind === 'critical' ? 'Safety' : s.kind === 'insight' ? 'Thought' : 'Coworker';
+        const label = s.kind === 'critical' ? (s.updateOf ? 'Safety update' : 'Safety') : s.kind === 'insight' ? 'Thought' : 'Coworker';
         const lat = s.latencyMs == null ? '' : (s.kind === 'answer' ? 'answered in ' : 'flagged ') + secs(s.latencyMs) + (s.kind === 'answer' ? '' : ' after it was said');
         return (s.via === 'typed' && s.question ? typedHtml(s.question) : '')
             + '<article class="lc-item is-' + esc(s.kind) + (isPinned ? ' is-pinned' : '') + '" data-id="' + esc(s.id) + '">'
@@ -362,23 +362,31 @@
             }
             if (!items.length) this._whyOpen.clear();
             items.forEach((a, i) => {
-                // Newest in full; older ones fold to their first sentence until opened.
+                // Newest in full; older ones fold to their first sentence until opened. A card
+                // with updates leads with the newest one; what came before sits below it.
+                const ups = a.updates || [];
+                const latest = ups.length ? ups[ups.length - 1] : a;
                 const folded = i > 0 && !(v.openAlerts && v.openAlerts[a.id]);
-                const [lead, rest] = splitLead(a.text);
-                const hasWhy = !!(a.why || a.cueText);
+                const [lead, rest] = splitLead(latest.text);
+                const hasWhy = !!(latest.why || latest.cueText);
                 const whyOpen = this._whyOpen.has(a.id);
-                const lat = a.latencyMs != null ? 'flagged ' + secs(a.latencyMs) + ' after it was said' : '';
-                const open = '<article class="lc-alert' + (folded ? ' is-folded' : '') + (this._shown.has(a) ? ' is-seen' : '') + '" data-id="' + esc(a.id) + '" aria-label="Safety alert">';
+                const lat = latest.latencyMs != null ? 'flagged ' + secs(latest.latencyMs) + ' after it was said' : '';
+                const fresh = ups.length && !this._shown.has(latest);
+                const open = '<article class="lc-alert' + (folded ? ' is-folded' : '') + (this._shown.has(a) ? ' is-seen' : '') + (ups.length ? ' has-updates' : '') + '" data-id="' + esc(a.id) + '" aria-label="Safety alert">';
                 if (folded) {
-                    parts.push(open + '<button type="button" class="lc-alert-line" data-act="unfold" data-id="' + esc(a.id) + '" title="' + esc(a.text) + '">'
-                        + ICON.alert + '<span>' + esc(lead) + '</span>' + when(a.wallAt, a.t, lat) + '</button></article>');
+                    parts.push(open + '<button type="button" class="lc-alert-line" data-act="unfold" data-id="' + esc(a.id) + '" title="' + esc(latest.text) + '">'
+                        + ICON.alert + '<span>' + esc(lead) + '</span>' + (ups.length ? '<b class="lc-upd-tag">updated</b>' : '') + when(latest.wallAt, latest.t, lat) + '</button></article>');
                     return;
                 }
                 parts.push(open
-                    + '<div class="lc-alert-top">' + ICON.alert + '<span>Safety</span>' + when(a.wallAt, a.t, lat) + '</div>'
+                    + '<div class="lc-alert-top">' + ICON.alert + '<span>' + (ups.length ? 'Safety · updated' : 'Safety') + '</span>' + when(latest.wallAt, latest.t, lat) + '</div>'
                     + '<div class="lc-alert-body">'
-                    + '<p class="lc-alert-text"><strong>' + esc(lead) + '</strong> ' + esc(rest) + '</p>'
-                    + (hasWhy ? '<p class="lc-alert-why"' + (whyOpen ? '' : ' hidden') + '>' + esc(a.why || '') + (a.cueText ? ' Heard: <q>' + esc(a.cueText) + '</q>' : '') + '</p>' : '')
+                    + '<p class="lc-alert-text' + (fresh ? ' lc-changed' : '') + '"><strong>' + esc(lead) + '</strong> ' + esc(rest) + '</p>'
+                    + (ups.length
+                        ? '<ul class="lc-alert-before">' + ups.slice(0, -1).reverse().map((u) => '<li><span>Update</span> ' + esc(u.text) + '</li>').join('')
+                          + '<li><span>First</span> ' + esc(a.text) + '</li></ul>'
+                        : '')
+                    + (hasWhy ? '<p class="lc-alert-why"' + (whyOpen ? '' : ' hidden') + '>' + esc(latest.why || '') + (latest.cueText ? ' Heard: <q>' + esc(latest.cueText) + '</q>' : '') + '</p>' : '')
                     + '<div class="lc-alert-actions"><button type="button" class="lc-btn lc-btn-primary" data-act="ack" data-id="' + esc(a.id) + '">Got it</button>'
                     + (hasWhy ? '<button type="button" class="lc-btn lc-btn-quiet" data-act="why" data-id="' + esc(a.id) + '" aria-expanded="' + whyOpen + '">' + (whyOpen ? 'Hide why' : 'Why?') + '</button>' : '')
                     + '</div></div></article>');
@@ -387,6 +395,10 @@
             for (const a of items) {
                 if (!this._announced.has(a)) { this._announced.add(a); this._announce('alert', 'Safety alert. ' + a.text); }
                 this._shown.add(a);
+                for (const u of a.updates || []) {
+                    if (!this._announced.has(u)) { this._announced.add(u); this._announce('alert', 'Safety update. ' + u.text); }
+                    this._shown.add(u);
+                }
             }
         },
 
@@ -455,7 +467,8 @@
             const el = this.refs.said;
             const pane = el.parentElement;
             const atBottom = pane.scrollHeight - pane.scrollTop - pane.clientHeight < 80;
-            const pinned = new Set((v.alerts || []).map((a) => a.id));
+            const pinned = new Set();
+            for (const a of v.alerts || []) { pinned.add(a.id); for (const u of a.updates || []) pinned.add(u.id); }
             const said = v.said || [];          // newest first
             const lines = v.lines || [];
             const streaming = Object.entries(v.streaming || {});

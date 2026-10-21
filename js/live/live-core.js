@@ -198,8 +198,10 @@
                 take ? ['- ' + take.one_liner, '- ' + take.assessment].concat((take.concerns || []).map((c) => '- concern [' + c.topic + ', ' + c.severity + ']: ' + c.text)).join('\n') : '- (none yet)',
                 'WATCH LIST:',
                 wm.watch.length ? wm.watch.map((w) => '- ' + w.id + ' (' + w.severity + '): ' + w.trigger).join('\n') : '- (empty)',
+                'OPEN SAFETY ALERTS (on the doctor\'s screen until acknowledged; a new point about the same problem is an update to that id):',
+                openAlerts().length ? openAlerts().map((x) => '- ' + x.s.id + ' [' + mmss(x.s.t) + ', ' + x.s.topic + '] ' + x.s.text + x.updates.map((u) => ' | update [' + mmss(u.t) + ']: ' + u.text).join('')).join('\n') : '- (none)',
                 'ALREADY SAID (do not repeat):',
-                wm.said.length ? wm.said.map((s) => '- [' + mmss(s.t) + ', ' + s.kind + ', ' + s.topic + '] ' + s.text).join('\n') : '- (nothing yet)',
+                wm.said.length ? wm.said.map((s) => '- [' + mmss(s.t) + ', ' + s.kind + (s.updateOf ? ', update to ' + s.updateOf : '') + (s.acked ? ', acknowledged' : '') + ', ' + s.topic + '] ' + s.text).join('\n') : '- (nothing yet)',
                 'HELD FOR WHEN ASKED:',
                 wm.held.length ? wm.held.map((h) => '- [' + h.topic + '] ' + h.text).join('\n') : '- (nothing)',
                 '</working_memory>',
@@ -515,25 +517,48 @@
         // Concerns the brain is holding to see whether the doctor addresses them.
         const pendingChecks = [];
 
-        // Speech arrives in pieces ("his hand went clumsy" ... "we'll keep an eye on
-        // that"), so two checks about the same thing can run side by side, and neither
-        // sees what the other is about to say. Checks stay parallel (fast); a check that
-        // wants to speak after another alert went out during its run asks a quick
-        // helper whether that alert already covers it. Only that rare overlap pays.
-        async function coveredMeanwhile(text, since) {
-            const earlier = wm.said.filter((s) => s.kind === 'critical' && s.t >= since);
-            if (!earlier.length) return false;
+        // ── open alerts: on the doctor's screen until "Got it" ───────────
+        // A new remark about a problem already on screen becomes an update to that
+        // card, not a new alert. The brain says so itself (update_of: it sees the open
+        // alerts). Speech arrives in pieces, so two checks can also run side by side
+        // and neither sees what the other is about to say: alerts that went up while
+        // this check ran get a quick look from the helper instead.
+        function openAlerts() {
+            const now = elapsed();
+            return wm.said.filter((s) => s.kind === 'critical' && !s.updateOf && !s.acked)
+                .map((s) => ({ s, updates: wm.said.filter((u) => u.updateOf === s.id) }))
+                .filter((x) => now - Math.max(x.s.t, ...x.updates.map((u) => u.t)) < cfg.repeatWindowMs);
+        }
+
+        /** The doctor pressed "Got it": the alert and its updates are closed. */
+        function ack(id) {
+            for (const s of wm.said) if (s.id === id || s.updateOf === id) s.acked = true;
+            touch();
+        }
+
+        /** Place a critical remark: an update to an open alert, a new alert (true), or nothing new (false). */
+        async function placeAlert(c, updateOf, since) {
+            const open = openAlerts();
+            if (updateOf && open.some((x) => x.s.id === updateOf)) c.updateOf = updateOf;
+            const fresh = open.filter((x) => x.s.t >= since || x.updates.some((u) => u.t >= since));
+            if (!fresh.length) return true;
             try {
+                const listing = fresh.map((x) => '- ' + x.s.id + ': ' + x.s.text + x.updates.map((u) => ' Update: ' + u.text).join('')).join('\n');
                 const body = {
                     max_tokens: 300,
-                    system: P.COVERED_SYSTEM,
+                    system: P.RELATE_SYSTEM,
                     thinking: cfg.helperModel === 'claude-haiku-5-5' ? { type: 'disabled' } : { type: 'adaptive' },
-                    output_config: { effort: 'low', format: { type: 'json_schema', schema: P.COVERED_SCHEMA } },
-                    messages: [{ role: 'user', content: 'Already said:\n' + earlier.map((s) => '- ' + s.text).join('\n') + '\n\nNew alert:\n' + text }],
+                    output_config: { effort: 'low', format: { type: 'json_schema', schema: P.RELATE_SCHEMA } },
+                    messages: [{ role: 'user', content: 'On the doctor\'s screen:\n' + listing + '\n\nNew alert:\n' + c.text }],
                 };
                 const out = parseJSON(await modelCall('helper', cfg.helperModel, body));
-                return !!(out && out.covered);
-            } catch (e) { return false; }   // when unsure, speak
+                const same = out && out.same_as && fresh.find((x) => x.s.id === out.same_as);
+                if (same) {
+                    if (!out.adds_new) return false;
+                    c.updateOf = same.s.id;
+                }
+            } catch (e) { /* when unsure, speak */ }
+            return true;
         }
 
         function verify(reason, cueLine, key, followUp) {
@@ -551,11 +576,12 @@
                 const cue = followUp ? followUp.cue : cueLine;
                 if (decision === 'say' && out.text) {
                     const kind = out.severity === 'important' ? 'insight' : 'critical';
-                    if (kind === 'critical' && await coveredMeanwhile(out.text, startedAt)) {
-                        emit('suppressed', { reason: 'covered by an alert given meanwhile', topic: out.topic || key, text: out.text });
+                    const c = { kind, topic: out.topic || key, text: out.text, why: out.why, cueLine: cue && cue.id, heardAt: cue && cue.t, via: followUp ? 'after waiting' : 'verify' };
+                    if (kind === 'critical' && !(await placeAlert(c, out.update_of, startedAt))) {
+                        emit('suppressed', { reason: 'nothing new for an alert already on screen', topic: c.topic, text: c.text });
                         return;
                     }
-                    consider({ kind, topic: out.topic || key, text: out.text, why: out.why, cueLine: cue && cue.id, heardAt: cue && cue.t, via: followUp ? 'after waiting' : 'verify' });
+                    consider(c);
                 } else if (decision === 'wait' && (!followUp || followUp.rounds < 2)) {
                     holdForDoctor({ reason, key, topic: out.topic || '', text: out.text || out.why || reason, cue, rounds: followUp ? followUp.rounds + 1 : 1 });
                 }
@@ -640,14 +666,15 @@
                     // A concern already being held for the doctor's next words is left to that check.
                     const held = pendingChecks.some((p) => (p.topic && p.topic === out.say.topic) || overlap(p.text + ' ' + p.reason, out.say.text) >= 0.35);
                     const last = wm.lines[wm.lines.length - 1];
-                    if (held) emit('suppressed', { reason: 'waiting for the doctor', kind: out.say.kind, topic: out.say.topic, text: out.say.text });
-                    else if (out.say.kind === 'critical' && await coveredMeanwhile(out.say.text, seenUpTo)) {
-                        // An update takes several seconds; an alert given meanwhile may already cover it.
-                        emit('suppressed', { reason: 'covered by an alert given meanwhile', kind: out.say.kind, topic: out.say.topic, text: out.say.text });
-                    } else if (out.say.kind === 'critical' && last && last.speaker !== 'doctor' && !alreadySaid(out.say.topic, out.say.text)) {
+                    const c = { kind: out.say.kind === 'critical' ? 'critical' : 'insight', topic: out.say.topic, text: out.say.text, why: out.say.why, via: 'update' };
+                    if (held) emit('suppressed', { reason: 'waiting for the doctor', kind: c.kind, topic: c.topic, text: c.text });
+                    else if (c.kind === 'critical' && !(await placeAlert(c, out.say.update_of, seenUpTo))) {
+                        // An update takes several seconds; an alert that went up meanwhile may already say it.
+                        emit('suppressed', { reason: 'nothing new for an alert already on screen', kind: c.kind, topic: c.topic, text: c.text });
+                    } else if (c.kind === 'critical' && last && last.speaker !== 'doctor' && !alreadySaid(c.topic, c.text)) {
                         // Something just raised by the patient, family or nurse: give the doctor a turn first.
-                        holdForDoctor({ reason: 'your take update wanted to say: ' + out.say.text, key: 'update:' + (out.say.topic || last.id), topic: out.say.topic, text: out.say.text, cue: last, rounds: 1 });
-                    } else consider({ kind: out.say.kind === 'critical' ? 'critical' : 'insight', topic: out.say.topic, text: out.say.text, why: out.say.why, via: 'update' });
+                        holdForDoctor({ reason: 'your take update wanted to say: ' + c.text, key: 'update:' + (c.topic || last.id), topic: c.topic, text: c.text, cue: last, rounds: 1 });
+                    } else consider(c);
                 }
                 wm.held = wm.held.filter((h) => !alreadySaid(h.topic, h.text)).slice(-8);
                 touch();
@@ -743,7 +770,10 @@
 
         function consider(c) {
             if (c.kind === 'answer') return deliver(c);
-            if (alreadySaid(c.topic, c.text)) { emit('suppressed', Object.assign({ reason: 'repeat' }, c)); return null; }
+            const repeat = c.updateOf
+                ? wm.said.some((x) => x.kind !== 'answer' && overlap(x.text, c.text) >= 0.6)   // an update shares its card's topic by design
+                : alreadySaid(c.topic, c.text);
+            if (repeat) { emit('suppressed', Object.assign({ reason: 'repeat' }, c)); return null; }
             if (c.kind === 'critical') return deliver(c);
             // insight
             if (cfg.mode === 'lead' && elapsed() - lastInsightAt >= cfg.insightGapMs) { lastInsightAt = elapsed(); return deliver(c); }
@@ -757,7 +787,7 @@
             const item = {
                 id: c.id || ('S' + (++saidSeq)), t: elapsed(), kind: c.kind, topic: c.topic || '', text: c.text, why: c.why || '',
                 question: c.question || '', cueLine: c.cueLine || null, via: c.via || '',
-                latencyMs: c.heardAt != null ? elapsed() - c.heardAt : null, error: !!c.error,
+                latencyMs: c.heardAt != null ? elapsed() - c.heardAt : null, error: !!c.error, updateOf: c.updateOf || null,
             };
             wm.said.push(item);
             wm.held = wm.held.filter((h) => h.topic !== item.topic);
@@ -847,7 +877,7 @@
         }
 
         return {
-            on, hear, ask, tell, order, start, stop, update, prime, note: writeNote, idle, stats, setMode, setBrainModel, setSpeed,
+            on, hear, ask, tell, order, ack, start, stop, update, prime, note: writeNote, idle, stats, setMode, setBrainModel, setSpeed,
             wm, cfg, calls, renderForBrain, renderForEar, patientHeader,
             get running() { return running; },
             get elapsed() { return elapsed(); },

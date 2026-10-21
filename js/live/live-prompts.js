@@ -12,7 +12,7 @@
 (function (root) {
     'use strict';
 
-    const PROMPT_VERSION = 'live-v14';
+    const PROMPT_VERSION = 'live-v15';
 
     // ── Ear (Haiku): fast bookkeeping on every utterance ──────────────────
     const EAR_SYSTEM = [
@@ -140,8 +140,9 @@
                     topic: { type: 'string' },
                     text: { type: 'string' },
                     why: { type: 'string' },
+                    update_of: { type: 'string' },
                 },
-                required: ['should_say', 'kind', 'topic', 'text', 'why'],
+                required: ['should_say', 'kind', 'topic', 'text', 'why', 'update_of'],
             },
         },
         required: ['take', 'watch', 'say'],
@@ -156,8 +157,9 @@
             topic: { type: 'string' },
             text: { type: 'string' },
             why: { type: 'string' },
+            update_of: { type: 'string' },
         },
-        required: ['decision', 'severity', 'topic', 'text', 'why'],
+        required: ['decision', 'severity', 'topic', 'text', 'why', 'update_of'],
     };
 
     const TASK_PRIME = [
@@ -168,11 +170,14 @@
         'Use short topic and watch ids in kebab-case (for example "ace-angioedema", "k-trend").',
     ].join('\n');
 
+    // A new point about a problem already on the doctor's screen is an update to that card.
+    const SAME_PROBLEM_RULE = 'If it is about the same clinical problem as one of the OPEN SAFETY ALERTS (e.g. the possible GI bleed, the fast AF, the penicillin allergy, the possible TIA), set update_of to that alert\'s id and write only what is new; if it adds nothing new, do not say it. Otherwise update_of is "".';
+
     const TASK_UPDATE = [
         'TASK: Update your take with everything so far, refresh the watch list, and decide whether anything needs saying now.',
         '- take.one_liner (25 words or fewer), take.assessment (45 or fewer, aligned with the doctor\'s framing), take.concerns (most important first, at most 5, each a glanceable phrase of 12 words or fewer with the key number, keep topic ids stable across updates), take.next (at most 4 short items), take.doctor_view (how the doctor sees it, a few words, "" if unknown), take.differs (where you differ and why, or "").',
         '- watch: at most 8 safety tripwires (dangerous orders or plans, urgent findings; not routine management choices); keep the ones still relevant, drop those that no longer apply, add new ones the conversation suggests.',
-        '- say: follow the speaking rules for the current mode. should_say false unless a critical item (any mode) or, in Lead, an important insight is not yet said or addressed.',
+        '- say: follow the speaking rules for the current mode. should_say false unless a critical item (any mode) or, in Lead, an important insight is not yet said or addressed. ' + SAME_PROBLEM_RULE,
     ].join('\n');
 
     // Only "critical" interrupts; "important" is held until asked (or offered in Lead).
@@ -184,6 +189,7 @@
                 'TASK: A moment ago this was flagged: "' + reason + '". You chose to wait and see whether the doctor would address it. Your prepared remark was: "' + followUp.text + '".',
                 'Look at what has been said since. decision "say" if the doctor has moved on without addressing it (update the remark if anything new matters, 25 words or fewer); "quiet" if the doctor addressed it, it no longer matters, or something you already said covers it (see ALREADY SAID); "wait" only if the doctor is still in the middle of that very topic.',
                 'If you say it, set severity by what is at stake for the patient, not by the fact that it went unaddressed: ' + SEVERITY_RULE,
+                SAME_PROBLEM_RULE,
             ].join('\n');
         }
         return [
@@ -193,6 +199,7 @@
             '- "wait" for a red flag or worrying result that was just raised and the doctor has not yet had a turn to respond: you will look again after the doctor\'s next words.',
             '- "quiet" if it is not a real safety issue for this patient, it is the reason for the visit, the doctor is already working on it, or it was already said or addressed. Then severity "none".',
             SEVERITY_RULE,
+            SAME_PROBLEM_RULE,
         ].join('\n');
     }
 
@@ -241,13 +248,13 @@
     // ── Helpers (cheap models) ───────────────────────────────────────────
     const MEMORY_SYSTEM = 'You answer a clinician\'s question from a patient\'s long-term record summary. Quote values with dates. Answer in at most four short sentences. If the record does not contain the answer, say "Not in the record." Do not guess.';
 
-    const COVERED_SYSTEM = 'A clinical AI coworker (simulated patient) is about to interrupt a doctor with a new safety alert, but other alerts were shown to the doctor seconds ago. Decide whether the new alert is still needed. covered = true if a doctor who has read the earlier alerts would gain nothing they must act on now from the new one: the same problem and the same main action, where rewording, extra background or secondary suggestions do not count. covered = false if it raises a different problem or a different urgent action.';
+    const RELATE_SYSTEM = 'A clinical AI coworker (simulated patient) is about to show a doctor a new safety alert, but other alerts went up on the doctor\'s screen seconds ago. Decide how the new one relates to them. same_as: the id of the alert that is about the same clinical problem (e.g. the possible GI bleed, the fast AF, the penicillin allergy), or "" if it is a different problem. adds_new: true if, for that same problem, the new alert tells the doctor something more to act on now (a new order to stop, a new finding); false if a doctor who read the earlier alert would gain nothing from it.';
 
-    const COVERED_SCHEMA = {
+    const RELATE_SCHEMA = {
         type: 'object',
         additionalProperties: false,
-        properties: { covered: { type: 'boolean' } },
-        required: ['covered'],
+        properties: { same_as: { type: 'string' }, adds_new: { type: 'boolean' } },
+        required: ['same_as', 'adds_new'],
     };
 
     const MEDCHECK_SYSTEM = 'You are a clinical pharmacist checking one medication against one patient\'s record (simulated patient). Be specific and brief. Consider: allergies and cross-reactivity, contraindications given the problem list, interactions with the current medicines, dosing for kidney function, and relevant recent labs and vitals. Give a verdict: "ok", "caution" or "avoid".';
@@ -290,7 +297,7 @@
 
     const api = {
         PROMPT_VERSION, EAR_SYSTEM, EAR_SCHEMA, BRAIN_SYSTEM, TAKE_SCHEMA, VERIFY_SCHEMA,
-        TASK_PRIME, TASK_UPDATE, taskVerify, taskAnswer, NOTE_SYSTEM, NOTE_SCHEMA, TASK_NOTE, MEMORY_SYSTEM, COVERED_SYSTEM, COVERED_SCHEMA, MEDCHECK_SYSTEM, MEDCHECK_SCHEMA, BRAIN_TOOLS,
+        TASK_PRIME, TASK_UPDATE, taskVerify, taskAnswer, NOTE_SYSTEM, NOTE_SCHEMA, TASK_NOTE, MEMORY_SYSTEM, RELATE_SYSTEM, RELATE_SCHEMA, MEDCHECK_SYSTEM, MEDCHECK_SCHEMA, BRAIN_TOOLS,
     };
     if (typeof module !== 'undefined' && module.exports) module.exports = api;
     else root.LivePrompts = api;

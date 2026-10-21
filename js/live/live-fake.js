@@ -107,7 +107,10 @@
                     await sleep(1500 + Math.random() * 700);
                     const reason = (user.match(/possibly critical: \\"(.*?)\\"/) || [])[1] || '';
                     const t = TRAPS.find((x) => x[1] === reason);
-                    return reply({ decision: t ? 'say' : 'quiet', severity: t ? 'critical' : 'none', topic: reason, text: t ? t[2] : '', why: t ? t[3] : '' }, 1900);
+                    // The INR and heparin points belong to the GI bleed card while it is open.
+                    const open = (user.split('OPEN SAFETY ALERTS')[1] || '').split('ALREADY SAID')[0];
+                    const gi = /^(inr|heparin-bleed)$/.test(reason) && open.match(/- (S\d+) \[[^\]]*\] Black stools/);
+                    return reply({ decision: t ? 'say' : 'quiet', severity: t ? 'critical' : 'none', topic: reason, text: t ? t[2] : '', why: t ? t[3] : '', update_of: gi ? gi[1] : '' }, 1900);
                 }
                 if (req.label === 'answer') {
                     const q = (user.match(/just asked you: \\"(.*?)\\"/) || [])[1] || '';

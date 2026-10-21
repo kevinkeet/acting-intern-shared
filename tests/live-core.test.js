@@ -373,7 +373,7 @@ const manualClock = () => {
         cw.stop();
     });
 
-    await check('two checks about the same thing at once alert once (the later one asks whether it is covered)', async () => {
+    await check('two checks about the same thing at once alert once (the later one asks whether it adds anything)', async () => {
         const FIRST = 'Treat it as a TIA: head imaging and neurology tonight.';
         const SECOND = 'Probable TIA with AF off anticoagulation: do a neuro exam now.';
         const OTHER = 'Hold the heparin drip: black stools and Hgb 10.2.';
@@ -391,9 +391,10 @@ const manualClock = () => {
                 const text = /heparin with melena/.test(user) ? OTHER : n === 1 ? FIRST : SECOND;
                 return reply(JSON.stringify({ decision: 'say', severity: 'critical', topic: 'topic-' + n, text, why: '' }));
             }
-            if (lane === 'helper' && ((body.output_config || {}).format || {}).schema && body.output_config.format.schema.properties.covered) {
+            if (lane === 'helper' && ((body.output_config || {}).format || {}).schema && body.output_config.format.schema.properties.same_as) {
                 const msg = JSON.stringify(body.messages);
-                return reply(JSON.stringify({ covered: msg.includes(FIRST) && msg.includes(SECOND) }));
+                const first = msg.match(/- (S\d+): Treat it as a TIA/);
+                return reply(JSON.stringify({ same_as: first && msg.includes(SECOND) ? first[1] : '', adds_new: false }));
             }
             return reply(JSON.stringify(TAKE()));
         });
@@ -411,6 +412,53 @@ const manualClock = () => {
         await cw.idle();
         assert.deepStrictEqual(said.map((s) => s.text), [FIRST, OTHER]);
         cw.stop();
+    });
+
+    // Updates: a new point about a problem already on screen goes onto that card.
+    const updateRun = async (ackFirst) => {
+        const t = fakeTransport((lane, body) => {
+            const user = JSON.stringify(body.messages || '');
+            if (lane === 'ear') {
+                const nl = user.split('<new_lines>')[1] || '';
+                if (/black stools/.test(nl)) return reply(JSON.stringify(Object.assign({}, EMPTY_EAR, { alarm: 'possible_critical', alarm_reason: 'melena' })));
+                if (/heparin drip/.test(nl)) return reply(JSON.stringify(Object.assign({}, EMPTY_EAR, { alarm: 'possible_critical', alarm_reason: 'heparin with melena' })));
+                return reply(JSON.stringify(EMPTY_EAR));
+            }
+            if (lane === 'verify') {
+                const open = (user.split('OPEN SAFETY ALERTS')[1] || '').split('ALREADY SAID')[0];
+                const gi = open.match(/- (S\d+) \[[^\]]*\] Black stools/);
+                if (/heparin with melena/.test(user)) return reply(JSON.stringify({ decision: 'say', severity: 'critical', topic: 'heparin', text: 'Hold the heparin drip: he may be bleeding.', why: '', update_of: gi ? gi[1] : '' }));
+                return reply(JSON.stringify({ decision: 'say', severity: 'critical', topic: 'melena', text: 'Black stools after a 2023 ulcer bleed: check his hemoglobin.', why: '', update_of: '' }));
+            }
+            return reply(JSON.stringify(lane === 'note' ? { problem_representation: '', hpi: '', problems: [] } : TAKE()));
+        });
+        const cw = LiveCore.createCoworker({ transport: t, chart, clock: manualClock() });
+        const said = [];
+        cw.on('say', (x) => said.push(x));
+        cw.start({ skipPrime: true });
+        cw.hear({ speaker: 'doctor', text: 'He says his black stools started three days ago.' });
+        await cw.idle();
+        if (ackFirst) cw.ack(said[0].id);
+        cw.hear({ speaker: 'doctor', text: 'And start a heparin drip.' });
+        await cw.idle();
+        const verify2 = t.log.filter((x) => x.lane === 'verify')[1];
+        cw.stop();
+        return { said, prompt: JSON.stringify(verify2.body.messages) };
+    };
+
+    await check('a new point about a problem already on screen becomes an update to that card', async () => {
+        const { said, prompt } = await updateRun(false);
+        assert.strictEqual(said.length, 2);
+        assert.strictEqual(said[1].updateOf, said[0].id, 'the heparin alert updates the GI bleed card');
+        assert.match(prompt, /OPEN SAFETY ALERTS[^]*- S\d+ \[[^\]]*\] Black stools/, 'the brain sees the open alert and its id');
+    });
+
+    await check('after "Got it", the same problem gets a new card', async () => {
+        const { said, prompt } = await updateRun(true);
+        assert.strictEqual(said.length, 2);
+        assert.strictEqual(said[1].updateOf, null);
+        assert.match(prompt, /OPEN SAFETY ALERTS[^:]*:\\n- \(none\)/, 'no open alerts after Got it');
+        assert.match(prompt, /acknowledged/);
     });
 
     await check('an order placed in the EHR is logged, planned and safety-checked (no ear call)', async () => {

@@ -46,7 +46,7 @@ const JUDGE_SCHEMA = {
 const JUDGE_SYSTEM = [
     'You grade a clinical AI coworker that listened to a scripted doctor-patient encounter (simulated patient) and spoke only when it judged it necessary.',
     'You get the transcript, the answer key, and everything the coworker said, with times in seconds of script time.',
-    'For each UNPROMPTED remark (kind critical or insight): list the ids of the expected alerts (E...) it substantially conveys (the key clinical point must be there, not just the topic); say if it is clinically correct for this patient, if it is useful to the doctor right then, and if it merely repeats an earlier remark (give that remark id) without new, more urgent information.',
+    'For each UNPROMPTED remark (kind critical or insight): list the ids of the expected alerts (E...) it substantially conveys (the key clinical point must be there, not just the topic); say if it is clinically correct for this patient, if it is useful to the doctor right then, and if it merely repeats an earlier remark (give that remark id) without new, more urgent information. A remark marked UPDATE is added to the earlier alert\'s card on screen rather than shown as a new alert: it is a repeat only if it adds nothing new.',
     'For each expected ANSWER (Q...): find the coworker answer to that question and score it 2 = correct and complete enough to act on, 1 = partly right or missing a key element, 0 = wrong, unsafe, or missing. Put any clinical error in error ("" if none).',
     'Be strict about clinical accuracy and lenient about wording. Keep notes short.',
 ].join('\n');
@@ -62,7 +62,7 @@ export function keywordMatch(text, groups) {
 function judgeInput(script, run) {
     const lines = script.lines.map((l) => l.id + ' [' + fmtT(l.t) + '] ' + l.speaker.toUpperCase() + ': ' + l.text).join('\n');
     const key = script.expect.map((e) => e.id + ' (' + e.type + (e.level ? ', ' + e.level : '') + ', cue ' + e.cue + '): ' + e.summary).join('\n');
-    const said = run.said.map((s) => s.id + ' [' + fmtT(s.scriptT) + '] ' + s.kind.toUpperCase() + (s.question ? ' (answering "' + s.question + '")' : '') + ': ' + s.text).join('\n');
+    const said = run.said.map((s) => s.id + ' [' + fmtT(s.scriptT) + '] ' + s.kind.toUpperCase() + (s.updateOf ? ' UPDATE to ' + s.updateOf + ' (added to that alert\'s card, not a new alert)' : '') + (s.question ? ' (answering "' + s.question + '")' : '') + ': ' + s.text).join('\n');
     return '<transcript>\n' + lines + '\n</transcript>\n\n<answer_key>\n' + key + '\n</answer_key>\n\n<coworker_said>\n' + (said || '(nothing)') + '\n</coworker_said>\n\nCoworker mode: ' + run.config.mode + '. Grade every unprompted remark and every Q item.';
 }
 

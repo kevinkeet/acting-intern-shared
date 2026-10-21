@@ -273,7 +273,15 @@
                 const from = (s.cueLine && heardWall[s.cueLine]) || askedWall[s.id] || null;
                 const item = Object.assign({}, s, { cueText: cue ? cue.text : '', latencyMs: from ? Date.now() - from : null, wallAt: Date.now() });
                 v.said.unshift(item);
-                if (s.kind === 'critical') { v.alerts.unshift(item); this._chime(); }
+                if (s.kind === 'critical') {
+                    // A new point about a problem already on screen goes onto that card, which comes back to the top.
+                    const card = s.updateOf && v.alerts.find((a) => a.id === s.updateOf);
+                    if (card) {
+                        card.updates = (card.updates || []).concat([item]);
+                        v.alerts = [card].concat(v.alerts.filter((a) => a !== card));
+                    } else v.alerts.unshift(item);
+                    this._chime();
+                }
                 if (this.settings.speakAloud && (s.kind === 'critical' || s.kind === 'answer')) this._speak(s);
                 if (this.settings.glasses) this._toGlasses(s);
                 this.request('said', 'alerts', 'transcript');
@@ -399,7 +407,7 @@
                 onWide: () => this.toggleWide(),
                 onMode: (m) => this.setMode(m),
                 onAsk: (q) => this.ask(q),
-                onAck: (id) => { this.view.alerts = this.view.alerts.filter((a) => a.id !== id); this.request('alerts', 'said', 'take'); },
+                onAck: (id) => { this.view.alerts = this.view.alerts.filter((a) => a.id !== id); if (this.engine) this.engine.ack(id); this.request('alerts', 'said', 'take'); },
                 onRetry: (q) => { if (q) this.ask(q); },
                 onUnfold: (id) => { this.view.openAlerts = Object.assign({}, this.view.openAlerts, { [id]: true }); this.request('alerts'); },
                 onTellHeld: (topic) => { if (this.engine) this.engine.tell(topic); this.view.heldOpen = true; },
@@ -752,7 +760,7 @@
             try {
                 if (typeof LiveVoice === 'undefined') return;
                 this._applyVoice();
-                LiveVoice.say((s.kind === 'critical' ? 'Safety. ' : '') + s.text, { urgent: s.kind === 'critical' });
+                LiveVoice.say((s.kind === 'critical' ? (s.updateOf ? 'Safety update. ' : 'Safety. ') : '') + s.text, { urgent: s.kind === 'critical' });
             } catch (e) { /* speaking is optional */ }
         },
 
