@@ -410,6 +410,7 @@
                 '<fieldset><legend>When it speaks</legend>',
                 check('chime', 'Chime on safety alerts'),
                 check('speakAloud', 'Read answers and alerts aloud', 'Uses the computer\'s voice. Off by default with a patient in the room.'),
+                check('glasses', 'Show them on the G2 glasses', 'Through the glasses bridge, when it is set up.'),
                 '</fieldset>',
                 '<fieldset><legend>Practice</legend><div class="lc-pop-row">',
                 '<button type="button" class="lc-btn" data-act="replay" data-cmd="play">' + (v.replay && v.replay.active ? 'Restart' : 'Play') + ' Morrison demo</button>',

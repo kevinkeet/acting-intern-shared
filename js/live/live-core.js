@@ -31,6 +31,7 @@
         earThinking: 'disabled',      // Haiku 5.5 accepts disabled at low..high effort
         heartbeatMs: 60000,           // think at least this often while things change
         quickLookMs: 12000,           // sooner after something "worth a look"
+        minUpdateGapMs: 25000,        // but never two take updates closer than this
         insightGapMs: 120000,         // Lead: at most one unprompted insight per 2 minutes
         repeatWindowMs: 15 * 60000,   // never repeat a topic within this window
         recentLines: 12,              // verbatim lines the ear sees as context
@@ -452,9 +453,11 @@
         // ── brain: heartbeat update / prime ─────────────────────────────
         function markDirty() { if (dirtySince == null) dirtySince = elapsed(); }
 
+        let lastUpdateAt = -Infinity;
         function scheduleQuickLook() {
             if (!running || quickTimer) return;
-            quickTimer = clock.setTimeout(() => { quickTimer = null; update('quick look'); }, cfg.quickLookMs);
+            const wait = Math.max(cfg.quickLookMs, lastUpdateAt + cfg.minUpdateGapMs - elapsed());
+            quickTimer = clock.setTimeout(() => { quickTimer = null; update('quick look'); }, wait);
         }
 
         function startHeartbeat() {
@@ -484,6 +487,7 @@
             if (!running) return null;
             if (updateBusy) { updateAgain = true; return null; }
             updateBusy = true;
+            lastUpdateAt = elapsed();
             const seenUpTo = elapsed();
             dirtySince = null;
             const p = (async () => {
@@ -497,12 +501,6 @@
                 if (thoughts) emit('reasoning', { lane: 'update', text: thoughts, at: seenUpTo });
                 if (out.say && out.say.should_say && out.say.text) {
                     consider({ kind: out.say.kind === 'critical' ? 'critical' : 'insight', topic: out.say.topic, text: out.say.text, why: out.say.why, via: 'update' });
-                }
-                // Lead mode: important concerns that were never said become held thoughts in other modes.
-                for (const c of (out.take && out.take.concerns) || []) {
-                    if (c.severity !== 'minor' && !alreadySaid(c.topic, c.text) && !wm.held.some((h) => h.topic === c.topic)) {
-                        wm.held.push({ t: elapsed(), topic: c.topic, text: c.text, why: '', kind: c.severity === 'critical' ? 'critical' : 'insight' });
-                    }
                 }
                 wm.held = wm.held.filter((h) => !alreadySaid(h.topic, h.text)).slice(-8);
                 touch();

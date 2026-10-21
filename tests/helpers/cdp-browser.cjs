@@ -66,11 +66,11 @@ function connect(url) {
     });
 }
 
-async function startChrome() {
+async function startChrome(extraArgs) {
     if (!fs.existsSync(CHROME)) throw new Error('Chrome not found at ' + CHROME + ' (set CHROME_PATH)');
     const profile = mkTmp('live-test-chrome-');
     const proc = spawn(CHROME, ['--headless=new', '--remote-debugging-port=0', '--user-data-dir=' + profile, '--no-first-run', '--no-default-browser-check',
-        '--disable-extensions', '--disable-sync', '--disable-background-networking', '--disable-component-update', '--window-size=1440,900', 'about:blank'], { stdio: 'ignore' });
+        '--disable-extensions', '--disable-sync', '--disable-background-networking', '--disable-component-update', '--window-size=1440,900'].concat(extraArgs || [], ['about:blank']), { stdio: 'ignore' });
     const portFile = path.join(profile, 'DevToolsActivePort');
     for (let i = 0; i < 300 && !fs.existsSync(portFile); i++) await sleep(50);
     if (!fs.existsSync(portFile)) { proc.kill(); throw new Error('Chrome did not start'); }

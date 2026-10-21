@@ -37,7 +37,7 @@
         init() {
             if (this._inited) return;
             this._inited = true;
-            this.settings = Object.assign({ brain: 'claude-sonnet-5-5', mode: null, fast: false, source: 'room', chime: true, speakAloud: false, replaySpeed: 2, classic: false }, this._load());
+            this.settings = Object.assign({ brain: 'claude-sonnet-5-5', mode: null, fast: false, source: 'room', chime: true, speakAloud: false, glasses: false, replaySpeed: 2, classic: false }, this._load());
             if (!this.settings.mode) {
                 let old = null;
                 try { old = typeof AIModeConfig !== 'undefined' && AIModeConfig.getMode && AIModeConfig.getMode(); } catch (e) { /* ignore */ }
@@ -221,6 +221,7 @@
                 v.said.unshift(item);
                 if (s.kind === 'critical') { v.alerts.unshift(item); this._chime(); }
                 if (this.settings.speakAloud && (s.kind === 'critical' || s.kind === 'answer')) this._speak(s.text);
+                if (this.settings.glasses) this._toGlasses(s);
                 this.request('said', 'alerts', 'transcript');
             });
             cw.on('held', () => { v.held = cw.wm.held.slice(); this.request('said'); });
@@ -528,6 +529,15 @@
                     o.stop(now + i * 0.16 + 0.15);
                 });
             } catch (e) { /* no audio */ }
+        },
+
+        _toGlasses(s) {
+            try {
+                const G = window.GlassesBridge;
+                if (!G || !G.isEnabled || !G.isEnabled()) return;
+                const prefix = s.kind === 'critical' ? '⚠ ' : s.kind === 'insight' ? '💡 ' : '';
+                G.pushEvent({ kind: 'dictation', text: G._compress ? G._compress(prefix + s.text, 140) : (prefix + s.text).slice(0, 140), glyph: s.kind === 'critical' ? '⚠' : '✓' });
+            } catch (e) { /* glasses are optional */ }
         },
 
         _speak(text) {
