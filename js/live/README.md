@@ -46,18 +46,32 @@ that pass nothing (classic dictation, the scribe) connect as before.
 `?livemic=general` (or `audio-run.mjs --mic=general`) uses the general model for
 side-by-side tests.
 
+## The live note
+
+A scribe (Haiku 5.5, thinking off) keeps a short admission note current: a
+problem representation (two or three sentences with the key qualifiers), the HPI
+as told so far, and assessment and plan by problem (the doctor's plan; the
+coworker's suggestions only as "consider"). It is rewritten a few seconds after
+new speech, at most every 12 s, after each take update and at the end of the
+encounter; new or changed sentences light up briefly. About $0.002 per rewrite.
+
 ## The panel
 
-- Header: mic, what it is doing ("Listening · 2:14", "heard 3s ago"), mode
-  (Follow / Abreast / Lead). If two AI calls fail in a row, or it hears speech
-  and the ear gets no reply for 20 s, it says **"not checking"** (amber mic and a
-  pinned warning) until calls succeed again: silence must never look like "all clear".
+- Header: a full-width **Start encounter** when idle; during the encounter
+  "Encounter · 3:42", the mic pauses and resumes, **End encounter** writes the final
+  note. Mode (Follow / Abreast / Lead). If two AI calls fail in a row, or it hears
+  speech and the ear gets no reply for 20 s, it says **"not checking"** (amber mic
+  and a pinned warning) until calls succeed again: silence must never look like "all clear".
 - Safety alerts: pinned until "Got it". The first sentence (the action) is bold;
   older alerts fold to that sentence. "Why?" shows the chart fact and what was heard.
-- My take: what matters most first; summary, assessment and next steps on request.
-  One line while an alert waits.
-- Said (answers, alerts, held thoughts; "Try again" if an answer failed),
-  Tracking (working memory), Heard (transcript), Log (decisions, calls, cost).
+- My take: the problem representation, then what worries it most; assessment and
+  next steps on request. One line while an alert waits.
+- Conversation (what it heard and what it said, in order, with a live caption),
+  Note (the live note; "Side by side" widens the panel to show both), Tracking
+  (working memory), Log (decisions, calls, cost).
+- After "Coworker, …" it waits for the whole question ("um" and pauses are fine).
+- Read aloud (setting): answers and safety alerts in a natural voice; it stops
+  when you talk, and the mic ignores its own voice.
 
 ## Files
 
@@ -68,6 +82,7 @@ side-by-side tests.
 | `live-memory.js` | Builds the digest and the long-term text from the chart and the AI memory |
 | `live-prompts.js` | Prompts and JSON schemas (`PROMPT_VERSION`) |
 | `live-core.js` | The engine (no DOM): ear, working memory, brain lanes, tools, speaking rules, events |
+| `live-voice.js` | Speaking aloud (browser speech): cleanup, sentence pieces, voice choice, echo check |
 | `live-panel.js` | The panel UI (DOM only) |
 | `live-app.js` | Browser glue: chart, memory, mic (Deepgram room mic or browser speech), demo replay, settings |
 | `live-fake.js` | `?livefake`: a scripted stand-in model for UI work and UI tests (no AI cost) |
