@@ -12,7 +12,7 @@
 (function (root) {
     'use strict';
 
-    const PROMPT_VERSION = 'live-v1';
+    const PROMPT_VERSION = 'live-v2';
 
     // ── Ear (Haiku): fast bookkeeping on every utterance ──────────────────
     const EAR_SYSTEM = [
@@ -22,7 +22,7 @@
         '- facts: new clinically relevant facts: symptoms with timing, history, medicines the patient takes, stopped or missed, allergies and reactions, exam findings, numbers said aloud, social details that matter. One fact per item in plain clinical shorthand, under 15 words. Skip small talk and anything already in working memory.',
         '- doctor_thinking: reasoning the doctor says aloud (an assessment, a differential, a worry), close to their words.',
         '- plan: orders and plan items the doctor states. kind "order" for anything ordered, started, changed or given now; include the dose if said.',
-        '- to_coworker: true only if a NEW line speaks to the AI coworker rather than to the patient or a colleague: it names it ("coworker", "Claude", "AI"), or it asks about the chart in a way the patient could not answer ("what was his last potassium?"). Then put the request in question, rewritten to stand alone. Otherwise question is "".',
+        '- to_coworker: true only if a NEW line speaks to the AI coworker: it names it ("coworker", "Claude", "AI"), or the doctor is dictating alone and asks about the chart ("what was his last potassium?"). Questions to the patient, family, a nurse or another colleague are not for the coworker. When true, put the request in question, rewritten to stand alone; otherwise question is "".',
         '- watch_hits: ids from the watch list whose trigger has just happened in the new lines. Be literal: a drug only mentioned, or being stopped or held, has not been ordered.',
         '- alarm: "possible_critical" only if the new lines contain an order or plan that could be dangerous for this patient, a critical value, or a red-flag symptom that changes urgency, with the reason in alarm_reason. Otherwise "none" and "".',
         '- worth_a_look: true when the new lines change the clinical picture: a new symptom, result or exam finding, or a change in the doctor\'s thinking or plan.',

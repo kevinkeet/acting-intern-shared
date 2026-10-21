@@ -139,8 +139,15 @@ async function main() {
         if (done.err) throw done.err;
         console.log(stamp(), 'Finished:', JSON.stringify(done.ok));
         const json = await page.eval(EXPORT);
-        fs.writeFileSync(OUT, JSON.stringify(JSON.parse(json), null, 1));
         const fx = JSON.parse(json);
+        // The browser fetches the fixture each session: keep it to what the coworker reads.
+        const full = fx.longitudinalDoc;
+        delete fx.longitudinalDoc;
+        fs.writeFileSync(OUT, JSON.stringify(fx, null, 1));
+        const side = path.join(ROOT, 'tools/live/runs', PATIENT + '-longitudinal-' + fx.generated.replace(/[:.]/g, '-').slice(0, 19) + '.json');
+        fs.mkdirSync(path.dirname(side), { recursive: true });
+        fs.writeFileSync(side, JSON.stringify(full));
+        console.log(stamp(), 'Full longitudinal document (not committed): ' + side);
         console.log(stamp(), 'Saved ' + OUT + ' (' + Math.round(json.length / 1024) + ' KB): ' + fx.deepLearn.processedCount + '/' + fx.deepLearn.totalItems + ' items, ' + (fx.extractedFacts || []).length + ' extracted documents, $' + fx.runStats.cost.toFixed(2) + ', ' + fx.runStats.errors.length + ' retries/errors');
     } finally {
         await page.close().catch(() => {});
