@@ -215,6 +215,11 @@
 
         _wire(cw) {
             const v = this.view;
+            // Latency shown in the panel is real (wall-clock) time, even when the
+            // demo runs the engine on a faster clock.
+            const heardWall = {}, askedWall = {};
+            cw.on('line', (l) => { heardWall[l.id] = Date.now(); });
+            cw.on('thinking', (p) => { if (p.lane === 'answer' && p.id) askedWall[p.id] = Date.now(); });
             cw.on('line', (l) => {
                 const display = this._pendingLabel || SPEAKER_LABEL[l.speaker] || l.speaker;
                 v.lines.push({ id: l.id, speaker: l.speaker, label: display, text: l.text.replace(/^\((wife|nurse)\)\s*/i, '') });
@@ -234,7 +239,8 @@
             cw.on('say', (s) => {
                 delete v.streaming[s.id];
                 const cue = s.cueLine && v.lines.find((l) => l.id === s.cueLine);
-                const item = Object.assign({}, s, { cueText: cue ? cue.text : '' });
+                const from = (s.cueLine && heardWall[s.cueLine]) || askedWall[s.id] || null;
+                const item = Object.assign({}, s, { cueText: cue ? cue.text : '', latencyMs: from ? Date.now() - from : null });
                 v.said.unshift(item);
                 if (s.kind === 'critical') { v.alerts.unshift(item); this._chime(); }
                 if (this.settings.speakAloud && (s.kind === 'critical' || s.kind === 'answer')) this._speak(s.text);
