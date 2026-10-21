@@ -64,6 +64,10 @@ encounter; new or changed sentences light up briefly. About $0.002 per rewrite.
   and a pinned warning) until calls succeed again: silence must never look like "all clear".
 - Safety alerts: pinned until "Got it". The first sentence (the action) is bold;
   older alerts fold to that sentence. "Why?" shows the chart fact and what was heard.
+  A new point about a problem already on screen goes onto that card as an update
+  ("Safety · updated": the newest point leads, what came before sits below) and
+  the card comes back to the top; after "Got it" the same problem gets a new card.
+  The brain decides "same problem" itself (it sees the open alerts and their ids).
 - My take: the problem representation, then what worries it most; assessment and
   next steps on request. One line while an alert waits.
 - Conversation (what it heard and what it said, in order, with a live caption),
