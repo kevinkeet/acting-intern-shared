@@ -12,6 +12,7 @@
 //   node tools/live/audio-run.mjs --brain=opus --mode=lead
 //   node tools/live/audio-run.mjs --site=http://127.0.0.1:8787   (this checkout via the dev proxy)
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
@@ -39,8 +40,14 @@ async function main() {
     const health = await fetch(SITE + '/api/health').then((r) => r.json());
     if (!health.apiConfigured || !health.deepgramConfigured) throw new Error(SITE + ' is missing keys: ' + JSON.stringify(health));
 
+    // Chrome's audio service is sandboxed on macOS and silently reads zeros from
+    // a fake-capture file; run it in-process for this throwaway profile. The file
+    // goes to a temp path without spaces.
+    const wavCopy = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'live-audio-')), 'encounter.wav');
+    fs.copyFileSync(AUDIO + '.wav', wavCopy);
     const chrome = await startChrome(['--use-fake-ui-for-media-stream', '--use-fake-device-for-media-stream',
-        '--use-file-for-fake-audio-capture=' + AUDIO + '.wav%noloop', '--autoplay-policy=no-user-gesture-required']);
+        '--use-file-for-fake-audio-capture=' + wavCopy + '%noloop', '--autoplay-policy=no-user-gesture-required',
+        '--disable-features=AudioServiceSandbox,AudioServiceOutOfProcess']);
     const page = await openPage(chrome.cdp, SITE);
     try {
         await page.goto(SITE + '/favicon.svg');
@@ -55,7 +62,7 @@ async function main() {
         const micState = await page.eval('LiveApp.view.status.state');
         console.log(stamp(), 'Listening (' + micState + '); audio ' + Math.round(timing.duration_s) + 's, brain ' + brain + ', ' + mode);
         let lastLines = 0;
-        const end = Date.now() + (timing.duration_s + 25) * 1000;
+        const end = Date.now() + (timing.duration_s + 12) * 1000;
         while (Date.now() < end) {
             await sleep(15000);
             const p = await page.eval('({ lines: LiveApp.view.lines.length, said: LiveApp.view.said.length, calls: LiveApp.engine.calls.length, cost: +LiveApp.engine.stats().cost.toFixed(3), state: LiveApp.view.status.state })');

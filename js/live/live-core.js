@@ -26,12 +26,12 @@
         helperModel: 'claude-haiku-5-5',
         mode: 'abreast',              // follow | abreast | lead
         speed: null,                  // 'fast' = Opus fast mode
-        effort: { ear: 'low', answer: 'low', verify: 'low', update: 'medium', prime: 'medium', helper: 'medium' },
+        effort: { ear: 'low', answer: 'low', verify: 'low', update: 'low', prime: 'medium', helper: 'medium' },
         maxTokens: { ear: 2000, answer: 6000, verify: 3000, update: 9000, prime: 9000, helper: 3000 },
         earThinking: 'disabled',      // Haiku 5.5 accepts disabled at low..high effort
         heartbeatMs: 60000,           // think at least this often while things change
-        quickLookMs: 12000,           // sooner after something "worth a look"
-        minUpdateGapMs: 25000,        // but never two take updates closer than this
+        quickLookMs: 20000,           // sooner after something "worth a look"
+        minUpdateGapMs: 45000,        // but never two take updates closer than this (cost)
         insightGapMs: 120000,         // Lead: at most one unprompted insight per 2 minutes
         repeatWindowMs: 15 * 60000,   // never repeat a topic within this window
         recentLines: 12,              // verbatim lines the ear sees as context
@@ -330,8 +330,16 @@
             if (changed) { markDirty(); touch(); }
 
             // Questions for the coworker (unless the wake-word path already took them).
-            if (out.to_coworker && out.question && !batch.some((l) => handledLines.has(l.id))) {
+            const askedHere = batch.some((l) => handledLines.has(l.id));
+            if (out.to_coworker && out.question && !askedHere) {
                 ask(out.question, { cueLine: lastLine.id, heardAt: lastLine.t, via: 'ear' });
+            }
+            // A question to the coworker gets an answer; a separate alert about the
+            // same lines would only repeat it.
+            if (askedHere || out.to_coworker) {
+                if (out.worth_a_look) scheduleQuickLook();
+                if (batch.some((l) => l.speaker === 'doctor') && pendingChecks.length) onDoctorSpoke();
+                return;
             }
             // Tripwires and alarms -> one safety check for these lines; the brain decides whether to interrupt.
             const reasons = [];
@@ -536,8 +544,12 @@
                 if (out.say && out.say.should_say && out.say.text) {
                     // A concern already being held for the doctor's next words is left to that check.
                     const held = pendingChecks.some((p) => (p.topic && p.topic === out.say.topic) || overlap(p.text + ' ' + p.reason, out.say.text) >= 0.35);
+                    const last = wm.lines[wm.lines.length - 1];
                     if (held) emit('suppressed', { reason: 'waiting for the doctor', kind: out.say.kind, topic: out.say.topic, text: out.say.text });
-                    else consider({ kind: out.say.kind === 'critical' ? 'critical' : 'insight', topic: out.say.topic, text: out.say.text, why: out.say.why, via: 'update' });
+                    else if (out.say.kind === 'critical' && last && last.speaker !== 'doctor' && !alreadySaid(out.say.topic, out.say.text)) {
+                        // Something just raised by the patient, family or nurse: give the doctor a turn first.
+                        holdForDoctor({ reason: 'your take update wanted to say: ' + out.say.text, key: 'update:' + (out.say.topic || last.id), topic: out.say.topic, text: out.say.text, cue: last, rounds: 1 });
+                    } else consider({ kind: out.say.kind === 'critical' ? 'critical' : 'insight', topic: out.say.topic, text: out.say.text, why: out.say.why, via: 'update' });
                 }
                 wm.held = wm.held.filter((h) => !alreadySaid(h.topic, h.text)).slice(-8);
                 touch();

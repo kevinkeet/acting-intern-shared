@@ -12,6 +12,14 @@
 //   node tools/live/deeplearn.mjs                      PAT001 on the lab
 //   node tools/live/deeplearn.mjs --extract=claude-haiku-5-5 --synth=claude-sonnet-5-5
 //   node tools/live/deeplearn.mjs --site=http://127.0.0.1:8787   (via tools/live/dev-proxy.mjs)
+//   node tools/live/deeplearn.mjs --resume     continue from the last checkpoint
+//
+// After every completed level the run saves a checkpoint to
+// tools/live/runs/<PATIENT>-deeplearn-checkpoint.json (memory, extracted facts,
+// processed items), so a crash costs at most one level. The finished result is
+// saved twice in data/live/ (commit them): <PATIENT>-deep-memory.json (lean,
+// what the live coworker reads) and <PATIENT>-ai-seed-full.json (the same shape
+// as data/patients/<PATIENT>/ai-seed.json, to re-seed the classic coworker).
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
@@ -27,6 +35,8 @@ const PATIENT = argv.patient || 'PAT001';
 const EXTRACT = argv.extract || 'claude-haiku-5-5';
 const SYNTH = argv.synth || 'claude-sonnet-5-5';
 const OUT = path.join(ROOT, 'data/live', PATIENT + '-deep-memory.json');
+const SEED_OUT = path.join(ROOT, 'data/live', PATIENT + '-ai-seed-full.json');
+const CHECKPOINT = path.join(ROOT, 'tools/live/runs', PATIENT + '-deeplearn-checkpoint.json');
 const t0 = Date.now();
 const stamp = () => '[' + Math.round((Date.now() - t0) / 1000) + 's]';
 
@@ -68,16 +78,38 @@ const PATCH = `(() => {
     return true;
 })()`;
 
-const RUN = (extract, synth) => `(async () => {
+const RUN = (extract, synth, resume) => `(async () => {
     const A = AICoworker;
     const D = () => A._deepLearn;
     A._suppressMemoryViewer = true;
     A.analysisModel = ${JSON.stringify(extract)};
     A.dictationModel = ${JSON.stringify(synth)};
-    A._resetDeepLearn();
-    window.__dlProgress = { level: 1, phase: 'level 1' };
-    await A.learnPatient();
-    for (let lvl = 2; lvl <= D().totalLevels; lvl++) {
+    const cp = ${resume ? 'window.__dlResume' : 'null'};
+    const checkpoint = (lvl) => {
+        window.__dlCheckpoint = JSON.stringify({ patient: dataLoader.currentPatientId, level: lvl, totalLevels: D().totalLevels, totalItems: D().totalItems,
+            processedIds: [...D().processed], extractedFacts: D().extractedFacts, memoryDocument: A.longitudinalDoc.aiMemory.memoryDocument,
+            models: { extraction: A.analysisModel, synthesis: A.dictationModel }, cost: window.__dl.cost, at: new Date().toISOString() });
+        window.__dlCheckpointLevel = lvl;
+    };
+    let startLevel = 2;
+    if (cp) {
+        A._resetDeepLearn();
+        await A._mapChart();
+        D().processed = new Set(cp.processedIds);
+        D().processedCount = D().processed.size;
+        D().extractedFacts = cp.extractedFacts || [];
+        D().currentLevel = cp.level;
+        D().phase = 'between_levels';
+        A.longitudinalDoc.aiMemory.memoryDocument = cp.memoryDocument;
+        startLevel = cp.level + 1;
+        window.__dl.errors.push('resumed after level ' + cp.level + ' (' + D().processed.size + ' items)');
+    } else {
+        A._resetDeepLearn();
+        window.__dlProgress = { level: 1, phase: 'level 1' };
+        await A.learnPatient();
+        checkpoint(1);
+    }
+    for (let lvl = startLevel; lvl <= D().totalLevels; lvl++) {
         window.__dlProgress = { level: lvl, phase: 'level ' + lvl };
         const b = D().levelBatches[lvl - 1] || [];
         const f0 = D().extractedFacts.length;
@@ -88,6 +120,8 @@ const RUN = (extract, synth) => `(async () => {
             window.__dl.errors.push('level ' + lvl + ' not completed (attempt ' + (t + 1) + ', ' + (D().extractedFacts.length - f0) + ' extractions for ' + b.length + ' items; last reply ' + JSON.stringify(window.__dl.last || {}).slice(0, 400) + ')');
             await new Promise((r) => setTimeout(r, 10000));
         }
+        if (b.every((i) => D().processed.has(i.id))) checkpoint(lvl);
+        else throw new Error('level ' + lvl + ' failed 4 times; resume later with --resume');
     }
     window.__dlProgress = { level: D().totalLevels, phase: 'done' };
     return { phase: D().phase, processed: D().processed.size, total: D().totalItems };
@@ -131,8 +165,29 @@ async function main() {
         const ep = await page.eval('AICoworker.apiEndpoint');
         if (ep !== '/api/claude-full') throw new Error('expected the full-site route, got ' + ep);
         await page.eval(PATCH);
+        let resume = false;
+        if (argv.resume) {
+            if (!fs.existsSync(CHECKPOINT)) throw new Error('No checkpoint to resume from at ' + CHECKPOINT);
+            const cpText = fs.readFileSync(CHECKPOINT, 'utf8');
+            const cp = JSON.parse(cpText);
+            if (cp.patient && cp.patient !== PATIENT) throw new Error('Checkpoint is for ' + cp.patient);
+            await page.eval('window.__dlResume = ' + cpText + '; true');
+            resume = true;
+            console.log(stamp(), 'Resuming after level ' + cp.level + ' of ' + cp.totalLevels + ' (' + cp.processedIds.length + ' items, $' + (cp.cost || 0).toFixed(2) + ' spent before)');
+        }
         console.log(stamp(), 'Patched; starting.');
-        const run = page.eval(RUN(EXTRACT, SYNTH)).then((r) => ({ ok: r }), (e) => ({ err: e }));
+        const run = page.eval(RUN(EXTRACT, SYNTH, resume)).then((r) => ({ ok: r }), (e) => ({ err: e }));
+        let savedLevel = 0;
+        const saveCheckpoint = async () => {
+            const lvl = await page.eval('window.__dlCheckpointLevel || 0').catch(() => 0);
+            if (!lvl || lvl === savedLevel) return;
+            const text = await page.eval('window.__dlCheckpoint');
+            fs.mkdirSync(path.dirname(CHECKPOINT), { recursive: true });
+            fs.writeFileSync(CHECKPOINT + '.tmp', text);
+            fs.renameSync(CHECKPOINT + '.tmp', CHECKPOINT);
+            savedLevel = lvl;
+            console.log(stamp(), 'Checkpoint saved after level ' + lvl + ' (' + Math.round(text.length / 1024) + ' KB)');
+        };
         let done = null;
         let last = '';
         let seenErrors = 0;
@@ -144,6 +199,7 @@ async function main() {
             const fresh = page.errors.slice(seenErrors).filter((e) => /deep learn|synthes|extract|parse|level|memory/i.test(e));
             seenErrors = page.errors.length;
             for (const e of fresh) console.log(stamp(), 'page error: ' + e.slice(0, 300));
+            await saveCheckpoint().catch((e) => console.log(stamp(), 'checkpoint save failed: ' + e.message));
         }
         if (done.err) throw done.err;
         console.log(stamp(), 'Finished:', JSON.stringify(done.ok));
@@ -153,10 +209,9 @@ async function main() {
         const full = fx.longitudinalDoc;
         delete fx.longitudinalDoc;
         fs.writeFileSync(OUT, JSON.stringify(fx, null, 1));
-        const side = path.join(ROOT, 'tools/live/runs', PATIENT + '-longitudinal-' + fx.generated.replace(/[:.]/g, '-').slice(0, 19) + '.json');
-        fs.mkdirSync(path.dirname(side), { recursive: true });
-        fs.writeFileSync(side, JSON.stringify(full));
-        console.log(stamp(), 'Full longitudinal document (not committed): ' + side);
+        // Same shape as data/patients/<PATIENT>/ai-seed.json, so the classic coworker can be re-seeded from it.
+        fs.writeFileSync(SEED_OUT, JSON.stringify({ generated: fx.generated, note: 'Full Deep Learn (all levels), ' + fx.models.extraction + ' extraction + ' + fx.models.synthesis + ' synthesis. Same shape as ai-seed.json.', longitudinalDoc: full, deepLearn: { phase: fx.deepLearn.phase, processedCount: fx.deepLearn.processedCount, totalItems: fx.deepLearn.totalItems, currentLevel: fx.deepLearn.totalLevels, totalLevels: fx.deepLearn.totalLevels, processedIds: fx.deepLearn.processedIds, levelBatchSizes: [] } }));
+        console.log(stamp(), 'Saved ' + SEED_OUT + ' (classic coworker seed format)');
         console.log(stamp(), 'Saved ' + OUT + ' (' + Math.round(json.length / 1024) + ' KB): ' + fx.deepLearn.processedCount + '/' + fx.deepLearn.totalItems + ' items, ' + (fx.extractedFacts || []).length + ' extracted documents, $' + fx.runStats.cost.toFixed(2) + ', ' + fx.runStats.errors.length + ' retries/errors');
     } finally {
         await page.close().catch(() => {});

@@ -59,3 +59,14 @@ Loader: the end of `js/components/ai-coworker.js`. Styles: `css/live-coworker.cs
   synthetic multi-voice audio through the real mic path (Deepgram).
 - `node tools/live/deeplearn.mjs`: runs the full Deep Learn for PAT001 on the lab and saves
   `data/live/PAT001-deep-memory.json`, which the coworker uses as its long-term memory.
+
+## Saving and reloading the Deep Learn memory
+
+- `node tools/live/deeplearn.mjs` saves a checkpoint after every level
+  (`tools/live/runs/PAT001-deeplearn-checkpoint.json`); if a run dies, `--resume`
+  continues from the last completed level.
+- The finished memory is saved in `data/live/` and committed to both GitHub remotes:
+  `PAT001-deep-memory.json` (what the live coworker loads, automatically) and
+  `PAT001-ai-seed-full.json` (same shape as the classic coworker's seed).
+- To load it into the classic coworker too: `node tools/live/reseed.mjs PAT001`, then commit.
+  Any earlier version comes back with `git checkout <commit> -- <file>`.

@@ -53,6 +53,11 @@ function connect(url) {
             }
         });
         ws.addEventListener('error', () => reject(new Error('DevTools connection failed')));
+        // If Chrome goes away, fail every call still waiting instead of hanging silently.
+        ws.addEventListener('close', () => {
+            for (const p of pending.values()) p.reject(new Error('DevTools connection closed (Chrome exited?)'));
+            pending.clear();
+        });
         ws.addEventListener('open', () => resolve({
             send(method, params = {}, sessionId) {
                 const msg = { id: ++id, method, params };
