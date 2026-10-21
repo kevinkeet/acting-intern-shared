@@ -70,8 +70,11 @@ encounter; new or changed sentences light up briefly. About $0.002 per rewrite.
   Note (the live note; "Side by side" widens the panel to show both), Tracking
   (working memory), Log (decisions, calls, cost).
 - After "Coworker, …" it waits for the whole question ("um" and pauses are fine).
-- Read aloud (setting): answers and safety alerts in a natural voice; it stops
-  when you talk, and the mic ignores its own voice.
+- Read aloud (setting): answers and safety alerts in Deepgram's natural Aura voice
+  (server route `/api/tts`, one sentence per request, the next fetched while one
+  plays; Athena by default, nine to choose from), or this computer's voice, which
+  also takes over if the server can't speak. It stops when you talk, and the mic
+  ignores its own voice.
 
 ## Files
 

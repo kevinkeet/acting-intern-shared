@@ -2,8 +2,8 @@
 // server's outbound fetch so a test can never reach the real Anthropic API or
 // spend credit. A call to api.anthropic.com gets a canned reply that names
 // which key the route used ("shared", "fullsite" or "unknown"); the same line
-// is printed to stdout so a test can count AI calls. Any other outbound fetch
-// is refused.
+// is printed to stdout so a test can count AI calls. Fetches to other fakes on
+// this machine (127.0.0.1) pass; any other outbound fetch is refused.
 //
 // The log line also says whether the request asked to stream and which
 // anthropic-beta flags reached "Anthropic" (betas=- when none):
@@ -74,8 +74,12 @@ function lastUserText(body) {
     return '';
 }
 
+const realFetch = globalThis.fetch;
 globalThis.fetch = async (url, opts = {}) => {
     const u = String(url);
+    // Other fakes the tests start on this machine (e.g. a fake Deepgram) are fine;
+    // anything else is refused, so nothing can leave the machine.
+    if (/^https?:\/\/127\.0\.0\.1:\d+\//.test(u)) return realFetch(url, opts);
     if (!u.startsWith('https://api.anthropic.com/')) {
         throw new Error('fake-anthropic: outbound fetch blocked in tests: ' + u);
     }

@@ -1,7 +1,9 @@
 /**
  * Live Coworker: speaking out loud (the "Read answers and alerts aloud" setting).
  *
- * Uses the browser's own speech synthesis (on-device, free). It:
+ * Two engines: Deepgram's natural Aura voices through the server's /api/tts
+ * (the key stays on the server), or the browser's own speech synthesis
+ * (on-device, free; also the fallback if the server can't speak). It:
  *   - cleans text for the ear: no markdown, dates and shorthand said in words
  *     ("9/2023" -> "September 2023", "K 5.1" -> "potassium 5.1");
  *   - speaks one sentence at a time (Chrome cuts long utterances off);
@@ -93,8 +95,25 @@
         return score;
     }
 
+    // Deepgram Aura-2 voices offered in settings (the server allows exactly these).
+    const DG_VOICES = [
+        { id: 'aura-2-athena-en', name: 'Athena', note: 'calm, professional' },
+        { id: 'aura-2-asteria-en', name: 'Asteria', note: 'clear, confident' },
+        { id: 'aura-2-thalia-en', name: 'Thalia', note: 'clear, energetic' },
+        { id: 'aura-2-harmonia-en', name: 'Harmonia', note: 'empathetic, calm' },
+        { id: 'aura-2-odysseus-en', name: 'Odysseus', note: 'calm, professional' },
+        { id: 'aura-2-orpheus-en', name: 'Orpheus', note: 'professional, clear' },
+        { id: 'aura-2-arcas-en', name: 'Arcas', note: 'natural, smooth' },
+        { id: 'aura-2-draco-en', name: 'Draco', note: 'British, warm' },
+        { id: 'aura-2-pandora-en', name: 'Pandora', note: 'British, calm' },
+    ];
+
     const LiveVoice = {
         speaking: false,
+        engine: 'browser',       // 'deepgram' (natural, via /api/tts) or 'browser'
+        dgVoice: 'aura-2-athena-en',
+        endpoint: '/api/tts',
+        dgDown: false,           // the server could not speak: the browser voice takes over
         voiceName: null,
         onError: null,           // (reason) => {} e.g. 'not-allowed' before any click on the page
         _queue: [],
@@ -102,26 +121,29 @@
         _endedAt: 0,
         _keepAlive: null,
 
-        supported() { return typeof window !== 'undefined' && !!window.speechSynthesis && typeof window.SpeechSynthesisUtterance === 'function'; },
+        _browserOk() { return typeof window !== 'undefined' && !!window.speechSynthesis && typeof window.SpeechSynthesisUtterance === 'function'; },
+        _deepgramOk() { return typeof window !== 'undefined' && typeof window.Audio === 'function' && typeof fetch === 'function' && !this.dgDown; },
+        supported() { return this._browserOk() || (typeof window !== 'undefined' && typeof window.Audio === 'function'); },
 
         /** English voices, best first: [{ name, lang }]. Empty until the browser has loaded them. */
         voices() {
-            if (!this.supported()) return [];
+            if (!this._browserOk()) return [];
             return window.speechSynthesis.getVoices().map((v) => ({ v, r: rankVoice(v) })).filter((x) => x.r >= 0)
                 .sort((a, b) => b.r - a.r).map((x) => ({ name: x.v.name, lang: x.v.lang }));
         },
 
         _voice() {
-            const all = this.supported() ? window.speechSynthesis.getVoices() : [];
+            const all = this._browserOk() ? window.speechSynthesis.getVoices() : [];
             return (this.voiceName && all.find((v) => v.name === this.voiceName)) || all.find((v) => v.name === (this.voices()[0] || {}).name) || null;
         },
 
         /** Say something. urgent (a safety alert): stop what is playing and go first. */
         say(text, opts) {
             if (!this.supported()) return false;
+            if (this.engine === 'deepgram' && this._deepgramOk()) return this._sayDeepgram(text, opts);
             const chunks = pieces(speakable(text));
             if (!chunks.length) return false;
-            if (opts && opts.urgent) { this._queue = []; window.speechSynthesis.cancel(); }
+            if (opts && opts.urgent) this._halt();
             this._queue.push(...chunks);
             this._spoken.push({ text: chunks.join(' '), at: Date.now() });
             this._spoken = this._spoken.filter((x) => Date.now() - x.at < 60000).slice(-6);
@@ -130,6 +152,7 @@
         },
 
         _next() {
+            if (!this._browserOk()) { this._done(); return; }
             const synth = window.speechSynthesis;
             const text = this._queue.shift();
             if (!text) { this._done(); return; }
@@ -160,10 +183,83 @@
 
         /** Stop talking now (the doctor started speaking, or the setting was turned off). */
         stop() {
+            this._halt();
+            this._done();
+        },
+
+        /** Cancel whatever is playing or queued, in both engines. */
+        _halt() {
             this._queue = [];
             this._current = null;
-            if (this.supported()) window.speechSynthesis.cancel();
-            this._done();
+            this._turn = (this._turn || 0) + 1;
+            if (this._audio) { try { this._audio.pause(); } catch (e) { /* ignore */ } this._audio = null; }
+            for (const x of (this._fetches || new Map()).values()) { try { x.ctrl.abort(); } catch (e) { /* ignore */ } if (x.url) URL.revokeObjectURL(x.url); }
+            this._fetches = new Map();
+            this._dgQueue = [];
+            if (this._browserOk()) window.speechSynthesis.cancel();
+        },
+
+        // ── Deepgram: one request per sentence, the next fetched while this one plays ──
+        _sayDeepgram(text, opts) {
+            const chunks = pieces(speakable(text));
+            if (!chunks.length) return false;
+            if (opts && opts.urgent) this._halt();
+            this._dgQueue = (this._dgQueue || []).concat(chunks);
+            this._spoken.push({ text: chunks.join(' '), at: Date.now() });
+            this._spoken = this._spoken.filter((x) => Date.now() - x.at < 60000).slice(-6);
+            if (!this.speaking || (opts && opts.urgent)) this._nextDeepgram();
+            else this._prefetch();
+            return true;
+        },
+
+        _audioFor(text) {
+            this._fetches = this._fetches || new Map();
+            if (!this._fetches.has(text)) {
+                const ctrl = new AbortController();
+                const entry = { ctrl, url: null };
+                entry.p = fetch(this.endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text, voice: this.dgVoice }), signal: ctrl.signal })
+                    .then((r) => { if (!r.ok) throw new Error('speech ' + r.status); return r.blob(); })
+                    .then((b) => { entry.url = URL.createObjectURL(b); return entry.url; });
+                this._fetches.set(text, entry);
+            }
+            return this._fetches.get(text).p;
+        },
+
+        _prefetch() { const q = this._dgQueue || []; if (q[0]) this._audioFor(q[0]).catch(() => {}); },
+
+        _nextDeepgram() {
+            const text = (this._dgQueue || []).shift();
+            if (!text) { this._done(); return; }
+            this.speaking = true;
+            const turn = this._turn = (this._turn || 0) + 1;
+            const got = this._audioFor(text);
+            this._prefetch();
+            got.then((url) => {
+                if (turn !== this._turn) return;
+                const a = new window.Audio(url);
+                this._audio = a;
+                const after = () => {
+                    if (turn !== this._turn) return;
+                    const entry = this._fetches.get(text);
+                    if (entry && entry.url) URL.revokeObjectURL(entry.url);
+                    this._fetches.delete(text);
+                    this._audio = null;
+                    this._nextDeepgram();
+                };
+                a.onended = after;
+                a.onerror = after;
+                const played = a.play();
+                if (played && played.catch) played.catch((e) => { if (e && e.name === 'NotAllowedError' && this.onError) this.onError('not-allowed'); after(); });
+            }, () => {
+                if (turn !== this._turn) return;
+                // The server could not speak: the browser voice says this and what follows.
+                this.dgDown = true;
+                if (this.onError) this.onError('deepgram-unavailable');
+                const rest = [text].concat(this._dgQueue || []);
+                this._dgQueue = [];
+                this.speaking = false;
+                if (this._browserOk()) { this._queue.push(...rest); this._next(); } else this._done();
+            });
         },
 
         /** Speaking now, or stopped less than `ms` ago (the mic may still be hearing the tail). */
@@ -173,7 +269,7 @@
         isEcho(heard) { return isEchoOf(heard, this._spoken.map((x) => x.text).join(' ')); },
     };
 
-    const api = Object.assign(LiveVoice, { speakable, pieces, isEchoOf, rankVoice });
+    const api = Object.assign(LiveVoice, { speakable, pieces, isEchoOf, rankVoice, DG_VOICES });
     if (typeof module !== 'undefined' && module.exports) module.exports = api;
     else root.LiveVoice = api;
 })(typeof window !== 'undefined' ? window : globalThis);

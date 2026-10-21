@@ -156,6 +156,10 @@ const check = async (name, fn) => {
         assert.strictEqual((await ask(s.base, '/api/claude-full')).status, 500);
         assert.doesNotMatch(s.output(), /fake-anthropic\] call/);
     });
+    await check('no speech key: /api/tts refuses with 503', async () => {
+        const r = await post(s.base, '/api/tts', { text: 'Hello.' });
+        assert.strictEqual(r.status, 503);
+    });
     await s.stop();
 
     // Deepgram relay (lab, 21 Oct 2026): a browser may ask for the medical model and
@@ -175,7 +179,23 @@ const check = async (name, fn) => {
         });
     });
     const DG_KEY = 'dg-test-not-a-real-key';
-    s = await startServer({ DEEPGRAM_API_KEY: DG_KEY, DEEPGRAM_LISTEN_URL: 'ws://127.0.0.1:' + dgPort + '/v1/listen' });
+    // A fake Deepgram text-to-speech: records what it was asked, answers with a few "MP3" bytes.
+    const http = require('http');
+    const speakPort = await freePort();
+    const spoken = [];
+    const fakeSpeak = http.createServer((req, res) => {
+        let body = '';
+        req.on('data', (d) => { body += d; });
+        req.on('end', () => {
+            const u = new URL(req.url, 'http://deepgram.local');
+            spoken.push({ path: u.pathname, model: u.searchParams.get('model'), auth: req.headers.authorization, body: JSON.parse(body || '{}') });
+            if (/FAIL/.test(body)) { res.writeHead(500, { 'Content-Type': 'application/json' }); return res.end('{"err":"boom"}'); }
+            res.writeHead(200, { 'Content-Type': 'audio/mpeg' });
+            res.end(Buffer.from('ID3-fake-mp3'));
+        });
+    });
+    await new Promise((r) => fakeSpeak.listen(speakPort, '127.0.0.1', r));
+    s = await startServer({ DEEPGRAM_API_KEY: DG_KEY, DEEPGRAM_LISTEN_URL: 'ws://127.0.0.1:' + dgPort + '/v1/listen', DEEPGRAM_SPEAK_URL: 'http://127.0.0.1:' + speakPort + '/v1/speak' });
     const OLD_PARAMS = 'model=nova-3&diarize=true&punctuate=true&interim_results=true&utterance_end_ms=1500&encoding=linear16&sample_rate=16000&channels=1';
     // Open the relay, wait for the server's upstream connection, send a little audio, read the reply.
     const relay = (query) => new Promise((resolve, reject) => {
@@ -215,11 +235,33 @@ const check = async (name, fn) => {
         assert.ok(!terms.some((t) => /[<>]/.test(t) || t === 'x' || t.length > 40), terms.join(','));
         assert.ok(terms.length <= 50 && terms.join('').length <= 900, terms.length + ' terms');
     });
+    await check('/api/tts: one sentence in, Deepgram audio out, with the server\'s key and the chosen voice', async () => {
+        const r = await post(s.base, '/api/tts', { text: 'Hold the heparin drip.', voice: 'aura-2-orpheus-en' });
+        assert.strictEqual(r.status, 200);
+        assert.match(r.headers.get('content-type'), /audio\/mpeg/);
+        assert.strictEqual(Buffer.from(await r.arrayBuffer()).toString(), 'ID3-fake-mp3');
+        const last = spoken[spoken.length - 1];
+        assert.deepStrictEqual(last, { path: '/v1/speak', model: 'aura-2-orpheus-en', auth: 'Token ' + DG_KEY, body: { text: 'Hold the heparin drip.' } });
+    });
+    await check('/api/tts: unknown voices fall back to Athena; empty or too-long text is refused without calling Deepgram', async () => {
+        await post(s.base, '/api/tts', { text: 'Hello.', voice: 'some-other-model' });
+        assert.strictEqual(spoken[spoken.length - 1].model, 'aura-2-athena-en');
+        const before = spoken.length;
+        assert.strictEqual((await post(s.base, '/api/tts', { text: '   ' })).status, 400);
+        assert.strictEqual((await post(s.base, '/api/tts', { text: 'x'.repeat(1001) })).status, 413);
+        assert.strictEqual(spoken.length, before);
+    });
+    await check('/api/tts: a Deepgram error comes back as a 502 the browser can fall back from', async () => {
+        const r = await post(s.base, '/api/tts', { text: 'FAIL please.' });
+        assert.strictEqual(r.status, 502);
+        assert.match((await r.json()).error, /Speech service error \(500\)/);
+    });
     await check('Deepgram relay: the server log never shows the speech key', () => {
         assert.ok(!s.output().includes(DG_KEY));
     });
     await s.stop();
     await new Promise((r) => fakeDeepgram.close(r));
+    await new Promise((r) => fakeSpeak.close(r));
 
     process.exit(fail ? 1 : 0);
 })().catch((e) => { console.log('FAIL  server test crashed -> ' + e.message); process.exit(1); });

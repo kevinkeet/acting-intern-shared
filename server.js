@@ -158,6 +158,44 @@ app.post('/api/claude-full', async (req, res) => {
     }
 });
 
+// --- Text to speech for the live coworker (Deepgram Aura; lab, Kevin's OK 21 Oct 2026) ---
+// The browser posts one sentence at a time; the server adds its Deepgram key and
+// streams the audio (MP3) back. Voices are an allowlist; text is capped well under
+// Deepgram's 2,000 characters. (DEEPGRAM_SPEAK_URL exists for the tests.)
+const DEEPGRAM_SPEAK_URL = process.env.DEEPGRAM_SPEAK_URL || 'https://api.deepgram.com/v1/speak';
+const TTS_VOICES = new Set(['aura-2-athena-en', 'aura-2-asteria-en', 'aura-2-thalia-en', 'aura-2-harmonia-en',
+    'aura-2-odysseus-en', 'aura-2-orpheus-en', 'aura-2-arcas-en', 'aura-2-draco-en', 'aura-2-pandora-en']);
+app.post('/api/tts', async (req, res) => {
+    const key = process.env.DEEPGRAM_API_KEY;
+    if (!key) return res.status(503).json({ error: 'Speech is not set up on this server' });
+    const text = String((req.body && req.body.text) || '').replace(/\s+/g, ' ').trim();
+    if (!text) return res.status(400).json({ error: 'No text to speak' });
+    if (text.length > 1000) return res.status(413).json({ error: 'Text too long (1,000 characters at most)' });
+    const voice = TTS_VOICES.has(req.body && req.body.voice) ? req.body.voice : 'aura-2-athena-en';
+    const upstream = new AbortController();
+    res.on('close', () => { if (!res.writableEnded) upstream.abort(); });
+    try {
+        const r = await fetch(DEEPGRAM_SPEAK_URL + '?model=' + voice, {
+            method: 'POST',
+            headers: { 'Authorization': 'Token ' + key, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text }),
+            signal: upstream.signal,
+        });
+        if (!r.ok) {
+            const detail = (await r.text().catch(() => '')).slice(0, 200);
+            console.error('🔊 TTS: Deepgram replied ' + r.status);
+            return res.status(r.status === 429 ? 429 : 502).json({ error: 'Speech service error (' + r.status + ')', detail });
+        }
+        res.status(200).set({ 'Content-Type': r.headers.get('content-type') || 'audio/mpeg', 'Cache-Control': 'no-store' });
+        for await (const chunk of r.body) res.write(chunk);
+        res.end();
+    } catch (e) {
+        if (upstream.signal.aborted || res.headersSent) return res.end();
+        console.error('🔊 TTS error:', e.message);
+        res.status(502).json({ error: 'Could not reach the speech service' });
+    }
+});
+
 // --- Deepgram WebSocket relay ---
 const wss = new WebSocket.Server({ server, path: '/ws/transcribe' });
 

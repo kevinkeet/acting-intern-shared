@@ -67,6 +67,18 @@
         return m ? [m[1], t.slice(m[0].length).trim()] : [t, ''];
     };
 
+    // The voice picker: Deepgram's natural voices (when the server has a key), then this computer's.
+    function voiceRow(v, s) {
+        const dg = (typeof LiveVoice !== 'undefined' && LiveVoice.DG_VOICES) || [];
+        const current = s.voice || (v.deepgram ? 'dg:aura-2-athena-en' : '');
+        const opt = (value, label) => '<option value="' + esc(value) + '"' + (current === value ? ' selected' : '') + '>' + esc(label) + '</option>';
+        return '<div class="lc-pop-row lc-voice"><select name="voice" class="lc-btn" aria-label="Voice">'
+            + (v.deepgram && dg.length ? '<optgroup label="Natural voices (Deepgram)">' + dg.map((x) => opt('dg:' + x.id, x.name + ', ' + x.note)).join('') + '</optgroup>' : '')
+            + '<optgroup label="This computer">' + opt('os:', 'Best on this computer' + (v.voices && v.voices[0] ? ' (' + v.voices[0].name + ')' : ''))
+            + (v.voices || []).slice(0, 20).map((x) => opt('os:' + x.name, x.name)).join('') + '</optgroup>'
+            + '</select><button type="button" class="lc-btn" data-act="voice-test">Test</button></div>';
+    }
+
     // Note helpers: sentences, and a loose comparison key.
     const sentences = (t) => String(t || '').split(/(?<=[.!?])\s+(?=["“(]?[A-Z0-9])/).map((x) => x.trim()).filter(Boolean);
     const normText = (t) => String(t || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
@@ -647,12 +659,8 @@
                 '</fieldset>',
                 '<fieldset><legend>When it speaks</legend>',
                 check('chime', 'Chime on safety alerts'),
-                check('speakAloud', 'Read answers and alerts aloud', v.canSpeak ? 'Uses this computer’s voice. Stops when you start talking; the mic ignores it. Off by default with a patient in the room.' : 'This browser can’t speak.', !v.canSpeak),
-                (v.canSpeak && s.speakAloud
-                    ? '<div class="lc-pop-row lc-voice"><select name="voice" class="lc-btn" aria-label="Voice"><option value="">Best voice' + (v.voices && v.voices[0] ? ' (' + esc(v.voices[0].name) + ')' : '') + '</option>'
-                      + (v.voices || []).slice(0, 25).map((x) => '<option value="' + esc(x.name) + '"' + (s.voice === x.name ? ' selected' : '') + '>' + esc(x.name) + '</option>').join('')
-                      + '</select><button type="button" class="lc-btn" data-act="voice-test">Test</button></div>'
-                    : ''),
+                check('speakAloud', 'Read answers and alerts aloud', v.canSpeak ? (v.deepgram ? 'A natural voice (Deepgram). ' : 'Uses this computer’s voice. ') + 'Stops when you start talking; the mic ignores it. Off by default with a patient in the room.' : 'This browser can’t speak.', !v.canSpeak),
+                (v.canSpeak && s.speakAloud ? voiceRow(v, s) : ''),
                 check('glasses', 'Show them on the G2 glasses', 'Through the glasses bridge, when it is set up.'),
                 '</fieldset>',
                 '<fieldset><legend>Practice</legend><div class="lc-pop-row">',

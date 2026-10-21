@@ -55,8 +55,11 @@
             this.view = this._freshView();
             this._fetchHealth();
             if (typeof LiveVoice !== 'undefined' && LiveVoice.supported()) {
-                LiveVoice.voiceName = this.settings.voice || null;
-                LiveVoice.onError = (reason) => { if (reason === 'not-allowed') this._flash('Click anywhere on the page once so the coworker can speak.'); };
+                this._applyVoice();
+                LiveVoice.onError = (reason) => {
+                    if (reason === 'not-allowed') this._flash('Click anywhere on the page once so the coworker can speak.');
+                    if (reason === 'deepgram-unavailable') this._flash('The natural voice isn\'t available right now; using this computer\'s voice.');
+                };
                 // Browsers load their voice list late; refresh the settings when it arrives.
                 window.speechSynthesis.addEventListener('voiceschanged', () => this.request('settings'));
             }
@@ -87,6 +90,7 @@
                 this.health = await fetch('/api/health').then((r) => (r.ok ? r.json() : null));
             } catch (e) { this.health = null; }
             this.view.deepgram = !!(this.health && this.health.deepgramConfigured);
+            this._applyVoice();
             this.request('head', 'settings');
         },
 
@@ -406,7 +410,7 @@
                 onClassic: () => { LivePanel.togglePop(false); this.setEnabled(false); },
                 onSetting: (name, value) => this.setSetting(name, value),
                 onOpenSettings: () => this.request('settings'),
-                onVoiceTest: () => { if (typeof LiveVoice === 'undefined') return; LiveVoice.voiceName = this.settings.voice || null; LiveVoice.stop(); LiveVoice.say('Safety. Hold the heparin drip: black stools and hemoglobin 10.2.', { urgent: true }); },
+                onVoiceTest: () => { if (typeof LiveVoice === 'undefined') return; this._applyVoice(); LiveVoice.stop(); LiveVoice.say('Safety. Hold the heparin drip: black stools and hemoglobin 10.2.', { urgent: true }); },
                 onTab: () => {},
             };
         },
@@ -443,7 +447,7 @@
                 }
             } else if (name === 'voice') {
                 this.settings.voice = value || '';
-                if (typeof LiveVoice !== 'undefined') { LiveVoice.voiceName = this.settings.voice || null; LiveVoice.stop(); LiveVoice.say('This is how I sound.'); }
+                if (typeof LiveVoice !== 'undefined') { this._applyVoice(); LiveVoice.stop(); LiveVoice.say('This is how I sound.'); }
             } else {
                 this.settings[name] = value;
             }
@@ -747,9 +751,25 @@
         _speak(s) {
             try {
                 if (typeof LiveVoice === 'undefined') return;
-                LiveVoice.voiceName = this.settings.voice || null;
+                this._applyVoice();
                 LiveVoice.say((s.kind === 'critical' ? 'Safety. ' : '') + s.text, { urgent: s.kind === 'critical' });
             } catch (e) { /* speaking is optional */ }
+        },
+
+        /**
+         * Which voice: "dg:<Aura voice>" (Deepgram, natural, through the server), "os:<name>"
+         * (this computer's), or unset (Deepgram's Athena when the server has a Deepgram key).
+         */
+        _applyVoice() {
+            if (typeof LiveVoice === 'undefined') return;
+            const v = this.settings.voice || '';
+            const deepgram = v.startsWith('dg:') || (!v && this.view.deepgram);
+            const engine = deepgram ? 'deepgram' : 'browser';
+            const dgVoice = v.startsWith('dg:') ? v.slice(3) : 'aura-2-athena-en';
+            if (LiveVoice.engine !== engine || LiveVoice.dgVoice !== dgVoice) LiveVoice.dgDown = false;   // a new choice gets a fresh try
+            LiveVoice.engine = engine;
+            LiveVoice.dgVoice = dgVoice;
+            LiveVoice.voiceName = v.startsWith('os:') ? (v.slice(3) || null) : null;
         },
 
         /**
