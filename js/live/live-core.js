@@ -373,19 +373,32 @@
                     const uses = res.message.content.filter((b) => b.type === 'tool_use');
                     if (!uses.length || res.message.stop_reason !== 'tool_use') { answer = res.text.trim(); break; }
                     messages.push({ role: 'assistant', content: res.message.content });
-                    emit('say-partial', { id, text: '', question, status: 'Looking up ' + uses.map((u) => u.name.replace(/_/g, ' ')).join(', ') + '…' });
+                    emit('say-partial', { id, text: '', question, status: toolStatus(uses) });
                     const results = await Promise.all(uses.map((u) => runTool(u)));
                     messages.push({ role: 'user', content: results });
                 }
                 deliver({ id, kind: 'answer', topic: 'answer', text: answer || 'Sorry, I lost that one.', why: '', question, cueLine: m.cueLine, heardAt: m.heardAt, via: m.via });
             })().catch((e) => {
                 if (e && e.name === 'AbortError') return;
-                deliver({ id, kind: 'answer', topic: 'answer', text: 'Sorry, I could not answer just now (' + clip(e && e.message, 80) + ').', why: '', question, cueLine: m.cueLine, heardAt: m.heardAt, error: true });
+                // Plain words for the doctor; the exact error is in the call log.
+                const msg = String((e && e.message) || '');
+                const why = /\b529\b|overload/i.test(msg) ? 'the AI service is overloaded'
+                    : /\b429\b|rate/i.test(msg) ? 'too many requests right now'
+                        : /reach|fetch|network|cut off|stream error/i.test(msg) ? 'the connection dropped' : 'the AI call failed';
+                deliver({ id, kind: 'answer', topic: 'answer', text: 'Sorry, I couldn’t answer that just now (' + why + ').', why: '', question, cueLine: m.cueLine, heardAt: m.heardAt, error: true });
             });
             return track(p);
         }
 
         // ── brain: tools ─────────────────────────────────────────────────
+        // What the panel shows while tools run, in plain words ("Checking labs…").
+        const TOOL_WORDS = { lookup_labs: 'checking labs', search_chart: 'searching the chart', ask_long_term_memory: 'checking the history', check_medication: 'checking the medicine' };
+        function toolStatus(uses) {
+            const words = [...new Set(uses.map((u) => TOOL_WORDS[u.name] || 'looking it up'))];
+            const s = words.length > 1 ? words.slice(0, -1).join(', ') + ' and ' + words[words.length - 1] : words[0] || 'looking it up';
+            return s.charAt(0).toUpperCase() + s.slice(1) + '…';
+        }
+
         async function runTool(use) {
             const input = use.input || {};
             let content;

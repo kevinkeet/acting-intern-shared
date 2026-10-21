@@ -18,6 +18,15 @@
     const OLD_TO_MODE = { reactive: 'follow', active: 'abreast', proactive: 'lead' };
     const BRAIN_LABEL = { 'claude-sonnet-5-5': 'Sonnet 5.5', 'claude-opus-5-5': 'Opus 5.5' };
     const SPEAKER_LABEL = { doctor: 'Doctor', patient: 'Patient', other: 'Other', unknown: 'Voice', wife: 'Wife', nurse: 'Nurse', ehr: 'Order' };
+    // A failed call's reason in a few plain words, for the "not checking" status.
+    const plainError = (msg) => {
+        const m = String(msg || '');
+        if (/\b529\b|overload/i.test(m)) return 'the service is overloaded';
+        if (/\b429\b|rate/i.test(m)) return 'rate limited';
+        if (/\b40[13]\b|api key|auth/i.test(m)) return 'a key problem on the server';
+        if (/reach|fetch|network|offline|cut off|stream error/i.test(m)) return 'no connection';
+        return m ? m.replace(/^AI call failed\s*/i, '').slice(0, 60) : 'no reply';
+    };
 
     const LiveApp = {
         enabled: false,
@@ -219,6 +228,17 @@
             // demo runs the engine on a faster clock.
             const heardWall = {}, askedWall = {};
             cw.on('line', (l) => { heardWall[l.id] = Date.now(); });
+            // Health: is it actually checking what it hears? Two failed calls in a
+            // row, or heard lines with no successful ear call for 20 s, and the
+            // panel says "not checking" (silence must never read as "all clear").
+            const health = this._health = { failStreak: 0, lastError: '', pendingSince: null, lastHeardWall: null };
+            cw.on('line', () => { const now = Date.now(); health.lastHeardWall = now; if (health.pendingSince == null) health.pendingSince = now; });
+            cw.on('call', (c) => {
+                if (!/^(ear|verify|answer|update|prime)$/.test(c.lane)) return;
+                if (c.ok) { health.failStreak = 0; if (c.lane === 'ear') health.pendingSince = null; }
+                else if (!/abort/i.test(c.error || '')) { health.failStreak++; health.lastError = c.error || ''; }
+                this._checkHealth();
+            });
             cw.on('thinking', (p) => { if (p.lane === 'answer' && p.id) askedWall[p.id] = Date.now(); });
             cw.on('line', (l) => {
                 const display = this._pendingLabel || SPEAKER_LABEL[l.speaker] || l.speaker;
@@ -240,7 +260,7 @@
                 delete v.streaming[s.id];
                 const cue = s.cueLine && v.lines.find((l) => l.id === s.cueLine);
                 const from = (s.cueLine && heardWall[s.cueLine]) || askedWall[s.id] || null;
-                const item = Object.assign({}, s, { cueText: cue ? cue.text : '', latencyMs: from ? Date.now() - from : null });
+                const item = Object.assign({}, s, { cueText: cue ? cue.text : '', latencyMs: from ? Date.now() - from : null, wallAt: Date.now() });
                 v.said.unshift(item);
                 if (s.kind === 'critical') { v.alerts.unshift(item); this._chime(); }
                 if (this.settings.speakAloud && (s.kind === 'critical' || s.kind === 'answer')) this._speak(s.text);
@@ -253,9 +273,9 @@
             cw.on('verified', (p) => decide({ decision: p.decision, followUp: p.followUp, reason: p.reason, why: (p.out && p.out.why) || '', text: (p.out && p.out.text) || '' }));
             cw.on('suppressed', (p) => decide({ decision: 'suppressed', reason: p.reason || '', text: p.text || '', why: '' }));
             cw.on('call', () => { v.stats = cw.stats(); v.calls = cw.calls; this.request('log'); });
+            // Failed calls show up as the "not checking" state (see _healthView), not as a flash.
             cw.on('error', (e) => {
                 if (/prime|update/.test(e.lane)) { v.takeLoading = false; this.request('take'); }
-                if (/429|529|overloaded|reach/i.test(e.message)) this._flash('AI service busy: ' + e.message.slice(0, 80));
             });
         },
 
@@ -296,7 +316,7 @@
                 onMode: (m) => this.setMode(m),
                 onAsk: (q) => this.ask(q),
                 onAck: (id) => { this.view.alerts = this.view.alerts.filter((a) => a.id !== id); this.request('alerts', 'said', 'take'); },
-                onAckAll: () => { this.view.alerts = []; this.request('alerts', 'said', 'take'); },
+                onRetry: (q) => { if (q) this.ask(q); },
                 onUnfold: (id) => { this.view.openAlerts = Object.assign({}, this.view.openAlerts, { [id]: true }); this.request('alerts'); },
                 onTellHeld: (topic) => { if (this.engine) this.engine.tell(topic); this.view.heldOpen = true; },
                 onTakeToggle: () => { this.view.takeOpen = !this.view.takeOpen; this.request('take'); },
@@ -353,6 +373,7 @@
             this._stopReplay();
             if (!this.engine.running) this.onPanelOpen();
             this._quietOthers();
+            if (this._health) this._health.pendingSince = null;
             const useRoom = this.settings.source === 'room' && this.view.deepgram && typeof DeepgramClient !== 'undefined';
             try {
                 if (useRoom) await this._startDeepgram(); else this._startBrowserSpeech();
@@ -481,6 +502,7 @@
             if (!rp) return;
             rp.playing = true;
             rp.startedWall = Date.now() - (rp.pos * 1000) / rp.speed;
+            if (this._health) this._health.pendingSince = null;
             for (const line of rp.script.lines) {
                 const at = line.t + line.dur;
                 if (at <= rp.pos) continue;
@@ -521,23 +543,60 @@
         _status(state, label, sub) {
             this.view.status = { state, label: label || '', sub: sub || '', explicit: !!label };
             this.request('head');
+            this._checkHealth();   // pausing or stopping ends a "not checking" warning at once
         },
 
         _statusView() {
+            const base = this._baseStatus();
+            // A short message ("Open a patient first.") borrows the second line for 5 s.
+            if (this._flashMsg && Date.now() < this._flashUntil && base.state !== 'degraded') return Object.assign({}, base, { sub: this._flashMsg, subHtml: null });
+            return base;
+        },
+
+        _baseStatus() {
             const s = this.view.status;
             const brain = BRAIN_LABEL[this.settings.brain] || this.settings.brain;
             const elapsed = this.view.startedAt ? Date.now() - this.view.startedAt : 0;
             const clock = (ms) => { const x = Math.round(ms / 1000); return Math.floor(x / 60) + ':' + String(x % 60).padStart(2, '0'); };
-            if (this._flashMsg && Date.now() < this._flashUntil) return { state: s.state, label: s.label || 'Ready', sub: this._flashMsg };
-            if (s.state === 'listening') return { state: 'listening', label: 'Listening · ' + clock(elapsed), sub: (this._mic && this._mic.kind === 'room' ? 'Room mic, speakers separated' : 'Browser speech') + ' · ' + brain };
+            const hv = this._healthView();
+            if (hv.degraded && (s.state === 'listening' || s.state === 'replaying')) {
+                return { state: 'degraded', listening: s.state === 'listening', label: (s.state === 'listening' ? 'Listening' : 'Demo') + ', not checking', sub: hv.reason };
+            }
+            if (s.state === 'listening') {
+                const since = hv.lastHeardWall ? Math.round((Date.now() - hv.lastHeardWall) / 1000) : null;
+                const heard = since == null ? 'waiting for speech' : 'heard ' + (since < 5 ? 'just now' : since < 60 ? since + 's ago' : Math.round(since / 60) + 'm ago');
+                return { state: 'listening', label: 'Listening · ' + clock(elapsed), sub: (this._mic && this._mic.kind === 'room' ? 'Room mic' : 'Browser speech') + ' · ' + heard + ' · ' + brain };
+            }
             if (s.state === 'connecting') return { state: 'connecting', label: 'Connecting the mic…', sub: brain };
             if (s.state === 'replaying' && this._replay) return { state: 'replaying', label: 'Demo · ' + DEMO.title, sub: this._replay.speed + '× speed · ' + brain };
             if (s.state === 'error') return { state: 'error', label: s.label || 'Something went wrong', sub: s.sub };
             if (!this.patientId) return { state: 'idle', label: 'Ready', sub: 'Open a patient to start.' };
+            // A paused or finished demo: its own row has Resume / Play again, so no demo link here.
+            if (this._replay) return { state: 'idle', label: s.label || 'Demo paused', sub: this._replay.speed + '× speed · ' + brain };
+            const busy = this.view.lines.length > 0 || this.view.said.length > 0;
             return {
                 state: 'idle', label: s.label || 'Ready', sub: '',
-                subHtml: (this.patientId === DEMO.patient ? 'Start the mic, or <button type="button" data-act="demo">play the Morrison demo</button>' : 'Start the mic when you are with the patient') + ' · ' + brain,
+                subHtml: (this.patientId === DEMO.patient
+                    ? 'Start the mic, or <button type="button" data-act="demo"' + (busy ? ' data-confirm="clear this encounter and play the demo?"' : '') + '>play the Morrison demo</button>'
+                    : 'Start the mic when you are with the patient') + ' · ' + brain,
             };
+        },
+
+        /** Is the coworker checking what it hears? (See the health tracking in _wire.) */
+        _healthView() {
+            const h = this._health || {};
+            const active = !!this._mic || !!(this._replay && this._replay.playing);
+            let reason = '';
+            if (h.failStreak >= 2) reason = 'The AI is not answering (' + plainError(h.lastError) + ').';
+            else if (h.pendingSince != null && Date.now() - h.pendingSince > 20000) reason = 'No reply from the AI for over 20 seconds.';
+            return { degraded: active && !!reason, reason, lastHeardWall: h.lastHeardWall || null };
+        },
+
+        _checkHealth() {
+            const d = this._healthView().degraded;
+            if (d === !!this._wasDegraded) return;
+            this._wasDegraded = d;
+            this.request('head', 'alerts');
         },
 
         _flash(msg) { this._flashMsg = msg; this._flashUntil = Date.now() + 5000; this.request('head'); setTimeout(() => this.request('head'), 5100); },
@@ -605,6 +664,7 @@
             v.engineNow = this.engine ? this.engine.elapsed : null;
             v.mode = this.settings.mode;
             v.settings = this.settings;
+            v.health = this._healthView();
             v.replay = this._replay ? { active: true, finished: !this._replay.playing && this._replay.pos >= this._replay.script.duration_s, playing: this._replay.playing, t: this._replay.playing ? Math.min(this._replay.script.duration_s, ((Date.now() - this._replay.startedWall) * this._replay.speed) / 1000) : this._replay.pos, duration: this._replay.script.duration_s, title: DEMO.title, speed: this._replay.speed } : null;
             try {
                 if (q.has('head')) LivePanel.renderHead(Object.assign({}, v, { status: this._statusView() }));
@@ -621,10 +681,11 @@
 
         _tick() {
             if (!this.enabled || !this._panelVisible()) return;
+            this._checkHealth();
             const parts = ['head'];
-            if (this.view.take) parts.push('take');
             if (this._replay && this._replay.playing) parts.push('replay');
             this.request(...parts);
+            LivePanel.refreshTimes(Date.now());
         },
     };
 

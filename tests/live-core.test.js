@@ -319,12 +319,14 @@ const manualClock = () => {
             return reply(JSON.stringify(EMPTY_EAR));
         });
         const cw = LiveCore.createCoworker({ transport: t, chart, clock: manualClock() });
-        const said = [];
+        const said = [], statuses = [];
         cw.on('say', (s) => said.push(s));
+        cw.on('say-partial', (p) => { if (p.status) statuses.push(p.status); });
         cw.start({ skipPrime: true });
         await cw.ask('What are his last K and creatinine?');
         assert.strictEqual(said.length, 1);
         assert.match(said[0].text, /4\.46/);
+        assert.deepStrictEqual(statuses, ['Checking labs…'], 'tool status in plain words');
         const a = t.log.filter((x) => x.lane === 'answer');
         assert.strictEqual(a.length, 2);
         assert.strictEqual(JSON.stringify(a[0].body.system), JSON.stringify(a[1].body.system));

@@ -59,6 +59,11 @@
         let updates = 0;
         return {
             async callWithRetry(req, hooks) {
+                // LiveFake.failing = true: every call fails like an overloaded API (tests the "not checking" state).
+                if (root.LiveFake && root.LiveFake.failing) {
+                    await sleep(300);
+                    throw Object.assign(new Error('AI call failed (529): Overloaded'), { name: 'LiveApiError', status: 529, retryable: true });
+                }
                 const user = JSON.stringify(req.body.messages);
                 if (req.label === 'ear') {
                     await sleep(550 + Math.random() * 300);
@@ -96,5 +101,5 @@
         };
     }
 
-    root.LiveFake = { createTransport };
+    root.LiveFake = { createTransport, failing: false };
 })(typeof window !== 'undefined' ? window : globalThis);

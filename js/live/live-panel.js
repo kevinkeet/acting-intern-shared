@@ -2,20 +2,25 @@
  * Live Coworker: the panel UI (DOM only; no AI calls, no app state).
  *
  * Information architecture, top to bottom:
- *   1. Header: am I listening (mic + status), how much may I speak (mode).
- *   2. Safety alerts: pinned until acknowledged. The only loud thing.
- *   3. My take: the coworker's current read, one line first, detail on demand.
- *   4. Said | Tracking | Transcript | Log:
+ *   1. Header: am I listening, am I checking (mic + status), how much may I
+ *      speak (mode). When calls fail it says "not checking": silence must
+ *      never look like "all clear".
+ *   2. Safety alerts: pinned until acknowledged, newest in full, older ones
+ *      folded to their first sentence. The only loud thing.
+ *   3. My take: what matters most first; its summary and plan on request.
+ *      It shrinks to one line while an alert waits.
+ *   4. Said | Tracking | Heard | Log:
  *        Said: everything it said (answers, alerts, insights), newest first,
  *              plus thoughts it is holding until asked.
- *        Tracking: its working memory (what it heard, your thinking, the
- *              plan, what it is watching for).
- *        Transcript: the conversation as heard. Log: calls, latency, cost.
+ *        Tracking: its working memory (facts heard, your thinking, the plan,
+ *              what it is watching for).
+ *        Heard: the conversation as heard. Log: decisions, calls, cost.
  *   5. Ask box.
  * When the panel is wide, talk (alerts, Said, ask) sits on the left and
- * thinking (take, tracking, transcript, log) on the right.
+ * thinking (take, tracking, heard, log) on the right.
  *
- * LiveApp owns the state and calls render*(view) when something changes.
+ * LiveApp owns the state and calls render*(view) when something changes;
+ * refreshTimes() keeps the "2m ago" labels current without re-rendering.
  */
 (function (root) {
     'use strict';
@@ -28,19 +33,39 @@
         mic: svg('<path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/>'),
         more: svg('<circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>'),
         alert: svg('<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/>', 'is-critical'),
+        warn: svg('<circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/>'),
         bulb: svg('<path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/>', 'is-insight'),
         chat: svg('<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>'),
         chevron: svg('<path d="m6 9 6 6 6-6"/>'),
-        play: svg('<polygon points="6 3 20 12 6 21 6 3"/>'),
     };
     const MODE_HINT = {
         follow: 'Answers when you ask. Speaks up only for safety.',
-        abreast: 'Keeps pace with your thinking. Speaks up for safety and holds other thoughts until you ask.',
-        lead: 'Thinks ahead. Speaks up for safety and volunteers what you may have missed.',
+        abreast: 'Keeps pace with you. Speaks up for safety; saves other thoughts.',
+        lead: 'Thinks ahead. Speaks up for safety and for what you may have missed.',
     };
     const fmt = (ms) => { const s = Math.max(0, Math.round((ms || 0) / 1000)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
-    const ago = (ms) => { if (ms == null) return ''; const s = Math.round(ms / 1000); return s < 10 ? 'just now' : s < 60 ? s + 's ago' : Math.round(s / 60) + 'm ago'; };
-    const secs = (ms) => (ms == null ? '' : (ms / 1000).toFixed(1) + 's');
+    const ago = (ms) => {
+        if (ms == null || !isFinite(ms)) return '';
+        const s = Math.max(0, Math.round(ms / 1000));
+        if (s < 10) return 'just now';
+        if (s < 60) return s + 's ago';
+        const m = Math.round(s / 60);
+        return m < 60 ? m + 'm ago' : Math.round(m / 60) + 'h ago';
+    };
+    const secs = (ms) => (ms == null ? '' : (ms / 1000).toFixed(1) + ' s');
+    const clockTime = (wall) => { try { return new Date(wall).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }); } catch (e) { return ''; } };
+    // When something happened: "2m ago" on screen; the encounter clock, the
+    // time of day and any detail (latency) in the tooltip.
+    const when = (wall, t, extra) => {
+        const title = [t != null ? fmt(t) + ' into the encounter' : '', wall ? clockTime(wall) : '', extra || ''].filter(Boolean).join(' · ');
+        return '<time' + (wall ? ' data-wall="' + wall + '"' : '') + ' title="' + esc(title) + '">' + esc(wall ? ago(Date.now() - wall) : fmt(t)) + '</time>';
+    };
+    // An alert's first sentence is the action; the rest is the supporting fact.
+    const splitLead = (s) => {
+        const t = String(s || '').replace(/\*\*/g, '').trim();
+        const m = t.match(/^(.{8,}?[.!?])\s+(?=["“(]?[A-Z0-9])/);
+        return m ? [m[1], t.slice(m[0].length).trim()] : [t, ''];
+    };
 
     const LivePanel = {
         el: null,
@@ -51,45 +76,49 @@
 
         mount(panel, handlers) {
             this.handlers = handlers || {};
+            this._shown = new WeakSet();      // alerts already on screen (no entrance animation)
+            this._announced = new WeakSet();  // items already read out to screen readers
+            this._whyOpen = new Set();
+            const radio = (mode, label) => '    <button type="button" role="radio" data-mode="' + mode + '" aria-checked="false" tabindex="-1" title="' + esc(MODE_HINT[mode]) + '">' + label + '</button>';
             const wrap = document.createElement('section');
             wrap.className = 'lc';
             wrap.id = 'live-coworker';
             wrap.setAttribute('aria-label', 'AI Coworker, live');
             wrap.innerHTML = [
                 '<header class="lc-head">',
-                '  <div class="lc-status">',
-                '    <button type="button" class="lc-mic" data-act="mic" aria-pressed="false" title="Start listening">' + ICON.mic + '<span class="lc-sr">Listen</span></button>',
-                '    <div class="lc-status-text"><span class="lc-state" data-ref="state">Ready</span><span class="lc-sub" data-ref="sub"></span></div>',
-                '    <button type="button" class="lc-iconbtn" data-act="settings" aria-haspopup="true" aria-expanded="false" title="Coworker settings">' + ICON.more + '<span class="lc-sr">Settings</span></button>',
-                '  </div>',
+                '  <button type="button" class="lc-mic" data-act="mic" aria-pressed="false" title="Start listening">' + ICON.mic + '<span class="lc-sr">Listen</span></button>',
+                '  <div class="lc-status-text"><span class="lc-state" data-ref="state">Ready</span><span class="lc-sub" data-ref="sub"></span></div>',
+                '  <button type="button" class="lc-iconbtn" data-act="settings" aria-haspopup="dialog" aria-expanded="false" title="Coworker settings">' + ICON.more + '<span class="lc-sr">Settings</span></button>',
                 '  <div class="lc-modes" role="radiogroup" aria-label="How much the coworker speaks up">',
-                '    <button type="button" role="radio" data-mode="follow" aria-checked="false" title="' + MODE_HINT.follow + '">Follow</button>',
-                '    <button type="button" role="radio" data-mode="abreast" aria-checked="true" title="' + MODE_HINT.abreast + '">Abreast</button>',
-                '    <button type="button" role="radio" data-mode="lead" aria-checked="false" title="' + MODE_HINT.lead + '">Lead</button>',
+                radio('follow', 'Follow'),
+                radio('abreast', 'Abreast'),
+                radio('lead', 'Lead'),
                 '  </div>',
-                '  <p class="lc-mode-hint" data-ref="hint" hidden></p>',
+                '  <p class="lc-mode-hint" data-ref="hint"></p>',
                 '  <div class="lc-replay" data-ref="replay" hidden></div>',
                 '</header>',
+                '<div class="lc-sr" aria-live="assertive" data-ref="sayAlert"></div>',
+                '<div class="lc-sr" aria-live="polite" data-ref="sayPolite"></div>',
                 '<div class="lc-body">',
                 '  <div class="lc-left">',
-                '    <div class="lc-alerts" data-ref="alerts" aria-live="assertive"></div>',
-                '    <div class="lc-pane is-active" data-pane="said" role="tabpanel" aria-label="Said"><h3 class="lc-pane-title">Said</h3><div data-ref="said" aria-live="polite"></div></div>',
+                '    <div class="lc-alerts" data-ref="alerts"></div>',
+                '    <div class="lc-pane is-active" data-pane="said" role="tabpanel" aria-label="Said"><h3 class="lc-pane-title">Said</h3><div data-ref="said"></div></div>',
                 '    <form class="lc-ask" data-ref="ask" autocomplete="off">',
                 '      <label class="lc-sr" for="lc-ask-input">Ask the coworker</label>',
-                '      <input id="lc-ask-input" type="text" placeholder="Ask the coworker…" enterkeyhint="send">',
+                '      <input id="lc-ask-input" type="text" placeholder="Ask, or say “Coworker, …”" enterkeyhint="send">',
                 '      <button type="submit" class="lc-btn lc-btn-primary">Ask</button>',
                 '    </form>',
                 '  </div>',
                 '  <div class="lc-right">',
-                '    <section class="lc-take" data-ref="take" data-open="true" aria-label="My take"></section>',
+                '    <section class="lc-take" data-ref="take" data-open="false" aria-label="My take"></section>',
                 '    <div class="lc-tabs" role="tablist" aria-label="Coworker views">',
                 '      <button type="button" role="tab" data-tab="said" aria-selected="true">Said<span class="lc-count" data-ref="saidCount" hidden></span></button>',
-                '      <button type="button" role="tab" data-tab="tracking" aria-selected="false">Tracking</button>',
-                '      <button type="button" role="tab" data-tab="transcript" aria-selected="false">Transcript</button>',
-                '      <button type="button" role="tab" data-tab="log" aria-selected="false">Log</button>',
+                '      <button type="button" role="tab" data-tab="tracking" aria-selected="false" tabindex="-1">Tracking</button>',
+                '      <button type="button" role="tab" data-tab="transcript" aria-selected="false" tabindex="-1">Heard</button>',
+                '      <button type="button" role="tab" data-tab="log" aria-selected="false" tabindex="-1">Log</button>',
                 '    </div>',
                 '    <div class="lc-pane" data-pane="tracking" role="tabpanel" aria-label="Tracking"><h3 class="lc-pane-title">Tracking</h3><div data-ref="tracking"></div></div>',
-                '    <div class="lc-pane" data-pane="transcript" role="tabpanel" aria-label="Transcript"><h3 class="lc-pane-title">Transcript</h3><div data-ref="transcript" class="lc-lines"></div></div>',
+                '    <div class="lc-pane" data-pane="transcript" role="tabpanel" aria-label="Heard"><h3 class="lc-pane-title">Heard</h3><div data-ref="transcript" class="lc-lines"></div></div>',
                 '    <div class="lc-pane" data-pane="log" role="tabpanel" aria-label="Log"><h3 class="lc-pane-title">Under the hood</h3><div data-ref="log"></div></div>',
                 '  </div>',
                 '</div>',
@@ -120,19 +149,23 @@
                 if (t.dataset.tab) return this.showTab(t.dataset.tab);
                 const act = t.dataset.act;
                 if (!act) return;
-                if (act === 'mic') return h.onMic && h.onMic();
-                if (act === 'settings') return this.togglePop();
-                if (act === 'ack') return h.onAck && h.onAck(t.dataset.id);
-                if (act === 'ack-all') return h.onAckAll && h.onAckAll();
-                if (act === 'unfold') return h.onUnfold && h.onUnfold(t.dataset.id);
-                if (act === 'why') { const p = t.closest('.lc-alert'); const why = p && p.querySelector('.lc-alert-why'); if (why) { why.hidden = !why.hidden; t.textContent = why.hidden ? 'Why?' : 'Hide why'; } return; }
-                if (act === 'take-toggle') return h.onTakeToggle && h.onTakeToggle();
-                if (act === 'tell') return h.onTellHeld && h.onTellHeld(t.dataset.topic);
-                if (act === 'demo') return h.onReplay && h.onReplay('play');
-                if (act === 'replay') return h.onReplay && h.onReplay(t.dataset.cmd);
-                if (act === 'prime') return h.onPrime && h.onPrime();
-                if (act === 'reset') return h.onReset && h.onReset();
-                if (act === 'classic') return h.onClassic && h.onClassic();
+                if (t.dataset.confirm && !this._confirm(t)) return;
+                switch (act) {
+                    case 'mic': return h.onMic && h.onMic();
+                    case 'settings': return this.togglePop();
+                    case 'ack': return h.onAck && h.onAck(t.dataset.id);
+                    case 'unfold': return h.onUnfold && h.onUnfold(t.dataset.id);
+                    case 'why': return this._toggleWhy(t);
+                    case 'take-toggle': return h.onTakeToggle && h.onTakeToggle();
+                    case 'tell': return h.onTellHeld && h.onTellHeld(t.dataset.topic);
+                    case 'retry': return h.onRetry && h.onRetry(t.dataset.q);
+                    case 'demo': return h.onReplay && h.onReplay('play');
+                    case 'replay': return h.onReplay && h.onReplay(t.dataset.cmd);
+                    case 'prime': return h.onPrime && h.onPrime();
+                    case 'reset': return h.onReset && h.onReset();
+                    case 'classic': return h.onClassic && h.onClassic();
+                    default: return undefined;
+                }
             });
             w.addEventListener('change', (ev) => {
                 const t = ev.target;
@@ -147,14 +180,17 @@
                 this.showTab('said');
             });
             w.addEventListener('keydown', (ev) => {
-                if (ev.key === 'Escape' && !this.refs.pop.hidden) { this.togglePop(false); this.refs.settingsBtn.focus(); }
-                if (ev.target.getAttribute('role') === 'tab' && (ev.key === 'ArrowRight' || ev.key === 'ArrowLeft')) {
-                    const tabs = [...w.querySelectorAll('[role="tab"]')];
-                    const i = tabs.indexOf(ev.target);
-                    const n = tabs[(i + (ev.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
-                    n.focus();
-                    this.showTab(n.dataset.tab);
-                }
+                if (ev.key === 'Escape' && !this.refs.pop.hidden) { this.togglePop(false); this.refs.settingsBtn.focus(); return; }
+                const role = ev.target.getAttribute && ev.target.getAttribute('role');
+                const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[ev.key];
+                if (!step || (role !== 'tab' && role !== 'radio')) return;
+                if (role === 'tab' && (ev.key === 'ArrowUp' || ev.key === 'ArrowDown')) return;
+                ev.preventDefault();
+                const group = [...w.querySelectorAll(role === 'tab' ? '[role="tab"]' : '.lc-modes [role="radio"]')];
+                const n = group[(group.indexOf(ev.target) + step + group.length) % group.length];
+                n.focus();
+                if (role === 'tab') this.showTab(n.dataset.tab);
+                else if (h.onMode) h.onMode(n.dataset.mode);
             });
             document.addEventListener('click', (ev) => {
                 if (!this.el || this.refs.pop.hidden) return;
@@ -162,12 +198,45 @@
             });
         },
 
+        // Anything that clears an encounter asks once, inline: the first click arms the button.
+        _confirm(t) {
+            if (t.classList.contains('is-armed')) {
+                clearTimeout(t._lcArm);
+                t.classList.remove('is-armed');
+                t.textContent = t.dataset.label || t.textContent;
+                return true;
+            }
+            t.dataset.label = t.textContent;
+            t.textContent = t.dataset.confirm;
+            t.classList.add('is-armed');
+            t._lcArm = setTimeout(() => { t.classList.remove('is-armed'); t.textContent = t.dataset.label; }, 4000);
+            return false;
+        },
+
+        _toggleWhy(btn) {
+            const id = btn.dataset.id;
+            if (this._whyOpen.has(id)) this._whyOpen.delete(id); else this._whyOpen.add(id);
+            const box = btn.closest('.lc-alert');
+            const why = box && box.querySelector('.lc-alert-why');
+            const open = this._whyOpen.has(id);
+            if (why) why.hidden = !open;
+            btn.textContent = open ? 'Hide why' : 'Why?';
+            btn.setAttribute('aria-expanded', String(open));
+        },
+
+        _announce(kind, text) {
+            const n = kind === 'alert' ? this.refs.sayAlert : this.refs.sayPolite;
+            if (!n || !text) return;
+            n.textContent = '';
+            setTimeout(() => { n.textContent = text; }, 60);
+        },
+
         showTab(name) {
             this.tab = name;
-            this.el.querySelectorAll('[role="tab"]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === name)));
+            this.el.querySelectorAll('[role="tab"]').forEach((b) => { const on = b.dataset.tab === name; b.setAttribute('aria-selected', String(on)); b.tabIndex = on ? 0 : -1; });
             this.el.querySelectorAll('.lc-pane').forEach((p) => p.classList.toggle('is-active', p.dataset.pane === name));
             if (name === 'transcript') { const pane = this.refs.transcript.parentElement; pane.scrollTop = pane.scrollHeight; }
-            if (name === 'said' && this.refs.saidCount) { this.refs.saidCount.hidden = true; this.refs.saidCount.classList.remove('is-new'); this.seenSaid = this._saidTotal || 0; }
+            if (name === 'said' && this.refs.saidCount) { this.refs.saidCount.hidden = true; this.seenSaid = this._saidTotal || 0; }
             if (this.handlers.onTab) this.handlers.onTab(name);
         },
 
@@ -176,25 +245,40 @@
             const open = force == null ? pop.hidden : !!force;
             pop.hidden = !open;
             this.refs.settingsBtn.setAttribute('aria-expanded', String(open));
-            if (open && this.handlers.onOpenSettings) this.handlers.onOpenSettings();
+            if (open) { this._focusPop = true; if (this.handlers.onOpenSettings) this.handlers.onOpenSettings(); }
+        },
+
+        /** Keep "2m ago" labels current (called once a second; touches text only). */
+        refreshTimes(now) {
+            if (!this.el) return;
+            const t0 = now || Date.now();
+            this.el.querySelectorAll('time[data-wall]').forEach((n) => {
+                const s = ago(t0 - Number(n.dataset.wall));
+                if (s && n.textContent !== s) n.textContent = s;
+            });
         },
 
         // ── header ───────────────────────────────────────────────────────
         renderHead(v) {
             const r = this.refs;
-            r.state.textContent = v.status.label;
-            r.sub.innerHTML = v.status.subHtml || esc(v.status.sub || '');
-            r.mic.setAttribute('aria-pressed', String(v.status.state === 'listening'));
-            r.mic.dataset.state = v.status.state;
-            r.mic.title = v.status.state === 'listening' ? 'Stop listening' : 'Start listening';
-            this.el.querySelectorAll('.lc-modes [role="radio"]').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.mode === v.mode)));
-            if (this._lastMode && this._lastMode !== v.mode) {
-                r.hint.textContent = MODE_HINT[v.mode] || '';
-                r.hint.hidden = false;
-                clearTimeout(this._hintTimer);
-                this._hintTimer = setTimeout(() => { r.hint.hidden = true; }, 4500);
-            }
-            this._lastMode = v.mode;
+            const st = v.status;
+            if (r.state.textContent !== st.label) r.state.textContent = st.label;
+            r.state.classList.toggle('is-degraded', st.state === 'degraded');
+            // Rewrite the line only when it changes, so an armed link keeps its state.
+            const subHtml = st.subHtml || esc(st.sub || '');
+            if (r.sub._lcHtml !== subHtml) { r.sub.innerHTML = subHtml; r.sub._lcHtml = subHtml; }
+            r.sub.title = st.sub || '';
+            const on = st.state === 'listening' || (st.state === 'degraded' && !!st.listening);
+            r.mic.setAttribute('aria-pressed', String(on));
+            r.mic.dataset.state = st.state;
+            r.mic.title = on ? 'Stop listening' : 'Start listening';
+            this.el.querySelectorAll('.lc-modes [role="radio"]').forEach((b) => {
+                const sel = b.dataset.mode === v.mode;
+                b.setAttribute('aria-checked', String(sel));
+                b.tabIndex = sel ? 0 : -1;
+            });
+            const hint = MODE_HINT[v.mode] || '';
+            if (r.hint.textContent !== hint) r.hint.textContent = hint;
         },
 
         renderReplay(v) {
@@ -210,26 +294,41 @@
                       + '<button type="button" data-act="replay" data-cmd="stop">Stop</button>');
         },
 
-        // ── alerts ───────────────────────────────────────────────────────
+        // ── alerts (and the "not checking" warning) ──────────────────────
         renderAlerts(v) {
             const el = this.refs.alerts;
             const items = v.alerts || [];
-            // Newest alert in full; older ones fold to one line until opened.
-            el.innerHTML = items.map((a, i) => {
+            const hv = v.health || {};
+            const parts = [];
+            if (hv.degraded) {
+                parts.push('<div class="lc-warn" role="status">' + ICON.warn + '<p><b>Not checking right now.</b> ' + esc(hv.reason || '')
+                    + ' Still listening; safety checks resume when the AI answers again.</p></div>');
+            }
+            if (!items.length) this._whyOpen.clear();
+            items.forEach((a, i) => {
+                // Newest in full; older ones fold to their first sentence until opened.
                 const folded = i > 0 && !(v.openAlerts && v.openAlerts[a.id]);
-                return '<article class="lc-alert' + (folded ? ' is-folded' : '') + (this._seenAlerts && this._seenAlerts.has(a.id) ? ' is-seen' : '') + '" data-id="' + esc(a.id) + '" role="alert">'
-                    + '<div class="lc-alert-top">' + ICON.alert + '<span>Safety</span><time>' + fmt(a.t) + '</time></div>'
+                const [lead, rest] = splitLead(a.text);
+                const hasWhy = !!(a.why || a.cueText);
+                const whyOpen = this._whyOpen.has(a.id);
+                const lat = a.latencyMs != null ? 'flagged ' + secs(a.latencyMs) + ' after it was said' : '';
+                parts.push('<article class="lc-alert' + (folded ? ' is-folded' : '') + (this._shown.has(a) ? ' is-seen' : '') + '" data-id="' + esc(a.id) + '" aria-label="Safety alert">'
+                    + '<div class="lc-alert-top">' + ICON.alert + '<span>Safety</span>' + when(a.wallAt, a.t, lat) + '</div>'
+                    + '<div class="lc-alert-body">'
                     + (folded
-                        ? '<button type="button" class="lc-alert-line" data-act="unfold" data-id="' + esc(a.id) + '" title="Show this alert">' + esc(a.text) + '</button>'
-                        : '<p class="lc-alert-text">' + rich(a.text) + '</p>'
-                          + '<p class="lc-alert-why" hidden>' + esc(a.why || '') + (a.cueText ? ' Heard: <q>' + esc(a.cueText) + '</q>' : '') + '</p>'
+                        ? '<button type="button" class="lc-alert-line" data-act="unfold" data-id="' + esc(a.id) + '" title="' + esc(a.text) + '">' + esc(lead) + '</button>'
+                        : '<p class="lc-alert-text"><strong>' + esc(lead) + '</strong> ' + esc(rest) + '</p>'
+                          + (hasWhy ? '<p class="lc-alert-why"' + (whyOpen ? '' : ' hidden') + '>' + esc(a.why || '') + (a.cueText ? ' Heard: <q>' + esc(a.cueText) + '</q>' : '') + '</p>' : '')
                           + '<div class="lc-alert-actions"><button type="button" class="lc-btn lc-btn-primary" data-act="ack" data-id="' + esc(a.id) + '">Got it</button>'
-                          + (a.why || a.cueText ? '<button type="button" class="lc-btn lc-btn-quiet" data-act="why">Why?</button>' : '')
-                          + (items.length > 1 && i === 0 ? '<button type="button" class="lc-btn lc-btn-quiet" data-act="ack-all">Got all ' + items.length + '</button>' : '')
+                          + (hasWhy ? '<button type="button" class="lc-btn lc-btn-quiet" data-act="why" data-id="' + esc(a.id) + '" aria-expanded="' + whyOpen + '">' + (whyOpen ? 'Hide why' : 'Why?') + '</button>' : '')
                           + '</div>')
-                    + '</article>';
-            }).join('');
-            this._seenAlerts = new Set(items.map((a) => a.id));
+                    + '</div></article>');
+            });
+            el.innerHTML = parts.join('');
+            for (const a of items) {
+                if (!this._announced.has(a)) { this._announced.add(a); this._announce('alert', 'Safety alert. ' + a.text); }
+                this._shown.add(a);
+            }
         },
 
         // ── take ─────────────────────────────────────────────────────────
@@ -237,14 +336,28 @@
             const el = this.refs.take;
             const t = v.take;
             const open = v.takeOpen === true;
+            const follow = v.mode === 'follow';
+            const lead = v.mode === 'lead';
+            // One line only in Follow, and while a safety alert waits (more on request).
+            const quiet = !!t && (follow || ((v.alerts || []).length > 0 && !open));
             el.dataset.open = String(open);
-            const chip = t && v.mode !== 'follow'
-                ? (t.differs ? '<span class="lc-chip is-differs">I see it differently</span>' : (t.doctor_view ? '<span class="lc-chip is-with">With you</span>' : ''))
+            el.classList.toggle('is-quiet', quiet);
+            const concerns = t ? (t.concerns || []).slice(0, 4) : [];
+            const next = t ? (t.next || []) : [];
+            // Behind the toggle: the summary line (when concerns lead), the assessment, the plan.
+            const more = t && !follow ? [
+                concerns.length && t.one_liner ? '<p class="lc-one">' + esc(t.one_liner) + '</p>' : '',
+                t.assessment ? '<p class="lc-assess">' + esc(t.assessment) + '</p>' : '',
+                !lead && t.differs ? '<p class="lc-differs"><b>Where I differ:</b> ' + esc(t.differs) + '</p>' : '',
+                next.length ? '<div><span class="lc-label">Next I would</span><ul class="lc-next">' + next.map((x) => '<li>' + esc(x) + '</li>').join('') + '</ul></div>' : '',
+            ].join('') : '';
+            const hasMore = !follow && (!!more || (quiet && concerns.length > 0));
+            const chip = t && !follow
+                ? (t.differs ? '<span class="lc-chip is-differs">I see it differently</span>' : (t.doctor_view ? '<span class="lc-chip">With you</span>' : ''))
                 : '';
-            const hasMore = t && v.mode !== 'follow' && (t.assessment || (t.next || []).length || (t.differs && v.mode !== 'lead') || ((v.alerts || []).length && (t.concerns || []).length));
             const head = '<div class="lc-take-head"><span class="lc-label">My take</span>'
-                + (t ? '<time>' + esc(ago(v.now - t.at)) + '</time>' : '') + chip
-                + (hasMore ? '<button type="button" class="lc-iconbtn" data-act="take-toggle" aria-expanded="' + String(open) + '" title="' + (open ? 'Show less' : 'Show more') + '">' + ICON.chevron + '</button>' : '')
+                + (t ? when(t.at, null) : '') + chip
+                + (hasMore ? '<button type="button" class="lc-iconbtn" data-act="take-toggle" aria-expanded="' + open + '" title="' + (open ? 'Show less' : 'Show more') + '">' + ICON.chevron + '<span class="lc-sr">' + (open ? 'Show less' : 'Show more') + '</span></button>' : '')
                 + '</div>';
             if (!t) {
                 el.innerHTML = head + (v.takeLoading
@@ -252,25 +365,15 @@
                     : '<p class="lc-take-empty">No take yet. It forms as soon as I read the chart. <button type="button" class="lc-btn lc-btn-quiet" data-act="prime">Read it now</button></p>');
                 return;
             }
-            const concerns = (t.concerns || []).slice(0, 4).map((c) => '<li><span class="lc-dot ' + esc(c.severity) + '" title="' + esc(c.severity) + '"></span><span title="' + esc(c.text) + '">' + esc(c.text) + '</span></li>').join('');
-            const next = (t.next || []).map((x) => '<li>' + esc(x) + '</li>').join('');
-            const differs = t.differs ? '<p class="lc-differs"><b>Where I differ:</b> ' + esc(t.differs) + '</p>' : '';
-            // Follow mode, or a safety alert waiting: one line only (more on request).
-            if (v.mode === 'follow' || ((v.alerts || []).length && !open)) {
-                el.innerHTML = head.replace('data-act="take-toggle"', 'data-act="take-toggle"') + '<p class="lc-one">' + esc(t.one_liner) + '</p>'
-                    + (v.mode !== 'follow' && open ? '' : '');
-                if (v.mode !== 'follow' && !hasMore && concerns) el.querySelector('.lc-take-head').insertAdjacentHTML('beforeend', '<button type="button" class="lc-iconbtn" data-act="take-toggle" aria-expanded="false" title="Show more">' + ICON.chevron + '</button>');
+            if (quiet) {
+                el.innerHTML = head + '<p class="lc-one" title="' + esc(t.one_liner) + '">' + esc(t.one_liner) + '</p>';
                 return;
             }
+            const list = concerns.map((c) => '<li><span class="lc-dot ' + esc(c.severity) + '" title="' + esc(c.severity) + '"></span><span title="' + esc(c.text) + '">' + esc(c.text) + '</span></li>').join('');
             el.innerHTML = head
-                + '<p class="lc-one">' + esc(t.one_liner) + '</p>'
-                + (concerns ? '<ul class="lc-concerns" aria-label="What matters most">' + concerns + '</ul>' : '')
-                + (v.mode === 'lead' ? differs : '')
-                + '<div class="lc-take-more">'
-                + (t.assessment ? '<p class="lc-assess">' + esc(t.assessment) + '</p>' : '')
-                + (v.mode !== 'lead' ? differs : '')
-                + (next ? '<div><span class="lc-label">Next I would</span><ul class="lc-next">' + next + '</ul></div>' : '')
-                + '</div>';
+                + (lead && t.differs ? '<p class="lc-differs"><b>Where I differ:</b> ' + esc(t.differs) + '</p>' : '')
+                + (list ? '<ul class="lc-concerns" aria-label="What matters most">' + list + '</ul>' : '<p class="lc-one">' + esc(t.one_liner) + '</p>')
+                + (more ? '<div class="lc-take-more">' + more + '</div>' : '');
         },
 
         // ── said stream ──────────────────────────────────────────────────
@@ -280,10 +383,15 @@
             const items = (v.said || []).filter((s) => !pinned.has(s.id));
             this._saidTotal = items.length;
             const held = v.held || [];
+            for (const s of v.said || []) {
+                if (s.kind === 'critical' || this._announced.has(s)) continue;
+                this._announced.add(s);
+                this._announce('polite', (s.kind === 'answer' ? 'Answer. ' : 'Thought. ') + s.text);
+            }
             if (!items.length && !held.length && !Object.keys(v.streaming || {}).length) {
                 el.innerHTML = '<p class="lc-empty">' + (v.mode === 'lead'
-                    ? 'I\'ll answer when you ask (say <b>"Coworker, …"</b> or type below), flag anything unsafe, and point out what you might be missing.'
-                    : 'I\'ll answer when you ask (say <b>"Coworker, …"</b> or type below) and speak up only for safety issues.') + '</p>';
+                    ? 'I’ll answer when you ask (say <b>“Coworker, …”</b> or type below), flag anything unsafe, and point out what you might be missing.'
+                    : 'I’ll answer when you ask (say <b>“Coworker, …”</b> or type below) and speak up only for safety issues.') + '</p>';
                 this._updateCount();
                 return;
             }
@@ -302,12 +410,13 @@
             for (const s of items) {
                 const icon = s.kind === 'critical' ? ICON.alert : s.kind === 'insight' ? ICON.bulb : ICON.chat;
                 const label = s.kind === 'critical' ? 'Safety' : s.kind === 'insight' ? 'Thought' : 'Answer';
+                const lat = s.latencyMs == null ? '' : (s.kind === 'answer' ? 'answered in ' : 'flagged ') + secs(s.latencyMs) + (s.kind === 'answer' ? '' : ' after it was said');
                 parts.push('<article class="lc-item is-' + esc(s.kind) + '" data-id="' + esc(s.id) + '">'
-                    + '<div class="lc-item-meta">' + icon + '<span>' + label + '</span><span>·</span><time>' + fmt(s.t) + '</time>'
-                    + (s.latencyMs != null ? '<span>·</span><span title="from what was said to the reply">' + secs(s.latencyMs) + '</span>' : '') + '</div>'
+                    + '<div class="lc-item-meta">' + icon + '<span>' + label + '</span><span aria-hidden="true">·</span>' + when(s.wallAt, s.t, lat) + '</div>'
                     + (s.question ? '<p class="lc-q">' + esc(s.question) + '</p>' : '')
                     + '<p class="lc-a">' + rich(s.text) + '</p>'
                     + (s.why && s.kind !== 'answer' ? '<p class="lc-why">' + esc(s.why) + '</p>' : '')
+                    + (s.error && s.question ? '<button type="button" class="lc-btn" data-act="retry" data-q="' + esc(s.question) + '">Try again</button>' : '')
                     + '</article>');
             }
             el.innerHTML = '<div class="lc-stream">' + parts.join('') + '</div>';
@@ -315,9 +424,9 @@
         },
 
         /** Fast path while an answer streams in: touch only that item. */
-        streamText(id, text, status, question) {
+        streamText(id, text, status) {
             const el = this.refs.said;
-            let item = el.querySelector('.lc-item[data-id="' + CSS.escape(id) + '"]');
+            const item = el.querySelector('.lc-item[data-id="' + CSS.escape(id) + '"]');
             if (!item) return false;
             const p = item.querySelector('.lc-a, .lc-status-line');
             if (text) {
@@ -337,7 +446,6 @@
             if (this.tab === 'said' || unseen <= 0) { c.hidden = true; if (this.tab === 'said') this.seenSaid = this._saidTotal || 0; return; }
             c.hidden = false;
             c.textContent = String(unseen);
-            c.classList.add('is-new');
         },
 
         // ── tracking (working memory) ────────────────────────────────────
@@ -349,30 +457,31 @@
             const factGroup = (title, kinds) => {
                 const fs = wm.facts.filter((f) => kinds.includes(f.kind));
                 if (!fs.length) return '';
-                return '<div class="lc-group"><h4>' + title + '</h4><ul>' + fs.map((f) => '<li' + fresh(f.t) + '><span class="lc-tag' + (f.from === 'patient' ? ' patient' : '') + '">' + esc(f.from === 'other' ? 'family' : f.from) + '</span><span>' + esc(f.text) + '</span></li>').join('') + '</ul></div>';
+                return '<div class="lc-group"><h4>' + title + '</h4><ul>' + fs.map((f) => '<li' + fresh(f.t) + '><span class="lc-tag">' + esc(f.from === 'other' ? 'family' : f.from) + '</span><span>' + esc(f.text) + '</span></li>').join('') + '</ul></div>';
             };
             const parts = [];
             parts.push(factGroup('Story and symptoms', ['symptom', 'history', 'social', 'other']));
             parts.push(factGroup('Medicines and allergies', ['medication', 'allergy']));
             parts.push(factGroup('Exam and results', ['exam', 'data']));
             if (wm.thinking.length) parts.push('<div class="lc-group"><h4>Your thinking</h4><ul>' + wm.thinking.map((x) => '<li' + fresh(x.t) + '><span class="lc-tag">' + fmt(x.t) + '</span><span class="lc-quote">' + esc(x.text) + '</span></li>').join('') + '</ul></div>');
-            if (wm.plan.length) parts.push('<div class="lc-group"><h4>Plan and orders</h4><ul>' + wm.plan.map((x) => '<li' + fresh(x.t) + '><span class="lc-tag ' + esc(x.kind) + '">' + esc(x.kind) + '</span><span>' + esc(x.text) + '</span></li>').join('') + '</ul></div>');
-            if (wm.watch.length) parts.push('<div class="lc-group"><h4>Watching for</h4><ul>' + wm.watch.map((w) => '<li class="lc-watch" title="' + esc('If it happens: ' + w.alert) + '"><span class="lc-tag ' + esc(w.severity) + '">' + (w.severity === 'critical' ? 'safety' : 'note') + '</span><span>' + esc(w.trigger) + '</span></li>').join('') + '</ul></div>');
+            if (wm.plan.length) parts.push('<div class="lc-group"><h4>Plan and orders</h4><ul>' + wm.plan.map((x) => '<li' + fresh(x.t) + '><span class="lc-tag">' + esc(x.kind) + '</span><span>' + esc(x.text) + '</span></li>').join('') + '</ul></div>');
+            if (wm.watch.length) parts.push('<div class="lc-group"><h4>Watching for</h4><ul>' + wm.watch.map((w) => '<li title="' + esc('If it happens: ' + w.alert) + '"><span class="lc-tag ' + (w.severity === 'critical' ? 'critical' : '') + '">' + (w.severity === 'critical' ? 'safety' : 'note') + '</span><span>' + esc(w.trigger) + '</span></li>').join('') + '</ul></div>');
             const body = parts.filter(Boolean).join('');
             el.innerHTML = (body || '<p class="lc-empty">Nothing heard yet. Facts, your thinking and the plan collect here as you talk.</p>')
                 + (v.memoryNote ? '<p class="lc-empty">' + esc(v.memoryNote) + '</p>' : '');
         },
 
-        // ── transcript ───────────────────────────────────────────────────
+        // ── heard (transcript) ───────────────────────────────────────────
         renderTranscript(v) {
             const el = this.refs.transcript;
             const lines = v.lines || [];
-            if (!lines.length && !v.interim) { el.innerHTML = '<p class="lc-empty">The conversation will appear here as it is heard.</p>'; return; }
+            if (!lines.length && !v.interim) { el.innerHTML = '<p class="lc-empty">The conversation appears here as it is heard.</p>'; return; }
             const flagged = new Set((v.said || []).filter((s) => s.kind !== 'answer' && s.cueLine).map((s) => s.cueLine));
-            const nearBottom = el.parentElement && (el.parentElement.scrollHeight - el.parentElement.scrollTop - el.parentElement.clientHeight < 60);
+            const pane = el.parentElement;
+            const nearBottom = pane && (pane.scrollHeight - pane.scrollTop - pane.clientHeight < 60);
             el.innerHTML = lines.map((l) => '<div class="lc-line' + (flagged.has(l.id) ? ' is-flagged' : '') + '" data-speaker="' + esc(l.speaker) + '"><span class="lc-who">' + esc(l.label || l.speaker) + '</span><span class="lc-said">' + esc(l.text) + '</span></div>').join('')
                 + (v.interim ? '<div class="lc-line is-interim" data-speaker="' + esc(v.interim.speaker) + '"><span class="lc-who">' + esc(v.interim.speaker) + '</span><span class="lc-said">' + esc(v.interim.text) + '</span></div>' : '');
-            if (nearBottom && el.parentElement) el.parentElement.scrollTop = el.parentElement.scrollHeight;
+            if (nearBottom && pane) pane.scrollTop = pane.scrollHeight;
         },
 
         // ── log ──────────────────────────────────────────────────────────
@@ -382,7 +491,7 @@
             if (!st || !st.calls) { el.innerHTML = '<p class="lc-empty">No AI calls yet.</p>' + (v.memoryNote ? '<p class="lc-empty">' + esc(v.memoryNote) + '</p>' : ''); return; }
             const med = (a) => { if (!a || !a.length) return null; const s = a.slice().sort((x, y) => x - y); return s[Math.floor(s.length / 2)]; };
             const LANE = { ear: 'Ear (listens)', answer: 'Answers', verify: 'Safety checks', update: 'Take updates', prime: 'Chart read', helper: 'Helpers' };
-            const rows = Object.entries(st.byLane).map(([k, b]) => '<tr><td>' + esc(LANE[k] || k) + '</td><td>' + b.calls + (b.errors ? ' (' + b.errors + ' err)' : '') + '</td><td>' + secs(med(b.ms)) + '</td><td>$' + b.cost.toFixed(3) + '</td></tr>').join('');
+            const rows = Object.entries(st.byLane).map(([k, b]) => '<tr><td>' + esc(LANE[k] || k) + '</td><td>' + b.calls + (b.errors ? ' (' + b.errors + ' failed)' : '') + '</td><td>' + secs(med(b.ms)) + '</td><td>$' + b.cost.toFixed(3) + '</td></tr>').join('');
             const calls = (v.calls || []).slice(-14).reverse().map((c) => {
                 const u = c.usage || {};
                 const cached = u.cache_read_input_tokens || 0;
@@ -402,6 +511,8 @@
         // ── settings popover ─────────────────────────────────────────────
         renderSettings(v) {
             const s = v.settings;
+            const busy = (v.lines || []).length > 0 || (v.said || []).length > 0;
+            const confirm = (text) => (busy ? ' data-confirm="' + esc(text) + '"' : '');
             const radio = (name, value, label, hint) => '<label class="lc-opt"><input type="radio" name="' + name + '" value="' + value + '"' + (s[name] === value ? ' checked' : '') + '><span>' + label + (hint ? '<small>' + hint + '</small>' : '') + '</span></label>';
             const check = (name, label, hint, disabled) => '<label class="lc-opt"><input type="checkbox" name="' + name + '"' + (s[name] ? ' checked' : '') + (disabled ? ' disabled' : '') + '><span>' + label + (hint ? '<small>' + hint + '</small>' : '') + '</span></label>';
             this.refs.pop.innerHTML = [
@@ -411,20 +522,25 @@
                 check('fast', 'Opus fast mode', 'Up to 2.5× faster output at twice the price.', s.brain !== 'claude-opus-5-5'),
                 '</fieldset>',
                 '<fieldset><legend>Listening</legend>',
-                radio('source', 'room', 'Room mic', v.deepgram ? 'Tells speakers apart (doctor, patient, family).' : 'Not available: the server has no speech key, so the browser\'s own recognition is used.'),
+                radio('source', 'room', 'Room mic', v.deepgram ? 'Tells speakers apart (doctor, patient, family).' : 'Not available: the server has no speech key, so the browser’s own recognition is used.'),
                 radio('source', 'browser', 'Browser speech', 'No speaker labels; works without the server.'),
                 '</fieldset>',
                 '<fieldset><legend>When it speaks</legend>',
                 check('chime', 'Chime on safety alerts'),
-                check('speakAloud', 'Read answers and alerts aloud', 'Uses the computer\'s voice. Off by default with a patient in the room.'),
+                check('speakAloud', 'Read answers and alerts aloud', 'Uses the computer’s voice. Off by default with a patient in the room.'),
                 check('glasses', 'Show them on the G2 glasses', 'Through the glasses bridge, when it is set up.'),
                 '</fieldset>',
                 '<fieldset><legend>Practice</legend><div class="lc-pop-row">',
-                '<button type="button" class="lc-btn" data-act="replay" data-cmd="play">' + (v.replay && v.replay.active ? 'Restart' : 'Play') + ' Morrison demo</button>',
+                '<button type="button" class="lc-btn" data-act="replay" data-cmd="play"' + confirm('Clear and play?') + '>' + (v.replay && v.replay.active ? 'Restart' : 'Play') + ' Morrison demo</button>',
                 '<select name="replaySpeed" class="lc-btn" aria-label="Demo speed">' + [1, 2, 4].map((x) => '<option value="' + x + '"' + (String(s.replaySpeed) === String(x) ? ' selected' : '') + '>' + x + '× speed</option>').join('') + '</select>',
                 '</div></fieldset>',
-                '<div class="lc-pop-row"><button type="button" class="lc-btn" data-act="prime">Re-read chart</button><button type="button" class="lc-btn" data-act="reset">New encounter</button><button type="button" class="lc-btn lc-btn-quiet" data-act="classic">Classic coworker</button></div>',
+                '<div class="lc-pop-row"><button type="button" class="lc-btn" data-act="prime">Re-read chart</button><button type="button" class="lc-btn" data-act="reset"' + confirm('Clear this encounter?') + '>New encounter</button><button type="button" class="lc-btn lc-btn-quiet" data-act="classic">Classic coworker</button></div>',
             ].join('');
+            if (this._focusPop && !this.refs.pop.hidden) {
+                this._focusPop = false;
+                const first = this.refs.pop.querySelector('input:checked, input, button');
+                if (first) first.focus();
+            }
         },
     };
 
