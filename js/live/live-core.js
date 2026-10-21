@@ -26,9 +26,10 @@
         helperModel: 'claude-haiku-5-5',
         mode: 'abreast',              // follow | abreast | lead
         speed: null,                  // 'fast' = Opus fast mode
-        effort: { ear: 'low', answer: 'low', verify: 'low', update: 'low', prime: 'medium', helper: 'medium' },
+        effort: { ear: 'low', answer: 'low', verify: 'low', update: 'low', prime: 'medium', helper: 'medium', memory: 'low' },
         maxTokens: { ear: 2000, answer: 6000, verify: 3000, update: 9000, prime: 9000, helper: 3000 },
         earThinking: 'disabled',      // Haiku 5.5 accepts disabled at low..high effort
+        memoryThinking: 'disabled',   // the long-term memory helper: lookup, not reasoning (2-5 s instead of 6-9 s on a 319K-token record)
         heartbeatMs: 90000,           // refresh the take this often while things change
         quickLookMs: 20000,           // sooner after something "worth a look"
         minUpdateGapMs: 60000,        // but never two take updates closer than this (cost)
@@ -427,7 +428,8 @@
             const body = {
                 max_tokens: cfg.maxTokens.helper,
                 system: [{ type: 'text', text: P.MEMORY_SYSTEM }, { type: 'text', text: 'LONG-TERM RECORD SUMMARY:\n\n' + memory.longTerm, cache_control: { type: 'ephemeral' } }],
-                output_config: { effort: cfg.effort.helper },
+                thinking: cfg.helperModel === 'claude-haiku-5-5' && cfg.memoryThinking === 'disabled' ? { type: 'disabled' } : { type: 'adaptive' },
+                output_config: { effort: cfg.effort.memory || cfg.effort.helper },
                 messages: [{ role: 'user', content: question }],
             };
             const res = await modelCall('helper', cfg.helperModel, body);

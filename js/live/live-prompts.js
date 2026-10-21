@@ -12,7 +12,7 @@
 (function (root) {
     'use strict';
 
-    const PROMPT_VERSION = 'live-v8';
+    const PROMPT_VERSION = 'live-v9';
 
     // ── Ear (Haiku): fast bookkeeping on every utterance ──────────────────
     const EAR_SYSTEM = [
@@ -175,11 +175,15 @@
         '- say: follow the speaking rules for the current mode. should_say false unless a critical item (any mode) or, in Lead, an important insight is not yet said or addressed.',
     ].join('\n');
 
+    // Only "critical" interrupts; "important" is held until asked (or offered in Lead).
+    const SEVERITY_RULE = 'severity "critical" means likely serious harm to this patient soon if things go ahead unchanged (a drug he must not get, a dangerous dose, a missed emergency). A precaution or refinement to a reasonable plan is "important", even when it is wise.';
+
     function taskVerify(reason, followUp) {
         if (followUp) {
             return [
                 'TASK: A moment ago this was flagged: "' + reason + '". You chose to wait and see whether the doctor would address it. Your prepared remark was: "' + followUp.text + '".',
                 'Look at what has been said since. decision "say" if the doctor has moved on without addressing it (update the remark if anything new matters, 25 words or fewer); "quiet" if the doctor addressed it or it no longer matters; "wait" only if the doctor is still in the middle of that very topic.',
+                'If you say it, set severity by what is at stake for the patient, not by the fact that it went unaddressed: ' + SEVERITY_RULE,
             ].join('\n');
         }
         return [
@@ -188,7 +192,7 @@
             '- "say" now for an order or plan that is dangerous for this patient (do not wait on those), or for a red flag or critical result the doctor has already heard and moved past or dismissed.',
             '- "wait" for a red flag or worrying result that was just raised and the doctor has not yet had a turn to respond: you will look again after the doctor\'s next words.',
             '- "quiet" if it is not a real safety issue for this patient, it is the reason for the visit, the doctor is already working on it, or it was already said or addressed. Then severity "none".',
-            'severity "critical" means likely serious harm to this patient soon if things go ahead unchanged (a drug he must not get, a dangerous dose, a missed emergency). A precaution or refinement to a reasonable plan is "important", even when it is wise.',
+            SEVERITY_RULE,
         ].join('\n');
     }
 

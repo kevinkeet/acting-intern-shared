@@ -14,20 +14,37 @@ lines in ─► EAR (Haiku 5.5, every few lines) ─► WORKING MEMORY (facts he
                ▼                                  watch list, said, held)
             BRAIN (Sonnet 5.5 or Opus 5.5)
               answer   the doctor asked: streams, may call tools
-              verify   a tripwire or alarm fired: interrupt or not?
-              update   heartbeat (60 s when something changed, 25 s apart at most)
+              verify   a tripwire or alarm fired: say now, wait for the doctor's
+                       next words (then look again), or keep quiet
+              update   the take: heartbeat every 90 s while things change,
+                       20 s after something "worth a look", never < 60 s apart
               prime    before the visit: first take + tripwires for the ear
                │ tools: lookup_labs, search_chart (exact, no AI)
                │        ask_long_term_memory, check_medication (Haiku helpers)
                ▼
-            SPEAKING RULES (code): answers always; safety alerts in every mode;
-            insights only in Lead, one per 2 min; never repeat a point
-            (new, more urgent information may follow up); otherwise hold.
+            SPEAKING RULES (code): answers always; "critical" safety alerts in
+            every mode; "important" points held until asked (Lead offers one
+            per 2 min); never repeat a point; otherwise hold.
 ```
 
 The brain's prompt is cached: rules + a chart digest (structured allergies,
-meds, problems, labs, vitals, encounters, then the AI long-term memory). Only
-the working memory and the task change per call.
+meds, problems, labs, vitals, encounters, then the AI long-term memory, about
+6K tokens). Only the working memory and the task change per call. The long-term
+memory helper reads the whole Deep Learn record (about 319K tokens for PAT001,
+cached; thinking off, 2 to 5 s per question) and only when the brain asks.
+
+## The panel
+
+- Header: mic, what it is doing ("Listening · 2:14", "heard 3s ago"), mode
+  (Follow / Abreast / Lead). If two AI calls fail in a row, or it hears speech
+  and the ear gets no reply for 20 s, it says **"not checking"** (amber mic and a
+  pinned warning) until calls succeed again: silence must never look like "all clear".
+- Safety alerts: pinned until "Got it". The first sentence (the action) is bold;
+  older alerts fold to that sentence. "Why?" shows the chart fact and what was heard.
+- My take: what matters most first; summary, assessment and next steps on request.
+  One line while an alert waits.
+- Said (answers, alerts, held thoughts; "Try again" if an answer failed),
+  Tracking (working memory), Heard (transcript), Log (decisions, calls, cost).
 
 ## Files
 
