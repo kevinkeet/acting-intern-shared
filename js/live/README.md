@@ -24,7 +24,9 @@ lines in ─► EAR (Haiku 5.5, every few lines) ─► WORKING MEMORY (facts he
                ▼
             SPEAKING RULES (code): answers always; "critical" safety alerts in
             every mode; "important" points held until asked (Lead offers one
-            per 2 min); never repeat a point; otherwise hold.
+            per 2 min); never repeat a point (a check that finishes after
+            another alert went out asks Haiku whether that alert covers it);
+            otherwise hold.
 ```
 
 The brain's prompt is cached: rules + a chart digest (structured allergies,

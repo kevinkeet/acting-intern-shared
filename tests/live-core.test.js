@@ -291,24 +291,27 @@ const manualClock = () => {
         cw.stop();
     });
 
-    await check('safety checks take turns, so two batches about the same thing alert once', async () => {
+    await check('two checks about the same thing at once alert once (the later one asks whether it is covered)', async () => {
         const FIRST = 'Treat it as a TIA: head imaging and neurology tonight.';
         const SECOND = 'Probable TIA with AF off anticoagulation: do a neuro exam now.';
+        const OTHER = 'Hold the heparin drip: black stools and Hgb 10.2.';
         let n = 0;
         const t = fakeTransport(async (lane, body) => {
             const user = JSON.stringify(body.messages || '');
             if (lane === 'ear') {
                 const nl = user.split('<new_lines>')[1] || '';
-                if (/jumbled|keep an eye/.test(nl)) return reply(JSON.stringify(Object.assign({}, EMPTY_EAR, { alarm: 'possible_critical', alarm_reason: 'possible TIA' })));
+                if (/jumbled|keep an eye|heparin/.test(nl)) return reply(JSON.stringify(Object.assign({}, EMPTY_EAR, { alarm: 'possible_critical', alarm_reason: /heparin/.test(nl) ? 'heparin with melena' : 'possible TIA' })));
                 return reply(JSON.stringify(EMPTY_EAR));
             }
             if (lane === 'verify') {
-                await new Promise((r) => setTimeout(r, 30));   // a check is slower than the ear
-                const covered = (user.split('ALREADY SAID')[1] || '').includes(FIRST);
+                await new Promise((r) => setTimeout(r, 30 - 10 * n));   // a check is slower than the ear; the later one finishes later
                 n++;
-                return reply(JSON.stringify(covered
-                    ? { decision: 'quiet', severity: 'none', topic: '', text: '', why: 'already said' }
-                    : { decision: 'say', severity: 'critical', topic: 'tia-' + n, text: n === 1 ? FIRST : SECOND, why: '' }));
+                const text = /heparin with melena/.test(user) ? OTHER : n === 1 ? FIRST : SECOND;
+                return reply(JSON.stringify({ decision: 'say', severity: 'critical', topic: 'topic-' + n, text, why: '' }));
+            }
+            if (lane === 'helper' && /Two safety checks/.test(JSON.stringify(body.system))) {
+                const msg = JSON.stringify(body.messages);
+                return reply(JSON.stringify({ covered: msg.includes(FIRST) && msg.includes(SECOND) }));
             }
             return reply(JSON.stringify(TAKE()));
         });
@@ -319,8 +322,12 @@ const manualClock = () => {
         cw.hear({ speaker: 'other', text: 'His words came out all jumbled.' });
         cw.hear({ speaker: 'doctor', text: 'Okay, we will keep an eye on that.' });
         await cw.idle();
-        assert.strictEqual(t.log.filter((x) => x.lane === 'verify').length, 2, 'both batches were checked');
+        assert.strictEqual(t.log.filter((x) => x.lane === 'verify').length, 2, 'both batches were checked, side by side');
         assert.deepStrictEqual(said.map((s) => s.text), [FIRST]);
+        // A different problem in the meantime is still said.
+        cw.hear({ speaker: 'doctor', text: 'And start a heparin drip.' });
+        await cw.idle();
+        assert.deepStrictEqual(said.map((s) => s.text), [FIRST, OTHER]);
         cw.stop();
     });
 

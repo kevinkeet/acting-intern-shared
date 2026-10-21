@@ -466,20 +466,32 @@
         // Concerns the brain is holding to see whether the doctor addresses them.
         const pendingChecks = [];
 
-        // Safety checks run one at a time. Speech arrives in pieces ("his hand went
-        // clumsy" ... "we'll keep an eye on that"), and two checks about the same thing
-        // running side by side would both speak; in turn, the later one sees what the
-        // earlier one said. A check takes 2 to 4 s, and overlaps are rare.
-        let verifyTurn = Promise.resolve();
+        // Speech arrives in pieces ("his hand went clumsy" ... "we'll keep an eye on
+        // that"), so two checks about the same thing can run side by side, and neither
+        // sees what the other is about to say. Checks stay parallel (fast); a check that
+        // wants to speak after another alert went out during its run asks a quick
+        // helper whether that alert already covers it. Only that rare overlap pays.
+        async function coveredMeanwhile(text, since) {
+            const earlier = wm.said.filter((s) => s.kind === 'critical' && s.t >= since);
+            if (!earlier.length) return false;
+            try {
+                const body = {
+                    max_tokens: 300,
+                    system: P.COVERED_SYSTEM,
+                    thinking: cfg.helperModel === 'claude-haiku-5-5' ? { type: 'disabled' } : { type: 'adaptive' },
+                    output_config: { effort: 'low', format: { type: 'json_schema', schema: P.COVERED_SCHEMA } },
+                    messages: [{ role: 'user', content: 'Already said:\n' + earlier.map((s) => '- ' + s.text).join('\n') + '\n\nNew alert:\n' + text }],
+                };
+                const out = parseJSON(await modelCall('helper', cfg.helperModel, body));
+                return !!(out && out.covered);
+            } catch (e) { return false; }   // when unsure, speak
+        }
 
         function verify(reason, cueLine, key, followUp) {
             if (inflightVerify.has(key)) return null;
             inflightVerify.add(key);
             const startedAt = elapsed();
-            const before = verifyTurn;
             const p = (async () => {
-                await before;
-                if (!running) return;
                 emit('thinking', { lane: 'verify', reason });
                 const body = brainBody('verify', renderForBrain() + '\n\n' + P.taskVerify(reason, followUp), { schema: P.VERIFY_SCHEMA });
                 const res = await modelCall('verify', cfg.brainModel, body);
@@ -490,12 +502,15 @@
                 const cue = followUp ? followUp.cue : cueLine;
                 if (decision === 'say' && out.text) {
                     const kind = out.severity === 'important' ? 'insight' : 'critical';
+                    if (kind === 'critical' && await coveredMeanwhile(out.text, startedAt)) {
+                        emit('suppressed', { reason: 'covered by an alert given meanwhile', topic: out.topic || key, text: out.text });
+                        return;
+                    }
                     consider({ kind, topic: out.topic || key, text: out.text, why: out.why, cueLine: cue && cue.id, heardAt: cue && cue.t, via: followUp ? 'after waiting' : 'verify' });
                 } else if (decision === 'wait' && (!followUp || followUp.rounds < 2)) {
                     holdForDoctor({ reason, key, topic: out.topic || '', text: out.text || out.why || reason, cue, rounds: followUp ? followUp.rounds + 1 : 1 });
                 }
             })().catch(() => { /* logged */ }).finally(() => inflightVerify.delete(key));
-            verifyTurn = p;
             return track(p);
         }
 

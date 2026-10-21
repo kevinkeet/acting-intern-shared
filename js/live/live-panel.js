@@ -312,17 +312,20 @@
                 const hasWhy = !!(a.why || a.cueText);
                 const whyOpen = this._whyOpen.has(a.id);
                 const lat = a.latencyMs != null ? 'flagged ' + secs(a.latencyMs) + ' after it was said' : '';
-                parts.push('<article class="lc-alert' + (folded ? ' is-folded' : '') + (this._shown.has(a) ? ' is-seen' : '') + '" data-id="' + esc(a.id) + '" aria-label="Safety alert">'
+                const open = '<article class="lc-alert' + (folded ? ' is-folded' : '') + (this._shown.has(a) ? ' is-seen' : '') + '" data-id="' + esc(a.id) + '" aria-label="Safety alert">';
+                if (folded) {
+                    parts.push(open + '<button type="button" class="lc-alert-line" data-act="unfold" data-id="' + esc(a.id) + '" title="' + esc(a.text) + '">'
+                        + ICON.alert + '<span>' + esc(lead) + '</span>' + when(a.wallAt, a.t, lat) + '</button></article>');
+                    return;
+                }
+                parts.push(open
                     + '<div class="lc-alert-top">' + ICON.alert + '<span>Safety</span>' + when(a.wallAt, a.t, lat) + '</div>'
                     + '<div class="lc-alert-body">'
-                    + (folded
-                        ? '<button type="button" class="lc-alert-line" data-act="unfold" data-id="' + esc(a.id) + '" title="' + esc(a.text) + '">' + esc(lead) + '</button>'
-                        : '<p class="lc-alert-text"><strong>' + esc(lead) + '</strong> ' + esc(rest) + '</p>'
-                          + (hasWhy ? '<p class="lc-alert-why"' + (whyOpen ? '' : ' hidden') + '>' + esc(a.why || '') + (a.cueText ? ' Heard: <q>' + esc(a.cueText) + '</q>' : '') + '</p>' : '')
-                          + '<div class="lc-alert-actions"><button type="button" class="lc-btn lc-btn-primary" data-act="ack" data-id="' + esc(a.id) + '">Got it</button>'
-                          + (hasWhy ? '<button type="button" class="lc-btn lc-btn-quiet" data-act="why" data-id="' + esc(a.id) + '" aria-expanded="' + whyOpen + '">' + (whyOpen ? 'Hide why' : 'Why?') + '</button>' : '')
-                          + '</div>')
-                    + '</div></article>');
+                    + '<p class="lc-alert-text"><strong>' + esc(lead) + '</strong> ' + esc(rest) + '</p>'
+                    + (hasWhy ? '<p class="lc-alert-why"' + (whyOpen ? '' : ' hidden') + '>' + esc(a.why || '') + (a.cueText ? ' Heard: <q>' + esc(a.cueText) + '</q>' : '') + '</p>' : '')
+                    + '<div class="lc-alert-actions"><button type="button" class="lc-btn lc-btn-primary" data-act="ack" data-id="' + esc(a.id) + '">Got it</button>'
+                    + (hasWhy ? '<button type="button" class="lc-btn lc-btn-quiet" data-act="why" data-id="' + esc(a.id) + '" aria-expanded="' + whyOpen + '">' + (whyOpen ? 'Hide why' : 'Why?') + '</button>' : '')
+                    + '</div></div></article>');
             });
             el.innerHTML = parts.join('');
             for (const a of items) {
@@ -344,16 +347,18 @@
             el.classList.toggle('is-quiet', quiet);
             const concerns = t ? (t.concerns || []).slice(0, 4) : [];
             const next = t ? (t.next || []) : [];
+            // A difference only means something once the doctor has said what they think.
+            const differs = t && t.doctor_view && t.differs ? t.differs : '';
             // Behind the toggle: the summary line (when concerns lead), the assessment, the plan.
             const more = t && !follow ? [
                 concerns.length && t.one_liner ? '<p class="lc-one">' + esc(t.one_liner) + '</p>' : '',
                 t.assessment ? '<p class="lc-assess">' + esc(t.assessment) + '</p>' : '',
-                !lead && t.differs ? '<p class="lc-differs"><b>Where I differ:</b> ' + esc(t.differs) + '</p>' : '',
+                !lead && differs ? '<p class="lc-differs"><b>Where I differ:</b> ' + esc(differs) + '</p>' : '',
                 next.length ? '<div><span class="lc-label">Next I would</span><ul class="lc-next">' + next.map((x) => '<li>' + esc(x) + '</li>').join('') + '</ul></div>' : '',
             ].join('') : '';
             const hasMore = !follow && (!!more || (quiet && concerns.length > 0));
             const chip = t && !follow
-                ? (t.differs ? '<span class="lc-chip is-differs">I see it differently</span>' : (t.doctor_view ? '<span class="lc-chip">With you</span>' : ''))
+                ? (differs ? '<span class="lc-chip is-differs">I see it differently</span>' : (t.doctor_view ? '<span class="lc-chip">With you</span>' : ''))
                 : '';
             const head = '<div class="lc-take-head"><span class="lc-label">My take</span>'
                 + (t ? when(t.at, null) : '') + chip
@@ -371,7 +376,7 @@
             }
             const list = concerns.map((c) => '<li><span class="lc-dot ' + esc(c.severity) + '" title="' + esc(c.severity) + '"></span><span title="' + esc(c.text) + '">' + esc(c.text) + '</span></li>').join('');
             el.innerHTML = head
-                + (lead && t.differs ? '<p class="lc-differs"><b>Where I differ:</b> ' + esc(t.differs) + '</p>' : '')
+                + (lead && differs ? '<p class="lc-differs"><b>Where I differ:</b> ' + esc(differs) + '</p>' : '')
                 + (list ? '<ul class="lc-concerns" aria-label="What matters most">' + list + '</ul>' : '<p class="lc-one">' + esc(t.one_liner) + '</p>')
                 + (more ? '<div class="lc-take-more">' + more + '</div>' : '');
         },
@@ -397,7 +402,7 @@
             }
             const parts = [];
             if (held.length) {
-                parts.push('<details class="lc-held"' + (v.heldOpen ? ' open' : '') + '><summary>' + held.length + (held.length === 1 ? ' thought' : ' thoughts') + ' ready if you want them</summary><ul>'
+                parts.push('<details class="lc-held"' + (v.heldOpen ? ' open' : '') + '><summary>' + (held.length === 1 ? '1 thought ready if you want it' : held.length + ' thoughts ready if you want them') + '</summary><ul>'
                     + held.map((x) => '<li><span>' + esc(x.text) + '</span><button type="button" class="lc-btn" data-act="tell" data-topic="' + esc(x.topic) + '">Tell me</button></li>').join('')
                     + '</ul></details>');
             }

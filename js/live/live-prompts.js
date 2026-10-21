@@ -12,7 +12,7 @@
 (function (root) {
     'use strict';
 
-    const PROMPT_VERSION = 'live-v11';
+    const PROMPT_VERSION = 'live-v12';
 
     // ── Ear (Haiku): fast bookkeeping on every utterance ──────────────────
     const EAR_SYSTEM = [
@@ -207,6 +207,15 @@
     // ── Helpers (cheap models) ───────────────────────────────────────────
     const MEMORY_SYSTEM = 'You answer a clinician\'s question from a patient\'s long-term record summary. Quote values with dates. Answer in at most four short sentences. If the record does not contain the answer, say "Not in the record." Do not guess.';
 
+    const COVERED_SYSTEM = 'Two safety checks ran at the same moment in a clinical AI coworker (simulated patient). One alert was already shown to the doctor; decide whether a new alert repeats it. covered = true if an alert already said makes the same main point (the same problem and the same thing to do or avoid), even in different words. covered = false if the new alert raises a different problem or a different action.';
+
+    const COVERED_SCHEMA = {
+        type: 'object',
+        additionalProperties: false,
+        properties: { covered: { type: 'boolean' } },
+        required: ['covered'],
+    };
+
     const MEDCHECK_SYSTEM = 'You are a clinical pharmacist checking one medication against one patient\'s record (simulated patient). Be specific and brief. Consider: allergies and cross-reactivity, contraindications given the problem list, interactions with the current medicines, dosing for kidney function, and relevant recent labs and vitals. Give a verdict: "ok", "caution" or "avoid".';
 
     const MEDCHECK_SCHEMA = {
@@ -247,7 +256,7 @@
 
     const api = {
         PROMPT_VERSION, EAR_SYSTEM, EAR_SCHEMA, BRAIN_SYSTEM, TAKE_SCHEMA, VERIFY_SCHEMA,
-        TASK_PRIME, TASK_UPDATE, taskVerify, taskAnswer, MEMORY_SYSTEM, MEDCHECK_SYSTEM, MEDCHECK_SCHEMA, BRAIN_TOOLS,
+        TASK_PRIME, TASK_UPDATE, taskVerify, taskAnswer, MEMORY_SYSTEM, COVERED_SYSTEM, COVERED_SCHEMA, MEDCHECK_SYSTEM, MEDCHECK_SCHEMA, BRAIN_TOOLS,
     };
     if (typeof module !== 'undefined' && module.exports) module.exports = api;
     else root.LivePrompts = api;
