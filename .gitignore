@@ -20,3 +20,6 @@ Thumbs.db
 .claude/worktrees/
 *.bak
 COGNITIVE-INITIATIVE.doc
+
+# Live Coworker replay reports (local)
+tools/live/runs/
