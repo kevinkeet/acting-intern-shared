@@ -22,7 +22,9 @@ app.get('/api/health', (req, res) => {
         deepgramConfigured: !!process.env.DEEPGRAM_API_KEY,
         // The full-site door sends its AI calls to /api/claude-full (below).
         fullSiteRoute: true,
-        fullSiteKeyConfigured: !!process.env.ANTHROPIC_API_KEY_FULLSITE
+        fullSiteKeyConfigured: !!process.env.ANTHROPIC_API_KEY_FULLSITE,
+        // /api/claude-full passes "stream": true replies straight through (lab, 21 Oct 2026).
+        fullSiteStreaming: true
     });
 });
 
@@ -64,6 +66,26 @@ app.post('/api/claude', async (req, res) => {
 // credit the study's AI Chat and auto-grader rely on. Until that variable is
 // set, this route uses the shared key, which is what the full site used before.
 // /api/claude above is deliberately left unchanged for the study.
+//
+// Two additions for the real-time AI Coworker (Kevin's OK, 21 Oct 2026; full-site
+// route only):
+//  - A request with "stream": true gets Anthropic's server-sent events passed
+//    straight through as they arrive, and if the browser goes away mid-reply the
+//    upstream request is cancelled so it stops generating (and billing).
+//  - The anthropic-beta flags on FULL_SITE_BETAS are forwarded; any other flag
+//    the browser sends is dropped.
+const FULL_SITE_BETAS = new Set([
+    'fast-mode-2026-02-01',            // speed: "fast" (Opus)
+    'server-side-fallback-2026-07-01'  // fallbacks: "default" after a safety decline
+]);
+
+function fullSiteBetas(headerValue) {
+    if (!headerValue) return [];
+    return String(headerValue).split(',')
+        .map((flag) => flag.trim())
+        .filter((flag) => FULL_SITE_BETAS.has(flag));
+}
+
 app.post('/api/claude-full', async (req, res) => {
     const apiKey = process.env.ANTHROPIC_API_KEY_FULLSITE || process.env.ANTHROPIC_API_KEY;
     if (!apiKey) {
@@ -72,21 +94,64 @@ app.post('/api/claude-full', async (req, res) => {
         });
     }
 
+    const headers = {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01'
+    };
+    const betas = fullSiteBetas(req.get('anthropic-beta'));
+    if (betas.length) headers['anthropic-beta'] = betas.join(',');
+
+    const streaming = !!(req.body && req.body.stream === true);
+    const upstream = new AbortController();
+    if (streaming) {
+        // 'close' also fires after a normal end; only a reply cut short cancels.
+        res.on('close', () => { if (!res.writableEnded) upstream.abort(); });
+    }
+
     try {
         const response = await fetch('https://api.anthropic.com/v1/messages', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'x-api-key': apiKey,
-                'anthropic-version': '2023-06-01'
-            },
-            body: JSON.stringify(req.body)
+            headers,
+            body: JSON.stringify(req.body),
+            signal: upstream.signal
         });
 
-        const data = await response.json();
-        res.status(response.status).json(data);
+        const isEventStream = streaming && response.ok &&
+            /text\/event-stream/i.test(response.headers.get('content-type') || '');
+        if (!isEventStream) {
+            // Ordinary replies, and errors (which Anthropic sends as JSON even
+            // for streaming requests), pass through as before.
+            const data = await response.json();
+            return res.status(response.status).json(data);
+        }
+
+        res.status(200).set({
+            'Content-Type': 'text/event-stream; charset=utf-8',
+            'Cache-Control': 'no-cache, no-transform',
+            'Connection': 'keep-alive',
+            'X-Accel-Buffering': 'no'
+        });
+        res.flushHeaders();
+        for await (const chunk of response.body) {
+            res.write(chunk);
+        }
+        res.end();
     } catch (error) {
+        if (upstream.signal.aborted) {
+            // The browser left mid-reply; nothing to report.
+            if (!res.writableEnded) res.end();
+            return;
+        }
         console.error('Anthropic full-site proxy error:', error.message);
+        if (res.headersSent) {
+            // Broke mid-stream: say so in the stream's own format, then close.
+            res.write('event: error\ndata: ' + JSON.stringify({
+                type: 'error',
+                error: { type: 'proxy_error', message: 'Stream from Anthropic broke: ' + error.message }
+            }) + '\n\n');
+            return res.end();
+        }
         res.status(502).json({
             error: { message: 'Failed to reach Anthropic API: ' + error.message }
         });
