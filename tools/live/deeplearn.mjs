@@ -48,7 +48,7 @@ const PATCH = `(() => {
         // Thinking counts toward max_tokens, and five long notes can extract to
         // well over 8K tokens of JSON: give every call room (streaming, so no timeout).
         const isHaiku = /haiku/.test(model);
-        const body = { max_tokens: Math.max(maxTokens || 1024, isHaiku ? 32000 : 40000), system, messages: [{ role: 'user', content: user }] };
+        const body = { max_tokens: Math.max(maxTokens || 1024, isHaiku ? 32000 : 64000), system, messages: [{ role: 'user', content: user }] };
         if (schema) body.output_config = { format: { type: 'json_schema', schema }, effort: isHaiku ? 'low' : 'medium' };
         for (let attempt = 0; ; attempt++) {
             try {
@@ -56,8 +56,13 @@ const PATCH = `(() => {
                 const stop = r.message.stop_reason;
                 window.__dl.calls.push({ model, ms: Math.round(r.ms.total), in: (r.usage.input_tokens || 0) + (r.usage.cache_read_input_tokens || 0), out: r.usage.output_tokens || 0, cost: r.cost, stop });
                 window.__dl.last = { model, stop, chars: (r.text || '').length, out: r.usage.output_tokens || 0, head: (r.text || '').slice(0, 160), tail: (r.text || '').slice(-160) };
-                if (stop === 'max_tokens') window.__dl.errors.push(model + ': hit max_tokens (' + body.max_tokens + ')');
                 window.__dl.cost += r.cost;
+                if (stop === 'max_tokens') {
+                    window.__dl.errors.push(model + ': hit max_tokens (' + body.max_tokens + ')');
+                    // A cut-off memory merge parses "successfully" and silently keeps old
+                    // sections, so retry with the model's full output room (128K) instead.
+                    if (body.max_tokens < 128000) { body.max_tokens = 128000; throw Object.assign(new Error('cut off at max_tokens; retrying with 128K'), { retryable: true }); }
+                }
                 if (stop === 'refusal') throw Object.assign(new Error('declined (' + ((r.message.stop_details || {}).category || '?') + ')'), { retryable: false });
                 if (!r.text) throw Object.assign(new Error('empty reply'), { retryable: true });
                 return r.text;
@@ -101,6 +106,7 @@ const RUN = (extract, synth, resume) => `(async () => {
         D().currentLevel = cp.level;
         D().phase = 'between_levels';
         A.longitudinalDoc.aiMemory.memoryDocument = cp.memoryDocument;
+        window.__dl.cost += cp.cost || 0;   // the saved total covers the whole run, not just the resumed part
         startLevel = cp.level + 1;
         window.__dl.errors.push('resumed after level ' + cp.level + ' (' + D().processed.size + ' items)');
     } else {
