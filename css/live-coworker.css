@@ -170,6 +170,7 @@
 /* An updated card: the newest point leads; what came before sits below it, quieter. */
 .lc-alert-before { list-style: none; margin: -2px 0 8px; padding: 6px 0 0; border-top: 1px solid oklch(0.88 0.04 27); display: grid; gap: 3px; font-size: 12.5px; color: var(--lc-ink-2); }
 .lc-alert-before li > span { margin-right: 4px; font-size: 11px; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; color: var(--lc-ink-3); }
+.lc-more { border: 0; background: none; padding: 0; font: inherit; font-size: 12px; font-weight: 600; color: var(--lc-blue); cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
 .lc-upd-tag { flex: none; font-size: 11px; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; color: var(--lc-red-ink); }
 .lc-alert-why q { color: var(--lc-ink); }
 .lc-alert-actions { display: flex; gap: 6px; }

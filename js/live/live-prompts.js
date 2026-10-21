@@ -12,7 +12,7 @@
 (function (root) {
     'use strict';
 
-    const PROMPT_VERSION = 'live-v15';
+    const PROMPT_VERSION = 'live-v16';
 
     // ── Ear (Haiku): fast bookkeeping on every utterance ──────────────────
     const EAR_SYSTEM = [
@@ -171,7 +171,7 @@
     ].join('\n');
 
     // A new point about a problem already on the doctor's screen is an update to that card.
-    const SAME_PROBLEM_RULE = 'If it is about the same clinical problem as one of the OPEN SAFETY ALERTS (e.g. the possible GI bleed, the fast AF, the penicillin allergy, the possible TIA), set update_of to that alert\'s id and write only what is new; if it adds nothing new, do not say it. Otherwise update_of is "".';
+    const SAME_PROBLEM_RULE = 'If it is about the same clinical problem as one of the OPEN SAFETY ALERTS (the same diagnosis or danger: e.g. the possible GI bleed, the fast AF, the penicillin allergy, the possible TIA), set update_of to that alert\'s id and write only what is new; if it adds nothing new, do not say it. A different drug or decision with its own reason (e.g. metformin and kidney function, potassium supplements) is its own problem even when it mentions the same findings: then update_of is "".';
 
     const TASK_UPDATE = [
         'TASK: Update your take with everything so far, refresh the watch list, and decide whether anything needs saying now.',

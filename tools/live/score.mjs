@@ -99,7 +99,9 @@ export function score(script, run, judged) {
     const matchedRemarks = new Set();
     for (const e of script.expect.filter((x) => x.type === 'speak')) {
         const cue = byLine[e.cue];
-        const from = cue.t, until = cue.t + cue.dur + (e.window_s || 60);
+        // An alert a little before the cue line counts (e.g. flagged when the value was read
+        // out, a line before the doctor waved it off); latency is never negative.
+        const from = cue.t - (e.lead_s != null ? e.lead_s : 15), until = cue.t + cue.dur + (e.window_s || 60);
         const candidates = unprompted.filter((s) => s.scriptT >= from && s.scriptT <= until);
         const hit = candidates.find((s) => (jr ? (jr[s.id] && jr[s.id].matches.includes(e.id)) : keywordMatch(s.text, e.keywords)));
         // Also accept a later remark the judge ties to it (late is reported, not hidden).

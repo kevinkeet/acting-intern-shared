@@ -409,6 +409,7 @@
                 onAsk: (q) => this.ask(q),
                 onAck: (id) => { this.view.alerts = this.view.alerts.filter((a) => a.id !== id); if (this.engine) this.engine.ack(id); this.request('alerts', 'said', 'take'); },
                 onRetry: (q) => { if (q) this.ask(q); },
+                onRerenderAlerts: () => this.request('alerts'),
                 onUnfold: (id) => { this.view.openAlerts = Object.assign({}, this.view.openAlerts, { [id]: true }); this.request('alerts'); },
                 onTellHeld: (topic) => { if (this.engine) this.engine.tell(topic); this.view.heldOpen = true; },
                 onTakeToggle: () => { this.view.takeOpen = !this.view.takeOpen; this.request('take'); },

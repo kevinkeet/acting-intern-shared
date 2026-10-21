@@ -67,6 +67,17 @@
         return m ? [m[1], t.slice(m[0].length).trim()] : [t, ''];
     };
 
+    // Below an updated alert's newest point: the update before it and the first alert;
+    // anything older folds behind "N more".
+    function beforeList(a, ups, open) {
+        const older = ups.slice(0, -1).reverse();   // newest first, without the latest (it leads the card)
+        const shown = open ? older : older.slice(0, 1);
+        const hidden = older.length - shown.length;
+        return '<ul class="lc-alert-before">' + shown.map((u) => '<li><span>Update</span> ' + esc(u.text) + '</li>').join('')
+            + (hidden > 0 ? '<li><button type="button" class="lc-more" data-act="more-updates" data-id="' + esc(a.id) + '">' + hidden + ' more</button></li>' : '')
+            + '<li><span>First</span> ' + esc(a.text) + '</li></ul>';
+    }
+
     // The voice picker: Deepgram's natural voices (when the server has a key), then this computer's.
     function voiceRow(v, s) {
         const dg = (typeof LiveVoice !== 'undefined' && LiveVoice.DG_VOICES) || [];
@@ -113,6 +124,7 @@
             this._shown = new WeakSet();      // alerts already on screen (no entrance animation)
             this._announced = new WeakSet();  // items already read out to screen readers
             this._whyOpen = new Set();
+            this._moreOpen = new Set();
             const radio = (mode, label) => '    <button type="button" role="radio" data-mode="' + mode + '" aria-checked="false" tabindex="-1" title="' + esc(MODE_HINT[mode]) + '">' + label + '</button>';
             const wrap = document.createElement('section');
             wrap.className = 'lc';
@@ -196,6 +208,7 @@
                     case 'ack': return h.onAck && h.onAck(t.dataset.id);
                     case 'unfold': return h.onUnfold && h.onUnfold(t.dataset.id);
                     case 'why': return this._toggleWhy(t);
+                    case 'more-updates': { this._moreOpen.add(t.dataset.id); return h.onRerenderAlerts && h.onRerenderAlerts(); }
                     case 'take-toggle': return h.onTakeToggle && h.onTakeToggle();
                     case 'tell': return h.onTellHeld && h.onTellHeld(t.dataset.topic);
                     case 'retry': return h.onRetry && h.onRetry(t.dataset.q);
@@ -382,10 +395,7 @@
                     + '<div class="lc-alert-top">' + ICON.alert + '<span>' + (ups.length ? 'Safety · updated' : 'Safety') + '</span>' + when(latest.wallAt, latest.t, lat) + '</div>'
                     + '<div class="lc-alert-body">'
                     + '<p class="lc-alert-text' + (fresh ? ' lc-changed' : '') + '"><strong>' + esc(lead) + '</strong> ' + esc(rest) + '</p>'
-                    + (ups.length
-                        ? '<ul class="lc-alert-before">' + ups.slice(0, -1).reverse().map((u) => '<li><span>Update</span> ' + esc(u.text) + '</li>').join('')
-                          + '<li><span>First</span> ' + esc(a.text) + '</li></ul>'
-                        : '')
+                    + (ups.length ? beforeList(a, ups, this._moreOpen.has(a.id)) : '')
                     + (hasWhy ? '<p class="lc-alert-why"' + (whyOpen ? '' : ' hidden') + '>' + esc(latest.why || '') + (latest.cueText ? ' Heard: <q>' + esc(latest.cueText) + '</q>' : '') + '</p>' : '')
                     + '<div class="lc-alert-actions"><button type="button" class="lc-btn lc-btn-primary" data-act="ack" data-id="' + esc(a.id) + '">Got it</button>'
                     + (hasWhy ? '<button type="button" class="lc-btn lc-btn-quiet" data-act="why" data-id="' + esc(a.id) + '" aria-expanded="' + whyOpen + '">' + (whyOpen ? 'Hide why' : 'Why?') + '</button>' : '')
