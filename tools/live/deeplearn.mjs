@@ -35,13 +35,18 @@ const PATCH = `(() => {
     const T = LiveTransport.createTransport({ endpoint: () => ClaudeAPI._getEndpoint(), headers: () => ClaudeAPI._getHeaders() });
     window.__dl = { calls: [], errors: [], cost: 0 };
     const call = async (model, system, user, maxTokens, schema) => {
-        const body = { max_tokens: Math.max(maxTokens || 1024, (maxTokens || 0) >= 12000 ? 40000 : 8000), system, messages: [{ role: 'user', content: user }] };
-        if (schema) body.output_config = { format: { type: 'json_schema', schema }, effort: 'medium' };
+        // Thinking counts toward max_tokens, and five long notes can extract to
+        // well over 8K tokens of JSON: give every call room (streaming, so no timeout).
+        const isHaiku = /haiku/.test(model);
+        const body = { max_tokens: Math.max(maxTokens || 1024, isHaiku ? 32000 : 40000), system, messages: [{ role: 'user', content: user }] };
+        if (schema) body.output_config = { format: { type: 'json_schema', schema }, effort: isHaiku ? 'low' : 'medium' };
         for (let attempt = 0; ; attempt++) {
             try {
                 const r = await T.call({ model, body });
                 const stop = r.message.stop_reason;
                 window.__dl.calls.push({ model, ms: Math.round(r.ms.total), in: (r.usage.input_tokens || 0) + (r.usage.cache_read_input_tokens || 0), out: r.usage.output_tokens || 0, cost: r.cost, stop });
+                window.__dl.last = { model, stop, chars: (r.text || '').length, out: r.usage.output_tokens || 0, head: (r.text || '').slice(0, 160), tail: (r.text || '').slice(-160) };
+                if (stop === 'max_tokens') window.__dl.errors.push(model + ': hit max_tokens (' + body.max_tokens + ')');
                 window.__dl.cost += r.cost;
                 if (stop === 'refusal') throw Object.assign(new Error('declined (' + ((r.message.stop_details || {}).category || '?') + ')'), { retryable: false });
                 if (!r.text) throw Object.assign(new Error('empty reply'), { retryable: true });
@@ -74,14 +79,14 @@ const RUN = (extract, synth) => `(async () => {
     await A.learnPatient();
     for (let lvl = 2; lvl <= D().totalLevels; lvl++) {
         window.__dlProgress = { level: lvl, phase: 'level ' + lvl };
+        const b = D().levelBatches[lvl - 1] || [];
+        const f0 = D().extractedFacts.length;
         for (let t = 0; t < 4; t++) {
-            const b = D().levelBatches[lvl - 1] || [], f0 = D().extractedFacts.length;
+            D().extractedFacts.length = f0;   // a redo re-extracts the same documents
             try { await (t ? A.redoCurrentLevel() : A._runNextLevel()); } catch (e) { window.__dl.errors.push('level ' + lvl + ': ' + e.message); }
-            const done = b.every((i) => D().processed.has(i.id));
-            const gained = D().extractedFacts.length - f0;
-            if (done && gained >= b.length - 4) break;
-            window.__dl.errors.push('level ' + lvl + ' incomplete (attempt ' + (t + 1) + ', +' + gained + ' facts of ' + b.length + '); redoing');
-            await new Promise((r) => setTimeout(r, 15000));
+            if (b.every((i) => D().processed.has(i.id))) break;
+            window.__dl.errors.push('level ' + lvl + ' not completed (attempt ' + (t + 1) + ', ' + (D().extractedFacts.length - f0) + ' extractions for ' + b.length + ' items; last reply ' + JSON.stringify(window.__dl.last || {}).slice(0, 400) + ')');
+            await new Promise((r) => setTimeout(r, 10000));
         }
     }
     window.__dlProgress = { level: D().totalLevels, phase: 'done' };
@@ -130,11 +135,15 @@ async function main() {
         const run = page.eval(RUN(EXTRACT, SYNTH)).then((r) => ({ ok: r }), (e) => ({ err: e }));
         let done = null;
         let last = '';
+        let seenErrors = 0;
         while (!done) {
             done = await Promise.race([run, sleep(20000).then(() => null)]);
             const pr = await page.eval(PROGRESS).catch((e) => ({ error: e.message }));
             const line = JSON.stringify(pr);
             if (line !== last) { console.log(stamp(), line); last = line; }
+            const fresh = page.errors.slice(seenErrors).filter((e) => /deep learn|synthes|extract|parse|level|memory/i.test(e));
+            seenErrors = page.errors.length;
+            for (const e of fresh) console.log(stamp(), 'page error: ' + e.slice(0, 300));
         }
         if (done.err) throw done.err;
         console.log(stamp(), 'Finished:', JSON.stringify(done.ok));

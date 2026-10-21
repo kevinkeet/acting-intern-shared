@@ -149,6 +149,16 @@ export function score(script, run, judged) {
     const cost = run.calls.reduce((a, c) => a + (c.cost || 0), 0);
     const costBy = {};
     for (const c of run.calls) costBy[c.lane] = (costBy[c.lane] || 0) + (c.cost || 0);
+    const cacheBy = {};
+    for (const c of run.calls) {
+        if (!c.usage) continue;
+        const u = c.usage, b = cacheBy[c.lane] || (cacheBy[c.lane] = { read: 0, total: 0, out: 0, n: 0 });
+        b.read += u.cache_read_input_tokens || 0;
+        b.total += (u.input_tokens || 0) + (u.cache_creation_input_tokens || 0) + (u.cache_read_input_tokens || 0);
+        b.out += u.output_tokens || 0;
+        b.n += 1;
+    }
+    const cachePct = Object.fromEntries(Object.entries(cacheBy).map(([k, b]) => [k, { cached: b.total ? Math.round((b.read / b.total) * 100) + '%' : '-', avgIn: Math.round(b.total / b.n), avgOut: Math.round(b.out / b.n) }]));
 
     return {
         mode,
@@ -161,7 +171,7 @@ export function score(script, run, judged) {
         earMs: { median: median(lane('ear')), p90: pct(lane('ear'), 0.9) },
         verifyMs: { median: median(lane('verify')), p90: pct(lane('verify'), 0.9) },
         updateMs: { median: median(lane('update')), p90: pct(lane('update'), 0.9) },
-        cost: +cost.toFixed(4), costBy: Object.fromEntries(Object.entries(costBy).map(([k, v]) => [k, +v.toFixed(4)])),
+        cost: +cost.toFixed(4), costBy: Object.fromEntries(Object.entries(costBy).map(([k, v]) => [k, +v.toFixed(4)])), cache: cachePct,
         calls: run.calls.length, errors: run.calls.filter((c) => !c.ok).length,
         items, qa, falseAlarmList: falseAlarms, extraList: extras, repeatList: repeats, wrongList: wrong,
         judgeSummary: judged && judged.out ? judged.out.summary : '',
@@ -176,6 +186,7 @@ export function printScore(m, label) {
     lines.push('Answers: ' + m.answers.points + '/' + m.answers.of + ' points   False alarms: ' + m.falseAlarms + (m.mode === 'lead' ? '   Extras: ' + m.extras : '') + '   Repeats: ' + m.repeats + '   Wrong: ' + m.wrong);
     lines.push('Alert latency median ' + ms(m.alertLatencyMs.median) + ' (p90 ' + ms(m.alertLatencyMs.p90) + ')   Answer: first words ' + ms(m.answerLatencyMs.firstWordMedian) + ', done ' + ms(m.answerLatencyMs.median));
     lines.push('Ear ' + ms(m.earMs.median) + ' / verify ' + ms(m.verifyMs.median) + ' / update ' + ms(m.updateMs.median) + ' (medians)   Cost $' + m.cost.toFixed(3) + ' ' + JSON.stringify(m.costBy) + '   Calls ' + m.calls + (m.errors ? '  ERRORS ' + m.errors : ''));
+    if (m.cache) lines.push('Tokens per call (avg in / out, cached share): ' + Object.entries(m.cache).map(([k, c]) => k + ' ' + c.avgIn + '/' + c.avgOut + ' ' + c.cached).join(' · '));
     for (const i of m.items) {
         if (!i.expected) continue;
         lines.push('  ' + (i.hit ? 'HIT ' : 'MISS') + ' ' + i.id + (i.hit ? ' +' + i.scriptDelayS + 's script, ' + ms(i.latencyMs) + ' wall: ' + i.text : (i.late ? ' (said late as ' + i.late + ')' : '')));

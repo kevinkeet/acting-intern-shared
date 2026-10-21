@@ -220,7 +220,7 @@ const manualClock = () => {
             }
             if (lane === 'verify') {
                 if (/chose to wait/.test(user)) return reply(JSON.stringify({ decision: followUpDecision, severity: followUpDecision === 'say' ? 'critical' : 'none', topic: 'melena', text: 'Black stools with his 2023 ulcer bleed: check his hemoglobin.', why: 'moved on' }));
-                return reply(JSON.stringify({ decision: 'wait', severity: 'critical', topic: 'melena', text: 'Black stools with his 2023 ulcer bleed: check his hemoglobin.', why: 'just raised' }));
+                return reply(JSON.stringify({ decision: 'wait', severity: 'critical', topic: 'melena', text: '', why: 'just raised; give the doctor a turn' }));
             }
             return reply(JSON.stringify(TAKE()));
         });

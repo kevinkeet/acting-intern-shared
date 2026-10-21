@@ -454,8 +454,8 @@
                 if (decision === 'say' && out.text) {
                     const kind = out.severity === 'important' ? 'insight' : 'critical';
                     consider({ kind, topic: out.topic || key, text: out.text, why: out.why, cueLine: cue && cue.id, heardAt: cue && cue.t, via: followUp ? 'after waiting' : 'verify' });
-                } else if (decision === 'wait' && out.text && (!followUp || followUp.rounds < 2)) {
-                    holdForDoctor({ reason, key, text: out.text, cue, rounds: followUp ? followUp.rounds + 1 : 1 });
+                } else if (decision === 'wait' && (!followUp || followUp.rounds < 2)) {
+                    holdForDoctor({ reason, key, topic: out.topic || '', text: out.text || out.why || reason, cue, rounds: followUp ? followUp.rounds + 1 : 1 });
                 }
             })().catch(() => { /* logged */ }).finally(() => inflightVerify.delete(key));
             return track(p);
@@ -534,7 +534,10 @@
                 const thoughts = res.message.content.filter((b) => b.type === 'thinking' && b.thinking).map((b) => b.thinking).join('\n');
                 if (thoughts) emit('reasoning', { lane: 'update', text: thoughts, at: seenUpTo });
                 if (out.say && out.say.should_say && out.say.text) {
-                    consider({ kind: out.say.kind === 'critical' ? 'critical' : 'insight', topic: out.say.topic, text: out.say.text, why: out.say.why, via: 'update' });
+                    // A concern already being held for the doctor's next words is left to that check.
+                    const held = pendingChecks.some((p) => (p.topic && p.topic === out.say.topic) || overlap(p.text + ' ' + p.reason, out.say.text) >= 0.35);
+                    if (held) emit('suppressed', { reason: 'waiting for the doctor', kind: out.say.kind, topic: out.say.topic, text: out.say.text });
+                    else consider({ kind: out.say.kind === 'critical' ? 'critical' : 'insight', topic: out.say.topic, text: out.say.text, why: out.say.why, via: 'update' });
                 }
                 wm.held = wm.held.filter((h) => !alreadySaid(h.topic, h.text)).slice(-8);
                 touch();
