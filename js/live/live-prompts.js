@@ -12,7 +12,7 @@
 (function (root) {
     'use strict';
 
-    const PROMPT_VERSION = 'live-v2';
+    const PROMPT_VERSION = 'live-v3';
 
     // ── Ear (Haiku): fast bookkeeping on every utterance ──────────────────
     const EAR_SYSTEM = [
@@ -24,7 +24,7 @@
         '- plan: orders and plan items the doctor states. kind "order" for anything ordered, started, changed or given now; include the dose if said.',
         '- to_coworker: true only if a NEW line speaks to the AI coworker: it names it ("coworker", "Claude", "AI"), or the doctor is dictating alone and asks about the chart ("what was his last potassium?"). Questions to the patient, family, a nurse or another colleague are not for the coworker. When true, put the request in question, rewritten to stand alone; otherwise question is "".',
         '- watch_hits: ids from the watch list whose trigger has just happened in the new lines. Be literal: a drug only mentioned, or being stopped or held, has not been ordered.',
-        '- alarm: "possible_critical" only if the new lines contain an order or plan that could be dangerous for this patient, a critical value, or a red-flag symptom that changes urgency, with the reason in alarm_reason. Otherwise "none" and "".',
+        '- alarm: "possible_critical" only if the new lines contain (a) an order or plan that could be dangerous for this patient, (b) a critical or unexpected result, or (c) a NEW red-flag finding that changes urgency and is not the reason for the visit (for a breathing visit, black stools or one-sided weakness are new; shortness of breath is not). Give the reason in alarm_reason. The presenting complaint, and things the doctor is asking about or working through, are not alarms. Otherwise "none" and "".',
         '- worth_a_look: true when the new lines change the clinical picture: a new symptom, result or exam finding, or a change in the doctor\'s thinking or plan.',
         '- speaker_fix: lines whose speaker label is clearly wrong (a "doctor" line that is obviously the patient talking), with the right speaker.',
     ].join('\n');
@@ -151,13 +151,13 @@
         type: 'object',
         additionalProperties: false,
         properties: {
-            should_say: { type: 'boolean' },
+            decision: { type: 'string', enum: ['say', 'wait', 'quiet'] },
             severity: { type: 'string', enum: ['critical', 'important', 'none'] },
             topic: { type: 'string' },
             text: { type: 'string' },
             why: { type: 'string' },
         },
-        required: ['should_say', 'severity', 'topic', 'text', 'why'],
+        required: ['decision', 'severity', 'topic', 'text', 'why'],
     };
 
     const TASK_PRIME = [
@@ -175,10 +175,19 @@
         '- say: follow the speaking rules for the current mode. should_say false unless a critical item (any mode) or, in Lead, an important insight is not yet said or addressed.',
     ].join('\n');
 
-    function taskVerify(reason) {
+    function taskVerify(reason, followUp) {
+        if (followUp) {
+            return [
+                'TASK: A moment ago this was flagged: "' + reason + '". You chose to wait and see whether the doctor would address it. Your prepared remark was: "' + followUp.text + '".',
+                'Look at what has been said since. decision "say" if the doctor has moved on without addressing it (update the remark if anything new matters, 35 words or fewer); "quiet" if the doctor addressed it or it no longer matters; "wait" only if the doctor is still in the middle of that very topic.',
+            ].join('\n');
+        }
         return [
             'TASK: The ear flagged the new lines as possibly critical: "' + reason + '".',
-            'Decide whether to interrupt the doctor now. Interrupt only for a real safety issue for this patient that the doctor has not already addressed. If yes, write exactly what you would say (35 words or fewer) and a short why. If not, should_say false and severity "none".',
+            'Decide what to do and write the remark you would make (35 words or fewer) with a short why:',
+            '- "say" now for an order or plan that is dangerous for this patient (do not wait on those), or for a red flag or critical result the doctor has already heard and moved past or dismissed.',
+            '- "wait" for a red flag or worrying result that was just raised and the doctor has not yet had a turn to respond: you will look again after the doctor\'s next words.',
+            '- "quiet" if it is not a real safety issue for this patient, it is the reason for the visit, the doctor is already working on it, or it was already said or addressed. Then severity "none".',
         ].join('\n');
     }
 

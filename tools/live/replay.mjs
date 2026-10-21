@@ -95,7 +95,7 @@ function dryTransport() {
             }
             if (req.label === 'verify') {
                 const reason = (user.match(/possibly critical: \\"(.*?)\\"/) || [])[1] || '';
-                return R({ should_say: !!SAY[reason], severity: 'critical', topic: reason.split(' ')[0].toLowerCase(), text: SAY[reason] || '', why: 'dry' });
+                return R({ decision: SAY[reason] ? 'say' : 'quiet', severity: 'critical', topic: reason.split(' ')[0].toLowerCase(), text: SAY[reason] || '', why: 'dry' });
             }
             if (req.label === 'answer') { const t = 'Dry answer: baseline creatinine about 2.0; no lisinopril (angioedema, on Entresto); 2023 GI bleed; ceftriaxone.'; if (hooks && hooks.onText) hooks.onText(t, 0); return R(t); }
             if (req.label === 'judge') return R({ remarks: [], answers: [], summary: 'dry run' });
@@ -167,7 +167,7 @@ async function main() {
             events.push({ name, t: +scriptNow().toFixed(1), p });
             if (name === 'error') log('  ⚠️  ' + p.lane + ': ' + p.message);
             if (name === 'tool') log('     🔧 ' + p.name + ' ' + JSON.stringify(p.input).slice(0, 100));
-            if (name === 'verified' && p.out) log('     ✔︎ verify (' + p.reason.slice(0, 60) + '…) → ' + (p.out.should_say ? 'SAY' : 'quiet') + (p.out.should_say ? '' : ': ' + (p.out.why || '').slice(0, 80)));
+            if (name === 'verified' && p.out) log('     ✔︎ ' + (p.followUp ? 'follow-up' : 'verify') + ' (' + p.reason.slice(0, 60) + '…) → ' + String(p.decision).toUpperCase() + (p.decision === 'say' ? '' : ': ' + (p.out.why || '').slice(0, 90)));
         });
     }
 

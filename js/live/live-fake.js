@@ -76,7 +76,7 @@
                     await sleep(1500 + Math.random() * 700);
                     const reason = (user.match(/possibly critical: \\"(.*?)\\"/) || [])[1] || '';
                     const t = TRAPS.find((x) => x[1] === reason);
-                    return reply({ should_say: !!t, severity: t ? 'critical' : 'none', topic: reason, text: t ? t[2] : '', why: t ? t[3] : '' }, 1900);
+                    return reply({ decision: t ? 'say' : 'quiet', severity: t ? 'critical' : 'none', topic: reason, text: t ? t[2] : '', why: t ? t[3] : '' }, 1900);
                 }
                 if (req.label === 'answer') {
                     const q = (user.match(/just asked you: \\"(.*?)\\"/) || [])[1] || '';

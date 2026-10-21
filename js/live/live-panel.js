@@ -21,6 +21,8 @@
     'use strict';
 
     const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    // Model text: escape everything, then allow **bold** only.
+    const rich = (s) => esc(s).replace(/\*\*([^*\n]{1,200})\*\*/g, '<b>$1</b>').replace(/(^|\s)\*([^*\n]{1,120})\*(?=\s|[.,;:!?]|$)/g, '$1$2');
     const svg = (paths, cls) => '<svg class="' + (cls || '') + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + paths + '</svg>';
     const ICON = {
         mic: svg('<path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/>'),
@@ -219,7 +221,7 @@
                     + '<div class="lc-alert-top">' + ICON.alert + '<span>Safety</span><time>' + fmt(a.t) + '</time></div>'
                     + (folded
                         ? '<button type="button" class="lc-alert-line" data-act="unfold" data-id="' + esc(a.id) + '" title="Show this alert">' + esc(a.text) + '</button>'
-                        : '<p class="lc-alert-text">' + esc(a.text) + '</p>'
+                        : '<p class="lc-alert-text">' + rich(a.text) + '</p>'
                           + '<p class="lc-alert-why" hidden>' + esc(a.why || '') + (a.cueText ? ' Heard: <q>' + esc(a.cueText) + '</q>' : '') + '</p>'
                           + '<div class="lc-alert-actions"><button type="button" class="lc-btn lc-btn-primary" data-act="ack" data-id="' + esc(a.id) + '">Got it</button>'
                           + (a.why || a.cueText ? '<button type="button" class="lc-btn lc-btn-quiet" data-act="why">Why?</button>' : '')
@@ -304,7 +306,7 @@
                     + '<div class="lc-item-meta">' + icon + '<span>' + label + '</span><span>·</span><time>' + fmt(s.t) + '</time>'
                     + (s.latencyMs != null ? '<span>·</span><span title="from what was said to the reply">' + secs(s.latencyMs) + '</span>' : '') + '</div>'
                     + (s.question ? '<p class="lc-q">' + esc(s.question) + '</p>' : '')
-                    + '<p class="lc-a">' + esc(s.text) + '</p>'
+                    + '<p class="lc-a">' + rich(s.text) + '</p>'
                     + (s.why && s.kind !== 'answer' ? '<p class="lc-why">' + esc(s.why) + '</p>' : '')
                     + '</article>');
             }

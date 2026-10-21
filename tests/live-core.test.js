@@ -147,7 +147,7 @@ const manualClock = () => {
         const t = fakeTransport((lane) => {
             if (lane === 'prime') return reply(JSON.stringify(TAKE()));
             if (lane === 'ear') return reply(JSON.stringify(Object.assign({}, EMPTY_EAR, { watch_hits: ['pcn-anaphylaxis'], alarm: 'possible_critical', alarm_reason: 'Zosyn ordered' })));
-            if (lane === 'verify') { verifyCalls++; return reply(JSON.stringify({ should_say: true, severity: 'critical', topic: 'pcn-anaphylaxis', text: 'Hold the Zosyn: penicillin anaphylaxis on file.', why: 'piperacillin is a penicillin' })); }
+            if (lane === 'verify') { verifyCalls++; return reply(JSON.stringify({ decision: 'say', severity: 'critical', topic: 'pcn-anaphylaxis', text: 'Hold the Zosyn: penicillin anaphylaxis on file.', why: 'piperacillin is a penicillin' })); }
             return reply(JSON.stringify(TAKE()));
         });
         const cw = LiveCore.createCoworker({ transport: t, chart, clock: manualClock() });
@@ -176,7 +176,7 @@ const manualClock = () => {
         const t = fakeTransport((lane) => {
             if (lane === 'prime') return reply(JSON.stringify(TAKE()));
             if (lane === 'ear') return reply(JSON.stringify(Object.assign({}, EMPTY_EAR, { watch_hits: ['pcn-anaphylaxis'], alarm: 'possible_critical', alarm_reason: 'Zosyn with penicillin allergy' })));
-            if (lane === 'verify') return reply(JSON.stringify({ should_say: true, severity: 'critical', topic: 'pcn', text: 'Hold the Zosyn: penicillin anaphylaxis.', why: '' }));
+            if (lane === 'verify') return reply(JSON.stringify({ decision: 'say', severity: 'critical', topic: 'pcn', text: 'Hold the Zosyn: penicillin anaphylaxis.', why: '' }));
             return reply(JSON.stringify(TAKE()));
         });
         const cw = LiveCore.createCoworker({ transport: t, chart, clock: manualClock() });
@@ -199,7 +199,7 @@ const manualClock = () => {
         let i = 0;
         const t = fakeTransport((lane) => {
             if (lane === 'ear') return reply(JSON.stringify(Object.assign({}, EMPTY_EAR, { alarm: 'possible_critical', alarm_reason: 'bleeding' })));
-            if (lane === 'verify') return reply(JSON.stringify({ should_say: true, severity: 'critical', topic: 'gi-bleed', text: texts[i++], why: '' }));
+            if (lane === 'verify') return reply(JSON.stringify({ decision: 'say', severity: 'critical', topic: 'gi-bleed', text: texts[i++], why: '' }));
             return reply(JSON.stringify(TAKE()));
         });
         const cw = LiveCore.createCoworker({ transport: t, chart, clock: manualClock() });
@@ -211,9 +211,50 @@ const manualClock = () => {
         cw.stop();
     });
 
+    const waitScenario = async (followUpDecision) => {
+        const t = fakeTransport((lane, body) => {
+            const user = JSON.stringify(body.messages || '');
+            if (lane === 'ear') {
+                const red = /almost black/.test(user.split('<new_lines>')[1] || '');
+                return reply(JSON.stringify(Object.assign({}, EMPTY_EAR, red ? { alarm: 'possible_critical', alarm_reason: 'black stools, prior ulcer bleed' } : {})));
+            }
+            if (lane === 'verify') {
+                if (/chose to wait/.test(user)) return reply(JSON.stringify({ decision: followUpDecision, severity: followUpDecision === 'say' ? 'critical' : 'none', topic: 'melena', text: 'Black stools with his 2023 ulcer bleed: check his hemoglobin.', why: 'moved on' }));
+                return reply(JSON.stringify({ decision: 'wait', severity: 'critical', topic: 'melena', text: 'Black stools with his 2023 ulcer bleed: check his hemoglobin.', why: 'just raised' }));
+            }
+            return reply(JSON.stringify(TAKE()));
+        });
+        const clock = manualClock();
+        const cw = LiveCore.createCoworker({ transport: t, chart, clock });
+        const said = [];
+        cw.on('say', (s) => said.push(s));
+        cw.start({ skipPrime: true });
+        clock.advance(5000);
+        cw.hear({ speaker: 'patient', text: 'My stools have been almost black.' });
+        await cw.idle();
+        assert.strictEqual(said.length, 0, 'held while the doctor has not had a turn');
+        clock.advance(4000);
+        cw.hear({ speaker: 'doctor', text: followUpDecision === 'say' ? 'Okay. How are you sleeping?' : 'Black stools? Let us check your blood count right now.' });
+        await cw.idle();
+        return { said, t };
+    };
+
+    await check('a red flag just raised is held, then said once the doctor moves past it', async () => {
+        const { said, t } = await waitScenario('say');
+        assert.strictEqual(said.length, 1);
+        assert.strictEqual(said[0].via, 'after waiting');
+        assert.strictEqual(said[0].latencyMs, 4000, 'latency counts from the red flag');
+        assert.strictEqual(t.log.filter((x) => x.lane === 'verify').length, 2);
+    });
+
+    await check('a held red flag stays unsaid when the doctor addresses it', async () => {
+        const { said } = await waitScenario('quiet');
+        assert.strictEqual(said.length, 0);
+    });
+
     await check('an order placed in the EHR is logged, planned and safety-checked (no ear call)', async () => {
         const t = fakeTransport((lane) => {
-            if (lane === 'verify') return reply(JSON.stringify({ should_say: true, severity: 'critical', topic: 'pcn', text: 'Cancel the Zosyn: penicillin anaphylaxis in 1985.', why: '' }));
+            if (lane === 'verify') return reply(JSON.stringify({ decision: 'say', severity: 'critical', topic: 'pcn', text: 'Cancel the Zosyn: penicillin anaphylaxis in 1985.', why: '' }));
             return reply(JSON.stringify(TAKE()));
         });
         const cw = LiveCore.createCoworker({ transport: t, chart, clock: manualClock() });

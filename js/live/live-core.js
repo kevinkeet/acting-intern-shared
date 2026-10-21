@@ -342,6 +342,7 @@
             if (out.alarm === 'possible_critical') reasons.push(out.alarm_reason || 'possible safety issue');
             if (reasons.length) verify(reasons.join('; '), lastLine, 'lines:' + batch.map((l) => l.id).join(','));
             if (out.worth_a_look) scheduleQuickLook();
+            if (batch.some((l) => l.speaker === 'doctor') && pendingChecks.length) onDoctorSpoke();
         }
 
         // ── brain: answer ────────────────────────────────────────────────
@@ -434,22 +435,53 @@
         }
 
         // ── brain: verify a possible critical ───────────────────────────
-        function verify(reason, cueLine, key) {
+        // Concerns the brain is holding to see whether the doctor addresses them.
+        const pendingChecks = [];
+
+        function verify(reason, cueLine, key, followUp) {
             if (inflightVerify.has(key)) return null;
             inflightVerify.add(key);
             const startedAt = elapsed();
             const p = (async () => {
                 emit('thinking', { lane: 'verify', reason });
-                const body = brainBody('verify', renderForBrain() + '\n\n' + P.taskVerify(reason), { schema: P.VERIFY_SCHEMA });
+                const body = brainBody('verify', renderForBrain() + '\n\n' + P.taskVerify(reason, followUp), { schema: P.VERIFY_SCHEMA });
                 const res = await modelCall('verify', cfg.brainModel, body);
                 const out = parseJSON(res);
-                emit('verified', { reason, out, ms: elapsed() - startedAt });
-                if (out && out.should_say && out.text) {
-                    const kind = out.severity === 'critical' ? 'critical' : 'insight';
-                    consider({ kind, topic: out.topic || key, text: out.text, why: out.why, cueLine: cueLine && cueLine.id, heardAt: cueLine && cueLine.t, via: 'verify' });
+                if (!out) return;
+                const decision = out.decision || (out.should_say ? 'say' : 'quiet');
+                emit('verified', { reason, out, decision, followUp: !!followUp, ms: elapsed() - startedAt });
+                const cue = followUp ? followUp.cue : cueLine;
+                if (decision === 'say' && out.text) {
+                    const kind = out.severity === 'important' ? 'insight' : 'critical';
+                    consider({ kind, topic: out.topic || key, text: out.text, why: out.why, cueLine: cue && cue.id, heardAt: cue && cue.t, via: followUp ? 'after waiting' : 'verify' });
+                } else if (decision === 'wait' && out.text && (!followUp || followUp.rounds < 2)) {
+                    holdForDoctor({ reason, key, text: out.text, cue, rounds: followUp ? followUp.rounds + 1 : 1 });
                 }
             })().catch(() => { /* logged */ }).finally(() => inflightVerify.delete(key));
             return track(p);
+        }
+
+        /** Look again after the doctor's next words, or after 30 s (script time) if they say nothing. */
+        function holdForDoctor(item) {
+            const entry = Object.assign({ at: elapsed(), lastLine: lineSeq }, item);
+            entry.timer = clock.setTimeout(() => followUpCheck(entry), 30000);
+            pendingChecks.push(entry);
+            emit('waiting', { reason: item.reason, text: item.text });
+        }
+
+        function followUpCheck(entry) {
+            const i = pendingChecks.indexOf(entry);
+            if (i < 0) return;
+            pendingChecks.splice(i, 1);
+            clock.clearTimeout(entry.timer);
+            if (!running) return;
+            verify(entry.reason, entry.cue, 'follow:' + entry.key + ':' + entry.rounds, entry);
+        }
+
+        function onDoctorSpoke() {
+            for (const entry of pendingChecks.slice()) {
+                if (lineSeq > entry.lastLine) followUpCheck(entry);
+            }
         }
 
         // ── brain: heartbeat update / prime ─────────────────────────────
@@ -573,6 +605,7 @@
 
         function stop() {
             running = false;
+            for (const entry of pendingChecks.splice(0)) clock.clearTimeout(entry.timer);
             if (heartbeatTimer) clock.clearTimeout(heartbeatTimer);
             if (quickTimer) clock.clearTimeout(quickTimer);
             heartbeatTimer = quickTimer = null;
