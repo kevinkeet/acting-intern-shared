@@ -581,7 +581,7 @@
    "cue": "U43",
    "window_s": 60,
    "topic": "inr",
-   "summary": "INR 2.3 is unexplained: warfarin was stopped in 9/2023 (baseline INR ~1.0). With black stools and Hgb 10.2 (13.9 in Jan 2026) this is a bleeding concern; ask about leftover warfarin.",
+   "summary": "INR 2.3 is unexplained: warfarin was stopped in 9/2023 (his INR has run about 1.0). With black stools and Hgb 10.2 (11.1 on 1/28/2026 per the PCP note, 13.9 on 1/11) this is a bleeding concern; ask about leftover warfarin.",
    "keywords": [
     [
      "inr"
@@ -603,7 +603,7 @@
    "cue": "U50",
    "window_s": 45,
    "topic": "metformin-renal",
-   "summary": "Hold metformin: creatinine 2.4 means eGFR about 27, below 30. Gabapentin 900 mg/day also needs a renal dose reduction.",
+   "summary": "Hold metformin: creatinine 2.4 means eGFR about 27, below 30. (Gabapentin 900 mg/day may also need lowering if creatinine clearance is under 30; optional.)",
    "keywords": [
     [
      "metformin"
