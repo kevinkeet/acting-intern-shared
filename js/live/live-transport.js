@@ -147,6 +147,7 @@
      *   headers:  object or () => object (Content-Type etc.; the browser's comes from ClaudeAPI)
      *   fetchImpl: fetch (default: global fetch)
      *   now: () => ms (default: performance.now / Date.now)
+     *   stream: bool or () => bool (default true; false for a server that cannot stream)
      */
     function createTransport(opts) {
         const o = opts || {};
@@ -164,7 +165,7 @@
         async function call(req, hooks) {
             const h = hooks || {};
             const info = MODELS[req.model] || {};
-            const body = Object.assign({}, req.body, { model: req.model, stream: true });
+            const body = Object.assign({}, req.body, { model: req.model, stream: o.stream == null ? true : !!resolve(o.stream) });
             const betas = [];
             if (info.fallback && req.fallback !== false) { body.fallbacks = 'default'; betas.push(BETA_FALLBACK); }
             if (req.speed === 'fast' && info.fast) { body.speed = 'fast'; betas.push(BETA_FAST); }

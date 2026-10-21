@@ -6,6 +6,12 @@
       "runtimeExecutable": "node",
       "runtimeArgs": ["--watch", "server.js"],
       "port": 3000
+    },
+    {
+      "name": "live-lab",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["tools/live/dev-proxy.mjs"],
+      "port": 8787
     }
   ]
 }

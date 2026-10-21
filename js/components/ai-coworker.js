@@ -9870,3 +9870,33 @@ window.refreshAIAssistant = function() {
 window.updateAIFromRefresh = function(response) {
     AICoworker.receiveRefreshUpdate(response);
 };
+
+// ── Live Coworker loader (lab, Oct 2026) ─────────────────────────────────
+// The real-time coworker lives in js/live/ and css/live-coworker.css. It loads
+// ONLY in the full-site door (?allmodes): study and demo browsers return here
+// before anything is fetched, so they never download it. Any failure is
+// swallowed so start-up can never be affected.
+(function loadLiveCoworker() {
+    try {
+        if (typeof document === 'undefined' || typeof document.createElement !== 'function' || !document.head) return;
+        if (typeof ModeManager === 'undefined' || !ModeManager.isStudyLocked || ModeManager.isStudyLocked() !== false) return;
+        if (typeof DemoMode !== 'undefined' && DemoMode.isActive && DemoMode.isActive()) return;
+        if (window.__liveCoworkerLoading) return;
+        window.__liveCoworkerLoading = true;
+        const LIVE_V = 'L1';
+        const q = '?v=' + (window.__CACHE_V || '') + '-' + LIVE_V;
+        const css = document.createElement('link');
+        css.rel = 'stylesheet';
+        css.href = 'css/live-coworker.css' + q;
+        document.head.appendChild(css);
+        ['live-transport', 'live-chart', 'live-memory', 'live-prompts', 'live-core', 'live-panel', 'live-app'].forEach(function (name) {
+            const s = document.createElement('script');
+            s.src = 'js/live/' + name + '.js' + q;
+            s.async = false;
+            s.onerror = function () { console.warn('Live Coworker: could not load ' + name); };
+            document.head.appendChild(s);
+        });
+    } catch (e) {
+        try { console.warn('Live Coworker loader skipped:', e && e.message); } catch (e2) { /* ignore */ }
+    }
+})();

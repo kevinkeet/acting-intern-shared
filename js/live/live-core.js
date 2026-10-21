@@ -577,6 +577,13 @@
             emit('status', { running: false });
         }
 
+        /** The doctor asked for a held thought ("Tell me"). */
+        function tell(topic) {
+            const h = wm.held.find((x) => x.topic === topic);
+            if (!h) return null;
+            return deliver({ kind: 'insight', topic: h.topic, text: h.text, why: h.why, via: 'asked' });
+        }
+
         function setMode(m) {
             if (!['follow', 'abreast', 'lead'].includes(m)) return;
             cfg.mode = m;
@@ -610,9 +617,10 @@
         }
 
         return {
-            on, hear, ask, start, stop, update, prime, idle, stats, setMode, setBrainModel, setSpeed,
+            on, hear, ask, tell, start, stop, update, prime, idle, stats, setMode, setBrainModel, setSpeed,
             wm, cfg, calls, renderForBrain, renderForEar, patientHeader,
             get running() { return running; },
+            get elapsed() { return elapsed(); },
         };
     }
 
