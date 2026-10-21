@@ -202,8 +202,10 @@
             el.hidden = false;
             const pct = rp.duration ? Math.min(100, (rp.t / rp.duration) * 100) : 0;
             el.innerHTML = '<span class="lc-track" role="progressbar" aria-label="Demo progress" aria-valuemin="0" aria-valuemax="' + Math.round(rp.duration) + '" aria-valuenow="' + Math.round(rp.t) + '"><i style="width:' + pct.toFixed(1) + '%"></i></span><span>' + fmt(rp.t * 1000) + ' / ' + fmt(rp.duration * 1000) + '</span>'
-                + '<button type="button" data-act="replay" data-cmd="' + (rp.playing ? 'pause' : 'play') + '">' + (rp.playing ? 'Pause' : 'Resume') + '</button>'
-                + '<button type="button" data-act="replay" data-cmd="stop">Stop</button>';
+                + (rp.finished
+                    ? '<button type="button" data-act="replay" data-cmd="restart">Play again</button><button type="button" data-act="replay" data-cmd="stop">Close</button>'
+                    : '<button type="button" data-act="replay" data-cmd="' + (rp.playing ? 'pause' : 'play') + '">' + (rp.playing ? 'Pause' : 'Resume') + '</button>'
+                      + '<button type="button" data-act="replay" data-cmd="stop">Stop</button>');
         },
 
         // ── alerts ───────────────────────────────────────────────────────

@@ -426,7 +426,9 @@
             const rp = this._replay;
             if (cmd === 'pause' && rp) { this._pauseReplay(); return; }
             if (cmd === 'stop') { this._stopReplay(); this._status('idle'); return; }
+            if (cmd === 'restart') cmd = 'play-new';
             if (cmd === 'play' && rp && !rp.playing && rp.pos > 0 && rp.pos < rp.script.duration_s) { this._resumeReplay(); return; }
+            if (cmd === 'play' && rp && rp.playing) return;
             // (Re)start from the beginning.
             if (this.patientId !== DEMO.patient) { this._flash('The demo uses Robert Morrison. Open his chart first.'); return; }
             let script;
@@ -576,7 +578,7 @@
             v.engineNow = this.engine ? this.engine.elapsed : null;
             v.mode = this.settings.mode;
             v.settings = this.settings;
-            v.replay = this._replay ? { active: true, playing: this._replay.playing, t: this._replay.playing ? Math.min(this._replay.script.duration_s, ((Date.now() - this._replay.startedWall) * this._replay.speed) / 1000) : this._replay.pos, duration: this._replay.script.duration_s, title: DEMO.title, speed: this._replay.speed } : null;
+            v.replay = this._replay ? { active: true, finished: !this._replay.playing && this._replay.pos >= this._replay.script.duration_s, playing: this._replay.playing, t: this._replay.playing ? Math.min(this._replay.script.duration_s, ((Date.now() - this._replay.startedWall) * this._replay.speed) / 1000) : this._replay.pos, duration: this._replay.script.duration_s, title: DEMO.title, speed: this._replay.speed } : null;
             try {
                 if (q.has('head')) LivePanel.renderHead(Object.assign({}, v, { status: this._statusView() }));
                 if (q.has('replay')) LivePanel.renderReplay(v);
