@@ -75,8 +75,8 @@ const App = {
             }
         }
 
-        // Initialize AI panel
-        AIPanel.init();
+        // Initialize AI panel (contained: see _startSafely)
+        this._startSafely('AI panel', () => AIPanel.init());
 
         // Initialize simulation engine and controls
         SimulationEngine.init();
@@ -89,7 +89,7 @@ const App = {
         ClinicalImages.init();
         FloatingChat.init();
         FeedbackWidget.init();
-        AICoworker.init();
+        this._startSafely('AI Coworker', () => AICoworker.init());
 
         // Load default patient (demo and full-site builds each have exactly one)
         if (typeof DemoMode !== 'undefined' && DemoMode.isActive()) this.defaultPatientId = 'PAT002';
@@ -185,12 +185,35 @@ const App = {
         // Initialize AI longitudinal document in background (non-blocking).
         // This used to block the entire page render — now the chart loads
         // immediately while the AI context builds in the background.
-        if (typeof AICoworker !== 'undefined') {
-            AICoworker.onPatientLoaded(patientId).then(() => {
-                console.log('AI longitudinal document ready');
-            }).catch(err => {
-                console.warn('AI longitudinal doc init failed (non-fatal):', err);
-            });
+        // The try also contains a synchronous throw, so a coworker bug can
+        // never stop a chart (including a study case's chart) from loading.
+        try {
+            if (typeof AICoworker !== 'undefined') {
+                AICoworker.onPatientLoaded(patientId).then(() => {
+                    console.log('AI longitudinal document ready');
+                }).catch(err => {
+                    console.warn('AI longitudinal doc init failed (non-fatal):', err);
+                });
+            }
+        } catch (err) {
+            console.warn('AI longitudinal doc init failed to start (non-fatal):', err && err.message ? err.message : err);
+        }
+    },
+
+    /**
+     * Start a component that the study does not need without letting it stop
+     * the page. The AI panel and AI Coworker belong to the full site but start
+     * in every mode, including the study. If either throws while starting,
+     * log it and carry on, so the study pages (code entry, cases, grading)
+     * still load.
+     */
+    _startSafely(name, start) {
+        try {
+            start();
+            return true;
+        } catch (err) {
+            console.error(name + ' failed to start; the rest of the site carries on:', err && err.message ? err.message : err);
+            return false;
         }
     },
 

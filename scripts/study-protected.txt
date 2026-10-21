@@ -1,0 +1,72 @@
+# Files the TEACH-AI study depends on (guardrails, 21 Oct 2026). A push to main that changes
+# any of them stops at the pre-push check until Kevin has OK'd that change; then push once with
+# TEACHAI_STUDY_OK=1. index.html may always change its cache-version strings (?v=...).
+# Patterns: * = any characters except "/", ** = anything. See CLAUDE.md, "Study guardrails".
+
+# The study itself: AI Chat, engine, start page, logger, auto-grader, results, orientation
+js/components/assessment-*.js
+js/services/assessment-*.js
+data/assessments/**
+
+# Case charts (study cases 1-3 and the other study patients)
+data/patients/index.json
+data/patients/PAT003/**
+data/patients/PAT004/**
+data/patients/PAT005/**
+data/patients/PAT006/**
+data/patients/PAT007/**
+
+# Chart pages a case displays
+js/components/chart-review.js
+js/components/patient-header.js
+js/components/navigation.js
+js/components/labs-table.js
+js/components/lab-trending.js
+js/components/medications.js
+js/components/problems.js
+js/components/allergies.js
+js/components/vitals.js
+js/components/notes-list.js
+js/components/note-viewer.js
+js/components/imaging.js
+js/components/encounters.js
+js/components/history.js
+js/components/procedures.js
+js/components/orders.js
+js/components/order-entry.js
+js/components/global-search.js
+js/components/clinical-images.js
+js/utils/*.js
+js/data-loader.js
+
+# App shell, doors, password gate, participant code, AI client, database
+index.html
+js/app.js
+js/router.js
+js/services/mode-manager.js
+js/services/access-gate.js
+js/access-config.js
+js/services/user-code.js
+js/services/supabase-sync.js
+js/services/claude-api.js
+css/epic-theme.css
+
+# Grading, admin console, progress page
+js/components/grading.js
+js/components/admin-dashboard.js
+grade/**
+grade-practice/**
+admin/**
+progress/**
+
+# Server and database
+server.js
+package.json
+package-lock.json
+supabase/**
+
+# The guardrails themselves (adding a window to scripts/deploy-freeze.json needs no OK)
+scripts/study-protected.txt
+scripts/predeploy-check.mjs
+scripts/smoke-study.mjs
+scripts/git-hooks/**

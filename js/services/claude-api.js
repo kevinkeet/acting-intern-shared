@@ -12,6 +12,33 @@ const ClaudeAPI = {
     useProxy: true,
     apiKey: null, // Only used in fallback (no backend) mode
 
+    // Full-site door only (the page was opened with ?allmodes, so all three
+    // modes are unlocked). When the server offers /api/claude-full, AI calls
+    // go there instead of /api/claude. That route is paid by its own API key
+    // with its own spending limit, so heavy AI Assistant or Tutor use can
+    // never use up the credit the study's AI Chat and auto-grader depend on.
+    // Study and demo browsers never take this path: their requests go exactly
+    // where they went before. Both flags are set by AICoworker.detectBackend()
+    // from /api/health.
+    serverAvailable: false,
+    fullSiteRoute: false,
+
+    _isFullSiteDoor() {
+        try {
+            return typeof ModeManager !== 'undefined' && !!ModeManager.isStudyLocked
+                && ModeManager.isStudyLocked() === false;
+        } catch (e) { return false; }
+    },
+
+    _useFullSiteRoute() {
+        return this.serverAvailable === true && this.fullSiteRoute === true && this._isFullSiteDoor();
+    },
+
+    /** The server route this browser should use: /api/claude-full on the full site, else /api/claude. */
+    serverEndpoint() {
+        return this._useFullSiteRoute() ? '/api/claude-full' : '/api/claude';
+    },
+
     /**
      * Set the API key (fallback mode only)
      */
@@ -42,7 +69,7 @@ const ClaudeAPI = {
      * In fallback mode: needs an API key (pulled from localStorage if needed)
      */
     isConfigured() {
-        if (this.useProxy) return true;
+        if (this._useFullSiteRoute() || this.useProxy) return true;
         return !!this._ensureKey();
     },
 
@@ -50,7 +77,7 @@ const ClaudeAPI = {
      * Build headers based on mode
      */
     _getHeaders() {
-        if (this.useProxy) {
+        if (this._useFullSiteRoute() || this.useProxy) {
             return { 'Content-Type': 'application/json' };
         }
         // Fallback: direct browser access
@@ -66,6 +93,7 @@ const ClaudeAPI = {
      * Get the API endpoint URL
      */
     _getEndpoint() {
+        if (this._useFullSiteRoute()) return '/api/claude-full';
         if (this.useProxy) return '/api/claude';
         return 'https://api.anthropic.com/v1/messages';
     },

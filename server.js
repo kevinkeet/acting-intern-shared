@@ -19,7 +19,10 @@ app.get('/api/health', (req, res) => {
     res.json({
         status: 'ok',
         apiConfigured: !!process.env.ANTHROPIC_API_KEY,
-        deepgramConfigured: !!process.env.DEEPGRAM_API_KEY
+        deepgramConfigured: !!process.env.DEEPGRAM_API_KEY,
+        // The full-site door sends its AI calls to /api/claude-full (below).
+        fullSiteRoute: true,
+        fullSiteKeyConfigured: !!process.env.ANTHROPIC_API_KEY_FULLSITE
     });
 });
 
@@ -47,6 +50,43 @@ app.post('/api/claude', async (req, res) => {
         res.status(response.status).json(data);
     } catch (error) {
         console.error('Anthropic proxy error:', error.message);
+        res.status(502).json({
+            error: { message: 'Failed to reach Anthropic API: ' + error.message }
+        });
+    }
+});
+
+// --- Full-site Anthropic proxy ---
+// The full-site door (?allmodes: AI Assistant, Tutor, all patients) calls this
+// route instead of /api/claude. It is paid by its own key,
+// ANTHROPIC_API_KEY_FULLSITE, which belongs in a separate Anthropic workspace
+// with a monthly spend limit, so heavy full-site use can never spend the
+// credit the study's AI Chat and auto-grader rely on. Until that variable is
+// set, this route uses the shared key, which is what the full site used before.
+// /api/claude above is deliberately left unchanged for the study.
+app.post('/api/claude-full', async (req, res) => {
+    const apiKey = process.env.ANTHROPIC_API_KEY_FULLSITE || process.env.ANTHROPIC_API_KEY;
+    if (!apiKey) {
+        return res.status(500).json({
+            error: { message: 'No Anthropic API key configured on server' }
+        });
+    }
+
+    try {
+        const response = await fetch('https://api.anthropic.com/v1/messages', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': apiKey,
+                'anthropic-version': '2023-06-01'
+            },
+            body: JSON.stringify(req.body)
+        });
+
+        const data = await response.json();
+        res.status(response.status).json(data);
+    } catch (error) {
+        console.error('Anthropic full-site proxy error:', error.message);
         res.status(502).json({
             error: { message: 'Failed to reach Anthropic API: ' + error.message }
         });
@@ -157,5 +197,6 @@ app.get('/api/glasses-state', (req, res) => {
 server.listen(PORT, () => {
     console.log(`Acting Intern server running on http://localhost:${PORT}`);
     console.log(`Anthropic API key: ${process.env.ANTHROPIC_API_KEY ? 'configured' : 'NOT SET'}`);
+    console.log(`Full-site API key: ${process.env.ANTHROPIC_API_KEY_FULLSITE ? 'configured' : 'NOT SET (the full site uses the shared key)'}`);
     console.log(`Deepgram API key: ${process.env.DEEPGRAM_API_KEY ? 'configured' : 'NOT SET'}`);
 });

@@ -1,0 +1,9 @@
+{
+  "_note": "No pushes to main (each one deploys actingintern.com) inside these windows: from 00:00 the day before each TEACH-AI workshop session until the session ends. Add every new session here when it is scheduled. Override for one push with TEACHAI_FREEZE_OK=1, only with Kevin's OK.",
+  "windows": [
+    { "label": "Stanford session Thu 22 Oct, 10:30-12:00 PT", "from": "2026-10-21T00:00:00-07:00", "until": "2026-10-22T12:00:00-07:00" },
+    { "label": "Stanford session Thu 5 Nov, 10:30-12:00 PT", "from": "2026-11-04T00:00:00-08:00", "until": "2026-11-05T12:00:00-08:00" },
+    { "label": "BIDMC session Tue 10 Nov, 12:00-13:00 ET", "from": "2026-11-09T00:00:00-05:00", "until": "2026-11-10T13:00:00-05:00" },
+    { "label": "AdventHealth session Wed 18 Nov (time not set yet, so the whole day)", "from": "2026-11-17T00:00:00-05:00", "until": "2026-11-19T00:00:00-05:00" }
+  ]
+}

@@ -5723,6 +5723,13 @@ Format your response as JSON:
                     this.apiEndpoint = '/api/claude';
                     if (typeof ClaudeAPI !== 'undefined') {
                         ClaudeAPI.useProxy = true;
+                        // The full-site door gets /api/claude-full (its own key);
+                        // study and demo browsers stay on /api/claude.
+                        ClaudeAPI.serverAvailable = true;
+                        ClaudeAPI.fullSiteRoute = data.fullSiteRoute === true;
+                        if (typeof ClaudeAPI.serverEndpoint === 'function') {
+                            this.apiEndpoint = ClaudeAPI.serverEndpoint();
+                        }
                     }
                     console.log('✅ Backend detected — API key on server');
                     return;
@@ -5736,6 +5743,7 @@ Format your response as JSON:
         this.apiEndpoint = 'https://api.anthropic.com/v1/messages';
         if (typeof ClaudeAPI !== 'undefined') {
             ClaudeAPI.useProxy = false;
+            ClaudeAPI.serverAvailable = false;
         }
         this.loadApiKeyFallback();
         console.log('⚠️ No backend — using direct Anthropic access');
