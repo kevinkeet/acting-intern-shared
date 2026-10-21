@@ -291,6 +291,39 @@ const manualClock = () => {
         cw.stop();
     });
 
+    await check('safety checks take turns, so two batches about the same thing alert once', async () => {
+        const FIRST = 'Treat it as a TIA: head imaging and neurology tonight.';
+        const SECOND = 'Probable TIA with AF off anticoagulation: do a neuro exam now.';
+        let n = 0;
+        const t = fakeTransport(async (lane, body) => {
+            const user = JSON.stringify(body.messages || '');
+            if (lane === 'ear') {
+                const nl = user.split('<new_lines>')[1] || '';
+                if (/jumbled|keep an eye/.test(nl)) return reply(JSON.stringify(Object.assign({}, EMPTY_EAR, { alarm: 'possible_critical', alarm_reason: 'possible TIA' })));
+                return reply(JSON.stringify(EMPTY_EAR));
+            }
+            if (lane === 'verify') {
+                await new Promise((r) => setTimeout(r, 30));   // a check is slower than the ear
+                const covered = (user.split('ALREADY SAID')[1] || '').includes(FIRST);
+                n++;
+                return reply(JSON.stringify(covered
+                    ? { decision: 'quiet', severity: 'none', topic: '', text: '', why: 'already said' }
+                    : { decision: 'say', severity: 'critical', topic: 'tia-' + n, text: n === 1 ? FIRST : SECOND, why: '' }));
+            }
+            return reply(JSON.stringify(TAKE()));
+        });
+        const cw = LiveCore.createCoworker({ transport: t, chart, clock: manualClock() });
+        const said = [];
+        cw.on('say', (s) => said.push(s));
+        cw.start({ skipPrime: true });
+        cw.hear({ speaker: 'other', text: 'His words came out all jumbled.' });
+        cw.hear({ speaker: 'doctor', text: 'Okay, we will keep an eye on that.' });
+        await cw.idle();
+        assert.strictEqual(t.log.filter((x) => x.lane === 'verify').length, 2, 'both batches were checked');
+        assert.deepStrictEqual(said.map((s) => s.text), [FIRST]);
+        cw.stop();
+    });
+
     await check('an order placed in the EHR is logged, planned and safety-checked (no ear call)', async () => {
         const t = fakeTransport((lane) => {
             if (lane === 'verify') return reply(JSON.stringify({ decision: 'say', severity: 'critical', topic: 'pcn', text: 'Cancel the Zosyn: penicillin anaphylaxis in 1985.', why: '' }));

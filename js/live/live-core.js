@@ -466,11 +466,20 @@
         // Concerns the brain is holding to see whether the doctor addresses them.
         const pendingChecks = [];
 
+        // Safety checks run one at a time. Speech arrives in pieces ("his hand went
+        // clumsy" ... "we'll keep an eye on that"), and two checks about the same thing
+        // running side by side would both speak; in turn, the later one sees what the
+        // earlier one said. A check takes 2 to 4 s, and overlaps are rare.
+        let verifyTurn = Promise.resolve();
+
         function verify(reason, cueLine, key, followUp) {
             if (inflightVerify.has(key)) return null;
             inflightVerify.add(key);
             const startedAt = elapsed();
+            const before = verifyTurn;
             const p = (async () => {
+                await before;
+                if (!running) return;
                 emit('thinking', { lane: 'verify', reason });
                 const body = brainBody('verify', renderForBrain() + '\n\n' + P.taskVerify(reason, followUp), { schema: P.VERIFY_SCHEMA });
                 const res = await modelCall('verify', cfg.brainModel, body);
@@ -486,6 +495,7 @@
                     holdForDoctor({ reason, key, topic: out.topic || '', text: out.text || out.why || reason, cue, rounds: followUp ? followUp.rounds + 1 : 1 });
                 }
             })().catch(() => { /* logged */ }).finally(() => inflightVerify.delete(key));
+            verifyTurn = p;
             return track(p);
         }
 
