@@ -719,7 +719,12 @@
                 };
                 const out = parseJSON(await modelCall('note', cfg.noteModel, body));
                 if (!out || typeof out.problem_representation !== 'string') return;
-                wm.note = { problem_representation: out.problem_representation, hpi: out.hpi || '', problems: (out.problems || []).slice(0, 8), t: elapsed() };
+                // Glanceable by construction: at most 6 problems, 8 plan items and 2 "consider" items each.
+                const problems = (out.problems || []).slice(0, 6).map((x) => ({
+                    name: String(x.name || ''), assessment: String(x.assessment || ''),
+                    plan: (x.plan || []).map(String).slice(0, 8), consider: (x.consider || []).map(String).slice(0, 2),
+                }));
+                wm.note = { problem_representation: out.problem_representation, hpi: out.hpi || '', problems, t: elapsed() };
                 emit('note', wm.note);
             })().catch(() => { /* logged in modelCall */ })
                 .finally(() => { noteBusy = false; if (noteAgain) { noteAgain = false; scheduleNote(); } });
