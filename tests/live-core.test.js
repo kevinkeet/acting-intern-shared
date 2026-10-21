@@ -252,6 +252,45 @@ const manualClock = () => {
         assert.strictEqual(said.length, 0);
     });
 
+    await check('a held point gets its second look after the fresh check on the same words (no double alert)', async () => {
+        const ALERT = 'Treat it as a TIA: head imaging and neurology tonight.';
+        const t = fakeTransport((lane, body) => {
+            const user = JSON.stringify(body.messages || '');
+            if (lane === 'ear') {
+                const nl = user.split('<new_lines>')[1] || '';
+                if (/hand went clumsy/.test(nl)) return reply(JSON.stringify(Object.assign({}, EMPTY_EAR, { alarm: 'possible_critical', alarm_reason: 'ZZ-raised' })));
+                if (/keep an eye/.test(nl)) return reply(JSON.stringify(Object.assign({}, EMPTY_EAR, { alarm: 'possible_critical', alarm_reason: 'ZZ-moved-on' })));
+                return reply(JSON.stringify(EMPTY_EAR));
+            }
+            if (lane === 'verify') {
+                if (/chose to wait/.test(user)) {
+                    const covered = user.includes(ALERT);
+                    return reply(JSON.stringify({ decision: covered ? 'quiet' : 'say', severity: covered ? 'none' : 'critical', topic: 'tia-held', text: covered ? '' : 'Possible TIA: he needs a stroke workup.', why: '' }));
+                }
+                if (/ZZ-moved-on/.test(user)) return reply(JSON.stringify({ decision: 'say', severity: 'critical', topic: 'tia', text: ALERT, why: '' }));
+                return reply(JSON.stringify({ decision: 'wait', severity: 'critical', topic: 'tia', text: '', why: 'just raised' }));
+            }
+            return reply(JSON.stringify(TAKE()));
+        });
+        const clock = manualClock();
+        const cw = LiveCore.createCoworker({ transport: t, chart, clock });
+        const said = [];
+        cw.on('say', (s) => said.push(s));
+        cw.start({ skipPrime: true });
+        clock.advance(3000);
+        cw.hear({ speaker: 'other', text: 'Last Tuesday his right hand went clumsy and his words came out jumbled.' });
+        await cw.idle();
+        assert.strictEqual(said.length, 0, 'held at first');
+        clock.advance(4000);
+        cw.hear({ speaker: 'doctor', text: 'Okay, we will keep an eye on that.' });
+        await cw.idle();
+        assert.deepStrictEqual(said.map((s) => s.text), [ALERT]);
+        const v = t.log.filter((x) => x.lane === 'verify');
+        assert.strictEqual(v.length, 3);
+        assert.match(JSON.stringify(v[2].body.messages), /chose to wait/, 'the second look runs last');
+        cw.stop();
+    });
+
     await check('an order placed in the EHR is logged, planned and safety-checked (no ear call)', async () => {
         const t = fakeTransport((lane) => {
             if (lane === 'verify') return reply(JSON.stringify({ decision: 'say', severity: 'critical', topic: 'pcn', text: 'Cancel the Zosyn: penicillin anaphylaxis in 1985.', why: '' }));

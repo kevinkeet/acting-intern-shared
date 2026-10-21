@@ -349,9 +349,14 @@
                 if (w) reasons.push('watch item "' + w.id + '" fired: ' + w.trigger + ' (prepared alert: ' + w.alert + ')');
             }
             if (out.alarm === 'possible_critical') reasons.push(out.alarm_reason || 'possible safety issue');
-            if (reasons.length) verify(reasons.join('; '), lastLine, 'lines:' + batch.map((l) => l.id).join(','));
+            const check = reasons.length ? verify(reasons.join('; '), lastLine, 'lines:' + batch.map((l) => l.id).join(',')) : null;
             if (out.worth_a_look) scheduleQuickLook();
-            if (batch.some((l) => l.speaker === 'doctor') && pendingChecks.length) onDoctorSpoke();
+            // A held point gets its second look after this batch's own check: the doctor's
+            // words often set off both about the same issue (a dismissed TIA, the diltiazem
+            // that answers a fast heart rate), and the second look must see what was just said.
+            if (batch.some((l) => l.speaker === 'doctor') && pendingChecks.length) {
+                if (check) track(check.then(() => onDoctorSpoke())); else onDoctorSpoke();
+            }
         }
 
         // ── brain: answer ────────────────────────────────────────────────

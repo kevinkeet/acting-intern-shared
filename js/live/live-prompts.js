@@ -12,7 +12,7 @@
 (function (root) {
     'use strict';
 
-    const PROMPT_VERSION = 'live-v9';
+    const PROMPT_VERSION = 'live-v10';
 
     // ── Ear (Haiku): fast bookkeeping on every utterance ──────────────────
     const EAR_SYSTEM = [
@@ -182,7 +182,7 @@
         if (followUp) {
             return [
                 'TASK: A moment ago this was flagged: "' + reason + '". You chose to wait and see whether the doctor would address it. Your prepared remark was: "' + followUp.text + '".',
-                'Look at what has been said since. decision "say" if the doctor has moved on without addressing it (update the remark if anything new matters, 25 words or fewer); "quiet" if the doctor addressed it or it no longer matters; "wait" only if the doctor is still in the middle of that very topic.',
+                'Look at what has been said since. decision "say" if the doctor has moved on without addressing it (update the remark if anything new matters, 25 words or fewer); "quiet" if the doctor addressed it, it no longer matters, or something you already said covers it (see ALREADY SAID); "wait" only if the doctor is still in the middle of that very topic.',
                 'If you say it, set severity by what is at stake for the patient, not by the fact that it went unaddressed: ' + SEVERITY_RULE,
             ].join('\n');
         }
