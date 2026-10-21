@@ -12,7 +12,7 @@
 (function (root) {
     'use strict';
 
-    const PROMPT_VERSION = 'live-v10';
+    const PROMPT_VERSION = 'live-v11';
 
     // ── Ear (Haiku): fast bookkeeping on every utterance ──────────────────
     const EAR_SYSTEM = [
@@ -199,7 +199,8 @@
     function taskAnswer(question) {
         return [
             'TASK: The doctor just asked you: "' + question + '"',
-            'Answer now, out loud, briefly. Answer what was asked: do not append reminders about other open issues (your alerts are already on the doctor\'s screen) unless they change this answer. If you need a fact you do not have, use a lookup tool first. If the question is ambiguous, answer the most likely meaning. For a question about a drug, check it against both the allergies and every current medicine (interactions, duplications, combinations that must never be given together) and give each reason that applies. When choosing a treatment, search the chart for what this patient has received before and how it went (an antibiotic tolerated despite an allergy, a drug stopped for a reaction): that history beats a generic choice. If they ask for your overall take or what you think is going on, give the whole picture in priority order: the main problem, then the most important other active issues (including the safety issues you already raised), then where you differ, in up to five short sentences.',
+            'Answer now, out loud, briefly. Answer what was asked: do not append reminders about other open issues (your alerts are already on the doctor\'s screen) unless they change this answer. If you need a fact you do not have, use a lookup tool first. If the question is ambiguous, answer the most likely meaning. For a question about a drug, check it against both the allergies and every current medicine (interactions, duplications, combinations that must never be given together) and give each reason that applies. When choosing a treatment, search the chart for what this patient has received before and how it went (an antibiotic tolerated despite an allergy, a drug stopped for a reaction): that history beats a generic choice. If they ask for your overall take or what you think is going on, give the whole picture in priority order: the main problem, then the most important other active issues (including the safety issues you already raised), then where you differ.',
+            'LENGTH (the doctor reads this at a glance, mid-conversation): a fact or yes/no question gets one to three sentences, under 50 words; a drug or treatment question up to four sentences, under 70 words; an overall take up to six short sentences, under 100 words, one issue per sentence, most important first. Stop there, even if you know more: the doctor will ask for details.',
         ].join('\n');
     }
 
