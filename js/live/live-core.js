@@ -591,7 +591,10 @@
                     const held = pendingChecks.some((p) => (p.topic && p.topic === out.say.topic) || overlap(p.text + ' ' + p.reason, out.say.text) >= 0.35);
                     const last = wm.lines[wm.lines.length - 1];
                     if (held) emit('suppressed', { reason: 'waiting for the doctor', kind: out.say.kind, topic: out.say.topic, text: out.say.text });
-                    else if (out.say.kind === 'critical' && last && last.speaker !== 'doctor' && !alreadySaid(out.say.topic, out.say.text)) {
+                    else if (out.say.kind === 'critical' && await coveredMeanwhile(out.say.text, seenUpTo)) {
+                        // An update takes several seconds; an alert given meanwhile may already cover it.
+                        emit('suppressed', { reason: 'covered by an alert given meanwhile', kind: out.say.kind, topic: out.say.topic, text: out.say.text });
+                    } else if (out.say.kind === 'critical' && last && last.speaker !== 'doctor' && !alreadySaid(out.say.topic, out.say.text)) {
                         // Something just raised by the patient, family or nurse: give the doctor a turn first.
                         holdForDoctor({ reason: 'your take update wanted to say: ' + out.say.text, key: 'update:' + (out.say.topic || last.id), topic: out.say.topic, text: out.say.text, cue: last, rounds: 1 });
                     } else consider({ kind: out.say.kind === 'critical' ? 'critical' : 'insight', topic: out.say.topic, text: out.say.text, why: out.say.why, via: 'update' });

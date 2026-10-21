@@ -207,7 +207,7 @@
     // ── Helpers (cheap models) ───────────────────────────────────────────
     const MEMORY_SYSTEM = 'You answer a clinician\'s question from a patient\'s long-term record summary. Quote values with dates. Answer in at most four short sentences. If the record does not contain the answer, say "Not in the record." Do not guess.';
 
-    const COVERED_SYSTEM = 'Two safety checks ran at the same moment in a clinical AI coworker (simulated patient). One alert was already shown to the doctor; decide whether a new alert repeats it. covered = true if an alert already said makes the same main point (the same problem and the same thing to do or avoid), even in different words. covered = false if the new alert raises a different problem or a different action.';
+    const COVERED_SYSTEM = 'A clinical AI coworker (simulated patient) is about to interrupt a doctor with a new safety alert, but other alerts were shown to the doctor seconds ago. Decide whether the new alert is still needed. covered = true if a doctor who has read the earlier alerts would gain nothing they must act on now from the new one: the same problem and the same main action, where rewording, extra background or secondary suggestions do not count. covered = false if it raises a different problem or a different urgent action.';
 
     const COVERED_SCHEMA = {
         type: 'object',

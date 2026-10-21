@@ -309,7 +309,7 @@ const manualClock = () => {
                 const text = /heparin with melena/.test(user) ? OTHER : n === 1 ? FIRST : SECOND;
                 return reply(JSON.stringify({ decision: 'say', severity: 'critical', topic: 'topic-' + n, text, why: '' }));
             }
-            if (lane === 'helper' && /Two safety checks/.test(JSON.stringify(body.system))) {
+            if (lane === 'helper' && ((body.output_config || {}).format || {}).schema && body.output_config.format.schema.properties.covered) {
                 const msg = JSON.stringify(body.messages);
                 return reply(JSON.stringify({ covered: msg.includes(FIRST) && msg.includes(SECOND) }));
             }
