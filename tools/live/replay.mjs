@@ -206,7 +206,7 @@ async function main() {
 
     const run = {
         script: script.id, at: new Date().toISOString(), config: { brain: opt.brain, mode: opt.mode, pace: opt.pace, speed: opt.speed, memory: memorySource, fast: opt.fast, prompts: LivePrompts.PROMPT_VERSION, effort: cw.cfg.effort },
-        said, fedWall, calls: cw.calls, watchAtStart, finalTake: cw.wm.take, finalWatch: cw.wm.watch, facts: cw.wm.facts, thinking: cw.wm.thinking, plan: cw.wm.plan, held: cw.wm.held, events,
+        said, fedWall, calls: cw.calls, watchAtStart, finalTake: cw.wm.take, finalNote: cw.wm.note, finalWatch: cw.wm.watch, facts: cw.wm.facts, thinking: cw.wm.thinking, plan: cw.wm.plan, held: cw.wm.held, events,
         wallSeconds: Math.round((performance.now() - wall0) / 1000),
     };
     run.config.mode = opt.mode;
@@ -230,6 +230,11 @@ async function main() {
     fs.appendFileSync(idx, [name, LivePrompts.PROMPT_VERSION, opt.brain, opt.mode, opt.pace, memorySource, metrics.must.hit + '/' + metrics.must.of, metrics.answers.points + '/' + metrics.answers.of, metrics.falseAlarms, metrics.extras, metrics.repeats, metrics.wrong, metrics.alertLatencyMs.median, metrics.answerLatencyMs.firstWordMedian, metrics.cost, opt.label].join('\t') + '\n');
 
     console.log('\n' + printScore(metrics, name));
+    const n = cw.wm.note;
+    if (n) {
+        console.log('\nLive note at the end:\n  PROBLEM REPRESENTATION: ' + n.problem_representation + '\n  HPI: ' + n.hpi + '\n  ASSESSMENT AND PLAN:');
+        (n.problems || []).forEach((p, i) => console.log('    ' + (i + 1) + '. ' + p.name + ': ' + p.assessment + (p.plan.length ? '\n       plan: ' + p.plan.join('; ') : '') + (p.consider.length ? '\n       consider: ' + p.consider.join('; ') : '')));
+    }
     console.log('Report: ' + path.join(outDir, name + '.json') + '  (wall ' + run.wallSeconds + 's)');
 }
 

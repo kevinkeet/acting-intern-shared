@@ -75,7 +75,7 @@
                 now: Date.now(), status: { state: 'idle', label: 'Ready', sub: '' }, mode: this.settings.mode,
                 take: null, takeLoading: false, takeOpen: false, alerts: [], said: [], streaming: {}, held: [], heldOpen: false,
                 wm: null, lines: [], interim: null, stats: null, calls: [], replay: null, settings: this.settings,
-                memoryNote: '', deepgram: false, startedAt: null,
+                memoryNote: '', deepgram: false, startedAt: null, note: null, noteWriting: false,
             };
         },
 
@@ -160,6 +160,7 @@
             this.patientId = patientId;
             this.chart = null;
             this.memory = null;
+            this.encounter = null;
             this.view = Object.assign(this._freshView(), { deepgram: this.view.deepgram });
             this.renderAll();
             try {
@@ -282,7 +283,11 @@
             // Failed calls show up as the "not checking" state (see _healthView), not as a flash.
             cw.on('error', (e) => {
                 if (/prime|update/.test(e.lane)) { v.takeLoading = false; this.request('take'); }
+                if (e.lane === 'note') { v.noteWriting = false; this.request('note'); }
             });
+            // The live note: problem representation, HPI, assessment and plan, rewritten as people talk.
+            cw.on('thinking', (p) => { if (p.lane === 'note') { v.noteWriting = true; this.request('note'); } });
+            cw.on('note', (n) => { v.note = Object.assign({}, n, { wallAt: Date.now() }); v.noteWriting = false; this.request('note', 'take'); });
         },
 
         _panelVisible() {
@@ -299,6 +304,70 @@
             this.engine.start();
             this.view.takeLoading = true;
             this.request('take');
+        },
+
+        // ── the encounter: start, pause and resume (the mic), end ────────
+        /** Start: a fresh encounter if one already ran, then listen; the clock starts now. */
+        async startEncounter() {
+            if (!this.engine) { this._flash('Open a patient first.'); return; }
+            if (this.encounter && this.encounter.state !== 'ended') return;
+            this._stopReplay();
+            if (this.encounter || this.view.lines.length || this.view.said.length) this.newEncounter();
+            this.encounter = { state: 'live', kind: 'mic', startedWall: Date.now(), endedWall: null };
+            await this.startListening();
+            if (!this._mic && this.encounter) this.encounter.state = 'paused';   // the mic was refused
+            this.request('head', 'note');
+        },
+
+        /** End: stop listening, write the final version of the note. */
+        endEncounter() {
+            const e = this.encounter;
+            if (!e || e.state === 'ended') return;
+            if (this._replay) this._stopReplay();
+            this.stopListening();
+            if (typeof LiveVoice !== 'undefined') LiveVoice.stop();
+            e.state = 'ended';
+            e.endedWall = Date.now();
+            if (this.engine && this.engine.running) this.engine.note();
+            this._status('idle', e.kind === 'demo' ? 'Demo finished' : 'Encounter ended');
+            this.request('head', 'note');
+        },
+
+        /** The mic button: start an encounter, or pause and resume listening within one. */
+        toggleMic() {
+            const e = this.encounter;
+            if (!e || e.state === 'ended') { this.startEncounter(); return; }
+            if (e.kind === 'demo') { this.replay(this._replay && this._replay.playing ? 'pause' : 'play'); return; }
+            if (this._mic) { this.stopListening(); e.state = 'paused'; }
+            else { e.state = 'live'; this.startListening(); }
+            this.request('head');
+        },
+
+        copyNote() {
+            const n = this.view.note;
+            if (!n) return;
+            const text = ['Problem representation', n.problem_representation, '', 'HPI', n.hpi || '(none yet)', '', 'Assessment and plan']
+                .concat((n.problems || []).map((p, i) => [(i + 1) + '. ' + p.name + (p.assessment ? ': ' + p.assessment : '')].concat(p.plan.map((x) => '   - ' + x)).join('\n')))
+                .join('\n');
+            const done = () => this._flash('Note copied.');
+            try { navigator.clipboard.writeText(text).then(done, () => this._flash('Could not copy (the browser blocked it).')); } catch (err) { this._flash('Could not copy.'); }
+        },
+
+        /** Side by side: widen the AI panel so the conversation and the note sit in two columns. */
+        toggleWide() {
+            const root = document.documentElement;
+            const panel = document.getElementById('ai-panel');
+            const now = panel ? panel.getBoundingClientRect().width : 440;
+            let width;
+            if (now >= 620) {
+                width = Number(localStorage.getItem('live-narrow-width')) || 440;
+            } else {
+                try { localStorage.setItem('live-narrow-width', String(Math.round(now))); } catch (e) { /* ignore */ }
+                width = Math.max(660, Math.min(900, window.innerWidth - 560));
+            }
+            root.style.setProperty('--ai-panel-width', width + 'px');
+            try { localStorage.setItem('ai-panel-width', String(width)); } catch (e) { /* ignore */ }
+            setTimeout(() => this.renderAll(), 260);
         },
 
         newEncounter(extraConfig, clock) {
@@ -319,7 +388,11 @@
         // ── panel handlers ───────────────────────────────────────────────
         _handlers() {
             return {
-                onMic: () => (this._mic ? this.stopListening() : this.startListening()),
+                onMic: () => this.toggleMic(),
+                onStart: () => this.startEncounter(),
+                onEnd: () => this.endEncounter(),
+                onCopyNote: () => this.copyNote(),
+                onWide: () => this.toggleWide(),
                 onMode: (m) => this.setMode(m),
                 onAsk: (q) => this.ask(q),
                 onAck: (id) => { this.view.alerts = this.view.alerts.filter((a) => a.id !== id); this.request('alerts', 'said', 'take'); },
@@ -329,7 +402,7 @@
                 onTakeToggle: () => { this.view.takeOpen = !this.view.takeOpen; this.request('take'); },
                 onReplay: (cmd) => this.replay(cmd),
                 onPrime: () => { if (!this.engine) return; if (!this.engine.running) this.onPanelOpen(); else { this.view.takeLoading = !this.view.take; this.engine.prime(); this.request('take'); } LivePanel.togglePop(false); },
-                onReset: () => { this.newEncounter(); LivePanel.togglePop(false); },
+                onReset: () => { this.encounter = null; this.newEncounter(); LivePanel.togglePop(false); },
                 onClassic: () => { LivePanel.togglePop(false); this.setEnabled(false); },
                 onSetting: (name, value) => this.setSetting(name, value),
                 onOpenSettings: () => this.request('settings'),
@@ -496,7 +569,7 @@
             LivePanel.togglePop(false);
             const rp = this._replay;
             if (cmd === 'pause' && rp) { this._pauseReplay(); return; }
-            if (cmd === 'stop') { this._stopReplay(); this._status('idle'); return; }
+            if (cmd === 'stop') { if (this.encounter && this.encounter.kind === 'demo') this.endEncounter(); else { this._stopReplay(); this._status('idle'); } return; }
             if (cmd === 'restart') cmd = 'play-new';
             if (cmd === 'play' && rp && !rp.playing && rp.pos > 0 && rp.pos < rp.script.duration_s) { this._resumeReplay(); return; }
             if (cmd === 'play' && rp && rp.playing) return;
@@ -516,6 +589,7 @@
                 clearTimeout: (h) => clearTimeout(h),
             };
             this.newEncounter(null, demoClock);
+            this.encounter = { state: 'live', kind: 'demo', startedWall: Date.now(), endedWall: null };
             this._replay = run;
             this._resumeReplay();
         },
@@ -525,13 +599,22 @@
             if (!rp) return;
             rp.playing = true;
             rp.startedWall = Date.now() - (rp.pos * 1000) / rp.speed;
+            if (this.encounter && this.encounter.kind === 'demo') this.encounter.state = 'live';
             if (this._health) this._health.pendingSince = null;
             for (const line of rp.script.lines) {
                 const at = line.t + line.dur;
                 if (at <= rp.pos) continue;
                 rp.timers.push(setTimeout(() => this._replayLine(line), ((at - rp.pos) * 1000) / rp.speed));
             }
-            rp.timers.push(setTimeout(() => { if (this._replay === rp) { rp.playing = false; rp.pos = rp.script.duration_s; this._status('idle', 'Demo finished'); this.request('replay'); } }, ((rp.script.duration_s - rp.pos) * 1000) / rp.speed + 500));
+            rp.timers.push(setTimeout(() => {
+                if (this._replay !== rp) return;
+                rp.playing = false;
+                rp.pos = rp.script.duration_s;
+                const e = this.encounter;
+                if (e && e.kind === 'demo' && e.state !== 'ended') { e.state = 'ended'; e.endedWall = Date.now(); if (this.engine) this.engine.note(); }
+                this._status('idle', 'Demo finished');
+                this.request('replay', 'head', 'note');
+            }, ((rp.script.duration_s - rp.pos) * 1000) / rp.speed + 500));
             this._status('replaying');
             this.request('replay');
         },
@@ -550,6 +633,7 @@
             rp.timers = [];
             rp.pos = ((Date.now() - rp.startedWall) * rp.speed) / 1000;
             rp.playing = false;
+            if (this.encounter && this.encounter.kind === 'demo') this.encounter.state = 'paused';
             this._status('idle', 'Demo paused');
             this.request('replay');
         },
@@ -583,25 +667,33 @@
             const clock = (ms) => { const x = Math.round(ms / 1000); return Math.floor(x / 60) + ':' + String(x % 60).padStart(2, '0'); };
             const hv = this._healthView();
             if (hv.degraded && (s.state === 'listening' || s.state === 'replaying')) {
-                return { state: 'degraded', listening: s.state === 'listening', label: (s.state === 'listening' ? 'Listening' : 'Demo') + ', not checking', sub: hv.reason };
+                return { state: 'degraded', listening: s.state === 'listening', label: (s.state === 'listening' ? (this.encounter ? 'Encounter' : 'Listening') : 'Demo') + ', not checking', sub: hv.reason };
             }
             if (s.state === 'listening') {
                 const since = hv.lastHeardWall ? Math.round((Date.now() - hv.lastHeardWall) / 1000) : null;
                 const heard = since == null ? 'waiting for speech' : 'heard ' + (since < 5 ? 'just now' : since < 60 ? since + 's ago' : Math.round(since / 60) + 'm ago');
-                return { state: 'listening', label: 'Listening · ' + clock(elapsed), sub: (this._mic && this._mic.kind === 'room' ? 'Room mic' : 'Browser speech') + ' · ' + heard + ' · ' + brain };
+                const enc = this.encounter && this.encounter.kind === 'mic' ? this.encounter : null;
+                return { state: 'listening', label: (enc ? 'Encounter · ' + clock(Date.now() - enc.startedWall) : 'Listening · ' + clock(elapsed)), sub: (this._mic && this._mic.kind === 'room' ? 'Room mic' : 'Browser speech') + ' · ' + heard + ' · ' + brain };
             }
             if (s.state === 'connecting') return { state: 'connecting', label: 'Connecting the mic…', sub: brain };
             if (s.state === 'replaying' && this._replay) return { state: 'replaying', label: 'Demo · ' + DEMO.title, sub: this._replay.speed + '× speed · ' + brain };
             if (s.state === 'error') return { state: 'error', label: s.label || 'Something went wrong', sub: s.sub };
             if (!this.patientId) return { state: 'idle', label: 'Ready', sub: 'Open a patient to start.' };
-            // A paused or finished demo: its own row has Resume / Play again, so no demo link here.
+            const e = this.encounter;
+            if (e && e.state === 'ended') {
+                return { state: 'idle', label: (e.kind === 'demo' ? 'Demo finished' : 'Encounter ended') + ' · ' + clock((e.endedWall || Date.now()) - e.startedWall), sub: 'The note is ready · ' + brain };
+            }
+            if (e && e.state === 'paused' && e.kind === 'mic') {
+                return { state: 'idle', label: 'Encounter paused · ' + clock(Date.now() - e.startedWall), sub: 'Tap the mic to keep listening · ' + brain };
+            }
+            // A paused demo: its own row has Resume, so no demo link here.
             if (this._replay) return { state: 'idle', label: s.label || 'Demo paused', sub: this._replay.speed + '× speed · ' + brain };
             const busy = this.view.lines.length > 0 || this.view.said.length > 0;
             return {
-                state: 'idle', label: s.label || 'Ready', sub: '',
+                state: 'idle', label: 'Ready', sub: '',
                 subHtml: (this.patientId === DEMO.patient
-                    ? 'Start the mic, or <button type="button" data-act="demo"' + (busy ? ' data-confirm="clear this encounter and play the demo?"' : '') + '>play the Morrison demo</button>'
-                    : 'Start the mic when you are with the patient') + ' · ' + brain,
+                    ? 'Or <button type="button" data-act="demo"' + (busy ? ' data-confirm="clear this encounter and play the demo?"' : '') + '>play the Morrison demo</button>'
+                    : 'Start when you are with the patient') + ' · ' + brain,
             };
         },
 
@@ -690,7 +782,7 @@
             this._raf = { frame: requestAnimationFrame(run), timer: setTimeout(run, 120) };
         },
 
-        renderAll() { this.request('head', 'replay', 'alerts', 'take', 'said', 'tracking', 'transcript', 'log', 'settings'); },
+        renderAll() { this.request('head', 'replay', 'alerts', 'take', 'said', 'note', 'tracking', 'transcript', 'log', 'settings'); },
 
         _render(q) {
             if (!LivePanel.el || !this.enabled) return;
@@ -700,11 +792,15 @@
             v.mode = this.settings.mode;
             v.settings = this.settings;
             v.health = this._healthView();
+            v.encounter = this.encounter ? Object.assign({}, this.encounter) : null;
+            v.canStart = !!this.engine;
+            v.wide = !!(LivePanel.el && LivePanel.el.getBoundingClientRect().width >= 620);
             v.canSpeak = typeof LiveVoice !== 'undefined' && LiveVoice.supported();
             v.voices = v.canSpeak ? LiveVoice.voices() : [];
             v.replay = this._replay ? { active: true, finished: !this._replay.playing && this._replay.pos >= this._replay.script.duration_s, playing: this._replay.playing, t: this._replay.playing ? Math.min(this._replay.script.duration_s, ((Date.now() - this._replay.startedWall) * this._replay.speed) / 1000) : this._replay.pos, duration: this._replay.script.duration_s, title: DEMO.title, speed: this._replay.speed } : null;
             try {
                 if (q.has('head')) LivePanel.renderHead(Object.assign({}, v, { status: this._statusView() }));
+                if (q.has('note')) LivePanel.renderNote(v);
                 if (q.has('replay')) LivePanel.renderReplay(v);
                 if (q.has('alerts')) LivePanel.renderAlerts(v);
                 if (q.has('take')) LivePanel.renderTake(v);

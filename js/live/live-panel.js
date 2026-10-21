@@ -67,6 +67,10 @@
         return m ? [m[1], t.slice(m[0].length).trim()] : [t, ''];
     };
 
+    // Note helpers: sentences, and a loose comparison key.
+    const sentences = (t) => String(t || '').split(/(?<=[.!?])\s+(?=["“(]?[A-Z0-9])/).map((x) => x.trim()).filter(Boolean);
+    const normText = (t) => String(t || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+
     // Conversation pieces.
     const lineHtml = (l, flagged) => '<div class="lc-line' + (flagged ? ' is-flagged' : '') + '" data-speaker="' + esc(l.speaker) + '"><span class="lc-who">' + esc(l.label || l.speaker) + '</span><span class="lc-said">' + esc(l.text) + '</span></div>';
     const typedHtml = (q) => '<div class="lc-line is-typed" data-speaker="doctor"><span class="lc-who">You</span><span class="lc-said">' + esc(q) + '</span></div>';
@@ -106,7 +110,9 @@
                 '<header class="lc-head">',
                 '  <button type="button" class="lc-mic" data-act="mic" aria-pressed="false" title="Start listening">' + ICON.mic + '<span class="lc-sr">Listen</span></button>',
                 '  <div class="lc-status-text"><span class="lc-state" data-ref="state">Ready</span><span class="lc-sub" data-ref="sub"></span></div>',
+                '  <button type="button" class="lc-btn lc-end" data-act="end" data-ref="end" hidden>End encounter</button>',
                 '  <button type="button" class="lc-iconbtn" data-act="settings" aria-haspopup="dialog" aria-expanded="false" title="Coworker settings">' + ICON.more + '<span class="lc-sr">Settings</span></button>',
+                '  <div class="lc-enc" data-ref="enc"></div>',
                 '  <div class="lc-modes" role="radiogroup" aria-label="How much the coworker speaks up">',
                 radio('follow', 'Follow'),
                 radio('abreast', 'Abreast'),
@@ -131,9 +137,11 @@
                 '    <section class="lc-take" data-ref="take" data-open="false" aria-label="My take"></section>',
                 '    <div class="lc-tabs" role="tablist" aria-label="Coworker views">',
                 '      <button type="button" role="tab" data-tab="said" aria-selected="true">Conversation<span class="lc-count" data-ref="saidCount" hidden></span></button>',
+                '      <button type="button" role="tab" data-tab="note" aria-selected="false" tabindex="-1">Note</button>',
                 '      <button type="button" role="tab" data-tab="tracking" aria-selected="false" tabindex="-1">Tracking</button>',
                 '      <button type="button" role="tab" data-tab="log" aria-selected="false" tabindex="-1">Log</button>',
                 '    </div>',
+                '    <div class="lc-pane" data-pane="note" role="tabpanel" aria-label="Live note"><h3 class="lc-pane-title">Live note</h3><div data-ref="note"></div></div>',
                 '    <div class="lc-pane" data-pane="tracking" role="tabpanel" aria-label="Tracking"><h3 class="lc-pane-title">Tracking</h3><div data-ref="tracking"></div></div>',
                 '    <div class="lc-pane" data-pane="log" role="tabpanel" aria-label="Log"><h3 class="lc-pane-title">Under the hood</h3><div data-ref="log"></div></div>',
                 '  </div>',
@@ -168,6 +176,10 @@
                 if (t.dataset.confirm && !this._confirm(t)) return;
                 switch (act) {
                     case 'mic': return h.onMic && h.onMic();
+                    case 'start': return h.onStart && h.onStart();
+                    case 'end': return h.onEnd && h.onEnd();
+                    case 'copy-note': return h.onCopyNote && h.onCopyNote();
+                    case 'wide': return h.onWide && h.onWide();
                     case 'settings': return this.togglePop();
                     case 'ack': return h.onAck && h.onAck(t.dataset.id);
                     case 'unfold': return h.onUnfold && h.onUnfold(t.dataset.id);
@@ -225,13 +237,13 @@
             if (t.classList.contains('is-armed')) {
                 clearTimeout(t._lcArm);
                 t.classList.remove('is-armed');
-                t.textContent = t.dataset.label || t.textContent;
+                if (t.dataset.label) t.innerHTML = t.dataset.label;
                 return true;
             }
-            t.dataset.label = t.textContent;
+            t.dataset.label = t.innerHTML;
             t.textContent = t.dataset.confirm;
             t.classList.add('is-armed');
-            t._lcArm = setTimeout(() => { t.classList.remove('is-armed'); t.textContent = t.dataset.label; }, 4000);
+            t._lcArm = setTimeout(() => { t.classList.remove('is-armed'); t.innerHTML = t.dataset.label; }, 4000);
             return false;
         },
 
@@ -291,9 +303,19 @@
             if (r.sub._lcHtml !== subHtml) { r.sub.innerHTML = subHtml; r.sub._lcHtml = subHtml; }
             r.sub.title = st.sub || '';
             const on = st.state === 'listening' || (st.state === 'degraded' && !!st.listening);
+            const e = v.encounter;
+            const live = !!e && e.state !== 'ended';
             r.mic.setAttribute('aria-pressed', String(on));
             r.mic.dataset.state = st.state;
-            r.mic.title = on ? 'Stop listening' : 'Start listening';
+            r.mic.title = !live ? 'Start the encounter' : e.kind === 'demo' ? (on || st.state === 'replaying' ? 'Pause the demo' : 'Resume the demo') : on ? 'Pause listening' : 'Resume listening';
+            // The encounter: one clear way in ("Start encounter"), and a way out ("End").
+            r.end.hidden = !live;
+            r.end.textContent = e && e.kind === 'demo' ? 'Stop demo' : 'End encounter';
+            const startHtml = live ? '' : '<button type="button" class="lc-start" data-act="start"' + (v.canStart ? '' : ' disabled')
+                + (e && e.state === 'ended' && v.note ? ' data-confirm="Clear this note and start over?"' : '') + '>' + ICON.mic
+                + '<span>' + (e && e.state === 'ended' ? 'Start a new encounter' : 'Start encounter') + '</span></button>';
+            if (r.enc._lcHtml !== startHtml) { r.enc.innerHTML = startHtml; r.enc._lcHtml = startHtml; }
+            r.enc.hidden = !startHtml;
             this.el.querySelectorAll('.lc-modes [role="radio"]').forEach((b) => {
                 const sel = b.dataset.mode === v.mode;
                 b.setAttribute('aria-checked', String(sel));
@@ -369,11 +391,15 @@
             el.classList.toggle('is-quiet', quiet);
             const concerns = t ? (t.concerns || []).slice(0, 4) : [];
             const next = t ? (t.next || []) : [];
+            // The problem representation from the live note, once there is one (fuller than the one-liner).
+            const pr = v.note && v.note.problem_representation ? v.note.problem_representation : '';
+            const prChanged = !!pr && !!this._takePr && this._takePr !== pr;
+            this._takePr = pr || this._takePr;
             // A difference only means something once the doctor has said what they think.
             const differs = t && t.doctor_view && t.differs ? t.differs : '';
             // Behind the toggle: the summary line (when concerns lead), the assessment, the plan.
             const more = t && !follow ? [
-                concerns.length && t.one_liner ? '<p class="lc-one">' + esc(t.one_liner) + '</p>' : '',
+                !pr && concerns.length && t.one_liner ? '<p class="lc-one">' + esc(t.one_liner) + '</p>' : '',
                 t.assessment ? '<p class="lc-assess">' + esc(t.assessment) + '</p>' : '',
                 !lead && differs ? '<p class="lc-differs"><b>Where I differ:</b> ' + esc(differs) + '</p>' : '',
                 next.length ? '<div><span class="lc-label">Next I would</span><ul class="lc-next">' + next.map((x) => '<li>' + esc(x) + '</li>').join('') + '</ul></div>' : '',
@@ -393,13 +419,16 @@
                 return;
             }
             if (quiet) {
-                el.innerHTML = head + '<p class="lc-one" title="' + esc(t.one_liner) + '">' + esc(t.one_liner) + '</p>';
+                // Side by side, the note already shows the problem representation: lead with the top worry.
+                const line = v.wide && concerns.length ? concerns[0].text : (pr || t.one_liner);
+                el.innerHTML = head + '<p class="lc-one" title="' + esc(line) + '">' + esc(line) + '</p>';
                 return;
             }
             const list = concerns.map((c) => '<li><span class="lc-dot ' + esc(c.severity) + '" title="' + esc(c.severity) + '"></span><span title="' + esc(c.text) + '">' + esc(c.text) + '</span></li>').join('');
             el.innerHTML = head
+                + (pr ? '<p class="lc-take-pr' + (prChanged ? ' lc-changed' : '') + '">' + esc(pr) + '</p>' : '')
                 + (lead && differs ? '<p class="lc-differs"><b>Where I differ:</b> ' + esc(differs) + '</p>' : '')
-                + (list ? '<ul class="lc-concerns" aria-label="What matters most">' + list + '</ul>' : '<p class="lc-one">' + esc(t.one_liner) + '</p>')
+                + (list ? '<ul class="lc-concerns" aria-label="What matters most">' + list + '</ul>' : (pr ? '' : '<p class="lc-one">' + esc(t.one_liner) + '</p>'))
                 + (more ? '<div class="lc-take-more">' + more + '</div>' : '');
         },
 
@@ -522,6 +551,57 @@
             const body = parts.filter(Boolean).join('');
             el.innerHTML = (body || '<p class="lc-empty">Nothing heard yet. Facts, your thinking and the plan collect here as you talk.</p>')
                 + (v.memoryNote ? '<p class="lc-empty">' + esc(v.memoryNote) + '</p>' : '');
+        },
+
+        // ── live note ────────────────────────────────────────────────────
+        // Problem representation, HPI, assessment and plan by problem, rewritten as
+        // people talk. Whatever is new since the last version lights up briefly.
+        renderNote(v) {
+            const el = this.refs.note;
+            const n = v.note;
+            const status = v.noteWriting ? '<span class="lc-writing">Updating…</span>' : (n ? 'Updated ' + when(n.wallAt, null) : '');
+            const head = '<div class="lc-note-head"><span class="lc-note-status" data-ref-note-status>' + status + '</span><span class="lc-note-tools">'
+                + (n ? '<button type="button" class="lc-btn lc-btn-quiet" data-act="copy-note">Copy note</button>' : '')
+                + '<button type="button" class="lc-btn lc-btn-quiet" data-act="wide">' + (v.wide ? 'Narrow panel' : 'Side by side') + '</button></span></div>';
+            if (n && n === this._shownNote) {   // same note: only the status changed; keep the highlights running
+                const st = el.querySelector('[data-ref-note-status]');
+                const wb = el.querySelector('[data-act="wide"]');
+                if (wb) wb.textContent = v.wide ? 'Narrow panel' : 'Side by side';
+                if (st) { st.innerHTML = status; return; }
+            }
+            if (!n) {
+                const e = v.encounter;
+                el.innerHTML = head + '<p class="lc-empty">' + (e
+                    ? 'Writing the first version…'
+                    : 'Start the encounter and the note writes itself as you talk: a problem representation, the HPI, and assessment and plan by problem.') + '</p>';
+                this._shownNote = null;
+                return;
+            }
+            const was = this._shownNote;
+            const isNew = (set, x) => !!was && !set.has(normText(x));
+            const prBefore = new Set(was ? sentences(was.problem_representation).map(normText) : []);
+            const hpiBefore = new Set(was ? sentences(was.hpi).map(normText) : []);
+            const mark = (list, before) => list.map((x) => '<span' + (isNew(before, x) ? ' class="lc-changed"' : '') + '>' + esc(x) + '</span>').join(' ');
+            const oldProblems = new Map((was ? was.problems || [] : []).map((p) => [normText(p.name), p]));
+            const problems = (n.problems || []).map((p, i) => {
+                const old = oldProblems.get(normText(p.name));
+                const fresh = !!was && !old;
+                const planBefore = new Set(old ? (old.plan || []).map(normText) : []);
+                const considerBefore = new Set(old ? (old.consider || []).map(normText) : []);
+                const plan = p.plan || [], consider = p.consider || [];
+                return '<li class="lc-problem' + (fresh ? ' lc-changed' : '') + '"><div class="lc-problem-name"><span class="lc-problem-num">' + (i + 1) + '</span><span>' + esc(p.name) + '</span></div>'
+                    + (p.assessment ? '<p class="lc-problem-assess' + (old && normText(old.assessment) !== normText(p.assessment) ? ' lc-changed' : '') + '">' + esc(p.assessment) + '</p>' : '')
+                    + (plan.length
+                        ? '<ul class="lc-plan">' + plan.map((x) => '<li' + (!fresh && isNew(planBefore, x) ? ' class="lc-changed"' : '') + '>' + esc(x) + '</li>').join('') + '</ul>'
+                        : '<p class="lc-plan-empty">No plan stated yet</p>')
+                    + (consider.length ? '<ul class="lc-consider">' + consider.map((x) => '<li' + (!fresh && isNew(considerBefore, x) ? ' class="lc-changed"' : '') + '><b>Consider</b> ' + esc(x) + '</li>').join('') + '</ul>' : '')
+                    + '</li>';
+            }).join('');
+            el.innerHTML = head
+                + '<section class="lc-note-sec"><h4>Problem representation</h4><p class="lc-pr">' + mark(sentences(n.problem_representation), prBefore) + '</p></section>'
+                + '<section class="lc-note-sec"><h4>History of present illness</h4>' + (n.hpi ? '<p class="lc-hpi">' + mark(sentences(n.hpi), hpiBefore) + '</p>' : '<p class="lc-empty">Fills in as the history is told.</p>') + '</section>'
+                + '<section class="lc-note-sec"><h4>Assessment and plan</h4>' + (problems ? '<ol class="lc-problems">' + problems + '</ol>' : '<p class="lc-empty">Problems and plans appear as you discuss them.</p>') + '</section>';
+            this._shownNote = n;
         },
 
         // ── log ──────────────────────────────────────────────────────────

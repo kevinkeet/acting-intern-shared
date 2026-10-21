@@ -59,12 +59,24 @@
 /* ── header: listening state, mode ───────────────────────────────────── */
 .lc-head {
     flex: none; padding: 10px 12px; border-bottom: 1px solid var(--lc-line); background: var(--lc-surface);
-    display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "mic status more" "modes modes modes" "hint hint hint" "replay replay replay";
+    display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; grid-template-areas: "mic status end more" "enc enc enc enc" "modes modes modes modes" "hint hint hint hint" "replay replay replay replay";
     align-items: center; column-gap: 10px;
 }
 .lc-mic { grid-area: mic; }
 .lc-status-text { grid-area: status; }
 .lc-head > .lc-iconbtn { grid-area: more; }
+.lc-end { grid-area: end; white-space: nowrap; }
+.lc-enc { grid-area: enc; margin-top: 10px; }
+/* The way into an encounter: one clear, full-width button. */
+.lc-start {
+    width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 9px 14px;
+    border-radius: var(--lc-radius); border: 1px solid var(--lc-navy); background: var(--lc-navy); color: var(--lc-navy-ink);
+    font-size: 14px; font-weight: 600; cursor: pointer; transition: background-color 160ms var(--lc-ease);
+}
+.lc-start:hover { background: oklch(0.31 0.07 255); }
+.lc-start:disabled { opacity: 0.5; cursor: default; }
+.lc-start svg { width: 16px; height: 16px; }
+.lc-start.is-armed { background: var(--lc-red); border-color: var(--lc-red); color: var(--lc-navy-ink); }
 .lc-modes { grid-area: modes; }
 .lc-mode-hint { grid-area: hint; }
 .lc-replay { grid-area: replay; }
@@ -125,7 +137,9 @@
 
 /* Short screens (a cart at 1366x768): the mode control moves up beside the status. */
 @media (max-height: 760px) {
-    .lc-head { grid-template-areas: "mic status modes more" "hint hint hint hint" "replay replay replay replay"; grid-template-columns: auto minmax(0, 1fr) auto auto; padding: 8px 10px; }
+    .lc-head { grid-template-areas: "mic status modes end more" "enc enc enc enc enc" "hint hint hint hint hint" "replay replay replay replay replay"; grid-template-columns: auto minmax(0, 1fr) auto auto auto; padding: 8px 10px; }
+    .lc-enc { margin-top: 8px; }
+    .lc-start { padding: 6px 12px; }
     .lc-modes { margin-top: 0; width: auto; }
     .lc-modes button { padding: 3px 7px; }
     .lc-mode-hint { display: none; }
@@ -190,6 +204,7 @@
 .lc-chip.is-differs { border-color: oklch(0.85 0.07 80); background: var(--lc-amber-bg); color: var(--lc-amber-ink); }
 .lc-one { margin: 6px 0 0; font-size: 14px; font-weight: 400; line-height: 1.4; color: var(--lc-ink-2); }
 .lc-take.is-quiet .lc-one { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lc-take-pr { margin: 6px 0 4px; font-size: 13.5px; line-height: 1.45; color: var(--lc-ink); border-radius: 3px; }
 .lc-assess { margin: 4px 0 0; color: var(--lc-ink-2); }
 .lc-take[data-open="false"] .lc-take-more { display: none; }
 .lc-take-more { margin-top: 8px; display: grid; gap: 8px; }
@@ -279,6 +294,29 @@
 .lc-line.is-interim .lc-said::after { content: ' …'; }
 .lc-line.is-flagged .lc-said { text-decoration: underline; text-decoration-color: oklch(0.8 0.09 27); text-decoration-thickness: 2px; text-underline-offset: 3px; }
 
+/* live note: the problem representation, HPI, and assessment and plan, as they form */
+.lc-note-head { display: flex; align-items: center; gap: 8px; min-height: 26px; font-size: 12px; color: var(--lc-ink-3); }
+.lc-note-tools { margin-left: auto; display: flex; gap: 2px; }
+.lc-writing { color: var(--lc-blue); }
+.lc-writing::before { content: ''; display: inline-block; width: 6px; height: 6px; margin-right: 6px; border-radius: 50%; background: var(--lc-blue); vertical-align: 1px; animation: lc-blink 900ms steps(1) infinite; }
+.lc-note-sec { margin-top: 12px; }
+.lc-note-sec h4 { margin: 0 0 4px; font-size: 11px; font-weight: 600; color: var(--lc-ink-3); letter-spacing: 0.03em; text-transform: uppercase; }
+.lc-pr { margin: 0; font-size: 14.5px; line-height: 1.5; color: var(--lc-ink); max-width: 68ch; }
+.lc-hpi { margin: 0; font-size: 13.5px; line-height: 1.55; color: var(--lc-ink); max-width: 72ch; }
+.lc-problems { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.lc-problem-name { display: flex; gap: 8px; align-items: baseline; font-size: 14px; font-weight: 650; color: var(--lc-ink); }
+.lc-problem-num { flex: none; display: inline-grid; place-items: center; min-width: 18px; height: 18px; border-radius: 50%; background: var(--lc-sunken); font-size: 11px; font-weight: 600; color: var(--lc-ink-2); }
+.lc-problem-assess { margin: 2px 0 0 26px; font-size: 13px; color: var(--lc-ink-2); }
+.lc-plan, .lc-consider { list-style: none; margin: 4px 0 0 26px; padding: 0; display: grid; gap: 2px; font-size: 13px; }
+.lc-plan li { color: var(--lc-ink); }
+.lc-plan li::before { content: '•'; margin-right: 6px; color: var(--lc-ink-3); }
+.lc-consider li { color: var(--lc-amber-ink); }
+.lc-consider b { font-size: 11px; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; margin-right: 4px; }
+.lc-plan-empty { margin: 3px 0 0 26px; font-size: 12px; color: var(--lc-ink-3); }
+/* What just changed in the note, like a highlighter that fades. */
+.lc-changed { border-radius: 3px; animation: lc-mark 3.2s var(--lc-ease); }
+@keyframes lc-mark { 0%, 45% { background: oklch(0.94 0.09 95); } 100% { background: transparent; } }
+
 /* log */
 .lc-table { width: 100%; border-collapse: collapse; font-size: 12px; font-variant-numeric: tabular-nums; }
 .lc-table th, .lc-table td { text-align: right; padding: 4px 6px; border-bottom: 1px solid var(--lc-line); }
@@ -326,7 +364,8 @@
     .lc-right { overflow: auto; }
     .lc-right .lc-pane { flex: none; overflow: visible; padding-top: 4px; }
     .lc-pane-title { display: block; margin: 12px 0 6px; font-size: 13px; font-weight: 600; color: var(--lc-ink-2); }
-    .lc-pane[data-pane="log"] { border-top: 1px solid var(--lc-line); }
+    .lc-pane[data-pane="log"], .lc-pane[data-pane="tracking"] { border-top: 1px solid var(--lc-line); }
+    .lc-take-pr { display: none; }   /* the note beside it already shows it */
 }
 
 /* Screenshots and reduced motion: no transitions or entrance animations. */

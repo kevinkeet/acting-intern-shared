@@ -12,7 +12,7 @@
 (function (root) {
     'use strict';
 
-    const PROMPT_VERSION = 'live-v12';
+    const PROMPT_VERSION = 'live-v13';
 
     // ── Ear (Haiku): fast bookkeeping on every utterance ──────────────────
     const EAR_SYSTEM = [
@@ -204,6 +204,40 @@
         ].join('\n');
     }
 
+    // ── Scribe (Haiku): the live note, rewritten every few seconds ─────────
+    const NOTE_SYSTEM = [
+        'You are the scribe in a live hospital encounter (simulated patient). As the conversation unfolds you keep a short admission note current, so the doctor can watch it take shape. Write only what the conversation and the chart support; never invent a finding, value, time or plan. Clinical and concise.',
+        'problem_representation: two or three sentences, a strong morning-report summary: age and sex; the background that matters for today, with key numbers (for example EF, CKD stage, anticoagulation status and why); the presenting syndrome and its tempo; and the key findings so far (symptoms, exam, labs, vitals) with semantic qualifiers (acute or chronic, worsening, new, unexplained). Before anything is heard, write it from the chart alone and end with the reason for the visit if known.',
+        'hpi: the history of present illness as told so far, in order: chief complaint and onset, course, associated symptoms, pertinent negatives that were said, medication and adherence details, what the family added. Three to eight sentences, past tense, no exam or labs. An empty string until some history has been heard.',
+        'problems: the problems addressed today, in priority order, at most eight. Each: name (short, e.g. "Acute on chronic HFrEF"), assessment (one sentence: the working reasoning, the doctor\'s when stated), plan (what the doctor said or ordered, short items, e.g. "IV furosemide 80 mg now, then 40 mg IV twice daily"), consider (at most two short items from the coworker\'s take that the doctor has not addressed; empty if none). Never put a coworker suggestion into plan. Leave out chronic problems nobody touched today.',
+        'Keep it stable: keep the previous wording unless something new changes it, and add new details where they belong instead of rewriting everything.',
+    ].join('\n\n');
+
+    const NOTE_SCHEMA = {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+            problem_representation: { type: 'string' },
+            hpi: { type: 'string' },
+            problems: {
+                type: 'array',
+                items: {
+                    type: 'object', additionalProperties: false,
+                    properties: {
+                        name: { type: 'string' },
+                        assessment: { type: 'string' },
+                        plan: { type: 'array', items: { type: 'string' } },
+                        consider: { type: 'array', items: { type: 'string' } },
+                    },
+                    required: ['name', 'assessment', 'plan', 'consider'],
+                },
+            },
+        },
+        required: ['problem_representation', 'hpi', 'problems'],
+    };
+
+    const TASK_NOTE = 'TASK: Bring the note up to date with everything heard so far. Return the whole note.';
+
     // ── Helpers (cheap models) ───────────────────────────────────────────
     const MEMORY_SYSTEM = 'You answer a clinician\'s question from a patient\'s long-term record summary. Quote values with dates. Answer in at most four short sentences. If the record does not contain the answer, say "Not in the record." Do not guess.';
 
@@ -256,7 +290,7 @@
 
     const api = {
         PROMPT_VERSION, EAR_SYSTEM, EAR_SCHEMA, BRAIN_SYSTEM, TAKE_SCHEMA, VERIFY_SCHEMA,
-        TASK_PRIME, TASK_UPDATE, taskVerify, taskAnswer, MEMORY_SYSTEM, COVERED_SYSTEM, COVERED_SCHEMA, MEDCHECK_SYSTEM, MEDCHECK_SCHEMA, BRAIN_TOOLS,
+        TASK_PRIME, TASK_UPDATE, taskVerify, taskAnswer, NOTE_SYSTEM, NOTE_SCHEMA, TASK_NOTE, MEMORY_SYSTEM, COVERED_SYSTEM, COVERED_SCHEMA, MEDCHECK_SYSTEM, MEDCHECK_SCHEMA, BRAIN_TOOLS,
     };
     if (typeof module !== 'undefined' && module.exports) module.exports = api;
     else root.LivePrompts = api;

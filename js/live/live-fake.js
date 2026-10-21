@@ -49,6 +49,32 @@
         say: { should_say: false, kind: 'insight', topic: '', text: '', why: '' },
     };
 
+    // A note that grows with what has been said (stand-in for the scribe).
+    function fakeNote(conv) {
+        const has = (re) => re.test(conv);
+        const bg = '74-year-old man with ischemic HFrEF (EF 30-35%), CKD 3b and persistent AF off anticoagulation since a 2023 ulcer bleed';
+        let pr = bg + (has(/breath/i) ? ', presenting with a week of worsening dyspnea, orthopnea and leg swelling' : ', admitted from the ED');
+        if (has(/ran out/i)) pr += ' after six days without furosemide';
+        pr += '.';
+        if (has(/almost black|dark/i)) pr += ' New dark stools' + (has(/Hemoglobin 10\.2/i) ? ' with Hgb 10.2 (13.9 in January)' : '') + (has(/INR 2\.3/i) ? ' and an unexplained INR of 2.3' : '') + ' raise concern for a recurrent upper GI bleed.';
+        const hpi = [];
+        if (has(/catch my breath/i)) hpi.push('Mr. Morrison reports a week of progressive shortness of breath.');
+        if (has(/lie down flat/i)) hpi.push('He cannot lie flat and has been sleeping in a recliner, waking two to three times a night short of breath.');
+        if (has(/tree trunks|shoes don/i)) hpi.push('His legs have swollen; his wife reports a ten-pound weight gain.');
+        if (has(/ran out/i)) hpi.push('He ran out of furosemide about six days ago while his wife was away.');
+        if (has(/mailbox/i)) hpi.push('He notes chest tightness walking to the mailbox, none at rest.');
+        if (has(/almost black/i)) hpi.push('He reports several days of very dark, almost black stools and a sour stomach.');
+        if (has(/Aleve/i)) hpi.push('He takes Aleve two to three times a day for knee pain.');
+        if (has(/clumsy/i)) hpi.push('His wife describes about twenty minutes of right hand clumsiness and jumbled speech last Tuesday that resolved.');
+        const problems = [];
+        if (has(/breath|furosemide/i)) problems.push({ name: 'Acute on chronic HFrEF', assessment: 'Volume overload after a lapse in furosemide, likely worsened by NSAIDs.', plan: [has(/furosemide 80/i) ? 'IV furosemide 80 mg now, then 40 mg IV twice daily' : '', has(/ins and outs|daily weights/i) ? 'Strict ins and outs, daily weights, 2 g sodium' : ''].filter(Boolean), consider: [] });
+        if (has(/almost black|dark stools/i)) problems.push({ name: 'Possible upper GI bleed', assessment: 'Melena on aspirin and naproxen with a prior ulcer bleed.', plan: [], consider: ['Rectal exam, CBC and type and screen'] });
+        if (has(/creatinine 2\.4|kidney/i)) problems.push({ name: 'AKI on CKD 3b with K 5.1', assessment: 'Creatinine 2.4 from about 2.0, likely cardiorenal.', plan: [has(/spironolactone tonight/i) ? 'Hold spironolactone' : '', has(/BMP and magnesium/i) ? 'Repeat BMP and magnesium in the morning' : ''].filter(Boolean), consider: has(/potassium chloride/i) ? ['Skip the potassium chloride'] : [] });
+        if (has(/clumsy/i)) problems.push({ name: 'Possible TIA', assessment: 'Transient right hand weakness and speech change in AF without anticoagulation.', plan: [], consider: ['Head imaging and neurology'] });
+        if (has(/142/)) problems.push({ name: 'AF with rapid ventricular response', assessment: 'Rate 142 during decompensation.', plan: [has(/diltiazem/i) ? 'IV diltiazem 10 mg (ordered)' : ''].filter(Boolean), consider: has(/diltiazem/i) ? ['Amiodarone instead of diltiazem'] : [] });
+        return { problem_representation: pr, hpi: hpi.join(' '), problems };
+    }
+
     function reply(obj, ms) {
         const text = typeof obj === 'string' ? obj : JSON.stringify(obj);
         const usage = { input_tokens: 900, cache_read_input_tokens: 5200, output_tokens: Math.round(text.length / 4) };
@@ -92,6 +118,11 @@
                     return reply(a, 900 + a.split(' ').length * 35);
                 }
                 if (req.label === 'helper') { await sleep(800); return reply('{"verdict":"ok","issues":[],"dose_advice":""}', 800); }
+                if (req.label === 'note') {
+                    await sleep(1200);
+                    const conv = ((user.match(/<conversation>(.*?)<\/conversation>/s) || [])[1] || '').replace(/\\n/g, '\n');
+                    return reply(fakeNote(conv), 1200);
+                }
                 await sleep(req.label === 'prime' ? 3500 : 2600);
                 updates++;
                 const t = JSON.parse(JSON.stringify(TAKE));

@@ -26,8 +26,11 @@
         helperModel: 'claude-haiku-5-5',
         mode: 'abreast',              // follow | abreast | lead
         speed: null,                  // 'fast' = Opus fast mode
-        effort: { ear: 'low', answer: 'low', verify: 'low', update: 'low', prime: 'medium', helper: 'medium', memory: 'low' },
-        maxTokens: { ear: 2000, answer: 6000, verify: 3000, update: 9000, prime: 9000, helper: 3000 },
+        noteModel: 'claude-haiku-5-5',  // the scribe that keeps the live note current
+        effort: { ear: 'low', answer: 'low', verify: 'low', update: 'low', prime: 'medium', helper: 'medium', memory: 'low', note: 'low' },
+        maxTokens: { ear: 2000, answer: 6000, verify: 3000, update: 9000, prime: 9000, helper: 3000, note: 4000 },
+        noteGapMs: 12000,             // the live note is rewritten at most this often
+        noteDelayMs: 3000,            // after new speech, wait this long so a few lines go in together
         earThinking: 'disabled',      // Haiku 5.5 accepts disabled at low..high effort
         memoryThinking: 'disabled',   // the long-term memory helper: lookup, not reasoning (2-5 s instead of 6-9 s on a 319K-token record)
         heartbeatMs: 90000,           // refresh the take this often while things change
@@ -72,6 +75,7 @@
             watch: [],            // tripwires for the ear
             said: [],             // {id, t, kind, topic, text, why, latencyMs, cueLine}
             held: [],             // thoughts kept for when asked: {t, topic, text, why, kind}
+            note: null,           // live note: {problem_representation, hpi, problems[], t}
             version: 0,
         };
     }
@@ -381,6 +385,7 @@
             }
             // A question to the coworker gets an answer; a separate alert about the
             // same lines would only repeat it.
+            scheduleNote();
             if (askedHere || out.to_coworker) {
                 if (out.worth_a_look) scheduleQuickLook();
                 if (batch.some((l) => l.speaker === 'doctor') && pendingChecks.length) onDoctorSpoke();
@@ -606,6 +611,7 @@
             if (out.take) {
                 wm.take = Object.assign({}, out.take, { t: elapsed(), why });
                 emit('take', wm.take);
+                scheduleNote(why === 'prime' ? 0 : null);
             }
             if (Array.isArray(out.watch)) {
                 wm.watch = out.watch.slice(0, 10);
@@ -664,6 +670,62 @@
             return track(p);
         }
 
+        // ── the live note (scribe) ───────────────────────────────────────
+        // A cheap, fast model rewrites the whole note a few seconds after new
+        // speech (at most every noteGapMs), after each take update, and on demand
+        // (end of the encounter). The doctor watches it take shape.
+        let noteBusy = false, noteAgain = false, noteTimer = null, lastNoteAt = -Infinity;
+        let noteSystemCache = null;
+        function noteSystem() {
+            if (!noteSystemCache) {
+                noteSystemCache = [
+                    { type: 'text', text: P.NOTE_SYSTEM },
+                    { type: 'text', text: 'PATIENT CHART DIGEST:\n\n' + (memory.digest || patientHeader()), cache_control: { type: 'ephemeral' } },
+                ];
+            }
+            return noteSystemCache;
+        }
+        function renderForNote() {
+            const t = wm.take;
+            return [
+                '<conversation>',
+                wm.lines.length ? wm.lines.slice(-300).map(lineText).join('\n') : '(nothing heard yet)',
+                '</conversation>',
+                '<doctor_thinking>' + (wm.thinking.length ? wm.thinking.map((x) => x.text).join(' | ') : '(none stated)') + '</doctor_thinking>',
+                '<plan_heard>' + (wm.plan.length ? wm.plan.map((x) => '[' + x.kind + '] ' + x.text).join(' | ') : '(none yet)') + '</plan_heard>',
+                '<coworker_take>' + (t ? [t.assessment, (t.concerns || []).map((c) => c.text).join('; '), (t.next || []).join('; ')].filter(Boolean).join(' || ') : '(none yet)') + '</coworker_take>',
+                '<previous_note>' + (wm.note ? JSON.stringify({ problem_representation: wm.note.problem_representation, hpi: wm.note.hpi, problems: wm.note.problems }) : '(none yet)') + '</previous_note>',
+            ].join('\n');
+        }
+        function scheduleNote(delayMs) {
+            if (!running || noteTimer) return;
+            const wait = Math.max(delayMs == null ? cfg.noteDelayMs : delayMs, lastNoteAt + cfg.noteGapMs - elapsed(), 0);
+            noteTimer = clock.setTimeout(() => { noteTimer = null; writeNote(); }, wait);
+        }
+        function writeNote() {
+            if (!running) return null;
+            if (noteBusy) { noteAgain = true; return null; }
+            if (noteTimer) { clock.clearTimeout(noteTimer); noteTimer = null; }
+            noteBusy = true;
+            lastNoteAt = elapsed();
+            const p = (async () => {
+                emit('thinking', { lane: 'note' });
+                const body = {
+                    max_tokens: cfg.maxTokens.note,
+                    system: noteSystem(),
+                    thinking: cfg.noteModel === 'claude-haiku-5-5' ? { type: 'disabled' } : { type: 'adaptive' },
+                    output_config: { effort: cfg.effort.note, format: { type: 'json_schema', schema: P.NOTE_SCHEMA } },
+                    messages: [{ role: 'user', content: renderForNote() + '\n\n' + P.TASK_NOTE }],
+                };
+                const out = parseJSON(await modelCall('note', cfg.noteModel, body));
+                if (!out || typeof out.problem_representation !== 'string') return;
+                wm.note = { problem_representation: out.problem_representation, hpi: out.hpi || '', problems: (out.problems || []).slice(0, 8), t: elapsed() };
+                emit('note', wm.note);
+            })().catch(() => { /* logged in modelCall */ })
+                .finally(() => { noteBusy = false; if (noteAgain) { noteAgain = false; scheduleNote(); } });
+            return track(p);
+        }
+
         // ── speaking rules ───────────────────────────────────────────────
         // A repeat is the same point again: nearly the same words, or the same
         // topic without much new in it. A same-topic remark that says something
@@ -718,6 +780,8 @@
             heartbeatTimer = quickTimer = null;
             if (pendingWake && pendingWake.timer) clock.clearTimeout(pendingWake.timer);
             pendingWake = null;
+            if (noteTimer) clock.clearTimeout(noteTimer);
+            noteTimer = null;
             for (const c of aborters) { try { c.abort(); } catch (e) { /* ignore */ } }
             emit('status', { running: false });
         }
@@ -734,6 +798,7 @@
             markDirty();
             touch();
             if (running) verify('a new order was just placed in the EHR: ' + what, line, 'order:' + line.id);
+            scheduleNote();
             return line;
         }
 
@@ -777,7 +842,7 @@
         }
 
         return {
-            on, hear, ask, tell, order, start, stop, update, prime, idle, stats, setMode, setBrainModel, setSpeed,
+            on, hear, ask, tell, order, start, stop, update, prime, note: writeNote, idle, stats, setMode, setBrainModel, setSpeed,
             wm, cfg, calls, renderForBrain, renderForEar, patientHeader,
             get running() { return running; },
             get elapsed() { return elapsed(); },

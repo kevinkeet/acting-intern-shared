@@ -166,6 +166,47 @@ const manualClock = () => {
         assert.deepStrictEqual(r3.asked, ['Thoughts?'], 'a short question that ends with a question mark is fine');
     });
 
+    await check('live note: written a few seconds after speech, at most every 12 s, from the whole conversation and its last version', async () => {
+        let n = 0;
+        const t = fakeTransport((lane, body) => {
+            if (lane === 'note') {
+                n++;
+                return reply(JSON.stringify({ problem_representation: 'PR v' + n, hpi: 'HPI v' + n, problems: [{ name: 'Acute on chronic HFrEF', assessment: 'Missed furosemide.', plan: n > 1 ? ['IV furosemide 80 mg now'] : [], consider: [] }] }));
+            }
+            return reply(JSON.stringify(lane === 'ear' ? EMPTY_EAR : TAKE()));
+        });
+        const clock = manualClock();
+        const cw = LiveCore.createCoworker({ transport: t, chart, clock });
+        const notes = [];
+        cw.on('note', (x) => notes.push(x));
+        cw.start({ skipPrime: true });
+        cw.hear({ speaker: 'patient', text: 'I cannot catch my breath.' });
+        await cw.idle();
+        assert.strictEqual(t.log.filter((x) => x.lane === 'note').length, 0, 'waits for a few lines to go in together');
+        clock.advance(3000);
+        await cw.idle();
+        assert.strictEqual(notes.length, 1);
+        assert.strictEqual(cw.wm.note.problem_representation, 'PR v1');
+        const first = t.log.filter((x) => x.lane === 'note')[0].body;
+        assert.match(first.messages[0].content, /I cannot catch my breath/);
+        assert.deepStrictEqual(first.thinking, { type: 'disabled' });
+        assert.ok(first.system[1].cache_control, 'the chart digest is cached');
+        cw.hear({ speaker: 'doctor', text: 'Let us give IV furosemide 80 now.' });
+        await cw.idle();
+        clock.advance(3000);
+        await cw.idle();
+        assert.strictEqual(t.log.filter((x) => x.lane === 'note').length, 1, 'not again within 12 s');
+        clock.advance(9000);   // 12 s after the first note
+        await cw.idle();
+        assert.strictEqual(t.log.filter((x) => x.lane === 'note').length, 2);
+        assert.match(t.log.filter((x) => x.lane === 'note')[1].body.messages[0].content, /<previous_note>\{"problem_representation":"PR v1"/);
+        assert.deepStrictEqual(cw.wm.note.problems[0].plan, ['IV furosemide 80 mg now']);
+        cw.note();
+        await cw.idle();
+        assert.strictEqual(t.log.filter((x) => x.lane === 'note').length, 3, 'on demand (end of the encounter)');
+        cw.stop();
+    });
+
     await check('a question the ear catches without a wake word is answered', async () => {
         const t = fakeTransport((lane) => {
             if (lane === 'ear') return reply(JSON.stringify(Object.assign({}, EMPTY_EAR, { to_coworker: true, question: 'What is his EF?' })));
