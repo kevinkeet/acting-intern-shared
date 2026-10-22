@@ -123,21 +123,27 @@
         if ((a.kind === 'message' || a.kind === 'referral') && a.draft) return b('act-copy', 'Copy');
         return '';
     }
+    // A radar flag is "stop" (red: do not give it as it is) or "check" (amber: check something first, then sign it).
+    const stopFlag = (a) => !!a.flag && a.flagLevel !== 'check';
+    const checkFlag = (a) => !!a.flag && a.flagLevel === 'check';
     function actRow(a, changed) {
         const todo = a.status === 'todo';
-        const flagged = todo && !!a.flag;
+        const flagged = todo && stopFlag(a);
+        const checkFirst = todo && checkFlag(a);
         const draftLine = (a.kind === 'message' || a.kind === 'referral') && !!a.draft;
         // The next step: the flag; for an order, what its form still needs (worked out from the form, not the model); else the model's next step.
         const isOrder = a.kind === 'order' || a.kind === 'consult';
+        const needs = isOrder && a.needs && a.needs.length ? '<p class="lc-act-next">Fill in: ' + esc(a.needs.join(', ')) + '</p>' : '';
         const sub = flagged ? '<p class="lc-act-flag">' + ICON.alert + esc(a.flag) + '</p>'
-            : !todo ? ''
-                : draftLine ? '<p class="lc-act-next">' + (a.to ? esc(a.to) + ': ' : '') + '“' + esc(a.draft) + '”</p>'
-                    : isOrder ? (a.needs && a.needs.length ? '<p class="lc-act-next">Fill in: ' + esc(a.needs.join(', ')) + '</p>' : '')
-                        : a.next ? '<p class="lc-act-next">' + esc(a.next) + '</p>' : '';
+            : checkFirst ? '<p class="lc-act-checkfirst">' + ICON.alert + '<b>Check first:</b> ' + esc(a.flag) + '</p>' + needs
+                : !todo ? ''
+                    : draftLine ? '<p class="lc-act-next">' + (a.to ? esc(a.to) + ': ' : '') + '“' + esc(a.draft) + '”</p>'
+                        : isOrder ? needs
+                            : a.next ? '<p class="lc-act-next">' + esc(a.next) + '</p>' : '';
         const by = { ehr: 'ordered', sent: 'sent', saved: 'saved' }[a.statusBy];
-        return '<li class="lc-act is-' + esc(a.status) + (flagged ? ' is-flagged' : '') + (changed ? ' lc-changed' : '') + '" data-id="' + esc(a.id) + '">'
+        return '<li class="lc-act is-' + esc(a.status) + (flagged ? ' is-flagged' : checkFirst ? ' is-checkfirst' : '') + (changed ? ' lc-changed' : '') + '" data-id="' + esc(a.id) + '">'
             + '<button type="button" class="lc-act-check" role="checkbox" aria-checked="' + (a.status === 'done') + '" data-act="act-done" data-id="' + esc(a.id) + '" title="' + (todo ? 'Mark done' : 'Put back on the list') + '">' + (a.status === 'done' ? ICON.check : '') + '<span class="lc-sr">' + (todo ? 'Mark done: ' : 'Put back: ') + esc(a.title) + '</span></button>'
-            + '<div class="lc-act-main"><p class="lc-act-title"><span class="lc-tag' + (flagged ? ' critical' : '') + '">' + esc(actTag(a)) + '</span>' + esc(a.title)
+            + '<div class="lc-act-main"><p class="lc-act-title"><span class="lc-tag' + (flagged ? ' critical' : checkFirst ? ' important' : '') + '">' + esc(actTag(a)) + '</span>' + esc(a.title)
             + (a.status === 'dropped' ? ' <span class="lc-act-state">removed</span>' : by ? ' <span class="lc-act-state">' + by + '</span>' : '') + '</p>' + sub + '</div>'
             + '<div class="lc-act-btns">' + actButton(a)
             + (todo ? '<button type="button" class="lc-iconbtn lc-act-x" data-act="act-drop" data-id="' + esc(a.id) + '" title="Remove (not doing this)">' + ICON.x + '<span class="lc-sr">Remove ' + esc(a.title) + '</span></button>' : '')
@@ -256,6 +262,9 @@
             const w = this.el;
             const h = this.handlers;
             w.addEventListener('click', (ev) => {
+                // The live note: click a part to edit it yourself.
+                const part = ev.target.closest && ev.target.closest('.lc-editable');
+                if (part && w.contains(part) && !ev.target.closest('button, a, input, textarea')) { this._startNoteEdit(part); return; }
                 const t = ev.target.closest('button, [data-act]');
                 if (!t || !w.contains(t)) return;
                 if (t.dataset.mode) return h.onMode && h.onMode(t.dataset.mode);
@@ -264,6 +273,14 @@
                 if (!act) return;
                 if (t.dataset.confirm && !this._confirm(t)) return;
                 switch (act) {
+                    case 'note-save': return this._endNoteEdit(true);
+                    case 'note-cancel': return this._endNoteEdit(false);
+                    case 'note-unedit': return h.onNoteUnedit && h.onNoteUnedit(t.dataset.part, this._problemName(t.dataset.p));
+                    case 'consider-take': {
+                        const pr = this._shownNote && (this._shownNote.problems || [])[Number(t.dataset.p)];
+                        const c = pr && (pr.consider || [])[Number(t.dataset.c)];
+                        return c && h.onConsider && h.onConsider(pr.name, c);
+                    }
                     case 'mic': return h.onMic && h.onMic();
                     case 'start': return h.onStart && h.onStart();
                     case 'end': return h.onEnd && h.onEnd();
@@ -329,6 +346,14 @@
                 this.showTab('said');
             });
             w.addEventListener('keydown', (ev) => {
+                // The note editor: Esc cancels; Enter (one line) or Cmd/Ctrl+Enter saves. Enter or Space on a part edits it.
+                const cls = ev.target.classList;
+                if (cls && cls.contains('lc-note-input')) {
+                    if (ev.key === 'Escape') { ev.preventDefault(); ev.stopPropagation(); this._endNoteEdit(false); return; }
+                    if (ev.key === 'Enter' && (ev.target.tagName === 'INPUT' || ev.metaKey || ev.ctrlKey)) { ev.preventDefault(); this._endNoteEdit(true); }
+                    return;
+                }
+                if (cls && cls.contains('lc-editable') && (ev.key === 'Enter' || ev.key === ' ')) { ev.preventDefault(); this._startNoteEdit(ev.target); return; }
                 if (ev.key === 'Escape' && !this.refs.pop.hidden) { this.togglePop(false); this.refs.settingsBtn.focus(); return; }
                 if (ev.key === 'Escape' && this._full && !(ev.target.closest && ev.target.closest('.lc-about'))) { if (h.onFull) h.onFull(false); return; }
                 if (ev.target.closest && ev.target.closest('.lc-about')) return;   // "Inside the coworker" has its own keys
@@ -525,10 +550,11 @@
         },
 
         // ── on my radar ──────────────────────────────────────────────────
-        // Header: what is waiting ("6 to do · 2 flagged") and "Review all N" to
-        // sign the orders one after another. Closed (the narrow default): the
-        // newest item, with its button. Open: flagged items first, then what was
-        // heard most recently (each dictated batch in the order it was said).
+        // Header: what is waiting ("6 to do · 2 flagged · 1 to check") and "Review
+        // all N" to sign the orders one after another (red flags left out; amber
+        // "check first" ones in, showing the check). Closed (the narrow default):
+        // the newest item, with its button. Open: red flags first, then amber, then
+        // what was heard most recently (each dictated batch in the order it was said).
         // Only the header is fixed; the list takes the rest and scrolls.
         renderRadar(v) {
             const el = this.refs.radar;
@@ -542,31 +568,33 @@
             const rs = v.settings && v.settings.radarOpen;
             const open = rs === true || (!!v.full && rs == null);
             const todo = all.filter((a) => a.status === 'todo');
-            const flagged = todo.filter((a) => a.flag);
+            const flagged = todo.filter(stopFlag);
             const closed = all.filter((a) => a.status !== 'todo');
             // Newest batch first; within a batch, the order it was said (ids rise in that order).
             const num = (a) => Number(String(a.id).slice(1)) || 0;
             const byNewest = (x, y) => ((y.batch || 0) - (x.batch || 0)) || (num(x) - num(y));
+            const checks = todo.filter(checkFlag).sort(byNewest);
             const rest = todo.filter((a) => !a.flag).sort(byNewest);
             const pendNewest = pend.slice().sort((x, y) => y.t - x.t);
             // What changed since the last render lights up (not on the first one).
             const prev = this._radarSig;
-            const sig = new Map(all.map((a) => [a.id, [a.title, a.status, a.flag].join('|')]));
+            const sig = new Map(all.map((a) => [a.id, [a.title, a.status, a.flag, a.flagLevel].join('|')]));
             const changed = (a) => !!prev && prev.get(a.id) !== sig.get(a.id);
             const added = prev ? all.filter((a) => !prev.has(a.id) && a.status === 'todo') : [];
             if (added.length) this._announce('polite', 'On my radar: ' + added.map((a) => a.title).join('; ') + '.');
             this._radarSig = sig;
 
-            const newest = pendNewest[0] ? null : (flagged.concat(rest).sort(byNewest)[0] || null);
+            const newest = pendNewest[0] ? null : (flagged.concat(checks, rest).sort(byNewest)[0] || null);
             const summary = (todo.length ? '<span class="lc-radar-sum">' + todo.length + ' to do</span>' : '<span class="lc-radar-sum">' + (closed.length ? 'All done' : 'Getting ready') + '</span>')
                 + (flagged.length ? '<span class="lc-radar-flag">' + flagged.length + ' flagged</span>' : '')
+                + (checks.length ? '<span class="lc-radar-check">' + checks.length + ' to check</span>' : '')
                 + (pend.length ? '<span class="lc-radar-heard">' + pend.length + ' just heard</span>' : '');
-            const ready = todo.filter((a) => !a.flag && ((a.kind === 'order' && a.orderType) || a.kind === 'consult'));
+            const ready = todo.filter((a) => !stopFlag(a) && ((a.kind === 'order' && a.orderType) || a.kind === 'consult'));
             const head = '<div class="lc-radar-head"><button type="button" class="lc-radar-toggle" data-act="radar-toggle" aria-expanded="' + open + '" title="' + (open ? 'Show only the newest' : 'Show the whole list') + '">'
                 + ICON.radar + '<span class="lc-label">On my radar</span><span class="lc-radar-counts">' + summary + '</span>' + ICON.chevron + '</button>'
-                + (ready.length > 1 ? '<button type="button" class="lc-btn lc-btn-primary lc-radar-all" data-act="review-orders" title="Open each order form in turn (flagged ones are left out)">Review all ' + ready.length + '</button>' : '') + '</div>';
+                + (ready.length > 1 ? '<button type="button" class="lc-btn lc-btn-primary lc-radar-all" data-act="review-orders" title="Open each order form in turn (flagged ones are left out; ones to check show what to check)">Review all ' + ready.length + '</button>' : '') + '</div>';
             let rows;
-            if (open) rows = flagged.map((a) => actRow(a, changed(a))).concat(pendNewest.map(pendingRow), rest.map((a) => actRow(a, changed(a))));
+            if (open) rows = flagged.map((a) => actRow(a, changed(a))).concat(checks.map((a) => actRow(a, changed(a))), pendNewest.map(pendingRow), rest.map((a) => actRow(a, changed(a))));
             else rows = pendNewest.length ? [pendingRow(pendNewest[0])] : newest ? [actRow(newest, changed(newest))] : [];
             const doneLine = open && closed.length
                 ? '<div class="lc-radar-doneline"><button type="button" class="lc-more" data-act="radar-done" aria-expanded="' + !!this._radarDone + '">' + (this._radarDone ? 'Hide' : (closed.some((a) => a.status === 'dropped') ? 'Done or removed (' : 'Done (') + closed.length + ')') + '</button></div>'
@@ -786,6 +814,8 @@
                 + (n ? '<button type="button" class="lc-btn lc-btn-quiet" data-act="copy-note">Copy note</button>' : '')
                 + (v.full ? '' : '<button type="button" class="lc-btn lc-btn-quiet" data-act="wide">' + (v.wide ? 'Narrow panel' : 'Side by side') + '</button>') + '</span>';   // full screen has room already
             this._renderExamLive(v);
+            this._lastNoteV = v;
+            if (this._noteEdit) return;   // the doctor is typing in the note: the rewrite shows when they are done
             if (n && n === this._shownNote) return;   // same note: keep the highlights running
             const was = this._shownNote;
             this._shownNote = n || null;
@@ -801,8 +831,14 @@
             const prBefore = new Set(was ? sentences(was.problem_representation).map(normText) : []);
             const hpiBefore = new Set(was ? sentences(was.hpi).map(normText) : []);
             const mark = (list, before) => list.map((x) => '<span' + (isNew(before, x) ? ' class="lc-changed"' : '') + '>' + esc(x) + '</span>').join(' ');
-            N.top.innerHTML = '<section class="lc-note-sec"><h4>Problem representation</h4><p class="lc-pr">' + mark(sentences(n.problem_representation), prBefore) + '</p></section>'
-                + '<section class="lc-note-sec"><h4>History of present illness</h4>' + (n.hpi ? '<p class="lc-hpi">' + mark(sentences(n.hpi), hpiBefore) + '</p>' : '<p class="lc-empty">Fills in as the history is told.</p>') + '</section>';
+            // Every part can be edited by the doctor (click, or Enter); what they wrote stays theirs over the scribe's rewrites.
+            const ed = n.edited || { pr: false, hpi: false, problems: {} };
+            const editable = (cls, part, pi) => ' class="' + cls + ' lc-editable" data-edit="' + part + '"' + (pi != null ? ' data-p="' + pi + '"' : '') + ' tabindex="0" role="button" title="Click to edit"';
+            const mine = (on, part, pi) => (on ? '<p class="lc-mine">Edited by you <button type="button" class="lc-more" data-act="note-unedit" data-part="' + part + '"' + (pi != null ? ' data-p="' + pi + '"' : '') + ' title="Let the scribe update this part again">Let it update</button></p>' : '');
+            N.top.innerHTML = '<section class="lc-note-sec"><h4>Problem representation</h4><p' + editable('lc-pr', 'pr') + '>' + mark(sentences(n.problem_representation), ed.pr ? new Set(sentences(n.problem_representation).map(normText)) : prBefore) + '</p>' + mine(ed.pr, 'pr') + '</section>'
+                + '<section class="lc-note-sec"><h4>History of present illness</h4>'
+                + (n.hpi ? '<p' + editable('lc-hpi', 'hpi') + '>' + mark(sentences(n.hpi), ed.hpi ? new Set(sentences(n.hpi).map(normText)) : hpiBefore) + '</p>' : '<p' + editable('lc-empty', 'hpi') + '>Fills in as the history is told, or click to write it.</p>')
+                + mine(ed.hpi, 'hpi') + '</section>';
             // The exam, by system as stated; a new or changed line lights up.
             const ex = n.exam || { vitals: '', systems: [] };
             const oldEx = was && was.exam ? was.exam : null;
@@ -819,15 +855,61 @@
                 const planBefore = new Set(old ? (old.plan || []).map(normText) : []);
                 const considerBefore = new Set(old ? (old.consider || []).map(normText) : []);
                 const plan = p.plan || [], consider = p.consider || [];
-                return '<li class="lc-problem' + (fresh ? ' lc-changed' : '') + '"><div class="lc-problem-name"><span class="lc-problem-num">' + (i + 1) + '</span><span>' + esc(p.name) + '</span></div>'
-                    + (p.assessment ? '<p class="lc-problem-assess' + (old && normText(old.assessment) !== normText(p.assessment) ? ' lc-changed' : '') + '">' + esc(p.assessment) + '</p>' : '')
+                const pe = ed.problems[normText(p.name)] || {};
+                return '<li class="lc-problem' + (fresh ? ' lc-changed' : '') + '"><div class="lc-problem-name"><span class="lc-problem-num">' + (i + 1) + '</span><span' + editable('lc-problem-title', 'name', i) + '>' + esc(p.name) + '</span></div>'
+                    + (p.assessment
+                        ? '<p' + editable('lc-problem-assess' + (old && normText(old.assessment) !== normText(p.assessment) && !pe.assessment ? ' lc-changed' : ''), 'assessment', i) + '>' + esc(p.assessment) + '</p>'
+                        : '<p' + editable('lc-plan-empty', 'assessment', i) + '>Add an assessment</p>')
                     + (plan.length
-                        ? '<ul class="lc-plan">' + plan.map((x) => '<li' + (!fresh && isNew(planBefore, x) ? ' class="lc-changed"' : '') + '>' + esc(x) + '</li>').join('') + '</ul>'
-                        : '<p class="lc-plan-empty">No plan stated yet</p>')
-                    + (consider.length ? '<ul class="lc-consider">' + consider.map((x) => '<li' + (!fresh && isNew(considerBefore, x) ? ' class="lc-changed"' : '') + '><b>Consider</b> ' + esc(x) + '</li>').join('') + '</ul>' : '')
+                        ? '<ul' + editable('lc-plan', 'plan', i) + '>' + plan.map((x) => '<li' + (!fresh && isNew(planBefore, x) ? ' class="lc-changed"' : '') + '>' + esc(x) + '</li>').join('') + '</ul>'
+                        : '<p' + editable('lc-plan-empty', 'plan', i) + '>No plan stated yet. Click to add one.</p>')
+                    + (consider.length ? '<ul class="lc-consider">' + consider.map((x, j) => '<li' + (!fresh && isNew(considerBefore, x) ? ' class="lc-changed"' : '') + '><button type="button" class="lc-consider-btn" data-act="consider-take" data-p="' + i + '" data-c="' + j + '" title="Add to your plan and open the order"><b>Consider</b><span class="lc-consider-text">' + esc(x) + '</span><span class="lc-consider-go">Order</span></button></li>').join('') + '</ul>' : '')
+                    + mine(!!(pe.name || pe.assessment || pe.plan), 'problem', i)
                     + '</li>';
             }).join('');
             N.ap.innerHTML = '<section class="lc-note-sec"><h4>Assessment and plan</h4>' + (problems ? '<ol class="lc-problems">' + problems + '</ol>' : '<p class="lc-empty">Problems and plans appear as you discuss them.</p>') + '</section>';
+        },
+
+        /** Edit a part of the live note in place: a box with the text, Save / Cancel. One at a time. */
+        _startNoteEdit(el) {
+            const n = this._shownNote;
+            if (!n || !el || !el.isConnected) return;
+            if (this._noteEdit) this._endNoteEdit(true);   // finish the one already open
+            const part = el.dataset.edit, pi = el.dataset.p != null ? Number(el.dataset.p) : null;
+            const prob = pi != null ? (n.problems || [])[pi] : null;
+            if (pi != null && !prob) return;
+            const value = part === 'pr' ? n.problem_representation : part === 'hpi' ? n.hpi
+                : part === 'name' ? prob.name : part === 'assessment' ? prob.assessment : part === 'plan' ? (prob.plan || []).join('\n') : '';
+            const one = part === 'name';
+            const box = document.createElement('div');
+            box.className = 'lc-note-editor' + (pi != null ? ' is-problem' : '');
+            box.innerHTML = (one ? '<input type="text" class="lc-note-input" autocomplete="off">' : '<textarea class="lc-note-input" rows="3"></textarea>')
+                + '<div class="lc-note-editor-btns"><button type="button" class="lc-btn lc-btn-primary" data-act="note-save">Save</button>'
+                + '<button type="button" class="lc-btn lc-btn-quiet" data-act="note-cancel">Cancel</button>'
+                + '<span class="lc-note-editor-hint">' + (part === 'plan' ? 'One item per line. ' : '') + (one ? 'Enter' : (/Mac/.test(navigator.platform || '') ? '⌘' : 'Ctrl+') + 'Enter') + ' saves, Esc cancels. The scribe keeps your words.</span></div>';
+            const input = box.querySelector('.lc-note-input');
+            input.value = value || '';
+            input.setAttribute('aria-label', { pr: 'Problem representation', hpi: 'History of present illness', name: 'Problem name', assessment: 'Assessment', plan: 'Plan, one item per line' }[part] || 'Note');
+            el.replaceWith(box);
+            this._noteEdit = { part, problem: prob ? prob.name : null, box, original: value || '' };
+            const fit = () => { if (!one) { input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight + 2, 320) + 'px'; } };
+            input.addEventListener('input', fit);
+            fit();
+            input.focus();
+            try { input.setSelectionRange(input.value.length, input.value.length); } catch (e) { /* not a text field */ }
+        },
+        _endNoteEdit(save) {
+            const e = this._noteEdit;
+            if (!e) return;
+            const value = e.box.querySelector('.lc-note-input').value;
+            this._noteEdit = null;
+            const changed = value.trim() !== String(e.original).trim();
+            if (save && changed && this.handlers.onNoteEdit) this.handlers.onNoteEdit(e.part, value, e.problem);   // the note comes back with it
+            else { this._shownNote = null; if (this._lastNoteV) this.renderNote(this._lastNoteV); }
+        },
+        _problemName(pi) {
+            const p = pi != null && this._shownNote ? (this._shownNote.problems || [])[Number(pi)] : null;
+            return p ? p.name : null;
         },
 
         /** The exam's live parts: Dictate exam / Done, what was just dictated (not in the note yet), and the live caption. */

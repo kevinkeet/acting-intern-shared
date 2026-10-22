@@ -76,6 +76,18 @@ ways in:
 - Type a finding in the box under the exam ("Lungs: crackles at both bases").
 Copy note and the H&P draft (On my radar) include the exam.
 
+The doctor can edit the note in place: click the problem representation, the HPI,
+or a problem's name, assessment or plan (one item per line), then Save (⌘↩, or
+Enter for a name) or Cancel (Esc). What the doctor wrote stays theirs over every
+rewrite ("Edited by you"; "Let it update" hands it back): the scribe sees the edits
+and keeps the rest consistent, and code lays them over its version (`editNote`,
+`wm.noteRaw` is the scribe's own). In an edited plan, items said later still come
+in and items the doctor took out stay out. A rewrite waits while the doctor types.
+A "Consider" item is a button ("Order"): one click puts it in that problem's plan
+and in the conversation as the doctor's ("You, in the note"), sends it to the radar
+at once, and opens its order form once the radar has it ready (several, one after
+another; never over a form that is already open) (`acceptSuggestion`).
+
 ## On my radar
 
 Every order, consult, referral, message, note and task the doctor asks for goes
@@ -97,9 +109,15 @@ on a list, ready to act on with one click:
   H&P starts from the live note), and Save to Chart ticks it off; other messages
   and referrals have **Copy**. Tasks (update the allergy list, the med rec, a
   family meeting) have the next step and a tick box.
-- An order a safety alert is about is **flagged**: red, first in the list, with
-  the reason, and left out of "Review all". The doctor's own ticks and removals
-  stand; only an order seen placed in the EHR overrides them.
+- An order a safety alert is about is flagged at one of two levels (prompts
+  `live-v22`). **Stop** (red, first in the list, with the reason, left out of
+  "Review all"): the alert says not to give it as it is (Zosyn with penicillin
+  anaphylaxis, heparin with a bleed, diltiazem with a low EF). **Check first**
+  (amber, "N to check" in the header): it can go ahead once something is checked
+  first or alongside (a hemoglobin before diuresing); "Review all" includes it and
+  its order form shows "Check first: ...". A flag without a level counts as stop,
+  and a red flag never turns amber for the same alert. The doctor's own ticks and
+  removals stand; only an order seen placed in the EHR overrides them.
 - Side panel: the header ("6 to do · 2 flagged", Review all) and the newest
   item; open it for the whole list. Full screen: the whole list in its own column.
   Only the header is fixed: when space is short the list scrolls, and the
@@ -154,7 +172,12 @@ on a list, ready to act on with one click:
     own summary and dated evidence.
   - **How it thinks**: for any alert, update, answer or thought, the chain behind it:
     the words heard, what the ear filed, the tripwire or alarm that set off the check,
-    the verdict, what it said, and what it led to (a flagged radar item).
+    the verdict, what it said, and what it led to (a flagged radar item). And its
+    picture of the patient over time: a strip of every look it took (a new or more
+    urgent worry in amber or red), and for each version what was new since the one
+    before, what changed (summary and assessment word by word; worries new, more
+    urgent or dropped) and the take as it stood, with the live note's summary at that
+    time (`wm.takes`, `wm.notePRs`).
   - **Each call**: what every AI call actually read, part by part (rules, digest,
     working memory, conversation, lookups, task), how much was cached, time and cost.
   The numbers behind Digestion and Problems come from `tools/live/memory-stats.mjs`

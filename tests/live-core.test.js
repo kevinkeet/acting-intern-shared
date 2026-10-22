@@ -208,6 +208,75 @@ const manualClock = () => {
         cw.stop();
     });
 
+    await check('note edits: the doctor\'s words stay over rewrites; an edited plan keeps later items and never brings back what was taken out; a suggestion taken up goes into the plan and onto the radar', async () => {
+        let n = 0;
+        const radarIn = [];
+        const t = fakeTransport((lane, body) => {
+            if (lane === 'note') {
+                n++;
+                return reply(JSON.stringify({
+                    problem_representation: 'Scribe PR v' + n, hpi: 'Scribe HPI v' + n,
+                    problems: [
+                        { name: 'Acute on chronic HFrEF', assessment: 'Scribe assessment v' + n, plan: ['IV furosemide 80 mg now', 'Daily weights'].concat(n > 1 ? ['Strict I&O'] : []), consider: ['Stat echocardiogram to confirm effusion'] },
+                        { name: 'AKI on CKD 3b', assessment: 'Cr 2.4 from about 2.0.', plan: [], consider: ['Recheck BMP in the morning'] },
+                    ],
+                }));
+            }
+            if (lane === 'actions') {
+                const msg = body.messages[0].content;
+                radarIn.push(msg);
+                const m = msg.match(/P\d+ \[order, heard by (L\d+)\] Stat echocardiogram/);
+                const echo = { id: '', kind: 'order', title: 'Echocardiogram STAT', order_type: 'imaging', fields: [], to: '', note_type: '', draft: '', next: '', status: 'todo', flag: '', flag_level: '', alert: '', line: m ? m[1] : '' };
+                return reply(JSON.stringify({ changes: m ? [echo] : [] }));
+            }
+            return reply(JSON.stringify(lane === 'ear' ? EMPTY_EAR : TAKE()));
+        });
+        const clock = manualClock();
+        const cw = LiveCore.createCoworker({ transport: t, chart, clock });
+        cw.start({ skipPrime: true });
+        cw.note();
+        await cw.idle();
+        assert.strictEqual(cw.wm.note.problem_representation, 'Scribe PR v1');
+
+        cw.editNote('pr', 'Doctor PR: 74M with HFrEF in a flare.');
+        assert.strictEqual(cw.wm.note.problem_representation, 'Doctor PR: 74M with HFrEF in a flare.', 'shown at once');
+        assert.strictEqual(cw.wm.note.edited.pr, true);
+        cw.editNote('plan', '- IV furosemide 80 mg now', 'Acute on chronic HFrEF');   // "Daily weights" taken out
+        cw.editNote('name', 'ADHF from missed diuretics', 'Acute on chronic HFrEF');
+        cw.editNote('assessment', 'Doctor assessment.', 'ADHF from missed diuretics');
+        const line = cw.acceptSuggestion('ADHF from missed diuretics', 'Stat echocardiogram to confirm effusion');
+        const said = cw.wm.lines.find((l) => l.id === line);
+        assert.ok(said && said.speaker === 'doctor' && said.via === 'note', 'the doctor\'s line, marked as from the note');
+        assert.ok(cw.wm.plan.some((p) => p.from === 'note' && p.line === line), 'a plan item for the radar');
+        let hf = cw.wm.note.problems[0];
+        assert.deepStrictEqual(hf.plan, ['IV furosemide 80 mg now', 'Stat echocardiogram to confirm effusion'], 'into the plan at once');
+        assert.deepStrictEqual(hf.consider, [], 'and out of "consider"');
+        clock.advance(0);
+        await cw.idle();
+        assert.match(radarIn[radarIn.length - 1], /P\d+ \[order, heard by L\d+\] Stat echocardiogram to confirm effusion/, 'the radar gets it at once');
+        assert.ok(cw.wm.actions.some((a) => a.title === 'Echocardiogram STAT' && a.line === line), 'listed on the radar, citing the line');
+
+        cw.note();   // the scribe writes again, with its own wording
+        await cw.idle();
+        const scribeIn = t.log.filter((x) => x.lane === 'note').pop().body.messages[0].content;
+        assert.match(scribeIn, /<doctor_edits>[^]*Problem representation \(the doctor's\): Doctor PR/);
+        assert.match(scribeIn, /taken out of the plan by the doctor \(do not put back\): Daily weights/);
+        assert.match(scribeIn, /DOCTOR \(in the note\): Add to the plan for ADHF from missed diuretics: Stat echocardiogram/);
+        assert.strictEqual(cw.wm.note.problem_representation, 'Doctor PR: 74M with HFrEF in a flare.', 'the doctor\'s words stay');
+        assert.strictEqual(cw.wm.note.hpi, 'Scribe HPI v2', 'the rest keeps updating');
+        hf = cw.wm.note.problems[0];
+        assert.strictEqual(hf.name, 'ADHF from missed diuretics');
+        assert.strictEqual(hf.assessment, 'Doctor assessment.');
+        assert.deepStrictEqual(hf.plan, ['IV furosemide 80 mg now', 'Strict I&O', 'Stat echocardiogram to confirm effusion'], 'new items come in; "Daily weights" stays out');
+        assert.deepStrictEqual(cw.wm.note.edited.problems['adhf from missed diuretics'], { name: true, assessment: true, plan: true });
+        assert.strictEqual(cw.wm.noteRaw.problem_representation, 'Scribe PR v2', 'the scribe\'s own version is kept apart');
+
+        cw.editNote('pr', null);   // handed back to the scribe
+        assert.strictEqual(cw.wm.note.problem_representation, 'Scribe PR v2');
+        assert.strictEqual(cw.wm.note.edited.pr, false);
+        cw.stop();
+    });
+
     await check('dictating the exam: lines are marked, the note catches up within seconds, the exam is kept by system', async () => {
         let n = 0;
         const many = Array.from({ length: 16 }, (_, i) => ({ system: 'System ' + i, findings: 'Finding ' + i }));
@@ -528,7 +597,7 @@ const manualClock = () => {
     });
 
     // ── on my radar ──────────────────────────────────────────────────────
-    const item = (x) => Object.assign({ id: '', kind: 'order', title: '', order_type: 'none', fields: [], to: '', note_type: '', draft: '', next: '', status: 'todo', flag: '', alert: '', line: '' }, x);
+    const item = (x) => Object.assign({ id: '', kind: 'order', title: '', order_type: 'none', fields: [], to: '', note_type: '', draft: '', next: '', status: 'todo', flag: '', flag_level: '', alert: '', line: '' }, x);
     const radarReply = (changes) => reply(JSON.stringify({ changes }));
 
     await check('on my radar: a heard plan item shows at once, then Haiku lists it ready to act on', async () => {
@@ -736,6 +805,35 @@ const manualClock = () => {
         hear('doctor', "Okay, let's do that.");
         await cw.actions();
         assert.ok(titles().includes('Amiodarone 150 mg IV now'), 'the doctor took it up');
+        cw.stop();
+    });
+
+    await check('radar flag levels: "check first" stays apart from "stop"; no level means stop; a red flag never turns amber for the same alert', async () => {
+        const replies = [
+            [item({ title: 'Furosemide 80 mg IV now', order_type: 'medication', fields: [{ key: 'name', value: 'Furosemide' }], flag: 'Check first: Hemoglobin and type and screen', flag_level: 'check', alert: 'S1' }),
+                item({ title: 'Zosyn IV', order_type: 'medication', fields: [{ key: 'name', value: 'Piperacillin-tazobactam' }], flag: 'Penicillin anaphylaxis in 1985', alert: 'S2' })],
+            [item({ id: 'A2', title: 'Zosyn IV', order_type: 'medication', flag: 'Penicillin anaphylaxis in 1985', flag_level: 'check', alert: 'S2' })],
+        ];
+        let n = 0;
+        const t = fakeTransport((lane) => (lane === 'actions' ? radarReply(replies[n++] || []) : reply(JSON.stringify(TAKE()))));
+        const cw = LiveCore.createCoworker({ transport: t, chart, clock: manualClock() });
+        cw.start({ skipPrime: true });
+        const say = (id, text) => cw.wm.said.push({ id, t: 0, kind: 'critical', topic: id, text, why: '', question: '', cueLine: null, via: 'test', updateOf: null });
+        say('S1', 'Get a hemoglobin and type and screen before diuresing.');
+        say('S2', 'Hold the Zosyn: penicillin anaphylaxis in 1985.');
+        cw.wm.lines.push({ id: 'L1', t: 0, speaker: 'doctor', text: 'IV furosemide 80 now. And start Zosyn.' });
+        cw.wm.plan.push({ id: 'P1', t: 0, text: 'IV furosemide 80 now; start Zosyn', kind: 'order', line: 'L1' });
+        await cw.actions();
+        const [furo, zosyn] = cw.wm.actions;
+        assert.strictEqual(furo.flagLevel, 'check');
+        assert.strictEqual(furo.flag, 'Hemoglobin and type and screen', 'no "Check first:" twice');
+        assert.strictEqual(zosyn.flagLevel, 'stop', 'a flag without a level is a stop');
+        const forRadar = cw.renderForActions([]);
+        assert.match(forRadar, /A1 \[todo, check first: Hemoglobin and type and screen \(S1\)\] order \(medication\): Furosemide 80 mg IV now/);
+        assert.match(forRadar, /A2 \[todo, flag: Penicillin anaphylaxis in 1985 \(S2\)\] order \(medication\): Zosyn IV/);
+        assert.match(cw.renderForBrain(), /- \[to do, check first: Hemoglobin and type and screen\] order: Furosemide 80 mg IV now/);
+        await cw.actions();
+        assert.strictEqual(cw.wm.actions[1].flagLevel, 'stop', 'the same alert cannot soften a red flag');
         cw.stop();
     });
 

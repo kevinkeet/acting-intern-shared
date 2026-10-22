@@ -12,7 +12,7 @@
 (function (root) {
     'use strict';
 
-    const PROMPT_VERSION = 'live-v21';
+    const PROMPT_VERSION = 'live-v22';
 
     // ── Ear (Haiku): fast bookkeeping on every utterance ──────────────────
     const EAR_SYSTEM = [
@@ -220,6 +220,7 @@
         'exam: the physical exam as the doctor stated or dictated it (lines marked "dictating the exam", or "for my note: ..."). vitals: the latest vital signs said aloud (by anyone, or read off the monitor), in one line like "T 38.6, HR 142 irregular, BP 138/88, SpO2 94% on 2 L", or "" if none were said; vitals never go in the system findings. systems: one entry per system the doctor examined, in the usual order (General, HEENT, Neck, Heart, Lungs, Abdomen, Extremities, Skin, Neuro, Psych), each with the findings in standard clinical shorthand, close to the doctor\'s words. Only what was said: never add a normal finding or a system that was not examined. When the doctor corrects a finding, write it as finally stated and drop the earlier version (no "corrected"). Empty until the exam is heard.',
         'problems: the problems addressed today, most important first, at most six. name: short ("Acute on chronic HFrEF"). assessment: one sentence of at most 20 words, the working reasoning (the doctor\'s when stated). plan: ONLY what the doctor actually said or ordered in this conversation (see the doctor\'s lines and PLAN HEARD), each item at most 12 words, kept as said even if you disagree; if the doctor said nothing about a problem, plan is empty. Anything the doctor did not say, including standard workup you would expect, never goes in plan. consider: at most two items of at most 12 words, from the coworker\'s take, that the doctor has not addressed; empty if none.',
         'Keep it stable: keep the previous wording unless something new changes it, and add new details where they belong instead of rewriting everything.',
+        'The doctor may edit the note. DOCTOR EDITS lists what they wrote: it is kept exactly as written whatever you return, so keep the rest consistent with it, never put back what they took out, and treat a plan item they added (a doctor line marked "in the note") as said.',
     ].join('\n\n');
 
     const NOTE_SCHEMA = {
@@ -293,7 +294,7 @@
         '- next: for a task, note, message or referral, the next step in at most 12 words ("Add penicillin anaphylaxis to the allergy list"). For an order or consult, "" (the form shows what it still needs).',
         '- to, draft, note_type: for a message or referral, the recipient ("nurse", "PCP") and the message in the doctor\'s voice (at most 40 words, saying only what the doctor asked to say); for a note, note_type names it ("H&P", "Goals of Care Note") and draft is a short start (at most 80 words) from what was said. Otherwise "".',
         '- status: "done" if a line shows it was placed in the EHR (saying "I will" is still "todo"); "dropped" only when the doctor\'s own words take it back or replace it ("no lisinopril then", "make it ceftriaxone instead"); otherwise "todo". A coworker alert never drops an item: it flags it, and the doctor decides.',
-        '- flag: only when a coworker safety alert (OPEN SAFETY ALERTS, COWORKER SAID) says not to give this order, or to change its drug, dose or route: the concern in at most 10 words ("Penicillin anaphylaxis in 1985"), and alert is that alert\'s id. An alert that agrees with the order (it also says to hold that drug) does not flag it. Keep the flag until the doctor changes or drops the item. Otherwise flag and alert are "".',
+        '- flag, flag_level, alert: when a coworker safety alert (OPEN SAFETY ALERTS, COWORKER SAID) is about this item. flag_level "stop" when the alert says not to give it, or to change its drug, dose or route ("Hold the Zosyn: penicillin anaphylaxis"); "check" when it can go ahead once something is checked, drawn or watched first or alongside ("Get a hemoglobin and type and screen before diuresing" for a furosemide order; "Check the QTc" for azithromycin). flag: the concern in at most 10 words; for "check", what to check ("Hemoglobin and type and screen"). alert: that alert\'s id. An alert that agrees with the order (it also says to hold that drug) does not flag it. Keep the flag until the doctor changes or drops the item. Otherwise flag, flag_level and alert are "".',
         '- line: the id of the line where the doctor said it (or the EHR line).',
         '',
         'Return only changes: new items with id "", and existing items whose content or status changed, with their id and all their fields (when only the status changes, keep the title as it was). Leave unchanged items out. If nothing changed, return an empty list.',
@@ -322,10 +323,11 @@
                         next: { type: 'string' },
                         status: { type: 'string', enum: ['todo', 'done', 'dropped'] },
                         flag: { type: 'string' },
+                        flag_level: { type: 'string', enum: ['', 'stop', 'check'] },
                         alert: { type: 'string' },
                         line: { type: 'string' },
                     },
-                    required: ['id', 'kind', 'title', 'order_type', 'fields', 'to', 'note_type', 'draft', 'next', 'status', 'flag', 'alert', 'line'],
+                    required: ['id', 'kind', 'title', 'order_type', 'fields', 'to', 'note_type', 'draft', 'next', 'status', 'flag', 'flag_level', 'alert', 'line'],
                 },
             },
         },

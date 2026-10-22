@@ -28,17 +28,14 @@
         [/antibiotic/i, 'Ceftriaxone plus azithromycin: tolerated in February 2021 despite his penicillin allergy.'],
         [/take|think/i, 'Heart failure flare from missed furosemide. Bigger worry: a possible GI bleed. Last week sounds like a TIA. Avoid diltiazem, heparin and Zosyn.'],
     ];
+    // The take's shape; fakeTake() fills it from what has been heard so far.
     const TAKE = {
         take: {
-            one_liner: '74M with HFrEF (EF 30-35%), CKD 3b and AF off anticoagulation since a 2023 ulcer bleed, admitted with a heart failure flare.',
-            assessment: 'Acute on chronic systolic heart failure after running out of furosemide, with a kidney bump.',
-            concerns: [
-                { topic: 'melena', text: 'Possible upper GI bleed: black stools, Hgb 10.2', severity: 'critical' },
-                { topic: 'k-high', text: 'K 5.1 on Entresto and spironolactone', severity: 'important' },
-                { topic: 'nsaid', text: 'Daily Aleve: caused the 2023 bleed', severity: 'important' },
-            ],
-            next: ['Hemoglobin now and in 6 hours', 'Ask about leftover warfarin', 'Telemetry and daily weights'],
-            doctor_view: 'Heart failure flare from missed diuretic',
+            one_liner: '74M with HFrEF (EF 30-35%), CKD 3b and AF off anticoagulation since a 2023 ulcer bleed, here with shortness of breath.',
+            assessment: 'Likely acute on chronic systolic heart failure.',
+            concerns: [],
+            next: [],
+            doctor_view: '',
             differs: '',
         },
         watch: [
@@ -50,6 +47,52 @@
         ],
         say: { should_say: false, kind: 'insight', topic: '', text: '', why: '' },
     };
+
+    // The take grows with what has been heard (the brain's picture of the patient changing),
+    // so "How it thinks" has real versions to show. Cues are kept across calls and reset when a
+    // new encounter starts (a prime, or the encounter clock going back).
+    const TAKE_CUES = [
+        ['ranout', /I ran out/i], ['tight', /walk to the mailbox/i], ['melena', /almost black/i], ['dizzy', /dizzy standing/i],
+        ['aleve', /Aleve for my knees/i], ['labs', /creatinine 2\.4/i], ['hgb', /hemoglobin 10\.2/i], ['inr', /INR 2\.3/i],
+        ['think', /probably a big part/i], ['metformin', /metformin and the gabapentin/i], ['tia', /right hand went clumsy|words came out/i],
+        ['rvr', /up to 142/i], ['dilt', /IV diltiazem/i], ['heparin', /heparin drip/i], ['fever', /38\.6/], ['zosyn', /start Zosyn/i],
+        ['goals', /kept alive on machines/i],
+    ];
+    function fakeTake(seen) {
+        const has = (k) => seen.has(k);
+        const t = JSON.parse(JSON.stringify(TAKE.take));
+        if (has('ranout')) t.one_liner = '74M with HFrEF (EF 30-35%), CKD 3b and AF off anticoagulation since a 2023 ulcer bleed, admitted with a heart failure flare after six days without furosemide.';
+        const a = ['Acute on chronic systolic heart failure' + (has('ranout') ? ' after running out of furosemide' : '') + (has('labs') ? ', with a kidney bump (creatinine 2.4, baseline about 2.0)' : '') + '.'];
+        if (has('melena')) a.push('Possible upper GI bleed' + (has('aleve') ? ' on daily Aleve and aspirin' : '') + (has('hgb') ? ', Hgb down to 10.2' : '') + '.');
+        if (has('tia')) a.push('Last week sounds like a TIA.');
+        if (has('fever')) a.push('Fever and cough: possible pneumonia.');
+        t.assessment = a.join(' ');
+        const c = [];
+        if (has('melena')) c.push({ topic: 'melena', text: 'Possible upper GI bleed: black stools' + (has('hgb') ? ', Hgb 10.2 (13.9 in January)' : '') + (has('dizzy') ? ', dizzy standing' : ''), severity: has('hgb') ? 'critical' : 'important' });
+        if (has('tia')) c.push({ topic: 'tia', text: 'Probable TIA last week, in AF off anticoagulation', severity: 'critical' });
+        if (has('rvr')) c.push({ topic: 'rvr', text: 'AF at 142: rate control, not diltiazem (EF 30-35%)', severity: has('dilt') ? 'critical' : 'important' });
+        if (has('fever')) c.push({ topic: 'pna', text: 'Possible pneumonia with penicillin anaphylaxis', severity: has('zosyn') ? 'critical' : 'important' });
+        if (has('inr')) c.push({ topic: 'inr', text: 'INR 2.3 off warfarin: unexplained', severity: 'important' });
+        if (has('labs')) c.push({ topic: 'k-high', text: 'K 5.1 and creatinine 2.4 on Entresto and spironolactone', severity: 'important' });
+        if (has('metformin')) c.push({ topic: 'metformin', text: 'Metformin with eGFR about 27', severity: 'important' });
+        if (has('aleve')) c.push({ topic: 'nsaid', text: 'Daily Aleve: caused the 2023 bleed', severity: 'important' });
+        // From the chart alone, before the visit says much.
+        c.push({ topic: 'anticoag', text: 'AF off anticoagulation since the 2023 ulcer bleed', severity: 'important' });
+        c.push({ topic: 'allergy', text: 'Penicillin anaphylaxis; lisinopril angioedema', severity: 'minor' });
+        const rank = { critical: 0, important: 1, minor: 2 };
+        t.concerns = c.map((x, i) => [x, i]).sort((x, y) => rank[x[0].severity] - rank[y[0].severity] || x[1] - y[1]).map((x) => x[0]).slice(0, 5);
+        const next = [];
+        if (has('melena')) next.push('Hemoglobin now and in 6 hours; type and screen');
+        if (has('tia')) next.push('Head CT and neurology');
+        if (has('rvr')) next.push('Rate control with digoxin, not diltiazem');
+        if (has('fever')) next.push('Ceftriaxone and azithromycin (tolerated in 2021)');
+        if (has('inr')) next.push('Ask about leftover warfarin');
+        next.push(has('ranout') ? 'IV furosemide, daily weights, strict I&O' : 'Volume exam and a BMP');
+        t.next = next.slice(0, 4);
+        t.doctor_view = has('think') ? 'Heart failure flare from missed diuretic' : '';
+        t.differs = has('heparin') ? 'I would not start heparin while he may be bleeding.' : has('melena') && has('hgb') ? 'I would hold the aspirin until the bleeding question is settled.' : '';
+        return t;
+    }
 
     // The doctor's orders and to-dos in the demo (stand-in for the radar lane), by what was heard.
     const HF = 'Acute on chronic HFrEF, volume overload';
@@ -82,26 +125,38 @@
             { kind: 'task', title: 'Family meeting tomorrow morning', next: 'With Bob and Patricia: goals of care and code status' },
             { kind: 'note', title: 'Goals-of-care note', note_type: 'Goals of Care Note', draft: 'Mr. Morrison said that if it comes to that, he does not want to be kept alive on machines. His wife Patricia was present; they have not talked about this before. Plan: meet tomorrow morning with both of them to talk about what matters to him and his code status.' },
         ]],
+        // The note's "consider" items, when the doctor takes one up (they reach the radar as the doctor's plan).
+        [/rectal exam, cbc and type and screen/i, [
+            { kind: 'order', order_type: 'lab', title: 'CBC now', fields: { name: 'Complete Blood Count', specimen: 'Blood', priority: 'STAT', indication: 'Melena, possible upper GI bleed' } },
+            { kind: 'order', order_type: 'lab', title: 'Type and screen', fields: { name: 'Other', customName: 'Type and screen', specimen: 'Blood', priority: 'STAT', indication: 'Possible upper GI bleed' } },
+            { kind: 'task', title: 'Rectal exam', next: 'Check for melena; guaiac' },
+        ]],
+        [/head imaging and neurology/i, [
+            { kind: 'order', order_type: 'imaging', title: 'CT head without contrast', fields: { modality: 'CT', bodyPart: 'Head', contrast: 'Without contrast', priority: 'Urgent', indication: 'Possible TIA, AF off anticoagulation' } },
+            { kind: 'consult', title: 'Neurology consult: possible TIA', fields: { specialty: 'Neurology', priority: 'Urgent', reason: 'Transient right hand weakness and jumbled speech last week, in AF off anticoagulation. Possible TIA.' } },
+        ]],
         // Not in the demo script; the UI test says them to try a consult and a message.
         [/neurology to see him/i, [{ kind: 'consult', title: 'Neurology consult: possible TIA', fields: { specialty: 'Neurology', priority: 'Urgent', reason: 'Transient right hand weakness and jumbled speech last week, in AF off anticoagulation. Possible TIA.' } }]],
         [/let the nurse know/i, [{ kind: 'message', title: 'Ask the nurse to call for HR over 130', to: 'nurse', draft: 'Please call me if his heart rate stays above 130 or his pressure drops below 100 systolic.' }]],
     ];
+    // [item title, alert text, flag, level]: "stop" (do not give it as it is) or "check" (check something first, then sign it).
     const RADAR_FLAGS = [
-        [/zosyn|piperacillin/i, /zosyn|penicillin/i, 'Penicillin anaphylaxis in 1985'],
-        [/heparin/i, /heparin/i, 'Anticoagulation stopped after the 2023 bleed'],
-        [/diltiazem/i, /diltiazem/i, 'EF 30-35%: can worsen the heart failure'],
-        [/potassium/i, /potassium/i, 'K is already 5.1 on Entresto'],
-        [/home medicines/i, /metformin/i, 'Metformin with eGFR about 27'],
+        [/zosyn|piperacillin/i, /zosyn|penicillin/i, 'Penicillin anaphylaxis in 1985', 'stop'],
+        [/heparin/i, /heparin/i, 'Anticoagulation stopped after the 2023 bleed', 'stop'],
+        [/diltiazem/i, /diltiazem/i, 'EF 30-35%: can worsen the heart failure', 'stop'],
+        [/potassium/i, /potassium/i, 'K is already 5.1 on Entresto', 'stop'],
+        [/home medicines/i, /metformin/i, 'Metformin with eGFR about 27', 'stop'],
+        [/furosemide/i, /hemoglobin/i, 'Hemoglobin now (black stools)', 'check'],
     ];
     function fakeRadar(user) {
         const sect = (name) => ((user.match(new RegExp('<' + name + '>(.*?)</' + name + '>', 's')) || [])[1] || '').replace(/\\n/g, '\n').replace(/\\"/g, '"');
         const listed = sect('on_my_radar').split('\n').map((l) => l.match(/^(A\d+) \[(\w+)([^\]]*)\] [^:]+: (.*?)(?: · said \w+)?(?: · next: .*)?$/)).filter(Boolean)
-            .map((m) => ({ id: m[1], status: m[2], flagged: /flag:/.test(m[3]), title: m[4] }));
+            .map((m) => ({ id: m[1], status: m[2], flagged: /flag:|check first:/.test(m[3]), title: m[4] }));
         const alerts = sect('open_safety_alerts').split('\n').map((l) => l.match(/^- (S\d+) \[[^\]]*\] (.*)$/)).filter(Boolean).map((m) => ({ id: m[1], text: m[2] }));
         const fill = (x, line) => ({
             id: '', kind: x.kind, title: x.title, order_type: x.order_type || (x.kind === 'consult' ? 'consult' : 'none'),
             fields: Object.entries(x.fields || {}).map(([key, value]) => ({ key, value })), to: x.to || '', note_type: x.note_type || '', draft: x.draft || '',
-            next: x.next || '', status: 'todo', flag: '', alert: '', line,
+            next: x.next || '', status: 'todo', flag: '', flag_level: '', alert: '', line,
         });
         const changes = [];
         for (const p of sect('new_plan_items').split('\n')) {
@@ -115,10 +170,10 @@
             const f = RADAR_FLAGS.find(([re]) => re.test(item.title));
             const a = f && alerts.find((x) => f[1].test(x.text));
             if (!a) continue;
-            if (item.change) Object.assign(item.change, { flag: f[2], alert: a.id });
+            if (item.change) Object.assign(item.change, { flag: f[2], flag_level: f[3], alert: a.id });
             else {
                 const x = RADAR.flatMap((r) => r[1]).find((y) => y.title === item.title);
-                if (x) changes.push(Object.assign(fill(x, ''), { id: item.id, flag: f[2], alert: a.id }));
+                if (x) changes.push(Object.assign(fill(x, ''), { id: item.id, flag: f[2], flag_level: f[3], alert: a.id }));
             }
         }
         return { changes };
@@ -174,6 +229,8 @@
 
     function createTransport() {
         let updates = 0;
+        const seen = new Set();   // what the take has heard so far (see fakeTake)
+        let lastSecs = 0;
         return {
             async callWithRetry(req, hooks) {
                 // LiveFake.failing = true: every call fails like an overloaded API (tests the "not checking" state).
@@ -224,8 +281,14 @@
                 }
                 await sleep(req.label === 'prime' ? 3500 : 2600);
                 updates++;
+                // A new encounter starts over (a prime, or the encounter clock went back).
+                const clockAt = (user.match(/ENCOUNTER TIME: (\d+):(\d\d)/) || []).slice(1).map(Number);
+                const secs = clockAt.length ? clockAt[0] * 60 + clockAt[1] : 0;
+                if (req.label === 'prime' || secs + 5 < lastSecs) seen.clear();
+                lastSecs = secs;
+                for (const [k, re] of TAKE_CUES) if (re.test(user)) seen.add(k);
                 const t = JSON.parse(JSON.stringify(TAKE));
-                if (updates > 3) t.take.differs = 'I would hold the aspirin until the bleeding question is settled.';
+                t.take = fakeTake(seen);
                 return reply(t, 3000);
             },
         };

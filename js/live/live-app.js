@@ -22,6 +22,9 @@
     const OLD_TO_MODE = { reactive: 'follow', active: 'abreast', proactive: 'lead' };
     const BRAIN_LABEL = { 'claude-sonnet-5-5': 'Sonnet 5.5', 'claude-opus-5-5': 'Opus 5.5' };
     const SPEAKER_LABEL = { doctor: 'Doctor', patient: 'Patient', other: 'Other', unknown: 'Voice', wife: 'Wife', nurse: 'Nurse', ehr: 'Order' };
+    const escHtml = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    // A red flag ("stop") keeps an order out of "Review all"; an amber one ("check first") does not.
+    const stopFlag = (a) => !!a.flag && a.flagLevel !== 'check';
     // A failed call's reason in a few plain words, for the "not checking" status.
     const plainError = (msg) => {
         const m = String(msg || '');
@@ -602,9 +605,13 @@
             if (!cfg) { OrderEntry.open(); this._actionForm = null; return; }
             OrderEntry.openWithPrefill(type, LiveCore.toOrderForm(cfg.fields, a.fields));
             this._actionForm = { id: a.id, formData: OrderEntry.formData, type };
-            // Say where the form came from (and, in "Review all", how many are left).
+            // Say where the form came from (and, in "Review all", how many are left), and what to check first.
+            // The EHR resets the title on every open, so none of this stays on an order opened by hand.
             const title = document.querySelector('#order-entry-modal .order-entry-title');
-            if (title) title.innerHTML = 'New Order <span style="font-size:12px;color:#c9dcf0;font-weight:normal;margin-left:6px;">From the coworker\'s radar' + (more ? ' · ' + more + ' more after this' : '') + '</span>';
+            const check = a.flag && a.flagLevel === 'check'
+                ? '<span class="lc-order-check" style="display:block;width:fit-content;margin-top:6px;padding:3px 9px;border-radius:5px;background:#fbefd9;color:#5c3a06;font-size:12.5px;font-weight:600;line-height:1.4;">Check first: ' + escHtml(a.flag) + '</span>'
+                : '';
+            if (title) title.innerHTML = 'New Order <span style="font-size:12px;color:#c9dcf0;font-weight:normal;margin-left:6px;">From the coworker\'s radar' + (more ? ' · ' + more + ' more after this' : '') + '</span>' + check;
         },
 
         _messageNurse(a) {
@@ -630,9 +637,48 @@
             this._actionNote = { id: a.id, type };
         },
 
+        /** "Let it update": hand a part of the note back to the scribe (a whole problem: its name, assessment and plan). */
+        uneditNote(part, problem) {
+            if (!this.engine) return;
+            if (part === 'problem') { ['plan', 'assessment', 'name'].forEach((f) => this.engine.editNote(f, null, problem)); return; }
+            this.engine.editNote(part, null, problem);
+        },
+
+        /**
+         * The doctor clicked a "consider" item in the note: it goes into the plan and onto the radar, and once
+         * the radar has it ready its order form opens (several, one after another), unless a form is already open.
+         */
+        async takeSuggestion(problem, text) {
+            if (!this.engine) return;
+            if (!this.engine.running) this.onPanelOpen();
+            const before = new Set((this.view.actions || []).map((a) => a.id));
+            this._pendingLabel = 'You, in the note';
+            const lineId = this.engine.acceptSuggestion(problem, text);
+            if (!lineId) return;
+            this._flash('Added to the plan. Getting the order ready…');
+            const plan = () => (this.engine && this.engine.wm.plan.find((x) => x.line === lineId)) || {};
+            const words = new Set(String(text).toLowerCase().split(/[^a-z0-9]+/).filter((w) => w.length >= 4));
+            // Its items cite the line; failing that, the new ones that share a word with it.
+            const mine = () => {
+                const fresh = (this.view.actions || []).filter((a) => !before.has(a.id));
+                const cited = fresh.filter((a) => a.line === lineId);
+                return cited.length ? cited : fresh.filter((a) => a.title.toLowerCase().split(/[^a-z0-9]+/).some((w) => words.has(w)));
+            };
+            await this._until(() => mine().length > 0 || plan().radar === true || plan().radar === 'failed', 15000);
+            const items = mine();
+            const orders = items.filter((a) => a.status === 'todo' && !stopFlag(a) && ((a.kind === 'order' && a.orderType) || a.kind === 'consult'));
+            if (!orders.length) {
+                this._flash(items.length ? 'In the plan and on your radar.' : plan().radar === 'failed' ? 'In the plan. The radar is busy and will try again.' : 'In the plan.');
+                return;
+            }
+            if (typeof OrderEntry !== 'undefined' && OrderEntry.isOpen) { this._flash('On your radar, ready to order.'); return; }   // never take over an open form
+            this._queue = orders.map((a) => a.id);
+            this._nextInQueue();
+        },
+
         /** "Review all orders": the order forms one after another; each signed one opens the next. */
         reviewOrders() {
-            const ready = (this.view.actions || []).filter((a) => a.status === 'todo' && !a.flag && ((a.kind === 'order' && a.orderType) || a.kind === 'consult'));
+            const ready = (this.view.actions || []).filter((a) => a.status === 'todo' && !stopFlag(a) && ((a.kind === 'order' && a.orderType) || a.kind === 'consult'));
             if (!ready.length) return;
             this._queue = ready.sort((x, y) => x.t - y.t || x.id.localeCompare(y.id, undefined, { numeric: true })).map((a) => a.id);
             this._nextInQueue();
@@ -732,6 +778,9 @@
                 onRadarToggle: (open) => { this.settings.radarOpen = open; this._save(); this.request('radar'); },
                 onRerenderRadar: () => this.request('radar'),
                 onRadarRetry: () => { if (this.engine) this.engine.actions(); },
+                onNoteEdit: (part, value, problem) => { if (this.engine) this.engine.editNote(part, value, problem); },
+                onNoteUnedit: (part, problem) => this.uneditNote(part, problem),
+                onConsider: (problem, text) => this.takeSuggestion(problem, text),
                 onAbout: (btn) => this.openAbout(btn),
                 onFull: (on) => this.toggleFull(on),
                 onDemoVoices: () => this.toggleDemoVoices(),

@@ -210,6 +210,7 @@
 .lc-radar-icon { flex: none; width: 15px; height: 15px; color: var(--lc-blue); }
 .lc-radar-sum { font-weight: 600; color: var(--lc-ink); font-variant-numeric: tabular-nums; }
 .lc-radar-flag { font-weight: 600; color: var(--lc-red-ink); }
+.lc-radar-check { font-weight: 600; color: var(--lc-amber-ink); }
 .lc-radar-heard { color: var(--lc-blue); }
 .lc-radar-toggle > svg:last-child { flex: none; margin-left: auto; width: 14px; height: 14px; color: var(--lc-ink-3); transition: transform 180ms var(--lc-ease); }
 .lc-radar-toggle[aria-expanded="true"] > svg:last-child { transform: rotate(180deg); }
@@ -223,6 +224,9 @@
 .lc-act + .lc-act { border-top: 1px solid var(--lc-line); }
 .lc-act.is-flagged { background: var(--lc-red-bg); }
 .lc-act.is-flagged + .lc-act, .lc-act + .lc-act.is-flagged { border-top-color: transparent; }
+/* "Check first": amber, signed with the rest once the check is in hand. */
+.lc-act.is-checkfirst { background: var(--lc-amber-bg); }
+.lc-act.is-checkfirst + .lc-act, .lc-act + .lc-act.is-checkfirst { border-top-color: transparent; }
 .lc-act-check {
     width: 16px; height: 16px; margin-top: 2px; padding: 0; border-radius: 4px; cursor: pointer;
     border: 1.5px solid var(--lc-line-2); background: var(--lc-surface); color: var(--lc-navy-ink);
@@ -238,6 +242,9 @@
 .lc-act-next { margin: 1px 0 0; font-size: 12px; line-height: 1.35; color: var(--lc-ink-3); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .lc-act-flag { margin: 2px 0 0; font-size: 12px; line-height: 1.35; font-weight: 500; color: var(--lc-red-ink); }
 .lc-act-flag svg { width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px; }
+.lc-act-checkfirst { margin: 2px 0 0; font-size: 12px; line-height: 1.35; font-weight: 500; color: var(--lc-amber-ink); }
+.lc-act-checkfirst b { font-weight: 650; }
+.lc-act-checkfirst svg { width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px; }
 .lc-act-state { margin-left: 4px; font-size: 11px; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; color: var(--lc-ink-3); text-decoration: none; display: inline-block; }
 .lc-act-btns { display: flex; align-items: center; gap: 2px; }
 .lc-act-btns .lc-btn { white-space: nowrap; }
@@ -388,6 +395,34 @@
 .lc-consider li { color: var(--lc-amber-ink); }
 .lc-consider b { font-size: 11px; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; margin-right: 4px; }
 .lc-plan-empty { margin: 3px 0 0 26px; font-size: 12px; color: var(--lc-ink-3); }
+/* The doctor edits the note in place: a part shows it can be clicked; the box keeps the text's own size. */
+.lc-editable { cursor: text; border-radius: 4px; transition: background-color 120ms var(--lc-ease), box-shadow 120ms var(--lc-ease); }
+.lc-editable:hover { background: var(--lc-sunken); box-shadow: 0 0 0 3px var(--lc-sunken); }
+.lc-editable:focus-visible { outline: 2px solid var(--lc-blue); outline-offset: 2px; }
+.lc-problem-title.lc-editable:hover { box-shadow: 0 0 0 2px var(--lc-sunken); }
+.lc-note-editor { margin: 4px 0 6px; }
+.lc-note-editor.is-problem { margin-left: 26px; }
+.lc-problem-name + .lc-note-editor.is-problem { margin-top: 4px; }
+.lc-note-input {
+    display: block; width: 100%; box-sizing: border-box; padding: 6px 8px; resize: vertical;
+    font: inherit; font-size: 13.5px; line-height: 1.45; color: var(--lc-ink);
+    background: var(--lc-surface); border: 1.5px solid var(--lc-blue); border-radius: 6px;
+}
+.lc-note-input:focus { outline: none; box-shadow: 0 0 0 3px oklch(0.50 0.13 255 / 0.15); }
+.lc-note-editor-btns { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 6px; }
+.lc-note-editor-hint { font-size: 11.5px; color: var(--lc-ink-3); }
+.lc-mine { margin: 3px 0 0; font-size: 11.5px; color: var(--lc-ink-3); }
+.lc-problem .lc-mine { margin-left: 26px; }
+/* A "consider" item is a button: one click adds it to the plan and opens its order. */
+.lc-consider-btn {
+    display: flex; align-items: baseline; gap: 4px; width: calc(100% + 8px); margin: 0 -4px; padding: 2px 4px;
+    border: 0; border-radius: 4px; background: none; cursor: pointer; text-align: left; font: inherit; color: inherit;
+}
+.lc-consider-btn:hover { background: var(--lc-amber-bg); }
+.lc-consider-btn:focus-visible { outline: 2px solid var(--lc-blue); outline-offset: 1px; }
+.lc-consider-text { min-width: 0; }
+.lc-consider-go { flex: none; margin-left: auto; padding-left: 8px; font-size: 11.5px; font-weight: 600; color: var(--lc-blue); opacity: 0.7; }
+.lc-consider-btn:hover .lc-consider-go, .lc-consider-btn:focus-visible .lc-consider-go { opacity: 1; text-decoration: underline; }
 /* The physical exam: by system as dictated; what was just dictated shows at once ("Adding"). */
 .lc-exam-head { display: flex; align-items: center; gap: 8px; min-height: 26px; margin-bottom: 2px; }
 .lc-exam-head h4 { margin: 0; }

@@ -104,8 +104,14 @@
             facts: [],            // {id, t, text, kind, from, line}
             thinking: [],         // doctor's reasoning: {t, text}
             plan: [],             // {id, t, text, kind, line, from?, radar?}
-            actions: [],          // "On my radar": {id, t, kind, title, orderType, fields, to, noteType, draft, next, status, flag, alert, line, statusBy}
+            actions: [],          // "On my radar": {id, t, kind, title, orderType, fields, to, noteType, draft, next, status, flag, flagLevel, alert, line, statusBy}
             take: null,           // brain's current take + t
+            takes: [],            // each version of the take, and what was new since the one before:
+                                  // {n, t, why, take, facts[], thinking[], plan[], said[]} (the first and the latest 39)
+            notePRs: [],          // the live note's problem representation each time it changed: {t, text}
+            noteRaw: null,        // the scribe's own version; wm.note is this with the doctor's edits laid over it
+            noteEdits: { pr: null, hpi: null, problems: [] },   // what the doctor wrote: kept over every rewrite
+                                  // problems: {key, name, assessment, plan, removed[], added[]} (null = the scribe's)
             watch: [],            // tripwires for the ear
             said: [],             // {id, t, kind, topic, text, why, latencyMs, cueLine}
             held: [],             // thoughts kept for when asked: {t, topic, text, why, kind}
@@ -193,7 +199,7 @@
         }
 
         // ── working memory renderings ────────────────────────────────────
-        const lineText = (l) => l.id + ' [' + mmss(l.t) + '] ' + l.speaker.toUpperCase() + (l.dictation === 'exam' ? ' (dictating the exam)' : '') + ': ' + l.text;
+        const lineText = (l) => l.id + ' [' + mmss(l.t) + '] ' + l.speaker.toUpperCase() + (l.dictation === 'exam' ? ' (dictating the exam)' : l.via === 'note' ? ' (in the note)' : '') + ': ' + l.text;
 
         function renderForEar(newLines) {
             const newIds = new Set(newLines.map((l) => l.id));
@@ -231,7 +237,7 @@
             ];
             // The doctor's to-do list, so "what do I still need to order?" has an answer.
             if (wm.actions.length) {
-                const st = (a) => (a.status === 'todo' ? 'to do' + (a.flag ? ', flagged: ' + a.flag : '') : a.status === 'done' ? 'done' : 'removed');
+                const st = (a) => (a.status === 'todo' ? 'to do' + (a.flag ? (a.flagLevel === 'check' ? ', check first: ' : ', flagged: ') + a.flag : '') : a.status === 'done' ? 'done' : 'removed');
                 out.push('ON THE DOCTOR\'S RADAR (what the doctor asked for, ready to sign; the doctor sees this list):');
                 out.push(wm.actions.filter((a) => a.status !== 'dropped').slice(-25).map((a) => '- [' + st(a) + '] ' + a.kind + ': ' + a.title).join('\n') || '- (nothing open)');
             }
@@ -705,6 +711,19 @@
         function applyTake(out, why) {
             if (out.take) {
                 wm.take = Object.assign({}, out.take, { t: elapsed(), why });
+                // Its picture of the patient over time: each version, with what it heard, the doctor's
+                // thinking, the plan and its own alerts since the version before.
+                const since = wm.takes.length ? wm.takes[wm.takes.length - 1].t : -1;
+                const after = (list, n) => list.filter((x) => x.t > since).slice(-n);
+                wm.takes.push({
+                    n: wm.takes.length ? wm.takes[wm.takes.length - 1].n + 1 : 1, t: wm.take.t, why,
+                    take: JSON.parse(JSON.stringify(out.take)),
+                    facts: after(wm.facts, 14).map((f) => ({ id: f.id, t: f.t, text: f.text, kind: f.kind })),
+                    thinking: after(wm.thinking, 6).map((x) => ({ t: x.t, text: x.text })),
+                    plan: after(wm.plan, 8).map((x) => ({ t: x.t, text: x.text, kind: x.kind })),
+                    said: after(wm.said, 6).filter((x) => x.kind !== 'answer').map((x) => ({ id: x.id, t: x.t, kind: x.kind, text: x.text })),
+                });
+                if (wm.takes.length > 40) wm.takes.splice(1, 1);   // keep the first and the latest
                 emit('take', wm.take);
                 scheduleNote(why === 'prime' ? 0 : null);
             }
@@ -791,7 +810,108 @@
                 '<plan_heard>' + (wm.plan.length ? wm.plan.map((x) => '[' + x.kind + '] ' + x.text).join(' | ') : '(none yet)') + '</plan_heard>',
                 '<coworker_take>' + (t ? [t.assessment, (t.concerns || []).map((c) => c.text).join('; '), (t.next || []).join('; ')].filter(Boolean).join(' || ') : '(none yet)') + '</coworker_take>',
                 '<previous_note>' + (wm.note ? JSON.stringify({ problem_representation: wm.note.problem_representation, hpi: wm.note.hpi, exam: wm.note.exam, problems: wm.note.problems }) : '(none yet)') + '</previous_note>',
+                '<doctor_edits>' + (editsText() || '(none)') + '</doctor_edits>',
             ].join('\n');
+        }
+        /** What the doctor wrote in the note, for the scribe (it keeps the rest consistent; code keeps these as written). */
+        function editsText() {
+            const e = wm.noteEdits, out = [];
+            if (e.pr != null) out.push('Problem representation (the doctor\'s): ' + e.pr);
+            if (e.hpi != null) out.push('HPI (the doctor\'s): ' + e.hpi);
+            for (const pe of e.problems) {
+                const name = pe.name || pe.key;
+                if (pe.name != null) out.push('Problem renamed by the doctor: ' + pe.name);
+                if (pe.assessment != null) out.push(name + ', assessment (the doctor\'s): ' + pe.assessment);
+                if (pe.plan != null) out.push(name + ', plan (the doctor\'s): ' + (pe.plan.join('; ') || '(empty)'));
+                if (pe.removed.length) out.push(name + ', taken out of the plan by the doctor (do not put back): ' + pe.removed.join('; '));
+                if (pe.added.length) out.push(name + ', added to the plan by the doctor from your suggestions: ' + pe.added.join('; '));
+            }
+            return out.join('\n');
+        }
+        const sameItem = (a, b) => normText(a) === normText(b) || overlap(a, b) >= 0.8;
+        const hasItem = (list, x) => (list || []).some((y) => sameItem(x, y));
+        /** The doctor's edits win: laid over each version the scribe writes. */
+        function withEdits(raw) {
+            const e = wm.noteEdits;
+            const note = Object.assign({}, raw, { edited: { pr: e.pr != null, hpi: e.hpi != null, problems: {} } });
+            if (e.pr != null) note.problem_representation = e.pr;
+            if (e.hpi != null) note.hpi = e.hpi;
+            const problems = (raw.problems || []).map((p) => Object.assign({}, p, { plan: (p.plan || []).slice(), consider: (p.consider || []).slice() }));
+            for (const pe of e.problems) {
+                let p = problems.find((x) => normText(x.name) === pe.key || (pe.name && normText(x.name) === normText(pe.name)));
+                if (!p) { p = { name: pe.name || pe.key, assessment: '', plan: [], consider: [] }; problems.push(p); }   // the scribe dropped it; the doctor's stays
+                if (pe.name != null) p.name = pe.name;
+                if (pe.assessment != null) p.assessment = pe.assessment;
+                // A plan the doctor edited is theirs; what is said later still comes in, what they took out stays out.
+                const base = pe.plan != null ? pe.plan.slice() : p.plan.filter((x) => !hasItem(pe.removed, x));
+                const later = pe.plan != null ? p.plan.filter((x) => !hasItem(pe.plan, x) && !hasItem(pe.removed, x)) : [];
+                const plan = base.concat(later);
+                for (const x of pe.added) if (!hasItem(plan, x)) plan.push(x);
+                p.plan = plan.slice(0, 12);
+                p.consider = p.consider.filter((x) => !hasItem(pe.added, x) && !hasItem(p.plan, x));
+                note.edited.problems[normText(p.name)] = { name: pe.name != null, assessment: pe.assessment != null, plan: pe.plan != null };
+            }
+            note.problems = problems;
+            return note;
+        }
+        function refreshNote() {
+            if (!wm.noteRaw) return;
+            wm.note = Object.assign(withEdits(wm.noteRaw), { t: wm.noteRaw.t, upToLine: wm.noteRaw.upToLine });
+            emit('note', wm.note);
+            touch();
+        }
+        function problemEdit(name, create) {
+            const k = normText(name);
+            let pe = wm.noteEdits.problems.find((x) => x.key === k || (x.name && normText(x.name) === k));
+            if (!pe && create && k) { pe = { key: k, name: null, assessment: null, plan: null, removed: [], added: [] }; wm.noteEdits.problems.push(pe); }
+            return pe || null;
+        }
+        /**
+         * The doctor edited part of the note ("pr", "hpi", or a problem's "name", "assessment" or "plan"):
+         * it stays theirs over every rewrite. value null hands it back to the scribe.
+         */
+        function editNote(part, value, problem) {
+            const text = (v, n) => (v == null ? null : clip(String(v).trim(), n));
+            if (part === 'pr' || part === 'hpi') wm.noteEdits[part] = text(value, 1500);
+            else if (part === 'name' || part === 'assessment') {
+                const pe = problemEdit(problem, value != null);
+                if (pe) pe[part] = part === 'name' && value != null && !String(value).trim() ? null : text(value, part === 'name' ? 80 : 500);
+            } else if (part === 'plan') {
+                const pe = problemEdit(problem, value != null);
+                if (pe) {
+                    const list = value == null ? null : (Array.isArray(value) ? value : String(value).split('\n'))
+                        .map((x) => clip(String(x).replace(/^\s*(?:[-•*]|\d{1,2}[.)])\s+/, '').trim(), 160)).filter(Boolean).slice(0, 12);
+                    const shown = ((wm.note && wm.note.problems) || []).find((x) => normText(x.name) === normText(problem) || normText(x.name) === normText(pe.name || pe.key));
+                    pe.removed = list == null ? [] : pe.removed.concat(((shown && shown.plan) || []).filter((x) => !hasItem(list, x) && !hasItem(pe.removed, x)));
+                    pe.added = list == null ? pe.added : pe.added.filter((x) => hasItem(list, x));
+                    pe.plan = list;
+                }
+            } else return null;
+            refreshNote();
+            return wm.note;
+        }
+        /**
+         * The doctor took up one of the note's "consider" items: it goes into that problem's plan, into the
+         * conversation as the doctor's (so the scribe, the brain and the radar's checks see it), and onto the
+         * radar at once. Returns the new line's id (the radar's items cite it).
+         */
+        function acceptSuggestion(problem, suggestion) {
+            const what = clip(String(suggestion || '').trim(), 200);
+            if (!what) return null;
+            const pe = problemEdit(problem, true);
+            if (pe && !hasItem(pe.added, what)) pe.added.push(what);
+            refreshNote();
+            if (wm.startedAt == null) wm.startedAt = clock.now();
+            const line = { id: 'L' + (++lineSeq), t: elapsed(), speaker: 'doctor', text: 'Add to the plan' + (problem ? ' for ' + clip(problem, 60) : '') + ': ' + what, via: 'note' };
+            wm.lines.push(line);
+            emit('line', line);
+            wm.plan.push({ id: 'P' + (++planSeq), t: elapsed(), text: what, kind: 'order', line: line.id, from: 'note' });
+            emit('actions', wm.actions);   // shown at once as "heard"
+            markDirty();
+            touch();
+            scheduleActions(0);
+            scheduleNote();
+            return line.id;
         }
         /** Rewrite the note after delayMs (default: a few seconds), at most once per gapMs; a sooner request moves the rewrite up. */
         function scheduleNote(delayMs, gapMs) {
@@ -836,7 +956,13 @@
                     systems: (Array.isArray(ex.systems) ? ex.systems : []).filter((x) => x && x.system && x.findings)
                         .slice(0, 14).map((x) => ({ system: clip(String(x.system).trim(), 30), findings: clip(String(x.findings).trim(), 400) })),
                 };
-                wm.note = { problem_representation: out.problem_representation, hpi: out.hpi || '', exam, problems, t: elapsed(), upToLine };
+                wm.noteRaw = { problem_representation: out.problem_representation, hpi: out.hpi || '', exam, problems, t: elapsed(), upToLine };
+                wm.note = Object.assign(withEdits(wm.noteRaw), { t: wm.noteRaw.t, upToLine });
+                const lastPR = wm.notePRs.length ? wm.notePRs[wm.notePRs.length - 1].text : '';
+                if (out.problem_representation && normText(out.problem_representation) !== normText(lastPR)) {
+                    wm.notePRs.push({ t: wm.note.t, text: String(out.problem_representation) });
+                    if (wm.notePRs.length > 40) wm.notePRs.splice(1, 1);
+                }
                 emit('note', wm.note);
             })().catch(() => { /* logged in modelCall */ })
                 .finally(() => {
@@ -864,7 +990,7 @@
         }
         const BY = { doctor: 'set by the doctor', ehr: 'placed in the EHR', sent: 'message sent', saved: 'note saved' };
         const actionLine = (a) => a.id + ' [' + a.status + (a.statusBy !== 'model' ? ' (' + (BY[a.statusBy] || a.statusBy) + ')' : '')
-            + (a.flag ? ', flag: ' + a.flag + (a.alert ? ' (' + a.alert + ')' : '') : '') + '] ' + a.kind + (a.orderType ? ' (' + a.orderType + ')' : '') + ': ' + a.title + (a.line ? ' · said ' + a.line : '') + (a.next ? ' · next: ' + a.next : '');
+            + (a.flag ? (a.flagLevel === 'check' ? ', check first: ' : ', flag: ') + a.flag + (a.alert ? ' (' + a.alert + ')' : '') : '') + '] ' + a.kind + (a.orderType ? ' (' + a.orderType + ')' : '') + ': ' + a.title + (a.line ? ' · said ' + a.line : '') + (a.next ? ' · next: ' + a.next : '');
         function renderForActions(newPlan) {
             const alerts = openAlerts();
             const said = wm.said.slice(-8);
@@ -998,7 +1124,7 @@
                 }
                 if (!a) {
                     if (!title) continue;
-                    a = { id: 'A' + (++actionSeq), t: elapsed(), batch: batch || 0, kind: c.kind, title, orderType: '', fields: {}, to: '', noteType: '', draft: '', next: '', status: 'todo', flag: '', alert: '', line: '', statusBy: 'model' };
+                    a = { id: 'A' + (++actionSeq), t: elapsed(), batch: batch || 0, kind: c.kind, title, orderType: '', fields: {}, to: '', noteType: '', draft: '', next: '', status: 'todo', flag: '', flagLevel: '', alert: '', line: '', statusBy: 'model' };
                     wm.actions.push(a);
                 }
                 const retitled = !!title && normText(title) !== normText(a.title);
@@ -1019,11 +1145,17 @@
                 if (c.draft) a.draft = clip(String(c.draft).trim(), 800);
                 if (c.next) a.next = clip(String(c.next).trim(), 140);
                 // A safety flag stays until the order itself changes (a new title) or it is done or dropped.
+                // Two levels: "stop" (do not give it as it is; left out of "Review all") and "check" (it can go
+                // ahead once something is checked first; signed with the rest, the check shown). No level means stop.
                 if (c.flag) {
-                    a.flag = clip(String(c.flag).replace(/\s*\((?:S\d+[,\s]*)+\)/g, '').trim(), 120);   // the alert id goes in its own field
-                    a.alert = c.alert && wm.said.some((s) => s.id === c.alert) ? c.alert : '';
-                } else if (retitled) { a.flag = ''; a.alert = ''; }
-                if (a.flag && alertAgreesWithHold(a)) { a.flag = ''; a.alert = ''; }
+                    const alert = c.alert && wm.said.some((s) => s.id === c.alert) ? c.alert : '';
+                    const level = c.flag_level === 'check' ? 'check' : 'stop';
+                    // A red flag never turns amber for the same alert: a routine reply must not soften it.
+                    a.flagLevel = a.flag && a.flagLevel === 'stop' && level === 'check' && alert && alert === a.alert ? 'stop' : level;
+                    a.flag = clip(String(c.flag).replace(/\s*\((?:S\d+[,\s]*)+\)/g, '').replace(/^check(?: first)?:\s*/i, '').trim(), 120);   // the alert id goes in its own field
+                    a.alert = alert;
+                } else if (retitled) { a.flag = ''; a.flagLevel = ''; a.alert = ''; }
+                if (a.flag && alertAgreesWithHold(a)) { a.flag = ''; a.flagLevel = ''; a.alert = ''; }
                 if (c.line && wm.lines.some((l) => l.id === c.line)) a.line = c.line;
                 // "done" needs an order seen in the EHR; the doctor's own tick (or the EHR's) stands unless the model saw it placed.
                 const placed = c.status === 'done' && wm.lines.some((l) => l.speaker === 'ehr');
@@ -1183,7 +1315,7 @@
         }
 
         return {
-            on, hear, ask, tell, order, ack, start, stop, update, prime, note: writeNote, actions: writeActions, setActionStatus, idle, stats, setMode, setBrainModel, setSpeed,
+            on, hear, ask, tell, order, ack, start, stop, update, prime, note: writeNote, editNote, acceptSuggestion, actions: writeActions, setActionStatus, idle, stats, setMode, setBrainModel, setSpeed,
             wm, cfg, calls, renderForBrain, renderForEar, renderForActions, patientHeader,
             get running() { return running; },
             get elapsed() { return elapsed(); },
