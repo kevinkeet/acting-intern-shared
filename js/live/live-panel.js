@@ -815,6 +815,12 @@
             if (N.live._lcHtml !== live) { N.live.innerHTML = live; N.live._lcHtml = live; }
         },
 
+        /** Bring the exam section into view (only as far as needed). */
+        showExam() {
+            const sec = this.refs.noteParts && this.refs.noteParts.ctl.closest('.lc-exam');
+            if (sec && sec.scrollIntoView) sec.scrollIntoView({ block: 'nearest' });
+        },
+
         /** Live caption while the exam is dictated (several times a second; touches one line). */
         setExamInterim(text) {
             this._examInterim = text || '';

@@ -301,7 +301,7 @@
                 v.lines.push({ id: l.id, t: l.t, speaker: l.speaker, label: display, text: l.text.replace(/^\((wife|nurse)\)\s*/i, ''), dictation: l.dictation, typed: !!l.typed });
                 this._pendingLabel = null;
                 v.interim = null;
-                if (l.dictation) { LivePanel.setExamInterim(''); this.request('note'); }
+                if (l.dictation) { LivePanel.setExamInterim(''); this.request('note'); if (LivePanel.tab === 'note' || v.wide) setTimeout(() => LivePanel.showExam(), 150); }
                 if (v.startedAt == null) v.startedAt = Date.now() - l.t;
                 this.request('transcript');
             });
@@ -481,6 +481,7 @@
             this.dictating = 'exam';
             LivePanel.showTab('note');
             this.request('note', 'head');
+            setTimeout(() => LivePanel.showExam(), 150);
             if (!this._mic) {
                 if (!this.encounter) this.encounter = { state: 'live', kind: 'mic', startedWall: Date.now(), endedWall: null };
                 else { this.encounter.state = 'live'; this.encounter.endedWall = null; }

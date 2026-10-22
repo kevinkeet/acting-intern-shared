@@ -50,10 +50,25 @@ side-by-side tests.
 
 A scribe (Haiku 5.5, thinking off) keeps a short admission note current: a
 problem representation (two or three sentences with the key qualifiers), the HPI
-as told so far, and assessment and plan by problem (the doctor's plan; the
-coworker's suggestions only as "consider"). It is rewritten a few seconds after
-new speech, at most every 12 s, after each take update and at the end of the
-encounter; new or changed sentences light up briefly. About $0.002 per rewrite.
+as told so far, the physical exam, and assessment and plan by problem (the
+doctor's plan; the coworker's suggestions only as "consider"). It is rewritten a
+few seconds after new speech, at most every 12 s, after each take update and at
+the end of the encounter; new or changed sentences light up briefly. About
+$0.002 per rewrite.
+
+The physical exam has its own space in the Note tab: vitals said aloud (by
+anyone, or read off the monitor) and the findings by system, only what was said
+(no normal findings filled in; a correction replaces what it corrects). Three
+ways in:
+- Just say it while examining, or after ("For my note: JVP to the angle of the jaw…").
+- **Dictate exam**: the mic comes on (the same encounter and note, even after
+  "End encounter") and the doctor's words are marked as exam dictation until
+  **Done**; the patient's are not. A live caption shows what it is hearing, and
+  each finding shows at once as "Adding" until the note files it under its
+  system (the note catches up 1.5 s after dictation, at most every 5 s). Not in
+  the demo, which is a recording.
+- Type a finding in the box under the exam ("Lungs: crackles at both bases").
+Copy note and the H&P draft (On my radar) include the exam.
 
 ## On my radar
 
