@@ -46,7 +46,7 @@
         init() {
             if (this._inited) return;
             this._inited = true;
-            this.settings = Object.assign({ brain: 'claude-sonnet-5-5', mode: null, fast: false, source: 'room', chime: true, speakAloud: false, voice: '', glasses: false, replaySpeed: 2, classic: false }, this._load());
+            this.settings = Object.assign({ brain: 'claude-sonnet-5-5', mode: null, fast: false, source: 'room', chime: true, speakAloud: false, voice: '', glasses: false, replaySpeed: 2, classic: false, radarOpen: null }, this._load());
             if (!this.settings.mode) {
                 let old = null;
                 try { old = typeof AIModeConfig !== 'undefined' && AIModeConfig.getMode && AIModeConfig.getMode(); } catch (e) { /* ignore */ }
@@ -79,6 +79,7 @@
                 take: null, takeLoading: false, takeOpen: false, alerts: [], said: [], streaming: {}, held: [], heldOpen: false,
                 wm: null, lines: [], interim: null, stats: null, calls: [], replay: null, settings: this.settings,
                 memoryNote: '', deepgram: false, startedAt: null, note: null, noteWriting: false,
+                actions: [], pendingPlan: [],
             };
         },
 
@@ -107,20 +108,54 @@
             }
             // Orders placed in the EHR (typed or dictated) get the same safety check
             // as spoken ones. trackOrder runs only for orders that actually go through.
+            // An order signed from a radar item's form ticks that item off (the form
+            // still holds the very values object the item filled in).
             if (typeof SimulationScoreTracker !== 'undefined' && SimulationScoreTracker.trackOrder && !SimulationScoreTracker._liveWrapped) {
                 const origTrack = SimulationScoreTracker.trackOrder;
                 SimulationScoreTracker.trackOrder = function (order) {
                     const r = origTrack.apply(this, arguments);
                     try {
                         if (LiveApp.enabled && LiveApp.engine && order) {
+                            const f = LiveApp._actionForm;
+                            const actionId = f && typeof OrderEntry !== 'undefined' && OrderEntry.formData === f.formData ? f.id : null;
+                            if (actionId) LiveApp._actionForm = null;
                             if (!LiveApp.engine.running) LiveApp.onPanelOpen();
                             LiveApp._pendingLabel = 'EHR order';
-                            LiveApp.engine.order({ name: order.name, details: order.details, priority: order.priority, category: order.category });
+                            LiveApp.engine.order({ name: order.name, details: order.details, priority: order.priority, category: order.category, actionId });
+                            // "Review all orders": the next one opens once this form has closed.
+                            if (actionId && LiveApp._queue) setTimeout(() => LiveApp._nextInQueue(), 450);
                         }
                     } catch (e) { console.warn('Live Coworker order hook:', e); }
                     return r;
                 };
                 SimulationScoreTracker._liveWrapped = true;
+            }
+            // A message sent to the nurse, or a note saved to the chart, from a radar item ticks it off.
+            if (typeof NurseChat !== 'undefined' && NurseChat.sendMessage && !NurseChat._liveWrapped) {
+                const origSend = NurseChat.sendMessage;
+                NurseChat.sendMessage = function () {
+                    try {
+                        const m = LiveApp._actionMsg;
+                        const input = document.getElementById('nurse-input');
+                        const text = input ? input.value : '';
+                        if (m && text && LiveApp.engine && LiveCore._overlap(text, m.text) >= 0.5) { LiveApp.engine.setActionStatus(m.id, 'done', 'sent'); LiveApp._actionMsg = null; }
+                    } catch (e) { console.warn('Live Coworker message hook:', e); }
+                    return origSend.apply(this, arguments);
+                };
+                NurseChat._liveWrapped = true;
+            }
+            if (typeof AICoworker !== 'undefined' && AICoworker.saveNoteToEHR && !AICoworker._liveNoteWrapped) {
+                const origSave = AICoworker.saveNoteToEHR;
+                AICoworker.saveNoteToEHR = function (type) {
+                    const r = origSave.apply(this, arguments);
+                    try {
+                        const n = LiveApp._actionNote;
+                        const modal = document.getElementById('ai-note-editor-modal');
+                        if (n && type === n.type && !(modal && modal.classList.contains('visible')) && LiveApp.engine) { LiveApp.engine.setActionStatus(n.id, 'done', 'saved'); LiveApp._actionNote = null; }
+                    } catch (e) { console.warn('Live Coworker note hook:', e); }
+                    return r;
+                };
+                AICoworker._liveNoteWrapped = true;
             }
             window.addEventListener('patient:loaded', (ev) => {
                 const id = ev && ev.detail && ev.detail.patientId;
@@ -165,6 +200,7 @@
             this.chart = null;
             this.memory = null;
             this.encounter = null;
+            this._queue = this._actionForm = this._actionMsg = this._actionNote = null;
             this.view = Object.assign(this._freshView(), { deepgram: this.view.deepgram });
             this.renderAll();
             try {
@@ -300,6 +336,12 @@
             // The live note: problem representation, HPI, assessment and plan, rewritten as people talk.
             cw.on('thinking', (p) => { if (p.lane === 'note') { v.noteWriting = true; this.request('note'); } });
             cw.on('note', (n) => { v.note = Object.assign({}, n, { wallAt: Date.now() }); v.noteWriting = false; this.request('note', 'take'); });
+            // On my radar: the doctor's orders and to-dos, plus what was just heard and is being got ready.
+            cw.on('actions', (list) => {
+                v.actions = list.map((a) => Object.assign({}, a, { fields: Object.assign({}, a.fields), needs: this._formNeeds(a) }));
+                v.pendingPlan = cw.wm.plan.filter((p) => p.radar !== true && p.kind !== 'cancel' && p.from !== 'ehr').map((p) => ({ id: p.id, t: p.t, text: p.text, kind: p.kind, line: p.line, failed: p.radar === 'failed' }));
+                this.request('radar', 'transcript');
+            });
         },
 
         _panelVisible() {
@@ -355,14 +397,111 @@
             this.request('head');
         },
 
-        copyNote() {
+        _noteText() {
             const n = this.view.note;
-            if (!n) return;
-            const text = ['Problem representation', n.problem_representation, '', 'HPI', n.hpi || '(none yet)', '', 'Assessment and plan']
+            if (!n) return '';
+            return ['Problem representation', n.problem_representation, '', 'HPI', n.hpi || '(none yet)', '', 'Assessment and plan']
                 .concat((n.problems || []).map((p, i) => [(i + 1) + '. ' + p.name + (p.assessment ? ': ' + p.assessment : '')].concat(p.plan.map((x) => '   - ' + x)).join('\n')))
                 .join('\n');
-            const done = () => this._flash('Note copied.');
-            try { navigator.clipboard.writeText(text).then(done, () => this._flash('Could not copy (the browser blocked it).')); } catch (err) { this._flash('Could not copy.'); }
+        },
+
+        copyNote() {
+            if (!this.view.note) return;
+            this._copy(this._noteText(), 'Note copied.');
+        },
+
+        _copy(text, ok) {
+            const fail = () => this._flash('Could not copy (the browser blocked it).');
+            try { navigator.clipboard.writeText(text).then(() => this._flash(ok || 'Copied.'), fail); } catch (err) { fail(); }
+        },
+
+        // ── on my radar: one click to act on what the doctor asked for ───
+        _action(id) { return (this.view.actions || []).find((a) => a.id === id) || null; },
+
+        /** The item's main button: the order form filled in, the nurse chat with the message typed, or the note draft. */
+        openAction(id) {
+            const a = this._action(id);
+            if (!a || !this.engine) return;
+            this._queue = null;
+            if (a.kind === 'order' || a.kind === 'consult') return this._openOrder(a);
+            if (a.kind === 'message' && /nurse/i.test(a.to || '')) return this._messageNurse(a);
+            if (a.kind === 'note') return this._openNote(a);
+            if (a.draft) return this._copy(a.draft, 'Copied. Paste it where it goes.');
+            return undefined;
+        },
+
+        /** For an order or consult: the order form's required fields the item leaves empty ("dose", "frequency"). */
+        _formNeeds(a) {
+            if (a.kind !== 'order' && a.kind !== 'consult') return null;
+            const type = a.kind === 'consult' ? 'consult' : a.orderType;
+            const cfg = typeof OrderEntry !== 'undefined' && OrderEntry.orderTypes && type ? OrderEntry.orderTypes[type] : null;
+            if (!cfg) return null;
+            const form = LiveCore.toOrderForm(cfg.fields, a.fields);
+            const WORD = { 'Medication Name': 'drug', 'Lab Panel/Test': 'test', 'Specimen Type': 'specimen', 'Clinical Indication': 'indication', 'Body Part/Region': 'body part', 'Procedure Name': 'procedure', 'Reason for Consult': 'reason', 'Order Type': 'order type', 'Order Details': 'details' };
+            return cfg.fields.filter((f) => f.required && !form[f.name]).map((f) => WORD[f.label] || String(f.label).toLowerCase());
+        },
+
+        _openOrder(a, more) {
+            if (typeof OrderEntry === 'undefined' || !OrderEntry.openWithPrefill) { this._flash('The order form is not available on this page.'); return; }
+            const type = a.kind === 'consult' ? 'consult' : a.orderType;
+            const cfg = type && OrderEntry.orderTypes && OrderEntry.orderTypes[type];
+            if (!cfg) { OrderEntry.open(); this._actionForm = null; return; }
+            OrderEntry.openWithPrefill(type, LiveCore.toOrderForm(cfg.fields, a.fields));
+            this._actionForm = { id: a.id, formData: OrderEntry.formData, type };
+            // Say where the form came from (and, in "Review all", how many are left).
+            const title = document.querySelector('#order-entry-modal .order-entry-title');
+            if (title) title.innerHTML = 'New Order <span style="font-size:12px;color:#c9dcf0;font-weight:normal;margin-left:6px;">From the coworker\'s radar' + (more ? ' · ' + more + ' more after this' : '') + '</span>';
+        },
+
+        _messageNurse(a) {
+            const text = a.draft || a.title;
+            if (typeof FloatingChat === 'undefined' || !FloatingChat.openChat) { this._copy(text, 'Copied. Paste it to the nurse.'); return; }
+            FloatingChat.openChat('nurse');
+            this._actionMsg = { id: a.id, text };
+            setTimeout(() => {
+                const input = document.getElementById('nurse-input');
+                if (!input) return;
+                input.value = text;
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+                input.focus();
+            }, 60);
+        },
+
+        _openNote(a) {
+            const type = a.noteType || 'Note';
+            // An admission note starts from the live note; any other from the radar's short draft.
+            const content = /h\s*&\s*p|admission|history and physical/i.test(type) && this.view.note ? this._noteText() : (a.draft || '');
+            if (typeof AICoworker === 'undefined' || !AICoworker.openNoteEditor) { this._copy(content || a.title, 'Copied the draft.'); return; }
+            AICoworker.openNoteEditor(type, content);
+            this._actionNote = { id: a.id, type };
+        },
+
+        /** "Review all orders": the order forms one after another; each signed one opens the next. */
+        reviewOrders() {
+            const ready = (this.view.actions || []).filter((a) => a.status === 'todo' && !a.flag && ((a.kind === 'order' && a.orderType) || a.kind === 'consult'));
+            if (!ready.length) return;
+            this._queue = ready.sort((x, y) => x.t - y.t || x.id.localeCompare(y.id, undefined, { numeric: true })).map((a) => a.id);
+            this._nextInQueue();
+        },
+
+        _nextInQueue() {
+            const q = this._queue;
+            while (q && q.length) {
+                const a = this._action(q.shift());
+                if (a && a.status === 'todo') { this._openOrder(a, q.length); if (!q.length) this._queue = null; return; }
+            }
+            this._queue = null;
+        },
+
+        _actionClick(id, verb) {
+            const a = this._action(id);
+            if (!a || !this.engine) return;
+            if (verb === 'open') {
+                try { this.openAction(id); } catch (e) { console.warn('Live Coworker radar:', e); this._flash('Could not open that here. The details are on the radar.'); }
+            }
+            else if (verb === 'copy') this._copy(a.draft || a.title, 'Copied. Paste it where it goes.');
+            else if (verb === 'toggle') this.engine.setActionStatus(id, a.status === 'todo' ? 'done' : 'todo', 'doctor');
+            else if (verb === 'drop') this.engine.setActionStatus(id, 'dropped', 'doctor');
         },
 
         /** Side by side: widen the AI panel so the conversation and the note sit in two columns. */
@@ -386,6 +525,7 @@
             this.stopListening();
             if (typeof LiveVoice !== 'undefined') LiveVoice.stop();
             if (!clock) this._stopReplay();
+            this._queue = this._actionForm = this._actionMsg = this._actionNote = null;
             const keep = { deepgram: this.view.deepgram, memoryNote: this.view.memoryNote };
             this.view = Object.assign(this._freshView(), keep);
             if (!this.chart) return null;
@@ -420,6 +560,11 @@
                 onSetting: (name, value) => this.setSetting(name, value),
                 onOpenSettings: () => this.request('settings'),
                 onVoiceTest: () => { if (typeof LiveVoice === 'undefined') return; this._applyVoice(); LiveVoice.stop(); LiveVoice.say('Safety. Hold the heparin drip: black stools and hemoglobin 10.2.', { urgent: true }); },
+                onAction: (id, verb) => this._actionClick(id, verb),
+                onReviewOrders: () => this.reviewOrders(),
+                onRadarToggle: (open) => { this.settings.radarOpen = open; this._save(); this.request('radar'); },
+                onRerenderRadar: () => this.request('radar'),
+                onRadarRetry: () => { if (this.engine) this.engine.actions(); },
                 onTab: () => {},
             };
         },
@@ -811,7 +956,7 @@
             this._raf = { frame: requestAnimationFrame(run), timer: setTimeout(run, 120) };
         },
 
-        renderAll() { this.request('head', 'replay', 'alerts', 'take', 'said', 'note', 'tracking', 'transcript', 'log', 'settings'); },
+        renderAll() { this.request('head', 'replay', 'alerts', 'radar', 'take', 'said', 'note', 'tracking', 'transcript', 'log', 'settings'); },
 
         _render(q) {
             if (!LivePanel.el || !this.enabled) return;
@@ -832,6 +977,7 @@
                 if (q.has('note')) LivePanel.renderNote(v);
                 if (q.has('replay')) LivePanel.renderReplay(v);
                 if (q.has('alerts')) LivePanel.renderAlerts(v);
+                if (q.has('radar')) LivePanel.renderRadar(v);
                 if (q.has('take')) LivePanel.renderTake(v);
                 if (q.has('said') || q.has('transcript')) LivePanel.renderConversation(v);
                 if (q.has('tracking')) LivePanel.renderTracking(v);

@@ -186,6 +186,69 @@
 .lc-alert-line time { flex: none; font-size: 12px; color: var(--lc-red-ink); }
 .lc-alert-line:hover > span { text-decoration: underline; text-underline-offset: 2px; }
 
+/* ── on my radar: the doctor's orders and to-dos, each one click from done ── */
+.lc-radar {
+    /* It shrinks (its list scrolls) before the conversation goes below its minimum; the header always shows. */
+    flex: 0 1 auto; min-height: 36px; max-height: 34%; margin: 10px 12px 0; overflow: hidden;
+    display: flex; flex-direction: column;
+    border: 1px solid var(--lc-line); border-radius: var(--lc-radius); background: var(--lc-surface);
+}
+.lc-radar-head { flex: none; display: flex; align-items: center; gap: 4px; padding-right: 7px; }
+.lc-radar-toggle {
+    flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: 8px; padding: 7px 6px 7px 10px;
+    border: 0; background: none; cursor: pointer; text-align: left; font-size: 12.5px; color: var(--lc-ink-2); border-radius: var(--lc-radius);
+}
+.lc-radar-toggle:hover { background: var(--lc-sunken); }
+.lc-radar-counts { display: flex; gap: 8px; min-width: 0; overflow: hidden; white-space: nowrap; }
+.lc-radar-all { flex: none; padding: 3px 10px; white-space: nowrap; }
+.lc-radar-icon { flex: none; width: 15px; height: 15px; color: var(--lc-blue); }
+.lc-radar-sum { font-weight: 600; color: var(--lc-ink); font-variant-numeric: tabular-nums; }
+.lc-radar-flag { font-weight: 600; color: var(--lc-red-ink); }
+.lc-radar-heard { color: var(--lc-blue); }
+.lc-radar-toggle > svg:last-child { flex: none; margin-left: auto; width: 14px; height: 14px; color: var(--lc-ink-3); transition: transform 180ms var(--lc-ease); }
+.lc-radar-toggle[aria-expanded="true"] > svg:last-child { transform: rotate(180deg); }
+.lc-radar-body { flex: 1 1 auto; min-height: 0; overflow: auto; border-top: 1px solid var(--lc-line); }
+.lc-radar-list { list-style: none; margin: 0; padding: 2px 6px; }
+.lc-radar-list.is-done { border-top: 1px dashed var(--lc-line-2); }
+.lc-act {
+    display: grid; grid-template-columns: 18px minmax(0, 1fr) auto; column-gap: 8px; align-items: start;
+    padding: 6px 4px; border-radius: 6px;
+}
+.lc-act + .lc-act { border-top: 1px solid var(--lc-line); }
+.lc-act.is-flagged { background: var(--lc-red-bg); }
+.lc-act.is-flagged + .lc-act, .lc-act + .lc-act.is-flagged { border-top-color: transparent; }
+.lc-act-check {
+    width: 16px; height: 16px; margin-top: 2px; padding: 0; border-radius: 4px; cursor: pointer;
+    border: 1.5px solid var(--lc-line-2); background: var(--lc-surface); color: var(--lc-navy-ink);
+    display: grid; place-items: center; transition: background-color 160ms var(--lc-ease), border-color 160ms var(--lc-ease);
+}
+.lc-act-check:hover { border-color: var(--lc-ink-3); }
+.lc-act-check[aria-checked="true"] { background: var(--lc-green); border-color: var(--lc-green); }
+.lc-act-check svg { width: 12px; height: 12px; stroke-width: 3; }
+.lc-act-main { min-width: 0; }
+.lc-act-title { margin: 0; font-size: 13.5px; line-height: 1.35; color: var(--lc-ink); }
+.lc-act-title .lc-tag { margin-right: 6px; vertical-align: 1px; }
+.lc-act.is-flagged .lc-act-title { font-weight: 600; }
+.lc-act-next { margin: 1px 0 0; font-size: 12px; line-height: 1.35; color: var(--lc-ink-3); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.lc-act-flag { margin: 2px 0 0; font-size: 12px; line-height: 1.35; font-weight: 500; color: var(--lc-red-ink); }
+.lc-act-flag svg { width: 12px; height: 12px; margin-right: 4px; vertical-align: -2px; }
+.lc-act-state { margin-left: 4px; font-size: 11px; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; color: var(--lc-ink-3); text-decoration: none; display: inline-block; }
+.lc-act-btns { display: flex; align-items: center; gap: 2px; }
+.lc-act-btns .lc-btn { white-space: nowrap; }
+.lc-act-x { width: 24px; height: 24px; color: var(--lc-ink-3); }
+.lc-act-x svg { width: 13px; height: 13px; }
+.lc-act.is-done .lc-act-title, .lc-act.is-dropped .lc-act-title { color: var(--lc-ink-3); text-decoration: line-through; text-decoration-color: var(--lc-line-2); }
+.lc-act.is-pending { grid-template-columns: 18px minmax(0, 1fr); }
+.lc-act.is-pending .lc-act-title { color: var(--lc-ink-2); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.lc-act.is-pending .lc-act-next { color: var(--lc-blue); }
+.lc-act.is-failed .lc-act-next { color: var(--lc-amber-ink); }
+.lc-act-wait { width: 14px; height: 14px; margin: 3px 0 0 1px; border-radius: 50%; border: 2px solid var(--lc-blue-bg); border-top-color: var(--lc-blue); animation: lc-spin 900ms linear infinite; }
+@keyframes lc-spin { to { transform: rotate(360deg); } }
+.lc-radar-doneline { padding: 5px 10px 7px; text-align: right; border-top: 1px solid var(--lc-line); }
+/* In the conversation: the line that put something on the radar says so. */
+.lc-radar-mark { display: inline-flex; align-items: center; gap: 3px; margin-left: 4px; padding: 0 6px; border-radius: 999px; background: var(--lc-blue-bg); color: var(--lc-blue); font-size: 11px; font-weight: 600; font-style: normal; white-space: nowrap; vertical-align: 1px; }
+.lc-radar-mark svg { width: 11px; height: 11px; }
+
 .lc-btn {
     border: 1px solid var(--lc-line-2); background: var(--lc-surface); border-radius: 6px; padding: 4px 10px;
     font-size: 12px; font-weight: 500; cursor: pointer; color: var(--lc-ink);
@@ -240,9 +303,9 @@
 .lc-tabs button[aria-selected="true"] { color: var(--lc-ink); border-bottom-color: var(--lc-navy); font-weight: 600; }
 .lc-count { display: inline-block; min-width: 16px; margin-left: 4px; padding: 0 4px; border-radius: 8px; font-size: 11px; background: var(--lc-navy); color: var(--lc-navy-ink); text-align: center; }
 .lc-left, .lc-right { display: contents; }
-.lc-pane { flex: 1 1 auto; min-height: 0; overflow: auto; padding: 10px 12px 14px; order: 4; }
+.lc-pane { flex: 1 1 0; min-height: 130px; overflow: auto; padding: 10px 12px 14px; order: 4; }   /* takes what is left, never less than a few lines */
 .lc-pane:not(.is-active) { display: none; }
-.lc-alerts { order: 1; } .lc-take { order: 2; } .lc-tabs { order: 3; } .lc-ask { order: 5; }
+.lc-alerts, .lc-radar { order: 1; } .lc-take { order: 2; } .lc-tabs { order: 3; } .lc-ask { order: 5; }
 .lc-pane-title { display: none; }
 
 /* conversation: what it heard (plain lines) and what it said (tinted blocks), oldest
@@ -365,12 +428,13 @@
     .lc-left { border-right: 1px solid var(--lc-line); }
     .lc-tabs { display: none; }
     .lc-pane, .lc-pane:not(.is-active) { display: block; }
-    .lc-left .lc-pane { flex: 1 1 auto; }
+    .lc-left .lc-pane { flex: 1 1 0; }
     .lc-right { overflow: auto; }
-    .lc-right .lc-pane { flex: none; overflow: visible; padding-top: 4px; }
+    .lc-right .lc-pane { flex: none; min-height: 0; overflow: visible; padding-top: 4px; }
     .lc-pane-title { display: block; margin: 12px 0 6px; font-size: 13px; font-weight: 600; color: var(--lc-ink-2); }
     .lc-pane[data-pane="log"], .lc-pane[data-pane="tracking"] { border-top: 1px solid var(--lc-line); }
     .lc-take-pr { display: none; }   /* the note beside it already shows it */
+    .lc-radar { max-height: 44%; }
 }
 
 /* Screenshots and reduced motion: no transitions or entrance animations. */

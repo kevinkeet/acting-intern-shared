@@ -206,7 +206,7 @@ async function main() {
 
     const run = {
         script: script.id, at: new Date().toISOString(), config: { brain: opt.brain, mode: opt.mode, pace: opt.pace, speed: opt.speed, memory: memorySource, fast: opt.fast, prompts: LivePrompts.PROMPT_VERSION, effort: cw.cfg.effort },
-        said, fedWall, calls: cw.calls, watchAtStart, finalTake: cw.wm.take, finalNote: cw.wm.note, finalWatch: cw.wm.watch, facts: cw.wm.facts, thinking: cw.wm.thinking, plan: cw.wm.plan, held: cw.wm.held, events,
+        said, fedWall, calls: cw.calls, watchAtStart, finalTake: cw.wm.take, finalNote: cw.wm.note, finalActions: cw.wm.actions, finalWatch: cw.wm.watch, facts: cw.wm.facts, thinking: cw.wm.thinking, plan: cw.wm.plan, held: cw.wm.held, events,
         wallSeconds: Math.round((performance.now() - wall0) / 1000),
     };
     run.config.mode = opt.mode;
@@ -234,6 +234,16 @@ async function main() {
     if (n) {
         console.log('\nLive note at the end:\n  PROBLEM REPRESENTATION: ' + n.problem_representation + '\n  HPI: ' + n.hpi + '\n  ASSESSMENT AND PLAN:');
         (n.problems || []).forEach((p, i) => console.log('    ' + (i + 1) + '. ' + p.name + ': ' + p.assessment + (p.plan.length ? '\n       plan: ' + p.plan.join('; ') : '') + (p.consider.length ? '\n       consider: ' + p.consider.join('; ') : '')));
+    }
+    const acts = cw.wm.actions || [];
+    if (acts.length) {
+        const sline = (id) => toScript[id] || id || '?';
+        console.log('\nOn my radar at the end (' + acts.filter((a) => a.status === 'todo').length + ' to do, ' + acts.filter((a) => a.flag && a.status === 'todo').length + ' flagged):');
+        for (const a of acts) {
+            const f = Object.entries(a.fields || {}).map(([k, v]) => k + '=' + v).join('; ');
+            console.log('  ' + a.id + ' [' + a.status + '] ' + a.kind + (a.orderType ? '/' + a.orderType : '') + ': ' + a.title + ' (' + sline(a.line) + ')' + (a.flag ? '\n       FLAG: ' + a.flag + (a.alert ? ' (' + a.alert + ')' : '') : '')
+                + (f ? '\n       fields: ' + f : '') + (a.next ? '\n       next: ' + a.next : '') + (a.draft ? '\n       draft' + (a.to ? ' to ' + a.to : '') + ': ' + a.draft : ''));
+        }
     }
     console.log('Report: ' + path.join(outDir, name + '.json') + '  (wall ' + run.wallSeconds + 's)');
 }

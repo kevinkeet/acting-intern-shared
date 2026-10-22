@@ -27,10 +27,13 @@
         mode: 'abreast',              // follow | abreast | lead
         speed: null,                  // 'fast' = Opus fast mode
         noteModel: 'claude-haiku-5-5',  // the scribe that keeps the live note current
-        effort: { ear: 'low', answer: 'low', verify: 'low', update: 'low', prime: 'medium', helper: 'medium', memory: 'low', note: 'low' },
-        maxTokens: { ear: 2000, answer: 6000, verify: 3000, update: 9000, prime: 9000, helper: 3000, note: 4000 },
+        actionsModel: 'claude-haiku-5-5', // keeps the doctor's orders and to-dos ("On my radar")
+        effort: { ear: 'low', answer: 'low', verify: 'low', update: 'low', prime: 'medium', helper: 'medium', memory: 'low', note: 'low', actions: 'low' },
+        maxTokens: { ear: 2000, answer: 6000, verify: 3000, update: 9000, prime: 9000, helper: 3000, note: 4000, actions: 4000 },
         noteGapMs: 12000,             // the live note is rewritten at most this often
         noteDelayMs: 3000,            // after new speech, wait this long so a few lines go in together
+        actionsDelayMs: 1200,         // after a plan item is heard, wait this long so a dictated plan goes in together
+        maxActions: 40,
         earThinking: 'disabled',      // Haiku 5.5 accepts disabled at low..high effort
         memoryThinking: 'disabled',   // the long-term memory helper: lookup, not reasoning (2-5 s instead of 6-9 s on a 319K-token record)
         heartbeatMs: 90000,           // refresh the take this often while things change
@@ -70,7 +73,8 @@
             lines: [],            // {id, t, speaker, text, viaAi?}
             facts: [],            // {id, t, text, kind, from, line}
             thinking: [],         // doctor's reasoning: {t, text}
-            plan: [],             // {t, text, kind}
+            plan: [],             // {id, t, text, kind, line, from?, radar?}
+            actions: [],          // "On my radar": {id, t, kind, title, orderType, fields, to, noteType, draft, next, status, flag, alert, line, statusBy}
             take: null,           // brain's current take + t
             watch: [],            // tripwires for the ear
             said: [],             // {id, t, kind, topic, text, why, latencyMs, cueLine}
@@ -92,7 +96,7 @@
         const listeners = new Map();
 
         const wm = newMemory();
-        let lineSeq = 0, factSeq = 0, saidSeq = 0;
+        let lineSeq = 0, factSeq = 0, saidSeq = 0, planSeq = 0, actionSeq = 0;
         let running = false;
         let earBusy = false;
         let earQueue = [];            // lines waiting for the ear
@@ -194,6 +198,14 @@
                 wm.thinking.length ? wm.thinking.map((x) => '- ' + x.text).join('\n') : '- (not stated yet)',
                 'PLAN AND ORDERS SAID:',
                 wm.plan.length ? wm.plan.map((x) => '- (' + x.kind + ') ' + x.text).join('\n') : '- (none yet)',
+            ];
+            // The doctor's to-do list, so "what do I still need to order?" has an answer.
+            if (wm.actions.length) {
+                const st = (a) => (a.status === 'todo' ? 'to do' + (a.flag ? ', flagged: ' + a.flag : '') : a.status === 'done' ? 'done' : 'removed');
+                out.push('ON THE DOCTOR\'S RADAR (what the doctor asked for, ready to sign; the doctor sees this list):');
+                out.push(wm.actions.filter((a) => a.status !== 'dropped').slice(-25).map((a) => '- [' + st(a) + '] ' + a.kind + ': ' + a.title).join('\n') || '- (nothing open)');
+            }
+            out.push(
                 'YOUR CURRENT TAKE' + (take ? ' (from ' + mmss(take.t) + ')' : '') + ':',
                 take ? ['- ' + take.one_liner, '- ' + take.assessment].concat((take.concerns || []).map((c) => '- concern [' + c.topic + ', ' + c.severity + ']: ' + c.text)).join('\n') : '- (none yet)',
                 'WATCH LIST:',
@@ -208,7 +220,7 @@
                 '<recent_conversation>',
                 wm.lines.length ? wm.lines.slice(-cfg.brainLines).map(lineText).join('\n') : '(no conversation yet)',
                 '</recent_conversation>',
-            ];
+            );
             return out.join('\n');
         }
 
@@ -375,10 +387,12 @@
             for (const t of out.doctor_thinking || []) {
                 if (t && !wm.thinking.some((x) => overlap(x.text, t) >= 0.85)) { wm.thinking.push({ t: elapsed(), text: clip(t, 200), line: lastLine.id }); changed = true; }
             }
+            let newPlan = 0;
             for (const p of out.plan || []) {
-                if (p && p.text && !wm.plan.some((x) => overlap(x.text, p.text) >= 0.85)) { wm.plan.push({ t: elapsed(), text: clip(p.text, 160), kind: p.kind || 'plan', line: lastLine.id }); changed = true; }
+                if (p && p.text && !wm.plan.some((x) => overlap(x.text, p.text) >= 0.85)) { wm.plan.push({ id: 'P' + (++planSeq), t: elapsed(), text: clip(p.text, 160), kind: p.kind || 'plan', line: lastLine.id }); newPlan++; changed = true; }
             }
             if (changed) { markDirty(); touch(); }
+            if (newPlan) { emit('actions', wm.actions); scheduleActions(); }   // shown at once as "heard"; the radar lane gets it ready
 
             // Questions for the coworker (unless the wake-word path already took them).
             const askedHere = batch.some((l) => handledLines.has(l.id));
@@ -758,6 +772,163 @@
             return track(p);
         }
 
+        // ── on my radar: the doctor's orders and to-dos ──────────────────
+        // The ear hears a plan item ("Repeat BMP and magnesium in the morning"); a
+        // cheap model turns it into items ready to act on (order form fields, a
+        // drafted message, the next step) and flags the ones a safety alert is
+        // about. It returns only what changed; the doctor's own ticks win.
+        let actionsBusy = false, actionsAgain = false, actionsTimer = null, actionsRuns = 0, actionsFails = 0;
+        let actionsSystemCache = null;
+        function actionsSystem() {
+            if (!actionsSystemCache) {
+                actionsSystemCache = [
+                    { type: 'text', text: P.ACTIONS_SYSTEM },
+                    { type: 'text', text: patientHeader(), cache_control: { type: 'ephemeral' } },
+                ];
+            }
+            return actionsSystemCache;
+        }
+        const BY = { doctor: 'set by the doctor', ehr: 'placed in the EHR', sent: 'message sent', saved: 'note saved' };
+        const actionLine = (a) => a.id + ' [' + a.status + (a.statusBy !== 'model' ? ' (' + (BY[a.statusBy] || a.statusBy) + ')' : '')
+            + (a.flag ? ', flag: ' + a.flag + (a.alert ? ' (' + a.alert + ')' : '') : '') + '] ' + a.kind + (a.orderType ? ' (' + a.orderType + ')' : '') + ': ' + a.title + (a.line ? ' · said ' + a.line : '') + (a.next ? ' · next: ' + a.next : '');
+        function renderForActions(newPlan) {
+            const alerts = openAlerts();
+            const said = wm.said.slice(-8);
+            return [
+                '<on_my_radar>',
+                wm.actions.length ? wm.actions.map(actionLine).join('\n') : '(empty)',
+                '</on_my_radar>',
+                '<open_safety_alerts>',
+                alerts.length ? alerts.map((x) => '- ' + x.s.id + ' [' + mmss(x.s.t) + '] ' + x.s.text + x.updates.map((u) => ' | update ' + u.id + ': ' + u.text).join('')).join('\n') : '(none)',
+                '</open_safety_alerts>',
+                '<coworker_said>',
+                said.length ? said.map((s) => '- ' + s.id + ' [' + mmss(s.t) + ', ' + s.kind + (s.acked ? ', acknowledged' : '') + '] ' + (s.question ? '(asked: ' + s.question + ') ' : '') + s.text).join('\n') : '(nothing yet)',
+                '</coworker_said>',
+                '<conversation>',
+                wm.lines.length ? wm.lines.slice(-30).map(lineText).join('\n') : '(nothing heard yet)',
+                '</conversation>',
+                '<new_plan_items>',
+                newPlan.length ? newPlan.map((p) => p.id + ' [' + p.kind + ', heard by ' + p.line + '] ' + p.text).join('\n') : '(none: check flags and statuses only)',
+                '</new_plan_items>',
+            ].join('\n');
+        }
+        function scheduleActions(delayMs) {
+            if (!running) return;
+            const wait = delayMs == null ? cfg.actionsDelayMs : delayMs;
+            if (actionsTimer) {
+                if (wait > 0) return;      // a debounce is already waiting; it will take this too
+                clock.clearTimeout(actionsTimer);
+            }
+            actionsTimer = clock.setTimeout(() => { actionsTimer = null; writeActions(); }, wait);
+        }
+        function writeActions() {
+            if (!running) return null;
+            if (actionsBusy) { actionsAgain = true; return null; }
+            if (actionsTimer) { clock.clearTimeout(actionsTimer); actionsTimer = null; }
+            const newPlan = wm.plan.filter((p) => p.radar !== true && p.radar !== 'pending');
+            if (!newPlan.length && !wm.actions.some((a) => a.status === 'todo')) return null;   // nothing to place or re-check
+            newPlan.forEach((p) => { p.radar = 'pending'; });
+            actionsBusy = true;
+            const p = (async () => {
+                emit('thinking', { lane: 'actions' });
+                const body = {
+                    max_tokens: cfg.maxTokens.actions,
+                    system: actionsSystem(),
+                    thinking: cfg.actionsModel === 'claude-haiku-5-5' ? { type: 'disabled' } : { type: 'adaptive' },
+                    output_config: { effort: cfg.effort.actions, format: { type: 'json_schema', schema: P.ACTIONS_SCHEMA } },
+                    messages: [{ role: 'user', content: renderForActions(newPlan) + '\n\n' + P.TASK_ACTIONS }],
+                };
+                const out = parseJSON(await modelCall('actions', cfg.actionsModel, body));
+                if (!out) throw new Error('no list');
+                applyActions(out, ++actionsRuns);
+                newPlan.forEach((x) => { x.radar = true; });
+                actionsFails = 0;
+                emit('actions', wm.actions);
+                touch();
+            })().catch(() => {
+                // Busy or unreachable: try again a little later (three times), then show them as heard but not ready.
+                actionsFails++;
+                newPlan.forEach((x) => { if (x.radar === 'pending') x.radar = actionsFails >= 3 ? 'failed' : false; });
+                if (actionsFails < 3) actionsAgain = true;
+                emit('actions', wm.actions);
+            }).finally(() => {
+                actionsBusy = false;
+                if (actionsAgain) { actionsAgain = false; scheduleActions(actionsFails ? 4000 * actionsFails : 0); }
+            });
+            return track(p);
+        }
+
+        const ACTION_KINDS = ['order', 'consult', 'referral', 'message', 'note', 'task'];
+        const ACTION_STATUS = ['todo', 'done', 'dropped'];
+        /** Only the order form's own field keys survive, each value trimmed. */
+        function cleanFields(orderType, list) {
+            const allowed = P.ORDER_FIELDS[orderType];
+            const out = {};
+            if (!allowed) return out;
+            for (const f of Array.isArray(list) ? list : []) {
+                const k = String((f && f.key) || '').trim();
+                const v = String((f && f.value) || '').trim();
+                if (v && Object.prototype.hasOwnProperty.call(allowed, k)) out[k] = clip(v, 200);
+            }
+            return out;
+        }
+        function applyActions(out, batch) {
+            for (const c of (out && Array.isArray(out.changes) ? out.changes : []).slice(0, 24)) {
+                if (!c || !ACTION_KINDS.includes(c.kind)) continue;
+                const title = clip(String(c.title || '').trim(), 90);
+                let a = c.id ? wm.actions.find((x) => x.id === c.id) : null;
+                // The same thing listed again (or under a made-up id) updates the item already there.
+                if (!a && title) a = wm.actions.find((x) => x.kind === c.kind && x.status !== 'dropped' && overlap(x.title, title) >= 0.8) || null;
+                if (!a) {
+                    if (!title) continue;
+                    a = { id: 'A' + (++actionSeq), t: elapsed(), batch: batch || 0, kind: c.kind, title, orderType: '', fields: {}, to: '', noteType: '', draft: '', next: '', status: 'todo', flag: '', alert: '', line: '', statusBy: 'model' };
+                    wm.actions.push(a);
+                }
+                const retitled = !!title && normText(title) !== normText(a.title);
+                a.kind = c.kind;
+                if (title) a.title = title;
+                const type = c.kind === 'consult' ? 'consult' : c.kind === 'order' && P.ORDER_FIELDS[c.order_type] ? c.order_type : c.kind === 'order' ? a.orderType : '';
+                if (type !== a.orderType) a.fields = {};
+                a.orderType = type;
+                const fields = cleanFields(type, c.fields);
+                if (Object.keys(fields).length) a.fields = fields;
+                if (c.to) a.to = clip(String(c.to).trim(), 60);
+                if (c.note_type) a.noteType = clip(String(c.note_type).replace(/[^A-Za-z0-9 &/-]+/g, ' ').replace(/\s+/g, ' ').trim(), 40);
+                if (c.draft) a.draft = clip(String(c.draft).trim(), 800);
+                if (c.next) a.next = clip(String(c.next).trim(), 140);
+                // A safety flag stays until the order itself changes (a new title) or it is done or dropped.
+                if (c.flag) {
+                    a.flag = clip(String(c.flag).replace(/\s*\((?:S\d+[,\s]*)+\)/g, '').trim(), 120);   // the alert id goes in its own field
+                    a.alert = c.alert && wm.said.some((s) => s.id === c.alert) ? c.alert : '';
+                } else if (retitled) { a.flag = ''; a.alert = ''; }
+                if (c.line && wm.lines.some((l) => l.id === c.line)) a.line = c.line;
+                // "done" needs an order seen in the EHR; the doctor's own tick (or the EHR's) stands unless the model saw it placed.
+                const placed = c.status === 'done' && wm.lines.some((l) => l.speaker === 'ehr');
+                if (ACTION_STATUS.includes(c.status) && (c.status !== 'done' || placed) && (a.statusBy === 'model' || c.status === 'done') && c.status !== a.status) {
+                    a.status = c.status;
+                    a.statusBy = 'model';
+                }
+                a.updatedAt = elapsed();
+            }
+            // Keep the list bounded: the oldest closed items go first.
+            while (wm.actions.length > cfg.maxActions) {
+                const i = wm.actions.findIndex((x) => x.status !== 'todo');
+                wm.actions.splice(i >= 0 ? i : 0, 1);
+            }
+        }
+
+        /** The doctor ticked an item (done), removed it (dropped) or put it back (todo); "by" says who. */
+        function setActionStatus(id, status, by) {
+            const a = wm.actions.find((x) => x.id === id);
+            if (!a || !ACTION_STATUS.includes(status)) return null;
+            a.status = status;
+            a.statusBy = by || 'doctor';
+            a.updatedAt = elapsed();
+            emit('actions', wm.actions);
+            touch();
+            return a;
+        }
+
         // ── speaking rules ───────────────────────────────────────────────
         // A repeat is the same point again: nearly the same words, or the same
         // topic without much new in it. A same-topic remark that says something
@@ -793,6 +964,7 @@
             wm.held = wm.held.filter((h) => h.topic !== item.topic);
             emit('say', item);
             touch();
+            if (item.kind === 'critical') scheduleActions(0);   // flag the order it is about, if it is on the radar
             return item;
         }
 
@@ -817,11 +989,16 @@
             pendingWake = null;
             if (noteTimer) clock.clearTimeout(noteTimer);
             noteTimer = null;
+            if (actionsTimer) clock.clearTimeout(actionsTimer);
+            actionsTimer = null;
             for (const c of aborters) { try { c.abort(); } catch (e) { /* ignore */ } }
             emit('status', { running: false });
         }
 
-        /** An order went into the EHR: log it, add it to the plan, and safety-check it. */
+        /**
+         * An order went into the EHR: log it, add it to the plan, and safety-check it.
+         * o.actionId: it was placed from that radar item's form, so the item is done.
+         */
         function order(o) {
             const what = [o && o.name, o && o.details, o && o.priority && o.priority !== 'Routine' ? o.priority : ''].filter(Boolean).join(' ');
             if (!what) return null;
@@ -829,11 +1006,14 @@
             const line = { id: 'L' + (++lineSeq), t: elapsed(), speaker: 'ehr', text: 'Order placed in the EHR: ' + what };
             wm.lines.push(line);
             emit('line', line);
-            wm.plan.push({ t: elapsed(), text: clip(what, 160), kind: 'order', line: line.id });
+            const fromItem = !!(o.actionId && wm.actions.some((a) => a.id === o.actionId));
+            wm.plan.push({ id: 'P' + (++planSeq), t: elapsed(), text: clip(what, 160), kind: 'order', line: line.id, from: 'ehr', radar: fromItem });
             markDirty();
             touch();
+            if (fromItem) setActionStatus(o.actionId, 'done', 'ehr');
             if (running) verify('a new order was just placed in the EHR: ' + what, line, 'order:' + line.id);
             scheduleNote();
+            if (!fromItem) scheduleActions();   // the radar ticks off what matches, or lists it as done
             return line;
         }
 
@@ -877,14 +1057,78 @@
         }
 
         return {
-            on, hear, ask, tell, order, ack, start, stop, update, prime, note: writeNote, idle, stats, setMode, setBrainModel, setSpeed,
-            wm, cfg, calls, renderForBrain, renderForEar, patientHeader,
+            on, hear, ask, tell, order, ack, start, stop, update, prime, note: writeNote, actions: writeActions, setActionStatus, idle, stats, setMode, setBrainModel, setSpeed,
+            wm, cfg, calls, renderForBrain, renderForEar, renderForActions, patientHeader,
             get running() { return running; },
             get elapsed() { return elapsed(); },
         };
     }
 
-    const api = { createCoworker, DEFAULTS, _overlap: overlap, _mmss: mmss };
+    // ── a radar item's fields -> the EHR order form's values ─────────────
+    // The model is asked for the form's exact choices; this maps what it says
+    // otherwise ("twice a day" -> BID, "BMP" -> Basic Metabolic Panel) and leaves a
+    // choice blank, for the doctor, rather than guess. Unknown tests and
+    // specialties go in the form's "Other" box.
+    const SYNONYMS = {
+        route: { 'PO': ['oral', 'orally', 'by mouth'], 'IV Push': ['ivp', 'push', 'iv bolus', 'slow push'], 'IV Piggyback': ['ivpb', 'piggyback'], 'IV': ['intravenous', 'iv drip', 'iv infusion', 'infusion', 'drip'], 'SC': ['subq', 'sq', 'subcut', 'subcutaneous'], 'IM': ['intramuscular'], 'SL': ['sublingual'], 'PR': ['rectal', 'per rectum'], 'Inhaled': ['nebulized', 'neb', 'inhaler'] },
+        frequency: {
+            'Once': ['now', 'stat', 'x1', 'once now', 'one time', 'single dose', 'one dose', 'tonight'], 'BID': ['twice daily', 'twice a day', 'two times a day', 'b i d', 'every 12 hours'], 'TID': ['three times daily', 'three times a day', 't i d'],
+            'QID': ['four times daily', 'four times a day'], 'Daily': ['once daily', 'once a day', 'every day', 'qd', 'every morning', 'qam'], 'At bedtime': ['qhs', 'nightly', 'at night', 'bedtime'],
+            'Continuous': ['drip', 'infusion', 'continuous infusion', 'gtt'], 'PRN': ['as needed'], 'Q8H': ['every 8 hours'], 'Q6H': ['every 6 hours'], 'Q4H': ['every 4 hours'], 'Q24H': ['every 24 hours'],
+        },
+        priority: { 'STAT': ['now', 'stat', 'immediately', 'emergent', 'right away'], 'Urgent': ['asap', 'today'], 'Routine': ['in the morning', 'morning', 'am', 'tomorrow', 'am labs'] },
+        name: {
+            'Complete Blood Count': ['cbc', 'blood count', 'hemoglobin', 'hgb', 'h&h', 'h and h', 'cbc with differential'], 'Basic Metabolic Panel': ['bmp', 'chem 7', 'chem7', 'basic panel', 'basic metabolic', 'electrolytes', 'lytes'],
+            'Comprehensive Metabolic Panel': ['cmp', 'chem 14', 'comprehensive panel'], 'Coagulation Panel (PT/INR/PTT)': ['inr', 'pt/inr', 'pt inr', 'coags', 'coagulation panel', 'pt/ptt', 'ptt'],
+            'Magnesium': ['mg', 'mag'], 'Phosphorus': ['phos', 'phosphate'], 'Troponin': ['trop', 'troponins', 'hs troponin'], 'Liver Function Tests': ['lfts', 'lft', 'hepatic panel', 'liver panel'],
+            'Thyroid Panel': ['tsh'], 'Arterial Blood Gas': ['abg'], 'Venous Blood Gas': ['vbg'], 'Urinalysis': ['ua', 'urine analysis'], 'Hemoglobin A1c': ['a1c', 'hba1c'], 'C-Reactive Protein': ['crp'],
+            'Blood Culture': ['blood cultures', 'blood cx'], 'Lactate': ['lactic acid'], 'Iron Studies': ['iron panel'], 'Pro-BNP': ['nt-probnp', 'probnp', 'nt pro bnp'],
+        },
+        specialty: { 'Gastroenterology': ['gi', 'gastro'], 'Infectious Disease': ['id', 'infectious diseases'], 'Pulmonology': ['pulm', 'pulmonary'], 'Cardiology': ['cards', 'cardiac', 'heart failure', 'electrophysiology', 'ep'], 'Neurology': ['neuro', 'stroke', 'stroke neurology'], 'Nephrology': ['renal', 'kidney'], 'Psychiatry': ['psych'], 'Surgery': ['general surgery'], 'Endocrinology': ['endo', 'endocrine'] },
+        modality: { 'X-Ray': ['xray', 'x ray', 'cxr', 'radiograph', 'plain film', 'film', 'kub'], 'Ultrasound': ['us', 'sonogram', 'doppler', 'duplex'], 'Echo': ['echocardiogram', 'tte', 'tee'], 'CT': ['cat scan', 'ct scan', 'cta'], 'MRI': ['mr', 'mra'] },
+        contrast: { 'Without contrast': ['no contrast', 'noncontrast', 'non contrast', 'without'], 'With contrast': ['with'], 'N/A': ['none', 'not applicable'] },
+        orderType: { 'Vital Signs': ['vitals'], 'I&O Monitoring': ['i&o', 'i and o', 'ins and outs', 'intake and output', 'strict i&o'], 'Diet': ['nutrition'], 'Activity': ['ambulation'] },
+        specimen: { 'Blood': ['serum', 'plasma'] },
+    };
+    const normOpt = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9&/+]+/g, ' ').trim();
+    function matchOption(options, key, value) {
+        const v = normOpt(value);
+        if (!v) return '';
+        let hit = options.find((o) => o === value) || options.find((o) => normOpt(o) === v);
+        if (hit) return hit;
+        const syn = SYNONYMS[key] || {};
+        const pairs = Object.entries(syn).filter(([opt]) => options.includes(opt));
+        hit = pairs.find(([, list]) => list.some((s) => normOpt(s) === v));
+        if (hit) return hit[0];
+        // A choice named inside a longer value ("IV push over 2 minutes"), longest first so "IV Push" beats "IV".
+        const padded = ' ' + v + ' ';
+        hit = options.slice().sort((a, b) => b.length - a.length).find((o) => normOpt(o).length >= 2 && padded.includes(' ' + normOpt(o) + ' '));
+        if (hit) return hit;
+        hit = pairs.find(([, list]) => list.some((s) => padded.includes(' ' + normOpt(s) + ' ')));
+        return hit ? hit[0] : '';
+    }
+    /** fieldsConfig: the order form's fields ([{name, type, options, showIf}]); values: {key: value}. */
+    function toOrderForm(fieldsConfig, values) {
+        const cfgFields = Array.isArray(fieldsConfig) ? fieldsConfig : [];
+        const v = values || {};
+        const out = {};
+        for (const f of cfgFields) {
+            const raw = v[f.name];
+            if (raw == null || String(raw).trim() === '' || out[f.name] != null) continue;
+            if (f.type === 'select' && Array.isArray(f.options)) {
+                const options = f.options.filter((o) => !/^-{2,}/.test(o));
+                const hit = matchOption(options, f.name, raw);
+                const other = cfgFields.find((g) => g.showIf === f.name + ':Other');
+                if (hit) out[f.name] = hit;
+                else if (other && options.includes('Other')) { out[f.name] = 'Other'; if (!v[other.name]) out[other.name] = String(raw).trim(); }
+            } else if (f.type !== 'multiselect') {
+                out[f.name] = String(raw).trim();
+            }
+        }
+        return out;
+    }
+
+    const api = { createCoworker, toOrderForm, DEFAULTS, _overlap: overlap, _mmss: mmss };
     if (isNode) module.exports = api;
     else root.LiveCore = api;
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -49,6 +49,79 @@
         say: { should_say: false, kind: 'insight', topic: '', text: '', why: '' },
     };
 
+    // The doctor's orders and to-dos in the demo (stand-in for the radar lane), by what was heard.
+    const HF = 'Acute on chronic HFrEF, volume overload';
+    const RADAR = [
+        [/sats above/i, [{ kind: 'order', order_type: 'nursing', title: 'Oxygen to keep SpO2 above 92%', fields: { orderType: 'Other', details: 'Titrate oxygen to keep SpO2 above 92%', priority: 'Routine' } }]],
+        [/furosemide 80/i, [
+            { kind: 'order', order_type: 'medication', title: 'Furosemide 80 mg IV now', fields: { name: 'Furosemide', dose: '80 mg', route: 'IV Push', frequency: 'Once', indication: HF } },
+            { kind: 'order', order_type: 'medication', title: 'Furosemide 40 mg IV twice daily', fields: { name: 'Furosemide', dose: '40 mg', route: 'IV Push', frequency: 'BID', indication: HF } },
+            { kind: 'order', order_type: 'nursing', title: 'Strict I&O and daily weights', fields: { orderType: 'I&O Monitoring', details: 'Strict I&O, daily weights', priority: 'Routine' } },
+            { kind: 'order', order_type: 'nursing', title: '2 g sodium diet, fluid restriction', fields: { orderType: 'Diet', details: '2 g sodium diet, fluid restriction', priority: 'Routine' } },
+            { kind: 'order', order_type: 'nursing', title: 'Telemetry', fields: { orderType: 'Other', details: 'Continuous telemetry', priority: 'Routine' } },
+        ]],
+        [/repeat bmp/i, [
+            { kind: 'order', order_type: 'lab', title: 'BMP in the morning', fields: { name: 'BMP', specimen: 'Blood', priority: 'Routine', indication: 'Diuresis, AKI on CKD 3b', notes: 'AM labs' } },
+            { kind: 'order', order_type: 'lab', title: 'Magnesium in the morning', fields: { name: 'Magnesium', specimen: 'Blood', priority: 'Routine', indication: 'Diuresis', notes: 'AM labs' } },
+            { kind: 'order', order_type: 'procedure', title: 'EKG now', fields: { name: '12-lead EKG', priority: 'STAT', indication: 'Atrial fibrillation, heart failure' } },
+        ]],
+        [/hold the spironolactone/i, [
+            { kind: 'order', order_type: 'nursing', title: 'Hold spironolactone tonight', fields: { orderType: 'Other', details: 'Hold spironolactone tonight (K 5.1, kidney bump)', priority: 'Routine' } },
+            { kind: 'task', title: 'Continue carvedilol and Entresto', next: 'Mark them continued in the admission med rec' },
+        ]],
+        [/continue the rest/i, [{ kind: 'task', title: 'Continue his other home medicines', next: 'Admission med rec, including metformin and gabapentin' }]],
+        [/potassium chloride/i, [{ kind: 'order', order_type: 'medication', title: 'Potassium chloride 40 mEq PO once', fields: { name: 'Potassium chloride', dose: '40 mEq', route: 'PO', frequency: 'Once', indication: 'Replacement during diuresis' } }]],
+        [/diltiazem/i, [{ kind: 'order', order_type: 'medication', title: 'Diltiazem 10 mg IV push now', fields: { name: 'Diltiazem', dose: '10 mg', route: 'IV Push', frequency: 'Once', indication: 'AF with rapid ventricular response' } }]],
+        [/heparin drip/i, [{ kind: 'order', order_type: 'medication', title: 'Heparin drip for AF', fields: { name: 'Heparin', route: 'IV', frequency: 'Continuous', indication: 'Atrial fibrillation' } }]],
+        [/start zosyn/i, [{ kind: 'order', order_type: 'medication', title: 'Zosyn (piperacillin-tazobactam) IV', fields: { name: 'Piperacillin-tazobactam', route: 'IV Piggyback', indication: 'Possible pneumonia' }, next: 'Choose the dose and frequency' }]],
+        [/penicillin as a serious/i, [{ kind: 'task', title: 'Update allergy: penicillin, anaphylaxis', next: 'Add penicillin anaphylaxis (1985, needed epinephrine) to the allergy list' }]],
+        [/look into those dark stools/i, [{ kind: 'task', title: 'Work up the dark stools', next: 'Rectal exam, repeat hemoglobin, type and screen' }]],
+        [/sit down together/i, [
+            { kind: 'task', title: 'Family meeting tomorrow morning', next: 'With Bob and Patricia: goals of care and code status' },
+            { kind: 'note', title: 'Goals-of-care note', note_type: 'Goals of Care Note', draft: 'Mr. Morrison said that if it comes to that, he does not want to be kept alive on machines. His wife Patricia was present; they have not talked about this before. Plan: meet tomorrow morning with both of them to talk about what matters to him and his code status.' },
+        ]],
+        // Not in the demo script; the UI test says them to try a consult and a message.
+        [/neurology to see him/i, [{ kind: 'consult', title: 'Neurology consult: possible TIA', fields: { specialty: 'Neurology', priority: 'Urgent', reason: 'Transient right hand weakness and jumbled speech last week, in AF off anticoagulation. Possible TIA.' } }]],
+        [/let the nurse know/i, [{ kind: 'message', title: 'Ask the nurse to call for HR over 130', to: 'nurse', draft: 'Please call me if his heart rate stays above 130 or his pressure drops below 100 systolic.' }]],
+    ];
+    const RADAR_FLAGS = [
+        [/zosyn|piperacillin/i, /zosyn|penicillin/i, 'Penicillin anaphylaxis in 1985'],
+        [/heparin/i, /heparin/i, 'Anticoagulation stopped after the 2023 bleed'],
+        [/diltiazem/i, /diltiazem/i, 'EF 30-35%: can worsen the heart failure'],
+        [/potassium/i, /potassium/i, 'K is already 5.1 on Entresto'],
+        [/home medicines/i, /metformin/i, 'Metformin with eGFR about 27'],
+    ];
+    function fakeRadar(user) {
+        const sect = (name) => ((user.match(new RegExp('<' + name + '>(.*?)</' + name + '>', 's')) || [])[1] || '').replace(/\\n/g, '\n').replace(/\\"/g, '"');
+        const listed = sect('on_my_radar').split('\n').map((l) => l.match(/^(A\d+) \[(\w+)([^\]]*)\] [^:]+: (.*?)(?: · said \w+)?$/)).filter(Boolean)
+            .map((m) => ({ id: m[1], status: m[2], flagged: /flag:/.test(m[3]), title: m[4] }));
+        const alerts = sect('open_safety_alerts').split('\n').map((l) => l.match(/^- (S\d+) \[[^\]]*\] (.*)$/)).filter(Boolean).map((m) => ({ id: m[1], text: m[2] }));
+        const fill = (x, line) => ({
+            id: '', kind: x.kind, title: x.title, order_type: x.order_type || (x.kind === 'consult' ? 'consult' : 'none'),
+            fields: Object.entries(x.fields || {}).map(([key, value]) => ({ key, value })), to: x.to || '', note_type: x.note_type || '', draft: x.draft || '',
+            next: x.next || '', status: 'todo', flag: '', alert: '', line,
+        });
+        const changes = [];
+        for (const p of sect('new_plan_items').split('\n')) {
+            const m = p.match(/^P\d+ \[\w+, heard by (L\d+)\] (.*)$/);
+            if (!m) continue;
+            const hit = RADAR.find(([re]) => re.test(m[2]));
+            if (hit) for (const x of hit[1]) if (!listed.some((l) => l.title === x.title)) changes.push(fill(x, m[1]));
+        }
+        // Flag what an open safety alert is about.
+        for (const item of listed.filter((l) => l.status === 'todo' && !l.flagged).concat(changes.map((c) => ({ title: c.title, change: c })))) {
+            const f = RADAR_FLAGS.find(([re]) => re.test(item.title));
+            const a = f && alerts.find((x) => f[1].test(x.text));
+            if (!a) continue;
+            if (item.change) Object.assign(item.change, { flag: f[2], alert: a.id });
+            else {
+                const x = RADAR.flatMap((r) => r[1]).find((y) => y.title === item.title);
+                if (x) changes.push(Object.assign(fill(x, ''), { id: item.id, flag: f[2], alert: a.id }));
+            }
+        }
+        return { changes };
+    }
+
     // A note that grows with what has been said (stand-in for the scribe).
     function fakeNote(conv) {
         const has = (re) => re.test(conv);
@@ -98,7 +171,8 @@
                     const facts = lines.filter((l) => /PATIENT|OTHER/.test(l)).map((l) => ({ text: l.replace(/^L\d+ \[[^\]]+\] \w+: /, '').slice(0, 90), kind: /stool|breath|swell|tight|cough|dizzy/i.test(l) ? 'symptom' : /aleve|pill|furosemide|penicillin|sulfa/i.test(l) ? 'medication' : 'history', from: /PATIENT/.test(l) ? 'patient' : 'other' }));
                     const exam = lines.filter((l) => /JVP|crackles|sodium/i.test(l)).map((l) => ({ text: l.replace(/^L\d+ \[[^\]]+\] \w+: /, '').slice(0, 110), kind: /sodium/i.test(l) ? 'data' : 'exam', from: 'doctor' }));
                     const think = lines.filter((l) => /so this is|probably a big part/i.test(l)).map((l) => l.replace(/^L\d+ \[[^\]]+\] \w+: /, ''));
-                    const plan = lines.filter((l) => /DOCTOR: .*(furosemide 80|push|start a heparin|start zosyn|potassium chloride|hold the spironolactone|repeat bmp)/i.test(l)).map((l) => ({ text: l.replace(/^L\d+ \[[^\]]+\] \w+: /, '').slice(0, 100), kind: 'order' }));
+                    const plan = lines.filter((l) => /DOCTOR: .*(sats above|furosemide 80|push|start a heparin|start zosyn|potassium chloride|hold the spironolactone|repeat bmp|continue the rest|penicillin as a serious|look into those dark stools|sit down together|neurology to see him|let the nurse know)/i.test(l))
+                        .map((l) => ({ text: l.replace(/^L\d+ \[[^\]]+\] \w+: /, ''), kind: /neurology/i.test(l) ? 'consult' : /nurse know/i.test(l) ? 'message' : /penicillin as|dark stools|sit down|continue the rest/i.test(l) ? 'task' : 'order' }));
                     const trap = TRAPS.find(([re]) => re.test(nl));
                     const q = /coworker,/i.test(nl);
                     return reply({ facts: facts.concat(exam), doctor_thinking: think, plan, to_coworker: q, question: q ? nl.replace(/^.*coworker,\s*/i, '') : '', watch_hits: [], alarm: trap ? 'possible_critical' : 'none', alarm_reason: trap ? trap[1] : '', worth_a_look: !!(think.length || plan.length), speaker_fix: [] }, 700);
@@ -121,6 +195,10 @@
                     return reply(a, 900 + a.split(' ').length * 35);
                 }
                 if (req.label === 'helper') { await sleep(800); return reply('{"verdict":"ok","issues":[],"dose_advice":""}', 800); }
+                if (req.label === 'actions') {
+                    await sleep(900);
+                    return reply(fakeRadar(user), 900);
+                }
                 if (req.label === 'note') {
                     await sleep(1200);
                     const conv = ((user.match(/<conversation>(.*?)<\/conversation>/s) || [])[1] || '').replace(/\\n/g, '\n');

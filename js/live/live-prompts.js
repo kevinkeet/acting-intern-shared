@@ -12,7 +12,7 @@
 (function (root) {
     'use strict';
 
-    const PROMPT_VERSION = 'live-v16';
+    const PROMPT_VERSION = 'live-v18';
 
     // ── Ear (Haiku): fast bookkeeping on every utterance ──────────────────
     const EAR_SYSTEM = [
@@ -21,7 +21,7 @@
         'Work only on the NEW lines. Earlier lines are context.',
         '- facts: new clinically relevant facts: symptoms with timing, history, medicines the patient takes, stopped or missed, allergies and reactions, exam findings, numbers said aloud, social details that matter. One fact per item in plain clinical shorthand, under 15 words. Skip small talk and anything already in working memory.',
         '- doctor_thinking: reasoning the doctor says aloud (an assessment, a differential, a worry), close to their words.',
-        '- plan: orders and plan items the doctor states. kind "order" for anything ordered, started, changed or given now; include the dose if said.',
+        '- plan: orders and plan items the doctor states, close to their words. kind "order" for anything ordered, started, changed, held or given now (include the dose if said); "test" for labs, imaging and other tests; "consult" for a specialist asked to see the patient; "referral" for an outpatient referral; "message" for something to tell or send someone (the nurse, the PCP, the family, pharmacy); "note" for a note to write; "task" for any other to-do (update the allergy list, set up a family meeting); "cancel" when the doctor takes back or changes an earlier order or plan ("no lisinopril then", "hold off on the heparin").',
         '- to_coworker: true only if a NEW line speaks to the AI coworker: it names it ("coworker", "Claude", "AI"), or the doctor is dictating alone and asks about the chart ("what was his last potassium?"). Questions to the patient, family, a nurse or another colleague are not for the coworker. When true, put the request in question, rewritten to stand alone; otherwise question is "".',
         '- watch_hits: ids from the watch list whose trigger has just happened in the new lines. Be literal: a drug only mentioned, or being stopped or held, has not been ordered.',
         '- alarm: "possible_critical" only if the new lines contain (a) an order or plan that could be dangerous for this patient, (b) a critical or unexpected result, or (c) a NEW red-flag finding that changes urgency and is not the reason for the visit (for a breathing visit, black stools or one-sided weakness are new; shortness of breath is not). Give the reason in alarm_reason. The presenting complaint, and things the doctor is asking about or working through, are not alarms. Otherwise "none" and "".',
@@ -52,7 +52,7 @@
                     type: 'object', additionalProperties: false,
                     properties: {
                         text: { type: 'string' },
-                        kind: { type: 'string', enum: ['order', 'test', 'consult', 'plan', 'disposition'] },
+                        kind: { type: 'string', enum: ['order', 'test', 'consult', 'referral', 'message', 'note', 'task', 'cancel', 'plan', 'disposition'] },
                     },
                     required: ['text', 'kind'],
                 },
@@ -206,7 +206,7 @@
     function taskAnswer(question) {
         return [
             'TASK: The doctor just asked you: "' + question + '"',
-            'Answer now, out loud, briefly. Answer what was asked: do not append reminders about other open issues (your alerts are already on the doctor\'s screen) unless they change this answer. If you need a fact you do not have, use a lookup tool first. If the question is ambiguous, answer the most likely meaning. For a question about a drug, check it against both the allergies and every current medicine (interactions, duplications, combinations that must never be given together) and give each reason that applies. When choosing a treatment, search the chart for what this patient has received before and how it went (an antibiotic tolerated despite an allergy, a drug stopped for a reaction): that history beats a generic choice. If they ask for your overall take or what you think is going on, give the whole picture in priority order: the main problem, then the most important other active issues (including the safety issues you already raised), then where you differ.',
+            'Answer now, out loud, briefly. Answer what was asked: do not append reminders about other open issues (your alerts are already on the doctor\'s screen) unless they change this answer. If you need a fact you do not have, use a lookup tool first. If the question is ambiguous, answer the most likely meaning. For a question about a drug, check it against both the allergies and every current medicine (interactions, duplications, combinations that must never be given together) and give each reason that applies. When choosing a treatment, search the chart for what this patient has received before and how it went (an antibiotic tolerated despite an allergy, a drug stopped for a reaction): that history beats a generic choice. If they ask for your overall take or what you think is going on, give the whole picture in priority order: the main problem, then the most important other active issues (including the safety issues you already raised), then where you differ. If they ask what is left to do or order, start from ON THE DOCTOR\'S RADAR: the open items (flagged ones first, with why), then at most two things they may have missed.',
             'LENGTH (the doctor reads this at a glance, mid-conversation): a fact or yes/no question gets one to three sentences, under 50 words; a drug or treatment question up to four sentences, under 70 words; an overall take up to six short sentences, under 100 words, one issue per sentence, most important first. Stop there, even if you know more: the doctor will ask for details.',
         ].join('\n');
     }
@@ -244,6 +244,82 @@
     };
 
     const TASK_NOTE = 'TASK: Bring the note up to date with everything heard so far. Return the whole note.';
+
+    // ── Radar (Haiku): the doctor's orders and to-dos, ready to act on ────
+    // Field names and choices of the EHR's order form (js/components/order-entry.js;
+    // tests/live-core.test.js checks they still match). A value that is not one of
+    // the choices is mapped or left blank in code (LiveCore.toOrderForm).
+    const ORDER_FIELDS = {
+        medication: { name: null, dose: null, route: ['PO', 'IV', 'IV Push', 'IV Piggyback', 'IM', 'SC', 'SL', 'PR', 'Topical', 'Inhaled', 'Intranasal'], frequency: ['Once', 'Daily', 'BID', 'TID', 'QID', 'Q2H', 'Q4H', 'Q6H', 'Q8H', 'Q12H', 'Q24H', 'Q4H PRN', 'Q6H PRN', 'Q8H PRN', 'PRN', 'At bedtime', 'Before meals', 'After meals', 'With meals', 'Continuous'], duration: null, indication: null, notes: null },
+        lab: { name: ['Complete Blood Count', 'Basic Metabolic Panel', 'Comprehensive Metabolic Panel', 'Lipid Panel', 'Liver Function Tests', 'Coagulation Panel (PT/INR/PTT)', 'Thyroid Panel', 'Troponin', 'BNP', 'Pro-BNP', 'Magnesium', 'Phosphorus', 'Lactate', 'Ammonia', 'Uric Acid', 'Iron Studies', 'Ferritin', 'Vitamin B12', 'Folate', 'Vitamin D', 'Hemoglobin A1c', 'C-Reactive Protein', 'ESR', 'Procalcitonin', 'Arterial Blood Gas', 'Venous Blood Gas', 'Urinalysis', 'Urine Culture', 'Urine Electrolytes', 'Blood Culture', 'Sputum Culture', 'Other'], customName: null, specimen: ['Blood', 'Urine', 'Stool', 'CSF', 'Sputum', 'Swab', 'Arterial Blood', 'Venous Blood', 'Other'], priority: ['Routine', 'Urgent', 'STAT'], indication: null, notes: null },
+        imaging: { modality: ['X-Ray', 'CT', 'MRI', 'Ultrasound', 'Echo', 'Nuclear Medicine', 'Fluoroscopy'], bodyPart: null, contrast: ['Without contrast', 'With contrast', 'With and without contrast', 'N/A'], priority: ['Routine', 'Urgent', 'STAT'], indication: null, notes: null },
+        procedure: { name: null, priority: ['Routine', 'Urgent', 'STAT'], indication: null, schedulingNotes: null, notes: null },
+        consult: { specialty: ['Cardiology', 'Nephrology', 'Endocrinology', 'Pulmonology', 'Gastroenterology', 'Neurology', 'Infectious Disease', 'Oncology', 'Rheumatology', 'Psychiatry', 'Surgery', 'Other'], customSpecialty: null, priority: ['Routine', 'Urgent', 'STAT'], reason: null, notes: null },
+        nursing: { orderType: ['Vital Signs', 'Activity', 'Diet', 'I&O Monitoring', 'Fall Precautions', 'Isolation', 'Wound Care', 'Foley Care', 'Other'], details: null, priority: ['Routine', 'Urgent'], duration: null, notes: null },
+    };
+    const fieldGuide = () => Object.entries(ORDER_FIELDS).map(([type, f]) => '- ' + type + ': ' + Object.entries(f).map(([k, v]) => k + (v ? ' [' + v.join(' | ') + ']' : '')).join(', ')).join('\n');
+
+    const ACTIONS_SYSTEM = [
+        'You keep the doctor\'s to-do list ("On my radar") during a live hospital encounter (simulated patient). Each time the doctor asks for something, you put it on the list, ready to act on with one click, so nothing said is lost. Only what the doctor asked for or committed to, and orders placed in the EHR: never your own ideas or the coworker\'s suggestions, unless the doctor takes one up ("let\'s do that": resolve "that" from COWORKER SAID).',
+        '',
+        'Kinds',
+        '- order: medicines (start, give, change, hold or stop), labs, imaging, procedures (an EKG is a procedure), nursing and diet orders (oxygen goal, telemetry, strict I&O, daily weights, diet, fluid restriction). An instruction to the nurse at the bedside ("keep his sats above 92") is a nursing order. To hold or stop a medicine: a nursing order, orderType Other, details like "Hold spironolactone tonight".',
+        '- consult: a specialist asked to see the patient here. referral: an outpatient referral.',
+        '- message: something to tell or send someone (the nurse, the PCP, the family, pharmacy, another team).',
+        '- note: a clinical note the doctor will write (H&P, progress note, goals-of-care note, procedure note); never an instruction or a remark.',
+        '- task: any other to-do (update the allergy list, continue home medicines in the medication reconciliation, set up a family meeting).',
+        'Not on the list: what was only discussed, considered or asked about, questions to the coworker, decisions that need no new action (keep using a drug he already takes), and anything the doctor decided against.',
+        'One item per thing to order: "BMP and magnesium in the morning" is two lab orders; "furosemide 80 IV now, then 40 IV twice a day" is two medication orders. Nursing orders said together (strict I&O and daily weights) may share one item.',
+        '',
+        'Order form fields (order_type, then field keys; where choices are listed use one exactly, else ""):',
+        fieldGuide(),
+        'Fill only what was said or is plainly implied (a drip is IV and Continuous; "now" is Once, and STAT for a test or consult; "today" is Urgent); leave the rest "". indication: the doctor\'s reason in a few words, or the obvious one from the conversation. For a consult, reason is the clinical question. notes: only instructions the doctor gave (timing, "AM labs"); never your own advice.',
+        '',
+        'Each item',
+        '- title: at most 8 words, as a doctor writes it, with the dose: "Furosemide 80 mg IV now", "BMP in the morning", "Hold spironolactone tonight".',
+        '- next: for a task, note, message or referral, the next step in at most 12 words ("Add penicillin anaphylaxis to the allergy list"). For an order or consult, "" (the form shows what it still needs).',
+        '- to, draft, note_type: for a message or referral, the recipient ("nurse", "PCP") and the message in the doctor\'s voice (at most 40 words, saying only what the doctor asked to say); for a note, note_type names it ("H&P", "Goals of Care Note") and draft is a short start (at most 80 words) from what was said. Otherwise "".',
+        '- status: "done" if a line shows it was placed in the EHR (saying "I will" is still "todo"); "dropped" only when the doctor\'s own words take it back or replace it ("no lisinopril then", "make it ceftriaxone instead"); otherwise "todo". A coworker alert never drops an item: it flags it, and the doctor decides.',
+        '- flag: if the coworker raised a safety concern about this item (OPEN SAFETY ALERTS, COWORKER SAID), the concern in at most 10 words ("Penicillin anaphylaxis in 1985"), and alert is that alert\'s id. Keep the flag until the doctor changes or drops the item. Otherwise flag and alert are "".',
+        '- line: the id of the line where the doctor said it (or the EHR line).',
+        '',
+        'Return only changes: new items with id "", and existing items whose content or status changed, with their id and all their fields (when only the status changes, keep the title as it was). Leave unchanged items out. If nothing changed, return an empty list.',
+    ].join('\n');
+
+    const ACTIONS_SCHEMA = {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+            changes: {
+                type: 'array',
+                items: {
+                    type: 'object', additionalProperties: false,
+                    properties: {
+                        id: { type: 'string' },
+                        kind: { type: 'string', enum: ['order', 'consult', 'referral', 'message', 'note', 'task'] },
+                        title: { type: 'string' },
+                        order_type: { type: 'string', enum: ['medication', 'lab', 'imaging', 'procedure', 'consult', 'nursing', 'none'] },
+                        fields: {
+                            type: 'array',
+                            items: { type: 'object', additionalProperties: false, properties: { key: { type: 'string' }, value: { type: 'string' } }, required: ['key', 'value'] },
+                        },
+                        to: { type: 'string' },
+                        note_type: { type: 'string' },
+                        draft: { type: 'string' },
+                        next: { type: 'string' },
+                        status: { type: 'string', enum: ['todo', 'done', 'dropped'] },
+                        flag: { type: 'string' },
+                        alert: { type: 'string' },
+                        line: { type: 'string' },
+                    },
+                    required: ['id', 'kind', 'title', 'order_type', 'fields', 'to', 'note_type', 'draft', 'next', 'status', 'flag', 'alert', 'line'],
+                },
+            },
+        },
+        required: ['changes'],
+    };
+
+    const TASK_ACTIONS = 'TASK: Update the list. NEW PLAN ITEMS are what was just heard; take exact doses and anything taken back from the conversation, and flags from the coworker\'s alerts. Return only the changes.';
 
     // ── Helpers (cheap models) ───────────────────────────────────────────
     const MEMORY_SYSTEM = 'You answer a clinician\'s question from a patient\'s long-term record summary. Quote values with dates. Answer in at most four short sentences. If the record does not contain the answer, say "Not in the record." Do not guess.';
@@ -297,7 +373,8 @@
 
     const api = {
         PROMPT_VERSION, EAR_SYSTEM, EAR_SCHEMA, BRAIN_SYSTEM, TAKE_SCHEMA, VERIFY_SCHEMA,
-        TASK_PRIME, TASK_UPDATE, taskVerify, taskAnswer, NOTE_SYSTEM, NOTE_SCHEMA, TASK_NOTE, MEMORY_SYSTEM, RELATE_SYSTEM, RELATE_SCHEMA, MEDCHECK_SYSTEM, MEDCHECK_SCHEMA, BRAIN_TOOLS,
+        TASK_PRIME, TASK_UPDATE, taskVerify, taskAnswer, NOTE_SYSTEM, NOTE_SCHEMA, TASK_NOTE, ORDER_FIELDS, ACTIONS_SYSTEM, ACTIONS_SCHEMA, TASK_ACTIONS,
+        MEMORY_SYSTEM, RELATE_SYSTEM, RELATE_SCHEMA, MEDCHECK_SYSTEM, MEDCHECK_SCHEMA, BRAIN_TOOLS,
     };
     if (typeof module !== 'undefined' && module.exports) module.exports = api;
     else root.LivePrompts = api;

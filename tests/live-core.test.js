@@ -481,6 +481,250 @@ const manualClock = () => {
         cw.stop();
     });
 
+    // ── on my radar ──────────────────────────────────────────────────────
+    const P = require('../js/live/live-prompts.js');
+    const item = (x) => Object.assign({ id: '', kind: 'order', title: '', order_type: 'none', fields: [], to: '', note_type: '', draft: '', next: '', status: 'todo', flag: '', alert: '', line: '' }, x);
+    const radarReply = (changes) => reply(JSON.stringify({ changes }));
+
+    await check('on my radar: a heard plan item shows at once, then Haiku lists it ready to act on', async () => {
+        const events = [];
+        const t = fakeTransport((lane, body, n) => {
+            if (lane === 'ear') return reply(JSON.stringify(Object.assign({}, EMPTY_EAR, { plan: [{ text: 'Repeat BMP and magnesium in the morning', kind: 'test' }] })));
+            if (lane === 'actions' && n === 1) {
+                return radarReply([
+                    item({ kind: 'order', order_type: 'lab', title: 'BMP in the morning', fields: [{ key: 'name', value: 'Basic Metabolic Panel' }, { key: 'priority', value: 'Routine' }, { key: 'dose', value: 'not a lab field' }], line: 'L1' }),
+                    item({ kind: 'order', order_type: 'lab', title: 'Magnesium in the morning', fields: [{ key: 'name', value: 'Magnesium' }], line: 'L99' }),
+                ]);
+            }
+            if (lane === 'actions') return radarReply([]);
+            return reply(JSON.stringify(TAKE()));
+        });
+        const clock = manualClock();
+        const cw = LiveCore.createCoworker({ transport: t, chart, clock });
+        cw.on('actions', (list) => events.push(list.length));
+        cw.start({ skipPrime: true });
+        cw.hear({ speaker: 'doctor', text: 'Repeat BMP and magnesium in the morning.' });
+        await cw.idle();
+        assert.strictEqual(cw.wm.plan[0].id, 'P1');
+        assert.ok(!cw.wm.plan[0].radar, 'heard, not yet ready');
+        assert.deepStrictEqual(events, [0], 'the panel hears about it at once (shown as "heard")');
+        assert.strictEqual(t.log.filter((x) => x.lane === 'actions').length, 0, 'waits a beat for the rest of the plan');
+        clock.advance(1200);
+        await cw.idle();
+        const call = t.log.find((x) => x.lane === 'actions');
+        assert.strictEqual(call.model, 'claude-haiku-5-5');
+        assert.deepStrictEqual(call.body.thinking, { type: 'disabled' });
+        assert.strictEqual(call.body.output_config.format.type, 'json_schema');
+        assert.ok(call.body.system[1].cache_control, 'patient header is a cache breakpoint');
+        assert.match(call.body.messages[0].content, /<new_plan_items>\nP1 \[test, heard by L1\] Repeat BMP and magnesium/);
+        assert.match(call.body.messages[0].content, /<on_my_radar>\n\(empty\)/);
+        assert.deepStrictEqual(cw.wm.actions.map((a) => a.id + ' ' + a.title), ['A1 BMP in the morning', 'A2 Magnesium in the morning']);
+        assert.deepStrictEqual(cw.wm.actions[0].fields, { name: 'Basic Metabolic Panel', priority: 'Routine' }, 'only the form\'s own fields');
+        assert.strictEqual(cw.wm.actions[0].orderType, 'lab');
+        assert.strictEqual(cw.wm.actions[0].line, 'L1');
+        assert.strictEqual(cw.wm.actions[1].line, '', 'a line that was never heard is not kept');
+        assert.strictEqual(cw.wm.plan[0].radar, true);
+        // Next time it sees the list (and no new plan items: just a re-check).
+        await cw.actions();
+        const second = t.log.filter((x) => x.lane === 'actions')[1].body.messages[0].content;
+        assert.match(second, /A1 \[todo\] order \(lab\): BMP in the morning · said L1/);
+        assert.match(second, /\(none: check flags and statuses only\)/);
+        cw.stop();
+    });
+
+    await check('radar changes: by id, a repeat merges, and the doctor\'s tick stands unless the EHR shows it placed', async () => {
+        const replies = [
+            [item({ title: 'Furosemide 80 mg IV now', order_type: 'medication' }), item({ title: 'EKG now', order_type: 'procedure' }), item({ kind: 'task', title: 'Update allergy list: penicillin' })],
+            [item({ id: 'A1', title: 'Furosemide 80 mg IV now', order_type: 'medication', status: 'todo' }), item({ title: 'EKG now', order_type: 'procedure', next: 'Compare with the last EKG' }), item({ id: 'A3', kind: 'task', title: '', status: 'dropped' })],
+            [item({ id: 'A1', title: 'Furosemide 80 mg IV now', order_type: 'medication', status: 'done' }), item({ id: 'A9', kind: 'note', title: 'Goals-of-care note', note_type: 'Goals of Care Note!', draft: 'He does not want machines.' })],
+        ];
+        let n = 0;
+        const t = fakeTransport((lane) => (lane === 'actions' ? radarReply(replies[n++] || []) : reply(JSON.stringify(TAKE()))));
+        const cw = LiveCore.createCoworker({ transport: t, chart, clock: manualClock() });
+        cw.start({ skipPrime: true });
+        cw.wm.plan.push({ id: 'P1', t: 0, text: 'x', kind: 'order', line: 'L1' });
+        await cw.actions();
+        assert.strictEqual(cw.wm.actions.length, 3);
+        cw.setActionStatus('A1', 'dropped', 'doctor');
+        await cw.actions();
+        const a = (id) => cw.wm.actions.find((x) => x.id === id);
+        assert.strictEqual(a('A1').status, 'dropped', 'the doctor removed it; the model\'s "todo" does not bring it back');
+        assert.strictEqual(cw.wm.actions.length, 3, 'EKG listed again updated A2 instead of adding A4');
+        assert.strictEqual(a('A2').next, 'Compare with the last EKG');
+        assert.strictEqual(a('A3').status, 'dropped');
+        assert.strictEqual(a('A3').title, 'Update allergy list: penicillin', 'an empty title keeps the old one');
+        await cw.actions();
+        assert.strictEqual(a('A1').status, 'dropped', '"done" without any order placed in the EHR is not believed');
+        n--;
+        cw.wm.lines.push({ id: 'L9', t: 0, speaker: 'ehr', text: 'Order placed in the EHR: Furosemide 80 mg IV Push Once' });
+        await cw.actions();
+        assert.strictEqual(a('A1').status, 'done', 'placed in the EHR wins over the doctor\'s earlier tick');
+        assert.ok(a('A4') && a('A4').kind === 'note', 'a made-up id is a new item');
+        assert.strictEqual(a('A4').noteType, 'Goals of Care Note', 'note type kept to safe characters');
+        cw.stop();
+    });
+
+    await check('an order signed from a radar item ticks it off at once; one placed by hand goes to the radar lane', async () => {
+        const t = fakeTransport((lane) => {
+            if (lane === 'actions') return radarReply([item({ title: 'Furosemide 80 mg IV now', order_type: 'medication' })]);
+            if (lane === 'verify') return reply(JSON.stringify({ decision: 'quiet', severity: 'none', topic: '', text: '', why: '', update_of: '' }));
+            return reply(JSON.stringify(TAKE()));
+        });
+        const clock = manualClock();
+        const cw = LiveCore.createCoworker({ transport: t, chart, clock });
+        cw.start({ skipPrime: true });
+        cw.wm.plan.push({ id: 'P1', t: 0, text: 'IV furosemide 80 now', kind: 'order', line: 'L1' });
+        await cw.actions();
+        cw.order({ name: 'Furosemide', details: '80 mg, IV Push, Once', priority: 'Routine', actionId: 'A1' });
+        await cw.idle();
+        assert.strictEqual(cw.wm.actions[0].status, 'done');
+        assert.strictEqual(cw.wm.actions[0].statusBy, 'ehr');
+        assert.strictEqual(cw.wm.plan[cw.wm.plan.length - 1].radar, true, 'nothing left for the radar lane');
+        clock.advance(2000);
+        await cw.idle();
+        assert.strictEqual(t.log.filter((x) => x.lane === 'actions').length, 1, 'no radar call for an order it already ticked');
+        cw.order({ name: 'Troponin', details: 'Blood', priority: 'STAT' });
+        clock.advance(1200);
+        await cw.idle();
+        const calls = t.log.filter((x) => x.lane === 'actions');
+        assert.strictEqual(calls.length, 2);
+        assert.match(calls[1].body.messages[0].content, /\[order, heard by L\d+\] Troponin Blood STAT/);
+        assert.match(calls[1].body.messages[0].content, /A1 \[done \(placed in the EHR\)\]/);
+        cw.stop();
+    });
+
+    await check('a safety alert sends the radar lane back to flag the order it is about', async () => {
+        let n = 0;
+        const t = fakeTransport((lane, body) => {
+            if (lane === 'actions') {
+                n++;
+                if (n === 1) return radarReply([item({ title: 'Zosyn IV', order_type: 'medication', fields: [{ key: 'name', value: 'Piperacillin-tazobactam' }] })]);
+                assert.match(body.messages[0].content, /<open_safety_alerts>\n- S1 \[[^\]]+\] Hold the Zosyn/);
+                return radarReply([item({ id: 'A1', title: 'Zosyn IV', order_type: 'medication', flag: 'Penicillin anaphylaxis in 1985', alert: 'S1' }), item({ title: 'Ceftriaxone 1 g IV daily', order_type: 'medication', flag: 'made up', alert: 'S7' })]);
+            }
+            if (lane === 'verify') return reply(JSON.stringify({ decision: 'say', severity: 'critical', topic: 'pcn', text: 'Hold the Zosyn: penicillin anaphylaxis in 1985.', why: 'Anaphylaxis on file.', update_of: '' }));
+            return reply(JSON.stringify(TAKE()));
+        });
+        const clock = manualClock();
+        const cw = LiveCore.createCoworker({ transport: t, chart, clock });
+        cw.start({ skipPrime: true });
+        cw.wm.plan.push({ id: 'P1', t: 0, text: 'Start Zosyn', kind: 'order', line: 'L1' });
+        await cw.actions();
+        cw.order({ name: 'Piperacillin-tazobactam', details: '4.5 g IV', priority: 'Routine', actionId: 'nope' });   // not a radar item: an ordinary EHR order
+        await cw.idle();
+        clock.advance(0);
+        await cw.idle();
+        assert.strictEqual(n, 2, 'the alert brought the radar lane back at once');
+        assert.strictEqual(cw.wm.actions[0].flag, 'Penicillin anaphylaxis in 1985');
+        assert.strictEqual(cw.wm.actions[0].alert, 'S1');
+        assert.strictEqual(cw.wm.actions[1].alert, '', 'an alert id that does not exist is dropped');
+        cw.stop();
+    });
+
+    await check('a safety flag stays on an item until its order changes', async () => {
+        const replies = [
+            [item({ title: 'Zosyn IV', order_type: 'medication', flag: 'Penicillin anaphylaxis in 1985 (S1)' })],
+            [item({ id: 'A1', title: 'Zosyn IV', order_type: 'medication', next: 'Choose the dose' })],
+            [item({ id: 'A1', title: 'Ceftriaxone 1 g IV daily', order_type: 'medication' })],
+        ];
+        let n = 0;
+        const t = fakeTransport((lane) => (lane === 'actions' ? radarReply(replies[n++] || []) : reply(JSON.stringify(TAKE()))));
+        const cw = LiveCore.createCoworker({ transport: t, chart, clock: manualClock() });
+        cw.start({ skipPrime: true });
+        cw.wm.plan.push({ id: 'P1', t: 0, text: 'Start Zosyn', kind: 'order', line: 'L1' });
+        await cw.actions();
+        assert.strictEqual(cw.wm.actions[0].flag, 'Penicillin anaphylaxis in 1985');
+        assert.match(cw.renderForBrain(), /ON THE DOCTOR'S RADAR[^\n]*\n- \[to do, flagged: Penicillin anaphylaxis in 1985\] order: Zosyn IV/, 'the brain can say what is still to sign');
+        await cw.actions();
+        assert.strictEqual(cw.wm.actions[0].flag, 'Penicillin anaphylaxis in 1985', 'a routine update does not drop the flag');
+        assert.strictEqual(cw.wm.actions[0].next, 'Choose the dose');
+        assert.match(cw.renderForActions([]), /A1 \[todo, flag: Penicillin anaphylaxis in 1985\] order \(medication\): Zosyn IV · next: Choose the dose/);
+        await cw.actions();
+        assert.strictEqual(cw.wm.actions[0].flag, '', 'a changed order (new title) loses the old flag');
+        assert.strictEqual(cw.wm.actions[0].next, 'Choose the dose', 'an empty next keeps the last one');
+        cw.stop();
+    });
+
+    await check('a busy radar tries again (4 s, 8 s), then shows the item as heard but not ready', async () => {
+        let busy = true, calls = 0;
+        const t = fakeTransport((lane) => {
+            if (lane === 'ear') return reply(JSON.stringify(Object.assign({}, EMPTY_EAR, { plan: [{ text: 'EKG now', kind: 'test' }] })));
+            if (lane === 'actions') {
+                calls++;
+                if (busy) throw Object.assign(new Error('AI call failed (529): Overloaded'), { status: 529 });
+                return radarReply([item({ title: 'EKG now', order_type: 'procedure' }), item({ title: 'Troponin now', order_type: 'lab' })]);
+            }
+            return reply(JSON.stringify(TAKE()));
+        });
+        const clock = manualClock();
+        const cw = LiveCore.createCoworker({ transport: t, chart, clock });
+        const seen = [];
+        cw.on('actions', () => seen.push(cw.wm.plan.map((p) => p.radar).join(',')));
+        cw.start({ skipPrime: true });
+        cw.hear({ speaker: 'doctor', text: 'EKG now.' });
+        await cw.idle();
+        clock.advance(1200); await cw.idle();
+        assert.strictEqual(calls, 1);
+        clock.advance(3999); await cw.idle();
+        assert.strictEqual(calls, 1, 'waits 4 s');
+        clock.advance(1); await cw.idle();
+        assert.strictEqual(calls, 2);
+        clock.advance(8000); await cw.idle();
+        assert.strictEqual(calls, 3);
+        assert.strictEqual(cw.wm.plan[0].radar, 'failed', 'shown as heard, not ready');
+        clock.advance(60000); await cw.idle();
+        assert.strictEqual(calls, 3, 'no endless retries');
+        busy = false;
+        await cw.actions();
+        assert.strictEqual(cw.wm.plan[0].radar, true, 'the next run picks it up');
+        assert.strictEqual(cw.wm.actions.length, 2);
+        cw.stop();
+    });
+
+    await check('toOrderForm maps the model\'s words to the order form\'s choices and never guesses', async () => {
+        const vm = require('vm');
+        const ctx = { window: {}, document: { addEventListener() {}, getElementById: () => null }, console };
+        vm.createContext(ctx);
+        vm.runInContext(fs.readFileSync(path.join(__dirname, '..', 'js', 'components', 'order-entry.js'), 'utf8'), ctx);
+        const types = ctx.window.OrderEntry.orderTypes;
+        const form = (type, values) => LiveCore.toOrderForm(types[type].fields, values);
+        assert.deepStrictEqual(form('medication', { name: 'Furosemide', dose: '40 mg', route: 'iv push', frequency: 'twice a day', indication: 'HF' }),
+            { name: 'Furosemide', dose: '40 mg', route: 'IV Push', frequency: 'BID', indication: 'HF' });
+        assert.strictEqual(form('medication', { route: 'IV push over 2 minutes' }).route, 'IV Push', 'longest choice wins');
+        assert.strictEqual(form('medication', { route: 'IV' }).route, 'IV');
+        assert.strictEqual(form('medication', { frequency: 'every few hours as he needs' }).frequency, undefined, 'no guess');
+        assert.strictEqual(form('medication', { frequency: 'drip' }).frequency, 'Continuous');
+        assert.deepStrictEqual(form('lab', { name: 'BMP', priority: 'in the morning' }), { name: 'Basic Metabolic Panel', priority: 'Routine' });
+        assert.deepStrictEqual(form('lab', { name: 'Type and screen' }), { name: 'Other', customName: 'Type and screen' }, 'an unknown test goes in "Other"');
+        assert.strictEqual(form('lab', { name: 'Coagulation Panel (PT/INR/PTT)' }).name, 'Coagulation Panel (PT/INR/PTT)');
+        assert.strictEqual(form('lab', { name: 'INR' }).name, 'Coagulation Panel (PT/INR/PTT)');
+        assert.deepStrictEqual(form('consult', { specialty: 'GI', reason: 'Melena' }), { specialty: 'Gastroenterology', reason: 'Melena' });
+        assert.deepStrictEqual(form('consult', { specialty: 'Palliative care' }), { specialty: 'Other', customSpecialty: 'Palliative care' });
+        assert.strictEqual(form('imaging', { modality: 'CXR', contrast: 'without IV contrast' }).modality, 'X-Ray');
+        assert.strictEqual(form('imaging', { contrast: 'without IV contrast' }).contrast, 'Without contrast');
+        assert.strictEqual(form('nursing', { orderType: 'strict I&O' }).orderType, 'I&O Monitoring');
+    });
+
+    await check('the radar\'s field guide matches the EHR order form (keys and choices)', async () => {
+        const vm = require('vm');
+        const ctx = { window: {}, document: { addEventListener() {}, getElementById: () => null }, console };
+        vm.createContext(ctx);
+        vm.runInContext(fs.readFileSync(path.join(__dirname, '..', 'js', 'components', 'order-entry.js'), 'utf8'), ctx);
+        const types = ctx.window.OrderEntry.orderTypes;
+        for (const [type, guide] of Object.entries(P.ORDER_FIELDS)) {
+            assert.ok(types[type], 'order type ' + type + ' exists');
+            const fields = types[type].fields.filter((f) => f.type !== 'multiselect');
+            // (Arrays from the order form's own context: copy them before comparing.)
+            assert.deepStrictEqual(Object.keys(guide).sort(), Array.from(fields, (f) => f.name).sort(), type + ' keys');
+            for (const f of fields) {
+                const want = f.type === 'select' ? Array.from(f.options).filter((o) => !/^-{2,}/.test(o)) : null;
+                assert.deepStrictEqual(guide[f.name], want, type + '.' + f.name + ' choices');
+            }
+        }
+        assert.match(P.ACTIONS_SYSTEM, /lab: name \[Complete Blood Count \| Basic Metabolic Panel/);
+        assert.ok(P.EAR_SCHEMA.properties.plan.items.properties.kind.enum.includes('cancel'));
+    });
+
     await check('insights: held in Abreast, spoken in Lead at most once per gap', async () => {
         const TEXTS = ['Consider amiodarone loading for rate control', 'His troponin needs a repeat in six hours', 'Dry weight was 97 kilograms in January notes', 'Ask about leftover warfarin tablets at home'];
         const insight = (topic, i) => reply(JSON.stringify(TAKE({ say: { should_say: true, kind: 'insight', topic, text: TEXTS[i % TEXTS.length], why: 'w' } })));

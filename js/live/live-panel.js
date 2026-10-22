@@ -7,17 +7,22 @@
  *      never look like "all clear".
  *   2. Safety alerts: pinned until acknowledged, newest in full, older ones
  *      folded to their first sentence. The only loud thing.
- *   3. My take: what matters most first; its summary and plan on request.
+ *   3. On my radar: the orders, consults, messages, notes and tasks the doctor
+ *      has asked for, each with its next step and the button that does it
+ *      (the order form filled in, the nurse chat with the message typed, the
+ *      note draft). Flagged items (a safety alert is about them) come first.
+ *      Narrow: the newest item, the rest on request. Wide: the whole list.
+ *   4. My take: what matters most first; its summary and plan on request.
  *      It shrinks to one line while an alert waits.
- *   4. Conversation | Tracking | Log:
+ *   5. Conversation | Note | Tracking | Log:
  *        Conversation: what it heard and what it said, in order, newest at the
  *              bottom, with a live caption of what it is hearing right now and
  *              the thoughts it is holding until asked.
- *        Tracking: its working memory (facts heard, your thinking, the plan,
- *              what it is watching for). Log: decisions, calls, cost.
- *   5. Ask box.
- * When the panel is wide, talk (alerts, conversation, ask) sits on the left and
- * thinking (take, tracking, log) on the right.
+ *        Note: the live note. Tracking: its working memory (facts heard, your
+ *              thinking, the plan, what it is watching for). Log: decisions, calls, cost.
+ *   6. Ask box.
+ * When the panel is wide, what to act on and talk (alerts, radar, conversation,
+ * ask) sit on the left and thinking (take, note, tracking, log) on the right.
  *
  * LiveApp owns the state and calls render*(view) when something changes;
  * refreshTimes() keeps the "2m ago" labels current without re-rendering.
@@ -37,6 +42,9 @@
         bulb: svg('<path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/>', 'is-insight'),
         chat: svg('<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>'),
         chevron: svg('<path d="m6 9 6 6 6-6"/>'),
+        radar: svg('<path d="M19.07 4.93A10 10 0 0 0 6.99 3.34"/><path d="M4 6h.01"/><path d="M2.29 9.62A10 10 0 1 0 21.31 8.35"/><path d="M16.24 7.76A6 6 0 1 0 8.23 16.67"/><path d="M12 18h.01"/><path d="M17.99 11.66A6 6 0 0 1 15.77 16.67"/><circle cx="12" cy="12" r="2"/><path d="m13.41 10.59 5.66-5.66"/>', 'lc-radar-icon'),
+        check: svg('<path d="M20 6 9 17l-5-5"/>'),
+        x: svg('<path d="M18 6 6 18"/><path d="m6 6 12 12"/>'),
     };
     const MODE_HINT = {
         follow: 'Answers when you ask. Speaks up only for safety.',
@@ -94,8 +102,47 @@
     const sentences = (t) => String(t || '').split(/(?<=[.!?])\s+(?=["“(]?[A-Z0-9])/).map((x) => x.trim()).filter(Boolean);
     const normText = (t) => String(t || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 
+    // ── on my radar ─────────────────────────────────────────────────────
+    const TYPE_TAG = { medication: 'med', lab: 'lab', imaging: 'imaging', procedure: 'procedure', nursing: 'nursing' };
+    const actTag = (a) => (a.kind === 'order' ? TYPE_TAG[a.orderType] || 'order' : a.kind);
+    /** The one button that acts on an item, named for what it does. */
+    function actButton(a) {
+        if (a.status !== 'todo') return '';
+        const b = (act, label) => '<button type="button" class="lc-btn" data-act="' + act + '" data-id="' + esc(a.id) + '">' + label + '</button>';
+        if (a.kind === 'consult') return b('act-open', 'Order consult');
+        if (a.kind === 'order') return b('act-open', 'Review order');
+        if (a.kind === 'message' && /nurse/i.test(a.to || '')) return b('act-open', 'Message nurse');
+        if (a.kind === 'note') return b('act-open', 'Open draft');
+        if ((a.kind === 'message' || a.kind === 'referral') && a.draft) return b('act-copy', 'Copy');
+        return '';
+    }
+    function actRow(a, changed) {
+        const todo = a.status === 'todo';
+        const flagged = todo && !!a.flag;
+        const draftLine = (a.kind === 'message' || a.kind === 'referral') && !!a.draft;
+        // The next step: the flag; for an order, what its form still needs (worked out from the form, not the model); else the model's next step.
+        const isOrder = a.kind === 'order' || a.kind === 'consult';
+        const sub = flagged ? '<p class="lc-act-flag">' + ICON.alert + esc(a.flag) + '</p>'
+            : !todo ? ''
+                : draftLine ? '<p class="lc-act-next">' + (a.to ? esc(a.to) + ': ' : '') + '“' + esc(a.draft) + '”</p>'
+                    : isOrder ? (a.needs && a.needs.length ? '<p class="lc-act-next">Fill in: ' + esc(a.needs.join(', ')) + '</p>' : '')
+                        : a.next ? '<p class="lc-act-next">' + esc(a.next) + '</p>' : '';
+        const by = { ehr: 'ordered', sent: 'sent', saved: 'saved' }[a.statusBy];
+        return '<li class="lc-act is-' + esc(a.status) + (flagged ? ' is-flagged' : '') + (changed ? ' lc-changed' : '') + '" data-id="' + esc(a.id) + '">'
+            + '<button type="button" class="lc-act-check" role="checkbox" aria-checked="' + (a.status === 'done') + '" data-act="act-done" data-id="' + esc(a.id) + '" title="' + (todo ? 'Mark done' : 'Put back on the list') + '">' + (a.status === 'done' ? ICON.check : '') + '<span class="lc-sr">' + (todo ? 'Mark done: ' : 'Put back: ') + esc(a.title) + '</span></button>'
+            + '<div class="lc-act-main"><p class="lc-act-title"><span class="lc-tag' + (flagged ? ' critical' : '') + '">' + esc(actTag(a)) + '</span>' + esc(a.title)
+            + (a.status === 'dropped' ? ' <span class="lc-act-state">removed</span>' : by ? ' <span class="lc-act-state">' + by + '</span>' : '') + '</p>' + sub + '</div>'
+            + '<div class="lc-act-btns">' + actButton(a)
+            + (todo ? '<button type="button" class="lc-iconbtn lc-act-x" data-act="act-drop" data-id="' + esc(a.id) + '" title="Remove (not doing this)">' + ICON.x + '<span class="lc-sr">Remove ' + esc(a.title) + '</span></button>' : '')
+            + '</div></li>';
+    }
+    // Heard, being got ready (or not ready: the AI was busy three times; it tries again with the next item).
+    const pendingRow = (p) => '<li class="lc-act is-pending' + (p.failed ? ' is-failed' : '') + '" data-plan="' + esc(p.id) + '">' + (p.failed ? '<span></span>' : '<span class="lc-act-wait" aria-hidden="true"></span>')
+        + '<div class="lc-act-main"><p class="lc-act-title">' + esc(p.text) + '</p><p class="lc-act-next">' + (p.failed ? 'Heard, not ready yet: the AI is busy. <button type="button" class="lc-more" data-act="radar-retry">Try again</button>' : 'Heard. Getting it ready…') + '</p></div></li>';
+
     // Conversation pieces.
-    const lineHtml = (l, flagged) => '<div class="lc-line' + (flagged ? ' is-flagged' : '') + '" data-speaker="' + esc(l.speaker) + '"><span class="lc-who">' + esc(l.label || l.speaker) + '</span><span class="lc-said">' + esc(l.text) + '</span></div>';
+    const lineHtml = (l, flagged, radar) => '<div class="lc-line' + (flagged ? ' is-flagged' : '') + '" data-speaker="' + esc(l.speaker) + '"><span class="lc-who">' + esc(l.label || l.speaker) + '</span><span class="lc-said">' + esc(l.text)
+        + (radar && radar.length ? ' <span class="lc-radar-mark" title="' + esc('On my radar: ' + radar.join('; ')) + '">' + ICON.radar + (radar.length > 1 ? radar.length + ' on radar' : 'on radar') + '</span>' : '') + '</span></div>';
     const typedHtml = (q) => '<div class="lc-line is-typed" data-speaker="doctor"><span class="lc-who">You</span><span class="lc-said">' + esc(q) + '</span></div>';
     const interimHtml = (it) => '<div class="lc-line is-interim"' + (it ? '' : ' hidden') + ' data-speaker="' + esc(it ? it.speaker : '') + '"><span class="lc-who">' + esc(it ? it.speaker : '') + '</span><span class="lc-said">' + esc(it ? it.text : '') + '</span></div>';
     function itemHtml(s, isPinned) {
@@ -150,6 +197,7 @@
                 '<div class="lc-body">',
                 '  <div class="lc-left">',
                 '    <div class="lc-alerts" data-ref="alerts"></div>',
+                '    <section class="lc-radar" data-ref="radar" aria-label="On my radar" hidden></section>',
                 '    <div class="lc-pane is-active" data-pane="said" role="tabpanel" aria-label="Conversation"><h3 class="lc-pane-title">Conversation</h3><div data-ref="said"></div><button type="button" class="lc-jump" data-act="jump" hidden>Latest ↓</button></div>',
                 '    <form class="lc-ask" data-ref="ask" autocomplete="off">',
                 '      <label class="lc-sr" for="lc-ask-input">Ask the coworker</label>',
@@ -218,6 +266,14 @@
                     case 'reset': return h.onReset && h.onReset();
                     case 'classic': return h.onClassic && h.onClassic();
                     case 'voice-test': return h.onVoiceTest && h.onVoiceTest();
+                    case 'radar-toggle': return h.onRadarToggle && h.onRadarToggle(t.getAttribute('aria-expanded') !== 'true');
+                    case 'radar-done': { this._radarDone = !this._radarDone; return h.onRerenderRadar && h.onRerenderRadar(); }
+                    case 'act-open': return h.onAction && h.onAction(t.dataset.id, 'open');
+                    case 'act-copy': return h.onAction && h.onAction(t.dataset.id, 'copy');
+                    case 'act-done': return h.onAction && h.onAction(t.dataset.id, 'toggle');
+                    case 'act-drop': return h.onAction && h.onAction(t.dataset.id, 'drop');
+                    case 'review-orders': return h.onReviewOrders && h.onReviewOrders();
+                    case 'radar-retry': return h.onRadarRetry && h.onRadarRetry();
                     case 'jump': { const pane = this.refs.said.parentElement; pane.scrollTop = pane.scrollHeight; this._jump(false); return undefined; }
                     default: return undefined;
                 }
@@ -336,8 +392,11 @@
             // The encounter: one clear way in ("Start encounter"), and a way out ("End").
             r.end.hidden = !live;
             r.end.textContent = e && e.kind === 'demo' ? 'Stop demo' : 'End encounter';
+            // Starting over clears the note and the radar: say so if anything is still open.
+            const openTodo = (v.actions || []).filter((a) => a.status === 'todo').length;
+            const clearAsk = openTodo ? 'Clear the note and ' + openTodo + ' open to-do' + (openTodo > 1 ? 's' : '') + '?' : 'Clear this note and start over?';
             const startHtml = live ? '' : '<button type="button" class="lc-start" data-act="start"' + (v.canStart ? '' : ' disabled')
-                + (e && e.state === 'ended' && v.note ? ' data-confirm="Clear this note and start over?"' : '') + '>' + ICON.mic
+                + (e && e.state === 'ended' && (v.note || openTodo) ? ' data-confirm="' + esc(clearAsk) + '"' : '') + '>' + ICON.mic
                 + '<span>' + (e && e.state === 'ended' ? 'Start a new encounter' : 'Start encounter') + '</span></button>';
             if (r.enc._lcHtml !== startHtml) { r.enc.innerHTML = startHtml; r.enc._lcHtml = startHtml; }
             r.enc.hidden = !startHtml;
@@ -410,6 +469,63 @@
                     this._shown.add(u);
                 }
             }
+        },
+
+        // ── on my radar ──────────────────────────────────────────────────
+        // Header: what is waiting ("6 to do · 2 flagged") and "Review all N" to
+        // sign the orders one after another. Closed (the narrow default): the
+        // newest item, with its button. Open: flagged items first, then what was
+        // heard most recently (each dictated batch in the order it was said).
+        // Only the header is fixed; the list takes the rest and scrolls.
+        renderRadar(v) {
+            const el = this.refs.radar;
+            const all = v.actions || [];
+            const pend = v.pendingPlan || [];
+            if (!all.length && !pend.length) {
+                el.hidden = true; el.innerHTML = ''; this._radarSig = null;
+                return;
+            }
+            el.hidden = false;
+            const open = v.settings && v.settings.radarOpen != null ? !!v.settings.radarOpen : !!v.wide;
+            const todo = all.filter((a) => a.status === 'todo');
+            const flagged = todo.filter((a) => a.flag);
+            const closed = all.filter((a) => a.status !== 'todo');
+            // Newest batch first; within a batch, the order it was said (ids rise in that order).
+            const num = (a) => Number(String(a.id).slice(1)) || 0;
+            const byNewest = (x, y) => ((y.batch || 0) - (x.batch || 0)) || (num(x) - num(y));
+            const rest = todo.filter((a) => !a.flag).sort(byNewest);
+            const pendNewest = pend.slice().sort((x, y) => y.t - x.t);
+            // What changed since the last render lights up (not on the first one).
+            const prev = this._radarSig;
+            const sig = new Map(all.map((a) => [a.id, [a.title, a.status, a.flag].join('|')]));
+            const changed = (a) => !!prev && prev.get(a.id) !== sig.get(a.id);
+            const added = prev ? all.filter((a) => !prev.has(a.id) && a.status === 'todo') : [];
+            if (added.length) this._announce('polite', 'On my radar: ' + added.map((a) => a.title).join('; ') + '.');
+            this._radarSig = sig;
+
+            const newest = pendNewest[0] ? null : (flagged.concat(rest).sort(byNewest)[0] || null);
+            const summary = (todo.length ? '<span class="lc-radar-sum">' + todo.length + ' to do</span>' : '<span class="lc-radar-sum">' + (closed.length ? 'All done' : 'Getting ready') + '</span>')
+                + (flagged.length ? '<span class="lc-radar-flag">' + flagged.length + ' flagged</span>' : '')
+                + (pend.length ? '<span class="lc-radar-heard">' + pend.length + ' just heard</span>' : '');
+            const ready = todo.filter((a) => !a.flag && ((a.kind === 'order' && a.orderType) || a.kind === 'consult'));
+            const head = '<div class="lc-radar-head"><button type="button" class="lc-radar-toggle" data-act="radar-toggle" aria-expanded="' + open + '" title="' + (open ? 'Show only the newest' : 'Show the whole list') + '">'
+                + ICON.radar + '<span class="lc-label">On my radar</span><span class="lc-radar-counts">' + summary + '</span>' + ICON.chevron + '</button>'
+                + (ready.length > 1 ? '<button type="button" class="lc-btn lc-btn-primary lc-radar-all" data-act="review-orders" title="Open each order form in turn (flagged ones are left out)">Review all ' + ready.length + '</button>' : '') + '</div>';
+            let rows;
+            if (open) rows = flagged.map((a) => actRow(a, changed(a))).concat(pendNewest.map(pendingRow), rest.map((a) => actRow(a, changed(a))));
+            else rows = pendNewest.length ? [pendingRow(pendNewest[0])] : newest ? [actRow(newest, changed(newest))] : [];
+            const doneLine = open && closed.length
+                ? '<div class="lc-radar-doneline"><button type="button" class="lc-more" data-act="radar-done" aria-expanded="' + !!this._radarDone + '">' + (this._radarDone ? 'Hide' : (closed.some((a) => a.status === 'dropped') ? 'Done or removed (' : 'Done (') + closed.length + ')') + '</button></div>'
+                : '';
+            const done = open && this._radarDone && closed.length ? '<ul class="lc-radar-list is-done" aria-label="Done">' + closed.slice().sort((x, y) => (y.updatedAt || 0) - (x.updatedAt || 0)).map((a) => actRow(a, false)).join('') + '</ul>' : '';
+            const list = rows.length ? '<ul class="lc-radar-list">' + rows.join('') + '</ul>' : '';
+            // Keep the list's scroll position across re-renders.
+            const scroller = el.querySelector('.lc-radar-body');
+            const top = scroller ? scroller.scrollTop : 0;
+            el.classList.toggle('is-open', open);
+            el.innerHTML = head + (list || doneLine ? '<div class="lc-radar-body">' + list + doneLine + done + '</div>' : '');
+            const body = el.querySelector('.lc-radar-body');
+            if (body && top) body.scrollTop = top;
         },
 
         // ── take ─────────────────────────────────────────────────────────
@@ -493,14 +609,21 @@
                 el.innerHTML = '<p class="lc-empty">' + (v.mode === 'lead'
                     ? 'I’ll answer when you ask (say <b>“Coworker, …”</b> or type below), flag anything unsafe, and point out what you might be missing.'
                     : 'I’ll answer when you ask (say <b>“Coworker, …”</b> or type below) and speak up only for safety issues.')
-                    + ' What I hear and what I say show up here, in order.</p>';
+                    + ' What I hear and what I say show up here, in order. Orders and to-dos you mention go on my radar, ready to sign.</p>';
                 this._lastConvo = 0;
                 this._jump(false);
                 this._updateCount();
                 return;
             }
             const flagged = new Set(said.filter((s) => s.kind !== 'answer' && s.cueLine).map((s) => s.cueLine));
-            const events = lines.map((l, i) => ({ t: l.t || 0, order: 0, seq: i, html: lineHtml(l, flagged.has(l.id)) }))
+            // Lines that put something on the radar say so, right where they were heard.
+            const radar = new Map();
+            for (const a of v.actions || []) {
+                if (!a.line || a.status === 'dropped') continue;
+                if (!radar.has(a.line)) radar.set(a.line, []);
+                radar.get(a.line).push(a.title);
+            }
+            const events = lines.map((l, i) => ({ t: l.t || 0, order: 0, seq: i, html: lineHtml(l, flagged.has(l.id), l.speaker === 'ehr' ? null : radar.get(l.id)) }))
                 .concat(said.map((s, i) => ({ t: s.t || 0, order: 1, seq: said.length - i, html: itemHtml(s, pinned.has(s.id)) })));
             events.sort((a, b) => (a.t - b.t) || (a.order - b.order) || (a.seq - b.seq));
             const parts = events.map((e) => e.html);

@@ -55,6 +55,41 @@ coworker's suggestions only as "consider"). It is rewritten a few seconds after
 new speech, at most every 12 s, after each take update and at the end of the
 encounter; new or changed sentences light up briefly. About $0.002 per rewrite.
 
+## On my radar
+
+Every order, consult, referral, message, note and task the doctor asks for goes
+on a list, ready to act on with one click:
+
+- The ear catches it as a plan item ("Repeat BMP and magnesium in the morning")
+  and it shows at once as "heard". A second cheap model (Haiku 5.5, thinking off;
+  1.5 to 3.5 s, about 2 cents an encounter) turns it into items: one per orderable
+  thing, with the EHR order form's own fields and choices, a drafted message or
+  note, and the next step. It sees the list so far and returns only what changed;
+  "no lisinopril then" takes an item off.
+- Buttons: **Review order** / **Order consult** opens the EHR's order form filled
+  in ("From the coworker's radar"); signing it ticks the item off and the
+  coworker safety-checks the order like any other; under an order, "Fill in: dose"
+  names what the form still needs (worked out from the form, not the model).
+  **Review all N** (in the radar's header) opens the orders one after another
+  (flagged ones are left out). **Message nurse** opens the
+  nurse chat with the message typed in; **Open draft** opens the note editor (an
+  H&P starts from the live note), and Save to Chart ticks it off; other messages
+  and referrals have **Copy**. Tasks (update the allergy list, the med rec, a
+  family meeting) have the next step and a tick box.
+- An order a safety alert is about is **flagged**: red, first in the list, with
+  the reason, and left out of "Review all". The doctor's own ticks and removals
+  stand; only an order seen placed in the EHR overrides them.
+- Narrow panel: the header ("6 to do · 2 flagged", Review all) and the newest
+  item; open it for the whole list. Side by side: the whole list under the alerts.
+  Only the header is fixed: when space is short the list scrolls, and the
+  conversation keeps a few lines. The line in the conversation that put something
+  on the radar says "on radar". Ask "Coworker, what's left to order?" and it
+  starts from the radar.
+- The model maps to the form's choices; code maps what it says otherwise ("twice
+  a day" to BID, "BMP" to Basic Metabolic Panel) and leaves a choice blank rather
+  than guess (`LiveCore.toOrderForm`). `tests/live-core.test.js` checks the
+  field guide still matches `js/components/order-entry.js`.
+
 ## The panel
 
 - Header: a full-width **Start encounter** when idle; during the encounter
@@ -68,6 +103,7 @@ encounter; new or changed sentences light up briefly. About $0.002 per rewrite.
   ("Safety · updated": the newest point leads, what came before sits below) and
   the card comes back to the top; after "Got it" the same problem gets a new card.
   The brain decides "same problem" itself (it sees the open alerts and their ids).
+- On my radar: the doctor's orders and to-dos (above).
 - My take: the problem representation, then what worries it most; assessment and
   next steps on request. One line while an alert waits.
 - Conversation (what it heard and what it said, in order, with a live caption),
@@ -88,10 +124,10 @@ encounter; new or changed sentences light up briefly. About $0.002 per rewrite.
 | `live-chart.js` | Exact chart lookups: labs by name or shorthand, BM25 search over notes, problems, meds, allergies, imaging reports |
 | `live-memory.js` | Builds the digest and the long-term text from the chart and the AI memory |
 | `live-prompts.js` | Prompts and JSON schemas (`PROMPT_VERSION`) |
-| `live-core.js` | The engine (no DOM): ear, working memory, brain lanes, tools, speaking rules, events |
-| `live-voice.js` | Speaking aloud (browser speech): cleanup, sentence pieces, voice choice, echo check |
+| `live-core.js` | The engine (no DOM): ear, working memory, brain lanes, tools, speaking rules, the live note, the radar, events |
+| `live-voice.js` | Speaking aloud (Deepgram's Aura voices, or this computer's): cleanup, sentence pieces, voice choice, echo check |
 | `live-panel.js` | The panel UI (DOM only) |
-| `live-app.js` | Browser glue: chart, memory, mic (Deepgram room mic or browser speech), demo replay, settings |
+| `live-app.js` | Browser glue: chart, memory, mic (Deepgram room mic or browser speech), demo replay, settings, the radar's buttons (order form, nurse chat, note editor) |
 | `live-fake.js` | `?livefake`: a scripted stand-in model for UI work and UI tests (no AI cost) |
 
 Loader: the end of `js/components/ai-coworker.js`. Styles: `css/live-coworker.css`.
