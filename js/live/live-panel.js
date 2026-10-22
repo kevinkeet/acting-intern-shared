@@ -45,6 +45,7 @@
         radar: svg('<path d="M19.07 4.93A10 10 0 0 0 6.99 3.34"/><path d="M4 6h.01"/><path d="M2.29 9.62A10 10 0 1 0 21.31 8.35"/><path d="M16.24 7.76A6 6 0 1 0 8.23 16.67"/><path d="M12 18h.01"/><path d="M17.99 11.66A6 6 0 0 1 15.77 16.67"/><circle cx="12" cy="12" r="2"/><path d="m13.41 10.59 5.66-5.66"/>', 'lc-radar-icon'),
         check: svg('<path d="M20 6 9 17l-5-5"/>'),
         x: svg('<path d="M18 6 6 18"/><path d="m6 6 12 12"/>'),
+        info: svg('<circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>'),
     };
     const MODE_HINT = {
         follow: 'Answers when you ask. Speaks up only for safety.',
@@ -185,6 +186,7 @@
                 '  <button type="button" class="lc-mic" data-act="mic" aria-pressed="false" title="Start listening">' + ICON.mic + '<span class="lc-sr">Listen</span></button>',
                 '  <div class="lc-status-text"><span class="lc-state" data-ref="state">Ready</span><span class="lc-sub" data-ref="sub"></span></div>',
                 '  <button type="button" class="lc-btn lc-end" data-act="end" data-ref="end" hidden>End encounter</button>',
+                '  <button type="button" class="lc-iconbtn lc-about-btn" data-act="about" title="How it thinks: its memory and how it works">' + ICON.info + '<span class="lc-sr">How it thinks</span></button>',
                 '  <button type="button" class="lc-iconbtn" data-act="settings" aria-haspopup="dialog" aria-expanded="false" title="Coworker settings">' + ICON.more + '<span class="lc-sr">Settings</span></button>',
                 '  <div class="lc-enc" data-ref="enc"></div>',
                 '  <div class="lc-modes" role="radiogroup" aria-label="How much the coworker speaks up">',
@@ -277,6 +279,7 @@
                     case 'act-drop': return h.onAction && h.onAction(t.dataset.id, 'drop');
                     case 'review-orders': return h.onReviewOrders && h.onReviewOrders();
                     case 'radar-retry': return h.onRadarRetry && h.onRadarRetry();
+                    case 'about': return h.onAbout && h.onAbout(t);
                     case 'exam-dictate': return h.onExamDictate && h.onExamDictate();
                     case 'exam-done': return h.onExamDone && h.onExamDone();
                     case 'jump': { const pane = this.refs.said.parentElement; pane.scrollTop = pane.scrollHeight; this._jump(false); return undefined; }

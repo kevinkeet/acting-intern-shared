@@ -1,0 +1,127 @@
+/*
+ * Live Coworker: "How it thinks" (js/live/live-about.js). Loaded the first time
+ * the sheet opens; every rule is scoped to .lc-about inside the live panel, so
+ * it uses the panel's colour tokens and touches nothing else.
+ *
+ * Memory rings, from seconds to years: green (working memory, live), blue
+ * (the chart digest), navy/blue/amber dots (long-term records: notes, labs,
+ * imaging). Red only for safety.
+ */
+
+.lc .lc-about {
+    --lc-about-note: oklch(0.42 0.09 258);
+    --lc-about-lab: oklch(0.66 0.11 232);
+    --lc-about-img: oklch(0.70 0.14 68);
+    --lc-about-dg: oklch(0.74 0.08 245);
+    position: absolute; inset: 0; z-index: 40;
+    display: flex; flex-direction: column; overflow: auto;
+    background: var(--lc-bg); color: var(--lc-ink);
+    animation: lc-about-in 220ms var(--lc-ease);
+}
+.lc-about-head {
+    position: sticky; top: 0; z-index: 1;
+    display: flex; align-items: flex-start; gap: 10px; padding: 12px 12px 10px;
+    background: var(--lc-surface); border-bottom: 1px solid var(--lc-line);
+}
+.lc-about-head > div { flex: 1; min-width: 0; }
+.lc-about-head h2 { margin: 0; font-size: 16px; font-weight: 650; letter-spacing: -0.005em; }
+.lc-about-sub { margin: 2px 0 0; font-size: 12px; color: var(--lc-ink-3); }
+.lc-about-body { padding: 6px 14px 18px; }
+.lc-about-fig { margin: 0 auto; max-width: 470px; }
+.lc-about-svg { display: block; width: 100%; height: auto; color: var(--lc-blue); font-family: inherit; overflow: visible; }
+.lc-about-now { margin: 2px 0 10px; text-align: center; font-size: 12.5px; color: var(--lc-ink-2); min-height: 1.4em; }
+.lc-about-now::before { content: ''; display: inline-block; width: 6px; height: 6px; margin-right: 7px; border-radius: 50%; background: var(--lc-green); vertical-align: 1px; }
+.lc-about-text h3 { margin: 14px 0 6px; font-size: 11px; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; color: var(--lc-ink-3); }
+.lc-about-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; font-size: 13px; line-height: 1.45; color: var(--lc-ink-2); }
+.lc-about-list li { display: grid; grid-template-columns: 10px minmax(0, 1fr); gap: 9px; align-items: start; }
+.lc-about-list b { color: var(--lc-ink); font-weight: 650; }
+.lc-about-sw { width: 10px; height: 10px; margin-top: 4px; border-radius: 50%; }
+.lc-about-sw.is-wm, .lc-about-sw.is-ear { background: var(--lc-green); }
+.lc-about-sw.is-dg { background: var(--lc-about-dg); }
+.lc-about-sw.is-lt { background: var(--lc-about-note); }
+.lc-about-sw.is-brain { background: var(--lc-navy); }
+.lc-about-sw.is-rules { background: var(--lc-red); border-radius: 2px; transform: rotate(45deg) scale(0.85); }
+.lc-about-sw.is-scribe { background: var(--lc-blue); }
+.lc-about-sw.is-helper { background: var(--lc-about-img); }
+.lc-about-key { white-space: nowrap; }
+.lc-about-key i { display: inline-block; width: 7px; height: 7px; margin: 0 4px 0 2px; border-radius: 50%; vertical-align: 0; }
+.lc-about-key .k-note { background: var(--lc-about-note); }
+.lc-about-key .k-lab { background: var(--lc-about-lab); }
+.lc-about-key .k-img { background: var(--lc-about-img); }
+.lc-about-foot { margin: 14px 0 0; font-size: 12px; color: var(--lc-ink-3); font-variant-numeric: tabular-nums; }
+
+/* ── the figure ─────────────────────────────────────────────────────── */
+.lc-about-svg text { text-anchor: middle; }
+.lc-about-svg .wire { fill: none; stroke: var(--lc-line-2); stroke-width: 1.2; }
+.lc-about-svg .wire.is-reader { stroke-dasharray: 3 3; }
+.lc-about-svg .ring { fill: none; stroke: var(--lc-line); stroke-width: 1; }
+.lc-about-svg .ring.is-wm { stroke: oklch(0.84 0.06 150); stroke-dasharray: 2 3; }
+.lc-about-svg .ring-name { font-size: 8.5px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; fill: var(--lc-ink-3); }
+
+.lc-about-svg .lt-dot { opacity: 0.85; }
+.lc-about-svg .lt-dot.is-note { fill: var(--lc-about-note); }
+.lc-about-svg .lt-dot.is-lab { fill: var(--lc-about-lab); }
+.lc-about-svg .lt-dot.is-imaging { fill: var(--lc-about-img); }
+.lc-about-svg .lt-tick { stroke: var(--lc-ink-3); stroke-width: 1; }
+.lc-about-svg .lt-year { font-size: 8.5px; fill: var(--lc-ink-3); font-variant-numeric: tabular-nums; }
+/* A slow radar sweep over the years of records; brighter while the reader is looking something up. */
+.lc-about-svg .lt-sweep { fill: var(--lc-blue); opacity: 0.7; transform-box: view-box; transform-origin: 200px 246px; animation: lc-about-spin 10s linear infinite; transition: opacity 300ms var(--lc-ease); }
+.lc-about-svg .lt-sweep line { stroke: var(--lc-blue); stroke-opacity: 0.4; stroke-width: 1; }
+.lc-about-svg .lt-sweep.is-lit { opacity: 1; }
+
+.lc-about-svg .dg-seg { fill: none; stroke: var(--lc-about-dg); stroke-width: 9; transition: stroke 300ms var(--lc-ease); }
+.lc-about-svg .dg-seg.is-0 { stroke: oklch(0.74 0.09 25); }     /* allergies */
+.lc-about-svg .dg-seg.is-1 { stroke: oklch(0.70 0.09 245); }
+.lc-about-svg .dg-seg.is-2 { stroke: oklch(0.66 0.10 250); }
+.lc-about-svg .dg-seg.is-3 { stroke: oklch(0.76 0.07 240); }
+.lc-about-svg .dg-seg.is-4 { stroke: oklch(0.80 0.06 235); }
+.lc-about-svg .dg-seg.is-5 { stroke: oklch(0.72 0.08 255); }
+.lc-about-svg .dg-seg.is-6 { stroke: oklch(0.62 0.09 262); }
+.lc-about-svg .dg.is-lit .dg-seg { stroke: oklch(0.58 0.15 250); }
+
+.lc-about-svg .wm-dot.is-fact { fill: var(--lc-green); }
+.lc-about-svg .wm-dot.is-thinking { fill: var(--lc-navy); }
+.lc-about-svg .wm-dot.is-plan { fill: var(--lc-blue); }
+.lc-about-svg .wm-dot.is-watch { fill: var(--lc-amber); }
+.lc-about-svg .wm-dot.is-new { transform-box: fill-box; transform-origin: center; animation: lc-about-pop 700ms var(--lc-ease); }
+
+.lc-about-svg .core { fill: var(--lc-navy); }
+.lc-about-svg .core-glow { fill: none; stroke: var(--lc-blue); stroke-width: 5; opacity: 0; transform-box: fill-box; transform-origin: center; }
+.lc-about-svg .core-glow.is-lit { animation: lc-about-glow 1.5s var(--lc-ease); }
+.lc-about-svg .core-name { font-size: 11.5px; font-weight: 650; fill: var(--lc-navy-ink); }
+.lc-about-svg .core-model { font-size: 8px; fill: oklch(0.86 0.03 250); }
+
+.lc-about-svg .ear rect { fill: var(--lc-surface); stroke: oklch(0.78 0.09 150); stroke-width: 1.2; }
+.lc-about-svg .node-name { font-size: 11.5px; font-weight: 650; fill: var(--lc-ink); }
+.lc-about-svg .node-sub { font-size: 8.5px; fill: var(--lc-ink-3); }
+.lc-about-svg .node-sub.is-left { text-anchor: end; }
+.lc-about-svg .room circle { fill: var(--lc-green); }
+.lc-about-svg .room path { stroke: var(--lc-line-2); stroke-width: 1.2; }
+.lc-about-svg .reader circle { fill: var(--lc-surface); stroke: var(--lc-about-img); stroke-width: 1.6; }
+.lc-about-svg .out rect { fill: var(--lc-surface); stroke: var(--lc-line-2); stroke-width: 1; }
+.lc-about-svg .out.is-alert rect { stroke: var(--lc-red); }
+.lc-about-svg .out.is-lit rect { animation: lc-about-out 1.5s var(--lc-ease); }
+.lc-about-svg .out.is-alert.is-lit rect { animation-name: lc-about-out-red; }
+.lc-about-svg .pulse { fill: var(--lc-blue); }
+.lc-about-svg .pulse.is-ear { fill: var(--lc-green); }
+.lc-about-svg .pulse.is-alert { fill: var(--lc-red); }
+.lc-about-svg .pulse.is-reader { fill: var(--lc-about-img); }
+
+@keyframes lc-about-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes lc-about-spin { to { transform: rotate(360deg); } }
+@keyframes lc-about-pop { 0% { transform: scale(0.2); } 60% { transform: scale(1.35); } 100% { transform: scale(1); } }
+@keyframes lc-about-glow { 0% { opacity: 0.5; transform: scale(1); } 100% { opacity: 0; transform: scale(1.55); } }
+@keyframes lc-about-out { 0%, 35% { fill: var(--lc-blue-bg); } 100% { fill: var(--lc-surface); } }
+@keyframes lc-about-out-red { 0%, 35% { fill: var(--lc-red-bg); } 100% { fill: var(--lc-surface); } }
+
+/* Side by side: the figure on the left, the words on the right. */
+@container lc (min-width: 620px) {
+    .lc-about-body { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 22px; align-items: start; padding-top: 12px; }
+    .lc-about-fig { max-width: 540px; }
+    .lc-about-text h3:first-child { margin-top: 4px; }
+}
+
+.lc-about.is-still .lt-sweep { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+    .lc .lc-about, .lc-about-svg .lt-sweep, .lc-about-svg .wm-dot.is-new, .lc-about-svg .core-glow.is-lit, .lc-about-svg .out.is-lit rect { animation: none; }
+}

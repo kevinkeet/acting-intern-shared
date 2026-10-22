@@ -106,6 +106,13 @@ on a list, ready to act on with one click:
 - On my radar: the doctor's orders and to-dos (above).
 - My take: the problem representation, then what worries it most; assessment and
   next steps on request. One line while an alert waits.
+- **How it thinks** (the ⓘ in the header): the memory drawn as rings around the
+  brain, from seconds to years: working memory (a dot for each thing heard this
+  visit), the chart digest (this admission, always in mind) and long-term memory
+  (one dot per record Deep Learn read, placed by date, 2018 to 2026, with a slow
+  radar sweep). The ear feeds in at the top; alerts, answers, the note and the
+  radar come out at the bottom. While it is open each lane pulses as it works and
+  the numbers follow. Loaded only when opened (`live-about.js`, `css/live-about.css`).
 - Conversation (what it heard and what it said, in order, with a live caption),
   Note (the live note; "Side by side" widens the panel to show both), Tracking
   (working memory), Log (decisions, calls, cost).
@@ -128,6 +135,7 @@ on a list, ready to act on with one click:
 | `live-voice.js` | Speaking aloud (Deepgram's Aura voices, or this computer's): cleanup, sentence pieces, voice choice, echo check |
 | `live-panel.js` | The panel UI (DOM only) |
 | `live-app.js` | Browser glue: chart, memory, mic (Deepgram room mic or browser speech), demo replay, settings, the radar's buttons (order form, nurse chat, note editor) |
+| `live-about.js` | "How it thinks": the memory rings and the lanes, live (loaded on first open) |
 | `live-fake.js` | `?livefake`: a scripted stand-in model for UI work and UI tests (no AI cost) |
 
 Loader: the end of `js/components/ai-coworker.js`. Styles: `css/live-coworker.css`.

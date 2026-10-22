@@ -60,12 +60,13 @@
 /* ── header: listening state, mode ───────────────────────────────────── */
 .lc-head {
     flex: none; padding: 10px 12px; border-bottom: 1px solid var(--lc-line); background: var(--lc-surface);
-    display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; grid-template-areas: "mic status end more" "enc enc enc enc" "modes modes modes modes" "hint hint hint hint" "replay replay replay replay";
+    display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto auto; grid-template-areas: "mic status end about more" "enc enc enc enc enc" "modes modes modes modes modes" "hint hint hint hint hint" "replay replay replay replay replay";
     align-items: center; column-gap: 10px;
 }
 .lc-mic { grid-area: mic; }
 .lc-status-text { grid-area: status; }
 .lc-head > .lc-iconbtn { grid-area: more; }
+.lc-head > .lc-about-btn { grid-area: about; }
 .lc-end { grid-area: end; white-space: nowrap; }
 .lc-enc { grid-area: enc; margin-top: 10px; }
 /* The way into an encounter: one clear, full-width button. */
@@ -138,7 +139,7 @@
 
 /* Short screens (a cart at 1366x768): the mode control moves up beside the status. */
 @media (max-height: 760px) {
-    .lc-head { grid-template-areas: "mic status modes end more" "enc enc enc enc enc" "hint hint hint hint hint" "replay replay replay replay replay"; grid-template-columns: auto minmax(0, 1fr) auto auto auto; padding: 8px 10px; }
+    .lc-head { grid-template-areas: "mic status modes end about more" "enc enc enc enc enc enc" "hint hint hint hint hint hint" "replay replay replay replay replay replay"; grid-template-columns: auto minmax(0, 1fr) auto auto auto auto; padding: 8px 10px; }
     .lc-enc { margin-top: 8px; }
     .lc-start { padding: 6px 12px; }
     .lc-modes { margin-top: 0; width: auto; }

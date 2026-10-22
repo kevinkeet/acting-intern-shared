@@ -13,6 +13,8 @@
     'use strict';
 
     const STORE = 'live-coworker';
+    // This file's own version query: files loaded later (the about sheet) use the same one.
+    const SELF_Q = (() => { try { const src = document.currentScript && document.currentScript.src; return src && src.indexOf('?') > 0 ? src.split('?')[1] : 'v=' + Date.now(); } catch (e) { return ''; } })();
     const DEMO = { file: 'data/live/morrison-admission-01.json', patient: 'PAT001', title: 'Morrison admission' };
     const MODE_TO_OLD = { follow: 'reactive', abreast: 'active', lead: 'proactive' };
     const OLD_TO_MODE = { reactive: 'follow', active: 'abreast', proactive: 'lead' };
@@ -234,7 +236,7 @@
                 loadAllLabs: () => dl.loadAllLabs(patientId),
             });
             await chart.load();
-            let md = null, facts = null, note = '';
+            let md = null, facts = null, note = '', shape = null;
             try {
                 const r = await fetch('data/live/' + patientId + '-deep-memory.json', { cache: 'no-store' });
                 if (r.ok) {
@@ -243,6 +245,10 @@
                     facts = fx.extractedFacts || null;
                     const dlState = fx.deepLearn || {};
                     note = 'Long-term memory: full chart review (' + (dlState.processedCount || (facts && facts.length) || '?') + ' of ' + (dlState.totalItems || '?') + ' documents)';
+                    const dateOf = new Map((facts || []).map((x) => [x.documentId, x.date]));
+                    const docs = (dlState.processedIds || []).map((id) => ({ d: dateOf.get(id) || null, k: /^LAB/.test(id) ? 'lab' : /^IMG/.test(id) ? 'imaging' : 'note' }));
+                    const years = docs.map((x) => x.d && Number(String(x.d).slice(0, 4))).filter(Boolean);
+                    shape = { docs, processed: dlState.processedCount || docs.length, total: dlState.totalItems || null, levels: dlState.totalLevels || null, first: years.length ? Math.min(...years) : null, last: years.length ? Math.max(...years) : null };
                 }
             } catch (e) { /* no fixture */ }
             if (!md) {
@@ -251,6 +257,7 @@
             }
             if (this.patientId !== patientId) return;
             this.chart = chart;
+            this.memoryShape = shape;
             this.memory = LiveMemory.build({ chart, memoryDocument: md, extractedFacts: facts });
             const latest = (this.memory.digest.match(/CHART DATA THROUGH: (\S+)/) || [])[1];
             this.view.memoryNote = note + (latest ? '. Chart data through ' + latest + '.' : '.');
@@ -339,6 +346,13 @@
             // The live note: problem representation, HPI, assessment and plan, rewritten as people talk.
             cw.on('thinking', (p) => { if (p.lane === 'note') { v.noteWriting = true; this.request('note'); } });
             cw.on('note', (n) => { v.note = Object.assign({}, n, { wallAt: Date.now() }); v.noteWriting = false; this.request('note', 'take'); });
+            // "How it thinks": pulses as each lane works, numbers as working memory grows (only while open).
+            const about = (what) => { if (typeof LiveAbout !== 'undefined' && LiveAbout.isOpen()) LiveAbout.pulse(what); };
+            cw.on('call-start', (c) => about(c.lane));
+            cw.on('tool', (x) => about('tool:' + x.name));
+            cw.on('say', (x) => about('say:' + (x.kind === 'critical' ? 'critical' : 'answer')));
+            cw.on('wm', () => { if (typeof LiveAbout !== 'undefined' && LiveAbout.isOpen()) this.request('about'); });
+            cw.on('call', () => { if (typeof LiveAbout !== 'undefined' && LiveAbout.isOpen()) this.request('about'); });
             // On my radar: the doctor's orders and to-dos, plus what was just heard and is being got ready.
             cw.on('actions', (list) => {
                 v.actions = list.map((a) => Object.assign({}, a, { fields: Object.assign({}, a.fields), needs: this._formNeeds(a) }));
@@ -418,6 +432,42 @@
         _copy(text, ok) {
             const fail = () => this._flash('Could not copy (the browser blocked it).');
             try { navigator.clipboard.writeText(text).then(() => this._flash(ok || 'Copied.'), fail); } catch (err) { fail(); }
+        },
+
+        // ── how it thinks (the about sheet, loaded on first open) ─────────
+        async openAbout(from) {
+            if (!LivePanel.el) return;
+            if (typeof LiveAbout === 'undefined') {
+                const css = document.createElement('link');
+                css.rel = 'stylesheet';
+                css.href = 'css/live-about.css?' + SELF_Q;
+                document.head.appendChild(css);
+                await new Promise((resolve) => {
+                    const sc = document.createElement('script');
+                    sc.src = 'js/live/live-about.js?' + SELF_Q;
+                    sc.onload = sc.onerror = resolve;
+                    document.head.appendChild(sc);
+                });
+                if (typeof LiveAbout === 'undefined') { this._flash('Could not load that view.'); return; }
+            }
+            LivePanel.togglePop(false);
+            LiveAbout.open(LivePanel.el, this._aboutState(), { returnFocus: from || null });
+        },
+
+        _aboutState() {
+            const c = this.chart;
+            const n = (x) => (Array.isArray(x) ? x.length : null);
+            return {
+                brain: BRAIN_LABEL[this.settings.brain] || this.settings.brain,
+                mode: { follow: 'Follow', abreast: 'Abreast', lead: 'Lead' }[this.settings.mode] || '',
+                listening: !!this._mic,
+                wm: this.engine ? this.engine.wm : null,
+                stats: this.engine ? this.engine.stats() : null,
+                memory: this.memory ? this.memory.meta : null,
+                memoryNote: this.view.memoryNote,
+                shape: this.memoryShape || null,
+                chart: c ? { allergies: n(c.allergies), meds: n(c.meds), problems: n(c.problems), labs: n(c.labs), encounters: n(c.encounters) } : null,
+            };
         },
 
         // ── dictating the physical exam ──────────────────────────────────
@@ -617,6 +667,7 @@
                 onRadarToggle: (open) => { this.settings.radarOpen = open; this._save(); this.request('radar'); },
                 onRerenderRadar: () => this.request('radar'),
                 onRadarRetry: () => { if (this.engine) this.engine.actions(); },
+                onAbout: (btn) => this.openAbout(btn),
                 onExamDictate: () => this.startExamDictation(),
                 onExamDone: () => this.stopDictation(),
                 onExamType: (text) => this.typeExam(text),
@@ -1042,6 +1093,7 @@
                 if (q.has('tracking')) LivePanel.renderTracking(v);
                 if (q.has('log')) LivePanel.renderLog(v);
                 if (q.has('settings')) LivePanel.renderSettings(v);
+                if (q.has('about') && typeof LiveAbout !== 'undefined' && LiveAbout.isOpen()) LiveAbout.update(this._aboutState());
             } catch (e) { console.warn('Live Coworker render:', e); }
         },
 
