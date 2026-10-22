@@ -18,6 +18,14 @@
  * grader's own user id (RLS: own rows only), so practice never reaches the
  * study's grades, assignment, adjudication or exports. Every page carries a
  * banner saying which area it is.
+ *
+ * Order (Kevin, 22 Oct 2026): graders go question by question: every answer
+ * to Case 1 question 1, then Case 1 question 2, and so on through Case 3.
+ * Within a question the answers keep the grader's own shuffled order, so PRE
+ * and POST answers stay mixed and nobody sees them in enrollment order.
+ * Study grading also asks for a deliberate "Start study grading" click once
+ * per browser session, and again after any visit to the practice area, so
+ * nobody grades real answers while meaning to practise.
  */
 const Grading = {
     _mode: 'real',
@@ -26,6 +34,13 @@ const Grading = {
     _mine: null,         // Map response_id -> grade row
     _order: null,        // response ids in display order
     _caseDefs: {},
+
+    // The study battery in the order residents see it (same as
+    // AssessmentData's CASE_IDS: Case 1, 2, 3), then the two pilot-only cases
+    // that appear in the practice area.
+    CASE_ORDER: ['PAT005', 'PAT004', 'PAT007', 'PAT003', 'PAT006'],
+    STUDY_CASES: 3,
+    STUDY_OK_KEY: 'grading-study-confirmed',
 
     MODES: {
         real: {
@@ -47,11 +62,97 @@ const Grading = {
 
     _setMode(mode) {
         this._mode = mode === 'practice' ? 'practice' : 'real';
+        // A visit to the practice area means study grading asks again next time.
+        if (this._mode === 'practice') this._setStudyConfirmed(false);
         const c = this._cache[this._mode];
         this._items = c ? c.items : null;
         this._order = c ? c.order : null;
         this._mine = c ? c.mine : null;
         try { document.title = this._conf().title + ' · Acting Intern'; } catch (e) { /* no document in tests */ }
+    },
+
+    // ── study-grading confirmation ────────────────────────────────────────
+    _studyConfirmed() {
+        try { return sessionStorage.getItem(this.STUDY_OK_KEY) === '1'; } catch (e) { return this._studyOkMem === true; }
+    },
+    _setStudyConfirmed(on) {
+        this._studyOkMem = !!on;
+        try { if (on) sessionStorage.setItem(this.STUDY_OK_KEY, '1'); else sessionStorage.removeItem(this.STUDY_OK_KEY); } catch (e) { /* storage blocked: memory only */ }
+    },
+    confirmStudy(responseId) {
+        this._setStudyConfirmed(true);
+        if (responseId) this.renderItem(responseId, 'real');
+        else this.renderQueue('real');
+    },
+    _studyConfirmScreen(responseId) {
+        const arg = responseId ? `'${String(responseId).replace(/[^A-Za-z0-9-]/g, '')}'` : '';
+        return `
+            <div class="grading-confirm" role="alertdialog" aria-labelledby="grading-confirm-title">
+                <h1 id="grading-confirm-title">You are about to grade real study answers</h1>
+                <p>Every grade you save here counts in the trial. These are answers from residents taking part in the study, and your scores go on to adjudication.</p>
+                <p>If you meant to practise, use the practice area instead. It has the same screens, with answers from the pilot, and nothing there is used in the study.</p>
+                <div class="grading-actions">
+                    <button class="btn btn-primary grading-confirm-go" onclick="Grading.confirmStudy(${arg})">Start study grading</button>
+                    <a class="btn grading-switch" href="#/grade-practice">Go to the practice area instead</a>
+                </div>
+                <p class="grading-confirm-small">You will be asked again whenever you come back from the practice area.</p>
+            </div>`;
+    },
+
+    // ── order: question by question ───────────────────────────────────────
+    /** Where an item sits: case rank, case number (1-3 for study cases) and question index in its case. */
+    _position(item) {
+        const ci = this.CASE_ORDER.indexOf(item.case_id);
+        const def = this._caseDefs[item.case_id];
+        const ids = [];
+        if (def) for (const ap of def.assessments || []) for (const p of ap.prompts || []) ids.push(p.id);
+        return {
+            caseRank: ci >= 0 ? ci : this.CASE_ORDER.length,
+            caseNo: ci >= 0 && ci < this.STUDY_CASES ? ci + 1 : null,
+            q: ids.indexOf(item.prompt_id),
+            total: ids.length,
+        };
+    },
+
+    /** Case 1 question 1 first, then question 2, and so on; within a question, the grader's shuffled order (sort_key). */
+    _sortByQuestion(items) {
+        const pos = new Map(items.map((i) => [i.response_id, this._position(i)]));
+        const qn = (p) => (p.q < 0 ? 9999 : p.q);
+        return items.slice().sort((a, b) => {
+            const pa = pos.get(a.response_id), pb = pos.get(b.response_id);
+            return (pa.caseRank - pb.caseRank)
+                || String(a.case_id).localeCompare(String(b.case_id))
+                || (qn(pa) - qn(pb))
+                || String(a.prompt_id).localeCompare(String(b.prompt_id), undefined, { numeric: true })
+                || String(a.sort_key).localeCompare(String(b.sort_key));
+        });
+    },
+
+    _caseLabel(caseId) {
+        const ci = this.CASE_ORDER.indexOf(caseId);
+        return ci >= 0 && ci < this.STUDY_CASES ? `Case ${ci + 1}` : `Pilot case ${caseId}`;
+    },
+
+    /** The queue as questions, in grading order: [{key, case_id, prompt_id, label, ids, done}]. */
+    _groups() {
+        const groups = []; const byKey = new Map();
+        for (const id of this._order || []) {
+            const it = this._items.find((x) => x.response_id === id);
+            if (!it) continue;
+            const key = it.case_id + '|' + it.prompt_id;
+            let g = byKey.get(key);
+            if (!g) {
+                const p = this._position(it);
+                g = { key, case_id: it.case_id, prompt_id: it.prompt_id, caseLabel: this._caseLabel(it.case_id),
+                      qLabel: p.q >= 0 ? `Question ${p.q + 1}${p.total ? ' of ' + p.total : ''}` : `Question ${it.prompt_id}`,
+                      ids: [], done: 0 };
+                byKey.set(key, g); groups.push(g);
+            }
+            g.ids.push(id);
+            const gr = this._mine && this._mine.get(id);
+            if (gr && gr.status === 'submitted') g.done++;
+        }
+        return groups;
     },
 
     // ── data ──────────────────────────────────────────────────────────────
@@ -84,14 +185,16 @@ const Grading = {
             items = q.data || [];
             grades = g.data || [];
         }
-        this._items = items.slice().sort((a, b) => a.sort_key.localeCompare(b.sort_key));
+        // Case definitions first: they give each question's place in its case.
+        const cases = [...new Set(items.map((i) => i.case_id))];
+        await Promise.all(cases.map(async (c) => {
+            if (this._caseDefs[c]) return;
+            try { this._caseDefs[c] = await AssessmentData.loadCase(c); } catch (e) { /* sorts by question id instead */ }
+        }));
+        this._items = this._sortByQuestion(items);
         this._order = this._items.map((i) => i.response_id);
         this._mine = new Map(grades.map((r) => [r.response_id, r]));
         this._cache[this._mode] = { items: this._items, order: this._order, mine: this._mine };
-        const cases = [...new Set(this._items.map((i) => i.case_id))];
-        await Promise.all(cases.map(async (c) => {
-            if (!this._caseDefs[c]) this._caseDefs[c] = await AssessmentData.loadCase(c);
-        }));
     },
 
     _prompt(item) {
@@ -173,7 +276,7 @@ const Grading = {
                     ${AdminDashboard._adminRole === 'admin' ? `<a href="#/admin/grading" class="admin-tab"><i data-lucide="scale"></i><span>Adjudication</span></a>` : ''}
                 </nav>
                 <div class="admin-session">
-                    <span class="grading-progress"><b>${done}</b> of ${total} ${practice ? 'practised' : 'graded'}</span>
+                    ${this._items ? `<span class="grading-progress"><b>${done}</b> of ${total} ${practice ? 'practised' : 'graded'}</span>` : ''}
                     <span class="admin-session-email">${AdminDashboard._escape(email)}</span>
                     <button class="btn btn-sm" onclick="AdminDashboard.changePassword()">Change password</button>
                 </div>
@@ -195,39 +298,42 @@ const Grading = {
             App.refreshIcons();
             return;
         }
+        if (!practice && !this._studyConfirmed()) {
+            root.innerHTML = `<div class="admin-page grading-is-real">${this._topbar()}${this._studyConfirmScreen(null)}</div>`;
+            App.refreshIcons();
+            return;
+        }
         try { await this._load(true); } catch (err) { root.innerHTML = `<div class="admin-page"><div class="empty-state-text">Could not load the ${practice ? 'practice' : 'grading'} queue: ${AdminDashboard._escape(err.message)}</div></div>`; return; }
 
-        const next = this._order.find((id) => { const g = this._mine.get(id); return !g || g.status !== 'submitted'; });
-        const byCase = {};
-        for (const it of this._items) {
-            const k = it.case_id; byCase[k] = byCase[k] || { total: 0, done: 0 };
-            byCase[k].total++;
-            const g = this._mine.get(it.response_id); if (g && g.status === 'submitted') byCase[k].done++;
-        }
+        const E = (s) => AdminDashboard._escape(String(s == null ? '' : s));
+        const isDone = (id) => { const g = this._mine.get(id); return !!(g && g.status === 'submitted'); };
+        const next = this._order.find((id) => !isDone(id));
+        const groups = this._groups();
+        const nextGroup = next ? groups.find((g) => g.ids.includes(next)) : null;
         const intro = practice
-            ? `<p>These are answers that residents wrote while testing the cases in August and September 2026, before the trial began. Grade them exactly as you would study answers: tick the criteria the answer earns, adjust the points if the rubric caps or branches, and save.</p>
+            ? `<p>These are answers that residents wrote while testing the cases in August and September 2026, before the trial began. They come one question at a time, as in study grading. Grade them exactly as you would study answers: tick the criteria the answer earns, adjust the points if the rubric caps or branches, and save.</p>
                <p class="grading-blind">Practice grades are kept apart from the study and never used in it. After you save an item, you see how the other graders scored it in practice, so you can compare your reading of the rubric.</p>`
-            : `<p>Each item shows one participant's answer to one question, with the rubric as a checklist. Tick the criteria the answer earns, adjust the points if the rubric caps or branches, add a note if useful, and save. You can return to any item later.</p>
-               <p class="grading-blind">You are blind to who wrote the answer, which arm they are in, and how anyone else scored it. Every answer is scored by two graders; the ${this._items.length} items below are your share, in a shuffled order unique to you, with each case's answers kept together.</p>`;
+            : `<p>Answers come one question at a time: every answer to Case 1, question 1, then question 2, and so on through Case 3. Each item shows one participant's answer with the rubric as a checklist. Tick the criteria the answer earns, adjust the points if the rubric caps or branches, add a note if useful, and save. You can return to any item later.</p>
+               <p class="grading-blind">You are blind to who wrote each answer, which arm they are in, and how anyone else scored it. Every answer is scored by two graders. Your ${this._items.length} items are below; within each question they come in a shuffled order unique to you.</p>`;
         root.innerHTML = `
-            <div class="admin-page${practice ? ' grading-is-practice' : ''}">
+            <div class="admin-page${practice ? ' grading-is-practice' : ' grading-is-real'}">
                 ${this._topbar()}
                 <div class="admin-header"><h1>${practice ? 'Practice queue' : 'Grading queue'}</h1></div>
                 <div class="grading-intro">${intro}</div>
                 <div class="grading-actions">
-                    ${next ? `<a class="btn btn-primary" href="${this._href(next)}">${practice ? 'Practise next item' : 'Grade next item'}</a>` : `<span class="grading-done">${practice ? 'You have practised every item.' : 'All items graded — thank you.'}</span>`}
+                    ${next ? `<a class="btn btn-primary" href="${this._href(next)}">${practice ? 'Practise next item' : 'Grade next answer'} (${E(nextGroup.caseLabel)}, ${E(nextGroup.qLabel.toLowerCase())})</a>` : `<span class="grading-done">${practice ? 'You have practised every item.' : 'All items graded — thank you.'}</span>`}
                     ${practice
                         ? '<a class="btn grading-switch" href="#/grade">Go to study grading (real answers) →</a>'
                         : '<a class="btn grading-switch" href="#/grade-practice">Open the practice area (pilot answers) →</a>'}
                 </div>
-                <table class="admin-table grading-case-table">
-                    <thead><tr><th>Case</th><th>${practice ? 'Practised' : 'Graded'}</th><th></th></tr></thead>
+                <table class="admin-table grading-case-table grading-q-table">
+                    <thead><tr><th>Question</th><th>${practice ? 'Practised' : 'Graded'}</th><th></th></tr></thead>
                     <tbody>
-                    ${Object.keys(byCase).sort().map((c) => `<tr><td>${AdminDashboard._escape(c)}</td><td>${byCase[c].done} / ${byCase[c].total}</td><td><div class="admin-bar"><div class="admin-bar-fill" style="width:${byCase[c].total ? Math.round(100 * byCase[c].done / byCase[c].total) : 0}%"></div></div></td></tr>`).join('')}
+                    ${groups.map((g, i) => `${i === 0 || groups[i - 1].case_id !== g.case_id ? `<tr class="grading-q-case"><td colspan="3">${E(g.caseLabel)}</td></tr>` : ''}<tr${nextGroup && g.key === nextGroup.key ? ' class="is-current"' : ''}><td><a href="${this._href(g.ids.find((id) => !isDone(id)) || g.ids[0])}">${E(g.qLabel)}</a> <span class="pill">${E(g.prompt_id)}</span></td><td>${g.done} / ${g.ids.length}</td><td><div class="admin-bar"><div class="admin-bar-fill" style="width:${g.ids.length ? Math.round(100 * g.done / g.ids.length) : 0}%"></div></div></td></tr>`).join('')}
                     </tbody>
                 </table>
                 <details class="grading-list"><summary>All items (${this._items.length})</summary>
-                    <ol>${this._order.map((id, i) => { const g = this._mine.get(id); const it = this._items.find((x) => x.response_id === id); return `<li><a href="${this._href(id)}">${practice ? 'Practice item' : 'Item'} ${i + 1}</a> · ${AdminDashboard._escape(it.case_id)} ${AdminDashboard._escape(it.prompt_id)} · ${g ? (g.status === 'submitted' ? `<b>${g.points}</b> / ${g.max_points}` : 'draft') : '—'}</li>`; }).join('')}</ol>
+                    <ol>${this._order.map((id, i) => { const g = this._mine.get(id); const grp = groups.find((x) => x.ids.includes(id)); return `<li><a href="${this._href(id)}">${practice ? 'Practice item' : 'Item'} ${i + 1}</a> · ${E(grp ? grp.caseLabel + ', ' + grp.qLabel.split(' of ')[0].toLowerCase() : '')} · ${g ? (g.status === 'submitted' ? `<b>${g.points}</b> / ${g.max_points}` : 'draft') : '—'}</li>`; }).join('')}</ol>
                 </details>
             </div>`;
         App.refreshIcons();
@@ -242,6 +348,11 @@ const Grading = {
         if (this._mode === 'real' && (await this._kind()) === 'practice') {
             this._items = []; this._mine = new Map(); this._order = [];
             root.innerHTML = `<div class="admin-page">${this._topbar()}${this._practiceAccountNotice()}</div>`;
+            App.refreshIcons();
+            return;
+        }
+        if (this._mode === 'real' && !this._studyConfirmed()) {
+            root.innerHTML = `<div class="admin-page grading-is-real">${this._topbar()}${this._studyConfirmScreen(responseId)}</div>`;
             App.refreshIcons();
             return;
         }
@@ -260,12 +371,20 @@ const Grading = {
         const nextId = idx >= 0 && idx < this._order.length - 1 ? this._order[idx + 1] : null;
         const maxPts = sr.maxPoints != null ? sr.maxPoints : '';
         const E = (s) => AdminDashboard._escape(String(s == null ? '' : s));
+        const groups = this._groups();
+        const grp = groups.find((g) => g.ids.includes(responseId));
+        const k = grp ? grp.ids.indexOf(responseId) + 1 : 1;
+        const nextGrp = nextId ? groups.find((g) => g.ids.includes(nextId)) : null;
+        const newQuestionNext = !!(nextGrp && grp && nextGrp.key !== grp.key);
 
         root.innerHTML = `
-            <div class="admin-page grading-page${practice ? ' grading-is-practice' : ''}">
+            <div class="admin-page grading-page${practice ? ' grading-is-practice' : ' grading-is-real'}">
                 ${this._topbar()}
                 <div class="grading-item-head">
-                    <div class="grading-item-title">${practice ? 'Practice item' : 'Item'} ${idx + 1} of ${this._order.length} <span class="pill">${E(item.case_id)} · ${E(item.prompt_id)}</span> ${prompt && prompt.type ? `<span class="pill">${E(prompt.type)}</span>` : ''}</div>
+                    <div>
+                        <div class="grading-item-title">${E(grp ? grp.caseLabel : item.case_id)} · ${E(grp ? grp.qLabel : item.prompt_id)} <span class="grading-item-sub">answer ${k} of ${grp ? grp.ids.length : 1}</span> <span class="pill">${E(item.prompt_id)}</span> ${prompt && prompt.type ? `<span class="pill">${E(prompt.type)}</span>` : ''}${k === 1 ? ' <span class="pill grading-newq">New question</span>' : ''}</div>
+                        <div class="grading-item-overall">${practice ? 'Practice item' : 'Item'} ${idx + 1} of ${this._order.length} overall</div>
+                    </div>
                     <div class="grading-item-nav">${prevId ? `<a class="btn btn-sm" href="${this._href(prevId)}">← Previous</a>` : ''} <a class="btn btn-sm" href="${this._href()}">Queue</a> ${nextId ? `<a class="btn btn-sm" href="${this._href(nextId)}">Next →</a>` : ''}</div>
                 </div>
                 <div class="grading-cols">
@@ -290,10 +409,10 @@ const Grading = {
                         <label class="grading-notes-label">Notes (optional)<textarea id="grading-notes" rows="3" placeholder="${practice ? 'Anything you want to remember about this one' : 'Anything the adjudicator should know'}">${E(existing ? existing.notes || '' : '')}</textarea></label>
                         <div class="grading-save-row">
                             ${practice
-                                ? `<button class="btn btn-primary" onclick="Grading.save('${responseId}', null)">Save and compare</button>
-                                   ${existing && nextId ? `<a class="btn" href="${this._href(nextId)}">Next practice item →</a>` : ''}`
-                                : `<button class="btn btn-primary" onclick="Grading.save('${responseId}', ${nextId ? `'${nextId}'` : 'null'})">Save &amp; next</button>
-                                   <button class="btn" onclick="Grading.save('${responseId}', null)">Save</button>`}
+                                ? `<button class="btn btn-primary" onclick="Grading.save('${responseId}', null)">Save practice grade and compare</button>
+                                   ${existing && nextId ? `<a class="btn" href="${this._href(nextId)}">${newQuestionNext ? 'Next practice question →' : 'Next practice item →'}</a>` : ''}`
+                                : `<button class="btn btn-primary" onclick="Grading.save('${responseId}', ${nextId ? `'${nextId}'` : 'null'})">${newQuestionNext ? 'Save study grade &amp; start the next question' : (nextId ? 'Save study grade &amp; next' : 'Save study grade')}</button>
+                                   ${nextId ? `<button class="btn" onclick="Grading.save('${responseId}', null)">Save study grade</button>` : ''}`}
                             <span id="grading-status" class="grading-status">${existing ? (existing.status === 'submitted' ? 'Saved' : 'Draft') : ''}</span>
                         </div>
                         ${practice && existing ? '<div class="grading-others" id="grading-others">Loading the other graders\' practice scores…</div>' : ''}
