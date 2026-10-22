@@ -1,0 +1,140 @@
+/*
+ * Live Coworker, "How it thinks": Each call (js/live/live-about-calls.js).
+ * Loaded the first time the tab opens; every rule is scoped to this view.
+ *
+ * Parts of a prompt: the fixed parts (cacheable) in cool neutrals and the
+ * Memory view's blue/navy; what changes each call in green (working memory),
+ * teal (the latest lines), amber (lookup results) and violet (the task).
+ * Hatching = read from the cache. Lane dots match the Memory view's legend.
+ */
+
+.lc-about [data-view="calls"] {
+    --lcc-tools: oklch(0.84 0.018 255);
+    --lcc-rules: oklch(0.66 0.035 255);
+    --lcc-digest: var(--lc-about-dg);
+    --lcc-longterm: var(--lc-about-note);
+    --lcc-memory: var(--lc-green);
+    --lcc-conversation: oklch(0.71 0.1 195);
+    --lcc-lookups: var(--lc-about-img);
+    --lcc-task: oklch(0.63 0.13 305);
+    --lcc-out: oklch(0.38 0.03 255);
+    --lcc-who: 120px;
+    --lcc-meta: 214px;
+}
+.lc-about [data-view="calls"] .lcc { padding: 8px 14px 20px; font-size: 13px; color: var(--lc-ink-2); }
+.lc-about [data-view="calls"] .lcc-lead { margin: 4px 0 10px; line-height: 1.45; max-width: 64ch; }
+
+/* ── the encounter so far, by lane ──────────────────────────────────── */
+.lc-about [data-view="calls"] .lcc-total { margin: 0 0 8px; line-height: 1.45; font-variant-numeric: tabular-nums; }
+.lc-about [data-view="calls"] .lcc-total b { color: var(--lc-ink); font-weight: 650; }
+.lc-about [data-view="calls"] .lcc-lanes { width: 100%; border-collapse: collapse; font-size: 12.5px; font-variant-numeric: tabular-nums; }
+.lc-about [data-view="calls"] .lcc-lanes th, .lc-about [data-view="calls"] .lcc-lanes td { padding: 4px 6px; border-bottom: 1px solid var(--lc-line); text-align: right; white-space: nowrap; }
+.lc-about [data-view="calls"] .lcc-lanes th:first-child { text-align: left; font-weight: 600; color: var(--lc-ink); }
+.lc-about [data-view="calls"] .lcc-lanes thead th { font-size: 11px; font-weight: 600; color: var(--lc-ink-3); text-transform: uppercase; letter-spacing: 0.03em; white-space: normal; vertical-align: bottom; }
+.lc-about [data-view="calls"] .lcc-lanes thead th:first-child { color: var(--lc-ink-3); }
+.lc-about [data-view="calls"] .lcc-err { color: var(--lc-red-ink); font-weight: 600; }
+
+/* ── what the colours mean ──────────────────────────────────────────── */
+.lc-about [data-view="calls"] .lcc-legend { margin: 14px 0 4px; display: grid; gap: 6px; }
+.lc-about [data-view="calls"] .lcc-chips { margin: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 3px 12px; font-size: 12.5px; color: var(--lc-ink); }
+.lc-about [data-view="calls"] .lcc-group { flex-basis: 100%; font-size: 11px; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; color: var(--lc-ink-3); }
+.lc-about [data-view="calls"] .lcc-chip { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; cursor: default; }
+.lc-about [data-view="calls"] .lcc-key { margin: 0; display: grid; grid-template-columns: 12px minmax(0, 1fr); gap: 7px; align-items: baseline; font-size: 12px; color: var(--lc-ink-3); line-height: 1.4; }
+.lc-about [data-view="calls"] .lcc-what summary { cursor: pointer; font-size: 12.5px; font-weight: 600; color: var(--lc-blue); width: max-content; }
+.lc-about [data-view="calls"] .lcc-what ul { list-style: none; margin: 6px 0 0; padding: 0; display: grid; gap: 3px; font-size: 12.5px; line-height: 1.4; }
+.lc-about [data-view="calls"] .lcc-what li { display: grid; grid-template-columns: 12px minmax(0, 1fr); gap: 7px; align-items: baseline; }
+.lc-about [data-view="calls"] .lcc-what b { color: var(--lc-ink); font-weight: 600; margin-right: 3px; }
+.lc-about [data-view="calls"] .lcc-sw { display: inline-block; width: 12px; height: 9px; border-radius: 2px; vertical-align: -1px; margin-right: 6px; }
+.lc-about [data-view="calls"] .lcc-legend .lcc-sw, .lc-about [data-view="calls"] .lcc-key .lcc-sw { margin-right: 0; }
+.lc-about [data-view="calls"] .is-tools { background: var(--lcc-tools); }
+.lc-about [data-view="calls"] .is-rules { background: var(--lcc-rules); }
+.lc-about [data-view="calls"] .is-digest { background: var(--lcc-digest); }
+.lc-about [data-view="calls"] .is-longterm { background: var(--lcc-longterm); }
+.lc-about [data-view="calls"] .is-memory { background: var(--lcc-memory); }
+.lc-about [data-view="calls"] .is-conversation { background: var(--lcc-conversation); }
+.lc-about [data-view="calls"] .is-lookups { background: var(--lcc-lookups); }
+.lc-about [data-view="calls"] .is-task { background: var(--lcc-task); }
+.lc-about [data-view="calls"] .is-out { background: var(--lcc-out); }
+.lc-about [data-view="calls"] .lcc-sw.is-cachekey { background: var(--lcc-digest); background-image: repeating-linear-gradient(135deg, oklch(0.99 0.004 250 / 0.75) 0 2px, transparent 2px 5px); }
+.lc-about [data-view="calls"] .lcc-sw.is-breakkey { background: linear-gradient(105deg, var(--lcc-rules) 0 42%, var(--lc-surface) 42% 58%, var(--lcc-longterm) 58%); }
+
+/* ── the calls ──────────────────────────────────────────────────────── */
+.lc-about [data-view="calls"] .lcc-calls { margin-top: 14px; border-top: 1px solid var(--lc-line); padding-top: 8px; }
+.lc-about [data-view="calls"] .lcc-axis { display: grid; grid-template-columns: minmax(0, 1fr); padding: 0 6px; margin-bottom: 4px; font-size: 10.5px; color: var(--lc-ink-3); font-variant-numeric: tabular-nums; }
+.lc-about [data-view="calls"] .lcc-axis-who { display: none; }
+.lc-about [data-view="calls"] .lcc-axis-track { position: relative; height: 14px; margin-right: 18px; }
+.lc-about [data-view="calls"] .lcc-axis-track span { position: absolute; top: 0; transform: translateX(-50%); white-space: nowrap; }
+.lc-about [data-view="calls"] .lcc-axis-track span:first-child { transform: none; }
+.lc-about [data-view="calls"] .lcc-axis-track span:last-child { transform: translateX(-100%); }
+.lc-about [data-view="calls"] .lcc-list { list-style: none; margin: 0; padding: 0; }
+.lc-about [data-view="calls"] .lcc-row + .lcc-row { border-top: 1px solid var(--lc-line); }
+.lc-about [data-view="calls"] .lcc-row.is-new { animation: lcc-in 260ms var(--lc-ease); }
+.lc-about [data-view="calls"] .lcc-row-btn {
+    width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "who meta" "bar bar";
+    gap: 4px 10px; align-items: center; padding: 7px 6px; border: 0; background: none; border-radius: 6px;
+    text-align: left; cursor: pointer; font: inherit; color: inherit;
+    transition: background-color 160ms var(--lc-ease);
+}
+.lc-about [data-view="calls"] .lcc-row-btn:hover { background: var(--lc-sunken); }
+.lc-about [data-view="calls"] .lcc-row-btn[aria-expanded="true"] { background: var(--lc-sunken); }
+.lc-about [data-view="calls"] .lcc-who { grid-area: who; display: flex; align-items: center; gap: 7px; min-width: 0; }
+.lc-about [data-view="calls"] .lcc-dot { flex: none; width: 8px; height: 8px; border-radius: 50%; }
+.lc-about [data-view="calls"] .lcc-dot.is-ear { background: var(--lc-green); }
+.lc-about [data-view="calls"] .lcc-dot.is-brain { background: var(--lc-navy); }
+.lc-about [data-view="calls"] .lcc-dot.is-scribe { background: var(--lc-blue); }
+.lc-about [data-view="calls"] .lcc-dot.is-helper { background: var(--lc-about-img); }
+.lc-about [data-view="calls"] .lcc-name { font-size: 12.5px; font-weight: 600; color: var(--lc-ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lc-about [data-view="calls"] .lcc-at { font-size: 11.5px; color: var(--lc-ink-3); font-variant-numeric: tabular-nums; }
+.lc-about [data-view="calls"] .lcc-meta { grid-area: meta; display: flex; align-items: baseline; justify-content: flex-end; gap: 4px; font-size: 12px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.lc-about [data-view="calls"] .lcc-num { color: var(--lc-ink-2); }
+.lc-about [data-view="calls"] .lcc-num + .lcc-dim { margin-right: 4px; }
+.lc-about [data-view="calls"] .lcc-dim { color: var(--lc-ink-3); }
+.lc-about [data-view="calls"] .lcc-bar { grid-area: bar; display: block; min-width: 0; padding-right: 18px; }
+.lc-about [data-view="calls"] .lcc-track { position: relative; height: 12px; border-radius: 3px; background: var(--lc-sunken); }
+.lc-about [data-view="calls"] .lcc-seg { position: absolute; top: 0; bottom: 0; }
+.lc-about [data-view="calls"] .lcc-seg:first-child { border-radius: 3px 0 0 3px; }
+/* Read from the cache: hatched over the fixed parts it covers. */
+.lc-about [data-view="calls"] .lcc-cached {
+    position: absolute; left: 0; top: 0; bottom: 0; border-radius: 3px 0 0 3px; pointer-events: none;
+    background-image: repeating-linear-gradient(135deg, oklch(0.99 0.004 250 / 0.62) 0 2px, transparent 2px 5px);
+}
+.lc-about [data-view="calls"] .lcc-out { position: absolute; top: 2px; bottom: 2px; border-radius: 2px; background: var(--lcc-out); }
+/* Far bigger than the rest: a break in the bar, drawn to its own proportions. */
+.lc-about [data-view="calls"] .lcc-track.is-broken { border-radius: 3px; }
+.lc-about [data-view="calls"] .lcc-break { position: absolute; left: 82%; top: -3px; bottom: -3px; width: 5px; background: var(--lc-bg); transform: skewX(-22deg); }
+.lc-about [data-view="calls"] .lcc-row-btn:hover .lcc-break, .lc-about [data-view="calls"] .lcc-row-btn[aria-expanded="true"] .lcc-break { background: var(--lc-sunken); }
+.lc-about [data-view="calls"] .lcc-track.is-failed { background: var(--lc-red-bg); display: flex; align-items: center; height: auto; min-height: 12px; padding: 1px 6px; }
+.lc-about [data-view="calls"] .lcc-fail { font-size: 11.5px; color: var(--lc-red-ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* One call's parts, on request. */
+.lc-about [data-view="calls"] .lcc-detail { padding: 4px 6px 10px 21px; }
+.lc-about [data-view="calls"] .lcc-parts { width: 100%; max-width: 420px; border-collapse: collapse; font-size: 12.5px; font-variant-numeric: tabular-nums; }
+.lc-about [data-view="calls"] .lcc-parts th, .lc-about [data-view="calls"] .lcc-parts td { padding: 3px 6px; text-align: right; border-bottom: 1px solid var(--lc-line); white-space: nowrap; }
+.lc-about [data-view="calls"] .lcc-parts th:first-child { text-align: left; font-weight: 500; color: var(--lc-ink); }
+.lc-about [data-view="calls"] .lcc-parts thead th { font-size: 11px; font-weight: 600; color: var(--lc-ink-3); text-transform: uppercase; letter-spacing: 0.03em; }
+.lc-about [data-view="calls"] .lcc-parts td:last-child { color: var(--lc-ink-3); text-align: left; }
+.lc-about [data-view="calls"] .lcc-parts .is-total th, .lc-about [data-view="calls"] .lcc-parts .is-total td { font-weight: 650; color: var(--lc-ink); border-bottom: 0; }
+.lc-about [data-view="calls"] .lcc-facts { margin: 8px 0 0; display: grid; gap: 2px; font-size: 12.5px; }
+.lc-about [data-view="calls"] .lcc-facts div { display: grid; grid-template-columns: 140px minmax(0, 1fr); gap: 8px; }
+.lc-about [data-view="calls"] .lcc-facts dt { color: var(--lc-ink-3); }
+.lc-about [data-view="calls"] .lcc-facts dd { margin: 0; color: var(--lc-ink); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.lc-about [data-view="calls"] .lcc-note { margin: 6px 0 0; font-size: 11.5px; color: var(--lc-ink-3); }
+.lc-about [data-view="calls"] .lcc-empty { margin: 12px 6px; font-size: 13px; color: var(--lc-ink-3); }
+.lc-about [data-view="calls"] .lcc-more { margin: 8px 6px 0; border: 0; background: none; padding: 0; font: inherit; font-size: 12.5px; font-weight: 600; color: var(--lc-blue); cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+
+@keyframes lcc-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+
+/* Side by side: who, the bar and the numbers on one line; the legend in two columns. */
+@container lc (min-width: 620px) {
+    .lc-about [data-view="calls"] .lcc-group { flex-basis: auto; margin-right: 2px; }
+    .lc-about [data-view="calls"] .lcc-what ul { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 22px; }
+    .lc-about [data-view="calls"] .lcc-row-btn { grid-template-columns: var(--lcc-who) minmax(0, 1fr) var(--lcc-meta); grid-template-areas: "who bar meta"; }
+    .lc-about [data-view="calls"] .lcc-axis { grid-template-columns: var(--lcc-who) minmax(0, 1fr) var(--lcc-meta); column-gap: 10px; }
+    .lc-about [data-view="calls"] .lcc-axis-who { display: block; }
+    .lc-about [data-view="calls"] .lcc-detail { padding-left: calc(var(--lcc-who) + 16px); }
+}
+
+.lc-about.is-still [data-view="calls"] .lcc-row.is-new { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+    .lc-about [data-view="calls"] .lcc-row.is-new { animation: none; }
+}

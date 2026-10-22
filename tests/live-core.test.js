@@ -286,6 +286,10 @@ const manualClock = () => {
         assert.ok(verifyCalls >= 1);
         assert.match(said[0].reason, /watch item "pcn-anaphylaxis" fired/, 'the alert remembers what set it off');
         assert.ok(typeof said[0].checkMs === 'number');
+        assert.ok(typeof said[0].checkWallMs === 'number', 'and how long the check took in real time');
+        assert.strictEqual(said[0].decision, 'say');
+        assert.strictEqual(said[0].severity, 'critical');
+        assert.strictEqual(said[0].waited, 0);
         cw.hear({ speaker: 'doctor', text: 'Go ahead and hang the Zosyn.' });
         await cw.idle();
         assert.strictEqual(said.length, 1, 'not repeated');
@@ -779,6 +783,7 @@ const manualClock = () => {
         await cw.update('test');
         assert.strictEqual(said.length, 0, 'abreast holds insights');
         assert.ok(cw.wm.held.some((h) => h.topic === 'topic-1'));
+        assert.match(cw.wm.held.find((h) => h.topic === 'topic-1').reason, /its take update/, 'a held thought remembers what raised it');
         cw.setMode('lead');
         clock.advance(1000);
         await cw.update('test');

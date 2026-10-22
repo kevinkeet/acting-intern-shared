@@ -28,7 +28,7 @@ const raw = { files: 0, bytes: 0, byFolder: {} };
         const p = path.join(d, f);
         const st = fs.statSync(p);
         if (st.isDirectory()) walk(p, top || f);
-        else if (f.endsWith('.json')) {
+        else if (f.endsWith('.json') && !/^ai-seed/.test(f)) {   // the classic coworker's AI memory is not chart
             raw.files++; raw.bytes += st.size;
             const k = top || 'patient';
             raw.byFolder[k] = (raw.byFolder[k] || 0) + st.size;
@@ -83,12 +83,12 @@ for (const line of mem.digest.split('\n')) {
 // ── problem threads: which records mention which problem, when ────────────
 const RULES = [
     [/heart failure|hfref|cardiomyopathy|\bchf\b|\badhf\b|volume overload|ejection fraction/i],
-    [/kidney|\bckd\b|renal|\baki\b|nephro|egfr|creatinine/i],
+    [/kidney|\bckd\b|renal (insufficiency|failure|disease|function)|\baki\b|nephro/i],
     [/atrial fib|\bafib\b|a-fib|\baf\b|atrial flutter/i],
     [/gi bleed|gastrointestinal (bleed|hemorrhage)|ulcer|melena|hematemesis|upper gi|peptic/i],
     [/coronary|\bcad\b|angina|\bnstemi\b|\bstemi\b|myocardial infarction|ischemic heart|cabg|stent/i],
     [/\bfall|mobility|gait|balance|frailty/i],
-    [/diabet|\bt2dm\b|\bdm2?\b|hyperglyc|hypoglyc|\ba1c\b|insulin/i],
+    [/diabet|\bt2dm\b|\bdm2?\b|hyperglyc|hypoglyc|\ba1c\b/i],
     [/neuropath/i],
     [/\bbph\b|prostat|nocturia|\bluts\b|urinary (frequency|retention|symptom)/i],
     [/depress|mood|adjustment disorder/i],
@@ -96,10 +96,10 @@ const RULES = [
     [/carotid|cerebrovascular|\btia\b|transient ischemic|stroke/i],
     [/anemia/i],
     [/hyponatr|hypernatr|sodium/i],
-    [/sleep apnea|\bosa\b|cpap/i],
+    [/sleep apnea|\bosa\b|cpap|polysomno/i],
     [/dyspnea|pneumonia|\bcap\b|pulmonary|lung|copd/i],
     [/knee|osteoarthritis|\boa\b/i],
-    [/advance care|goals of care|code status|polst|advance directive|dnr|hospice|palliative/i],
+    [/advance care|goals of care|code status|polst|molst|advance directive|\bdnr\b|hospice|palliative|health care proxy|living will/i],
 ];
 const problems = (md.problemAnalysis || []).map((p, i) => ({ i, name: p.problem, status: p.status || '', rule: (RULES[i] || [null])[0] }));
 const docType = new Map(facts.map((x) => [x.documentId, x.documentType]));
@@ -120,11 +120,46 @@ for (const card of facts) {
 }
 threads.forEach((t) => t.mentions.sort((a, b) => (a.d < b.d ? -1 : a.d > b.d ? 1 : 0)));
 
-// Hospital stays (inpatient encounters with a discharge date).
+// Hospital stays, from three places: inpatient encounters with a discharge date,
+// discharge summaries ("Admitted 1/9/2022, discharged 1/16/2022 ..."), and the memory's
+// own dated notes ("9/6-9/10/2025 ADHF admission"). Overlapping stays are merged.
+const iso = (t) => {
+    let m = String(t).match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (m) return m[1] + '-' + m[2] + '-' + m[3];
+    m = String(t).match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+    return m ? m[3] + '-' + m[1].padStart(2, '0') + '-' + m[2].padStart(2, '0') : null;
+};
+const stays = [];
 const enc = JSON.parse(fs.readFileSync(path.join(dir, 'encounters/index.json'), 'utf8'));
-const admissions = (enc.encounters || enc).filter((e) => /inpatient/i.test(e.type || '') && (e.dischargeDate || e.endDate))
-    .map((e) => ({ start: day(e.date), end: day(e.dischargeDate || e.endDate), label: (e.diagnoses || [])[0] || e.chiefComplaint || '' }))
-    .sort((a, b) => (a.start < b.start ? -1 : 1));
+for (const e of enc.encounters || enc) {
+    if (/inpatient/i.test(e.type || '') && (e.dischargeDate || e.endDate)) stays.push({ start: day(e.date), end: day(e.dischargeDate || e.endDate), label: (e.diagnoses || [])[0] || e.chiefComplaint || '' });
+}
+const DATE = '(\\d{4}-\\d{2}-\\d{2}|\\d{1,2}/\\d{1,2}/\\d{4})';
+for (const x of facts.filter((c) => /^Discharge Summary/i.test(c.documentType || ''))) {
+    const t = (x.key_findings || []).join(' ');
+    const m = t.match(new RegExp('Admitted (?:on )?' + DATE + '(?:,? (?:to|through|discharged(?: on)?) ' + DATE + ')?', 'i'));
+    if (!m) continue;
+    const why = (t.slice(m.index + m[0].length).match(/\bfor (?:an? )?([^.;,(]{4,70})/i) || [])[1] || String((x.problems_mentioned || [])[0] || '');
+    stays.push({ start: iso(m[1]), end: iso(m[2] || '') || day(x.date), label: why.trim() });
+}
+for (const p of md.problemAnalysis || []) {
+    for (const k of [].concat(p.keyData || [], p.trajectory || [])) {
+        const re = /(\d{1,2})\/(\d{1,2})\s*[-–]\s*(?:(\d{1,2})\/)?(\d{1,2})\/(\d{4})([^;]{0,40}?)\b(admission|admitted|hospitali[sz]ation)\b/gi;
+        let m;
+        while ((m = re.exec(String(k)))) {
+            const y = m[5], endMonth = m[3] || m[1];
+            const named = m[6].replace(/[:,]/g, ' ').trim();   // "9/6-9/10/2025 ADHF admission" -> ADHF
+            stays.push({ start: y + '-' + m[1].padStart(2, '0') + '-' + m[2].padStart(2, '0'), end: y + '-' + endMonth.padStart(2, '0') + '-' + m[4].padStart(2, '0'), label: named || p.problem.split(/[,(/]/)[0].trim() });
+        }
+    }
+}
+const admissions = [];
+for (const st of stays.filter((x) => x.start && x.end && x.end >= x.start).sort((a, b) => (a.start < b.start ? -1 : 1))) {
+    const last = admissions[admissions.length - 1];
+    if (last && st.start <= last.end) { if (st.end > last.end) last.end = st.end; if (!last.label && st.label) last.label = st.label; }
+    else admissions.push(Object.assign({}, st));
+}
+for (const a of admissions) a.label = String(a.label || '').replace(/\s*\(.*$/, '').replace(/\s+/g, ' ').trim().slice(0, 40);
 
 const out = {
     patient: PID,

@@ -176,6 +176,7 @@
                     const step = { ArrowRight: 1, ArrowLeft: -1 }[ev.key];
                     if (!tab || !step) return;
                     ev.preventDefault();
+                    ev.stopPropagation();   // the panel's own tabs listen for arrows too
                     const ids = TABS.map((t) => t[0]);
                     const next = ids[(ids.indexOf(tab.dataset.aboutTab) + step + ids.length) % ids.length];
                     this.show(next);

@@ -1,0 +1,93 @@
+/*
+ * "How it thinks" → Digestion (js/live/live-about-digest.js). Loaded the first
+ * time the tab opens; every rule is scoped to the view.
+ *
+ * Colours follow the Memory view: navy for notes and the memory's own words,
+ * blue for labs and the digest, amber for imaging, medicines and what is on
+ * call, green for what it heard, a soft red only for safety and allergies.
+ */
+
+.lc-about [data-view="digest"] {
+    --dg-find: oklch(0.45 0.09 258);
+    --dg-deep: oklch(0.36 0.07 255);
+    --dg-act: oklch(0.62 0.10 235);
+    --dg-vit: oklch(0.70 0.09 165);
+    --dg-safe: oklch(0.70 0.12 25);
+    --dg-soft: oklch(0.82 0.04 245);
+    --dg-patient: oklch(0.80 0.025 250);
+    --dg-enc: oklch(0.72 0.05 250);
+    --dg-other: oklch(0.88 0.015 250);
+    --dg-flow: oklch(0.955 0.014 250);
+}
+.lc-about [data-view="digest"] .dg-wrap { padding: 10px 14px 18px; }
+.lc-about [data-view="digest"] .dg-body { padding: 0; }
+.lc-about [data-view="digest"] .dg-squeeze { margin: 2px 0 12px; max-width: 44ch; font-size: 15px; line-height: 1.4; color: var(--lc-ink-2); }
+.lc-about [data-view="digest"] .dg-squeeze b { color: var(--lc-ink); font-weight: 700; }
+.lc-about [data-view="digest"] .dg-none { margin: 18px 0; font-size: 13px; color: var(--lc-ink-3); max-width: 46ch; }
+.lc-about [data-view="digest"] .dg-fig { width: 100%; }   /* a grid item with auto margins would shrink to the SVG's default 300 px */
+.lc-about [data-view="digest"] .dg-svg { display: block; width: 100%; height: auto; font-family: inherit; overflow: visible; }
+
+/* the stages */
+.lc-about [data-view="digest"] .dg-title { text-anchor: middle; font-size: 11.5px; fill: var(--lc-ink-2); }
+.lc-about [data-view="digest"] .dg-name { font-weight: 650; fill: var(--lc-ink); }
+.lc-about [data-view="digest"] .dg-tok { font-variant-numeric: tabular-nums; }
+.lc-about [data-view="digest"] .dg-frame { fill: none; stroke: oklch(0.3 0.03 255 / 0.12); stroke-width: 1; }
+.lc-about [data-view="digest"] .dg-empty { fill: none; stroke: var(--lc-line-2); stroke-width: 1.2; stroke-dasharray: 3 3; }
+.lc-about [data-view="digest"] .dg-bar.is-call .dg-frame { stroke: oklch(0.3 0.03 255 / 0.2); }
+.lc-about [data-view="digest"] .dg-bar.is-lit .dg-frame, .lc-about [data-view="digest"] .dg-empty.is-lit { stroke: var(--lc-blue); stroke-width: 2; }
+
+/* the flow between stages, what happens on the way, and the squeeze at each step */
+.lc-about [data-view="digest"] .dg-flow { fill: var(--dg-flow); }
+.lc-about [data-view="digest"] .dg-step { text-anchor: middle; font-size: 10px; fill: var(--lc-ink-3); }
+.lc-about [data-view="digest"] .dg-ratio { font-weight: 650; fill: var(--lc-blue); font-variant-numeric: tabular-nums; }
+.lc-about [data-view="digest"] .dg-dot { fill: var(--lc-blue); }
+.lc-about [data-view="digest"] .dg-dot.is-heard { fill: var(--lc-green); }
+
+/* on call: the long-term memory a helper reads */
+.lc-about [data-view="digest"] .dg-link { fill: none; stroke: var(--lc-about-img); stroke-width: 1.2; stroke-dasharray: 3 3; }
+.lc-about [data-view="digest"] .dg-pill { fill: var(--lc-surface); stroke: var(--lc-about-img); stroke-width: 1.3; stroke-dasharray: 3 2; transition: fill 300ms var(--lc-ease); }
+.lc-about [data-view="digest"] .dg-pill.is-lit { fill: oklch(0.96 0.04 75); }
+.lc-about [data-view="digest"] .dg-pill-t { text-anchor: middle; font-size: 11px; font-weight: 650; fill: var(--lc-ink); }
+.lc-about [data-view="digest"] .dg-pill-s { text-anchor: middle; font-size: 9px; fill: var(--lc-ink-3); }
+
+/* the cached part of each call */
+.lc-about [data-view="digest"] .dg-bracket { fill: none; stroke: var(--lc-ink-3); stroke-width: 1; }
+.lc-about [data-view="digest"] .dg-cached { text-anchor: middle; font-size: 9.5px; fill: var(--lc-ink-3); }
+
+/* parts (bars and the swatches beside the words) */
+.lc-about [data-view="digest"] .k-note { fill: var(--lc-about-note); background: var(--lc-about-note); }
+.lc-about [data-view="digest"] .k-lab { fill: var(--lc-about-lab); background: var(--lc-about-lab); }
+.lc-about [data-view="digest"] .k-img { fill: var(--lc-about-img); background: var(--lc-about-img); }
+.lc-about [data-view="digest"] .k-prob, .lc-about [data-view="digest"] .k-chart { fill: var(--lc-about-dg); background: var(--lc-about-dg); }
+.lc-about [data-view="digest"] .k-find, .lc-about [data-view="digest"] .k-mem { fill: var(--dg-find); background: var(--dg-find); }
+.lc-about [data-view="digest"] .k-deep { fill: var(--dg-deep); background: var(--dg-deep); }
+.lc-about [data-view="digest"] .k-act { fill: var(--dg-act); background: var(--dg-act); }
+.lc-about [data-view="digest"] .k-vit { fill: var(--dg-vit); background: var(--dg-vit); }
+.lc-about [data-view="digest"] .k-safe { fill: var(--dg-safe); background: var(--dg-safe); }
+.lc-about [data-view="digest"] .k-soft { fill: var(--dg-soft); background: var(--dg-soft); }
+.lc-about [data-view="digest"] .k-patient { fill: var(--dg-patient); background: var(--dg-patient); }
+.lc-about [data-view="digest"] .k-enc { fill: var(--dg-enc); background: var(--dg-enc); }
+.lc-about [data-view="digest"] .k-other, .lc-about [data-view="digest"] .k-tools { fill: var(--dg-other); background: var(--dg-other); }
+.lc-about [data-view="digest"] .k-rules { fill: oklch(0.76 0.03 250); background: oklch(0.76 0.03 250); }
+.lc-about [data-view="digest"] .k-wm { fill: var(--lc-green); background: var(--lc-green); }
+.lc-about [data-view="digest"] .k-conv { fill: var(--lc-blue); background: var(--lc-blue); }
+.lc-about [data-view="digest"] .k-look { fill: oklch(0.80 0.12 80); background: oklch(0.80 0.12 80); }
+.lc-about [data-view="digest"] .k-task { fill: oklch(0.58 0.02 255); background: oklch(0.58 0.02 255); }
+/* The words beside the picture: numbered like the picture, top to bottom. */
+.lc-about [data-view="digest"] .dg-list li { grid-template-columns: 18px minmax(0, 1fr); }
+.lc-about [data-view="digest"] .dg-mark { width: 18px; height: 18px; margin-top: 0; border-radius: 50%; background: var(--lc-sunken); border: 1px solid var(--lc-line); display: grid; place-items: center; }
+.lc-about [data-view="digest"] .dg-mark::before { content: attr(data-n); font-size: 10.5px; font-weight: 650; color: var(--lc-ink-2); font-variant-numeric: tabular-nums; }
+.lc-about [data-view="digest"] .dg-mark.is-call { border-radius: 5px; background: var(--lc-surface); border: 1.3px dashed var(--lc-about-img); }
+.lc-about [data-view="digest"] .dg-foot { max-width: 60ch; }
+
+/* Motion: the dots drift down the flows; none under reduced motion. */
+.lc-about.is-still [data-view="digest"] .dg-dot { display: none; }
+@media (prefers-reduced-motion: reduce) {
+    .lc-about [data-view="digest"] .dg-dot { display: none; }
+}
+
+/* Side by side: the picture on the left, the words on the right (the host's .lc-about-body grid). */
+@container lc (min-width: 620px) {
+    .lc-about [data-view="digest"] .dg-wrap { padding-top: 12px; }
+    .lc-about [data-view="digest"] .dg-squeeze { font-size: 16px; }
+}

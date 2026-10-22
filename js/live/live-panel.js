@@ -315,12 +315,13 @@
             });
             w.addEventListener('keydown', (ev) => {
                 if (ev.key === 'Escape' && !this.refs.pop.hidden) { this.togglePop(false); this.refs.settingsBtn.focus(); return; }
+                if (ev.target.closest && ev.target.closest('.lc-about')) return;   // "How it thinks" has its own keys
                 const role = ev.target.getAttribute && ev.target.getAttribute('role');
                 const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[ev.key];
                 if (!step || (role !== 'tab' && role !== 'radio')) return;
                 if (role === 'tab' && (ev.key === 'ArrowUp' || ev.key === 'ArrowDown')) return;
                 ev.preventDefault();
-                const group = [...w.querySelectorAll(role === 'tab' ? '[role="tab"]' : '.lc-modes [role="radio"]')];
+                const group = [...w.querySelectorAll(role === 'tab' ? '[role="tab"][data-tab]' : '.lc-modes [role="radio"]')];
                 const n = group[(group.indexOf(ev.target) + step + group.length) % group.length];
                 n.focus();
                 if (role === 'tab') this.showTab(n.dataset.tab);
@@ -367,7 +368,7 @@
 
         showTab(name) {
             this.tab = name;
-            this.el.querySelectorAll('[role="tab"]').forEach((b) => { const on = b.dataset.tab === name; b.setAttribute('aria-selected', String(on)); b.tabIndex = on ? 0 : -1; });
+            this.el.querySelectorAll('[role="tab"][data-tab]').forEach((b) => { const on = b.dataset.tab === name; b.setAttribute('aria-selected', String(on)); b.tabIndex = on ? 0 : -1; });
             this.el.querySelectorAll('.lc-pane').forEach((p) => p.classList.toggle('is-active', p.dataset.pane === name));
             if (name === 'said') { const pane = this.refs.said.parentElement; pane.scrollTop = pane.scrollHeight; this._jump(false); }
             if (name === 'said' && this.refs.saidCount) { this.refs.saidCount.hidden = true; this.seenSaid = this._saidTotal || 0; }

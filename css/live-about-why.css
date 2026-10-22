@@ -1,0 +1,101 @@
+/*
+ * "How it thinks" › Why it said (js/live/live-about-why.js). Loaded with its tab;
+ * every rule is scoped to that tab's panel and uses the live panel's tokens.
+ * Dots: red for safety, navy for answers, amber for thoughts, grey for what it
+ * checked and kept quiet about. The chain is a line of nodes, not cards.
+ */
+
+.lc-about [data-view="why"] { padding: 12px 14px 20px; }
+.lc-about [data-view="why"] .why { display: grid; gap: 14px; }
+
+/* ── the list: what it said or did ───────────────────────────────────── */
+.lc-about [data-view="why"] .why-list {
+    max-height: 236px; overflow: auto; padding: 4px;
+    border: 1px solid var(--lc-line); border-radius: var(--lc-radius); background: var(--lc-surface);
+}
+.lc-about [data-view="why"] .why-list:focus-visible { outline: 2px solid var(--lc-blue); outline-offset: 2px; }
+.lc-about [data-view="why"] .why-item {
+    display: grid; grid-template-columns: 10px minmax(0, 1fr) auto; column-gap: 9px; align-items: baseline;
+    padding: 6px 8px; border-radius: 6px; cursor: pointer; font-size: 13px; line-height: 1.4; color: var(--lc-ink-2);
+    transition: background-color 160ms var(--lc-ease);
+}
+.lc-about [data-view="why"] .why-item:hover { background: var(--lc-sunken); }
+.lc-about [data-view="why"] .why-item[aria-selected="true"] { background: var(--lc-blue-bg); color: var(--lc-ink); }
+.lc-about [data-view="why"] .why-item:focus-visible { outline: 2px solid var(--lc-blue); outline-offset: -2px; }
+.lc-about [data-view="why"] .why-item.is-new { animation: why-in 260ms var(--lc-ease); }
+.lc-about [data-view="why"] .why-item-text { min-width: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.lc-about [data-view="why"] .why-kind { margin-right: 6px; font-size: 11px; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; color: var(--lc-ink-3); }
+.lc-about [data-view="why"] .why-item time { font-size: 11.5px; color: var(--lc-ink-3); font-variant-numeric: tabular-nums; }
+.lc-about [data-view="why"] .why-group { padding: 10px 8px 4px; font-size: 11px; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; color: var(--lc-ink-3); border-top: 1px solid var(--lc-line); margin-top: 4px; }
+
+.lc-about [data-view="why"] .why-dot { width: 9px; height: 9px; border-radius: 50%; transform: translateY(0.5px); }
+.lc-about [data-view="why"] .is-alert.why-dot { background: var(--lc-red); }
+.lc-about [data-view="why"] .is-update.why-dot { background: var(--lc-surface); box-shadow: inset 0 0 0 2px var(--lc-red); }
+.lc-about [data-view="why"] .is-answer.why-dot { background: var(--lc-navy); }
+.lc-about [data-view="why"] .is-thought.why-dot { background: var(--lc-amber); }
+.lc-about [data-view="why"] .is-held.why-dot { background: var(--lc-surface); box-shadow: inset 0 0 0 2px var(--lc-amber); }
+.lc-about [data-view="why"] .is-quiet.why-dot { background: var(--lc-line-2); }
+
+/* ── the chain for the one selected ──────────────────────────────────── */
+.lc-about [data-view="why"] .why-head { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-bottom: 4px; }
+.lc-about [data-view="why"] .why-head time { font-size: 12px; color: var(--lc-ink-3); font-variant-numeric: tabular-nums; }
+.lc-about [data-view="why"] .why-chip {
+    display: inline-flex; align-items: center; padding: 1px 8px; border-radius: 999px; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.04em; text-transform: uppercase; color: var(--lc-ink-2); background: var(--lc-sunken);
+}
+.lc-about [data-view="why"] .why-chip.is-alert, .lc-about [data-view="why"] .why-chip.is-update { background: var(--lc-red-bg); color: var(--lc-red-ink); }
+.lc-about [data-view="why"] .why-chip.is-answer { background: var(--lc-blue-bg); color: var(--lc-navy); }
+.lc-about [data-view="why"] .why-chip.is-thought, .lc-about [data-view="why"] .why-chip.is-held { background: var(--lc-amber-bg); color: var(--lc-amber-ink); }
+.lc-about [data-view="why"] .why-follow { margin-left: auto; font-size: 12px; color: var(--lc-ink-3); }
+.lc-about [data-view="why"] .why-follow.is-btn { border: 0; background: none; padding: 0; font: inherit; font-size: 12px; font-weight: 600; color: var(--lc-blue); cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+
+.lc-about [data-view="why"] .why-steps { list-style: none; margin: 10px 0 0; padding: 0; }
+.lc-about [data-view="why"] .why-step { position: relative; display: grid; grid-template-columns: 16px minmax(0, 1fr); column-gap: 10px; padding-bottom: 14px; }
+/* The thread that joins one link to the next. */
+.lc-about [data-view="why"] .why-step:not(:last-child)::before { content: ''; position: absolute; left: 7px; top: 17px; bottom: 1px; width: 2px; border-radius: 1px; background: var(--lc-line); }
+.lc-about [data-view="why"] .why-node { position: relative; width: 12px; height: 12px; margin: 3px 0 0 2px; border-radius: 50%; background: var(--lc-surface); box-shadow: inset 0 0 0 2px var(--lc-ink-3); }
+.lc-about [data-view="why"] .is-heard .why-node { box-shadow: inset 0 0 0 2px var(--lc-ink-2); }
+.lc-about [data-view="why"] .is-filed .why-node { box-shadow: inset 0 0 0 2px var(--lc-green); }
+.lc-about [data-view="why"] .is-set .why-node { background: var(--lc-amber-bg); box-shadow: inset 0 0 0 2px var(--lc-amber); }
+.lc-about [data-view="why"] .is-check .why-node { box-shadow: inset 0 0 0 2px var(--lc-navy); }
+.lc-about [data-view="why"] .is-said .why-node { background: var(--lc-red); box-shadow: none; }
+.lc-about [data-view="why"] .is-said.is-answer .why-node { background: var(--lc-navy); }
+.lc-about [data-view="why"] .is-said.is-thought .why-node, .lc-about [data-view="why"] .is-held .why-node { background: var(--lc-amber); box-shadow: none; }
+.lc-about [data-view="why"] .is-led .why-node { box-shadow: inset 0 0 0 2px var(--lc-blue); }
+
+.lc-about [data-view="why"] .why-label { margin: 0; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--lc-ink-3); }
+.lc-about [data-view="why"] .why-label time { margin-left: 4px; font-weight: 500; letter-spacing: 0; text-transform: none; font-variant-numeric: tabular-nums; }
+.lc-about [data-view="why"] .why-text { margin-top: 2px; font-size: 13.5px; line-height: 1.5; color: var(--lc-ink); max-width: 64ch; overflow-wrap: anywhere; }
+.lc-about [data-view="why"] .why-text q { quotes: '“' '”'; color: var(--lc-ink); }
+.lc-about [data-view="why"] .why-said { display: block; }
+.lc-about [data-view="why"] .is-said:not(.is-answer):not(.is-thought) .why-said b { color: var(--lc-red-ink); }
+.lc-about [data-view="why"] .why-why, .lc-about [data-view="why"] .why-snip { display: block; margin-top: 3px; font-size: 12.5px; color: var(--lc-ink-2); }
+.lc-about [data-view="why"] .why-snip { color: var(--lc-ink-3); }
+.lc-about [data-view="why"] .why-meta { display: block; margin-top: 3px; font-size: 12px; color: var(--lc-ink-3); font-variant-numeric: tabular-nums; }
+.lc-about [data-view="why"] .why-muted { color: var(--lc-ink-3); }
+.lc-about [data-view="why"] .why-note { display: block; margin-top: 3px; font-size: 12px; }
+.lc-about [data-view="why"] .why-facts, .lc-about [data-view="why"] .why-tools, .lc-about [data-view="why"] .why-led { list-style: none; margin: 2px 0 0; padding: 0; display: grid; gap: 4px; }
+.lc-about [data-view="why"] .why-facts li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 7px; align-items: baseline; }
+.lc-about [data-view="why"] .why-tag { font-size: 11px; font-weight: 600; padding: 0 5px; border-radius: 4px; background: oklch(0.95 0.035 150); color: var(--lc-green-ink, oklch(0.42 0.1 150)); text-transform: lowercase; }
+
+/* Before anything is said: what will appear. */
+.lc-about [data-view="why"] .why-empty { padding: 4px 2px; font-size: 13.5px; line-height: 1.5; color: var(--lc-ink-2); max-width: 60ch; }
+.lc-about [data-view="why"] .why-empty p { margin: 0 0 10px; }
+.lc-about [data-view="why"] .why-preview { list-style: none; margin: 0 0 12px; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 4px; }
+.lc-about [data-view="why"] .why-preview li { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; color: var(--lc-ink-2); }
+.lc-about [data-view="why"] .why-preview li:not(:last-child)::after { content: '→'; margin-left: 4px; color: var(--lc-ink-3); font-weight: 400; }
+
+@keyframes why-in { from { opacity: 0; transform: translateY(-3px); } to { opacity: 1; transform: none; } }
+
+/* Side by side: the list on the left, the chain on the right. */
+@container lc (min-width: 620px) {
+    .lc-about [data-view="why"] .why { grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); align-items: start; gap: 20px; }
+    .lc-about [data-view="why"] .why-left { position: sticky; top: 96px; }
+    .lc-about [data-view="why"] .why-list { max-height: min(560px, calc(100vh - 220px)); }
+}
+
+.lc-about.is-still [data-view="why"] .why-item.is-new { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+    .lc-about [data-view="why"] .why-item.is-new { animation: none; }
+    .lc-about [data-view="why"] .why-item { transition: none; }
+}

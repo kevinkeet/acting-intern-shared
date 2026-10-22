@@ -1,0 +1,76 @@
+/*
+ * Live Coworker, "How it thinks" → Problems (js/live/live-about-threads.js).
+ * Loaded the first time the tab opens; every rule is scoped to the view and
+ * uses the panel's tokens and the about sheet's record colours.
+ */
+
+.lc-about [data-view="threads"] .th { padding: 8px 14px 18px; }
+.lc-about [data-view="threads"] .th-wait { margin: 18px 0; font-size: 13px; color: var(--lc-ink-3); }
+.lc-about [data-view="threads"] .th-intro { margin: 2px 0 6px; font-size: 13px; line-height: 1.45; color: var(--lc-ink-2); max-width: 68ch; }
+.lc-about [data-view="threads"] .th-key { display: flex; flex-wrap: wrap; gap: 4px 12px; margin: 0 0 6px; font-size: 12px; color: var(--lc-ink-3); }
+.lc-about [data-view="threads"] .th-key span { white-space: nowrap; }
+.lc-about [data-view="threads"] .th-key i { display: inline-block; width: 7px; height: 7px; margin-right: 5px; border-radius: 50%; vertical-align: 0; }
+.lc-about [data-view="threads"] .th-key i.is-note { background: var(--lc-about-note); }
+.lc-about [data-view="threads"] .th-key i.is-lab { background: var(--lc-about-lab); }
+.lc-about [data-view="threads"] .th-key i.is-imaging { background: var(--lc-about-img); }
+.lc-about [data-view="threads"] .th-key i.is-stay { width: 9px; height: 10px; border-radius: 2px; background: oklch(0.93 0.035 27); vertical-align: -1px; }
+
+/* ── the lanes ─────────────────────────────────────────────────────── */
+.lc-about [data-view="threads"] .th-svg { display: block; width: 100%; height: auto; font-family: inherit; overflow: visible; }
+.lc-about [data-view="threads"] .th-grid { stroke: var(--lc-line); stroke-width: 1; }
+.lc-about [data-view="threads"] .th-year { font-size: 9px; fill: var(--lc-ink-3); font-variant-numeric: tabular-nums; }
+.lc-about [data-view="threads"] .th-year.is-end { text-anchor: end; }
+.lc-about [data-view="threads"] .th-stay rect { fill: oklch(0.93 0.035 27); }
+.lc-about [data-view="threads"] .th-stay-name { font-size: 8.5px; font-weight: 600; fill: var(--lc-red-ink); text-anchor: middle; }
+.lc-about [data-view="threads"] .th-row { cursor: pointer; outline: none; }
+.lc-about [data-view="threads"] .th-hit { fill: transparent; stroke: transparent; transition: fill 160ms var(--lc-ease); }
+.lc-about [data-view="threads"] .th-row:hover .th-hit { fill: oklch(0.96 0.008 250 / 0.75); }
+.lc-about [data-view="threads"] .th-row.is-sel .th-hit { fill: oklch(0.95 0.025 250 / 0.85); }
+.lc-about [data-view="threads"] .th-row:focus-visible .th-hit { stroke: var(--lc-blue); stroke-width: 1.5; }
+.lc-about [data-view="threads"] .th-label { font-size: 10.5px; font-weight: 560; fill: var(--lc-ink); }
+.lc-about [data-view="threads"] .th-count { font-size: 9.5px; fill: var(--lc-ink-3); text-anchor: end; font-variant-numeric: tabular-nums; }
+.lc-about [data-view="threads"] .th-lane { stroke: var(--lc-line); stroke-width: 1; }
+.lc-about [data-view="threads"] .th-dot { opacity: 0.88; transition: opacity 200ms var(--lc-ease); }
+.lc-about [data-view="threads"] .th-dot.is-note { fill: var(--lc-about-note); }
+.lc-about [data-view="threads"] .th-dot.is-lab { fill: var(--lc-about-lab); }
+.lc-about [data-view="threads"] .th-dot.is-imaging { fill: var(--lc-about-img); }
+/* Few mentions: the lane steps back a little (it is in the memory, but the record rarely names it). */
+.lc-about [data-view="threads"] .th-row.is-sparse .th-label { fill: var(--lc-ink-2); font-weight: 450; }
+/* Once a lane is chosen, the others step back so its thread stands out. */
+.lc-about [data-view="threads"] .th-svg.has-sel .th-row:not(.is-sel) .th-dot { opacity: 0.4; }
+.lc-about [data-view="threads"] .th-svg.has-sel .th-row:not(.is-sel) .th-label { fill: var(--lc-ink-2); }
+.lc-about [data-view="threads"] .th-row.is-sel .th-label { fill: var(--lc-navy); font-weight: 680; }
+.lc-about [data-view="threads"] .th-row.is-sel .th-count { fill: var(--lc-navy); font-weight: 600; }
+
+/* ── what the memory says about the chosen problem ─────────────────── */
+.lc-about [data-view="threads"] .th-detail { margin-top: 10px; padding: 12px 14px 14px; border: 1px solid var(--lc-line); border-radius: var(--lc-radius); background: var(--lc-surface); }
+.lc-about [data-view="threads"] .th-d-head { display: flex; align-items: flex-start; gap: 8px; }
+.lc-about [data-view="threads"] .th-d-head h3 { flex: 1; min-width: 0; margin: 0; font-size: 14px; font-weight: 650; line-height: 1.35; color: var(--lc-ink); }
+.lc-about [data-view="threads"] .th-status { flex: none; margin-top: 1px; padding: 1px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; letter-spacing: 0.02em; background: var(--lc-sunken); color: var(--lc-ink-2); }
+.lc-about [data-view="threads"] .th-status.is-active { background: var(--lc-amber-bg); color: var(--lc-amber-ink); }
+.lc-about [data-view="threads"] .th-status.is-chronic { background: var(--lc-blue-bg); color: var(--lc-navy); }
+.lc-about [data-view="threads"] .th-status.is-stable { background: oklch(0.95 0.035 150); color: var(--lc-green-ink, oklch(0.42 0.1 150)); }
+.lc-about [data-view="threads"] .th-status.is-resolved { background: var(--lc-sunken); color: var(--lc-ink-3); }
+.lc-about [data-view="threads"] .th-d-meta { margin: 4px 0 0; font-size: 12px; color: var(--lc-ink-3); }
+.lc-about [data-view="threads"] .th-d-list { margin: 10px 0 0; display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 4px 10px; font-size: 13px; line-height: 1.45; }
+.lc-about [data-view="threads"] .th-d-list dt { font-size: 11px; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; color: var(--lc-ink-3); padding-top: 2px; }
+.lc-about [data-view="threads"] .th-d-list dd { margin: 0; color: var(--lc-ink); max-width: 68ch; }
+.lc-about [data-view="threads"] .th-detail h4 { margin: 12px 0 4px; font-size: 11px; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; color: var(--lc-ink-3); }
+.lc-about [data-view="threads"] .th-detail h4 span { margin-left: 4px; font-variant-numeric: tabular-nums; color: var(--lc-ink-3); font-weight: 500; }
+.lc-about [data-view="threads"] .th-evidence { list-style: none; margin: 0; padding: 0; display: grid; gap: 5px; max-height: 300px; overflow: auto; font-size: 12.5px; line-height: 1.45; color: var(--lc-ink-2); }
+.lc-about [data-view="threads"] .th-evidence li { padding-left: 12px; position: relative; max-width: 72ch; overflow-wrap: anywhere; }
+.lc-about [data-view="threads"] .th-evidence li::before { content: ''; position: absolute; left: 1px; top: 0.6em; width: 5px; height: 5px; border-radius: 50%; background: var(--lc-line-2); }
+.lc-about [data-view="threads"] .th-evidence b { color: var(--lc-ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+/* Side by side: the lanes on the left, the memory's words on the right (they stay in view). */
+@container lc (min-width: 620px) {
+    .lc-about [data-view="threads"] .th { padding-top: 12px; }
+    .lc-about [data-view="threads"] .th-wrap { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+    .lc-about [data-view="threads"] .th-detail { margin-top: 0; position: sticky; top: 100px; max-height: calc(100vh - 140px); overflow: auto; }
+    .lc-about [data-view="threads"] .th-evidence { max-height: none; overflow: visible; }
+}
+
+.lc-about.is-still [data-view="threads"] *, .lc-about.is-still [data-view="threads"] *::before { transition: none !important; }
+@media (prefers-reduced-motion: reduce) {
+    .lc-about [data-view="threads"] * { transition: none !important; }
+}

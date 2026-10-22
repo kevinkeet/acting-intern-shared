@@ -128,6 +128,21 @@ on a list, ready to act on with one click:
   radar sweep). The ear feeds in at the top; alerts, answers, the note and the
   radar come out at the bottom. While it is open each lane pulses as it works and
   the numbers follow. Loaded only when opened (`live-about.js`, `css/live-about.css`).
+  Four more tabs, each its own file loaded on first use (`live-about-<id>.js` and
+  `css/live-about-<id>.css`):
+  - **Digestion**: how the chart becomes what it keeps in mind, from 392 raw files
+    (~500K tokens) through 358 fact cards (Haiku, one per record) and the memory
+    document (Sonnet, 13 passes) to the ~6K-token digest, and what each call carries.
+  - **Problems**: the long-term memory by problem over the years, one dot per record
+    that mentions it, hospital stays as bands; pick a problem to read the memory's
+    own summary and dated evidence.
+  - **Why it said**: for any alert, update, answer or thought, the chain behind it:
+    the words heard, what the ear filed, the tripwire or alarm that set off the check,
+    the verdict, what it said, and what it led to (a flagged radar item).
+  - **Each call**: what every AI call actually read, part by part (rules, digest,
+    working memory, conversation, lookups, task), how much was cached, time and cost.
+  The numbers behind Digestion and Problems come from `tools/live/memory-stats.mjs`
+  (writes `data/live/<patient>-memory-stats.json`; rerun after a new Deep Learn).
 - Conversation (what it heard and what it said, in order, with a live caption),
   Note (the live note; "Side by side" widens the panel to show both), Tracking
   (working memory), Log (decisions, calls, cost).
@@ -150,7 +165,8 @@ on a list, ready to act on with one click:
 | `live-voice.js` | Speaking aloud (Deepgram's Aura voices, or this computer's): cleanup, sentence pieces, voice choice, echo check |
 | `live-panel.js` | The panel UI (DOM only) |
 | `live-app.js` | Browser glue: chart, memory, mic (Deepgram room mic or browser speech), demo replay, settings, the radar's buttons (order form, nurse chat, note editor) |
-| `live-about.js` | "How it thinks": the memory rings and the lanes, live (loaded on first open) |
+| `live-about.js` | "How it thinks": the tabs, the memory rings and the lanes, live (loaded on first open) |
+| `live-about-*.js` | Its other views: digest, threads, why, calls (each loaded when its tab opens) |
 | `live-fake.js` | `?livefake`: a scripted stand-in model for UI work and UI tests (no AI cost) |
 
 Loader: the end of `js/components/ai-coworker.js`. Styles: `css/live-coworker.css`.

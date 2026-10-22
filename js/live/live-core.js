@@ -604,6 +604,7 @@
             if (inflightVerify.has(key)) return null;
             inflightVerify.add(key);
             const startedAt = elapsed();
+            const wall0 = Date.now();   // real seconds (the demo's clock runs faster)
             const p = (async () => {
                 emit('thinking', { lane: 'verify', reason });
                 const body = brainBody('verify', renderForBrain() + '\n\n' + P.taskVerify(reason, followUp), { schema: P.VERIFY_SCHEMA });
@@ -616,7 +617,7 @@
                 if (decision === 'say' && out.text) {
                     const kind = out.severity === 'important' ? 'insight' : 'critical';
                     const c = { kind, topic: out.topic || key, text: out.text, why: out.why, cueLine: cue && cue.id, heardAt: cue && cue.t, via: followUp ? 'after waiting' : 'verify',
-                        reason, checkMs: elapsed() - startedAt, severity: out.severity };
+                        reason, checkMs: elapsed() - startedAt, checkWallMs: Date.now() - wall0, severity: out.severity, decision, waited: followUp ? followUp.rounds : 0 };
                     if (kind === 'critical' && !(await placeAlert(c, out.update_of, startedAt))) {
                         emit('suppressed', { reason: 'nothing new for an alert already on screen', topic: c.topic, text: c.text });
                         return;
@@ -993,7 +994,7 @@
             if (c.kind === 'critical') return deliver(c);
             // insight
             if (cfg.mode === 'lead' && elapsed() - lastInsightAt >= cfg.insightGapMs) { lastInsightAt = elapsed(); return deliver(c); }
-            if (!wm.held.some((h) => h.topic === c.topic)) wm.held.push({ t: elapsed(), topic: c.topic, text: c.text, why: c.why, kind: 'insight' });
+            if (!wm.held.some((h) => h.topic === c.topic)) wm.held.push({ t: elapsed(), topic: c.topic, text: c.text, why: c.why, kind: 'insight', reason: c.reason || '', cueLine: c.cueLine || null, checkMs: c.checkMs != null ? c.checkMs : null, checkWallMs: c.checkWallMs != null ? c.checkWallMs : null, severity: c.severity || 'important', via: c.via || '' });
             emit('held', c);
             touch();
             return null;
@@ -1004,7 +1005,9 @@
                 id: c.id || ('S' + (++saidSeq)), t: elapsed(), kind: c.kind, topic: c.topic || '', text: c.text, why: c.why || '',
                 question: c.question || '', cueLine: c.cueLine || null, via: c.via || '',
                 latencyMs: c.heardAt != null ? elapsed() - c.heardAt : null, error: !!c.error, updateOf: c.updateOf || null,
-                reason: c.reason || '', checkMs: c.checkMs != null ? c.checkMs : null, tools: c.tools && c.tools.length ? c.tools : null,
+                reason: c.reason || '', checkMs: c.checkMs != null ? c.checkMs : null, checkWallMs: c.checkWallMs != null ? c.checkWallMs : null,
+                severity: c.severity || (c.kind === 'critical' ? 'critical' : c.kind === 'insight' ? 'important' : ''), decision: c.decision || '', waited: c.waited || 0,
+                tools: c.tools && c.tools.length ? c.tools : null,
             };
             wm.said.push(item);
             wm.held = wm.held.filter((h) => h.topic !== item.topic);

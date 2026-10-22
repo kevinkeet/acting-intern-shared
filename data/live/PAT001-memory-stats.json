@@ -1,12 +1,12 @@
 {
  "patient": "PAT001",
- "generated": "2026-10-22T04:57:49.031Z",
+ "generated": "2026-10-22T05:13:30.076Z",
  "chart": {
-  "files": 392,
-  "bytes": 2011968,
-  "tokens": 502992,
+  "files": 391,
+  "bytes": 1389854,
+  "tokens": 347464,
   "byFolder": {
-   "patient": 637854,
+   "patient": 15740,
    "encounters": 34170,
    "imaging": 72894,
    "labs": 223578,
@@ -959,18 +959,6 @@
    "status": "chronic",
    "mentions": [
     {
-     "d": "2018-02-26",
-     "k": "lab",
-     "id": "LAB002",
-     "t": "Lab Panel - Basic Metabolic Panel"
-    },
-    {
-     "d": "2018-03-01",
-     "k": "lab",
-     "id": "LAB007",
-     "t": "Lab Panel - Basic Metabolic Panel"
-    },
-    {
      "d": "2018-04-20",
      "k": "note",
      "id": "Doc 4 / LAB009",
@@ -981,30 +969,6 @@
      "k": "note",
      "id": "Doc 1 / LAB011",
      "t": "Lab Panel - Basic Metabolic Panel"
-    },
-    {
-     "d": "2018-06-11",
-     "k": "lab",
-     "id": "LAB014",
-     "t": "Lab Panel: Basic Metabolic Panel"
-    },
-    {
-     "d": "2018-07-14",
-     "k": "lab",
-     "id": "LAB015",
-     "t": "Lab Panel: Basic Metabolic Panel"
-    },
-    {
-     "d": "2018-08-02",
-     "k": "lab",
-     "id": "LAB016",
-     "t": "Lab Panel: Basic Metabolic Panel"
-    },
-    {
-     "d": "2018-08-17",
-     "k": "lab",
-     "id": "LAB017",
-     "t": "Lab Panel: Basic Metabolic Panel"
     },
     {
      "d": "2018-10-27",
@@ -1187,12 +1151,6 @@
      "t": "Progress Note"
     },
     {
-     "d": "2021-02-08",
-     "k": "lab",
-     "id": "LAB089",
-     "t": "Lab Panel - Basic Metabolic Panel"
-    },
-    {
      "d": "2021-02-10",
      "k": "note",
      "id": "NOTE_HP003",
@@ -1253,18 +1211,6 @@
      "t": "Progress Note"
     },
     {
-     "d": "2021-04-27",
-     "k": "lab",
-     "id": "LAB103",
-     "t": "Lab Panel - Basic Metabolic Panel"
-    },
-    {
-     "d": "2021-05-11",
-     "k": "lab",
-     "id": "LAB105",
-     "t": "Lab Panel - Basic Metabolic Panel"
-    },
-    {
      "d": "2021-05-16",
      "k": "note",
      "id": "NOTE098",
@@ -1277,22 +1223,10 @@
      "t": "Progress Note"
     },
     {
-     "d": "2021-06-06",
-     "k": "lab",
-     "id": "LAB106",
-     "t": "Lab Panel - Basic Metabolic Panel"
-    },
-    {
      "d": "2021-07-15",
      "k": "note",
      "id": "NOTE096",
      "t": "Telephone Encounter"
-    },
-    {
-     "d": "2021-08-13",
-     "k": "lab",
-     "id": "LAB108",
-     "t": "Lab Panel - Basic Metabolic Panel"
     },
     {
      "d": "2021-08-20",
@@ -1433,12 +1367,6 @@
      "t": "Progress Note"
     },
     {
-     "d": "2022-07-07",
-     "k": "lab",
-     "id": "LAB134",
-     "t": "Lab Panel - Basic Metabolic Panel"
-    },
-    {
      "d": "2022-07-15",
      "k": "note",
      "id": "NOTE079",
@@ -1457,12 +1385,6 @@
      "t": "Discharge Summary"
     },
     {
-     "d": "2022-08-23",
-     "k": "lab",
-     "id": "LAB137",
-     "t": "Lab Panel - Basic Metabolic Panel"
-    },
-    {
      "d": "2022-08-25",
      "k": "note",
      "id": "NOTE_PT001",
@@ -1475,22 +1397,10 @@
      "t": "Progress Note"
     },
     {
-     "d": "2022-10-07",
-     "k": "lab",
-     "id": "LAB139",
-     "t": "Lab Panel - Basic Metabolic Panel"
-    },
-    {
      "d": "2022-10-10",
      "k": "note",
      "id": "NOTE076",
      "t": "Progress Note"
-    },
-    {
-     "d": "2022-11-07",
-     "k": "lab",
-     "id": "LAB141",
-     "t": "Lab Panel - Basic Metabolic Panel"
     },
     {
      "d": "2022-11-25",
@@ -1505,22 +1415,10 @@
      "t": "Progress Note"
     },
     {
-     "d": "2022-12-19",
-     "k": "lab",
-     "id": "LAB142",
-     "t": "Lab Panel - Basic Metabolic Panel"
-    },
-    {
      "d": "2023-01-10",
      "k": "note",
      "id": "NOTE073",
      "t": "Progress Note"
-    },
-    {
-     "d": "2023-01-17",
-     "k": "lab",
-     "id": "LAB143",
-     "t": "Lab Panel - Basic Metabolic Panel"
     },
     {
      "d": "2023-01-31",
@@ -1685,12 +1583,6 @@
      "t": "Progress Note (MICU Day 3)"
     },
     {
-     "d": "2023-09-14",
-     "k": "lab",
-     "id": "LAB154",
-     "t": "Lab Panel - Basic Metabolic Panel"
-    },
-    {
      "d": "2023-09-15",
      "k": "lab",
      "id": "LAB159",
@@ -1829,22 +1721,10 @@
      "t": "Consult Note"
     },
     {
-     "d": "2024-05-03",
-     "k": "lab",
-     "id": "LAB174",
-     "t": "Lab Panel - Basic Metabolic Panel"
-    },
-    {
      "d": "2024-05-23",
      "k": "note",
      "id": "NOTE038",
      "t": "Progress Note"
-    },
-    {
-     "d": "2024-06-02",
-     "k": "lab",
-     "id": "LAB176",
-     "t": "Lab Panel - Basic Metabolic Panel"
     },
     {
      "d": "2024-06-15",
@@ -2001,18 +1881,6 @@
      "k": "note",
      "id": "Doc 3",
      "t": "Lab Panel - Basic Metabolic Panel (LAB075)"
-    },
-    {
-     "d": "2025-03-24",
-     "k": "note",
-     "id": "Doc 4",
-     "t": "Lab Panel - Hemoglobin A1c (LAB076)"
-    },
-    {
-     "d": "2025-05-05",
-     "k": "note",
-     "id": "Doc 1",
-     "t": "Lab Panel - Coagulation Panel (LAB082)"
     },
     {
      "d": "2025-06-17",
@@ -6279,13 +6147,18 @@
  ],
  "threadCoverage": {
   "mentions": 1536,
-  "matched": 996
+  "matched": 967
  },
  "admissions": [
   {
    "start": "2021-02-10",
    "end": "2021-02-14",
    "label": "Community-Acquired Pneumonia"
+  },
+  {
+   "start": "2022-01-09",
+   "end": "2022-01-16",
+   "label": "Acute decompensated HFrEF"
   },
   {
    "start": "2022-08-15",
@@ -6296,6 +6169,11 @@
    "start": "2023-09-12",
    "end": "2023-09-17",
    "label": "Upper Gastrointestinal Hemorrhage"
+  },
+  {
+   "start": "2025-09-06",
+   "end": "2025-09-10",
+   "label": "ADHF"
   }
  ]
 }
