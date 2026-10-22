@@ -1,5 +1,5 @@
 /**
- * Live Coworker, "How it thinks": Each call. What the coworker actually reads on
+ * Live Coworker, "Inside the coworker": Each call. What the coworker actually reads on
  * every AI call, live. One bar per call, split into the parts of its prompt:
  * the fixed parts it can read from the cache (its lookups, its instructions, the
  * chart digest or the long-term record), then what changes each time (working

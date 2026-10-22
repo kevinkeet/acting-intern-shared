@@ -1,5 +1,5 @@
 /**
- * Live Coworker, "How it thinks" → Digestion: how the chart becomes what the
+ * Live Coworker, "Inside the coworker" → Digestion: how the chart becomes what the
  * brain holds in mind. Loaded by the about sheet (js/live/live-about.js) the
  * first time its tab opens; DOM only.
  *

@@ -15,7 +15,9 @@
     const STORE = 'live-coworker';
     // This file's own version query: files loaded later (the about sheet) use the same one.
     const SELF_Q = (() => { try { const src = document.currentScript && document.currentScript.src; return src && src.indexOf('?') > 0 ? src.split('?')[1] : 'v=' + Date.now(); } catch (e) { return ''; } })();
-    const DEMO = { file: 'data/live/morrison-admission-01.json', patient: 'PAT001', title: 'Morrison admission' };
+    // The demo: version 2 has the voices, more thinking out loud, and the orders and the H&P at the end;
+    // version 1 (the scoring benchmark) is the fallback.
+    const DEMO = { files: ['data/live/morrison-admission-02.json', 'data/live/morrison-admission-01.json'], patient: 'PAT001', title: 'Morrison admission' };
     const MODE_TO_OLD = { follow: 'reactive', abreast: 'active', lead: 'proactive' };
     const OLD_TO_MODE = { reactive: 'follow', active: 'abreast', proactive: 'lead' };
     const BRAIN_LABEL = { 'claude-sonnet-5-5': 'Sonnet 5.5', 'claude-opus-5-5': 'Opus 5.5' };
@@ -45,11 +47,28 @@
         _ticker: null,
         dictating: null,            // 'exam' while the doctor dictates the physical exam
 
+        /** A readable name for an order the EHR just placed (its own name can be "Other", or blank for a consult). */
+        _orderName(order) {
+            const f = order.formData || {};
+            const t = order.type || '';
+            if (t === 'consult') return 'Consult: ' + (f.specialty === 'Other' ? f.customSpecialty || 'Other' : f.specialty || '');
+            if (t === 'imaging') return [f.modality, f.bodyPart, f.contrast && f.contrast !== 'N/A' ? f.contrast.toLowerCase() : ''].filter(Boolean).join(' ');
+            if (t === 'lab' && f.name === 'Other') return f.customName || 'Lab';
+            if (t === 'nursing') return f.orderType && f.orderType !== 'Other' ? f.orderType + ': ' + (f.details || '') : f.details || 'Nursing order';
+            return String(order.name || '').replace(/^undefined( undefined)?$/, '') || order.category || 'Order';
+        },
+        /** The EHR's details, less what the name already says (a nursing order's text, a scan's contrast). */
+        _orderDetails(order, name) {
+            const said = ' ' + String(name || '').toLowerCase().replace(/[^a-z0-9.%&]+/g, ' ') + ' ';
+            const has = (p) => { const w = p.toLowerCase().replace(/[^a-z0-9.%&]+/g, ' ').trim(); return !!w && said.includes(' ' + w + ' '); };
+            return String(order.details || '').split(', ').filter((p) => p && !has(p)).join(', ');
+        },
+
         // ── start-up ─────────────────────────────────────────────────────
         init() {
             if (this._inited) return;
             this._inited = true;
-            this.settings = Object.assign({ brain: 'claude-sonnet-5-5', mode: null, fast: false, source: 'room', chime: true, speakAloud: false, voice: '', glasses: false, replaySpeed: 2, classic: false, radarOpen: null }, this._load());
+            this.settings = Object.assign({ brain: 'claude-sonnet-5-5', mode: null, fast: false, source: 'room', chime: true, speakAloud: false, voice: '', glasses: false, replaySpeed: 2, classic: false, radarOpen: null, demoVoices: true }, this._load());
             if (!this.settings.mode) {
                 let old = null;
                 try { old = typeof AIModeConfig !== 'undefined' && AIModeConfig.getMode && AIModeConfig.getMode(); } catch (e) { /* ignore */ }
@@ -124,7 +143,8 @@
                             if (actionId) LiveApp._actionForm = null;
                             if (!LiveApp.engine.running) LiveApp.onPanelOpen();
                             LiveApp._pendingLabel = 'EHR order';
-                            LiveApp.engine.order({ name: order.name, details: order.details, priority: order.priority, category: order.category, actionId });
+                            const name = LiveApp._orderName(order);
+                            LiveApp.engine.order({ name, details: LiveApp._orderDetails(order, name), priority: order.priority, category: order.category, actionId });
                             // "Review all orders": the next one opens once this form has closed.
                             if (actionId && LiveApp._queue) setTimeout(() => LiveApp._nextInQueue(), 450);
                         }
@@ -259,7 +279,7 @@
             this.chart = chart;
             this.memoryShape = shape;
             this.deepMemory = md ? { memoryDocument: md, extractedFacts: facts || [] } : null;
-            this.memStats = null;   // loaded when "How it thinks" opens
+            this.memStats = null;   // loaded when "Inside the coworker" opens
             this.memory = LiveMemory.build({ chart, memoryDocument: md, extractedFacts: facts });
             const latest = (this.memory.digest.match(/CHART DATA THROUGH: (\S+)/) || [])[1];
             this.view.memoryNote = note + (latest ? '. Chart data through ' + latest + '.' : '.');
@@ -348,7 +368,7 @@
             // The live note: problem representation, HPI, assessment and plan, rewritten as people talk.
             cw.on('thinking', (p) => { if (p.lane === 'note') { v.noteWriting = true; this.request('note'); } });
             cw.on('note', (n) => { v.note = Object.assign({}, n, { wallAt: Date.now() }); v.noteWriting = false; this.request('note', 'take'); });
-            // "How it thinks": pulses as each lane works, numbers as working memory grows (only while open).
+            // "Inside the coworker": pulses as each lane works, numbers as working memory grows (only while open).
             const about = (what) => { if (typeof LiveAbout !== 'undefined' && LiveAbout.isOpen()) LiveAbout.pulse(what); };
             cw.on('call-start', (c) => about(c.lane));
             cw.on('tool', (x) => about('tool:' + x.name));
@@ -462,7 +482,7 @@
             LiveAbout.open(LivePanel.el, this._aboutState(), { returnFocus: from || null, load: (id) => this._loadAboutView(id) });
         },
 
-        /** A view of "How it thinks" (js/live/live-about-<id>.js and its stylesheet), loaded on first use. */
+        /** A view of "Inside the coworker" (js/live/live-about-<id>.js and its stylesheet), loaded on first use. */
         _loadAboutView(id) {
             if (!/^[a-z]+$/.test(id)) return Promise.reject(new Error('bad view'));
             const css = document.createElement('link');
@@ -638,6 +658,17 @@
             else if (verb === 'drop') this.engine.setActionStatus(id, 'dropped', 'doctor');
         },
 
+        /** Full screen: the coworker covers the chart, in three columns (talk, the note, what it tracks). */
+        toggleFull(on) {
+            const panel = document.getElementById('ai-panel');
+            if (!panel) return;
+            this.full = on == null ? !this.full : !!on;
+            panel.classList.toggle('lc-full', this.full);
+            document.documentElement.classList.toggle('lc-full-on', this.full);
+            this.renderAll();
+            setTimeout(() => this.renderAll(), 80);   // after the layout settles (container widths)
+        },
+
         /** Side by side: widen the AI panel so the conversation and the note sit in two columns. */
         toggleWide() {
             const root = document.documentElement;
@@ -685,6 +716,7 @@
                 onAck: (id) => { this.view.alerts = this.view.alerts.filter((a) => a.id !== id); if (this.engine) this.engine.ack(id); this.request('alerts', 'said', 'take'); },
                 onRetry: (q) => { if (q) this.ask(q); },
                 onRerenderAlerts: () => this.request('alerts'),
+                onRerenderSaid: () => this.request('said'),
                 onUnfold: (id) => { this.view.openAlerts = Object.assign({}, this.view.openAlerts, { [id]: true }); this.request('alerts'); },
                 onTellHeld: (topic) => { if (this.engine) this.engine.tell(topic); this.view.heldOpen = true; },
                 onTakeToggle: () => { this.view.takeOpen = !this.view.takeOpen; this.request('take'); },
@@ -701,6 +733,8 @@
                 onRerenderRadar: () => this.request('radar'),
                 onRadarRetry: () => { if (this.engine) this.engine.actions(); },
                 onAbout: (btn) => this.openAbout(btn),
+                onFull: (on) => this.toggleFull(on),
+                onDemoVoices: () => this.toggleDemoVoices(),
                 onExamDictate: () => this.startExamDictation(),
                 onExamDone: () => this.stopDictation(),
                 onExamType: (text) => this.typeExam(text),
@@ -875,12 +909,17 @@
             if (cmd === 'play' && rp && rp.playing) return;
             // (Re)start from the beginning.
             if (this.patientId !== DEMO.patient) { this._flash('The demo uses Robert Morrison. Open his chart first.'); return; }
-            let script;
-            try { script = await fetch(DEMO.file, { cache: 'no-store' }).then((r) => r.json()); } catch (e) { this._flash('Could not load the demo script.'); return; }
+            let script = null;
+            // ?livedemo=01 plays the original script (the scoring benchmark; older UI checks use it).
+            const files = /[?&]livedemo=01\b/.test(location.search) ? DEMO.files.slice(-1) : DEMO.files;
+            for (const file of files) {
+                try { const r = await fetch(file, { cache: 'no-store' }); if (r.ok) { script = await r.json(); break; } } catch (e) { /* try the next */ }
+            }
+            if (!script) { this._flash('Could not load the demo script.'); return; }
             const speed = this.settings.replaySpeed || 1;
             this.stopListening();
             this._stopReplay();
-            const run = { script, speed, playing: false, pos: 0, timers: [], startedWall: 0 };
+            const run = { script, speed, playing: false, pos: 0, timers: [], startedWall: 0, audio: new Map(), now: null };
             // The engine runs on the demo's clock, so times, heartbeats and the
             // speaking-rule intervals all line up with the script at any speed.
             const demoClock = {
@@ -905,6 +944,15 @@
                 const at = line.t + line.dur;
                 if (at <= rp.pos) continue;
                 rp.timers.push(setTimeout(() => this._replayLine(line), ((at - rp.pos) * 1000) / rp.speed));
+                // The voices: each line plays as it is spoken (a line paused part-way picks up where it was).
+                if (line.audio && line.t >= rp.pos - 0.05) rp.timers.push(setTimeout(() => this._playLine(rp, line), Math.max(0, ((line.t - rp.pos) * 1000) / rp.speed)));
+            }
+            if (rp.now && rp.now.el.paused && rp.pos > rp.now.line.t && rp.pos < rp.now.line.t + rp.now.line.dur && this._voicesOn(rp)) rp.now.el.play().catch(() => {});
+            // The ending: the demo acts in the EHR (signs the orders, takes off what was flagged, saves the note).
+            for (const a of rp.script.actions || []) {
+                if (a.t <= rp.pos) continue;
+                // One step at a time: a step that runs long (signing a dozen orders) delays the next, never overlaps it.
+                rp.timers.push(setTimeout(() => { rp.chain = (rp.chain || Promise.resolve()).then(() => this._replayAction(a, rp)); }, ((a.t - rp.pos) * 1000) / rp.speed));
             }
             rp.timers.push(setTimeout(() => {
                 if (this._replay !== rp) return;
@@ -929,6 +977,7 @@
         _pauseReplay() {
             const rp = this._replay;
             if (!rp || !rp.playing) return;
+            if (rp.now) rp.now.el.pause();
             rp.timers.forEach(clearTimeout);
             rp.timers = [];
             rp.pos = ((Date.now() - rp.startedWall) * rp.speed) / 1000;
@@ -942,8 +991,155 @@
             const rp = this._replay;
             if (!rp) return;
             rp.timers.forEach(clearTimeout);
+            for (const el of rp.audio.values()) { try { el.pause(); } catch (e) { /* ignore */ } }
             this._replay = null;
             this.request('replay');
+        },
+
+        // ── the demo's voices ────────────────────────────────────────────
+        // Recorded once per line (Deepgram Aura voices, one per speaker) and kept with the
+        // script; they play at 1x and 2x and stay quiet when the demo runs faster.
+        _voicesOn(rp) { return !!(this.settings.demoVoices && rp && rp.speed <= 2); },
+        _lineAudio(rp, line) {
+            let el = rp.audio.get(line.id);
+            if (!el) {
+                const dir = (rp.script.audio && rp.script.audio.dir) || '';
+                el = new Audio(dir + line.audio + '?v=' + (rp.script.version || 1));
+                el.preload = 'auto';
+                rp.audio.set(line.id, el);
+            }
+            return el;
+        },
+        _playLine(rp, line) {
+            if (this._replay !== rp || !this._voicesOn(rp)) return;
+            const el = this._lineAudio(rp, line);
+            el.playbackRate = rp.speed;
+            try { el.currentTime = 0; } catch (e) { /* not loaded yet */ }
+            rp.now = { line, el };
+            el.play().catch(() => { /* the page has not been clicked yet, or the file is missing: the transcript still runs */ });
+            // Fetch the next few lines' audio while this one plays.
+            const i = rp.script.lines.indexOf(line);
+            rp.script.lines.slice(i + 1, i + 4).forEach((x) => { if (x.audio) this._lineAudio(rp, x); });
+        },
+        toggleDemoVoices() {
+            this.settings.demoVoices = !this.settings.demoVoices;
+            this._save();
+            const rp = this._replay;
+            if (rp && rp.now && !this.settings.demoVoices) rp.now.el.pause();
+            this.request('replay');
+        },
+
+        // ── the demo's ending: it works the EHR the way the doctor would ──
+        /** Wait ms of demo time; while the demo is paused, wait for it to play on. False once it was stopped or restarted. */
+        async _demoWait(ms) {
+            const rp = this._replay;
+            if (!rp) return false;
+            await new Promise((r) => setTimeout(r, ms / (rp.speed || 1)));
+            while (this._replay === rp && !rp.playing && rp.pos < rp.script.duration_s) await new Promise((r) => setTimeout(r, 200));
+            return this._replay === rp;
+        },
+        /** Wait (real time) until fn() is true, up to maxMs. */
+        async _until(fn, maxMs) { const end = Date.now() + maxMs; while (Date.now() < end) { if (fn()) return true; await new Promise((r) => setTimeout(r, 80)); } return !!fn(); },
+        _actionMatches(a, words) {
+            const ws = [].concat(words || []).map((w) => String(w).toLowerCase());
+            const SAME = { zosyn: 'piperacillin', piperacillin: 'zosyn' };
+            const text = (a.title + ' ' + Object.values(a.fields || {}).join(' ')).toLowerCase();
+            return ws.every((w) => text.includes(w) || (SAME[w] && text.includes(SAME[w])));
+        },
+        _matchAction(words) { return (this.view.actions || []).find((a) => a.status === 'todo' && this._actionMatches(a, words)) || null; },
+        async _replayAction(a, rp) {
+            if (!this.engine || !rp || this._replay !== rp) return;   // stopped or restarted since
+            try {
+                if (a.do === 'radar-open') {
+                    this.settings.radarOpen = true;
+                    this._save();
+                    this.request('radar');
+                } else if (a.do === 'review-all') {
+                    await this._demoSignAll();
+                } else if (a.do === 'sign') {
+                    await this._demoSignMatching(a.match);
+                } else if (a.do === 'remove' || a.do === 'tick') {
+                    const it = this._matchAction(a.match);
+                    if (it) this.engine.setActionStatus(it.id, a.do === 'remove' ? 'dropped' : 'done', 'doctor');
+                } else if (a.do === 'order') {
+                    await this._demoOrder(a.orderType, a.fields || {});
+                } else if (a.do === 'note') {
+                    const item = (this.view.actions || []).find((x) => x.kind === 'note' && x.status === 'todo' && /h\s*&\s*p|admission|history/i.test(x.noteType + ' ' + x.title));
+                    this._openNote(item || { id: null, noteType: a.noteType || 'H&P', draft: '', title: 'Admission H&P' });
+                } else if (a.do === 'save-note') {
+                    const n = this._actionNote;
+                    if (n && typeof AICoworker !== 'undefined' && AICoworker.saveNoteToEHR) AICoworker.saveNoteToEHR(n.type);
+                }
+            } catch (e) { console.warn('Demo step ' + (a.id || a.do) + ':', e); }
+        },
+        /** "Review all": each unflagged order form opens filled in, is checked and signed; the next one follows. */
+        async _demoSignAll() {
+            this.reviewOrders();
+            const formUp = () => typeof OrderEntry !== 'undefined' && OrderEntry.isOpen && !!this._actionForm;
+            for (let guard = 0; guard < 30; guard++) {
+                // The next form opens a moment after the last one is signed (or right away for the first).
+                if (!(await this._until(() => formUp() || !this._queue, 2500)) || !formUp()) break;
+                if (!(await this._demoWait(900))) break;   // long enough to see what was filled in
+                if (!this._demoFillDefaults()) {   // something only the doctor can choose (a dose): leave it on the radar
+                    OrderEntry.close();
+                    this._actionForm = null;
+                    if (this._queue) { this._nextInQueue(); continue; }
+                    break;
+                }
+                if (!(await this._demoWait(700))) break;
+                OrderEntry.goToReview();
+                if (!(await this._demoWait(700))) break;
+                if (OrderEntry.currentStep !== 3) { OrderEntry.close(); this._actionForm = null; if (this._queue) { this._nextInQueue(); continue; } break; }
+                await OrderEntry.submitOrder();   // the order hook ticks the item off and opens the next form
+                await this._until(() => !OrderEntry.isOpen, 1500);
+                if (!this._queue) break;
+            }
+        },
+        /** Sign the radar's orders for one thing, flagged or not (the doctor has just said why), one form at a time. */
+        async _demoSignMatching(words) {
+            const tried = new Set();   // never the same item twice, even if its tick does not land
+            for (;;) {
+                const it = (this.view.actions || []).find((x) => x.status === 'todo' && !tried.has(x.id) && (x.kind === 'order' || x.kind === 'consult') && this._actionMatches(x, words));
+                if (!it) return;
+                tried.add(it.id);
+                this._queue = null;
+                this._openOrder(it);
+                if (!this._actionForm) return;
+                if (!(await this._demoWait(900))) return;
+                if (!this._demoFillDefaults()) { OrderEntry.close(); this._actionForm = null; continue; }
+                if (!(await this._demoWait(700))) return;
+                OrderEntry.goToReview();
+                if (!(await this._demoWait(700))) return;
+                if (OrderEntry.currentStep !== 3) { OrderEntry.close(); this._actionForm = null; continue; }
+                await OrderEntry.submitOrder();   // the order hook ticks the item off
+                await this._until(() => !OrderEntry.isOpen, 1500);
+            }
+        },
+        /** Fill what a hospitalist fills without thinking (priority, specimen, the reason); false if a real choice is missing. */
+        _demoFillDefaults() {
+            const form = document.getElementById('order-form');
+            const cfg = OrderEntry.orderTypes && OrderEntry.orderTypes[OrderEntry.selectedType];
+            if (!form || !cfg) return false;
+            const it = this._actionForm && this._action(this._actionForm.id);
+            const defaults = { priority: 'Routine', specimen: 'Blood', indication: it ? it.title : 'Admission', reason: it ? it.title : '' };
+            for (const f of cfg.fields) {
+                const el = form.querySelector('[name="' + f.name + '"]');
+                if (!f.required || !el || el.value) continue;
+                if (defaults[f.name]) el.value = defaults[f.name];
+                else return false;
+            }
+            return true;
+        },
+        /** A new order the doctor decides on at the end (not from the radar). */
+        async _demoOrder(type, fields) {
+            if (typeof OrderEntry === 'undefined' || !OrderEntry.orderTypes || !OrderEntry.orderTypes[type]) return;
+            this._queue = null;
+            OrderEntry.openWithPrefill(type, LiveCore.toOrderForm(OrderEntry.orderTypes[type].fields, fields));
+            this._actionForm = null;
+            if (!(await this._demoWait(1100))) return;
+            OrderEntry.goToReview();
+            if (!(await this._demoWait(700))) return;
+            if (OrderEntry.currentStep === 3) await OrderEntry.submitOrder(); else OrderEntry.close();
         },
 
         // ── status, feedback, sound ──────────────────────────────────────
@@ -1110,11 +1306,13 @@
             v.health = this._healthView();
             v.encounter = this.encounter ? Object.assign({}, this.encounter) : null;
             v.dictating = this.dictating;
+            v.full = !!this.full;
             v.canStart = !!this.engine;
             v.wide = !!(LivePanel.el && LivePanel.el.getBoundingClientRect().width >= 620);
             v.canSpeak = typeof LiveVoice !== 'undefined' && LiveVoice.supported();
             v.voices = v.canSpeak ? LiveVoice.voices() : [];
-            v.replay = this._replay ? { active: true, finished: !this._replay.playing && this._replay.pos >= this._replay.script.duration_s, playing: this._replay.playing, t: this._replay.playing ? Math.min(this._replay.script.duration_s, ((Date.now() - this._replay.startedWall) * this._replay.speed) / 1000) : this._replay.pos, duration: this._replay.script.duration_s, title: DEMO.title, speed: this._replay.speed } : null;
+            v.replay = this._replay ? { active: true, finished: !this._replay.playing && this._replay.pos >= this._replay.script.duration_s, playing: this._replay.playing, t: this._replay.playing ? Math.min(this._replay.script.duration_s, ((Date.now() - this._replay.startedWall) * this._replay.speed) / 1000) : this._replay.pos, duration: this._replay.script.duration_s, title: DEMO.title, speed: this._replay.speed,
+                hasAudio: !!this._replay.script.audio, voices: !!this.settings.demoVoices } : null;
             try {
                 if (q.has('head')) LivePanel.renderHead(Object.assign({}, v, { status: this._statusView() }));
                 if (q.has('note')) LivePanel.renderNote(v);

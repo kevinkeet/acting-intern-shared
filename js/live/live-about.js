@@ -1,5 +1,5 @@
 /**
- * Live Coworker: "How it thinks", the about sheet. DOM only; LiveApp loads it
+ * Live Coworker: "Inside the coworker", the about sheet. DOM only; LiveApp loads it
  * the first time it is opened (full-site door only, like every live file).
  *
  * The memory is drawn as rings around the brain, from seconds to years:
@@ -136,7 +136,7 @@
 
     // The views: the rings here; the others are their own files (js/live/live-about-<id>.js,
     // css/live-about-<id>.css), loaded the first time their tab opens, and register themselves.
-    const TABS = [['memory', 'Memory'], ['digest', 'Digestion'], ['threads', 'Problems'], ['why', 'Why it said'], ['calls', 'Each call']];
+    const TABS = [['memory', 'Memory'], ['digest', 'Digestion'], ['threads', 'Problems'], ['why', 'How it thinks'], ['calls', 'Each call']];
     const TAB_KEY = 'live-about-tab';
 
     const LiveAbout = {
@@ -163,7 +163,7 @@
                 this.el = document.createElement('section');
                 this.el.className = 'lc-about';
                 this.el.setAttribute('role', 'dialog');
-                this.el.setAttribute('aria-label', 'How the coworker thinks');
+                this.el.setAttribute('aria-label', 'Inside the coworker');
                 container.appendChild(this.el);
                 this.el.addEventListener('click', (ev) => {
                     if (ev.target.closest('[data-about=close]')) { this.close(); return; }
@@ -216,9 +216,9 @@
             if (!view) { panel.innerHTML = '<p class="lc-about-loading">This view could not load.</p>'; return; }
             if (!this._rendered[id]) {
                 this._rendered[id] = true;
-                try { view.render(panel, this._state || {}); } catch (e) { console.warn('How it thinks:', e); panel.innerHTML = '<p class="lc-about-loading">This view could not draw.</p>'; }
+                try { view.render(panel, this._state || {}); } catch (e) { console.warn('Inside the coworker:', e); panel.innerHTML = '<p class="lc-about-loading">This view could not draw.</p>'; }
             } else if (view.update) {
-                try { view.update(panel, this._state || {}); } catch (e) { console.warn('How it thinks:', e); }
+                try { view.update(panel, this._state || {}); } catch (e) { console.warn('Inside the coworker:', e); }
             }
         },
 
@@ -230,7 +230,7 @@
         },
 
         _html(s) {
-            return '<header class="lc-about-head"><div class="lc-about-title"><div><h2>How it thinks</h2><p class="lc-about-sub" data-a="sub"></p></div>'
+            return '<header class="lc-about-head"><div class="lc-about-title"><div><h2>Inside the coworker</h2><p class="lc-about-sub" data-a="sub"></p></div>'
                 + '<button type="button" class="lc-iconbtn" data-about="close" aria-label="Close" title="Close (Esc)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>'
                 + '<nav class="lc-about-tabs" role="tablist" aria-label="Views">' + TABS.map(([id, label]) => '<button type="button" role="tab" data-about-tab="' + id + '" aria-selected="false" tabindex="-1">' + label + '</button>').join('') + '</nav></header>'
                 + TABS.slice(1).map(([id, label]) => '<div class="lc-about-view" data-view="' + id + '" role="tabpanel" aria-label="' + label + '" hidden></div>').join('')
@@ -250,7 +250,7 @@
             // The other views follow along while they are showing.
             const active = this._active !== 'memory' && this.views[this._active];
             if (active && this._rendered[this._active] && active.update) {
-                try { active.update(this.el.querySelector('.lc-about-view[data-view="' + this._active + '"]'), s); } catch (e) { console.warn('How it thinks:', e); }
+                try { active.update(this.el.querySelector('.lc-about-view[data-view="' + this._active + '"]'), s); } catch (e) { console.warn('Inside the coworker:', e); }
             }
             const q = (a) => this.el.querySelector('[data-a="' + a + '"]');
             const wm = s.wm || {};

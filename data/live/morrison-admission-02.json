@@ -1,0 +1,1427 @@
+{
+ "id": "morrison-admission-02",
+ "title": "Robert Morrison: admission for a heart failure flare, with voices, thinking aloud and the orders (scripted, ~14 min)",
+ "patient": "PAT001",
+ "version": 2,
+ "setting": "Admitting hospitalist (Dr. Rivera) meets Robert Morrison, 74, in the ED with his wife Patricia; a nurse comes in and out. Simulated patient; all chart facts from data/patients/PAT001. ED labs are read aloud (they are the scenario's admission values). Version 2: the doctor thinks out loud more while working up the plan (T lines, which never catch a planted problem), and after the visit sits at the workstation (Z lines): takes off the orders the coworker flagged, signs the rest, orders safer choices, and signs the H&P. \"actions\" are what the demo does in the EHR at time t.",
+ "speakers": {
+  "doctor": "Dr. Rivera (hospitalist)",
+  "patient": "Robert Morrison",
+  "wife": "Patricia Morrison",
+  "nurse": "Nurse"
+ },
+ "duration_s": 814.2,
+ "audio": {
+  "dir": "data/live/audio/morrison-admission-02/",
+  "voices": {
+   "doctor": "aura-2-arcas-en",
+   "patient": "aura-2-orpheus-en",
+   "wife": "aura-2-harmonia-en",
+   "nurse": "aura-2-thalia-en"
+  },
+  "format": "mp3"
+ },
+ "lines": [
+  {
+   "id": "U1",
+   "t": 2,
+   "dur": 6.53,
+   "speaker": "doctor",
+   "text": "Mr. Morrison? Hi, I'm Dr. Rivera, one of the hospital doctors. I'll be taking care of you upstairs tonight.",
+   "audio": "U1.mp3"
+  },
+  {
+   "id": "U2",
+   "t": 9.43,
+   "dur": 2.5,
+   "speaker": "patient",
+   "text": "Hi, doc. Sorry, I can't really catch my breath.",
+   "audio": "U2.mp3"
+  },
+  {
+   "id": "U3",
+   "t": 12.83,
+   "dur": 3.53,
+   "speaker": "doctor",
+   "text": "That's okay, take your time. And is this your wife?",
+   "audio": "U3.mp3"
+  },
+  {
+   "id": "U4",
+   "t": 17.26,
+   "dur": 4.58,
+   "speaker": "wife",
+   "text": "I'm Patricia. I just got back from my sister's and found him like this.",
+   "audio": "U4.mp3"
+  },
+  {
+   "id": "U5",
+   "t": 22.74,
+   "dur": 2.93,
+   "speaker": "doctor",
+   "text": "Nice to meet you. So tell me what's been going on.",
+   "audio": "U5.mp3"
+  },
+  {
+   "id": "U6",
+   "t": 26.57,
+   "dur": 5.62,
+   "speaker": "patient",
+   "text": "The breathing's been getting worse all week. I can't lie down flat at all. I've been sleeping in the recliner.",
+   "audio": "U6.mp3"
+  },
+  {
+   "id": "U7",
+   "t": 33.09,
+   "dur": 2.69,
+   "speaker": "doctor",
+   "text": "Do you ever wake up at night gasping for air?",
+   "audio": "U7.mp3"
+  },
+  {
+   "id": "U8",
+   "t": 36.68,
+   "dur": 4.97,
+   "speaker": "patient",
+   "text": "Two or three times a night. I have to sit up on the edge of the chair until it passes.",
+   "audio": "U8.mp3"
+  },
+  {
+   "id": "U9",
+   "t": 42.55,
+   "dur": 1.73,
+   "speaker": "doctor",
+   "text": "And your legs, any swelling?",
+   "audio": "U9.mp3"
+  },
+  {
+   "id": "U10",
+   "t": 45.18,
+   "dur": 3.22,
+   "speaker": "patient",
+   "text": "Like tree trunks. My shoes don't fit.",
+   "audio": "U10.mp3"
+  },
+  {
+   "id": "U11",
+   "t": 49.3,
+   "dur": 2.81,
+   "speaker": "wife",
+   "text": "He's up almost ten pounds since I left.",
+   "audio": "U11.mp3"
+  },
+  {
+   "id": "U12",
+   "t": 53.01,
+   "dur": 2.81,
+   "speaker": "doctor",
+   "text": "Have you been taking your water pill, the furosemide?",
+   "audio": "U12.mp3"
+  },
+  {
+   "id": "U13",
+   "t": 56.72,
+   "dur": 5.09,
+   "speaker": "patient",
+   "text": "I ran out. Maybe six days ago? Pat usually handles the refills and she was away.",
+   "audio": "U13.mp3"
+  },
+  {
+   "id": "U14",
+   "t": 62.71,
+   "dur": 3.41,
+   "speaker": "wife",
+   "text": "I had his pill box set up for one week. I didn't know he'd run out.",
+   "audio": "U14.mp3"
+  },
+  {
+   "id": "U15",
+   "t": 67.02,
+   "dur": 2.81,
+   "speaker": "doctor",
+   "text": "Okay, that's probably a big part of this. Any chest pain?",
+   "audio": "U15.mp3"
+  },
+  {
+   "id": "U16",
+   "t": 70.73,
+   "dur": 3.65,
+   "speaker": "patient",
+   "text": "A little tightness when I walk to the mailbox. Nothing when I'm sitting.",
+   "audio": "U16.mp3"
+  },
+  {
+   "id": "U17",
+   "t": 75.28,
+   "dur": 1.54,
+   "speaker": "doctor",
+   "text": "Any fevers or cough?",
+   "audio": "U17.mp3"
+  },
+  {
+   "id": "U18",
+   "t": 77.72,
+   "dur": 4.42,
+   "speaker": "patient",
+   "text": "A little cough, some white stuff. No fevers that I know of.",
+   "audio": "U18.mp3"
+  },
+  {
+   "id": "U19",
+   "t": 83.04,
+   "dur": 3.5,
+   "speaker": "doctor",
+   "text": "How's your appetite been? Any nausea or belly pain?",
+   "audio": "U19.mp3"
+  },
+  {
+   "id": "U20",
+   "t": 87.44,
+   "dur": 8.5,
+   "speaker": "patient",
+   "text": "Appetite's off. My stomach's been kind of sour. And my stools have been real dark the last few days, almost black. I figured it was something I ate.",
+   "audio": "U20.mp3"
+  },
+  {
+   "id": "U21",
+   "t": 96.84,
+   "dur": 3.41,
+   "speaker": "doctor",
+   "text": "Okay. How have you been sleeping, other than the recliner?",
+   "audio": "U21.mp3"
+  },
+  {
+   "id": "U22",
+   "t": 101.15,
+   "dur": 4.7,
+   "speaker": "patient",
+   "text": "Not great. I got dizzy standing up yesterday, too. Didn't fall though.",
+   "audio": "U22.mp3"
+  },
+  {
+   "id": "U23",
+   "t": 106.75,
+   "dur": 3.22,
+   "speaker": "doctor",
+   "text": "Good. Let's go over your medicines. Patricia, do you have the list?",
+   "audio": "U23.mp3"
+  },
+  {
+   "id": "U24",
+   "t": 110.87,
+   "dur": 16.01,
+   "speaker": "wife",
+   "text": "I brought the bottles. Carvedilol, the Entresto, the water pill, spironolactone, Jardiance, metformin, his insulin, the baby aspirin, the stomach pill, atorvastatin, gabapentin, and the prostate one.",
+   "audio": "U24.mp3"
+  },
+  {
+   "id": "U25",
+   "t": 129.28,
+   "dur": 3.38,
+   "speaker": "doctor",
+   "text": "Great. Anything over the counter? Anything for pain?",
+   "audio": "U25.mp3"
+  },
+  {
+   "id": "U26",
+   "t": 133.56,
+   "dur": 4.9,
+   "speaker": "patient",
+   "text": "Just the Aleve for my knees. Two or three a day. The Tylenol doesn't touch it.",
+   "audio": "U26.mp3"
+  },
+  {
+   "id": "U27",
+   "t": 139.36,
+   "dur": 2.57,
+   "speaker": "doctor",
+   "text": "Got it. Any allergies to medicines?",
+   "audio": "U27.mp3"
+  },
+  {
+   "id": "U28",
+   "t": 142.83,
+   "dur": 6.62,
+   "speaker": "patient",
+   "text": "Penicillin gave me a rash once, way back. And that lisinopril made my lips swell up.",
+   "audio": "U28.mp3"
+  },
+  {
+   "id": "U29",
+   "t": 150.35,
+   "dur": 4.18,
+   "speaker": "wife",
+   "text": "Bob, it was more than a rash. They had to give you a shot in the emergency room.",
+   "audio": "U29.mp3"
+  },
+  {
+   "id": "U30",
+   "t": 155.43,
+   "dur": 1.7,
+   "speaker": "patient",
+   "text": "That was forty years ago.",
+   "audio": "U30.mp3"
+  },
+  {
+   "id": "U31",
+   "t": 158.03,
+   "dur": 3.41,
+   "speaker": "doctor",
+   "text": "Okay, I'm going to list penicillin as a serious reaction then.",
+   "audio": "U31.mp3"
+  },
+  {
+   "id": "U32",
+   "t": 162.34,
+   "dur": 2.74,
+   "speaker": "wife",
+   "text": "And sulfa. The Bactrim gave him hives.",
+   "audio": "U32.mp3"
+  },
+  {
+   "id": "U33",
+   "t": 165.98,
+   "dur": 6.46,
+   "speaker": "doctor",
+   "text": "Furosemide is technically a sulfa drug, but he's taken it for years without a problem, so we'll keep using it.",
+   "audio": "U33.mp3"
+  },
+  {
+   "id": "U34",
+   "t": 173.34,
+   "dur": 1.7,
+   "speaker": "doctor",
+   "text": "Do you smoke or drink at all?",
+   "audio": "U34.mp3"
+  },
+  {
+   "id": "U35",
+   "t": 175.94,
+   "dur": 3.1,
+   "speaker": "patient",
+   "text": "Quit smoking in ninety-five. I don't really drink anymore.",
+   "audio": "U35.mp3"
+  },
+  {
+   "id": "U36",
+   "t": 179.94,
+   "dur": 2.93,
+   "speaker": "doctor",
+   "text": "Let me take a listen. Deep breaths for me.",
+   "audio": "U36.mp3"
+  },
+  {
+   "id": "U37",
+   "t": 193.77,
+   "dur": 16.22,
+   "speaker": "doctor",
+   "text": "Okay. For my note: JVP up to the angle of the jaw. Crackles about a third of the way up on both sides. Irregularly irregular, around ninety. Three plus pitting edema to the knees. Abdomen soft, liver edge down a few centimeters.",
+   "audio": "U37.mp3"
+  },
+  {
+   "id": "U38",
+   "t": 211.89,
+   "dur": 1.06,
+   "speaker": "patient",
+   "text": "Is it bad?",
+   "audio": "U38.mp3"
+  },
+  {
+   "id": "U39",
+   "t": 213.85,
+   "dur": 6.77,
+   "speaker": "doctor",
+   "text": "You've got a lot of extra fluid on board, and that's why you can't breathe. The good news is we know how to get it off.",
+   "audio": "U39.mp3"
+  },
+  {
+   "id": "U40",
+   "t": 221.52,
+   "dur": 2.98,
+   "speaker": "nurse",
+   "text": "He's on two liters now, sat ninety-four.",
+   "audio": "U40.mp3"
+  },
+  {
+   "id": "U41",
+   "t": 225.4,
+   "dur": 2.81,
+   "speaker": "doctor",
+   "text": "Thanks. Keep his sats above ninety-two.",
+   "audio": "U41.mp3"
+  },
+  {
+   "id": "T1",
+   "t": 228.91,
+   "dur": 11.09,
+   "speaker": "doctor",
+   "text": "So he's wet from head to toe. Orthopnea, waking up gasping, ten pounds up, JVP to his jaw, crackles, and pitting to the knees. He needs to be diuresed hard.",
+   "audio": "T1.mp3"
+  },
+  {
+   "id": "U42",
+   "t": 242.9,
+   "dur": 19.13,
+   "speaker": "doctor",
+   "text": "Let me look at what the ER sent. Sodium 134, potassium 5.1, bicarb 22, BUN 45, creatinine 2.4. BNP 2,680. Troponin 0.08. Hemoglobin 10.2. INR 2.3.",
+   "audio": "U42.mp3"
+  },
+  {
+   "id": "U43",
+   "t": 262.93,
+   "dur": 3.22,
+   "speaker": "doctor",
+   "text": "INR 2.3. Okay, that's fine.",
+   "audio": "U43.mp3"
+  },
+  {
+   "id": "U44",
+   "t": 268.05,
+   "dur": 4.58,
+   "speaker": "doctor",
+   "text": "Chest X-ray shows cardiomegaly and pulmonary edema with small effusions.",
+   "audio": "U44.mp3"
+  },
+  {
+   "id": "T2",
+   "t": 273.33,
+   "dur": 10.46,
+   "speaker": "doctor",
+   "text": "BNP almost twenty-seven hundred, and a troponin of 0.08 with that tightness when he walks. Probably demand from all this fluid, but I don't want to miss a heart attack.",
+   "audio": "T2.mp3"
+  },
+  {
+   "id": "U45",
+   "t": 285.69,
+   "dur": 9.46,
+   "speaker": "doctor",
+   "text": "So this is acute on chronic systolic heart failure, triggered by running out of the furosemide, maybe the Aleve too. His kidneys are a bit worse than baseline.",
+   "audio": "U45.mp3"
+  },
+  {
+   "id": "T3",
+   "t": 295.85,
+   "dur": 10.73,
+   "speaker": "doctor",
+   "text": "Creatinine 2.4, BUN 45. That looks like congestion. The fix for his kidneys is the same as the fix for his lungs: get the fluid off, and follow the creatinine every day.",
+   "audio": "T3.mp3"
+  },
+  {
+   "id": "U46",
+   "t": 308.48,
+   "dur": 2.5,
+   "speaker": "doctor",
+   "text": "Coworker, what's his baseline creatinine?",
+   "audio": "U46.mp3"
+  },
+  {
+   "id": "U47",
+   "t": 320.88,
+   "dur": 12.82,
+   "speaker": "doctor",
+   "text": "Okay, so a bump from about two. Here's the plan. IV furosemide 80 now, then 40 IV twice a day. Strict ins and outs, daily weights, two gram sodium, fluid restriction. Telemetry.",
+   "audio": "U47.mp3"
+  },
+  {
+   "id": "T4",
+   "t": 334.4,
+   "dur": 6.89,
+   "speaker": "doctor",
+   "text": "He takes 60 in the morning and 40 at night by mouth, so 80 IV is a lot more than he's used to. That should get things moving.",
+   "audio": "T4.mp3"
+  },
+  {
+   "id": "U48",
+   "t": 343.19,
+   "dur": 4.54,
+   "speaker": "doctor",
+   "text": "Repeat BMP and magnesium in the morning, and an EKG now.",
+   "audio": "U48.mp3"
+  },
+  {
+   "id": "T5",
+   "t": 348.43,
+   "dur": 6.29,
+   "speaker": "doctor",
+   "text": "And a repeat troponin in three hours. If it's flat, this is demand, not a heart attack.",
+   "audio": "T5.mp3"
+  },
+  {
+   "id": "U49",
+   "t": 356.62,
+   "dur": 7.54,
+   "speaker": "doctor",
+   "text": "Hold the spironolactone tonight with the potassium at 5.1 and the kidney bump. Continue the carvedilol and the Entresto for now.",
+   "audio": "U49.mp3"
+  },
+  {
+   "id": "U50",
+   "t": 366.06,
+   "dur": 4.73,
+   "speaker": "doctor",
+   "text": "Continue the rest of his home meds, including the metformin and the gabapentin.",
+   "audio": "U50.mp3"
+  },
+  {
+   "id": "U51",
+   "t": 373.19,
+   "dur": 4.25,
+   "speaker": "doctor",
+   "text": "And let's give him 40 of potassium chloride, since we're diuresing him hard.",
+   "audio": "U51.mp3"
+  },
+  {
+   "id": "U52",
+   "t": 379.84,
+   "dur": 7.54,
+   "speaker": "doctor",
+   "text": "Coworker, should we restart his lisinopril? His old discharge summary says to restart it when his kidneys recover.",
+   "audio": "U52.mp3"
+  },
+  {
+   "id": "U53",
+   "t": 397.28,
+   "dur": 1.78,
+   "speaker": "doctor",
+   "text": "Right. No lisinopril then.",
+   "audio": "U53.mp3"
+  },
+  {
+   "id": "U54",
+   "t": 399.96,
+   "dur": 1.97,
+   "speaker": "patient",
+   "text": "Are my kidneys going to be okay?",
+   "audio": "U54.mp3"
+  },
+  {
+   "id": "U55",
+   "t": 402.83,
+   "dur": 6.1,
+   "speaker": "doctor",
+   "text": "They're a little stressed from all the fluid. Usually they bounce back as we get it off, and we'll check them every morning.",
+   "audio": "U55.mp3"
+  },
+  {
+   "id": "T6",
+   "t": 409.63,
+   "dur": 4.49,
+   "speaker": "doctor",
+   "text": "And we'll weigh you every morning. I'd like to see about two pounds a day come off.",
+   "audio": "T6.mp3"
+  },
+  {
+   "id": "U56",
+   "t": 416.02,
+   "dur": 9.86,
+   "speaker": "wife",
+   "text": "Doctor, there's something else. Last Tuesday his right hand went clumsy. He couldn't hold his coffee cup, and his words came out all jumbled. Maybe twenty minutes, then he was fine.",
+   "audio": "U56.mp3"
+  },
+  {
+   "id": "U57",
+   "t": 426.78,
+   "dur": 2.3,
+   "speaker": "patient",
+   "text": "It went away. I didn't want to make a fuss.",
+   "audio": "U57.mp3"
+  },
+  {
+   "id": "U58",
+   "t": 429.98,
+   "dur": 2.18,
+   "speaker": "doctor",
+   "text": "Hmm. Okay, we'll keep an eye on that.",
+   "audio": "U58.mp3"
+  },
+  {
+   "id": "U59",
+   "t": 435.06,
+   "dur": 8.5,
+   "speaker": "nurse",
+   "text": "Doctor, his heart rate's up to 142 on the monitor, still A-fib. Pressure 138 over 88.",
+   "audio": "U59.mp3"
+  },
+  {
+   "id": "T7",
+   "t": 444.26,
+   "dur": 7.18,
+   "speaker": "doctor",
+   "text": "A hundred forty-two in A-fib, on top of all this fluid. His heart can't fill at that rate, so I want the rate down now.",
+   "audio": "T7.mp3"
+  },
+  {
+   "id": "U60",
+   "t": 452.34,
+   "dur": 2.86,
+   "speaker": "doctor",
+   "text": "Okay, let's push 10 of IV diltiazem.",
+   "audio": "U60.mp3"
+  },
+  {
+   "id": "T8",
+   "t": 455.9,
+   "dur": 9.7,
+   "speaker": "doctor",
+   "text": "And he's in A-fib with diabetes, heart failure, high blood pressure, and he's seventy-four. That's a high stroke risk, and he'll be lying in a hospital bed.",
+   "audio": "T8.mp3"
+  },
+  {
+   "id": "U61",
+   "t": 467.5,
+   "dur": 3.5,
+   "speaker": "doctor",
+   "text": "And start a heparin drip for the A-fib while he's in the hospital.",
+   "audio": "U61.mp3"
+  },
+  {
+   "id": "U62",
+   "t": 473.4,
+   "dur": 3.65,
+   "speaker": "doctor",
+   "text": "Coworker, why isn't he on anticoagulation at home?",
+   "audio": "U62.mp3"
+  },
+  {
+   "id": "U63",
+   "t": 487.95,
+   "dur": 3.34,
+   "speaker": "nurse",
+   "text": "His temperature just came back 38.6.",
+   "audio": "U63.mp3"
+  },
+  {
+   "id": "T9",
+   "t": 491.99,
+   "dur": 6.29,
+   "speaker": "doctor",
+   "text": "38.6. He did mention a cough with some white sputum, and the film showed small effusions.",
+   "audio": "T9.mp3"
+  },
+  {
+   "id": "U64",
+   "t": 499.18,
+   "dur": 5.81,
+   "speaker": "doctor",
+   "text": "With the cough and that fever, this could be a pneumonia on top of the heart failure. Let's start Zosyn.",
+   "audio": "U64.mp3"
+  },
+  {
+   "id": "U65",
+   "t": 507.39,
+   "dur": 3.5,
+   "speaker": "doctor",
+   "text": "Coworker, what antibiotic would you use for him?",
+   "audio": "U65.mp3"
+  },
+  {
+   "id": "U66",
+   "t": 520.79,
+   "dur": 2.54,
+   "speaker": "doctor",
+   "text": "Coworker, give me your overall take.",
+   "audio": "U66.mp3"
+  },
+  {
+   "id": "U67",
+   "t": 538.23,
+   "dur": 8.3,
+   "speaker": "doctor",
+   "text": "Mr. Morrison, we're going to get this fluid off you and get your breathing better. We're also going to look into those dark stools.",
+   "audio": "U67.mp3"
+  },
+  {
+   "id": "U68",
+   "t": 547.43,
+   "dur": 3.38,
+   "speaker": "patient",
+   "text": "My brother went into the hospital with his heart and never came out.",
+   "audio": "U68.mp3"
+  },
+  {
+   "id": "U69",
+   "t": 551.71,
+   "dur": 2.33,
+   "speaker": "doctor",
+   "text": "I'm sorry. That must make this really scary.",
+   "audio": "U69.mp3"
+  },
+  {
+   "id": "U70",
+   "t": 554.94,
+   "dur": 3.89,
+   "speaker": "patient",
+   "text": "If it comes to that, I don't want to be kept alive on machines.",
+   "audio": "U70.mp3"
+  },
+  {
+   "id": "U71",
+   "t": 559.73,
+   "dur": 1.73,
+   "speaker": "wife",
+   "text": "Bob, we haven't talked about that.",
+   "audio": "U71.mp3"
+  },
+  {
+   "id": "U72",
+   "t": 562.36,
+   "dur": 8.81,
+   "speaker": "doctor",
+   "text": "That's really important, and I want to hear more about what matters to you. Let's sit down together tomorrow morning, the three of us, when you're breathing easier.",
+   "audio": "U72.mp3"
+  },
+  {
+   "id": "U73",
+   "t": 572.07,
+   "dur": 1.25,
+   "speaker": "patient",
+   "text": "Okay. Thanks, doc.",
+   "audio": "U73.mp3"
+  },
+  {
+   "id": "Z1",
+   "t": 576.32,
+   "dur": 2.42,
+   "speaker": "doctor",
+   "text": "Okay. Let me sit down and get these orders in.",
+   "audio": "Z1.mp3"
+  },
+  {
+   "id": "Z2",
+   "t": 582.74,
+   "dur": 11.86,
+   "speaker": "doctor",
+   "text": "First, the flags. I should have stopped on the black stools. With his ulcer bleed in 2023, the aspirin and the Aleve, and a hemoglobin of 10.2, this could be an upper GI bleed.",
+   "audio": "Z2.mp3"
+  },
+  {
+   "id": "Z3",
+   "t": 595.5,
+   "dur": 1.9,
+   "speaker": "doctor",
+   "text": "So the heparin drip comes off.",
+   "audio": "Z3.mp3"
+  },
+  {
+   "id": "Z4",
+   "t": 600.9,
+   "dur": 3.38,
+   "speaker": "doctor",
+   "text": "No diltiazem, not with his ejection fraction.",
+   "audio": "Z4.mp3"
+  },
+  {
+   "id": "Z5",
+   "t": 607.78,
+   "dur": 2.93,
+   "speaker": "doctor",
+   "text": "No potassium either. It's already 5.1.",
+   "audio": "Z5.mp3"
+  },
+  {
+   "id": "Z6",
+   "t": 614.21,
+   "dur": 4.37,
+   "speaker": "doctor",
+   "text": "And no Zosyn. That's a penicillin, and he had anaphylaxis.",
+   "audio": "Z6.mp3"
+  },
+  {
+   "id": "Z18",
+   "t": 622.08,
+   "dur": 5.66,
+   "speaker": "doctor",
+   "text": "The furosemide stays, though. He's drowning, and we'll draw the hemoglobin and type and screen alongside it.",
+   "audio": "Z18.mp3"
+  },
+  {
+   "id": "Z7",
+   "t": 635.74,
+   "dur": 2.78,
+   "speaker": "doctor",
+   "text": "Now the rest of the plan, the way we said it.",
+   "audio": "Z7.mp3"
+  },
+  {
+   "id": "Z8",
+   "t": 676.52,
+   "dur": 12.86,
+   "speaker": "doctor",
+   "text": "For his rate, digoxin rather than amiodarone. Amiodarone could convert him, and he's not anticoagulated. Digoxin 0.25 milligrams IV now, and we'll dose it carefully for his kidneys.",
+   "audio": "Z8.mp3"
+  },
+  {
+   "id": "Z9",
+   "t": 694.88,
+   "dur": 6.74,
+   "speaker": "doctor",
+   "text": "For the pneumonia, ceftriaxone and azithromycin. He tolerated that combination in 2021.",
+   "audio": "Z9.mp3"
+  },
+  {
+   "id": "Z10",
+   "t": 710.12,
+   "dur": 6.14,
+   "speaker": "doctor",
+   "text": "Hold the metformin with a creatinine of 2.4, and cut the gabapentin to 300 twice a day.",
+   "audio": "Z10.mp3"
+  },
+  {
+   "id": "Z11",
+   "t": 724.76,
+   "dur": 10.3,
+   "speaker": "doctor",
+   "text": "For the bleed: hold the aspirin, no more Aleve, pantoprazole 40 IV twice a day, a type and screen, a repeat hemoglobin tonight, and GI to see him.",
+   "audio": "Z11.mp3"
+  },
+  {
+   "id": "Z12",
+   "t": 757.06,
+   "dur": 5.21,
+   "speaker": "doctor",
+   "text": "I'll ask Patricia whether there's any old warfarin at home. Nothing else explains that INR.",
+   "audio": "Z12.mp3"
+  },
+  {
+   "id": "Z13",
+   "t": 763.17,
+   "dur": 9.17,
+   "speaker": "doctor",
+   "text": "And last week's episode sounds like a TIA. Head CT tonight, and neurology to see him, since that was the trigger to revisit anticoagulation.",
+   "audio": "Z13.mp3"
+  },
+  {
+   "id": "Z14",
+   "t": 780.84,
+   "dur": 3.05,
+   "speaker": "doctor",
+   "text": "The penicillin allergy is updated to anaphylaxis.",
+   "audio": "Z14.mp3"
+  },
+  {
+   "id": "Z15",
+   "t": 787.39,
+   "dur": 2.57,
+   "speaker": "doctor",
+   "text": "The family meeting stays on for tomorrow morning.",
+   "audio": "Z15.mp3"
+  },
+  {
+   "id": "Z16",
+   "t": 790.86,
+   "dur": 5.21,
+   "speaker": "doctor",
+   "text": "Last thing, the H and P. The draft wrote itself while we talked. Let me read it over.",
+   "audio": "Z16.mp3"
+  },
+  {
+   "id": "Z17",
+   "t": 806.07,
+   "dur": 1.9,
+   "speaker": "doctor",
+   "text": "That's right. Signing it.",
+   "audio": "Z17.mp3"
+  }
+ ],
+ "actions": [
+  {
+   "id": "X1",
+   "t": 579.94,
+   "do": "radar-open"
+  },
+  {
+   "id": "X2",
+   "t": 598.6,
+   "do": "remove",
+   "match": [
+    "heparin"
+   ]
+  },
+  {
+   "id": "X3",
+   "t": 605.48,
+   "do": "remove",
+   "match": [
+    "diltiazem"
+   ]
+  },
+  {
+   "id": "X4",
+   "t": 611.91,
+   "do": "remove",
+   "match": [
+    "potassium"
+   ]
+  },
+  {
+   "id": "X5",
+   "t": 619.78,
+   "do": "remove",
+   "match": [
+    "zosyn"
+   ]
+  },
+  {
+   "id": "X6",
+   "t": 628.94,
+   "do": "sign",
+   "match": [
+    "furosemide"
+   ]
+  },
+  {
+   "id": "X7",
+   "t": 639.72,
+   "do": "review-all"
+  },
+  {
+   "id": "X8",
+   "t": 690.58,
+   "do": "order",
+   "orderType": "medication",
+   "fields": {
+    "name": "Digoxin",
+    "dose": "0.25 mg",
+    "route": "IV",
+    "frequency": "Once",
+    "indication": "Atrial fibrillation with rapid ventricular response",
+    "notes": "Renal dosing; check a level before any repeat dose"
+   }
+  },
+  {
+   "id": "X9",
+   "t": 702.82,
+   "do": "order",
+   "orderType": "medication",
+   "fields": {
+    "name": "Ceftriaxone",
+    "dose": "1 g",
+    "route": "IV Piggyback",
+    "frequency": "Daily",
+    "indication": "Community-acquired pneumonia",
+    "notes": "Tolerated 2/2021 despite penicillin anaphylaxis"
+   }
+  },
+  {
+   "id": "X10",
+   "t": 705.82,
+   "do": "order",
+   "orderType": "medication",
+   "fields": {
+    "name": "Azithromycin",
+    "dose": "500 mg",
+    "route": "IV Piggyback",
+    "frequency": "Daily",
+    "indication": "Community-acquired pneumonia"
+   }
+  },
+  {
+   "id": "X11",
+   "t": 717.46,
+   "do": "order",
+   "orderType": "nursing",
+   "fields": {
+    "orderType": "Other",
+    "details": "Hold metformin (creatinine 2.4, eGFR about 27)",
+    "priority": "Routine"
+   }
+  },
+  {
+   "id": "X12",
+   "t": 720.46,
+   "do": "order",
+   "orderType": "medication",
+   "fields": {
+    "name": "Gabapentin",
+    "dose": "300 mg",
+    "route": "PO",
+    "frequency": "BID",
+    "indication": "Diabetic peripheral neuropathy",
+    "notes": "Reduced from 300 mg three times a day for kidney function"
+   }
+  },
+  {
+   "id": "X13",
+   "t": 736.26,
+   "do": "order",
+   "orderType": "nursing",
+   "fields": {
+    "orderType": "Other",
+    "details": "Hold aspirin; no NSAIDs (possible upper GI bleed)",
+    "priority": "Routine"
+   }
+  },
+  {
+   "id": "X14",
+   "t": 739.26,
+   "do": "order",
+   "orderType": "medication",
+   "fields": {
+    "name": "Pantoprazole",
+    "dose": "40 mg",
+    "route": "IV",
+    "frequency": "BID",
+    "indication": "Possible upper GI bleed"
+   }
+  },
+  {
+   "id": "X15",
+   "t": 742.26,
+   "do": "order",
+   "orderType": "lab",
+   "fields": {
+    "name": "Other",
+    "customName": "Type and screen",
+    "specimen": "Blood",
+    "priority": "STAT",
+    "indication": "Possible upper GI bleed"
+   }
+  },
+  {
+   "id": "X16",
+   "t": 745.26,
+   "do": "order",
+   "orderType": "lab",
+   "fields": {
+    "name": "Complete Blood Count",
+    "specimen": "Blood",
+    "priority": "Urgent",
+    "indication": "Possible upper GI bleed",
+    "notes": "Repeat hemoglobin tonight"
+   }
+  },
+  {
+   "id": "X17",
+   "t": 748.26,
+   "do": "order",
+   "orderType": "consult",
+   "fields": {
+    "specialty": "Gastroenterology",
+    "priority": "Urgent",
+    "reason": "Melena with hemoglobin 10.2 (13.9 in January) and an unexplained INR of 2.3, in a man with a 2023 gastric ulcer bleed who takes aspirin and naproxen. Please evaluate for upper GI bleeding."
+   }
+  },
+  {
+   "id": "X18",
+   "t": 751.26,
+   "do": "tick",
+   "match": [
+    "home med"
+   ]
+  },
+  {
+   "id": "X19",
+   "t": 754.26,
+   "do": "tick",
+   "match": [
+    "carvedilol"
+   ]
+  },
+  {
+   "id": "X20",
+   "t": 773.54,
+   "do": "order",
+   "orderType": "imaging",
+   "fields": {
+    "modality": "CT",
+    "bodyPart": "Head",
+    "contrast": "Without contrast",
+    "priority": "Urgent",
+    "indication": "Transient right hand weakness and speech difficulty last week; atrial fibrillation without anticoagulation"
+   }
+  },
+  {
+   "id": "X21",
+   "t": 776.54,
+   "do": "order",
+   "orderType": "consult",
+   "fields": {
+    "specialty": "Neurology",
+    "priority": "Urgent",
+    "reason": "Possible TIA last week (about 20 minutes of right hand clumsiness and jumbled speech) in atrial fibrillation off anticoagulation since the 2023 GI bleed. Please advise on the workup and, with GI, on anticoagulation."
+   }
+  },
+  {
+   "id": "X22",
+   "t": 785.09,
+   "do": "tick",
+   "match": [
+    "allergy"
+   ]
+  },
+  {
+   "id": "X23",
+   "t": 797.27,
+   "do": "note",
+   "noteType": "H&P"
+  },
+  {
+   "id": "X24",
+   "t": 809.17,
+   "do": "save-note"
+  }
+ ],
+ "expect": [
+  {
+   "id": "E1",
+   "type": "speak",
+   "level": "must",
+   "cue": "U20",
+   "window_s": 60,
+   "topic": "melena",
+   "summary": "Black stools in a man with a 2023 bleeding gastric ulcer who takes aspirin (and NSAIDs): possible upper GI bleed. Check hemoglobin/stool, matters for any anticoagulation.",
+   "keywords": [
+    [
+     "black",
+     "dark",
+     "melena",
+     "tarry"
+    ],
+    [
+     "bleed",
+     "ulcer",
+     "gi ",
+     "hemorrhage",
+     "hemoglobin"
+    ]
+   ]
+  },
+  {
+   "id": "E2",
+   "type": "speak",
+   "level": "lead",
+   "cue": "U26",
+   "window_s": 60,
+   "topic": "nsaid",
+   "ok_in_any_mode": true,
+   "summary": "Daily Aleve (naproxen): NSAIDs caused his 2023 ulcer bleed and worsen kidney function and heart failure; he is also on aspirin.",
+   "keywords": [
+    [
+     "aleve",
+     "naproxen",
+     "nsaid"
+    ],
+    [
+     "bleed",
+     "ulcer",
+     "kidney",
+     "renal",
+     "heart failure",
+     "fluid"
+    ]
+   ]
+  },
+  {
+   "id": "E3",
+   "type": "speak",
+   "level": "must",
+   "cue": "U43",
+   "window_s": 60,
+   "topic": "inr",
+   "summary": "INR 2.3 is unexplained: warfarin was stopped in 9/2023 (his INR has run about 1.0). With black stools and Hgb 10.2 (11.1 on 1/28/2026 per the PCP note, 13.9 on 1/11) this is a bleeding concern; ask about leftover warfarin.",
+   "keywords": [
+    [
+     "inr"
+    ],
+    [
+     "warfarin",
+     "not on",
+     "off",
+     "unexplained",
+     "no anticoag",
+     "stopped"
+    ]
+   ]
+  },
+  {
+   "id": "E4",
+   "type": "speak",
+   "level": "must",
+   "cue": "U50",
+   "window_s": 45,
+   "topic": "metformin-renal",
+   "summary": "Hold metformin: creatinine 2.4 means eGFR about 27, below 30. (Gabapentin 900 mg/day may also need lowering if creatinine clearance is under 30; optional.)",
+   "keywords": [
+    [
+     "metformin"
+    ],
+    [
+     "egfr",
+     "kidney",
+     "renal",
+     "creatinine",
+     "30",
+     "lactic"
+    ]
+   ]
+  },
+  {
+   "id": "E5",
+   "type": "speak",
+   "level": "must",
+   "cue": "U51",
+   "window_s": 45,
+   "topic": "kcl-hyperk",
+   "summary": "No potassium chloride: K is already 5.1 with AKI, on Entresto (and spironolactone at home).",
+   "keywords": [
+    [
+     "potassium",
+     "kcl",
+     "k "
+    ],
+    [
+     "5.1",
+     "high",
+     "hyperkal",
+     "already"
+    ]
+   ]
+  },
+  {
+   "id": "E6",
+   "type": "speak",
+   "level": "must",
+   "cue": "U56",
+   "window_s": 60,
+   "topic": "tia",
+   "summary": "Transient right-hand clumsiness and jumbled speech last week is a possible TIA in a man with AF who is not anticoagulated (similar event 10/2020). Needs urgent evaluation; the 2023 decision said to revisit anticoagulation after a TIA or stroke.",
+   "keywords": [
+    [
+     "tia",
+     "stroke",
+     "transient"
+    ],
+    [
+     "workup",
+     "mri",
+     "imaging",
+     "neuro",
+     "urgent",
+     "evaluat",
+     "anticoag"
+    ]
+   ]
+  },
+  {
+   "id": "E7",
+   "type": "speak",
+   "level": "must",
+   "cue": "U60",
+   "window_s": 40,
+   "topic": "diltiazem-hfref",
+   "summary": "Avoid IV diltiazem: negative inotrope in decompensated HFrEF (EF 30-35%). Consider amiodarone or digoxin and treat the volume.",
+   "keywords": [
+    [
+     "diltiazem",
+     "calcium channel",
+     "cardizem"
+    ],
+    [
+     "ef",
+     "ejection",
+     "systolic",
+     "hfref",
+     "heart failure",
+     "inotrop"
+    ]
+   ]
+  },
+  {
+   "id": "E8",
+   "type": "speak",
+   "level": "must",
+   "cue": "U61",
+   "window_s": 40,
+   "topic": "heparin-bleed",
+   "summary": "No heparin drip: anticoagulation was stopped for good after the 9/2023 major ulcer bleed, and he may be bleeding now (black stools, Hgb 10.2, INR 2.3).",
+   "keywords": [
+    [
+     "heparin",
+     "anticoag",
+     "drip"
+    ],
+    [
+     "bleed",
+     "ulcer",
+     "stool"
+    ]
+   ]
+  },
+  {
+   "id": "E9",
+   "type": "speak",
+   "level": "must",
+   "cue": "U64",
+   "window_s": 40,
+   "topic": "pcn-anaphylaxis",
+   "summary": "Zosyn is a penicillin and he had penicillin anaphylaxis (1985, epinephrine). Ceftriaxone plus azithromycin was tolerated in 2/2021.",
+   "keywords": [
+    [
+     "zosyn",
+     "piperacillin",
+     "penicillin"
+    ],
+    [
+     "anaphyla",
+     "allerg",
+     "reaction"
+    ]
+   ]
+  },
+  {
+   "id": "Q1",
+   "type": "answer",
+   "cue": "U46",
+   "topic": "baseline-cr",
+   "summary": "Baseline creatinine about 2.0: 2.03 on 1/11/2026 (eGFR 39.5) and 1.96 on 1/28/2026 per the PCP note; it has run 1.65-2.0 since late 2025.",
+   "keywords": [
+    [
+     "1.9",
+     "2.0",
+     "2.03",
+     "1.96",
+     "about 2",
+     "around 2",
+     "1.65"
+    ]
+   ]
+  },
+  {
+   "id": "Q2",
+   "type": "answer",
+   "cue": "U52",
+   "topic": "lisinopril",
+   "summary": "No. Lisinopril caused angioedema (2018), and an ACE inhibitor must never be combined with Entresto (sacubitril/valsartan).",
+   "keywords": [
+    [
+     "no",
+     "not",
+     "don't",
+     "avoid",
+     "shouldn't"
+    ],
+    [
+     "angioedema",
+     "swell",
+     "lip"
+    ]
+   ]
+  },
+  {
+   "id": "Q3",
+   "type": "answer",
+   "cue": "U62",
+   "topic": "why-no-ac",
+   "summary": "Major upper GI bleed in 9/2023 (gastric ulcer with visible vessel, Hgb 7.2, INR 3.8, 4 units, NSAIDs and H. pylori). A multidisciplinary conference stopped warfarin for good; DOAC declined; he declined a Watchman. They planned to revisit after a TIA or stroke, which makes last week's episode relevant.",
+   "keywords": [
+    [
+     "bleed",
+     "hemorrhage",
+     "ulcer"
+    ],
+    [
+     "2023",
+     "september"
+    ]
+   ]
+  },
+  {
+   "id": "Q4",
+   "type": "answer",
+   "cue": "U65",
+   "topic": "antibiotic",
+   "summary": "Ceftriaxone plus azithromycin (tolerated in 2/2021 despite penicillin anaphylaxis); avoid penicillins such as Zosyn.",
+   "keywords": [
+    [
+     "ceftriaxone",
+     "cephalosporin"
+    ]
+   ]
+  },
+  {
+   "id": "Q5",
+   "type": "answer",
+   "cue": "U66",
+   "topic": "overall",
+   "summary": "Covers most of: ADHF from missed furosemide (and NSAIDs); AKI on CKD with K 5.1; possible upper GI bleed (black stools, Hgb drop, unexplained INR) so no heparin and check for warfarin; possible TIA needing workup; AF with RVR (avoid diltiazem); possible pneumonia (ceftriaxone + azithromycin, not Zosyn).",
+   "keywords": [
+    [
+     "heart failure",
+     "fluid",
+     "furosemide"
+    ],
+    [
+     "bleed"
+    ],
+    [
+     "tia",
+     "stroke"
+    ]
+   ]
+  }
+ ],
+ "quiet": [
+  {
+   "id": "N1",
+   "cue": "U15",
+   "why": "The doctor names the trigger (ran out of furosemide); nothing to add."
+  },
+  {
+   "id": "N2",
+   "cue": "U31",
+   "why": "The doctor upgrades the penicillin allergy after the wife's correction: already addressed."
+  },
+  {
+   "id": "N3",
+   "cue": "U33",
+   "why": "Furosemide despite a sulfa antibiotic allergy is fine; long tolerated."
+  },
+  {
+   "id": "N4",
+   "cue": "U37",
+   "why": "Exam dictation; nothing unsafe."
+  },
+  {
+   "id": "N5",
+   "cue": "U41",
+   "why": "Oxygen target; routine."
+  },
+  {
+   "id": "N6",
+   "cue": "U45",
+   "why": "The doctor's assessment is right; mirror it, don't interrupt."
+  },
+  {
+   "id": "N7",
+   "cue": "U47",
+   "why": "IV furosemide 80 then 40 BID, I/O, weights, telemetry: appropriate."
+  },
+  {
+   "id": "N8",
+   "cue": "U48",
+   "why": "Morning BMP, magnesium, EKG: appropriate."
+  },
+  {
+   "id": "N9",
+   "cue": "U49",
+   "why": "Holding spironolactone and continuing carvedilol and Entresto is a reasonable judgment call."
+  },
+  {
+   "id": "N10",
+   "cue": "U55",
+   "why": "Reassurance about the kidneys; routine."
+  },
+  {
+   "id": "N11",
+   "cue": "U70",
+   "why": "Goals of care: the doctor leads; the coworker can note Full Code and Patricia as proxy for later, but must not interrupt."
+  }
+ ],
+ "scoring": {
+  "must": "Critical: must be said unprompted in every mode, within window_s of the cue line ending. One alert may cover two items (E7+E8).",
+  "lead": "Important: expected in Lead mode; in Follow/Abreast it may be held (not a miss). ok_in_any_mode means saying it is never a false alarm.",
+  "answers": "Each question must get a correct answer; judged against the summary (keywords are a quick pre-check).",
+  "false_alarm": "In Follow and Abreast, any unprompted remark that matches no expectation. In Lead, unmatched remarks are judged as extras (useful or noise).",
+  "repeat": "Saying the same thing twice counts against it, unless the second adds new, more urgent information (E3 after E1 is fine)."
+ }
+}

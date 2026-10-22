@@ -690,6 +690,74 @@ const manualClock = () => {
         cw.stop();
     });
 
+    await check('radar guards: a hold is a nursing order; a drug only the coworker named waits for the doctor; an alert that also says hold does not flag the hold', async () => {
+        const replies = [
+            // The doctor holds spironolactone; the model writes a medication order for it, flagged by an alert that agrees.
+            [item({ title: 'Hold spironolactone tonight', order_type: 'medication', fields: [{ key: 'name', value: 'Spironolactone' }, { key: 'dose', value: '25 mg' }], flag: 'K 5.1: hold spironolactone and Entresto', alert: 'S1' })],
+            // "I want the rate down": the model fills in the coworker's amiodarone; the diltiazem the doctor said is fine.
+            [item({ title: 'Amiodarone for AF rate control', order_type: 'medication', fields: [{ key: 'name', value: 'Amiodarone' }] }), item({ title: 'Diltiazem 10 mg IV push now', order_type: 'medication', fields: [{ key: 'name', value: 'Diltiazem' }] })],
+            // The same drug, retitled onto the diltiazem item: still the coworker's idea.
+            [item({ id: 'A2', title: 'Amiodarone 150 mg IV now', order_type: 'medication', fields: [{ key: 'name', value: 'Amiodarone' }] })],
+            // "Lasix" said, "Furosemide" written (and the coworker said furosemide too): the doctor's order.
+            [item({ title: 'Furosemide 80 mg IV now', order_type: 'medication', fields: [{ key: 'name', value: 'Furosemide' }] })],
+            // The doctor takes the coworker's suggestion.
+            [item({ title: 'Amiodarone 150 mg IV now', order_type: 'medication', fields: [{ key: 'name', value: 'Amiodarone' }] })],
+        ];
+        let n = 0;
+        const t = fakeTransport((lane) => (lane === 'actions' ? radarReply(replies[n++] || []) : reply(JSON.stringify(TAKE()))));
+        const cw = LiveCore.createCoworker({ transport: t, chart, clock: manualClock() });
+        cw.start({ skipPrime: true });
+        const hear = (speaker, text) => { const id = 'L' + (cw.wm.lines.length + 1); cw.wm.lines.push({ id, t: 0, speaker, text }); cw.wm.plan.push({ id: 'P' + (cw.wm.plan.length + 1), t: 0, text, kind: 'order', line: id }); };
+        const say = (id, text) => cw.wm.said.push({ id, t: 0, kind: 'critical', topic: id, text, why: '', question: '', cueLine: null, via: 'test', updateOf: null });
+        const titles = () => cw.wm.actions.map((a) => a.title);
+
+        say('S1', 'K 5.1 and creatinine 2.4: hold spironolactone and Entresto.');
+        hear('doctor', 'Hold the spironolactone tonight with the potassium at 5.1.');
+        await cw.actions();
+        const hold = cw.wm.actions[0];
+        assert.strictEqual(hold.orderType, 'nursing', 'a hold is a nursing order');
+        assert.deepStrictEqual(hold.fields, { orderType: 'Other', details: 'Hold spironolactone tonight', priority: 'Routine' }, 'no dose: nothing that would give the drug');
+        assert.strictEqual(hold.flag, '', 'the alert says hold too: no flag');
+
+        say('S2', 'For rate control avoid diltiazem (EF 35%); consider IV amiodarone or digoxin.');
+        hear('doctor', "His heart can't fill at that rate, so I want the rate down now.");
+        hear('doctor', "Okay, let's push 10 of IV diltiazem.");
+        await cw.actions();
+        assert.deepStrictEqual(titles(), ['Hold spironolactone tonight', 'Diltiazem 10 mg IV push now'], 'no amiodarone: only the coworker named it');
+        await cw.actions();
+        assert.strictEqual(cw.wm.actions[1].title, 'Diltiazem 10 mg IV push now', 'not retitled to the coworker\'s drug either');
+
+        say('S3', 'Check a hemoglobin before more furosemide.');
+        hear('doctor', 'Give him 80 of IV Lasix now.');
+        await cw.actions();
+        assert.ok(titles().includes('Furosemide 80 mg IV now'), 'Lasix heard counts for furosemide');
+
+        cw.wm.said.push({ id: 'S4', t: 0, kind: 'answer', topic: 'answer', text: 'Amiodarone 150 mg IV over 10 minutes, then a drip.', why: '', question: 'what would you use?', cueLine: null, via: 'test', updateOf: null });
+        hear('doctor', "Okay, let's do that.");
+        await cw.actions();
+        assert.ok(titles().includes('Amiodarone 150 mg IV now'), 'the doctor took it up');
+        cw.stop();
+    });
+
+    await check('radar merge: two items side by side are two things; a later repeat updates the closest title', async () => {
+        const replies = [
+            [item({ title: 'BMP and magnesium in the morning', order_type: 'lab', fields: [{ key: 'name', value: 'Basic Metabolic Panel' }] }), item({ title: 'Magnesium in the morning', order_type: 'lab', fields: [{ key: 'name', value: 'Magnesium' }] })],
+            [item({ title: 'Magnesium in the morning', order_type: 'lab', fields: [{ key: 'name', value: 'Magnesium' }, { key: 'priority', value: 'Routine' }] })],
+        ];
+        let n = 0;
+        const t = fakeTransport((lane) => (lane === 'actions' ? radarReply(replies[n++] || []) : reply(JSON.stringify(TAKE()))));
+        const cw = LiveCore.createCoworker({ transport: t, chart, clock: manualClock() });
+        cw.start({ skipPrime: true });
+        cw.wm.plan.push({ id: 'P1', t: 0, text: 'Repeat BMP and magnesium in the morning', kind: 'test', line: 'L1' });
+        await cw.actions();
+        assert.deepStrictEqual(cw.wm.actions.map((a) => a.title), ['BMP and magnesium in the morning', 'Magnesium in the morning'], 'the BMP is not swallowed');
+        await cw.actions();
+        assert.strictEqual(cw.wm.actions.length, 2, 'listed again: an update, not a third item');
+        assert.strictEqual(cw.wm.actions[0].title, 'BMP and magnesium in the morning', 'the BMP item keeps its title');
+        assert.strictEqual(cw.wm.actions[1].fields.priority, 'Routine', 'the closest title got the update');
+        cw.stop();
+    });
+
     await check('a busy radar tries again (4 s, 8 s), then shows the item as heard but not ready', async () => {
         let busy = true, calls = 0;
         const t = fakeTransport((lane) => {

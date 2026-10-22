@@ -1,5 +1,5 @@
 /*
- * Live Coworker: "How it thinks" (js/live/live-about.js). Loaded the first time
+ * Live Coworker: "Inside the coworker" (js/live/live-about.js). Loaded the first time
  * the sheet opens; every rule is scoped to .lc-about inside the live panel, so
  * it uses the panel's colour tokens and touches nothing else.
  *

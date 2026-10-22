@@ -10,21 +10,23 @@
 
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     const TRAPS = [
-        [/almost black/i, 'melena', 'Black stools with his 2023 ulcer bleed and daily aspirin: this could be an upper GI bleed. Worth checking his hemoglobin now.', 'He bled from a gastric ulcer in 9/2023 (Hgb 7.2, 4 units).'],
-        [/inr 2\.3\. okay/i, 'inr', 'INR 2.3 is unexplained: warfarin was stopped in 9/2023 and his INR has run about 1.0. With the dark stools and Hgb 10.2 (13.9 in January), ask whether he has leftover warfarin at home.', 'Off warfarin since the 2023 bleed.'],
-        [/metformin and the gabapentin/i, 'metformin-renal', 'Hold the metformin: creatinine 2.4 puts his eGFR around 27, below 30. Gabapentin 900 mg a day is also high for his kidneys.', 'Metformin is contraindicated below eGFR 30.'],
-        [/potassium chloride/i, 'kcl-hyperk', 'Skip the potassium: K is already 5.1 with the kidney bump, on Entresto.', 'Hyperkalemia risk.'],
-        [/words came out/i, 'tia', 'That sounds like a TIA, in AF with no anticoagulation. He needs an urgent neuro workup, and the 2023 conference said to revisit anticoagulation after a TIA.', 'Similar episode in 10/2020.'],
-        [/diltiazem/i, 'diltiazem-hfref', 'Avoid IV diltiazem: his EF is 30 to 35%, and it can tip him into worse failure. Amiodarone or digoxin is safer here.', 'Negative inotrope in decompensated HFrEF.'],
-        [/heparin drip/i, 'heparin-bleed', 'No heparin drip: anticoagulation was stopped for good after his 2023 ulcer bleed, and he may be bleeding now.', 'Black stools, Hgb 10.2, INR 2.3.'],
-        [/start zosyn/i, 'pcn-anaphylaxis', 'Hold the Zosyn: it is a penicillin, and he had penicillin anaphylaxis in 1985. Ceftriaxone with azithromycin was tolerated in 2021.', 'Documented anaphylaxis with epinephrine.'],
+        // One short sentence each (the action and the one fact); the detail is the "why".
+        [/almost black/i, 'melena', 'Black stools after a 2023 ulcer bleed: check hemoglobin now.', 'He bled from a gastric ulcer in 9/2023 (Hgb 7.2, 4 units) and takes aspirin daily.'],
+        [/inr 2\.3\. okay/i, 'inr', 'INR 2.3 off warfarin: ask about leftover warfarin at home.', 'Warfarin was stopped in 9/2023 and his INR has run about 1.0; with dark stools and Hgb 10.2 (13.9 in January) this matters.'],
+        [/metformin and the gabapentin/i, 'metformin-renal', 'Hold metformin: eGFR about 27 with creatinine 2.4.', 'Metformin is contraindicated below eGFR 30; gabapentin 900 mg a day is also high for his kidneys.'],
+        [/potassium chloride/i, 'kcl-hyperk', 'Skip the potassium: K is already 5.1.', 'K 5.1 with a kidney bump, on Entresto: potassium chloride risks hyperkalemia.'],
+        [/words came out/i, 'tia', 'That sounds like a TIA in untreated AF: needs urgent workup.', 'A similar episode in 10/2020; the 2023 conference said to revisit anticoagulation after a TIA.'],
+        [/diltiazem/i, 'diltiazem-hfref', 'Avoid IV diltiazem with EF 30-35%: use amiodarone or digoxin.', 'A negative inotrope can tip decompensated HFrEF into worse failure.'],
+        [/heparin drip/i, 'heparin-bleed', 'No heparin drip: anticoagulation stopped after the 2023 bleed.', 'Black stools, Hgb 10.2 and an INR of 2.3: he may be bleeding now.'],
+        [/start zosyn/i, 'pcn-anaphylaxis', 'Hold the Zosyn: penicillin anaphylaxis in 1985.', 'Documented anaphylaxis needing epinephrine; ceftriaxone with azithromycin was tolerated in 2021.'],
     ];
     const ANSWERS = [
-        [/creatinine/i, 'About 2.0: 2.03 on January 11 and 1.96 on January 28, eGFR in the mid-30s. So 2.4 today is a modest bump.'],
-        [/lisinopril/i, 'No. Lisinopril gave him angioedema in 2018, and an ACE inhibitor can never be combined with Entresto.'],
-        [/anticoagulation|anticoagulated/i, 'He had a major gastric ulcer bleed in September 2023 (Hgb 7.2, INR 3.8, four units). A multidisciplinary conference stopped warfarin for good; he declined a Watchman. They planned to revisit after a TIA or stroke, which makes last week\'s episode important.'],
-        [/antibiotic/i, 'Ceftriaxone plus azithromycin. He tolerated that combination in February 2021 despite his penicillin anaphylaxis. Avoid Zosyn and other penicillins.'],
-        [/take|think/i, 'Heart failure flare from running out of furosemide, likely worsened by the Aleve, with a kidney bump and K 5.1. The bigger worry is a possible upper GI bleed: black stools, Hgb down to 10.2 and an INR of 2.3 off warfarin. Last week\'s episode sounds like a TIA. For the rapid AF I would avoid diltiazem and heparin, and treat the fever with ceftriaxone and azithromycin.'],
+        [/tell me more|more about/i, 'In September 2023 he bled from a gastric ulcer: hemoglobin 7.2, INR 3.8, four units. A conference stopped warfarin for good and he declined a Watchman. They planned to revisit after a stroke or TIA, which makes last week\'s episode important.'],
+        [/creatinine/i, 'About 2.0: 1.96 on January 28, so 2.4 is a modest bump.'],
+        [/lisinopril/i, 'No: angioedema in 2018, and never with Entresto.'],
+        [/anticoagulation|anticoagulated/i, 'Stopped after a major ulcer bleed in September 2023; revisit after a TIA.'],
+        [/antibiotic/i, 'Ceftriaxone plus azithromycin: tolerated in February 2021 despite his penicillin allergy.'],
+        [/take|think/i, 'Heart failure flare from missed furosemide. Bigger worry: a possible GI bleed. Last week sounds like a TIA. Avoid diltiazem, heparin and Zosyn.'],
     ];
     const TAKE = {
         take: {
@@ -93,7 +95,7 @@
     ];
     function fakeRadar(user) {
         const sect = (name) => ((user.match(new RegExp('<' + name + '>(.*?)</' + name + '>', 's')) || [])[1] || '').replace(/\\n/g, '\n').replace(/\\"/g, '"');
-        const listed = sect('on_my_radar').split('\n').map((l) => l.match(/^(A\d+) \[(\w+)([^\]]*)\] [^:]+: (.*?)(?: · said \w+)?$/)).filter(Boolean)
+        const listed = sect('on_my_radar').split('\n').map((l) => l.match(/^(A\d+) \[(\w+)([^\]]*)\] [^:]+: (.*?)(?: · said \w+)?(?: · next: .*)?$/)).filter(Boolean)
             .map((m) => ({ id: m[1], status: m[2], flagged: /flag:/.test(m[3]), title: m[4] }));
         const alerts = sect('open_safety_alerts').split('\n').map((l) => l.match(/^- (S\d+) \[[^\]]*\] (.*)$/)).filter(Boolean).map((m) => ({ id: m[1], text: m[2] }));
         const fill = (x, line) => ({

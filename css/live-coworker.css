@@ -60,13 +60,14 @@
 /* ── header: listening state, mode ───────────────────────────────────── */
 .lc-head {
     flex: none; padding: 10px 12px; border-bottom: 1px solid var(--lc-line); background: var(--lc-surface);
-    display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto auto; grid-template-areas: "mic status end about more" "enc enc enc enc enc" "modes modes modes modes modes" "hint hint hint hint hint" "replay replay replay replay replay";
+    display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto auto auto; grid-template-areas: "mic status end full about more" "enc enc enc enc enc enc" "modes modes modes modes modes modes" "hint hint hint hint hint hint" "replay replay replay replay replay replay";
     align-items: center; column-gap: 10px;
 }
 .lc-mic { grid-area: mic; }
 .lc-status-text { grid-area: status; }
 .lc-head > .lc-iconbtn { grid-area: more; }
 .lc-head > .lc-about-btn { grid-area: about; }
+.lc-head > .lc-full-btn { grid-area: full; }
 .lc-end { grid-area: end; white-space: nowrap; }
 .lc-enc { grid-area: enc; margin-top: 10px; }
 /* The way into an encounter: one clear, full-width button. */
@@ -129,17 +130,20 @@
 }
 .lc-modes button:hover { color: var(--lc-ink); }
 .lc-modes button[aria-checked="true"] { background: var(--lc-surface); color: var(--lc-ink); font-weight: 600; box-shadow: 0 0 0 1px var(--lc-line-2), 0 1px 2px oklch(0.3 0.03 255 / 0.08); }
-.lc-mode-hint { margin: 6px 2px 0; font-size: 12px; color: var(--lc-ink-3); }
+.lc-mode-hint { display: none; }   /* the mode's description is on its buttons' tooltips */
 
 /* ── demo replay row ─────────────────────────────────────────────────── */
 .lc-replay { display: flex; align-items: center; gap: 8px; margin-top: 8px; padding: 3px 4px 3px 8px; border-radius: 6px; background: var(--lc-blue-bg); font-size: 12px; color: var(--lc-ink-2); font-variant-numeric: tabular-nums; }
 .lc-replay .lc-track { flex: 1; height: 4px; border-radius: 2px; background: var(--lc-line-2); overflow: hidden; }
 .lc-replay .lc-track > i { display: block; height: 100%; width: 0; background: var(--lc-blue); transition: width 400ms linear; }
 .lc-replay button { border: 0; background: none; color: var(--lc-blue); cursor: pointer; padding: 2px 4px; font-weight: 600; }
+.lc-replay .lc-voices { display: grid; place-items: center; width: 24px; height: 22px; padding: 0; border-radius: 5px; color: var(--lc-blue); }
+.lc-replay .lc-voices[aria-pressed="false"] { color: var(--lc-ink-3); }
+.lc-replay .lc-voices svg { width: 15px; height: 15px; }
 
 /* Short screens (a cart at 1366x768): the mode control moves up beside the status. */
 @media (max-height: 760px) {
-    .lc-head { grid-template-areas: "mic status modes end about more" "enc enc enc enc enc enc" "hint hint hint hint hint hint" "replay replay replay replay replay replay"; grid-template-columns: auto minmax(0, 1fr) auto auto auto auto; padding: 8px 10px; }
+    .lc-head { grid-template-areas: "mic status modes end full about more" "enc enc enc enc enc enc enc" "hint hint hint hint hint hint hint" "replay replay replay replay replay replay replay"; grid-template-columns: auto minmax(0, 1fr) auto auto auto auto auto; padding: 8px 10px; }
     .lc-enc { margin-top: 8px; }
     .lc-start { padding: 6px 12px; }
     .lc-modes { margin-top: 0; width: auto; }
@@ -273,6 +277,7 @@
 .lc-chip { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; padding: 0 7px; border-radius: 999px; border: 1px solid var(--lc-line); color: var(--lc-ink-2); white-space: nowrap; }
 .lc-chip.is-differs { border-color: oklch(0.85 0.07 80); background: var(--lc-amber-bg); color: var(--lc-amber-ink); }
 .lc-one { margin: 6px 0 0; font-size: 14px; font-weight: 400; line-height: 1.4; color: var(--lc-ink-2); }
+.lc-one .lc-dot { display: inline-block; margin-right: 7px; vertical-align: 1px; }
 .lc-take.is-quiet .lc-one { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .lc-take-pr { margin: 6px 0 4px; font-size: 13.5px; line-height: 1.45; color: var(--lc-ink); border-radius: 3px; }
 .lc-assess { margin: 4px 0 0; color: var(--lc-ink-2); }
@@ -462,6 +467,31 @@
     .lc-pane[data-pane="log"], .lc-pane[data-pane="tracking"] { border-top: 1px solid var(--lc-line); }
     .lc-take-pr { display: none; }   /* the note beside it already shows it */
     .lc-radar { max-height: 44%; }
+}
+
+/* ── full screen: the coworker covers the chart (the EHR's modals and the nurse chat stay above it) ── */
+#ai-panel.live-on.lc-full {
+    position: fixed !important; inset: 0 !important; width: auto !important; max-width: none !important;
+    z-index: 1001; border-left: 0; box-shadow: none; opacity: 1; transition: none;
+}
+#ai-panel.live-on.lc-full .ai-panel-resize-handle { display: none; }
+html.lc-full-on { overflow: hidden; }
+/* Three columns when there is room: talk on the left; the live note in the middle;
+   the radar, the take and what it is tracking on the right. Each scrolls on its own. */
+@container lc (min-width: 1100px) {
+    #ai-panel.lc-full .lc-body { grid-template-columns: minmax(0, 1fr) minmax(0, 2.1fr); }
+    #ai-panel.lc-full .lc-right {
+        overflow: hidden; display: grid; column-gap: 0;
+        grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+        grid-template-rows: auto auto minmax(0, 1fr);
+        grid-template-areas: "note radar" "note take" "note side";
+    }
+    #ai-panel.lc-full .lc-right .lc-pane[data-pane="note"] { grid-area: note; overflow: auto; min-height: 0; border-right: 1px solid var(--lc-line); padding: 4px 18px 18px; }
+    #ai-panel.lc-full .lc-right .lc-radar { grid-area: radar; max-height: 46vh; margin: 12px 12px 0; }
+    #ai-panel.lc-full .lc-right .lc-take { grid-area: take; }
+    #ai-panel.lc-full .lc-right .lc-pane[data-pane="tracking"] { grid-area: side; overflow: auto; min-height: 0; border-top: 0; }
+    #ai-panel.lc-full .lc-right .lc-pane[data-pane="log"] { display: none; }
+    #ai-panel.lc-full .lc-pr { font-size: 15px; }
 }
 
 /* Screenshots and reduced motion: no transitions or entrance animations. */

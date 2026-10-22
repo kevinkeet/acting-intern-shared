@@ -66,8 +66,36 @@
         for (const w of A) if (B.has(w)) n++;
         return n / Math.min(A.size, B.size);
     }
+    /** Shared words over all words: tells "Magnesium in the morning" closer to itself than to "BMP and magnesium in the morning". */
+    function sameness(a, b) {
+        const A = words(a), B = words(b);
+        let n = 0;
+        for (const w of A) if (B.has(w)) n++;
+        return n / Math.max(1, new Set([...A, ...B]).size);
+    }
     const clip = (s, n) => { s = String(s || ''); return s.length > n ? s.slice(0, n - 1) + '…' : s; };
     const mmss = (ms) => { const s = Math.max(0, Math.round(ms / 1000)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
+
+    // ── radar guards (code, not prompt) ──────────────────────────────────
+    // "Hold spironolactone tonight" is a nursing order: as a medication order, signing it would give the drug.
+    const HOLD_RE = /^(?:hold|stop|discontinue|d\/c|no|do not|don'?t)\b/i;
+    // The doctor taking up the coworker's suggestion ("let's do that").
+    // It must point back at the suggestion: "Okay, let's push diltiazem" is a new order, not a yes.
+    const ACCEPT_RE = /\b(?:let'?s do (?:that|it|this)|do (?:that|it)|go ahead|sounds good|that works|agreed|please do|(?:go|let'?s go) with (?:that|it|this|yours?)|(?:use|start|order|give) (?:that|it|this))\b/i;
+    // Names said for the same drug (brand, generic, short forms), so "Lasix" heard counts for "Furosemide" on the radar.
+    const DRUG_NAMES = [
+        ['furosemide', 'lasix'], ['bumetanide', 'bumex'], ['torsemide', 'demadex'], ['piperacillin', 'tazobactam', 'zosyn'], ['diltiazem', 'cardizem', 'dilt'],
+        ['metoprolol', 'lopressor', 'toprol'], ['carvedilol', 'coreg'], ['spironolactone', 'aldactone'], ['sacubitril', 'valsartan', 'entresto'],
+        ['warfarin', 'coumadin'], ['apixaban', 'eliquis'], ['rivaroxaban', 'xarelto'], ['enoxaparin', 'lovenox'], ['pantoprazole', 'protonix'],
+        ['ceftriaxone', 'rocephin'], ['azithromycin', 'zithromax', 'azithro', 'zpack'], ['vancomycin', 'vanc', 'vanco'], ['cefepime', 'maxipime'],
+        ['gabapentin', 'neurontin'], ['metformin', 'glucophage'], ['naproxen', 'aleve', 'naprosyn'], ['ibuprofen', 'motrin', 'advil'],
+        ['acetaminophen', 'tylenol'], ['ketorolac', 'toradol'], ['potassium', 'kcl'], ['empagliflozin', 'jardiance'], ['dapagliflozin', 'farxiga'],
+        ['atorvastatin', 'lipitor'], ['clopidogrel', 'plavix'], ['nitroglycerin', 'nitro'], ['amiodarone', 'amio', 'cordarone', 'pacerone'], ['digoxin', 'lanoxin'],
+        ['insulin', 'lantus', 'glargine', 'humalog', 'lispro', 'novolog', 'aspart'], ['ondansetron', 'zofran'], ['lorazepam', 'ativan'], ['haloperidol', 'haldol'],
+    ];
+    const NOT_A_NAME = new Set(['hydrochloride', 'succinate', 'tartrate', 'sodium', 'calcium', 'chloride', 'mesylate', 'besylate', 'maleate', 'extended', 'release', 'tablet', 'injection', 'solution', 'drip', 'push', 'infusion', 'oral', 'tonight', 'today', 'daily']);
+    /** The words that name a drug: "Piperacillin-tazobactam (Zosyn)" -> piperacillin, tazobactam, zosyn. */
+    const drugWords = (name) => normText(name).split(' ').filter((w) => w.length >= 4 && !/^\d/.test(w) && !NOT_A_NAME.has(w));
 
     function newMemory() {
         return {
@@ -918,13 +946,56 @@
             }
             return out;
         }
+        /** Every word heard (the room and the EHR), plus the other names of each drug heard. */
+        function heardDrugWords() {
+            const set = new Set();
+            for (const l of wm.lines) for (const w of normText(l.text).split(' ')) if (w.length > 2) set.add(w);
+            const chartNames = ((chart && chart.meds) || []).map((m) => drugWords(m.name).concat(drugWords(m.genericName)));
+            for (const g of DRUG_NAMES.concat(chartNames)) if (g.some((w) => set.has(w))) g.forEach((w) => set.add(w));
+            return set;
+        }
+        /** A medicine only the coworker named (no one said it, and the doctor did not take it up): not the doctor's order. */
+        function coworkerOnlyDrug(c, heard) {
+            if (c.kind !== 'order' || c.order_type !== 'medication') return false;
+            const name = (Array.isArray(c.fields) ? c.fields : []).find((f) => f && f.key === 'name' && f.value);
+            const ws = drugWords(name ? name.value : String(c.title || '').split(/\s+/)[0]);
+            if (!ws.length) return false;
+            const said = (w) => heard.has(w) || [...heard].some((h) => h.length >= 4 && w.startsWith(h));   // "amio", "vanc"
+            if (ws.some(said)) return false;
+            if (!wm.said.some((x) => { const t = normText(x.text).split(' '); return ws.some((w) => t.includes(w)); })) return false;   // a name we cannot place: the model decides
+            const recent = wm.lines.slice(-4).concat(c.line ? wm.lines.filter((l) => l.id === c.line) : []);
+            return !recent.some((l) => l.speaker !== 'ehr' && ACCEPT_RE.test(l.text));
+        }
+        /** An alert that also says to hold this drug agrees with the hold: it is not a reason to flag it. */
+        function alertAgreesWithHold(a) {
+            if (!HOLD_RE.test(a.title)) return false;
+            const drug = drugWords(a.title.replace(HOLD_RE, ''))[0];
+            if (!drug) return false;
+            const re = new RegExp('\\b(?:hold|stop|skip|no)\\b[^.:;]{0,60}\\b' + drug, 'i');
+            const agrees = (text) => { const m = re.exec(String(text || '')); return !!m && !/(?:n't|not|never)\s*$/i.test(String(text).slice(0, m.index)); };
+            const s = a.alert && wm.said.find((x) => x.id === a.alert);
+            return agrees(a.flag) || agrees(s && s.text);
+        }
+
         function applyActions(out, batch) {
+            const heard = heardDrugWords();
             for (const c of (out && Array.isArray(out.changes) ? out.changes : []).slice(0, 24)) {
                 if (!c || !ACTION_KINDS.includes(c.kind)) continue;
+                if (coworkerOnlyDrug(c, heard)) continue;   // the coworker's idea, not the doctor's order
                 const title = clip(String(c.title || '').trim(), 90);
                 let a = c.id ? wm.actions.find((x) => x.id === c.id) : null;
-                // The same thing listed again (or under a made-up id) updates the item already there.
-                if (!a && title) a = wm.actions.find((x) => x.kind === c.kind && x.status !== 'dropped' && overlap(x.title, title) >= 0.8) || null;
+                // The same thing listed again (or under a made-up id) updates the item already there: the
+                // closest title wins. Two items side by side in one reply are two things ("BMP and magnesium
+                // in the morning" and "Magnesium in the morning"), unless their titles are the same.
+                if (!a && title) {
+                    let best = 0;
+                    for (const x of wm.actions) {
+                        if (x.kind !== c.kind || x.status === 'dropped') continue;
+                        if (x.batch === batch && normText(x.title) !== normText(title)) continue;
+                        const o = overlap(x.title, title);
+                        if (o >= 0.8 && o + sameness(x.title, title) > best) { best = o + sameness(x.title, title); a = x; }
+                    }
+                }
                 if (!a) {
                     if (!title) continue;
                     a = { id: 'A' + (++actionSeq), t: elapsed(), batch: batch || 0, kind: c.kind, title, orderType: '', fields: {}, to: '', noteType: '', draft: '', next: '', status: 'todo', flag: '', alert: '', line: '', statusBy: 'model' };
@@ -933,10 +1004,15 @@
                 const retitled = !!title && normText(title) !== normText(a.title);
                 a.kind = c.kind;
                 if (title) a.title = title;
-                const type = c.kind === 'consult' ? 'consult' : c.kind === 'order' && P.ORDER_FIELDS[c.order_type] ? c.order_type : c.kind === 'order' ? a.orderType : '';
+                let type = c.kind === 'consult' ? 'consult' : c.kind === 'order' && P.ORDER_FIELDS[c.order_type] ? c.order_type : c.kind === 'order' ? a.orderType : '';
+                let given = c.fields;
+                if (type === 'medication' && HOLD_RE.test(a.title)) {   // a hold, never an order for the drug
+                    type = 'nursing';
+                    given = [{ key: 'orderType', value: 'Other' }, { key: 'details', value: a.title }, { key: 'priority', value: 'Routine' }];
+                }
                 if (type !== a.orderType) a.fields = {};
                 a.orderType = type;
-                const fields = cleanFields(type, c.fields);
+                const fields = cleanFields(type, given);
                 if (Object.keys(fields).length) a.fields = fields;
                 if (c.to) a.to = clip(String(c.to).trim(), 60);
                 if (c.note_type) a.noteType = clip(String(c.note_type).replace(/[^A-Za-z0-9 &/-]+/g, ' ').replace(/\s+/g, ' ').trim(), 40);
@@ -947,6 +1023,7 @@
                     a.flag = clip(String(c.flag).replace(/\s*\((?:S\d+[,\s]*)+\)/g, '').trim(), 120);   // the alert id goes in its own field
                     a.alert = c.alert && wm.said.some((s) => s.id === c.alert) ? c.alert : '';
                 } else if (retitled) { a.flag = ''; a.alert = ''; }
+                if (a.flag && alertAgreesWithHold(a)) { a.flag = ''; a.alert = ''; }
                 if (c.line && wm.lines.some((l) => l.id === c.line)) a.line = c.line;
                 // "done" needs an order seen in the EHR; the doctor's own tick (or the EHR's) stands unless the model saw it placed.
                 const placed = c.status === 'done' && wm.lines.some((l) => l.speaker === 'ehr');

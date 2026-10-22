@@ -1,5 +1,5 @@
 /**
- * Live Coworker, "How it thinks" › Why it said: working memory as a chain of
+ * Live Coworker, "Inside the coworker" › How it thinks: working memory as a chain of
  * reasons. Loaded by the host (live-about.js) the first time its tab opens.
  *
  * Left (or top): what it said or did this encounter, newest first, plus what it
@@ -214,7 +214,7 @@
             this._el = el;
             this._listSig = this._chainSig = '';
             el.innerHTML = '<div class="why"><div class="why-left"><div class="why-list" role="listbox" aria-label="What it said or did" tabindex="-1"></div></div>'
-                + '<section class="why-chain" aria-live="polite" aria-label="Why it said it"></section></div>';
+                + '<section class="why-chain" aria-live="polite" aria-label="How it thought"></section></div>';
             const list = el.querySelector('.why-list');
             list.addEventListener('click', (ev) => {
                 const o = ev.target.closest('[data-key]');

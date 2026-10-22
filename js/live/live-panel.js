@@ -46,6 +46,10 @@
         check: svg('<path d="M20 6 9 17l-5-5"/>'),
         x: svg('<path d="M18 6 6 18"/><path d="m6 6 12 12"/>'),
         info: svg('<circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>'),
+        expand: svg('<path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="M21 3l-7 7"/><path d="M3 21l7-7"/>'),
+        shrink: svg('<path d="M4 14h6v6"/><path d="M20 10h-6V4"/><path d="M14 10l7-7"/><path d="M3 21l7-7"/>'),
+        sound: svg('<path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>'),
+        muted: svg('<path d="M11 5 6 9H2v6h4l5 4V5Z"/><line x1="22" x2="16" y1="9" y2="15"/><line x1="16" x2="22" y1="9" y2="15"/>'),
     };
     const MODE_HINT = {
         follow: 'Answers when you ask. Speaks up only for safety.',
@@ -149,7 +153,9 @@
         + (radar && radar.length ? ' <span class="lc-radar-mark" title="' + esc('On my radar: ' + radar.join('; ')) + '">' + ICON.radar + (radar.length > 1 ? radar.length + ' on radar' : 'on radar') + '</span>' : '') + '</span></div>';
     const typedHtml = (q) => '<div class="lc-line is-typed" data-speaker="doctor"><span class="lc-who">You</span><span class="lc-said">' + esc(q) + '</span></div>';
     const interimHtml = (it) => '<div class="lc-line is-interim"' + (it ? '' : ' hidden') + ' data-speaker="' + esc(it ? it.speaker : '') + '"><span class="lc-who">' + esc(it ? it.speaker : '') + '</span><span class="lc-said">' + esc(it ? it.text : '') + '</span></div>';
-    function itemHtml(s, isPinned) {
+    // A long reply shows its first sentences (about 160 characters) and "More".
+    const firstBit = (text) => { const ss = sentences(text); let out = ''; for (const x of ss) { if (out && (out + ' ' + x).length > 160) break; out = out ? out + ' ' + x : x; } return out.length < text.length ? out : text; };
+    function itemHtml(s, isPinned, expanded) {
         const icon = s.kind === 'critical' ? ICON.alert : s.kind === 'insight' ? ICON.bulb : ICON.chat;
         const label = s.kind === 'critical' ? (s.updateOf ? 'Safety update' : 'Safety') : s.kind === 'insight' ? 'Thought' : 'Coworker';
         const lat = s.latencyMs == null ? '' : (s.kind === 'answer' ? 'answered in ' : 'flagged ') + secs(s.latencyMs) + (s.kind === 'answer' ? '' : ' after it was said');
@@ -158,7 +164,11 @@
             + '<div class="lc-item-meta">' + icon + '<span>' + label + '</span><span aria-hidden="true">·</span>' + when(s.wallAt, s.t, lat) + '</div>'
             + (isPinned
                 ? '<p class="lc-a"><b>' + esc(splitLead(s.text)[0]) + '</b> <span class="lc-pin-note">Pinned above</span></p>'
-                : '<p class="lc-a">' + rich(s.text) + '</p>' + (s.why && s.kind !== 'answer' ? '<p class="lc-why">' + esc(s.why) + '</p>' : ''))
+                : (() => {
+                    const short = expanded && expanded.has(s.id) ? s.text : firstBit(s.text);
+                    return '<p class="lc-a"' + (s.why && s.kind !== 'answer' ? ' title="' + esc('Why: ' + s.why) + '"' : '') + '>' + rich(short)
+                        + (short !== s.text ? ' <button type="button" class="lc-more" data-act="item-more" data-id="' + esc(s.id) + '">More</button>' : '') + '</p>';
+                })())
             + (s.error && s.question ? '<button type="button" class="lc-btn" data-act="retry" data-q="' + esc(s.question) + '">Try again</button>' : '')
             + '</article>';
     }
@@ -176,6 +186,7 @@
             this._announced = new WeakSet();  // items already read out to screen readers
             this._whyOpen = new Set();
             this._moreOpen = new Set();
+            this._expanded = new Set();   // replies shown in full ("More")
             const radio = (mode, label) => '    <button type="button" role="radio" data-mode="' + mode + '" aria-checked="false" tabindex="-1" title="' + esc(MODE_HINT[mode]) + '">' + label + '</button>';
             const wrap = document.createElement('section');
             wrap.className = 'lc';
@@ -186,7 +197,8 @@
                 '  <button type="button" class="lc-mic" data-act="mic" aria-pressed="false" title="Start listening">' + ICON.mic + '<span class="lc-sr">Listen</span></button>',
                 '  <div class="lc-status-text"><span class="lc-state" data-ref="state">Ready</span><span class="lc-sub" data-ref="sub"></span></div>',
                 '  <button type="button" class="lc-btn lc-end" data-act="end" data-ref="end" hidden>End encounter</button>',
-                '  <button type="button" class="lc-iconbtn lc-about-btn" data-act="about" title="How it thinks: its memory and how it works">' + ICON.info + '<span class="lc-sr">How it thinks</span></button>',
+                '  <button type="button" class="lc-iconbtn lc-full-btn" data-act="full" data-ref="fullBtn" aria-pressed="false" title="Fill the screen">' + ICON.expand + '<span class="lc-sr">Fill the screen</span></button>',
+                '  <button type="button" class="lc-iconbtn lc-about-btn" data-act="about" title="Inside the coworker: its memory and how it thinks">' + ICON.info + '<span class="lc-sr">Inside the coworker</span></button>',
                 '  <button type="button" class="lc-iconbtn" data-act="settings" aria-haspopup="dialog" aria-expanded="false" title="Coworker settings">' + ICON.more + '<span class="lc-sr">Settings</span></button>',
                 '  <div class="lc-enc" data-ref="enc"></div>',
                 '  <div class="lc-modes" role="radiogroup" aria-label="How much the coworker speaks up">',
@@ -261,7 +273,8 @@
                     case 'ack': return h.onAck && h.onAck(t.dataset.id);
                     case 'unfold': return h.onUnfold && h.onUnfold(t.dataset.id);
                     case 'why': return this._toggleWhy(t);
-                    case 'more-updates': { this._moreOpen.add(t.dataset.id); return h.onRerenderAlerts && h.onRerenderAlerts(); }
+                    case 'more-updates': { if (this._moreOpen.has(t.dataset.id)) this._moreOpen.delete(t.dataset.id); else this._moreOpen.add(t.dataset.id); return h.onRerenderAlerts && h.onRerenderAlerts(); }
+                    case 'item-more': { this._expanded.add(t.dataset.id); return h.onRerenderSaid && h.onRerenderSaid(); }
                     case 'take-toggle': return h.onTakeToggle && h.onTakeToggle();
                     case 'tell': return h.onTellHeld && h.onTellHeld(t.dataset.topic);
                     case 'retry': return h.onRetry && h.onRetry(t.dataset.q);
@@ -271,6 +284,7 @@
                     case 'reset': return h.onReset && h.onReset();
                     case 'classic': return h.onClassic && h.onClassic();
                     case 'voice-test': return h.onVoiceTest && h.onVoiceTest();
+                    case 'voices': return h.onDemoVoices && h.onDemoVoices();
                     case 'radar-toggle': return h.onRadarToggle && h.onRadarToggle(t.getAttribute('aria-expanded') !== 'true');
                     case 'radar-done': { this._radarDone = !this._radarDone; return h.onRerenderRadar && h.onRerenderRadar(); }
                     case 'act-open': return h.onAction && h.onAction(t.dataset.id, 'open');
@@ -280,6 +294,7 @@
                     case 'review-orders': return h.onReviewOrders && h.onReviewOrders();
                     case 'radar-retry': return h.onRadarRetry && h.onRadarRetry();
                     case 'about': return h.onAbout && h.onAbout(t);
+                    case 'full': return h.onFull && h.onFull();
                     case 'exam-dictate': return h.onExamDictate && h.onExamDictate();
                     case 'exam-done': return h.onExamDone && h.onExamDone();
                     case 'jump': { const pane = this.refs.said.parentElement; pane.scrollTop = pane.scrollHeight; this._jump(false); return undefined; }
@@ -315,7 +330,8 @@
             });
             w.addEventListener('keydown', (ev) => {
                 if (ev.key === 'Escape' && !this.refs.pop.hidden) { this.togglePop(false); this.refs.settingsBtn.focus(); return; }
-                if (ev.target.closest && ev.target.closest('.lc-about')) return;   // "How it thinks" has its own keys
+                if (ev.key === 'Escape' && this._full && !(ev.target.closest && ev.target.closest('.lc-about'))) { if (h.onFull) h.onFull(false); return; }
+                if (ev.target.closest && ev.target.closest('.lc-about')) return;   // "Inside the coworker" has its own keys
                 const role = ev.target.getAttribute && ev.target.getAttribute('role');
                 const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[ev.key];
                 if (!step || (role !== 'tab' && role !== 'radio')) return;
@@ -397,6 +413,17 @@
         renderHead(v) {
             const r = this.refs;
             const st = v.status;
+            // Full screen: the button says which way it goes, and the radar joins the right-hand column.
+            this._full = !!v.full;
+            if (r.fullBtn && r.fullBtn._lcFull !== this._full) {
+                r.fullBtn._lcFull = this._full;
+                const left = this.el.querySelector('.lc-left'), right = this.el.querySelector('.lc-right');
+                if (this._full && r.radar.parentNode !== right) right.insertBefore(r.radar, r.take);
+                if (!this._full && r.radar.parentNode !== left) r.alerts.after(r.radar);
+                r.fullBtn.setAttribute('aria-pressed', String(this._full));
+                r.fullBtn.title = this._full ? 'Back to the side panel (Esc)' : 'Fill the screen';
+                r.fullBtn.innerHTML = (this._full ? ICON.shrink : ICON.expand) + '<span class="lc-sr">' + (this._full ? 'Back to the side panel' : 'Fill the screen') + '</span>';
+            }
             if (r.state.textContent !== st.label) r.state.textContent = st.label;
             r.state.classList.toggle('is-degraded', st.state === 'degraded');
             // Rewrite the line only when it changes, so an armed link keeps its state.
@@ -435,7 +462,12 @@
             if (!rp || !rp.active) { el.hidden = true; el.innerHTML = ''; return; }
             el.hidden = false;
             const pct = rp.duration ? Math.min(100, (rp.t / rp.duration) * 100) : 0;
-            el.innerHTML = '<span class="lc-track" role="progressbar" aria-label="Demo progress" aria-valuemin="0" aria-valuemax="' + Math.round(rp.duration) + '" aria-valuenow="' + Math.round(rp.t) + '"><i style="width:' + pct.toFixed(1) + '%"></i></span><span>' + fmt(rp.t * 1000) + ' / ' + fmt(rp.duration * 1000) + '</span>'
+            // The voices (when the script has them): on or off; they play at 1x and 2x.
+            const voices = rp.hasAudio
+                ? '<button type="button" class="lc-voices" data-act="voices" aria-pressed="' + rp.voices + '" title="' + (rp.speed > 2 ? 'Voices play at 1× and 2× speed' : rp.voices ? 'Mute the voices' : 'Play the voices') + '">'
+                  + (rp.voices && rp.speed <= 2 ? ICON.sound : ICON.muted) + '<span class="lc-sr">Voices</span></button>'
+                : '';
+            el.innerHTML = voices + '<span class="lc-track" role="progressbar" aria-label="Demo progress" aria-valuemin="0" aria-valuemax="' + Math.round(rp.duration) + '" aria-valuenow="' + Math.round(rp.t) + '"><i style="width:' + pct.toFixed(1) + '%"></i></span><span>' + fmt(rp.t * 1000) + ' / ' + fmt(rp.duration * 1000) + '</span>'
                 + (rp.finished
                     ? '<button type="button" data-act="replay" data-cmd="restart">Play again</button><button type="button" data-act="replay" data-cmd="stop">Close</button>'
                     : '<button type="button" data-act="replay" data-cmd="' + (rp.playing ? 'pause' : 'play') + '">' + (rp.playing ? 'Pause' : 'Resume') + '</button>'
@@ -460,7 +492,7 @@
                 const latest = ups.length ? ups[ups.length - 1] : a;
                 const folded = i > 0 && !(v.openAlerts && v.openAlerts[a.id]);
                 const [lead, rest] = splitLead(latest.text);
-                const hasWhy = !!(latest.why || latest.cueText);
+                const hasWhy = !!(rest || latest.why || latest.cueText);
                 const whyOpen = this._whyOpen.has(a.id);
                 const lat = latest.latencyMs != null ? 'flagged ' + secs(latest.latencyMs) + ' after it was said' : '';
                 const fresh = ups.length && !this._shown.has(latest);
@@ -473,11 +505,12 @@
                 parts.push(open
                     + '<div class="lc-alert-top">' + ICON.alert + '<span>' + (ups.length ? 'Safety · updated' : 'Safety') + '</span>' + when(latest.wallAt, latest.t, lat) + '</div>'
                     + '<div class="lc-alert-body">'
-                    + '<p class="lc-alert-text' + (fresh ? ' lc-changed' : '') + '"><strong>' + esc(lead) + '</strong> ' + esc(rest) + '</p>'
-                    + (ups.length ? beforeList(a, ups, this._moreOpen.has(a.id)) : '')
-                    + (hasWhy ? '<p class="lc-alert-why"' + (whyOpen ? '' : ' hidden') + '>' + esc(latest.why || '') + (latest.cueText ? ' Heard: <q>' + esc(latest.cueText) + '</q>' : '') + '</p>' : '')
+                    + '<p class="lc-alert-text' + (fresh ? ' lc-changed' : '') + '"><strong>' + esc(lead) + '</strong></p>'
+                    + (hasWhy ? '<p class="lc-alert-why"' + (whyOpen ? '' : ' hidden') + '>' + (rest ? esc(rest) + ' ' : '') + esc(latest.why || '') + (latest.cueText ? ' Heard: <q>' + esc(latest.cueText) + '</q>' : '') + '</p>' : '')
+                    + (ups.length ? (this._moreOpen.has(a.id) ? beforeList(a, ups, true) : '') : '')
                     + '<div class="lc-alert-actions"><button type="button" class="lc-btn lc-btn-primary" data-act="ack" data-id="' + esc(a.id) + '">Got it</button>'
                     + (hasWhy ? '<button type="button" class="lc-btn lc-btn-quiet" data-act="why" data-id="' + esc(a.id) + '" aria-expanded="' + whyOpen + '">' + (whyOpen ? 'Hide why' : 'Why?') + '</button>' : '')
+                    + (ups.length ? '<button type="button" class="lc-btn lc-btn-quiet" data-act="more-updates" data-id="' + esc(a.id) + '" aria-expanded="' + this._moreOpen.has(a.id) + '">' + (this._moreOpen.has(a.id) ? 'Hide earlier' : 'Earlier (' + ups.length + ')') + '</button>' : '')
                     + '</div></div></article>');
             });
             el.innerHTML = parts.join('');
@@ -506,7 +539,8 @@
                 return;
             }
             el.hidden = false;
-            const open = v.settings && v.settings.radarOpen != null ? !!v.settings.radarOpen : !!v.wide;
+            const rs = v.settings && v.settings.radarOpen;
+            const open = rs === true || (!!v.full && rs == null);
             const todo = all.filter((a) => a.status === 'todo');
             const flagged = todo.filter((a) => a.flag);
             const closed = all.filter((a) => a.status !== 'todo');
@@ -555,8 +589,8 @@
             const open = v.takeOpen === true;
             const follow = v.mode === 'follow';
             const lead = v.mode === 'lead';
-            // One line only in Follow, and while a safety alert waits (more on request).
-            const quiet = !!t && (follow || ((v.alerts || []).length > 0 && !open));
+            // One line until opened: its top worry (or its summary). Full screen has room for the whole take.
+            const quiet = !!t && (follow || (!open && !v.full));
             el.dataset.open = String(open);
             el.classList.toggle('is-quiet', quiet);
             const concerns = t ? (t.concerns || []).slice(0, 4) : [];
@@ -589,9 +623,9 @@
                 return;
             }
             if (quiet) {
-                // Side by side, the note already shows the problem representation: lead with the top worry.
-                const line = v.wide && concerns.length ? concerns[0].text : (pr || t.one_liner);
-                el.innerHTML = head + '<p class="lc-one" title="' + esc(line) + '">' + esc(line) + '</p>';
+                const top = concerns[0];
+                const line = top ? top.text : (pr || t.one_liner);
+                el.innerHTML = head + '<p class="lc-one" title="' + esc(line) + '">' + (top ? '<span class="lc-dot ' + esc(top.severity) + '"></span>' : '') + esc(line) + '</p>';
                 return;
             }
             const list = concerns.map((c) => '<li><span class="lc-dot ' + esc(c.severity) + '" title="' + esc(c.severity) + '"></span><span title="' + esc(c.text) + '">' + esc(c.text) + '</span></li>').join('');
@@ -626,10 +660,8 @@
                 this._announce('polite', (s.kind === 'answer' ? 'Answer. ' : 'Thought. ') + s.text);
             }
             if (!lines.length && !said.length && !streaming.length && !held.length && !v.interim) {
-                el.innerHTML = '<p class="lc-empty">' + (v.mode === 'lead'
-                    ? 'I’ll answer when you ask (say <b>“Coworker, …”</b> or type below), flag anything unsafe, and point out what you might be missing.'
-                    : 'I’ll answer when you ask (say <b>“Coworker, …”</b> or type below) and speak up only for safety issues.')
-                    + ' What I hear and what I say show up here, in order. Orders and to-dos you mention go on my radar, ready to sign.</p>';
+                el.innerHTML = '<p class="lc-empty">Say <b>“Coworker, …”</b> or type below to ask. ' + (v.mode === 'lead' ? 'I speak up for safety and for what you might be missing.' : 'I speak up only for safety.')
+                    + ' What I hear and say shows up here.</p>';
                 this._lastConvo = 0;
                 this._jump(false);
                 this._updateCount();
@@ -644,7 +676,7 @@
                 radar.get(a.line).push(a.title);
             }
             const events = lines.map((l, i) => ({ t: l.t || 0, order: 0, seq: i, html: lineHtml(l, flagged.has(l.id), l.speaker === 'ehr' ? null : radar.get(l.id)) }))
-                .concat(said.map((s, i) => ({ t: s.t || 0, order: 1, seq: said.length - i, html: itemHtml(s, pinned.has(s.id)) })));
+                .concat(said.map((s, i) => ({ t: s.t || 0, order: 1, seq: said.length - i, html: itemHtml(s, pinned.has(s.id), this._expanded) })));
             events.sort((a, b) => (a.t - b.t) || (a.order - b.order) || (a.seq - b.seq));
             const parts = events.map((e) => e.html);
             for (const [id, st] of streaming) {
@@ -752,7 +784,7 @@
             const status = v.noteWriting ? '<span class="lc-writing">Updating…</span>' : (n ? 'Updated ' + when(n.wallAt, null) : '');
             N.head.innerHTML = '<span class="lc-note-status">' + status + '</span><span class="lc-note-tools">'
                 + (n ? '<button type="button" class="lc-btn lc-btn-quiet" data-act="copy-note">Copy note</button>' : '')
-                + '<button type="button" class="lc-btn lc-btn-quiet" data-act="wide">' + (v.wide ? 'Narrow panel' : 'Side by side') + '</button></span>';
+                + (v.full ? '' : '<button type="button" class="lc-btn lc-btn-quiet" data-act="wide">' + (v.wide ? 'Narrow panel' : 'Side by side') + '</button>') + '</span>';   // full screen has room already
             this._renderExamLive(v);
             if (n && n === this._shownNote) return;   // same note: keep the highlights running
             const was = this._shownNote;

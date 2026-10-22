@@ -1,5 +1,5 @@
 /**
- * Live Coworker, "How it thinks" → Problems: how the long-term memory files
+ * Live Coworker, "Inside the coworker" → Problems: how the long-term memory files
  * years of records under the patient's problems. One lane per problem (in the
  * memory's own order), one dot per record that mentions it, by date, coloured
  * by kind (note, lab, imaging); hospital stays are faint bands where many lanes

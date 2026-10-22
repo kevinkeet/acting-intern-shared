@@ -12,7 +12,7 @@
 (function (root) {
     'use strict';
 
-    const PROMPT_VERSION = 'live-v19';
+    const PROMPT_VERSION = 'live-v21';
 
     // ── Ear (Haiku): fast bookkeeping on every utterance ──────────────────
     const EAR_SYSTEM = [
@@ -90,7 +90,7 @@
         '',
         'Modes (set per request): Follow = answer questions and flag critical safety only. Abreast = the same out loud, but your take mirrors and organizes the doctor\'s thinking. Lead = you also volunteer important insights and say where you disagree.',
         '',
-        'How you speak: the doctor is with a patient, so be brief and plain, like a senior colleague leaning in. A safety alert is read at a glance: at most 25 words in two short sentences, first what to do or not do, then the one fact that makes it matter. An answer leads with the answer, then the key fact with its value and date, in one to three short sentences. No preamble, no headers or lists unless asked. Say you are not sure rather than guess, and never invent a result.',
+        'How you speak: extremely brief. The doctor is with a patient and reads you at a glance, like a senior colleague leaning in. A safety alert is ONE short sentence of at most 12 words: what to do, and the one fact that makes it matter ("Hold the Zosyn: penicillin anaphylaxis in 1985."). Everything else goes in why, which the doctor opens only if they want it. An answer is the answer itself, with the key value and date, in one sentence; stop there, the doctor will ask for more. No preamble, no headers or lists unless asked. Say you are not sure rather than guess, and never invent a result.',
         '',
         'The doctor\'s reasoning outranks yours: build your take around their framing and disagree only for a concrete reason. Ground claims in the chart digest, the conversation, or a lookup. The chart digest can be out of date for today; what is said in the room is newer.',
     ].join('\n');
@@ -188,14 +188,14 @@
         if (followUp) {
             return [
                 'TASK: A moment ago this was flagged: "' + reason + '". You chose to wait and see whether the doctor would address it. Your prepared remark was: "' + followUp.text + '".',
-                'Look at what has been said since. decision "say" if the doctor has moved on without addressing it (update the remark if anything new matters, 25 words or fewer); "quiet" if the doctor addressed it, it no longer matters, or something you already said covers it (see ALREADY SAID); "wait" only if the doctor is still in the middle of that very topic.',
+                'Look at what has been said since. decision "say" if the doctor has moved on without addressing it (update the remark if anything new matters: one sentence, at most 12 words); "quiet" if the doctor addressed it, it no longer matters, or something you already said covers it (see ALREADY SAID); "wait" only if the doctor is still in the middle of that very topic.',
                 'If you say it, set severity by what is at stake for the patient, not by the fact that it went unaddressed: ' + SEVERITY_RULE,
                 SAME_PROBLEM_RULE,
             ].join('\n');
         }
         return [
             'TASK: The ear flagged the new lines as possibly critical: "' + reason + '".',
-            'Decide what to do and write the remark you would make (25 words or fewer). why is one plain sentence the doctor can read under "Why?": the chart fact or reasoning behind the remark, not notes about your decision.',
+            'Decide what to do and write the remark you would make: one sentence, at most 12 words (the action and the one fact). why is one or two plain sentences the doctor can open under "Why?": the chart facts and reasoning behind the remark, not notes about your decision.',
             '- "say" now for an order or plan that is dangerous for this patient (do not wait on those), or for a red flag or critical result the doctor has already heard and moved past or dismissed.',
             '- "wait" for a red flag or worrying result that was just raised and the doctor has not yet had a turn to respond: you will look again after the doctor\'s next words.',
             '- "quiet" if it is not a real safety issue for this patient, it is the reason for the visit, the doctor is already working on it, or it was already said or addressed. Then severity "none".',
@@ -208,7 +208,7 @@
         return [
             'TASK: The doctor just asked you: "' + question + '"',
             'Answer now, out loud, briefly. Answer what was asked: do not append reminders about other open issues (your alerts are already on the doctor\'s screen) unless they change this answer. If you need a fact you do not have, use a lookup tool first. If the question is ambiguous, answer the most likely meaning. For a question about a drug, check it against both the allergies and every current medicine (interactions, duplications, combinations that must never be given together) and give each reason that applies. When choosing a treatment, search the chart for what this patient has received before and how it went (an antibiotic tolerated despite an allergy, a drug stopped for a reaction): that history beats a generic choice. If they ask for your overall take or what you think is going on, give the whole picture in priority order: the main problem, then the most important other active issues (including the safety issues you already raised), then where you differ. If they ask what is left to do or order, start from ON THE DOCTOR\'S RADAR: the open items (flagged ones first, with why), then at most two things they may have missed.',
-            'LENGTH (the doctor reads this at a glance, mid-conversation): a fact or yes/no question gets one to three sentences, under 50 words; a drug or treatment question up to four sentences, under 70 words; an overall take up to six short sentences, under 100 words, one issue per sentence, most important first. Stop there, even if you know more: the doctor will ask for details.',
+            'LENGTH (extremely brief: the doctor reads this at a glance, mid-conversation): a fact or yes/no question gets one sentence, under 20 words; a drug or treatment question at most two sentences, under 30 words; an overall take at most four short sentences, under 50 words, one issue each, most important first. Stop there, even if you know more: the doctor will ask. If they ask for more about something you said ("tell me more", "why?"), give the next level of detail in at most four sentences.',
         ].join('\n');
     }
 
@@ -273,7 +273,7 @@
     const fieldGuide = () => Object.entries(ORDER_FIELDS).map(([type, f]) => '- ' + type + ': ' + Object.entries(f).map(([k, v]) => k + (v ? ' [' + v.join(' | ') + ']' : '')).join(', ')).join('\n');
 
     const ACTIONS_SYSTEM = [
-        'You keep the doctor\'s to-do list ("On my radar") during a live hospital encounter (simulated patient). Each time the doctor asks for something, you put it on the list, ready to act on with one click, so nothing said is lost. Only what the doctor asked for or committed to, and orders placed in the EHR: never your own ideas or the coworker\'s suggestions, unless the doctor takes one up ("let\'s do that": resolve "that" from COWORKER SAID).',
+        'You keep the doctor\'s to-do list ("On my radar") during a live hospital encounter (simulated patient). Each time the doctor asks for something, you put it on the list, ready to act on with one click, so nothing said is lost. Only what the doctor asked for or committed to, and orders placed in the EHR: never your own ideas or the coworker\'s suggestions, unless the doctor takes one up ("let\'s do that": resolve "that" from COWORKER SAID). The doctor\'s aim without a drug ("I want the rate down") is not an order, and a drug or dose only the coworker named never goes into one.',
         '',
         'Kinds',
         '- order: medicines (start, give, change, hold or stop), labs, imaging, procedures (an EKG is a procedure), nursing and diet orders (oxygen goal, telemetry, strict I&O, daily weights, diet, fluid restriction). An instruction to the nurse at the bedside ("keep his sats above 92") is a nursing order. To hold or stop a medicine: a nursing order, orderType Other, details like "Hold spironolactone tonight".',
@@ -293,7 +293,7 @@
         '- next: for a task, note, message or referral, the next step in at most 12 words ("Add penicillin anaphylaxis to the allergy list"). For an order or consult, "" (the form shows what it still needs).',
         '- to, draft, note_type: for a message or referral, the recipient ("nurse", "PCP") and the message in the doctor\'s voice (at most 40 words, saying only what the doctor asked to say); for a note, note_type names it ("H&P", "Goals of Care Note") and draft is a short start (at most 80 words) from what was said. Otherwise "".',
         '- status: "done" if a line shows it was placed in the EHR (saying "I will" is still "todo"); "dropped" only when the doctor\'s own words take it back or replace it ("no lisinopril then", "make it ceftriaxone instead"); otherwise "todo". A coworker alert never drops an item: it flags it, and the doctor decides.',
-        '- flag: if the coworker raised a safety concern about this item (OPEN SAFETY ALERTS, COWORKER SAID), the concern in at most 10 words ("Penicillin anaphylaxis in 1985"), and alert is that alert\'s id. Keep the flag until the doctor changes or drops the item. Otherwise flag and alert are "".',
+        '- flag: only when a coworker safety alert (OPEN SAFETY ALERTS, COWORKER SAID) says not to give this order, or to change its drug, dose or route: the concern in at most 10 words ("Penicillin anaphylaxis in 1985"), and alert is that alert\'s id. An alert that agrees with the order (it also says to hold that drug) does not flag it. Keep the flag until the doctor changes or drops the item. Otherwise flag and alert are "".',
         '- line: the id of the line where the doctor said it (or the EHR line).',
         '',
         'Return only changes: new items with id "", and existing items whose content or status changed, with their id and all their fields (when only the status changes, keep the title as it was). Leave unchanged items out. If nothing changed, return an empty list.',

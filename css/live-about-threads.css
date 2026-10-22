@@ -1,5 +1,5 @@
 /*
- * Live Coworker, "How it thinks" → Problems (js/live/live-about-threads.js).
+ * Live Coworker, "Inside the coworker" → Problems (js/live/live-about-threads.js).
  * Loaded the first time the tab opens; every rule is scoped to the view and
  * uses the panel's tokens and the about sheet's record colours.
  */
