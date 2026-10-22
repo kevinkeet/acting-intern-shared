@@ -12,7 +12,7 @@
 (function (root) {
     'use strict';
 
-    const PROMPT_VERSION = 'live-v18';
+    const PROMPT_VERSION = 'live-v19';
 
     // ── Ear (Haiku): fast bookkeeping on every utterance ──────────────────
     const EAR_SYSTEM = [
@@ -20,6 +20,7 @@
         '',
         'Work only on the NEW lines. Earlier lines are context.',
         '- facts: new clinically relevant facts: symptoms with timing, history, medicines the patient takes, stopped or missed, allergies and reactions, exam findings, numbers said aloud, social details that matter. One fact per item in plain clinical shorthand, under 15 words. Skip small talk and anything already in working memory.',
+        '  Lines marked "dictating the exam" are the doctor dictating physical exam findings for the note: record each finding as an exam fact from the doctor.',
         '- doctor_thinking: reasoning the doctor says aloud (an assessment, a differential, a worry), close to their words.',
         '- plan: orders and plan items the doctor states, close to their words. kind "order" for anything ordered, started, changed, held or given now (include the dose if said); "test" for labs, imaging and other tests; "consult" for a specialist asked to see the patient; "referral" for an outpatient referral; "message" for something to tell or send someone (the nurse, the PCP, the family, pharmacy); "note" for a note to write; "task" for any other to-do (update the allergy list, set up a family meeting); "cancel" when the doctor takes back or changes an earlier order or plan ("no lisinopril then", "hold off on the heparin").',
         '- to_coworker: true only if a NEW line speaks to the AI coworker: it names it ("coworker", "Claude", "AI"), or the doctor is dictating alone and asks about the chart ("what was his last potassium?"). Questions to the patient, family, a nurse or another colleague are not for the coworker. When true, put the request in question, rewritten to stand alone; otherwise question is "".',
@@ -213,9 +214,10 @@
 
     // ── Scribe (Haiku): the live note, rewritten every few seconds ─────────
     const NOTE_SYSTEM = [
-        'You are the scribe in a live hospital encounter (simulated patient). As the conversation unfolds you keep a short admission note current, so the doctor can glance at it and watch it take shape. Write only what the conversation and the chart support; never invent a finding, value, time or plan. Clinical, concise, no filler. The whole note stays under 350 words: brevity is the point.',
+        'You are the scribe in a live hospital encounter (simulated patient). As the conversation unfolds you keep a short admission note current, so the doctor can glance at it and watch it take shape. Write only what the conversation and the chart support; never invent a finding, value, time or plan. Clinical, concise, no filler. The whole note stays under 450 words: brevity is the point.',
         'problem_representation: at most three sentences and 60 words, like a crisp morning-report summary: age and sex; only the background that matters for today, with the key numbers (e.g. EF 30-35%, CKD 3b, off anticoagulation since a 2023 GI bleed); the presenting syndrome and its tempo; and the two or three findings that matter most so far, with semantic qualifiers (acute, worsening, new, unexplained). No exam laundry list, no date of birth, no medication list. Before anything is heard, write it from the chart alone.',
         'hpi: the history of present illness as told so far, at most 100 words: chief complaint and onset, course, associated symptoms, pertinent negatives that were said, medication and adherence details, what the family added. Past tense, no exam, labs or plan. An empty string until some history has been heard.',
+        'exam: the physical exam as the doctor stated or dictated it (lines marked "dictating the exam", or "for my note: ..."). vitals: the latest vital signs heard, in one line ("T 38.6, HR 142 irregular, BP 138/88, SpO2 94% on 2 L"), or "" if none were said. systems: one entry per system the doctor examined, in the usual order (General, HEENT, Neck, Heart, Lungs, Abdomen, Extremities, Skin, Neuro, Psych), each with the findings in standard clinical shorthand, close to the doctor\'s words. Only what was said: never add a normal finding or a system that was not examined. A correction replaces the earlier finding. Empty until the exam is heard.',
         'problems: the problems addressed today, most important first, at most six. name: short ("Acute on chronic HFrEF"). assessment: one sentence of at most 20 words, the working reasoning (the doctor\'s when stated). plan: ONLY what the doctor actually said or ordered in this conversation (see the doctor\'s lines and PLAN HEARD), each item at most 12 words, kept as said even if you disagree; if the doctor said nothing about a problem, plan is empty. Anything the doctor did not say, including standard workup you would expect, never goes in plan. consider: at most two items of at most 12 words, from the coworker\'s take, that the doctor has not addressed; empty if none.',
         'Keep it stable: keep the previous wording unless something new changes it, and add new details where they belong instead of rewriting everything.',
     ].join('\n\n');
@@ -226,6 +228,17 @@
         properties: {
             problem_representation: { type: 'string' },
             hpi: { type: 'string' },
+            exam: {
+                type: 'object', additionalProperties: false,
+                properties: {
+                    vitals: { type: 'string' },
+                    systems: {
+                        type: 'array',
+                        items: { type: 'object', additionalProperties: false, properties: { system: { type: 'string' }, findings: { type: 'string' } }, required: ['system', 'findings'] },
+                    },
+                },
+                required: ['vitals', 'systems'],
+            },
             problems: {
                 type: 'array',
                 items: {
@@ -240,7 +253,7 @@
                 },
             },
         },
-        required: ['problem_representation', 'hpi', 'problems'],
+        required: ['problem_representation', 'hpi', 'exam', 'problems'],
     };
 
     const TASK_NOTE = 'TASK: Bring the note up to date with everything heard so far. Return the whole note.';

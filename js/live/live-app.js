@@ -41,6 +41,7 @@
         _replay: null,
         _renderQueued: new Set(),
         _ticker: null,
+        dictating: null,            // 'exam' while the doctor dictates the physical exam
 
         // ── start-up ─────────────────────────────────────────────────────
         init() {
@@ -201,6 +202,7 @@
             this.memory = null;
             this.encounter = null;
             this._queue = this._actionForm = this._actionMsg = this._actionNote = null;
+            this.dictating = null;
             this.view = Object.assign(this._freshView(), { deepgram: this.view.deepgram });
             this.renderAll();
             try {
@@ -288,10 +290,11 @@
             });
             cw.on('thinking', (p) => { if (p.lane === 'answer' && p.id) askedWall[p.id] = Date.now(); });
             cw.on('line', (l) => {
-                const display = this._pendingLabel || SPEAKER_LABEL[l.speaker] || l.speaker;
-                v.lines.push({ id: l.id, t: l.t, speaker: l.speaker, label: display, text: l.text.replace(/^\((wife|nurse)\)\s*/i, '') });
+                const display = this._pendingLabel || (l.typed ? 'You' : SPEAKER_LABEL[l.speaker] || l.speaker);
+                v.lines.push({ id: l.id, t: l.t, speaker: l.speaker, label: display, text: l.text.replace(/^\((wife|nurse)\)\s*/i, ''), dictation: l.dictation, typed: !!l.typed });
                 this._pendingLabel = null;
                 v.interim = null;
+                if (l.dictation) { LivePanel.setExamInterim(''); this.request('note'); }
                 if (v.startedAt == null) v.startedAt = Date.now() - l.t;
                 this.request('transcript');
             });
@@ -400,7 +403,9 @@
         _noteText() {
             const n = this.view.note;
             if (!n) return '';
-            return ['Problem representation', n.problem_representation, '', 'HPI', n.hpi || '(none yet)', '', 'Assessment and plan']
+            const ex = n.exam || { vitals: '', systems: [] };
+            const exam = (ex.vitals ? ['Vitals: ' + ex.vitals] : []).concat((ex.systems || []).map((x) => x.system + ': ' + x.findings));
+            return ['Problem representation', n.problem_representation, '', 'HPI', n.hpi || '(none yet)', '', 'Physical exam'].concat(exam.length ? exam : ['(not dictated yet)'], ['', 'Assessment and plan'])
                 .concat((n.problems || []).map((p, i) => [(i + 1) + '. ' + p.name + (p.assessment ? ': ' + p.assessment : '')].concat(p.plan.map((x) => '   - ' + x)).join('\n')))
                 .join('\n');
         },
@@ -413,6 +418,52 @@
         _copy(text, ok) {
             const fail = () => this._flash('Could not copy (the browser blocked it).');
             try { navigator.clipboard.writeText(text).then(() => this._flash(ok || 'Copied.'), fail); } catch (err) { fail(); }
+        },
+
+        // ── dictating the physical exam ──────────────────────────────────
+        /**
+         * "Dictate exam": listen (the same encounter and note, even after it ended),
+         * and mark the doctor's words as exam dictation until "Done".
+         */
+        async startExamDictation() {
+            if (!this.engine) { this._flash('Open a patient first.'); return; }
+            if (this._replay || (this.encounter && this.encounter.kind === 'demo')) { this._flash('The demo is a recording: start an encounter to dictate. Typing works.'); return; }
+            this.dictating = 'exam';
+            LivePanel.showTab('note');
+            this.request('note', 'head');
+            if (!this._mic) {
+                if (!this.encounter) this.encounter = { state: 'live', kind: 'mic', startedWall: Date.now(), endedWall: null };
+                else { this.encounter.state = 'live'; this.encounter.endedWall = null; }
+                await this.startListening();
+                if (!this._mic) {
+                    if (this.encounter) this.encounter.state = 'paused';
+                    this._flash('No microphone: type the findings instead.');
+                }
+            }
+            this.request('note', 'head');
+        },
+
+        stopDictation() {
+            if (!this.dictating) return;
+            this.dictating = null;
+            LivePanel.setExamInterim('');
+            this.request('note');
+        },
+
+        /** A typed exam finding goes in exactly like a dictated one. */
+        typeExam(text) {
+            if (!this.engine) { this._flash('Open a patient first.'); return; }
+            if (!this.engine.running) this.onPanelOpen();
+            if (!this.engine.running) { this._flash('The coworker is not running here.'); return; }
+            this._pendingLabel = 'You';
+            this.engine.hear({ speaker: 'doctor', text, mode: 'exam', typed: true });
+        },
+
+        /** Every final line from the mic: while the exam is dictated, the doctor's words are tagged as exam. */
+        _heard(role, text) {
+            if (!this.engine || !text) return;
+            const exam = this.dictating === 'exam' && role !== 'patient';
+            this.engine.hear({ speaker: exam ? 'doctor' : role, text, mode: exam ? 'exam' : undefined });
         },
 
         // ── on my radar: one click to act on what the doctor asked for ───
@@ -526,6 +577,7 @@
             if (typeof LiveVoice !== 'undefined') LiveVoice.stop();
             if (!clock) this._stopReplay();
             this._queue = this._actionForm = this._actionMsg = this._actionNote = null;
+            this.dictating = null;
             const keep = { deepgram: this.view.deepgram, memoryNote: this.view.memoryNote };
             this.view = Object.assign(this._freshView(), keep);
             if (!this.chart) return null;
@@ -565,6 +617,9 @@
                 onRadarToggle: (open) => { this.settings.radarOpen = open; this._save(); this.request('radar'); },
                 onRerenderRadar: () => this.request('radar'),
                 onRadarRetry: () => { if (this.engine) this.engine.actions(); },
+                onExamDictate: () => this.startExamDictation(),
+                onExamDone: () => this.stopDictation(),
+                onExamType: (text) => this.typeExam(text),
                 onTab: () => {},
             };
         },
@@ -637,6 +692,7 @@
             if (!m) return;
             try { m.stop(); } catch (e) { /* ignore */ }
             this.view.interim = null;
+            this.stopDictation();
             this._status('idle', 'Paused');
             this.request('transcript');
         },
@@ -657,7 +713,7 @@
                 const role = buf.role === 'unknown' ? 'other' : buf.role;
                 const text = buf.parts.join(' ').trim();
                 buf = null;
-                if (text && this.engine) this.engine.hear({ speaker: role, text });
+                if (text) this._heard(role, text);
             };
             const startedAt = Date.now();
             DG.onTranscript = (r) => {
@@ -666,6 +722,7 @@
                 if (!r.isFinal) {
                     this.view.interim = { speaker: SPEAKER_LABEL[r.speakerRole] || 'Voice', text: (buf && buf.role === r.speakerRole ? buf.parts.join(' ') + ' ' : '') + r.transcript };
                     if (!LivePanel.setInterim(this.view.interim)) this.request('transcript');
+                    if (this.dictating === 'exam' && r.speakerRole !== 'patient') LivePanel.setExamInterim(this.view.interim.text);
                     return;
                 }
                 if (buf && buf.role !== r.speakerRole) flush();
@@ -709,11 +766,12 @@
                 for (let i = ev.resultIndex; i < ev.results.length; i++) {
                     const res = ev.results[i];
                     if (this._heardOwnVoice(res[0].transcript, res.isFinal)) continue;
-                    if (res.isFinal) { const t = res[0].transcript.trim(); if (t && this.engine) this.engine.hear({ speaker: 'unknown', text: t }); }
+                    if (res.isFinal) { const t = res[0].transcript.trim(); if (t) this._heard('unknown', t); }
                     else interim += res[0].transcript;
                 }
                 this.view.interim = interim ? { speaker: 'Voice', text: interim } : null;
                 if (!LivePanel.setInterim(this.view.interim)) this.request('transcript');
+                if (this.dictating === 'exam') LivePanel.setExamInterim(interim);
             };
             rec.onerror = (e) => { if (e.error === 'not-allowed') { stopped = true; this._mic = null; this._status('error', 'Microphone blocked', 'Allow the mic for this site'); } };
             rec.onend = () => { if (!stopped && this._mic) { try { rec.start(); } catch (e) { /* ignore */ } } };
@@ -967,6 +1025,7 @@
             v.settings = this.settings;
             v.health = this._healthView();
             v.encounter = this.encounter ? Object.assign({}, this.encounter) : null;
+            v.dictating = this.dictating;
             v.canStart = !!this.engine;
             v.wide = !!(LivePanel.el && LivePanel.el.getBoundingClientRect().width >= 620);
             v.canSpeak = typeof LiveVoice !== 'undefined' && LiveVoice.supported();

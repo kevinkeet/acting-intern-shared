@@ -33,6 +33,8 @@
         noteGapMs: 12000,             // the live note is rewritten at most this often
         noteDelayMs: 3000,            // after new speech, wait this long so a few lines go in together
         actionsDelayMs: 1200,         // after a plan item is heard, wait this long so a dictated plan goes in together
+        dictationNoteDelayMs: 1500,   // while the doctor dictates the exam, the note catches up sooner
+        dictationNoteGapMs: 5000,
         maxActions: 40,
         earThinking: 'disabled',      // Haiku 5.5 accepts disabled at low..high effort
         memoryThinking: 'disabled',   // the long-term memory helper: lookup, not reasoning (2-5 s instead of 6-9 s on a 319K-token record)
@@ -163,7 +165,7 @@
         }
 
         // ── working memory renderings ────────────────────────────────────
-        const lineText = (l) => l.id + ' [' + mmss(l.t) + '] ' + l.speaker.toUpperCase() + ': ' + l.text;
+        const lineText = (l) => l.id + ' [' + mmss(l.t) + '] ' + l.speaker.toUpperCase() + (l.dictation === 'exam' ? ' (dictating the exam)' : '') + ': ' + l.text;
 
         function renderForEar(newLines) {
             const newIds = new Set(newLines.map((l) => l.id));
@@ -285,9 +287,13 @@
             if (!text) return null;
             if (wm.startedAt == null) wm.startedAt = clock.now();
             const line = { id: 'L' + (++lineSeq), t: elapsed(), speaker: (utt.speaker || 'unknown').toLowerCase(), text };
+            // The doctor dictating the physical exam (the panel's "Dictate exam", or typed): findings for the note.
+            if (utt.mode === 'exam') { line.dictation = 'exam'; lastDictationAt = line.t; }
+            if (utt.typed) line.typed = true;
             wm.lines.push(line);
             emit('line', line);
             touch();
+            if (line.dictation) scheduleNote(cfg.dictationNoteDelayMs, cfg.dictationNoteGapMs);
 
             // Fast path: "Coworker, what was his last potassium?" goes straight to the brain,
             // once the question sounds finished. Speech arrives in pieces, so "Coworker,
@@ -715,7 +721,7 @@
         // A cheap, fast model rewrites the whole note a few seconds after new
         // speech (at most every noteGapMs), after each take update, and on demand
         // (end of the encounter). The doctor watches it take shape.
-        let noteBusy = false, noteAgain = false, noteTimer = null, lastNoteAt = -Infinity;
+        let noteBusy = false, noteAgain = false, noteTimer = null, noteTimerAt = 0, lastNoteAt = -Infinity, lastDictationAt = null;
         let noteSystemCache = null;
         function noteSystem() {
             if (!noteSystemCache) {
@@ -735,20 +741,29 @@
                 '<doctor_thinking>' + (wm.thinking.length ? wm.thinking.map((x) => x.text).join(' | ') : '(none stated)') + '</doctor_thinking>',
                 '<plan_heard>' + (wm.plan.length ? wm.plan.map((x) => '[' + x.kind + '] ' + x.text).join(' | ') : '(none yet)') + '</plan_heard>',
                 '<coworker_take>' + (t ? [t.assessment, (t.concerns || []).map((c) => c.text).join('; '), (t.next || []).join('; ')].filter(Boolean).join(' || ') : '(none yet)') + '</coworker_take>',
-                '<previous_note>' + (wm.note ? JSON.stringify({ problem_representation: wm.note.problem_representation, hpi: wm.note.hpi, problems: wm.note.problems }) : '(none yet)') + '</previous_note>',
+                '<previous_note>' + (wm.note ? JSON.stringify({ problem_representation: wm.note.problem_representation, hpi: wm.note.hpi, exam: wm.note.exam, problems: wm.note.problems }) : '(none yet)') + '</previous_note>',
             ].join('\n');
         }
-        function scheduleNote(delayMs) {
-            if (!running || noteTimer) return;
-            const wait = Math.max(delayMs == null ? cfg.noteDelayMs : delayMs, lastNoteAt + cfg.noteGapMs - elapsed(), 0);
+        /** Rewrite the note after delayMs (default: a few seconds), at most once per gapMs; a sooner request moves the rewrite up. */
+        function scheduleNote(delayMs, gapMs) {
+            if (!running) return;
+            const wait = Math.max(delayMs == null ? cfg.noteDelayMs : delayMs, lastNoteAt + (gapMs == null ? cfg.noteGapMs : gapMs) - elapsed(), 0);
+            const at = elapsed() + wait;
+            if (noteTimer) {
+                if (noteTimerAt <= at) return;
+                clock.clearTimeout(noteTimer);
+            }
+            noteTimerAt = at;
             noteTimer = clock.setTimeout(() => { noteTimer = null; writeNote(); }, wait);
         }
+        const dictatingNow = () => lastDictationAt != null && elapsed() - lastDictationAt < 20000;
         function writeNote() {
             if (!running) return null;
             if (noteBusy) { noteAgain = true; return null; }
             if (noteTimer) { clock.clearTimeout(noteTimer); noteTimer = null; }
             noteBusy = true;
             lastNoteAt = elapsed();
+            const upToLine = lineSeq;   // lines after this one are not in this version yet
             const p = (async () => {
                 emit('thinking', { lane: 'note' });
                 const body = {
@@ -765,10 +780,20 @@
                     name: String(x.name || ''), assessment: String(x.assessment || ''),
                     plan: (x.plan || []).map(String).slice(0, 8), consider: (x.consider || []).map(String).slice(0, 2),
                 }));
-                wm.note = { problem_representation: out.problem_representation, hpi: out.hpi || '', problems, t: elapsed() };
+                // The exam: vitals and at most 14 systems, as stated.
+                const ex = out.exam && typeof out.exam === 'object' ? out.exam : {};
+                const exam = {
+                    vitals: clip(String(ex.vitals || '').trim(), 300),
+                    systems: (Array.isArray(ex.systems) ? ex.systems : []).filter((x) => x && x.system && x.findings)
+                        .slice(0, 14).map((x) => ({ system: clip(String(x.system).trim(), 30), findings: clip(String(x.findings).trim(), 400) })),
+                };
+                wm.note = { problem_representation: out.problem_representation, hpi: out.hpi || '', exam, problems, t: elapsed(), upToLine };
                 emit('note', wm.note);
             })().catch(() => { /* logged in modelCall */ })
-                .finally(() => { noteBusy = false; if (noteAgain) { noteAgain = false; scheduleNote(); } });
+                .finally(() => {
+                    noteBusy = false;
+                    if (noteAgain) { noteAgain = false; if (dictatingNow()) scheduleNote(cfg.dictationNoteDelayMs, cfg.dictationNoteGapMs); else scheduleNote(); }
+                });
             return track(p);
         }
 

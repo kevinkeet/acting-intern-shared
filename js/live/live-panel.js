@@ -98,6 +98,8 @@
             + '</select><button type="button" class="lc-btn" data-act="voice-test">Test</button></div>';
     }
 
+    const EXAM_EMPTY = 'Say findings as you examine, or dictate them after (“For my note: lungs clear…”). Or press Dictate exam, or type a finding below.';
+
     // Note helpers: sentences, and a loose comparison key.
     const sentences = (t) => String(t || '').split(/(?<=[.!?])\s+(?=["“(]?[A-Z0-9])/).map((x) => x.trim()).filter(Boolean);
     const normText = (t) => String(t || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
@@ -142,6 +144,7 @@
 
     // Conversation pieces.
     const lineHtml = (l, flagged, radar) => '<div class="lc-line' + (flagged ? ' is-flagged' : '') + '" data-speaker="' + esc(l.speaker) + '"><span class="lc-who">' + esc(l.label || l.speaker) + '</span><span class="lc-said">' + esc(l.text)
+        + (l.dictation === 'exam' ? ' <span class="lc-exam-mark" title="Dictated for the exam">exam</span>' : '')
         + (radar && radar.length ? ' <span class="lc-radar-mark" title="' + esc('On my radar: ' + radar.join('; ')) + '">' + ICON.radar + (radar.length > 1 ? radar.length + ' on radar' : 'on radar') + '</span>' : '') + '</span></div>';
     const typedHtml = (q) => '<div class="lc-line is-typed" data-speaker="doctor"><span class="lc-who">You</span><span class="lc-said">' + esc(q) + '</span></div>';
     const interimHtml = (it) => '<div class="lc-line is-interim"' + (it ? '' : ' hidden') + ' data-speaker="' + esc(it ? it.speaker : '') + '"><span class="lc-who">' + esc(it ? it.speaker : '') + '</span><span class="lc-said">' + esc(it ? it.text : '') + '</span></div>';
@@ -274,6 +277,8 @@
                     case 'act-drop': return h.onAction && h.onAction(t.dataset.id, 'drop');
                     case 'review-orders': return h.onReviewOrders && h.onReviewOrders();
                     case 'radar-retry': return h.onRadarRetry && h.onRadarRetry();
+                    case 'exam-dictate': return h.onExamDictate && h.onExamDictate();
+                    case 'exam-done': return h.onExamDone && h.onExamDone();
                     case 'jump': { const pane = this.refs.said.parentElement; pane.scrollTop = pane.scrollHeight; this._jump(false); return undefined; }
                     default: return undefined;
                 }
@@ -286,6 +291,17 @@
                 const pane = ev.currentTarget;
                 if (pane.scrollHeight - pane.scrollTop - pane.clientHeight < 80) this._jump(false);
             }, { passive: true });
+            // A typed exam finding (the form is inside the note, so listen on the panel).
+            w.addEventListener('submit', (ev) => {
+                const f = ev.target;
+                if (!f || !f.classList || !f.classList.contains('lc-exam-type')) return;
+                ev.preventDefault();
+                const input = f.querySelector('input');
+                const text = input.value.trim();
+                if (!text) return;
+                input.value = '';
+                if (h.onExamType) h.onExamType(text);
+            });
             this.refs.ask.addEventListener('submit', (ev) => {
                 ev.preventDefault();
                 const q = this.refs.input.value.trim();
@@ -716,30 +732,50 @@
         // people talk. Whatever is new since the last version lights up briefly.
         renderNote(v) {
             const el = this.refs.note;
+            // Built once: the exam's typing box must survive rewrites of the note around it.
+            if (!this.refs.noteParts) {
+                el.innerHTML = '<div class="lc-note-head" data-n="head"></div><div data-n="top"></div>'
+                    + '<section class="lc-note-sec lc-exam" aria-label="Physical exam"><div class="lc-exam-head"><h4>Physical exam</h4><span class="lc-exam-ctl" data-n="ctl"></span></div>'
+                    + '<div data-n="exam"></div><div class="lc-exam-live" data-n="live" aria-live="polite"></div>'
+                    + '<form class="lc-exam-type" data-n="form" autocomplete="off"><label class="lc-sr" for="lc-exam-input">Add an exam finding</label>'
+                    + '<input id="lc-exam-input" type="text" placeholder="Type a finding: “Lungs: crackles at both bases”" enterkeyhint="done"><button type="submit" class="lc-btn">Add</button></form></section>'
+                    + '<div data-n="ap"></div>';
+                this.refs.noteParts = {};
+                el.querySelectorAll('[data-n]').forEach((x) => { this.refs.noteParts[x.dataset.n] = x; });
+            }
+            const N = this.refs.noteParts;
             const n = v.note;
             const status = v.noteWriting ? '<span class="lc-writing">Updating…</span>' : (n ? 'Updated ' + when(n.wallAt, null) : '');
-            const head = '<div class="lc-note-head"><span class="lc-note-status" data-ref-note-status>' + status + '</span><span class="lc-note-tools">'
+            N.head.innerHTML = '<span class="lc-note-status">' + status + '</span><span class="lc-note-tools">'
                 + (n ? '<button type="button" class="lc-btn lc-btn-quiet" data-act="copy-note">Copy note</button>' : '')
-                + '<button type="button" class="lc-btn lc-btn-quiet" data-act="wide">' + (v.wide ? 'Narrow panel' : 'Side by side') + '</button></span></div>';
-            if (n && n === this._shownNote) {   // same note: only the status changed; keep the highlights running
-                const st = el.querySelector('[data-ref-note-status]');
-                const wb = el.querySelector('[data-act="wide"]');
-                if (wb) wb.textContent = v.wide ? 'Narrow panel' : 'Side by side';
-                if (st) { st.innerHTML = status; return; }
-            }
+                + '<button type="button" class="lc-btn lc-btn-quiet" data-act="wide">' + (v.wide ? 'Narrow panel' : 'Side by side') + '</button></span>';
+            this._renderExamLive(v);
+            if (n && n === this._shownNote) return;   // same note: keep the highlights running
+            const was = this._shownNote;
+            this._shownNote = n || null;
             if (!n) {
-                const e = v.encounter;
-                el.innerHTML = head + '<p class="lc-empty">' + (e
+                N.top.innerHTML = '<p class="lc-empty">' + (v.encounter
                     ? 'Writing the first version…'
-                    : 'Start the encounter and the note writes itself as you talk: a problem representation, the HPI, and assessment and plan by problem.') + '</p>';
-                this._shownNote = null;
+                    : 'Start the encounter and the note writes itself as you talk: a problem representation, the HPI, the exam you dictate, and assessment and plan by problem.') + '</p>';
+                N.exam.innerHTML = '<p class="lc-empty">' + EXAM_EMPTY + '</p>';
+                N.ap.innerHTML = '';
                 return;
             }
-            const was = this._shownNote;
             const isNew = (set, x) => !!was && !set.has(normText(x));
             const prBefore = new Set(was ? sentences(was.problem_representation).map(normText) : []);
             const hpiBefore = new Set(was ? sentences(was.hpi).map(normText) : []);
             const mark = (list, before) => list.map((x) => '<span' + (isNew(before, x) ? ' class="lc-changed"' : '') + '>' + esc(x) + '</span>').join(' ');
+            N.top.innerHTML = '<section class="lc-note-sec"><h4>Problem representation</h4><p class="lc-pr">' + mark(sentences(n.problem_representation), prBefore) + '</p></section>'
+                + '<section class="lc-note-sec"><h4>History of present illness</h4>' + (n.hpi ? '<p class="lc-hpi">' + mark(sentences(n.hpi), hpiBefore) + '</p>' : '<p class="lc-empty">Fills in as the history is told.</p>') + '</section>';
+            // The exam, by system as stated; a new or changed line lights up.
+            const ex = n.exam || { vitals: '', systems: [] };
+            const oldEx = was && was.exam ? was.exam : null;
+            const oldFindings = new Map(oldEx ? oldEx.systems.map((x) => [normText(x.system), normText(x.findings)]) : []);
+            const rows = (ex.vitals ? [{ system: 'Vitals', findings: ex.vitals, changed: !!was && (!oldEx || normText(oldEx.vitals) !== normText(ex.vitals)) }] : [])
+                .concat((ex.systems || []).map((x) => ({ system: x.system, findings: x.findings, changed: !!was && oldFindings.get(normText(x.system)) !== normText(x.findings) })));
+            N.exam.innerHTML = rows.length
+                ? '<dl class="lc-exam-list">' + rows.map((r) => '<div class="lc-exam-row' + (r.changed ? ' lc-changed' : '') + '"><dt>' + esc(r.system) + '</dt><dd>' + esc(r.findings) + '</dd></div>').join('') + '</dl>'
+                : '<p class="lc-empty">' + EXAM_EMPTY + '</p>';
             const oldProblems = new Map((was ? was.problems || [] : []).map((p) => [normText(p.name), p]));
             const problems = (n.problems || []).map((p, i) => {
                 const old = oldProblems.get(normText(p.name));
@@ -755,11 +791,35 @@
                     + (consider.length ? '<ul class="lc-consider">' + consider.map((x) => '<li' + (!fresh && isNew(considerBefore, x) ? ' class="lc-changed"' : '') + '><b>Consider</b> ' + esc(x) + '</li>').join('') + '</ul>' : '')
                     + '</li>';
             }).join('');
-            el.innerHTML = head
-                + '<section class="lc-note-sec"><h4>Problem representation</h4><p class="lc-pr">' + mark(sentences(n.problem_representation), prBefore) + '</p></section>'
-                + '<section class="lc-note-sec"><h4>History of present illness</h4>' + (n.hpi ? '<p class="lc-hpi">' + mark(sentences(n.hpi), hpiBefore) + '</p>' : '<p class="lc-empty">Fills in as the history is told.</p>') + '</section>'
-                + '<section class="lc-note-sec"><h4>Assessment and plan</h4>' + (problems ? '<ol class="lc-problems">' + problems + '</ol>' : '<p class="lc-empty">Problems and plans appear as you discuss them.</p>') + '</section>';
-            this._shownNote = n;
+            N.ap.innerHTML = '<section class="lc-note-sec"><h4>Assessment and plan</h4>' + (problems ? '<ol class="lc-problems">' + problems + '</ol>' : '<p class="lc-empty">Problems and plans appear as you discuss them.</p>') + '</section>';
+        },
+
+        /** The exam's live parts: Dictate exam / Done, what was just dictated (not in the note yet), and the live caption. */
+        _renderExamLive(v) {
+            const N = this.refs.noteParts;
+            if (!N) return;
+            const on = v.dictating === 'exam';
+            const demo = !!(v.encounter && v.encounter.kind === 'demo');   // a recording: type, don't dictate
+            const ctl = on
+                ? '<span class="lc-exam-on"><i aria-hidden="true"></i>Dictating the exam</span><button type="button" class="lc-btn lc-btn-primary" data-act="exam-done">Done</button>'
+                : demo ? '' : '<button type="button" class="lc-btn lc-exam-dictate" data-act="exam-dictate" title="Listen for exam findings and write them into the note">' + ICON.mic + 'Dictate exam</button>';
+            if (N.ctl._lcHtml !== ctl) { N.ctl.innerHTML = ctl; N.ctl._lcHtml = ctl; }
+            // Dictated or typed but not in the note yet: shown at once, then filed under its system.
+            const upTo = v.note && v.note.upToLine != null ? v.note.upToLine : -1;
+            const pending = (v.lines || []).filter((l) => l.dictation === 'exam' && (Number(String(l.id).slice(1)) || 0) > upTo);
+            const live = pending.map((l) => '<p class="lc-exam-pending"><span>Adding</span> “' + esc(l.text) + '”</p>').join('')
+                + (on ? '<p class="lc-exam-hearing" data-n="interim"' + (this._examInterim ? '' : ' hidden') + '><span>Hearing</span> <i>' + esc(this._examInterim || '') + '</i></p>' : '');
+            if (N.live._lcHtml !== live) { N.live.innerHTML = live; N.live._lcHtml = live; }
+        },
+
+        /** Live caption while the exam is dictated (several times a second; touches one line). */
+        setExamInterim(text) {
+            this._examInterim = text || '';
+            const el = this.refs.noteParts && this.refs.noteParts.live.querySelector('[data-n="interim"]');
+            if (!el) return false;
+            el.hidden = !text;
+            el.lastChild.textContent = text || '';
+            return true;
         },
 
         // ── log ──────────────────────────────────────────────────────────

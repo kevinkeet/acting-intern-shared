@@ -9,6 +9,7 @@ const path = require('path');
 const LiveCore = require('../js/live/live-core.js');
 const LiveChart = require('../js/live/live-chart.js');
 const LiveTransport = require('../js/live/live-transport.js');
+const P = require('../js/live/live-prompts.js');
 
 const BASE = path.join(__dirname, '..', 'data', 'patients', 'PAT001');
 
@@ -204,6 +205,45 @@ const manualClock = () => {
         cw.note();
         await cw.idle();
         assert.strictEqual(t.log.filter((x) => x.lane === 'note').length, 3, 'on demand (end of the encounter)');
+        cw.stop();
+    });
+
+    await check('dictating the exam: lines are marked, the note catches up within seconds, the exam is kept by system', async () => {
+        let n = 0;
+        const many = Array.from({ length: 16 }, (_, i) => ({ system: 'System ' + i, findings: 'Finding ' + i }));
+        const t = fakeTransport((lane) => {
+            if (lane === 'note') {
+                n++;
+                return reply(JSON.stringify({ problem_representation: 'PR', hpi: '', problems: [],
+                    exam: n === 1 ? { vitals: 'T 38.6, SpO2 94% on 2 L', systems: [{ system: 'Lungs', findings: 'Crackles at both bases' }, { system: 'Heart', findings: '' }] } : { vitals: '', systems: many } }));
+            }
+            return reply(JSON.stringify(lane === 'ear' ? EMPTY_EAR : TAKE()));
+        });
+        const clock = manualClock();
+        const cw = LiveCore.createCoworker({ transport: t, chart, clock });
+        cw.start({ skipPrime: true });
+        const line = cw.hear({ speaker: 'doctor', text: 'Lungs: crackles at both bases.', mode: 'exam', typed: true });
+        assert.strictEqual(line.dictation, 'exam');
+        assert.strictEqual(line.typed, true);
+        await cw.idle();
+        assert.match(t.log.find((x) => x.lane === 'ear').body.messages[0].content, /L1 \[0:00\] DOCTOR \(dictating the exam\): Lungs: crackles/, 'the ear knows it is dictation');
+        clock.advance(1499); await cw.idle();
+        assert.strictEqual(t.log.filter((x) => x.lane === 'note').length, 0);
+        clock.advance(1); await cw.idle();
+        const notes = t.log.filter((x) => x.lane === 'note');
+        assert.strictEqual(notes.length, 1, 'written 1.5 s after the dictation, not 3 s');
+        assert.match(notes[0].body.messages[0].content, /DOCTOR \(dictating the exam\): Lungs: crackles at both bases/);
+        assert.deepStrictEqual(cw.wm.note.exam, { vitals: 'T 38.6, SpO2 94% on 2 L', systems: [{ system: 'Lungs', findings: 'Crackles at both bases' }] }, 'an empty finding is dropped');
+        assert.strictEqual(cw.wm.note.upToLine, 1, 'the note says which lines it has seen');
+        cw.hear({ speaker: 'doctor', text: 'Heart: irregularly irregular.', mode: 'exam' });
+        await cw.idle();
+        clock.advance(4999); await cw.idle();
+        assert.strictEqual(t.log.filter((x) => x.lane === 'note').length, 1, 'at most every 5 s while dictating');
+        clock.advance(1); await cw.idle();
+        assert.strictEqual(t.log.filter((x) => x.lane === 'note').length, 2);
+        assert.match(t.log.filter((x) => x.lane === 'note')[1].body.messages[0].content, /<previous_note>\{[^<]*"exam":\{"vitals":"T 38\.6/);
+        assert.strictEqual(cw.wm.note.exam.systems.length, 14, 'at most 14 systems');
+        assert.ok(P.NOTE_SCHEMA.required.includes('exam'));
         cw.stop();
     });
 
@@ -482,7 +522,6 @@ const manualClock = () => {
     });
 
     // ── on my radar ──────────────────────────────────────────────────────
-    const P = require('../js/live/live-prompts.js');
     const item = (x) => Object.assign({ id: '', kind: 'order', title: '', order_type: 'none', fields: [], to: '', note_type: '', draft: '', next: '', status: 'todo', flag: '', alert: '', line: '' }, x);
     const radarReply = (changes) => reply(JSON.stringify({ changes }));
 

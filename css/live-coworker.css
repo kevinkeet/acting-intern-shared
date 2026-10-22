@@ -35,6 +35,7 @@
     --lc-amber-ink: oklch(0.43 0.09 65);
     --lc-amber-bg: oklch(0.972 0.03 85);
     --lc-green: oklch(0.58 0.14 150);
+    --lc-green-ink: oklch(0.42 0.1 150);
     --lc-radius: 8px;
     --lc-ease: cubic-bezier(0.25, 1, 0.5, 1);
     container-type: inline-size;
@@ -381,6 +382,31 @@
 .lc-consider li { color: var(--lc-amber-ink); }
 .lc-consider b { font-size: 11px; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; margin-right: 4px; }
 .lc-plan-empty { margin: 3px 0 0 26px; font-size: 12px; color: var(--lc-ink-3); }
+/* The physical exam: by system as dictated; what was just dictated shows at once ("Adding"). */
+.lc-exam-head { display: flex; align-items: center; gap: 8px; min-height: 26px; margin-bottom: 2px; }
+.lc-exam-head h4 { margin: 0; }
+.lc-exam-ctl { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.lc-exam-dictate { display: inline-flex; align-items: center; gap: 5px; }
+.lc-exam-dictate svg { width: 13px; height: 13px; }
+.lc-exam-on { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--lc-green-ink); }
+.lc-exam-on i { width: 8px; height: 8px; border-radius: 50%; background: var(--lc-green); animation: lc-blink 1.2s steps(1) infinite; }
+.lc-exam-list { margin: 2px 0 0; display: grid; gap: 3px; font-size: 13.5px; line-height: 1.45; }
+.lc-exam-row { display: grid; grid-template-columns: 84px minmax(0, 1fr); column-gap: 8px; align-items: baseline; }
+.lc-exam-row dt { font-size: 12px; font-weight: 600; color: var(--lc-ink-2); overflow-wrap: anywhere; }
+.lc-exam-row dd { margin: 0; color: var(--lc-ink); max-width: 68ch; }
+.lc-exam-live p { margin: 4px 0 0; font-size: 13px; }
+.lc-exam-live span { margin-right: 4px; font-size: 11px; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; }
+.lc-exam-pending { color: var(--lc-blue); }
+.lc-exam-hearing { color: var(--lc-ink-3); }
+.lc-exam-type { display: flex; gap: 6px; margin-top: 8px; }
+.lc-exam-type input {
+    flex: 1; min-width: 0; border: 1px solid var(--lc-line-2); border-radius: 6px; padding: 5px 8px; font: inherit; font-size: 13px;
+    color: var(--lc-ink); background: var(--lc-bg); transition: border-color 160ms var(--lc-ease), box-shadow 160ms var(--lc-ease);
+}
+.lc-exam-type input::placeholder { color: var(--lc-ink-3); }
+.lc-exam-type input:focus { outline: none; border-color: var(--lc-blue); box-shadow: 0 0 0 3px oklch(0.5 0.13 255 / 0.15); }
+.lc-exam-mark { display: inline-block; margin-left: 4px; padding: 0 6px; border-radius: 999px; background: oklch(0.95 0.035 150); color: var(--lc-green-ink); font-size: 11px; font-weight: 600; font-style: normal; vertical-align: 1px; }
+
 /* What just changed in the note, like a highlighter that fades. */
 .lc-changed { border-radius: 3px; animation: lc-mark 3.2s var(--lc-ease); }
 @keyframes lc-mark { 0%, 45% { background: oklch(0.94 0.09 95); } 100% { background: transparent; } }

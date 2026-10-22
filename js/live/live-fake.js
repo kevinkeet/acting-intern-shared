@@ -145,7 +145,23 @@
         if (has(/creatinine 2\.4|kidney/i)) problems.push({ name: 'AKI on CKD 3b with K 5.1', assessment: 'Creatinine 2.4 from about 2.0, likely cardiorenal.', plan: [has(/spironolactone tonight/i) ? 'Hold spironolactone' : '', has(/BMP and magnesium/i) ? 'Repeat BMP and magnesium in the morning' : ''].filter(Boolean), consider: has(/potassium chloride/i) ? ['Skip the potassium chloride'] : [] });
         if (has(/clumsy/i)) problems.push({ name: 'Possible TIA', assessment: 'Transient right hand weakness and speech change in AF without anticoagulation.', plan: [], consider: ['Head imaging and neurology'] });
         if (has(/142/)) problems.push({ name: 'AF with rapid ventricular response', assessment: 'Rate 142 during decompensation.', plan: [has(/diltiazem/i) ? 'IV diltiazem 10 mg (ordered)' : ''].filter(Boolean), consider: has(/diltiazem/i) ? ['Amiodarone instead of diltiazem'] : [] });
-        return { problem_representation: pr, hpi: hpi.join(' '), problems };
+        // The exam: the demo's "For my note" dictation, vitals the nurse said, and anything dictated or typed.
+        const vit = [];
+        if (has(/38\.6/)) vit.push('T 38.6');
+        if (has(/heart rate's up to 142/i)) vit.push('HR 142, AF');
+        if (has(/138 over 88/)) vit.push('BP 138/88');
+        if (has(/two liters now, sat ninety-four/i)) vit.push('SpO2 94% on 2 L');
+        const sys = [];
+        if (has(/JVP up to the angle/i)) sys.push(['Neck', 'JVP to the angle of the jaw'], ['Heart', 'Irregularly irregular, about 90'], ['Lungs', 'Crackles a third of the way up bilaterally'], ['Abdomen', 'Soft; liver edge a few cm below the costal margin'], ['Extremities', '3+ pitting edema to the knees']);
+        for (const m of conv.matchAll(/DOCTOR \(dictating the exam\): ([^\n]+)/g)) {
+            const t = m[1].trim();
+            const mm = t.match(/^([A-Za-z][A-Za-z &/]{1,20}):\s*(.+)$/);
+            const system = mm ? mm[1].trim() : 'Exam', findings = mm ? mm[2].trim() : t;
+            const i = sys.findIndex(([x]) => x.toLowerCase() === system.toLowerCase());
+            if (i >= 0) sys[i] = [sys[i][0], findings]; else sys.push([system, findings]);
+        }
+        const exam = { vitals: vit.join(', '), systems: sys.map(([system, findings]) => ({ system, findings })) };
+        return { problem_representation: pr, hpi: hpi.join(' '), exam, problems };
     }
 
     function reply(obj, ms) {
