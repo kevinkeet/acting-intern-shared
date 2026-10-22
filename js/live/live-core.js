@@ -227,10 +227,27 @@
         }
 
         // ── model calls ──────────────────────────────────────────────────
+        /** What a prompt is made of, in characters: fixed parts first (cacheable), then what changes per call. */
+        function partsOf(lane, body) {
+            const sys = Array.isArray(body.system) ? body.system : body.system ? [{ text: String(body.system) }] : [];
+            const p = { tools: body.tools ? JSON.stringify(body.tools).length : 0, rules: sys[0] ? String(sys[0].text || '').length : 0, digest: 0, longterm: 0, memory: 0, conversation: 0, lookups: 0, task: 0 };
+            const ctx = sys.slice(1).reduce((a, b) => a + String(b.text || '').length, 0);
+            if (lane === 'helper' && ctx > 60000) p.longterm = ctx; else p.digest = ctx;
+            const textOf = (m) => (typeof m.content === 'string' ? m.content : (m.content || []).map((b) => (b.type === 'tool_result' ? String(b.content || '') : b.type === 'tool_use' ? JSON.stringify(b.input || {}) : b.text || '')).join(''));
+            (body.messages || []).forEach((m, i) => {
+                const t = textOf(m);
+                if (i > 0) { p.lookups += t.length; return; }
+                let rest = t.replace(/<(recent_conversation|conversation|earlier_lines|new_lines)>[\s\S]*?<\/\1>/g, (x) => { p.conversation += x.length; return ''; });
+                rest = rest.replace(/<([a-z_]+)>[\s\S]*?<\/\1>/g, (x) => { p.memory += x.length; return ''; });
+                p.task += rest.length;
+            });
+            return p;
+        }
+
         async function modelCall(lane, model, body, hooks) {
             const ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
             if (ctrl) aborters.add(ctrl);
-            const entry = { lane, model, at: elapsed(), ok: false };
+            const entry = { lane, model, at: elapsed(), ok: false, parts: partsOf(lane, body) };
             emit('call-start', entry);
             try {
                 const res = await transport.callWithRetry({ model, body, speed: lane === 'ear' || lane === 'helper' ? null : cfg.speed, label: lane },
@@ -439,6 +456,7 @@
                 const user = renderForBrain() + '\n\n' + P.taskAnswer(question);
                 const messages = [{ role: 'user', content: [{ type: 'text', text: user }] }];
                 let answer = '';
+                const used = [];   // the lookups behind this answer
                 for (let round = 0; round <= cfg.maxToolRounds; round++) {
                     const body = brainBody('answer', '', { toolChoice: round < cfg.maxToolRounds ? 'auto' : 'none' });
                     body.messages = messages;
@@ -452,9 +470,10 @@
                     messages.push({ role: 'assistant', content: res.message.content });
                     emit('say-partial', { id, text: '', question, via: m.via, status: toolStatus(uses) });
                     const results = await Promise.all(uses.map((u) => runTool(u)));
+                    uses.forEach((u, i) => used.push({ name: u.name, input: u.input || {}, result: clip(typeof results[i].content === 'string' ? results[i].content : '', 300), error: !!results[i].is_error }));
                     messages.push({ role: 'user', content: results });
                 }
-                deliver({ id, kind: 'answer', topic: 'answer', text: answer || 'Sorry, I lost that one.', why: '', question, cueLine: m.cueLine, heardAt: m.heardAt, via: m.via });
+                deliver({ id, kind: 'answer', topic: 'answer', text: answer || 'Sorry, I lost that one.', why: '', question, cueLine: m.cueLine, heardAt: m.heardAt, via: m.via, tools: used });
             })().catch((e) => {
                 if (e && e.name === 'AbortError') return;
                 // Plain words for the doctor; the exact error is in the call log.
@@ -596,7 +615,8 @@
                 const cue = followUp ? followUp.cue : cueLine;
                 if (decision === 'say' && out.text) {
                     const kind = out.severity === 'important' ? 'insight' : 'critical';
-                    const c = { kind, topic: out.topic || key, text: out.text, why: out.why, cueLine: cue && cue.id, heardAt: cue && cue.t, via: followUp ? 'after waiting' : 'verify' };
+                    const c = { kind, topic: out.topic || key, text: out.text, why: out.why, cueLine: cue && cue.id, heardAt: cue && cue.t, via: followUp ? 'after waiting' : 'verify',
+                        reason, checkMs: elapsed() - startedAt, severity: out.severity };
                     if (kind === 'critical' && !(await placeAlert(c, out.update_of, startedAt))) {
                         emit('suppressed', { reason: 'nothing new for an alert already on screen', topic: c.topic, text: c.text });
                         return;
@@ -686,7 +706,7 @@
                     // A concern already being held for the doctor's next words is left to that check.
                     const held = pendingChecks.some((p) => (p.topic && p.topic === out.say.topic) || overlap(p.text + ' ' + p.reason, out.say.text) >= 0.35);
                     const last = wm.lines[wm.lines.length - 1];
-                    const c = { kind: out.say.kind === 'critical' ? 'critical' : 'insight', topic: out.say.topic, text: out.say.text, why: out.say.why, via: 'update' };
+                    const c = { kind: out.say.kind === 'critical' ? 'critical' : 'insight', topic: out.say.topic, text: out.say.text, why: out.say.why, via: 'update', reason: 'its take update (' + why + ')' };
                     if (held) emit('suppressed', { reason: 'waiting for the doctor', kind: c.kind, topic: c.topic, text: c.text });
                     else if (c.kind === 'critical' && !(await placeAlert(c, out.say.update_of, seenUpTo))) {
                         // An update takes several seconds; an alert that went up meanwhile may already say it.
@@ -984,6 +1004,7 @@
                 id: c.id || ('S' + (++saidSeq)), t: elapsed(), kind: c.kind, topic: c.topic || '', text: c.text, why: c.why || '',
                 question: c.question || '', cueLine: c.cueLine || null, via: c.via || '',
                 latencyMs: c.heardAt != null ? elapsed() - c.heardAt : null, error: !!c.error, updateOf: c.updateOf || null,
+                reason: c.reason || '', checkMs: c.checkMs != null ? c.checkMs : null, tools: c.tools && c.tools.length ? c.tools : null,
             };
             wm.said.push(item);
             wm.held = wm.held.filter((h) => h.topic !== item.topic);

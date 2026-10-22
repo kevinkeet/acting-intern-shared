@@ -134,33 +134,91 @@
             + '</svg>';
     }
 
+    // The views: the rings here; the others are their own files (js/live/live-about-<id>.js,
+    // css/live-about-<id>.css), loaded the first time their tab opens, and register themselves.
+    const TABS = [['memory', 'Memory'], ['digest', 'Digestion'], ['threads', 'Problems'], ['why', 'Why it said'], ['calls', 'Each call']];
+    const TAB_KEY = 'live-about-tab';
+
     const LiveAbout = {
         el: null,
+        views: {},
         _onClose: null,
         _shownWm: 0,
+        _state: null,
+        _active: 'memory',
+        _loader: null,
+        _rendered: {},
 
         isOpen() { return !!this.el && !this.el.hidden; },
 
-        /** Open over the panel (container: the live panel's root). */
+        /** A view module registers itself: { render(el, state), update?(el, state), pulse?(what, el) }. */
+        register(id, view) { this.views[id] = view; },
+
+        /** Open over the panel (container: the live panel's root). opts.load(id) loads a view's files. */
         open(container, state, opts) {
             this._onClose = (opts && opts.onClose) || null;
             this._returnFocus = (opts && opts.returnFocus) || null;
+            this._loader = (opts && opts.load) || null;
             if (!this.el || !container.contains(this.el)) {
                 this.el = document.createElement('section');
                 this.el.className = 'lc-about';
                 this.el.setAttribute('role', 'dialog');
                 this.el.setAttribute('aria-label', 'How the coworker thinks');
                 container.appendChild(this.el);
-                this.el.addEventListener('click', (ev) => { if (ev.target.closest('[data-about=close]')) this.close(); });
-                this.el.addEventListener('keydown', (ev) => { if (ev.key === 'Escape') { ev.stopPropagation(); this.close(); } });
+                this.el.addEventListener('click', (ev) => {
+                    if (ev.target.closest('[data-about=close]')) { this.close(); return; }
+                    const tab = ev.target.closest('[data-about-tab]');
+                    if (tab) this.show(tab.dataset.aboutTab);
+                });
+                this.el.addEventListener('keydown', (ev) => {
+                    if (ev.key === 'Escape') { ev.stopPropagation(); this.close(); return; }
+                    const tab = ev.target.closest && ev.target.closest('[data-about-tab]');
+                    const step = { ArrowRight: 1, ArrowLeft: -1 }[ev.key];
+                    if (!tab || !step) return;
+                    ev.preventDefault();
+                    const ids = TABS.map((t) => t[0]);
+                    const next = ids[(ids.indexOf(tab.dataset.aboutTab) + step + ids.length) % ids.length];
+                    this.show(next);
+                    const b = this.el.querySelector('[data-about-tab="' + next + '"]');
+                    if (b) b.focus();
+                });
             }
             this._shownWm = 0;
+            this._rendered = {};
+            this._state = state;
             this.el.innerHTML = this._html(state);
             this.el.hidden = false;
             this.el.classList.toggle('is-still', reduceMotion());
             this.update(state);
+            let last = 'memory';
+            try { last = localStorage.getItem(TAB_KEY) || 'memory'; } catch (e) { /* ignore */ }
+            this.show(TABS.some((t) => t[0] === last) ? last : 'memory');
             const btn = this.el.querySelector('[data-about=close]');
             if (btn) btn.focus();
+        },
+
+        /** Switch view; a view's files load the first time it is shown. */
+        async show(id) {
+            if (!this.el) return;
+            this._active = id;
+            try { localStorage.setItem(TAB_KEY, id); } catch (e) { /* ignore */ }
+            this.el.querySelectorAll('[data-about-tab]').forEach((b) => { const on = b.dataset.aboutTab === id; b.setAttribute('aria-selected', String(on)); b.tabIndex = on ? 0 : -1; });
+            this.el.querySelectorAll('.lc-about-view').forEach((v) => { v.hidden = v.dataset.view !== id; });
+            const panel = this.el.querySelector('.lc-about-view[data-view="' + id + '"]');
+            if (!panel || id === 'memory') return;
+            if (!this.views[id] && this._loader) {
+                panel.innerHTML = '<p class="lc-about-loading">Loading…</p>';
+                try { await this._loader(id); } catch (e) { /* shown below */ }
+            }
+            if (this._active !== id) return;   // switched away while loading
+            const view = this.views[id];
+            if (!view) { panel.innerHTML = '<p class="lc-about-loading">This view could not load.</p>'; return; }
+            if (!this._rendered[id]) {
+                this._rendered[id] = true;
+                try { view.render(panel, this._state || {}); } catch (e) { console.warn('How it thinks:', e); panel.innerHTML = '<p class="lc-about-loading">This view could not draw.</p>'; }
+            } else if (view.update) {
+                try { view.update(panel, this._state || {}); } catch (e) { console.warn('How it thinks:', e); }
+            }
         },
 
         close() {
@@ -171,20 +229,28 @@
         },
 
         _html(s) {
-            return '<header class="lc-about-head"><div><h2>How it thinks</h2><p class="lc-about-sub" data-a="sub"></p></div>'
-                + '<button type="button" class="lc-iconbtn" data-about="close" aria-label="Close" title="Close (Esc)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></header>'
-                + '<div class="lc-about-body">'
+            return '<header class="lc-about-head"><div class="lc-about-title"><div><h2>How it thinks</h2><p class="lc-about-sub" data-a="sub"></p></div>'
+                + '<button type="button" class="lc-iconbtn" data-about="close" aria-label="Close" title="Close (Esc)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></div>'
+                + '<nav class="lc-about-tabs" role="tablist" aria-label="Views">' + TABS.map(([id, label]) => '<button type="button" role="tab" data-about-tab="' + id + '" aria-selected="false" tabindex="-1">' + label + '</button>').join('') + '</nav></header>'
+                + TABS.slice(1).map(([id, label]) => '<div class="lc-about-view" data-view="' + id + '" role="tabpanel" aria-label="' + label + '" hidden></div>').join('')
+                + '<div class="lc-about-view" data-view="memory" role="tabpanel" aria-label="Memory"><div class="lc-about-body">'
                 + '<figure class="lc-about-fig">' + figure(s) + '<figcaption class="lc-about-now" data-a="now" aria-live="polite">Listening for the next thing to do</figcaption></figure>'
                 + '<div class="lc-about-text">'
                 + '<h3>Memory, from seconds to years</h3><ul class="lc-about-list" data-a="layers"></ul>'
                 + '<h3>Who does what</h3><ul class="lc-about-list" data-a="lanes"></ul>'
                 + '<p class="lc-about-foot" data-a="foot"></p>'
-                + '</div></div>';
+                + '</div></div></div>';
         },
 
         /** Refresh the live parts: the subtitle, working memory's dots, the numbers. */
         update(s) {
             if (!this.isOpen() || !s) return;
+            this._state = s;
+            // The other views follow along while they are showing.
+            const active = this._active !== 'memory' && this.views[this._active];
+            if (active && this._rendered[this._active] && active.update) {
+                try { active.update(this.el.querySelector('.lc-about-view[data-view="' + this._active + '"]'), s); } catch (e) { console.warn('How it thinks:', e); }
+            }
             const q = (a) => this.el.querySelector('[data-a="' + a + '"]');
             const wm = s.wm || {};
             const facts = (wm.facts || []).length, thinking = (wm.thinking || []).length, plan = (wm.plan || []).length, watch = (wm.watch || []).length;
@@ -243,6 +309,11 @@
         /** A lane just started (or something was said): send a pulse along its wire and light up what it touched. */
         pulse(what) {
             if (!this.isOpen()) return;
+            if (this._active !== 'memory') {
+                const v = this.views[this._active];
+                if (v && v.pulse && this._rendered[this._active]) { try { v.pulse(what, this.el.querySelector('.lc-about-view[data-view="' + this._active + '"]')); } catch (e) { /* ignore */ } }
+                return;
+            }
             const now = this.el.querySelector('[data-a="now"]');
             const lane = String(what || '');
             const say = (t) => { if (now) now.textContent = t; };

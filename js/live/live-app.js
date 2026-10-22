@@ -258,6 +258,8 @@
             if (this.patientId !== patientId) return;
             this.chart = chart;
             this.memoryShape = shape;
+            this.deepMemory = md ? { memoryDocument: md, extractedFacts: facts || [] } : null;
+            this.memStats = null;   // loaded when "How it thinks" opens
             this.memory = LiveMemory.build({ chart, memoryDocument: md, extractedFacts: facts });
             const latest = (this.memory.digest.match(/CHART DATA THROUGH: (\S+)/) || [])[1];
             this.view.memoryNote = note + (latest ? '. Chart data through ' + latest + '.' : '.');
@@ -451,7 +453,28 @@
                 if (typeof LiveAbout === 'undefined') { this._flash('Could not load that view.'); return; }
             }
             LivePanel.togglePop(false);
-            LiveAbout.open(LivePanel.el, this._aboutState(), { returnFocus: from || null });
+            // The record's numbers for the Digestion and Problems views (precomputed by tools/live/memory-stats.mjs).
+            if (!this.memStats && this.patientId) {
+                const pid = this.patientId;
+                fetch('data/live/' + pid + '-memory-stats.json', { cache: 'no-store' }).then((r) => (r.ok ? r.json() : null)).catch(() => null)
+                    .then((st) => { if (st && this.patientId === pid) { this.memStats = st; this.request('about'); } });
+            }
+            LiveAbout.open(LivePanel.el, this._aboutState(), { returnFocus: from || null, load: (id) => this._loadAboutView(id) });
+        },
+
+        /** A view of "How it thinks" (js/live/live-about-<id>.js and its stylesheet), loaded on first use. */
+        _loadAboutView(id) {
+            if (!/^[a-z]+$/.test(id)) return Promise.reject(new Error('bad view'));
+            const css = document.createElement('link');
+            css.rel = 'stylesheet';
+            css.href = 'css/live-about-' + id + '.css?' + SELF_Q;
+            document.head.appendChild(css);
+            return new Promise((resolve) => {
+                const sc = document.createElement('script');
+                sc.src = 'js/live/live-about-' + id + '.js?' + SELF_Q;
+                sc.onload = sc.onerror = resolve;
+                document.head.appendChild(sc);
+            });
         },
 
         _aboutState() {
@@ -467,6 +490,15 @@
                 memoryNote: this.view.memoryNote,
                 shape: this.memoryShape || null,
                 chart: c ? { allergies: n(c.allergies), meds: n(c.meds), problems: n(c.problems), labs: n(c.labs), encounters: n(c.encounters) } : null,
+                // For the other views: the record's numbers, the memory document, and this encounter's trail.
+                memStats: this.memStats || null,
+                memDoc: this.deepMemory ? this.deepMemory.memoryDocument : null,
+                calls: this.engine ? this.engine.calls : [],
+                said: this.view.said || [],
+                lines: this.view.lines || [],
+                actions: this.view.actions || [],
+                decisions: this.view.decisions || [],
+                patientId: this.patientId,
             };
         },
 

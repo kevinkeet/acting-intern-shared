@@ -1,0 +1,6301 @@
+{
+ "patient": "PAT001",
+ "generated": "2026-10-22T04:57:49.031Z",
+ "chart": {
+  "files": 392,
+  "bytes": 2011968,
+  "tokens": 502992,
+  "byFolder": {
+   "patient": 637854,
+   "encounters": 34170,
+   "imaging": 72894,
+   "labs": 223578,
+   "medications": 9577,
+   "notes": 983186,
+   "orders": 11033,
+   "problems": 6861,
+   "procedures": 3321,
+   "vitals": 29494
+  }
+ },
+ "records": {
+  "read": 373,
+  "total": 373,
+  "byKind": {
+   "note": 134,
+   "lab": 214,
+   "imaging": 25
+  },
+  "first": "2018-02-05",
+  "last": "2026-02-05"
+ },
+ "factCards": {
+  "cards": 358,
+  "items": [
+   {
+    "key": "key_findings",
+    "label": "Findings",
+    "n": 2280
+   },
+   {
+    "key": "lab_values",
+    "label": "Lab values",
+    "n": 1886
+   },
+   {
+    "key": "problems_mentioned",
+    "label": "Problem mentions",
+    "n": 1536
+   },
+   {
+    "key": "action_items",
+    "label": "Action items",
+    "n": 750
+   },
+   {
+    "key": "vital_signs",
+    "label": "Vital signs",
+    "n": 607
+   },
+   {
+    "key": "safety_concerns",
+    "label": "Safety concerns",
+    "n": 601
+   },
+   {
+    "key": "medication_changes",
+    "label": "Medicine changes",
+    "n": 544
+   }
+  ],
+  "totalItems": 8204,
+  "chars": 623010,
+  "tokens": 207670
+ },
+ "passes": {
+  "levels": 13,
+  "extraction": "claude-haiku-5-5",
+  "synthesis": "claude-sonnet-5-5",
+  "calls": 7,
+  "cost": 4.9735
+ },
+ "memoryDocument": {
+  "chars": 89616,
+  "sections": [
+   {
+    "key": "clinicalGestalt",
+    "label": "Gestalt",
+    "chars": 434,
+    "count": null
+   },
+   {
+    "key": "patientOverview",
+    "label": "Overview",
+    "chars": 5360,
+    "count": null
+   },
+   {
+    "key": "safetyProfile",
+    "label": "Safety profile",
+    "chars": 5906,
+    "count": 5
+   },
+   {
+    "key": "problemAnalysis",
+    "label": "Problems",
+    "chars": 20999,
+    "count": 18
+   },
+   {
+    "key": "medicationRationale",
+    "label": "Why each medicine",
+    "chars": 3115,
+    "count": 15
+   },
+   {
+    "key": "labTrends",
+    "label": "Lab trends",
+    "chars": 41976,
+    "count": 1
+   },
+   {
+    "key": "pendingItems",
+    "label": "Open items",
+    "chars": 9819,
+    "count": 24
+   },
+   {
+    "key": "changesSinceLastReview",
+    "label": "Recent changes",
+    "chars": 1387,
+    "count": 9
+   }
+  ],
+  "problems": 18,
+  "meds": 15,
+  "pending": 24
+ },
+ "longTerm": {
+  "chars": 719091,
+  "tokens": 319596
+ },
+ "digest": {
+  "chars": 24510,
+  "tokens": 6128,
+  "parts": [
+   {
+    "label": "Patient",
+    "chars": 141,
+    "from": "chart"
+   },
+   {
+    "label": "Allergies",
+    "chars": 470,
+    "from": "chart"
+   },
+   {
+    "label": "Problem list",
+    "chars": 1650,
+    "from": "chart"
+   },
+   {
+    "label": "Medicines",
+    "chars": 2097,
+    "from": "chart"
+   },
+   {
+    "label": "Labs",
+    "chars": 1383,
+    "from": "chart"
+   },
+   {
+    "label": "Vitals",
+    "chars": 231,
+    "from": "chart"
+   },
+   {
+    "label": "Imaging",
+    "chars": 232,
+    "from": "chart"
+   },
+   {
+    "label": "Visits",
+    "chars": 997,
+    "from": "chart"
+   },
+   {
+    "label": "Social",
+    "chars": 300,
+    "from": "chart"
+   },
+   {
+    "label": "Summary",
+    "chars": 2788,
+    "from": "memory"
+   },
+   {
+    "label": "Safety notes",
+    "chars": 1815,
+    "from": "memory"
+   },
+   {
+    "label": "Problems in depth",
+    "chars": 8379,
+    "from": "memory"
+   },
+   {
+    "label": "Why each medicine",
+    "chars": 2328,
+    "from": "memory"
+   },
+   {
+    "label": "Open items",
+    "chars": 1700,
+    "from": "memory"
+   }
+  ]
+ },
+ "threads": [
+  {
+   "problem": "HFrEF / ischemic cardiomyopathy, EF 30-35%, NYHA II",
+   "status": "active",
+   "mentions": [
+    {
+     "d": "2018-02-26",
+     "k": "lab",
+     "id": "LAB004",
+     "t": "Lab Panel - BNP"
+    },
+    {
+     "d": "2018-11-12",
+     "k": "imaging",
+     "id": "IMG003",
+     "t": "Myocardial Perfusion Imaging"
+    },
+    {
+     "d": "2019-09-16",
+     "k": "imaging",
+     "id": "IMG001",
+     "t": "Stress Echocardiogram"
+    },
+    {
+     "d": "2020-02-08",
+     "k": "lab",
+     "id": "LAB057",
+     "t": "Lab Panel - BNP"
+    },
+    {
+     "d": "2020-09-21",
+     "k": "imaging",
+     "id": "IMG002",
+     "t": "Transthoracic Echocardiogram"
+    },
+    {
+     "d": "2020-11-27",
+     "k": "note",
+     "id": "Doc 4 (LAB080)",
+     "t": "Lab Panel - BNP"
+    },
+    {
+     "d": "2021-01-05",
+     "k": "note",
+     "id": "NOTE103",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2021-01-10",
+     "k": "note",
+     "id": "NOTE102",
+     "t": "H&P"
+    },
+    {
+     "d": "2021-01-31",
+     "k": "note",
+     "id": "NOTE101",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-02-10",
+     "k": "note",
+     "id": "NOTE_HP003",
+     "t": "H&P"
+    },
+    {
+     "d": "2021-02-10",
+     "k": "note",
+     "id": "NOTE_ID001",
+     "t": "Consult Note (Infectious Disease)"
+    },
+    {
+     "d": "2021-02-10",
+     "k": "note",
+     "id": "NOTE_RT001",
+     "t": "Respiratory Therapy Note"
+    },
+    {
+     "d": "2021-02-10",
+     "k": "note",
+     "id": "NOTE_NURS001",
+     "t": "Nursing Assessment"
+    },
+    {
+     "d": "2021-02-14",
+     "k": "note",
+     "id": "NOTE_DC003",
+     "t": "Discharge Summary"
+    },
+    {
+     "d": "2021-03-14",
+     "k": "note",
+     "id": "NOTE100",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2021-04-08",
+     "k": "note",
+     "id": "NOTE099",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-05-16",
+     "k": "note",
+     "id": "NOTE098",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-05-18",
+     "k": "imaging",
+     "id": "IMG008",
+     "t": "Myocardial Perfusion Imaging"
+    },
+    {
+     "d": "2021-06-01",
+     "k": "note",
+     "id": "NOTE097",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-07-15",
+     "k": "note",
+     "id": "NOTE096",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2021-08-20",
+     "k": "note",
+     "id": "NOTE095",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-09-24",
+     "k": "note",
+     "id": "NOTE094",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-10-30",
+     "k": "note",
+     "id": "NOTE093",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2021-11-12",
+     "k": "note",
+     "id": "NOTE092",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-11-19",
+     "k": "note",
+     "id": "NOTE090",
+     "t": "H&P"
+    },
+    {
+     "d": "2021-12-24",
+     "k": "note",
+     "id": "NOTE089",
+     "t": "H&P"
+    },
+    {
+     "d": "2022-01-15",
+     "k": "note",
+     "id": "NOTE088",
+     "t": "Progress Note (Nephrology follow-up)"
+    },
+    {
+     "d": "2022-01-16",
+     "k": "note",
+     "id": "NOTE087",
+     "t": "Discharge Summary"
+    },
+    {
+     "d": "2022-01-20",
+     "k": "imaging",
+     "id": "IMG018",
+     "t": "Stress Echocardiogram"
+    },
+    {
+     "d": "2022-02-15",
+     "k": "note",
+     "id": "NOTE086",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2022-03-14",
+     "k": "note",
+     "id": "NOTE085",
+     "t": "H&P"
+    },
+    {
+     "d": "2022-04-16",
+     "k": "note",
+     "id": "NOTE084",
+     "t": "H&P"
+    },
+    {
+     "d": "2022-05-06",
+     "k": "note",
+     "id": "NOTE083",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-05-20",
+     "k": "note",
+     "id": "NOTE082",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-05-27",
+     "k": "note",
+     "id": "NOTE081",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-05-29",
+     "k": "imaging",
+     "id": "IMG014",
+     "t": "CT CTA Chest"
+    },
+    {
+     "d": "2022-06-25",
+     "k": "note",
+     "id": "NOTE080",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-07-15",
+     "k": "note",
+     "id": "NOTE079",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-08-15",
+     "k": "note",
+     "id": "NOTE_HP001",
+     "t": "H&P"
+    },
+    {
+     "d": "2022-08-19",
+     "k": "note",
+     "id": "NOTE_DC001",
+     "t": "Discharge Summary"
+    },
+    {
+     "d": "2022-08-25",
+     "k": "note",
+     "id": "NOTE_PT001",
+     "t": "Consult Note (Physical Therapy Evaluation)"
+    },
+    {
+     "d": "2022-08-26",
+     "k": "note",
+     "id": "NOTE078",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-10-06",
+     "k": "note",
+     "id": "NOTE_PT002",
+     "t": "Consult Note (Physical Therapy Discharge Summary)"
+    },
+    {
+     "d": "2022-10-10",
+     "k": "note",
+     "id": "NOTE076",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-11-25",
+     "k": "note",
+     "id": "NOTE075",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-12-16",
+     "k": "note",
+     "id": "NOTE074",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-01-10",
+     "k": "note",
+     "id": "NOTE073",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-01-31",
+     "k": "note",
+     "id": "NOTE056",
+     "t": "H&P"
+    },
+    {
+     "d": "2023-03-12",
+     "k": "note",
+     "id": "NOTE071",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-03-31",
+     "k": "note",
+     "id": "NOTE070",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-04-21",
+     "k": "note",
+     "id": "NOTE069",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2023-05-07",
+     "k": "note",
+     "id": "NOTE068",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-05-26",
+     "k": "imaging",
+     "id": "IMG004",
+     "t": "Nuclear V/Q Scan"
+    },
+    {
+     "d": "2023-05-30",
+     "k": "note",
+     "id": "NOTE067",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-01",
+     "k": "note",
+     "id": "NOTE066",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-05",
+     "k": "note",
+     "id": "NOTE061",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-06",
+     "k": "note",
+     "id": "NOTE062",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-07",
+     "k": "note",
+     "id": "NOTE063",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-08",
+     "k": "note",
+     "id": "NOTE064",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-09",
+     "k": "note",
+     "id": "NOTE065",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-08-19",
+     "k": "note",
+     "id": "NOTE060",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2023-08-30",
+     "k": "note",
+     "id": "NOTE059",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-09-02",
+     "k": "note",
+     "id": "NOTE072",
+     "t": "H&P"
+    },
+    {
+     "d": "2023-09-03",
+     "k": "note",
+     "id": "NOTE057",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-09-04",
+     "k": "note",
+     "id": "NOTE058",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-09-12",
+     "k": "note",
+     "id": "NOTE_HP002",
+     "t": "H&P"
+    },
+    {
+     "d": "2023-09-12",
+     "k": "note",
+     "id": "NOTE077",
+     "t": "H&P"
+    },
+    {
+     "d": "2023-09-12",
+     "k": "note",
+     "id": "NOTE_GI001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2023-09-13",
+     "k": "note",
+     "id": "NOTE_PROC001",
+     "t": "Procedure Note"
+    },
+    {
+     "d": "2023-09-14",
+     "k": "lab",
+     "id": "LAB156",
+     "t": "Lab Panel - BNP"
+    },
+    {
+     "d": "2023-09-15",
+     "k": "note",
+     "id": "NOTE_MDT001",
+     "t": "Multidisciplinary Conference Note"
+    },
+    {
+     "d": "2023-10-22",
+     "k": "note",
+     "id": "NOTE054",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-11-05",
+     "k": "note",
+     "id": "NOTE053",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-11-15",
+     "k": "note",
+     "id": "NOTE_CARD001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2023-12-16",
+     "k": "note",
+     "id": "NOTE051",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-01-12",
+     "k": "note",
+     "id": "NOTE050",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-02-07",
+     "k": "note",
+     "id": "NOTE047",
+     "t": "Progress Note (cardiology follow-up)"
+    },
+    {
+     "d": "2024-02-08",
+     "k": "note",
+     "id": "NOTE042",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-02-08",
+     "k": "note",
+     "id": "NOTE048",
+     "t": "Progress Note (cardiology follow-up addendum)"
+    },
+    {
+     "d": "2024-02-09",
+     "k": "note",
+     "id": "NOTE043",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-02-10",
+     "k": "note",
+     "id": "NOTE044",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-02-11",
+     "k": "note",
+     "id": "NOTE045",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-02-24",
+     "k": "note",
+     "id": "NOTE040",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-03-20",
+     "k": "note",
+     "id": "NOTE_NEPH001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2024-03-25",
+     "k": "note",
+     "id": "NOTE_DIET001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2024-05-23",
+     "k": "note",
+     "id": "NOTE038",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-06-15",
+     "k": "note",
+     "id": "NOTE_ENDO001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2024-06-26",
+     "k": "note",
+     "id": "NOTE037",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2024-07-20",
+     "k": "note",
+     "id": "NOTE_URO001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2024-08-08",
+     "k": "note",
+     "id": "NOTE036",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-09-08",
+     "k": "note",
+     "id": "NOTE035",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2024-09-11",
+     "k": "note",
+     "id": "NOTE030",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-09-12",
+     "k": "note",
+     "id": "NOTE031",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-09-17",
+     "k": "note",
+     "id": "NOTE032",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-09-18",
+     "k": "note",
+     "id": "NOTE033",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-09-19",
+     "k": "note",
+     "id": "NOTE034",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-09-20",
+     "k": "note",
+     "id": "NOTE029",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-10-29",
+     "k": "note",
+     "id": "NOTE028",
+     "t": "Progress Note - Routine primary care follow-up, lab review, weight management"
+    },
+    {
+     "d": "2024-11-25",
+     "k": "note",
+     "id": "NOTE027",
+     "t": "Progress Note (BPH follow-up, worsening LUTS)"
+    },
+    {
+     "d": "2024-12-13",
+     "k": "note",
+     "id": "NOTE026",
+     "t": "Progress Note (GI surveillance follow-up and urinary symptoms)"
+    },
+    {
+     "d": "2024-12-15",
+     "k": "note",
+     "id": "NOTE_PODIATRY001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2024-12-15",
+     "k": "note",
+     "id": "NOTE_POD001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2025-02-01",
+     "k": "note",
+     "id": "NOTE024",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2025-03-20",
+     "k": "note",
+     "id": "NOTE021",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2025-04-22",
+     "k": "imaging",
+     "id": "IMG023",
+     "t": "Nuclear V/Q Scan"
+    },
+    {
+     "d": "2025-06-26",
+     "k": "note",
+     "id": "NOTE018",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-08-06",
+     "k": "note",
+     "id": "NOTE017",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2025-09-05",
+     "k": "note",
+     "id": "NOTE016",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-11",
+     "k": "note",
+     "id": "NOTE013",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-12",
+     "k": "note",
+     "id": "NOTE014",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-13",
+     "k": "note",
+     "id": "NOTE015",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-15",
+     "k": "note",
+     "id": "NOTE008",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-16",
+     "k": "note",
+     "id": "NOTE009",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-17",
+     "k": "note",
+     "id": "NOTE010",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-18",
+     "k": "note",
+     "id": "NOTE011",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-10-02",
+     "k": "note",
+     "id": "NOTE006",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2025-11-16",
+     "k": "note",
+     "id": "NOTE005",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2025-12-18",
+     "k": "note",
+     "id": "NOTE004",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2026-01-18",
+     "k": "note",
+     "id": "NOTE003",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2026-01-20",
+     "k": "note",
+     "id": "NOTE_BEHAV001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2026-01-27",
+     "k": "note",
+     "id": "NOTE002",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2026-02-05",
+     "k": "note",
+     "id": "NOTE001",
+     "t": "Telephone Encounter"
+    }
+   ]
+  },
+  {
+   "problem": "CKD 3b (G3bA2-A3) with prior AKI episodes",
+   "status": "chronic",
+   "mentions": [
+    {
+     "d": "2018-02-26",
+     "k": "lab",
+     "id": "LAB002",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2018-03-01",
+     "k": "lab",
+     "id": "LAB007",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2018-04-20",
+     "k": "note",
+     "id": "Doc 4 / LAB009",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2018-05-04",
+     "k": "note",
+     "id": "Doc 1 / LAB011",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2018-06-11",
+     "k": "lab",
+     "id": "LAB014",
+     "t": "Lab Panel: Basic Metabolic Panel"
+    },
+    {
+     "d": "2018-07-14",
+     "k": "lab",
+     "id": "LAB015",
+     "t": "Lab Panel: Basic Metabolic Panel"
+    },
+    {
+     "d": "2018-08-02",
+     "k": "lab",
+     "id": "LAB016",
+     "t": "Lab Panel: Basic Metabolic Panel"
+    },
+    {
+     "d": "2018-08-17",
+     "k": "lab",
+     "id": "LAB017",
+     "t": "Lab Panel: Basic Metabolic Panel"
+    },
+    {
+     "d": "2018-10-27",
+     "k": "lab",
+     "id": "LAB021",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2018-11-30",
+     "k": "lab",
+     "id": "LAB026",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2019-01-03",
+     "k": "note",
+     "id": "Doc 4 - LAB029",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2019-02-03",
+     "k": "note",
+     "id": "Doc 3 - LAB031",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2019-03-04",
+     "k": "lab",
+     "id": "LAB033",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2019-04-06",
+     "k": "lab",
+     "id": "LAB035",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2019-05-19",
+     "k": "lab",
+     "id": "LAB038",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2019-06-13",
+     "k": "lab",
+     "id": "LAB039",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2019-07-28",
+     "k": "lab",
+     "id": "LAB040",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2019-08-26",
+     "k": "lab",
+     "id": "LAB042",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2019-09-23",
+     "k": "lab",
+     "id": "LAB043",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2019-11-27",
+     "k": "lab",
+     "id": "LAB046",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2019-12-20",
+     "k": "lab",
+     "id": "LAB048",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2020-01-25",
+     "k": "lab",
+     "id": "LAB052",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2020-02-08",
+     "k": "lab",
+     "id": "LAB055",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2020-02-10",
+     "k": "lab",
+     "id": "LAB060",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2020-02-29",
+     "k": "lab",
+     "id": "LAB061",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2020-03-18",
+     "k": "lab",
+     "id": "LAB064",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2020-04-06",
+     "k": "lab",
+     "id": "LAB066",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2020-04-20",
+     "k": "lab",
+     "id": "LAB068",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2020-08-10",
+     "k": "note",
+     "id": "Doc 5",
+     "t": "Lab Panel - Basic Metabolic Panel (LAB074)"
+    },
+    {
+     "d": "2020-09-19",
+     "k": "note",
+     "id": "Doc 3",
+     "t": "Lab Panel - Basic Metabolic Panel (LAB075)"
+    },
+    {
+     "d": "2020-10-31",
+     "k": "note",
+     "id": "Doc 2",
+     "t": "Lab Panel - Basic Metabolic Panel (LAB077)"
+    },
+    {
+     "d": "2020-11-27",
+     "k": "note",
+     "id": "Doc 2 (LAB078)",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2020-11-28",
+     "k": "lab",
+     "id": "LAB083",
+     "t": "Lab Panel: Basic Metabolic Panel"
+    },
+    {
+     "d": "2020-12-27",
+     "k": "lab",
+     "id": "LAB085",
+     "t": "Lab Panel: Basic Metabolic Panel"
+    },
+    {
+     "d": "2021-01-05",
+     "k": "note",
+     "id": "NOTE103",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2021-01-10",
+     "k": "note",
+     "id": "NOTE102",
+     "t": "H&P"
+    },
+    {
+     "d": "2021-01-14",
+     "k": "lab",
+     "id": "LAB086",
+     "t": "Lab Panel: Basic Metabolic Panel"
+    },
+    {
+     "d": "2021-01-31",
+     "k": "note",
+     "id": "NOTE101",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-02-08",
+     "k": "lab",
+     "id": "LAB089",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2021-02-10",
+     "k": "note",
+     "id": "NOTE_HP003",
+     "t": "H&P"
+    },
+    {
+     "d": "2021-02-10",
+     "k": "note",
+     "id": "NOTE_ID001",
+     "t": "Consult Note (Infectious Disease)"
+    },
+    {
+     "d": "2021-02-10",
+     "k": "note",
+     "id": "NOTE_RT001",
+     "t": "Respiratory Therapy Note"
+    },
+    {
+     "d": "2021-02-12",
+     "k": "note",
+     "id": "NOTE_PROG_ADM001",
+     "t": "Progress Note (Hospital Day 3)"
+    },
+    {
+     "d": "2021-02-14",
+     "k": "note",
+     "id": "NOTE_DC003",
+     "t": "Discharge Summary"
+    },
+    {
+     "d": "2021-02-14",
+     "k": "note",
+     "id": "NOTE_PROG_ADM002",
+     "t": "Progress Note (Hospital Day 5, discharge day)"
+    },
+    {
+     "d": "2021-03-08",
+     "k": "lab",
+     "id": "LAB090",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2021-03-11",
+     "k": "lab",
+     "id": "LAB095",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2021-03-14",
+     "k": "note",
+     "id": "NOTE100",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2021-04-08",
+     "k": "note",
+     "id": "NOTE099",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-04-27",
+     "k": "lab",
+     "id": "LAB103",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2021-05-11",
+     "k": "lab",
+     "id": "LAB105",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2021-05-16",
+     "k": "note",
+     "id": "NOTE098",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-06-01",
+     "k": "note",
+     "id": "NOTE097",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-06-06",
+     "k": "lab",
+     "id": "LAB106",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2021-07-15",
+     "k": "note",
+     "id": "NOTE096",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2021-08-13",
+     "k": "lab",
+     "id": "LAB108",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2021-08-20",
+     "k": "note",
+     "id": "NOTE095",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-09-06",
+     "k": "lab",
+     "id": "LAB109",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2021-09-24",
+     "k": "note",
+     "id": "NOTE094",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-10-01",
+     "k": "lab",
+     "id": "LAB110",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2021-10-23",
+     "k": "lab",
+     "id": "LAB113",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2021-10-30",
+     "k": "note",
+     "id": "NOTE093",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2021-11-12",
+     "k": "note",
+     "id": "NOTE092",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-11-19",
+     "k": "note",
+     "id": "NOTE090",
+     "t": "H&P"
+    },
+    {
+     "d": "2021-12-16",
+     "k": "lab",
+     "id": "LAB116",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2021-12-24",
+     "k": "note",
+     "id": "NOTE089",
+     "t": "H&P"
+    },
+    {
+     "d": "2022-01-15",
+     "k": "note",
+     "id": "NOTE088",
+     "t": "Progress Note (Nephrology follow-up)"
+    },
+    {
+     "d": "2022-01-16",
+     "k": "note",
+     "id": "NOTE087",
+     "t": "Discharge Summary"
+    },
+    {
+     "d": "2022-01-24",
+     "k": "note",
+     "id": "Doc 4 / LAB119",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2022-02-15",
+     "k": "note",
+     "id": "NOTE086",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2022-02-21",
+     "k": "lab",
+     "id": "LAB121",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2022-02-24",
+     "k": "lab",
+     "id": "LAB126",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2022-03-14",
+     "k": "note",
+     "id": "NOTE085",
+     "t": "H&P"
+    },
+    {
+     "d": "2022-04-16",
+     "k": "note",
+     "id": "NOTE084",
+     "t": "H&P"
+    },
+    {
+     "d": "2022-05-06",
+     "k": "note",
+     "id": "NOTE083",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-05-20",
+     "k": "note",
+     "id": "NOTE082",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-05-27",
+     "k": "note",
+     "id": "NOTE081",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-05-29",
+     "k": "lab",
+     "id": "LAB131",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2022-06-25",
+     "k": "note",
+     "id": "NOTE080",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-07-07",
+     "k": "lab",
+     "id": "LAB134",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2022-07-15",
+     "k": "note",
+     "id": "NOTE079",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-08-15",
+     "k": "note",
+     "id": "NOTE_HP001",
+     "t": "H&P"
+    },
+    {
+     "d": "2022-08-19",
+     "k": "note",
+     "id": "NOTE_DC001",
+     "t": "Discharge Summary"
+    },
+    {
+     "d": "2022-08-23",
+     "k": "lab",
+     "id": "LAB137",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2022-08-25",
+     "k": "note",
+     "id": "NOTE_PT001",
+     "t": "Consult Note (Physical Therapy Evaluation)"
+    },
+    {
+     "d": "2022-08-26",
+     "k": "note",
+     "id": "NOTE078",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-10-07",
+     "k": "lab",
+     "id": "LAB139",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2022-10-10",
+     "k": "note",
+     "id": "NOTE076",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-11-07",
+     "k": "lab",
+     "id": "LAB141",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2022-11-25",
+     "k": "note",
+     "id": "NOTE075",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-12-16",
+     "k": "note",
+     "id": "NOTE074",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-12-19",
+     "k": "lab",
+     "id": "LAB142",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2023-01-10",
+     "k": "note",
+     "id": "NOTE073",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-01-17",
+     "k": "lab",
+     "id": "LAB143",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2023-01-31",
+     "k": "note",
+     "id": "NOTE056",
+     "t": "H&P"
+    },
+    {
+     "d": "2023-02-28",
+     "k": "lab",
+     "id": "LAB146",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2023-03-12",
+     "k": "note",
+     "id": "NOTE071",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-03-31",
+     "k": "note",
+     "id": "NOTE070",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-04-21",
+     "k": "lab",
+     "id": "LAB148",
+     "t": "Lab Panel - Comprehensive Metabolic Panel"
+    },
+    {
+     "d": "2023-05-07",
+     "k": "note",
+     "id": "NOTE068",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-05-17",
+     "k": "lab",
+     "id": "LAB149",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2023-05-30",
+     "k": "note",
+     "id": "NOTE067",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-06-09",
+     "k": "lab",
+     "id": "LAB150",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2023-07-01",
+     "k": "note",
+     "id": "NOTE066",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-05",
+     "k": "note",
+     "id": "NOTE061",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-06",
+     "k": "note",
+     "id": "NOTE062",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-07",
+     "k": "note",
+     "id": "NOTE063",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-08",
+     "k": "note",
+     "id": "NOTE064",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-09",
+     "k": "note",
+     "id": "NOTE065",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-08-13",
+     "k": "lab",
+     "id": "LAB152",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2023-08-19",
+     "k": "note",
+     "id": "NOTE060",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2023-08-30",
+     "k": "note",
+     "id": "NOTE059",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-09-02",
+     "k": "note",
+     "id": "NOTE072",
+     "t": "H&P"
+    },
+    {
+     "d": "2023-09-03",
+     "k": "note",
+     "id": "NOTE057",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-09-04",
+     "k": "note",
+     "id": "NOTE058",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-09-12",
+     "k": "note",
+     "id": "NOTE_HP002",
+     "t": "H&P"
+    },
+    {
+     "d": "2023-09-12",
+     "k": "note",
+     "id": "NOTE077",
+     "t": "H&P"
+    },
+    {
+     "d": "2023-09-12",
+     "k": "note",
+     "id": "NOTE_GI001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2023-09-13",
+     "k": "note",
+     "id": "NOTE_PROC001",
+     "t": "Procedure Note"
+    },
+    {
+     "d": "2023-09-13",
+     "k": "note",
+     "id": "NOTE_ICU001",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-09-14",
+     "k": "note",
+     "id": "NOTE_ICU002",
+     "t": "Progress Note (MICU Day 3)"
+    },
+    {
+     "d": "2023-09-14",
+     "k": "lab",
+     "id": "LAB154",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2023-09-15",
+     "k": "lab",
+     "id": "LAB159",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2023-09-15",
+     "k": "note",
+     "id": "NOTE_MDT001",
+     "t": "Multidisciplinary Conference Note"
+    },
+    {
+     "d": "2023-09-15",
+     "k": "note",
+     "id": "NOTE_PHARM001",
+     "t": "Clinical Pharmacy Note"
+    },
+    {
+     "d": "2023-10-22",
+     "k": "note",
+     "id": "NOTE054",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-10-30",
+     "k": "imaging",
+     "id": "IMG017",
+     "t": "Nuclear Renal Scan"
+    },
+    {
+     "d": "2023-10-30",
+     "k": "lab",
+     "id": "LAB161",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2023-11-05",
+     "k": "note",
+     "id": "NOTE053",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-11-15",
+     "k": "note",
+     "id": "NOTE_CARD001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2023-12-16",
+     "k": "note",
+     "id": "NOTE051",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-12-31",
+     "k": "lab",
+     "id": "LAB164",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2024-01-12",
+     "k": "note",
+     "id": "NOTE050",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-02-07",
+     "k": "note",
+     "id": "NOTE047",
+     "t": "Progress Note (cardiology follow-up)"
+    },
+    {
+     "d": "2024-02-08",
+     "k": "note",
+     "id": "NOTE042",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-02-08",
+     "k": "note",
+     "id": "NOTE048",
+     "t": "Progress Note (cardiology follow-up addendum)"
+    },
+    {
+     "d": "2024-02-09",
+     "k": "note",
+     "id": "NOTE043",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-02-10",
+     "k": "note",
+     "id": "NOTE044",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-02-11",
+     "k": "note",
+     "id": "NOTE045",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-02-17",
+     "k": "lab",
+     "id": "LAB167",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2024-02-24",
+     "k": "note",
+     "id": "NOTE040",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-03-20",
+     "k": "note",
+     "id": "NOTE_NEPH001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2024-03-25",
+     "k": "note",
+     "id": "NOTE_DIET001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2024-03-27",
+     "k": "lab",
+     "id": "LAB171",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2024-04-15",
+     "k": "note",
+     "id": "NOTE_GI003",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2024-05-03",
+     "k": "lab",
+     "id": "LAB174",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2024-05-23",
+     "k": "note",
+     "id": "NOTE038",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-06-02",
+     "k": "lab",
+     "id": "LAB176",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2024-06-15",
+     "k": "note",
+     "id": "NOTE_ENDO001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2024-06-26",
+     "k": "note",
+     "id": "NOTE037",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2024-07-20",
+     "k": "note",
+     "id": "NOTE_URO001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2024-07-24",
+     "k": "lab",
+     "id": "LAB179",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2024-08-08",
+     "k": "note",
+     "id": "NOTE036",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-08-22",
+     "k": "lab",
+     "id": "LAB181",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2024-09-06",
+     "k": "lab",
+     "id": "LAB182",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2024-09-08",
+     "k": "note",
+     "id": "NOTE035",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2024-09-11",
+     "k": "note",
+     "id": "NOTE030",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-09-12",
+     "k": "note",
+     "id": "NOTE031",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-09-17",
+     "k": "note",
+     "id": "NOTE032",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-09-18",
+     "k": "note",
+     "id": "NOTE033",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-09-20",
+     "k": "note",
+     "id": "NOTE029",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-09-24",
+     "k": "imaging",
+     "id": "IMG005",
+     "t": "CT Abdomen/Pelvis with Contrast"
+    },
+    {
+     "d": "2024-10-01",
+     "k": "lab",
+     "id": "LAB183",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2024-10-26",
+     "k": "lab",
+     "id": "LAB186",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2024-10-29",
+     "k": "note",
+     "id": "NOTE028",
+     "t": "Progress Note - Routine primary care follow-up, lab review, weight management"
+    },
+    {
+     "d": "2024-11-25",
+     "k": "note",
+     "id": "NOTE027",
+     "t": "Progress Note (BPH follow-up, worsening LUTS)"
+    },
+    {
+     "d": "2024-12-03",
+     "k": "lab",
+     "id": "LAB187",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2024-12-10",
+     "k": "note",
+     "id": "NOTE_OPHTH001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2024-12-13",
+     "k": "note",
+     "id": "NOTE026",
+     "t": "Progress Note (GI surveillance follow-up and urinary symptoms)"
+    },
+    {
+     "d": "2024-12-15",
+     "k": "note",
+     "id": "NOTE_PODIATRY001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2024-12-15",
+     "k": "note",
+     "id": "NOTE_POD001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2024-12-25",
+     "k": "note",
+     "id": "Doc 5",
+     "t": "Lab Panel - Basic Metabolic Panel (LAB074)"
+    },
+    {
+     "d": "2025-01-19",
+     "k": "note",
+     "id": "Doc 4",
+     "t": "Lab Panel - Hemoglobin A1c (LAB076)"
+    },
+    {
+     "d": "2025-02-23",
+     "k": "note",
+     "id": "Doc 3",
+     "t": "Lab Panel - Basic Metabolic Panel (LAB075)"
+    },
+    {
+     "d": "2025-03-24",
+     "k": "note",
+     "id": "Doc 4",
+     "t": "Lab Panel - Hemoglobin A1c (LAB076)"
+    },
+    {
+     "d": "2025-05-05",
+     "k": "note",
+     "id": "Doc 1",
+     "t": "Lab Panel - Coagulation Panel (LAB082)"
+    },
+    {
+     "d": "2025-06-17",
+     "k": "lab",
+     "id": "LAB199",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2025-06-26",
+     "k": "note",
+     "id": "NOTE018",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-07-02",
+     "k": "lab",
+     "id": "LAB200",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2025-08-06",
+     "k": "note",
+     "id": "NOTE017",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2025-08-08",
+     "k": "lab",
+     "id": "LAB202",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2025-08-29",
+     "k": "lab",
+     "id": "LAB204",
+     "t": "Lab Panel (Basic Metabolic Panel)"
+    },
+    {
+     "d": "2025-09-05",
+     "k": "note",
+     "id": "NOTE016",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-11",
+     "k": "note",
+     "id": "NOTE013",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-12",
+     "k": "note",
+     "id": "NOTE014",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-13",
+     "k": "note",
+     "id": "NOTE015",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-15",
+     "k": "note",
+     "id": "NOTE008",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-16",
+     "k": "note",
+     "id": "NOTE009",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-17",
+     "k": "note",
+     "id": "NOTE010",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-18",
+     "k": "note",
+     "id": "NOTE011",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-10-26",
+     "k": "lab",
+     "id": "LAB207",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2025-11-16",
+     "k": "note",
+     "id": "NOTE005",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2025-11-26",
+     "k": "lab",
+     "id": "LAB210",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2025-12-18",
+     "k": "note",
+     "id": "NOTE004",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-12-25",
+     "k": "lab",
+     "id": "LAB212",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2026-01-11",
+     "k": "lab",
+     "id": "LAB213",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2026-01-18",
+     "k": "note",
+     "id": "NOTE003",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2026-01-20",
+     "k": "note",
+     "id": "NOTE_BEHAV001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2026-01-27",
+     "k": "note",
+     "id": "NOTE002",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2026-02-05",
+     "k": "note",
+     "id": "NOTE001",
+     "t": "Telephone Encounter"
+    }
+   ]
+  },
+  {
+   "problem": "Persistent AFib, off anticoagulation (aspirin 81 only since 9/2023)",
+   "status": "active",
+   "mentions": [
+    {
+     "d": "2020-09-21",
+     "k": "imaging",
+     "id": "IMG002",
+     "t": "Transthoracic Echocardiogram"
+    },
+    {
+     "d": "2021-01-05",
+     "k": "note",
+     "id": "NOTE103",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2021-01-10",
+     "k": "note",
+     "id": "NOTE102",
+     "t": "H&P"
+    },
+    {
+     "d": "2021-01-31",
+     "k": "note",
+     "id": "NOTE101",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-02-10",
+     "k": "note",
+     "id": "NOTE_HP003",
+     "t": "H&P"
+    },
+    {
+     "d": "2021-02-10",
+     "k": "note",
+     "id": "NOTE_ID001",
+     "t": "Consult Note (Infectious Disease)"
+    },
+    {
+     "d": "2021-02-10",
+     "k": "note",
+     "id": "NOTE_NURS001",
+     "t": "Nursing Assessment"
+    },
+    {
+     "d": "2021-02-12",
+     "k": "note",
+     "id": "NOTE_PROG_ADM001",
+     "t": "Progress Note (Hospital Day 3)"
+    },
+    {
+     "d": "2021-02-14",
+     "k": "note",
+     "id": "NOTE_DC003",
+     "t": "Discharge Summary"
+    },
+    {
+     "d": "2021-02-14",
+     "k": "note",
+     "id": "NOTE_PROG_ADM002",
+     "t": "Progress Note (Hospital Day 5, discharge day)"
+    },
+    {
+     "d": "2021-03-14",
+     "k": "note",
+     "id": "NOTE100",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2021-04-08",
+     "k": "note",
+     "id": "NOTE099",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-05-16",
+     "k": "note",
+     "id": "NOTE098",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-07-31",
+     "k": "imaging",
+     "id": "IMG007",
+     "t": "MRI Brain with/without Contrast"
+    },
+    {
+     "d": "2021-08-20",
+     "k": "note",
+     "id": "NOTE095",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-09-24",
+     "k": "note",
+     "id": "NOTE094",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-11-12",
+     "k": "note",
+     "id": "NOTE092",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-11-14",
+     "k": "note",
+     "id": "NOTE091",
+     "t": "H&P"
+    },
+    {
+     "d": "2021-11-19",
+     "k": "note",
+     "id": "NOTE090",
+     "t": "H&P"
+    },
+    {
+     "d": "2021-12-24",
+     "k": "note",
+     "id": "NOTE089",
+     "t": "H&P"
+    },
+    {
+     "d": "2022-01-15",
+     "k": "note",
+     "id": "NOTE088",
+     "t": "Progress Note (Nephrology follow-up)"
+    },
+    {
+     "d": "2022-01-16",
+     "k": "note",
+     "id": "NOTE087",
+     "t": "Discharge Summary"
+    },
+    {
+     "d": "2022-02-15",
+     "k": "note",
+     "id": "NOTE086",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2022-03-14",
+     "k": "note",
+     "id": "NOTE085",
+     "t": "H&P"
+    },
+    {
+     "d": "2022-04-16",
+     "k": "note",
+     "id": "NOTE084",
+     "t": "H&P"
+    },
+    {
+     "d": "2022-05-06",
+     "k": "note",
+     "id": "NOTE083",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-05-20",
+     "k": "note",
+     "id": "NOTE082",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-05-27",
+     "k": "note",
+     "id": "NOTE081",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-06-25",
+     "k": "note",
+     "id": "NOTE080",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-07-15",
+     "k": "note",
+     "id": "NOTE079",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-08-15",
+     "k": "note",
+     "id": "NOTE_HP001",
+     "t": "H&P"
+    },
+    {
+     "d": "2022-08-19",
+     "k": "note",
+     "id": "NOTE_DC001",
+     "t": "Discharge Summary"
+    },
+    {
+     "d": "2022-08-25",
+     "k": "note",
+     "id": "NOTE_PT001",
+     "t": "Consult Note (Physical Therapy Evaluation)"
+    },
+    {
+     "d": "2022-08-26",
+     "k": "note",
+     "id": "NOTE078",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-10-10",
+     "k": "note",
+     "id": "NOTE076",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-11-25",
+     "k": "note",
+     "id": "NOTE075",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-12-16",
+     "k": "note",
+     "id": "NOTE074",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-01-10",
+     "k": "note",
+     "id": "NOTE073",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-01-31",
+     "k": "note",
+     "id": "NOTE056",
+     "t": "H&P"
+    },
+    {
+     "d": "2023-03-12",
+     "k": "note",
+     "id": "NOTE071",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-03-31",
+     "k": "note",
+     "id": "NOTE070",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-05-07",
+     "k": "note",
+     "id": "NOTE068",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-05-30",
+     "k": "note",
+     "id": "NOTE067",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-01",
+     "k": "note",
+     "id": "NOTE066",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-05",
+     "k": "note",
+     "id": "NOTE061",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-06",
+     "k": "note",
+     "id": "NOTE062",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-07",
+     "k": "note",
+     "id": "NOTE063",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-08",
+     "k": "note",
+     "id": "NOTE064",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-09",
+     "k": "note",
+     "id": "NOTE065",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-08-30",
+     "k": "note",
+     "id": "NOTE059",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-09-02",
+     "k": "note",
+     "id": "NOTE072",
+     "t": "H&P"
+    },
+    {
+     "d": "2023-09-03",
+     "k": "note",
+     "id": "NOTE057",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-09-04",
+     "k": "note",
+     "id": "NOTE058",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-09-12",
+     "k": "note",
+     "id": "NOTE_HP002",
+     "t": "H&P"
+    },
+    {
+     "d": "2023-09-12",
+     "k": "note",
+     "id": "NOTE077",
+     "t": "H&P"
+    },
+    {
+     "d": "2023-09-12",
+     "k": "note",
+     "id": "NOTE_GI001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2023-09-13",
+     "k": "note",
+     "id": "NOTE_PROC001",
+     "t": "Procedure Note"
+    },
+    {
+     "d": "2023-09-13",
+     "k": "note",
+     "id": "NOTE_ICU001",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-09-14",
+     "k": "note",
+     "id": "NOTE_ICU002",
+     "t": "Progress Note (MICU Day 3)"
+    },
+    {
+     "d": "2023-09-15",
+     "k": "note",
+     "id": "NOTE_MDT001",
+     "t": "Multidisciplinary Conference Note"
+    },
+    {
+     "d": "2023-09-15",
+     "k": "note",
+     "id": "NOTE_PHARM001",
+     "t": "Clinical Pharmacy Note"
+    },
+    {
+     "d": "2023-10-11",
+     "k": "note",
+     "id": "NOTE_GI002",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2023-10-22",
+     "k": "note",
+     "id": "NOTE054",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-11-05",
+     "k": "note",
+     "id": "NOTE053",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-11-15",
+     "k": "note",
+     "id": "NOTE_CARD001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2023-12-16",
+     "k": "note",
+     "id": "NOTE051",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-01-12",
+     "k": "note",
+     "id": "NOTE050",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-02-07",
+     "k": "note",
+     "id": "NOTE047",
+     "t": "Progress Note (cardiology follow-up)"
+    },
+    {
+     "d": "2024-02-08",
+     "k": "note",
+     "id": "NOTE042",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-02-08",
+     "k": "note",
+     "id": "NOTE048",
+     "t": "Progress Note (cardiology follow-up addendum)"
+    },
+    {
+     "d": "2024-02-09",
+     "k": "note",
+     "id": "NOTE043",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-02-10",
+     "k": "note",
+     "id": "NOTE044",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-02-11",
+     "k": "note",
+     "id": "NOTE045",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-02-24",
+     "k": "note",
+     "id": "NOTE040",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-03-20",
+     "k": "note",
+     "id": "NOTE_NEPH001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2024-04-15",
+     "k": "note",
+     "id": "NOTE_GI003",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2024-05-23",
+     "k": "note",
+     "id": "NOTE038",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-06-15",
+     "k": "note",
+     "id": "NOTE_ENDO001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2024-08-08",
+     "k": "note",
+     "id": "NOTE036",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-09-11",
+     "k": "note",
+     "id": "NOTE030",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-09-12",
+     "k": "note",
+     "id": "NOTE031",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-09-20",
+     "k": "note",
+     "id": "NOTE029",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-09-22",
+     "k": "imaging",
+     "id": "IMG024",
+     "t": "Echo TEE"
+    },
+    {
+     "d": "2024-10-29",
+     "k": "note",
+     "id": "NOTE028",
+     "t": "Progress Note - Routine primary care follow-up, lab review, weight management"
+    },
+    {
+     "d": "2024-11-25",
+     "k": "note",
+     "id": "NOTE027",
+     "t": "Progress Note (BPH follow-up, worsening LUTS)"
+    },
+    {
+     "d": "2024-12-13",
+     "k": "note",
+     "id": "NOTE026",
+     "t": "Progress Note (GI surveillance follow-up and urinary symptoms)"
+    },
+    {
+     "d": "2024-12-15",
+     "k": "note",
+     "id": "NOTE_PODIATRY001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2024-12-15",
+     "k": "note",
+     "id": "NOTE_POD001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2025-06-26",
+     "k": "note",
+     "id": "NOTE018",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-05",
+     "k": "note",
+     "id": "NOTE016",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-11",
+     "k": "note",
+     "id": "NOTE013",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-12",
+     "k": "note",
+     "id": "NOTE014",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-13",
+     "k": "note",
+     "id": "NOTE015",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-15",
+     "k": "note",
+     "id": "NOTE008",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-16",
+     "k": "note",
+     "id": "NOTE009",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-17",
+     "k": "note",
+     "id": "NOTE010",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-18",
+     "k": "note",
+     "id": "NOTE011",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-12-18",
+     "k": "note",
+     "id": "NOTE004",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2026-01-18",
+     "k": "note",
+     "id": "NOTE003",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2026-01-27",
+     "k": "note",
+     "id": "NOTE002",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2026-02-05",
+     "k": "note",
+     "id": "NOTE001",
+     "t": "Telephone Encounter"
+    }
+   ]
+  },
+  {
+   "problem": "Upper GI bleed 9/2023 / gastric ulcer, H. pylori (healed)",
+   "status": "resolved",
+   "mentions": [
+    {
+     "d": "2021-03-14",
+     "k": "note",
+     "id": "NOTE100",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2021-11-14",
+     "k": "note",
+     "id": "NOTE091",
+     "t": "H&P"
+    },
+    {
+     "d": "2022-11-25",
+     "k": "note",
+     "id": "NOTE075",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-09-12",
+     "k": "note",
+     "id": "NOTE_HP002",
+     "t": "H&P"
+    },
+    {
+     "d": "2023-09-12",
+     "k": "note",
+     "id": "NOTE_GI001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2023-09-13",
+     "k": "note",
+     "id": "NOTE_PROC001",
+     "t": "Procedure Note"
+    },
+    {
+     "d": "2023-09-13",
+     "k": "note",
+     "id": "NOTE_ICU001",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-09-14",
+     "k": "note",
+     "id": "NOTE_ICU002",
+     "t": "Progress Note (MICU Day 3)"
+    },
+    {
+     "d": "2023-09-14",
+     "k": "note",
+     "id": "NOTE_SW001",
+     "t": "Social Work Note"
+    },
+    {
+     "d": "2023-09-15",
+     "k": "note",
+     "id": "NOTE_MDT001",
+     "t": "Multidisciplinary Conference Note"
+    },
+    {
+     "d": "2023-09-15",
+     "k": "note",
+     "id": "NOTE_PHARM001",
+     "t": "Clinical Pharmacy Note"
+    },
+    {
+     "d": "2023-10-11",
+     "k": "note",
+     "id": "NOTE_GI002",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2023-10-22",
+     "k": "note",
+     "id": "NOTE054",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-11-05",
+     "k": "note",
+     "id": "NOTE053",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-11-15",
+     "k": "note",
+     "id": "NOTE_CARD001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2023-12-16",
+     "k": "note",
+     "id": "NOTE051",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-02-07",
+     "k": "note",
+     "id": "NOTE047",
+     "t": "Progress Note (cardiology follow-up)"
+    },
+    {
+     "d": "2024-04-15",
+     "k": "note",
+     "id": "NOTE_GI003",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2024-09-11",
+     "k": "note",
+     "id": "NOTE030",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-10-29",
+     "k": "note",
+     "id": "NOTE028",
+     "t": "Progress Note - Routine primary care follow-up, lab review, weight management"
+    },
+    {
+     "d": "2024-12-13",
+     "k": "note",
+     "id": "NOTE026",
+     "t": "Progress Note (GI surveillance follow-up and urinary symptoms)"
+    },
+    {
+     "d": "2025-09-15",
+     "k": "note",
+     "id": "NOTE008",
+     "t": "Progress Note"
+    }
+   ]
+  },
+  {
+   "problem": "CAD, 3-vessel, medically managed / hyperlipidemia",
+   "status": "stable",
+   "mentions": [
+    {
+     "d": "2020-11-28",
+     "k": "lab",
+     "id": "LAB083",
+     "t": "Lab Panel: Basic Metabolic Panel"
+    },
+    {
+     "d": "2020-12-27",
+     "k": "lab",
+     "id": "LAB085",
+     "t": "Lab Panel: Basic Metabolic Panel"
+    },
+    {
+     "d": "2021-01-10",
+     "k": "note",
+     "id": "NOTE102",
+     "t": "H&P"
+    },
+    {
+     "d": "2021-01-14",
+     "k": "lab",
+     "id": "LAB086",
+     "t": "Lab Panel: Basic Metabolic Panel"
+    },
+    {
+     "d": "2021-01-14",
+     "k": "lab",
+     "id": "LAB087",
+     "t": "Lab Panel: Hemoglobin A1c"
+    },
+    {
+     "d": "2021-01-31",
+     "k": "note",
+     "id": "NOTE101",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-02-10",
+     "k": "note",
+     "id": "NOTE_HP003",
+     "t": "H&P"
+    },
+    {
+     "d": "2021-08-20",
+     "k": "note",
+     "id": "NOTE095",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-11-12",
+     "k": "note",
+     "id": "NOTE092",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-11-19",
+     "k": "note",
+     "id": "NOTE090",
+     "t": "H&P"
+    },
+    {
+     "d": "2022-01-16",
+     "k": "note",
+     "id": "NOTE087",
+     "t": "Discharge Summary"
+    },
+    {
+     "d": "2022-08-15",
+     "k": "note",
+     "id": "NOTE_HP001",
+     "t": "H&P"
+    },
+    {
+     "d": "2022-08-19",
+     "k": "note",
+     "id": "NOTE_DC001",
+     "t": "Discharge Summary"
+    },
+    {
+     "d": "2022-08-25",
+     "k": "note",
+     "id": "NOTE_PT001",
+     "t": "Consult Note (Physical Therapy Evaluation)"
+    },
+    {
+     "d": "2022-11-25",
+     "k": "note",
+     "id": "NOTE075",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-12-16",
+     "k": "note",
+     "id": "NOTE074",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-01-10",
+     "k": "note",
+     "id": "NOTE073",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-03-12",
+     "k": "note",
+     "id": "NOTE071",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-03-31",
+     "k": "note",
+     "id": "NOTE070",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-05-07",
+     "k": "note",
+     "id": "NOTE068",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-05-30",
+     "k": "note",
+     "id": "NOTE067",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-01",
+     "k": "note",
+     "id": "NOTE066",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-05",
+     "k": "note",
+     "id": "NOTE061",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-07",
+     "k": "note",
+     "id": "NOTE063",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-08",
+     "k": "note",
+     "id": "NOTE064",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-09",
+     "k": "note",
+     "id": "NOTE065",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-08-30",
+     "k": "note",
+     "id": "NOTE059",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-09-02",
+     "k": "note",
+     "id": "NOTE072",
+     "t": "H&P"
+    },
+    {
+     "d": "2023-09-04",
+     "k": "note",
+     "id": "NOTE058",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-09-12",
+     "k": "note",
+     "id": "NOTE_HP002",
+     "t": "H&P"
+    },
+    {
+     "d": "2023-09-12",
+     "k": "note",
+     "id": "NOTE_GI001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2023-09-13",
+     "k": "note",
+     "id": "NOTE_PROC001",
+     "t": "Procedure Note"
+    },
+    {
+     "d": "2023-09-15",
+     "k": "note",
+     "id": "NOTE_MDT001",
+     "t": "Multidisciplinary Conference Note"
+    },
+    {
+     "d": "2023-09-15",
+     "k": "note",
+     "id": "NOTE_PHARM001",
+     "t": "Clinical Pharmacy Note"
+    },
+    {
+     "d": "2023-11-15",
+     "k": "note",
+     "id": "NOTE_CARD001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2023-12-16",
+     "k": "note",
+     "id": "NOTE051",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-01-12",
+     "k": "note",
+     "id": "NOTE050",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-02-07",
+     "k": "note",
+     "id": "NOTE047",
+     "t": "Progress Note (cardiology follow-up)"
+    },
+    {
+     "d": "2024-02-08",
+     "k": "note",
+     "id": "NOTE048",
+     "t": "Progress Note (cardiology follow-up addendum)"
+    },
+    {
+     "d": "2024-02-24",
+     "k": "note",
+     "id": "NOTE040",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-03-20",
+     "k": "note",
+     "id": "NOTE_NEPH001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2024-05-23",
+     "k": "note",
+     "id": "NOTE038",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-08-08",
+     "k": "note",
+     "id": "NOTE036",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-09-11",
+     "k": "note",
+     "id": "NOTE030",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-09-12",
+     "k": "note",
+     "id": "NOTE031",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-09-20",
+     "k": "note",
+     "id": "NOTE029",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-10-29",
+     "k": "note",
+     "id": "NOTE028",
+     "t": "Progress Note - Routine primary care follow-up, lab review, weight management"
+    },
+    {
+     "d": "2024-12-13",
+     "k": "note",
+     "id": "NOTE026",
+     "t": "Progress Note (GI surveillance follow-up and urinary symptoms)"
+    },
+    {
+     "d": "2024-12-15",
+     "k": "note",
+     "id": "NOTE_POD001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2025-09-11",
+     "k": "note",
+     "id": "NOTE013",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-12",
+     "k": "note",
+     "id": "NOTE014",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-15",
+     "k": "note",
+     "id": "NOTE008",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-16",
+     "k": "note",
+     "id": "NOTE009",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-17",
+     "k": "note",
+     "id": "NOTE010",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-18",
+     "k": "note",
+     "id": "NOTE011",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-12-18",
+     "k": "note",
+     "id": "NOTE004",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2026-01-18",
+     "k": "note",
+     "id": "NOTE003",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2026-01-27",
+     "k": "note",
+     "id": "NOTE002",
+     "t": "Progress Note"
+    }
+   ]
+  },
+  {
+   "problem": "Falls / mobility impairment (falls 9/2024 and 9/12/2025)",
+   "status": "active",
+   "mentions": [
+    {
+     "d": "2021-01-05",
+     "k": "note",
+     "id": "NOTE103",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2021-02-10",
+     "k": "note",
+     "id": "NOTE_NURS001",
+     "t": "Nursing Assessment"
+    },
+    {
+     "d": "2022-08-25",
+     "k": "note",
+     "id": "NOTE_PT001",
+     "t": "Consult Note (Physical Therapy Evaluation)"
+    },
+    {
+     "d": "2022-10-06",
+     "k": "note",
+     "id": "NOTE_PT002",
+     "t": "Consult Note (Physical Therapy Discharge Summary)"
+    },
+    {
+     "d": "2023-01-10",
+     "k": "note",
+     "id": "NOTE073",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-03-31",
+     "k": "note",
+     "id": "NOTE070",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-09-04",
+     "k": "note",
+     "id": "NOTE058",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-09-14",
+     "k": "note",
+     "id": "NOTE_SW001",
+     "t": "Social Work Note"
+    },
+    {
+     "d": "2023-11-05",
+     "k": "note",
+     "id": "NOTE053",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-01-12",
+     "k": "note",
+     "id": "NOTE050",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-02-08",
+     "k": "note",
+     "id": "NOTE048",
+     "t": "Progress Note (cardiology follow-up addendum)"
+    },
+    {
+     "d": "2024-09-20",
+     "k": "note",
+     "id": "NOTE029",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-11-25",
+     "k": "note",
+     "id": "NOTE027",
+     "t": "Progress Note (BPH follow-up, worsening LUTS)"
+    },
+    {
+     "d": "2024-12-13",
+     "k": "note",
+     "id": "NOTE026",
+     "t": "Progress Note (GI surveillance follow-up and urinary symptoms)"
+    },
+    {
+     "d": "2024-12-15",
+     "k": "note",
+     "id": "NOTE_POD001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2025-09-12",
+     "k": "note",
+     "id": "NOTE014",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-15",
+     "k": "note",
+     "id": "NOTE008",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-16",
+     "k": "note",
+     "id": "NOTE009",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-17",
+     "k": "note",
+     "id": "NOTE010",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-18",
+     "k": "note",
+     "id": "NOTE011",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-10-02",
+     "k": "note",
+     "id": "NOTE006",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2025-11-16",
+     "k": "note",
+     "id": "NOTE005",
+     "t": "Telephone Encounter"
+    }
+   ]
+  },
+  {
+   "problem": "T2DM with neuropathy, retinopathy, nephropathy",
+   "status": "active",
+   "mentions": [
+    {
+     "d": "2018-02-26",
+     "k": "lab",
+     "id": "LAB002",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2018-03-01",
+     "k": "lab",
+     "id": "LAB007",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2018-04-20",
+     "k": "note",
+     "id": "Doc 4 / LAB009",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2018-04-20",
+     "k": "note",
+     "id": "Doc 5 / LAB010",
+     "t": "Lab Panel - Hemoglobin A1c"
+    },
+    {
+     "d": "2018-05-04",
+     "k": "note",
+     "id": "Doc 1 / LAB011",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2018-06-11",
+     "k": "lab",
+     "id": "LAB014",
+     "t": "Lab Panel: Basic Metabolic Panel"
+    },
+    {
+     "d": "2018-07-14",
+     "k": "lab",
+     "id": "LAB015",
+     "t": "Lab Panel: Basic Metabolic Panel"
+    },
+    {
+     "d": "2018-08-02",
+     "k": "lab",
+     "id": "LAB016",
+     "t": "Lab Panel: Basic Metabolic Panel"
+    },
+    {
+     "d": "2018-08-17",
+     "k": "lab",
+     "id": "LAB017",
+     "t": "Lab Panel: Basic Metabolic Panel"
+    },
+    {
+     "d": "2018-08-17",
+     "k": "lab",
+     "id": "LAB018",
+     "t": "Lab Panel: Hemoglobin A1c"
+    },
+    {
+     "d": "2018-10-27",
+     "k": "lab",
+     "id": "LAB021",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2018-11-30",
+     "k": "lab",
+     "id": "LAB026",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2019-01-03",
+     "k": "note",
+     "id": "Doc 4 - LAB029",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2019-02-03",
+     "k": "note",
+     "id": "Doc 3 - LAB031",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2019-03-04",
+     "k": "lab",
+     "id": "LAB033",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2019-03-04",
+     "k": "note",
+     "id": "Doc 1 - LAB034",
+     "t": "Lab Panel - Hemoglobin A1c"
+    },
+    {
+     "d": "2019-04-06",
+     "k": "lab",
+     "id": "LAB035",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2019-04-06",
+     "k": "lab",
+     "id": "LAB036",
+     "t": "Lab Panel - Hemoglobin A1c"
+    },
+    {
+     "d": "2019-06-13",
+     "k": "lab",
+     "id": "LAB039",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2019-07-28",
+     "k": "lab",
+     "id": "LAB040",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2019-07-28",
+     "k": "lab",
+     "id": "LAB041",
+     "t": "Lab Panel - Hemoglobin A1c"
+    },
+    {
+     "d": "2019-08-26",
+     "k": "lab",
+     "id": "LAB042",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2019-09-23",
+     "k": "lab",
+     "id": "LAB043",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2019-09-23",
+     "k": "lab",
+     "id": "LAB044",
+     "t": "Lab Panel - Hemoglobin A1c"
+    },
+    {
+     "d": "2019-11-27",
+     "k": "lab",
+     "id": "LAB046",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2019-12-20",
+     "k": "lab",
+     "id": "LAB048",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2019-12-20",
+     "k": "lab",
+     "id": "LAB049",
+     "t": "Lab Panel - Hemoglobin A1c"
+    },
+    {
+     "d": "2020-01-25",
+     "k": "lab",
+     "id": "LAB053",
+     "t": "Lab Panel - Hemoglobin A1c"
+    },
+    {
+     "d": "2020-02-08",
+     "k": "lab",
+     "id": "LAB055",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2020-02-29",
+     "k": "lab",
+     "id": "LAB062",
+     "t": "Lab Panel - Hemoglobin A1c"
+    },
+    {
+     "d": "2020-03-18",
+     "k": "lab",
+     "id": "LAB064",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2020-03-18",
+     "k": "lab",
+     "id": "LAB065",
+     "t": "Lab Panel - Hemoglobin A1c"
+    },
+    {
+     "d": "2020-04-06",
+     "k": "lab",
+     "id": "LAB067",
+     "t": "Lab Panel - Hemoglobin A1c"
+    },
+    {
+     "d": "2020-08-10",
+     "k": "note",
+     "id": "Doc 5",
+     "t": "Lab Panel - Basic Metabolic Panel (LAB074)"
+    },
+    {
+     "d": "2020-09-10",
+     "k": "imaging",
+     "id": "IMG022",
+     "t": "MRI Lumbar Spine"
+    },
+    {
+     "d": "2020-09-19",
+     "k": "note",
+     "id": "Doc 4",
+     "t": "Lab Panel - Hemoglobin A1c (LAB076)"
+    },
+    {
+     "d": "2020-10-31",
+     "k": "note",
+     "id": "Doc 2",
+     "t": "Lab Panel - Basic Metabolic Panel (LAB077)"
+    },
+    {
+     "d": "2020-11-27",
+     "k": "note",
+     "id": "Doc 2 (LAB078)",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2020-11-28",
+     "k": "lab",
+     "id": "LAB083",
+     "t": "Lab Panel: Basic Metabolic Panel"
+    },
+    {
+     "d": "2020-11-28",
+     "k": "note",
+     "id": "Doc 1 (LAB084)",
+     "t": "Lab Panel - Hemoglobin A1c"
+    },
+    {
+     "d": "2020-12-27",
+     "k": "lab",
+     "id": "LAB085",
+     "t": "Lab Panel: Basic Metabolic Panel"
+    },
+    {
+     "d": "2021-01-05",
+     "k": "note",
+     "id": "NOTE103",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2021-01-10",
+     "k": "note",
+     "id": "NOTE102",
+     "t": "H&P"
+    },
+    {
+     "d": "2021-01-14",
+     "k": "lab",
+     "id": "LAB086",
+     "t": "Lab Panel: Basic Metabolic Panel"
+    },
+    {
+     "d": "2021-01-14",
+     "k": "lab",
+     "id": "LAB087",
+     "t": "Lab Panel: Hemoglobin A1c"
+    },
+    {
+     "d": "2021-01-31",
+     "k": "note",
+     "id": "NOTE101",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-02-10",
+     "k": "note",
+     "id": "NOTE_HP003",
+     "t": "H&P"
+    },
+    {
+     "d": "2021-02-10",
+     "k": "note",
+     "id": "NOTE_ID001",
+     "t": "Consult Note (Infectious Disease)"
+    },
+    {
+     "d": "2021-02-10",
+     "k": "note",
+     "id": "NOTE_NURS001",
+     "t": "Nursing Assessment"
+    },
+    {
+     "d": "2021-02-12",
+     "k": "note",
+     "id": "NOTE_PROG_ADM001",
+     "t": "Progress Note (Hospital Day 3)"
+    },
+    {
+     "d": "2021-02-14",
+     "k": "note",
+     "id": "NOTE_DC003",
+     "t": "Discharge Summary"
+    },
+    {
+     "d": "2021-02-14",
+     "k": "note",
+     "id": "NOTE_PROG_ADM002",
+     "t": "Progress Note (Hospital Day 5, discharge day)"
+    },
+    {
+     "d": "2021-03-14",
+     "k": "note",
+     "id": "NOTE100",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2021-04-08",
+     "k": "note",
+     "id": "NOTE099",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-04-27",
+     "k": "lab",
+     "id": "LAB103",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2021-05-11",
+     "k": "lab",
+     "id": "LAB105",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2021-05-16",
+     "k": "note",
+     "id": "NOTE098",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-06-01",
+     "k": "note",
+     "id": "NOTE097",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-07-15",
+     "k": "note",
+     "id": "NOTE096",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2021-08-20",
+     "k": "note",
+     "id": "NOTE095",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-09-06",
+     "k": "lab",
+     "id": "LAB109",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2021-09-24",
+     "k": "note",
+     "id": "NOTE094",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-10-01",
+     "k": "lab",
+     "id": "LAB110",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2021-10-01",
+     "k": "lab",
+     "id": "LAB111",
+     "t": "Lab Panel - Hemoglobin A1c"
+    },
+    {
+     "d": "2021-10-30",
+     "k": "note",
+     "id": "NOTE093",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2021-11-12",
+     "k": "note",
+     "id": "NOTE092",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-11-14",
+     "k": "note",
+     "id": "NOTE091",
+     "t": "H&P"
+    },
+    {
+     "d": "2021-11-19",
+     "k": "note",
+     "id": "NOTE090",
+     "t": "H&P"
+    },
+    {
+     "d": "2021-12-24",
+     "k": "note",
+     "id": "NOTE089",
+     "t": "H&P"
+    },
+    {
+     "d": "2022-01-16",
+     "k": "note",
+     "id": "NOTE087",
+     "t": "Discharge Summary"
+    },
+    {
+     "d": "2022-01-24",
+     "k": "note",
+     "id": "Doc 4 / LAB119",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2022-02-15",
+     "k": "note",
+     "id": "NOTE086",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2022-02-21",
+     "k": "lab",
+     "id": "LAB121",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2022-02-24",
+     "k": "lab",
+     "id": "LAB126",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2022-03-14",
+     "k": "note",
+     "id": "NOTE085",
+     "t": "H&P"
+    },
+    {
+     "d": "2022-04-16",
+     "k": "note",
+     "id": "NOTE084",
+     "t": "H&P"
+    },
+    {
+     "d": "2022-05-06",
+     "k": "note",
+     "id": "NOTE083",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-05-20",
+     "k": "note",
+     "id": "NOTE082",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-05-27",
+     "k": "note",
+     "id": "NOTE081",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-05-29",
+     "k": "lab",
+     "id": "LAB132",
+     "t": "Lab Panel - Hemoglobin A1c"
+    },
+    {
+     "d": "2022-06-25",
+     "k": "note",
+     "id": "NOTE080",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-07-07",
+     "k": "lab",
+     "id": "LAB134",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2022-07-15",
+     "k": "note",
+     "id": "NOTE079",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-08-15",
+     "k": "note",
+     "id": "NOTE_HP001",
+     "t": "H&P"
+    },
+    {
+     "d": "2022-08-19",
+     "k": "note",
+     "id": "NOTE_DC001",
+     "t": "Discharge Summary"
+    },
+    {
+     "d": "2022-08-23",
+     "k": "lab",
+     "id": "LAB137",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2022-08-25",
+     "k": "note",
+     "id": "NOTE_PT001",
+     "t": "Consult Note (Physical Therapy Evaluation)"
+    },
+    {
+     "d": "2022-08-26",
+     "k": "note",
+     "id": "NOTE078",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-10-06",
+     "k": "note",
+     "id": "NOTE_PT002",
+     "t": "Consult Note (Physical Therapy Discharge Summary)"
+    },
+    {
+     "d": "2022-10-07",
+     "k": "lab",
+     "id": "LAB139",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2022-10-07",
+     "k": "lab",
+     "id": "LAB140",
+     "t": "Lab Panel - Hemoglobin A1c"
+    },
+    {
+     "d": "2022-10-10",
+     "k": "note",
+     "id": "NOTE076",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-11-07",
+     "k": "lab",
+     "id": "LAB141",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2022-11-25",
+     "k": "note",
+     "id": "NOTE075",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-12-16",
+     "k": "note",
+     "id": "NOTE074",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-12-19",
+     "k": "lab",
+     "id": "LAB142",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2023-01-10",
+     "k": "note",
+     "id": "NOTE073",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-01-17",
+     "k": "lab",
+     "id": "LAB143",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2023-01-31",
+     "k": "note",
+     "id": "NOTE056",
+     "t": "H&P"
+    },
+    {
+     "d": "2023-03-11",
+     "k": "imaging",
+     "id": "IMG006",
+     "t": "Carotid Ultrasound"
+    },
+    {
+     "d": "2023-03-12",
+     "k": "note",
+     "id": "NOTE071",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-03-31",
+     "k": "note",
+     "id": "NOTE070",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-05-07",
+     "k": "note",
+     "id": "NOTE068",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-05-17",
+     "k": "lab",
+     "id": "LAB149",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2023-05-30",
+     "k": "note",
+     "id": "NOTE067",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-01",
+     "k": "note",
+     "id": "NOTE066",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-05",
+     "k": "note",
+     "id": "NOTE061",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-06",
+     "k": "note",
+     "id": "NOTE062",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-07",
+     "k": "note",
+     "id": "NOTE063",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-08",
+     "k": "note",
+     "id": "NOTE064",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-09",
+     "k": "note",
+     "id": "NOTE065",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-08-13",
+     "k": "lab",
+     "id": "LAB153",
+     "t": "Lab Panel - Hemoglobin A1c"
+    },
+    {
+     "d": "2023-08-19",
+     "k": "note",
+     "id": "NOTE060",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2023-08-30",
+     "k": "note",
+     "id": "NOTE059",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-09-02",
+     "k": "note",
+     "id": "NOTE072",
+     "t": "H&P"
+    },
+    {
+     "d": "2023-09-03",
+     "k": "note",
+     "id": "NOTE057",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-09-04",
+     "k": "note",
+     "id": "NOTE058",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-09-12",
+     "k": "note",
+     "id": "NOTE_HP002",
+     "t": "H&P"
+    },
+    {
+     "d": "2023-09-12",
+     "k": "note",
+     "id": "NOTE077",
+     "t": "H&P"
+    },
+    {
+     "d": "2023-09-14",
+     "k": "note",
+     "id": "NOTE_ICU002",
+     "t": "Progress Note (MICU Day 3)"
+    },
+    {
+     "d": "2023-09-14",
+     "k": "lab",
+     "id": "LAB154",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2023-09-15",
+     "k": "lab",
+     "id": "LAB159",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2023-09-15",
+     "k": "note",
+     "id": "NOTE_MDT001",
+     "t": "Multidisciplinary Conference Note"
+    },
+    {
+     "d": "2023-10-22",
+     "k": "note",
+     "id": "NOTE054",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-10-30",
+     "k": "lab",
+     "id": "LAB161",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2023-10-30",
+     "k": "lab",
+     "id": "LAB162",
+     "t": "Lab Panel - Hemoglobin A1c"
+    },
+    {
+     "d": "2023-11-05",
+     "k": "note",
+     "id": "NOTE053",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-11-15",
+     "k": "note",
+     "id": "NOTE_CARD001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2023-12-16",
+     "k": "note",
+     "id": "NOTE051",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-12-31",
+     "k": "lab",
+     "id": "LAB165",
+     "t": "Lab Panel - Hemoglobin A1c"
+    },
+    {
+     "d": "2024-01-12",
+     "k": "note",
+     "id": "NOTE050",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-02-07",
+     "k": "note",
+     "id": "NOTE047",
+     "t": "Progress Note (cardiology follow-up)"
+    },
+    {
+     "d": "2024-02-08",
+     "k": "note",
+     "id": "NOTE042",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-02-08",
+     "k": "note",
+     "id": "NOTE048",
+     "t": "Progress Note (cardiology follow-up addendum)"
+    },
+    {
+     "d": "2024-02-09",
+     "k": "note",
+     "id": "NOTE043",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-02-10",
+     "k": "note",
+     "id": "NOTE044",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-02-11",
+     "k": "note",
+     "id": "NOTE045",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-02-17",
+     "k": "lab",
+     "id": "LAB167",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2024-02-17",
+     "k": "lab",
+     "id": "LAB168",
+     "t": "Lab Panel - Hemoglobin A1c"
+    },
+    {
+     "d": "2024-02-24",
+     "k": "note",
+     "id": "NOTE040",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-03-20",
+     "k": "note",
+     "id": "NOTE_NEPH001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2024-03-25",
+     "k": "note",
+     "id": "NOTE_DIET001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2024-03-27",
+     "k": "lab",
+     "id": "LAB172",
+     "t": "Lab Panel - Hemoglobin A1c"
+    },
+    {
+     "d": "2024-05-03",
+     "k": "lab",
+     "id": "LAB174",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2024-05-23",
+     "k": "note",
+     "id": "NOTE038",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-06-02",
+     "k": "lab",
+     "id": "LAB176",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2024-06-15",
+     "k": "note",
+     "id": "NOTE_ENDO001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2024-06-26",
+     "k": "note",
+     "id": "NOTE037",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2024-07-20",
+     "k": "note",
+     "id": "NOTE_URO001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2024-07-24",
+     "k": "lab",
+     "id": "LAB179",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2024-08-08",
+     "k": "note",
+     "id": "NOTE036",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-08-22",
+     "k": "lab",
+     "id": "LAB181",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2024-09-06",
+     "k": "lab",
+     "id": "LAB182",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2024-09-08",
+     "k": "note",
+     "id": "NOTE035",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2024-09-11",
+     "k": "note",
+     "id": "NOTE030",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-09-20",
+     "k": "note",
+     "id": "NOTE029",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-10-01",
+     "k": "lab",
+     "id": "LAB183",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2024-10-01",
+     "k": "lab",
+     "id": "LAB184",
+     "t": "Lab Panel - Hemoglobin A1c"
+    },
+    {
+     "d": "2024-10-26",
+     "k": "lab",
+     "id": "LAB186",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2024-10-29",
+     "k": "note",
+     "id": "NOTE028",
+     "t": "Progress Note - Routine primary care follow-up, lab review, weight management"
+    },
+    {
+     "d": "2024-11-25",
+     "k": "note",
+     "id": "NOTE027",
+     "t": "Progress Note (BPH follow-up, worsening LUTS)"
+    },
+    {
+     "d": "2024-12-03",
+     "k": "lab",
+     "id": "LAB187",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2024-12-10",
+     "k": "note",
+     "id": "NOTE_OPHTH001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2024-12-13",
+     "k": "note",
+     "id": "NOTE026",
+     "t": "Progress Note (GI surveillance follow-up and urinary symptoms)"
+    },
+    {
+     "d": "2024-12-15",
+     "k": "note",
+     "id": "NOTE_PODIATRY001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2024-12-15",
+     "k": "note",
+     "id": "NOTE_POD001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2025-01-19",
+     "k": "note",
+     "id": "Doc 4",
+     "t": "Lab Panel - Hemoglobin A1c (LAB076)"
+    },
+    {
+     "d": "2025-02-23",
+     "k": "note",
+     "id": "Doc 3",
+     "t": "Lab Panel - Basic Metabolic Panel (LAB075)"
+    },
+    {
+     "d": "2025-03-20",
+     "k": "note",
+     "id": "NOTE021",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2025-03-24",
+     "k": "note",
+     "id": "Doc 4",
+     "t": "Lab Panel - Hemoglobin A1c (LAB076)"
+    },
+    {
+     "d": "2025-03-24",
+     "k": "note",
+     "id": "Doc 5",
+     "t": "Lab Panel - Basic Metabolic Panel (LAB074)"
+    },
+    {
+     "d": "2025-05-05",
+     "k": "note",
+     "id": "Doc 1",
+     "t": "Lab Panel - Coagulation Panel (LAB082)"
+    },
+    {
+     "d": "2025-06-17",
+     "k": "lab",
+     "id": "LAB199",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2025-06-26",
+     "k": "note",
+     "id": "NOTE018",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-08-06",
+     "k": "note",
+     "id": "NOTE017",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2025-08-08",
+     "k": "lab",
+     "id": "LAB203",
+     "t": "Lab Panel - Hemoglobin A1c"
+    },
+    {
+     "d": "2025-09-05",
+     "k": "note",
+     "id": "NOTE016",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-11",
+     "k": "note",
+     "id": "NOTE013",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-12",
+     "k": "note",
+     "id": "NOTE014",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-13",
+     "k": "note",
+     "id": "NOTE015",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-15",
+     "k": "note",
+     "id": "NOTE008",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-16",
+     "k": "note",
+     "id": "NOTE009",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-17",
+     "k": "note",
+     "id": "NOTE010",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-18",
+     "k": "note",
+     "id": "NOTE011",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-10-26",
+     "k": "lab",
+     "id": "LAB208",
+     "t": "Lab Panel - Hemoglobin A1c"
+    },
+    {
+     "d": "2025-11-16",
+     "k": "note",
+     "id": "NOTE005",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2025-11-26",
+     "k": "lab",
+     "id": "LAB211",
+     "t": "Lab Panel - Hemoglobin A1c"
+    },
+    {
+     "d": "2025-12-18",
+     "k": "note",
+     "id": "NOTE004",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2026-01-18",
+     "k": "note",
+     "id": "NOTE003",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2026-01-27",
+     "k": "note",
+     "id": "NOTE002",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2026-02-05",
+     "k": "note",
+     "id": "NOTE001",
+     "t": "Telephone Encounter"
+    }
+   ]
+  },
+  {
+   "problem": "Diabetic peripheral neuropathy, severe/progressive, high-risk feet",
+   "status": "active",
+   "mentions": [
+    {
+     "d": "2020-09-10",
+     "k": "imaging",
+     "id": "IMG022",
+     "t": "MRI Lumbar Spine"
+    },
+    {
+     "d": "2021-01-10",
+     "k": "note",
+     "id": "NOTE102",
+     "t": "H&P"
+    },
+    {
+     "d": "2021-01-31",
+     "k": "note",
+     "id": "NOTE101",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-02-10",
+     "k": "note",
+     "id": "NOTE_HP003",
+     "t": "H&P"
+    },
+    {
+     "d": "2021-02-10",
+     "k": "note",
+     "id": "NOTE_NURS001",
+     "t": "Nursing Assessment"
+    },
+    {
+     "d": "2021-02-14",
+     "k": "note",
+     "id": "NOTE_PROG_ADM002",
+     "t": "Progress Note (Hospital Day 5, discharge day)"
+    },
+    {
+     "d": "2021-04-08",
+     "k": "note",
+     "id": "NOTE099",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-05-16",
+     "k": "note",
+     "id": "NOTE098",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-06-01",
+     "k": "note",
+     "id": "NOTE097",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-08-20",
+     "k": "note",
+     "id": "NOTE095",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-09-24",
+     "k": "note",
+     "id": "NOTE094",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-11-12",
+     "k": "note",
+     "id": "NOTE092",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-11-14",
+     "k": "note",
+     "id": "NOTE091",
+     "t": "H&P"
+    },
+    {
+     "d": "2021-11-19",
+     "k": "note",
+     "id": "NOTE090",
+     "t": "H&P"
+    },
+    {
+     "d": "2021-12-24",
+     "k": "note",
+     "id": "NOTE089",
+     "t": "H&P"
+    },
+    {
+     "d": "2022-01-15",
+     "k": "note",
+     "id": "NOTE088",
+     "t": "Progress Note (Nephrology follow-up)"
+    },
+    {
+     "d": "2022-01-16",
+     "k": "note",
+     "id": "NOTE087",
+     "t": "Discharge Summary"
+    },
+    {
+     "d": "2022-05-06",
+     "k": "note",
+     "id": "NOTE083",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-05-20",
+     "k": "note",
+     "id": "NOTE082",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-05-27",
+     "k": "note",
+     "id": "NOTE081",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-06-25",
+     "k": "note",
+     "id": "NOTE080",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-08-25",
+     "k": "note",
+     "id": "NOTE_PT001",
+     "t": "Consult Note (Physical Therapy Evaluation)"
+    },
+    {
+     "d": "2022-10-06",
+     "k": "note",
+     "id": "NOTE_PT002",
+     "t": "Consult Note (Physical Therapy Discharge Summary)"
+    },
+    {
+     "d": "2022-11-25",
+     "k": "note",
+     "id": "NOTE075",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-12-16",
+     "k": "note",
+     "id": "NOTE074",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-01-10",
+     "k": "note",
+     "id": "NOTE073",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-01-31",
+     "k": "note",
+     "id": "NOTE056",
+     "t": "H&P"
+    },
+    {
+     "d": "2023-03-31",
+     "k": "note",
+     "id": "NOTE070",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-05-30",
+     "k": "note",
+     "id": "NOTE067",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-01",
+     "k": "note",
+     "id": "NOTE066",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-05",
+     "k": "note",
+     "id": "NOTE061",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-06",
+     "k": "note",
+     "id": "NOTE062",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-07",
+     "k": "note",
+     "id": "NOTE063",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-08",
+     "k": "note",
+     "id": "NOTE064",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-09",
+     "k": "note",
+     "id": "NOTE065",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-08-30",
+     "k": "note",
+     "id": "NOTE059",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-09-02",
+     "k": "note",
+     "id": "NOTE072",
+     "t": "H&P"
+    },
+    {
+     "d": "2023-09-03",
+     "k": "note",
+     "id": "NOTE057",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-09-04",
+     "k": "note",
+     "id": "NOTE058",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-10-22",
+     "k": "note",
+     "id": "NOTE054",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-11-05",
+     "k": "note",
+     "id": "NOTE053",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-12-16",
+     "k": "note",
+     "id": "NOTE051",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-01-12",
+     "k": "note",
+     "id": "NOTE050",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-02-07",
+     "k": "note",
+     "id": "NOTE047",
+     "t": "Progress Note (cardiology follow-up)"
+    },
+    {
+     "d": "2024-02-08",
+     "k": "note",
+     "id": "NOTE042",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-02-08",
+     "k": "note",
+     "id": "NOTE048",
+     "t": "Progress Note (cardiology follow-up addendum)"
+    },
+    {
+     "d": "2024-02-09",
+     "k": "note",
+     "id": "NOTE043",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-02-10",
+     "k": "note",
+     "id": "NOTE044",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-02-24",
+     "k": "note",
+     "id": "NOTE040",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-05-23",
+     "k": "note",
+     "id": "NOTE038",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-06-15",
+     "k": "note",
+     "id": "NOTE_ENDO001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2024-06-26",
+     "k": "note",
+     "id": "NOTE037",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2024-08-08",
+     "k": "note",
+     "id": "NOTE036",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-09-08",
+     "k": "note",
+     "id": "NOTE035",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2024-09-17",
+     "k": "note",
+     "id": "NOTE032",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-09-19",
+     "k": "note",
+     "id": "NOTE034",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-09-20",
+     "k": "note",
+     "id": "NOTE029",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-10-29",
+     "k": "note",
+     "id": "NOTE028",
+     "t": "Progress Note - Routine primary care follow-up, lab review, weight management"
+    },
+    {
+     "d": "2024-12-13",
+     "k": "note",
+     "id": "NOTE026",
+     "t": "Progress Note (GI surveillance follow-up and urinary symptoms)"
+    },
+    {
+     "d": "2024-12-15",
+     "k": "note",
+     "id": "NOTE_PODIATRY001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2024-12-15",
+     "k": "note",
+     "id": "NOTE_POD001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2025-03-20",
+     "k": "note",
+     "id": "NOTE021",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2025-09-12",
+     "k": "note",
+     "id": "NOTE014",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-13",
+     "k": "note",
+     "id": "NOTE015",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-15",
+     "k": "note",
+     "id": "NOTE008",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-16",
+     "k": "note",
+     "id": "NOTE009",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-17",
+     "k": "note",
+     "id": "NOTE010",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-18",
+     "k": "note",
+     "id": "NOTE011",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-10-02",
+     "k": "note",
+     "id": "NOTE006",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2025-11-16",
+     "k": "note",
+     "id": "NOTE005",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2025-12-18",
+     "k": "note",
+     "id": "NOTE004",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2026-01-18",
+     "k": "note",
+     "id": "NOTE003",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2026-01-27",
+     "k": "note",
+     "id": "NOTE002",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2026-02-05",
+     "k": "note",
+     "id": "NOTE001",
+     "t": "Telephone Encounter"
+    }
+   ]
+  },
+  {
+   "problem": "BPH with worsening nocturia",
+   "status": "active",
+   "mentions": [
+    {
+     "d": "2021-01-05",
+     "k": "note",
+     "id": "NOTE103",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2021-02-10",
+     "k": "note",
+     "id": "NOTE_HP003",
+     "t": "H&P"
+    },
+    {
+     "d": "2021-04-08",
+     "k": "note",
+     "id": "NOTE099",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-05-16",
+     "k": "note",
+     "id": "NOTE098",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-06-01",
+     "k": "note",
+     "id": "NOTE097",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-09-24",
+     "k": "note",
+     "id": "NOTE094",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-11-12",
+     "k": "note",
+     "id": "NOTE092",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-11-14",
+     "k": "note",
+     "id": "NOTE091",
+     "t": "H&P"
+    },
+    {
+     "d": "2021-11-19",
+     "k": "note",
+     "id": "NOTE090",
+     "t": "H&P"
+    },
+    {
+     "d": "2022-01-15",
+     "k": "note",
+     "id": "NOTE088",
+     "t": "Progress Note (Nephrology follow-up)"
+    },
+    {
+     "d": "2022-01-16",
+     "k": "note",
+     "id": "NOTE087",
+     "t": "Discharge Summary"
+    },
+    {
+     "d": "2022-05-06",
+     "k": "note",
+     "id": "NOTE083",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-08-15",
+     "k": "note",
+     "id": "NOTE_HP001",
+     "t": "H&P"
+    },
+    {
+     "d": "2022-08-25",
+     "k": "note",
+     "id": "NOTE_PT001",
+     "t": "Consult Note (Physical Therapy Evaluation)"
+    },
+    {
+     "d": "2022-12-16",
+     "k": "note",
+     "id": "NOTE074",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-03-12",
+     "k": "note",
+     "id": "NOTE071",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-03-31",
+     "k": "note",
+     "id": "NOTE070",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-05-07",
+     "k": "note",
+     "id": "NOTE068",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-05-30",
+     "k": "note",
+     "id": "NOTE067",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-01",
+     "k": "note",
+     "id": "NOTE066",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-05",
+     "k": "note",
+     "id": "NOTE061",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-06",
+     "k": "note",
+     "id": "NOTE062",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-09",
+     "k": "note",
+     "id": "NOTE065",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-08-30",
+     "k": "note",
+     "id": "NOTE059",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-09-02",
+     "k": "note",
+     "id": "NOTE072",
+     "t": "H&P"
+    },
+    {
+     "d": "2023-09-04",
+     "k": "note",
+     "id": "NOTE058",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-09-12",
+     "k": "note",
+     "id": "NOTE_HP002",
+     "t": "H&P"
+    },
+    {
+     "d": "2023-11-05",
+     "k": "note",
+     "id": "NOTE053",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-12-16",
+     "k": "note",
+     "id": "NOTE051",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-01-12",
+     "k": "note",
+     "id": "NOTE050",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-02-07",
+     "k": "note",
+     "id": "NOTE047",
+     "t": "Progress Note (cardiology follow-up)"
+    },
+    {
+     "d": "2024-02-08",
+     "k": "note",
+     "id": "NOTE042",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-02-08",
+     "k": "note",
+     "id": "NOTE048",
+     "t": "Progress Note (cardiology follow-up addendum)"
+    },
+    {
+     "d": "2024-02-24",
+     "k": "note",
+     "id": "NOTE040",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-03-20",
+     "k": "note",
+     "id": "NOTE_NEPH001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2024-06-26",
+     "k": "note",
+     "id": "NOTE037",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2024-07-20",
+     "k": "note",
+     "id": "NOTE_URO001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2024-08-08",
+     "k": "note",
+     "id": "NOTE036",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-09-19",
+     "k": "note",
+     "id": "NOTE034",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-09-20",
+     "k": "note",
+     "id": "NOTE029",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-09-24",
+     "k": "imaging",
+     "id": "IMG005",
+     "t": "CT Abdomen/Pelvis with Contrast"
+    },
+    {
+     "d": "2024-10-29",
+     "k": "note",
+     "id": "NOTE028",
+     "t": "Progress Note - Routine primary care follow-up, lab review, weight management"
+    },
+    {
+     "d": "2024-11-25",
+     "k": "note",
+     "id": "NOTE027",
+     "t": "Progress Note (BPH follow-up, worsening LUTS)"
+    },
+    {
+     "d": "2024-12-13",
+     "k": "note",
+     "id": "NOTE026",
+     "t": "Progress Note (GI surveillance follow-up and urinary symptoms)"
+    },
+    {
+     "d": "2024-12-15",
+     "k": "note",
+     "id": "NOTE_POD001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2025-02-01",
+     "k": "note",
+     "id": "NOTE024",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2025-03-20",
+     "k": "note",
+     "id": "NOTE021",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2025-09-05",
+     "k": "note",
+     "id": "NOTE016",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-12",
+     "k": "note",
+     "id": "NOTE014",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-15",
+     "k": "note",
+     "id": "NOTE008",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-16",
+     "k": "note",
+     "id": "NOTE009",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-10-02",
+     "k": "note",
+     "id": "NOTE006",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2025-12-18",
+     "k": "note",
+     "id": "NOTE004",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2026-01-18",
+     "k": "note",
+     "id": "NOTE003",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2026-01-20",
+     "k": "note",
+     "id": "NOTE_BEHAV001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2026-01-27",
+     "k": "note",
+     "id": "NOTE002",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2026-02-05",
+     "k": "note",
+     "id": "NOTE001",
+     "t": "Telephone Encounter"
+    }
+   ]
+  },
+  {
+   "problem": "Mild depression",
+   "status": "active",
+   "mentions": [
+    {
+     "d": "2022-11-25",
+     "k": "note",
+     "id": "NOTE075",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-05",
+     "k": "note",
+     "id": "NOTE061",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-10-22",
+     "k": "note",
+     "id": "NOTE054",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-11-05",
+     "k": "note",
+     "id": "NOTE053",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-12-16",
+     "k": "note",
+     "id": "NOTE051",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-02-08",
+     "k": "note",
+     "id": "NOTE048",
+     "t": "Progress Note (cardiology follow-up addendum)"
+    },
+    {
+     "d": "2024-06-26",
+     "k": "note",
+     "id": "NOTE037",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2024-10-29",
+     "k": "note",
+     "id": "NOTE028",
+     "t": "Progress Note - Routine primary care follow-up, lab review, weight management"
+    },
+    {
+     "d": "2024-12-13",
+     "k": "note",
+     "id": "NOTE026",
+     "t": "Progress Note (GI surveillance follow-up and urinary symptoms)"
+    },
+    {
+     "d": "2025-03-20",
+     "k": "note",
+     "id": "NOTE021",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2025-09-18",
+     "k": "note",
+     "id": "NOTE011",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-11-16",
+     "k": "note",
+     "id": "NOTE005",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2026-01-18",
+     "k": "note",
+     "id": "NOTE003",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2026-01-20",
+     "k": "note",
+     "id": "NOTE_BEHAV001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2026-01-27",
+     "k": "note",
+     "id": "NOTE002",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2026-02-05",
+     "k": "note",
+     "id": "NOTE001",
+     "t": "Telephone Encounter"
+    }
+   ]
+  },
+  {
+   "problem": "Hepatic steatosis (incidental, 9/2024)",
+   "status": "active",
+   "mentions": [
+    {
+     "d": "2024-09-11",
+     "k": "note",
+     "id": "NOTE030",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-09-12",
+     "k": "note",
+     "id": "NOTE031",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-09-17",
+     "k": "note",
+     "id": "NOTE032",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-09-18",
+     "k": "note",
+     "id": "NOTE033",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-09-19",
+     "k": "note",
+     "id": "NOTE034",
+     "t": "Progress Note"
+    }
+   ]
+  },
+  {
+   "problem": "Carotid/cerebrovascular disease",
+   "status": "stable",
+   "mentions": [
+    {
+     "d": "2019-10-07",
+     "k": "imaging",
+     "id": "IMG021",
+     "t": "MRI MRA Head and Neck"
+    },
+    {
+     "d": "2020-12-24",
+     "k": "imaging",
+     "id": "IMG011",
+     "t": "MRI MRA Head and Neck"
+    },
+    {
+     "d": "2022-03-10",
+     "k": "imaging",
+     "id": "IMG009",
+     "t": "MRA Head and Neck"
+    },
+    {
+     "d": "2023-03-11",
+     "k": "imaging",
+     "id": "IMG006",
+     "t": "Carotid Ultrasound"
+    }
+   ]
+  },
+  {
+   "problem": "Anemia of CKD / chronic",
+   "status": "chronic",
+   "mentions": [
+    {
+     "d": "2018-05-04",
+     "k": "note",
+     "id": "Doc 3 / LAB013",
+     "t": "Lab Panel - Complete Blood Count"
+    },
+    {
+     "d": "2019-01-03",
+     "k": "note",
+     "id": "Doc 5 - LAB030",
+     "t": "Lab Panel - Complete Blood Count"
+    },
+    {
+     "d": "2019-04-06",
+     "k": "lab",
+     "id": "LAB037",
+     "t": "Lab Panel - Complete Blood Count"
+    },
+    {
+     "d": "2020-01-25",
+     "k": "lab",
+     "id": "LAB054",
+     "t": "Lab Panel - Complete Blood Count"
+    },
+    {
+     "d": "2020-11-27",
+     "k": "note",
+     "id": "Doc 3 (LAB079)",
+     "t": "Lab Panel - Complete Blood Count"
+    },
+    {
+     "d": "2021-01-14",
+     "k": "lab",
+     "id": "LAB088",
+     "t": "Lab Panel: Complete Blood Count"
+    },
+    {
+     "d": "2021-03-12",
+     "k": "lab",
+     "id": "LAB100",
+     "t": "Lab Panel - Complete Blood Count"
+    },
+    {
+     "d": "2021-03-14",
+     "k": "note",
+     "id": "NOTE100",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2021-06-01",
+     "k": "note",
+     "id": "NOTE097",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-07-15",
+     "k": "note",
+     "id": "NOTE096",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2021-08-20",
+     "k": "note",
+     "id": "NOTE095",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-10-30",
+     "k": "note",
+     "id": "NOTE093",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2021-11-19",
+     "k": "note",
+     "id": "NOTE090",
+     "t": "H&P"
+    },
+    {
+     "d": "2022-01-15",
+     "k": "note",
+     "id": "NOTE088",
+     "t": "Progress Note (Nephrology follow-up)"
+    },
+    {
+     "d": "2022-01-24",
+     "k": "note",
+     "id": "Doc 5 / LAB120",
+     "t": "Lab Panel - Complete Blood Count"
+    },
+    {
+     "d": "2022-02-24",
+     "k": "lab",
+     "id": "LAB127",
+     "t": "Lab Panel - Complete Blood Count"
+    },
+    {
+     "d": "2022-11-25",
+     "k": "note",
+     "id": "NOTE075",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-01-10",
+     "k": "note",
+     "id": "NOTE073",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-09",
+     "k": "note",
+     "id": "NOTE065",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-08-19",
+     "k": "note",
+     "id": "NOTE060",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2023-09-12",
+     "k": "note",
+     "id": "NOTE_GI001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2023-09-13",
+     "k": "note",
+     "id": "NOTE_PROC001",
+     "t": "Procedure Note"
+    },
+    {
+     "d": "2023-09-14",
+     "k": "lab",
+     "id": "LAB155",
+     "t": "Lab Panel - Complete Blood Count"
+    },
+    {
+     "d": "2023-10-11",
+     "k": "note",
+     "id": "NOTE_GI002",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2023-10-22",
+     "k": "note",
+     "id": "NOTE054",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-03-20",
+     "k": "note",
+     "id": "NOTE_NEPH001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2024-04-15",
+     "k": "note",
+     "id": "NOTE_GI003",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2024-06-26",
+     "k": "note",
+     "id": "NOTE037",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2024-09-08",
+     "k": "note",
+     "id": "NOTE035",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2024-09-12",
+     "k": "note",
+     "id": "NOTE031",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-10-29",
+     "k": "note",
+     "id": "NOTE028",
+     "t": "Progress Note - Routine primary care follow-up, lab review, weight management"
+    },
+    {
+     "d": "2025-09-16",
+     "k": "note",
+     "id": "NOTE009",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-11-16",
+     "k": "note",
+     "id": "NOTE005",
+     "t": "Telephone Encounter"
+    }
+   ]
+  },
+  {
+   "problem": "Hyponatremia/hypernatremia (labile sodium, since at least 2018)",
+   "status": "active",
+   "mentions": [
+    {
+     "d": "2018-02-26",
+     "k": "lab",
+     "id": "LAB002",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2018-03-01",
+     "k": "lab",
+     "id": "LAB007",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2018-06-11",
+     "k": "lab",
+     "id": "LAB014",
+     "t": "Lab Panel: Basic Metabolic Panel"
+    },
+    {
+     "d": "2018-07-14",
+     "k": "lab",
+     "id": "LAB015",
+     "t": "Lab Panel: Basic Metabolic Panel"
+    },
+    {
+     "d": "2018-08-02",
+     "k": "lab",
+     "id": "LAB016",
+     "t": "Lab Panel: Basic Metabolic Panel"
+    },
+    {
+     "d": "2018-08-17",
+     "k": "lab",
+     "id": "LAB017",
+     "t": "Lab Panel: Basic Metabolic Panel"
+    },
+    {
+     "d": "2018-10-27",
+     "k": "lab",
+     "id": "LAB021",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2018-11-30",
+     "k": "lab",
+     "id": "LAB026",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2019-01-03",
+     "k": "note",
+     "id": "Doc 4 - LAB029",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2019-03-04",
+     "k": "lab",
+     "id": "LAB033",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2019-06-13",
+     "k": "lab",
+     "id": "LAB039",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2019-07-28",
+     "k": "lab",
+     "id": "LAB040",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2019-08-26",
+     "k": "lab",
+     "id": "LAB042",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2019-09-23",
+     "k": "lab",
+     "id": "LAB043",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2019-11-27",
+     "k": "lab",
+     "id": "LAB046",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2019-12-20",
+     "k": "lab",
+     "id": "LAB048",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2020-01-25",
+     "k": "lab",
+     "id": "LAB052",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2020-02-08",
+     "k": "lab",
+     "id": "LAB055",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2020-02-10",
+     "k": "lab",
+     "id": "LAB060",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2020-04-06",
+     "k": "lab",
+     "id": "LAB066",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2020-04-20",
+     "k": "lab",
+     "id": "LAB068",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2020-08-10",
+     "k": "note",
+     "id": "Doc 5",
+     "t": "Lab Panel - Basic Metabolic Panel (LAB074)"
+    },
+    {
+     "d": "2020-09-19",
+     "k": "note",
+     "id": "Doc 3",
+     "t": "Lab Panel - Basic Metabolic Panel (LAB075)"
+    },
+    {
+     "d": "2020-10-31",
+     "k": "note",
+     "id": "Doc 2",
+     "t": "Lab Panel - Basic Metabolic Panel (LAB077)"
+    },
+    {
+     "d": "2020-11-27",
+     "k": "note",
+     "id": "Doc 2 (LAB078)",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2020-11-28",
+     "k": "lab",
+     "id": "LAB083",
+     "t": "Lab Panel: Basic Metabolic Panel"
+    },
+    {
+     "d": "2021-01-14",
+     "k": "lab",
+     "id": "LAB086",
+     "t": "Lab Panel: Basic Metabolic Panel"
+    },
+    {
+     "d": "2021-03-08",
+     "k": "lab",
+     "id": "LAB090",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2021-04-27",
+     "k": "lab",
+     "id": "LAB103",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2021-06-06",
+     "k": "lab",
+     "id": "LAB106",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2021-08-13",
+     "k": "lab",
+     "id": "LAB108",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2021-10-01",
+     "k": "lab",
+     "id": "LAB110",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2021-10-23",
+     "k": "lab",
+     "id": "LAB113",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2022-01-24",
+     "k": "note",
+     "id": "Doc 4 / LAB119",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2022-02-21",
+     "k": "lab",
+     "id": "LAB121",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2022-05-29",
+     "k": "lab",
+     "id": "LAB131",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2022-07-07",
+     "k": "lab",
+     "id": "LAB134",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2022-10-07",
+     "k": "lab",
+     "id": "LAB139",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2022-11-07",
+     "k": "lab",
+     "id": "LAB141",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2023-01-17",
+     "k": "lab",
+     "id": "LAB143",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2023-05-17",
+     "k": "lab",
+     "id": "LAB149",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2023-12-31",
+     "k": "lab",
+     "id": "LAB164",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2024-06-02",
+     "k": "lab",
+     "id": "LAB176",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2024-10-01",
+     "k": "lab",
+     "id": "LAB183",
+     "t": "Lab Panel - Basic Metabolic Panel"
+    },
+    {
+     "d": "2025-02-23",
+     "k": "note",
+     "id": "Doc 3",
+     "t": "Lab Panel - Basic Metabolic Panel (LAB075)"
+    }
+   ]
+  },
+  {
+   "problem": "Obstructive sleep apnea on CPAP",
+   "status": "stable",
+   "mentions": [
+    {
+     "d": "2022-02-15",
+     "k": "note",
+     "id": "NOTE086",
+     "t": "Telephone Encounter"
+    }
+   ]
+  },
+  {
+   "problem": "Chronic dyspnea / pulmonary evaluation; prior CAP",
+   "status": "stable",
+   "mentions": [
+    {
+     "d": "2020-09-21",
+     "k": "imaging",
+     "id": "IMG002",
+     "t": "Transthoracic Echocardiogram"
+    },
+    {
+     "d": "2021-02-10",
+     "k": "note",
+     "id": "NOTE_HP003",
+     "t": "H&P"
+    },
+    {
+     "d": "2021-02-10",
+     "k": "note",
+     "id": "NOTE_ID001",
+     "t": "Consult Note (Infectious Disease)"
+    },
+    {
+     "d": "2021-02-10",
+     "k": "note",
+     "id": "NOTE_RT001",
+     "t": "Respiratory Therapy Note"
+    },
+    {
+     "d": "2021-02-10",
+     "k": "note",
+     "id": "NOTE_NURS001",
+     "t": "Nursing Assessment"
+    },
+    {
+     "d": "2021-02-12",
+     "k": "note",
+     "id": "NOTE_PROG_ADM001",
+     "t": "Progress Note (Hospital Day 3)"
+    },
+    {
+     "d": "2021-02-14",
+     "k": "note",
+     "id": "NOTE_DC003",
+     "t": "Discharge Summary"
+    },
+    {
+     "d": "2021-02-14",
+     "k": "note",
+     "id": "NOTE_PROG_ADM002",
+     "t": "Progress Note (Hospital Day 5, discharge day)"
+    },
+    {
+     "d": "2021-04-08",
+     "k": "note",
+     "id": "NOTE099",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2021-06-01",
+     "k": "note",
+     "id": "NOTE097",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2022-05-29",
+     "k": "imaging",
+     "id": "IMG014",
+     "t": "CT CTA Chest"
+    },
+    {
+     "d": "2022-10-06",
+     "k": "note",
+     "id": "NOTE_PT002",
+     "t": "Consult Note (Physical Therapy Discharge Summary)"
+    },
+    {
+     "d": "2023-01-10",
+     "k": "note",
+     "id": "NOTE073",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-01-29",
+     "k": "imaging",
+     "id": "IMG015",
+     "t": "Stress Echocardiogram"
+    },
+    {
+     "d": "2023-05-07",
+     "k": "note",
+     "id": "NOTE068",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-05-26",
+     "k": "imaging",
+     "id": "IMG004",
+     "t": "Nuclear V/Q Scan"
+    },
+    {
+     "d": "2023-11-15",
+     "k": "note",
+     "id": "NOTE_CARD001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2024-02-08",
+     "k": "note",
+     "id": "NOTE042",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2024-02-09",
+     "k": "note",
+     "id": "NOTE043",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-04-22",
+     "k": "imaging",
+     "id": "IMG023",
+     "t": "Nuclear V/Q Scan"
+    }
+   ]
+  },
+  {
+   "problem": "Knee OA, lumbar DDD, gout history, other",
+   "status": "stable",
+   "mentions": [
+    {
+     "d": "2019-09-14",
+     "k": "imaging",
+     "id": "IMG016",
+     "t": "Lumbar Spine X-Ray"
+    },
+    {
+     "d": "2022-01-15",
+     "k": "note",
+     "id": "NOTE088",
+     "t": "Progress Note (Nephrology follow-up)"
+    },
+    {
+     "d": "2022-12-16",
+     "k": "note",
+     "id": "NOTE074",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-03-12",
+     "k": "note",
+     "id": "NOTE071",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-05-30",
+     "k": "note",
+     "id": "NOTE067",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-01",
+     "k": "note",
+     "id": "NOTE066",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-05",
+     "k": "note",
+     "id": "NOTE061",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-06",
+     "k": "note",
+     "id": "NOTE062",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-07-08",
+     "k": "note",
+     "id": "NOTE064",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-08-19",
+     "k": "note",
+     "id": "NOTE060",
+     "t": "Telephone Encounter"
+    },
+    {
+     "d": "2023-08-30",
+     "k": "note",
+     "id": "NOTE059",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-09-03",
+     "k": "note",
+     "id": "NOTE057",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-09-04",
+     "k": "note",
+     "id": "NOTE058",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2023-09-12",
+     "k": "note",
+     "id": "NOTE_HP002",
+     "t": "H&P"
+    },
+    {
+     "d": "2023-09-12",
+     "k": "note",
+     "id": "NOTE_GI001",
+     "t": "Consult Note"
+    },
+    {
+     "d": "2023-09-14",
+     "k": "note",
+     "id": "NOTE_ICU002",
+     "t": "Progress Note (MICU Day 3)"
+    },
+    {
+     "d": "2024-02-07",
+     "k": "note",
+     "id": "NOTE047",
+     "t": "Progress Note (cardiology follow-up)"
+    },
+    {
+     "d": "2025-09-12",
+     "k": "note",
+     "id": "NOTE014",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-09-17",
+     "k": "note",
+     "id": "NOTE010",
+     "t": "Progress Note"
+    },
+    {
+     "d": "2025-12-18",
+     "k": "note",
+     "id": "NOTE004",
+     "t": "Progress Note"
+    }
+   ]
+  },
+  {
+   "problem": "Advance care planning",
+   "status": "active",
+   "mentions": [
+    {
+     "d": "2023-09-14",
+     "k": "note",
+     "id": "NOTE_SW001",
+     "t": "Social Work Note"
+    }
+   ]
+  }
+ ],
+ "threadCoverage": {
+  "mentions": 1536,
+  "matched": 996
+ },
+ "admissions": [
+  {
+   "start": "2021-02-10",
+   "end": "2021-02-14",
+   "label": "Community-Acquired Pneumonia"
+  },
+  {
+   "start": "2022-08-15",
+   "end": "2022-08-19",
+   "label": "Acute Decompensated Heart Failure"
+  },
+  {
+   "start": "2023-09-12",
+   "end": "2023-09-17",
+   "label": "Upper Gastrointestinal Hemorrhage"
+  }
+ ]
+}

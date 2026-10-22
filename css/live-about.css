@@ -20,10 +20,22 @@
 }
 .lc-about-head {
     position: sticky; top: 0; z-index: 1;
-    display: flex; align-items: flex-start; gap: 10px; padding: 12px 12px 10px;
+    padding: 12px 12px 0;
     background: var(--lc-surface); border-bottom: 1px solid var(--lc-line);
 }
-.lc-about-head > div { flex: 1; min-width: 0; }
+.lc-about-title { display: flex; align-items: flex-start; gap: 10px; }
+.lc-about-title > div { flex: 1; min-width: 0; }
+/* Views: the rings first, then how the chart was digested, the problems over time, why it said things, each call. */
+.lc-about-tabs { display: flex; gap: 2px; margin-top: 8px; overflow-x: auto; scrollbar-width: none; }
+.lc-about-tabs::-webkit-scrollbar { display: none; }
+.lc-about-tabs button {
+    flex: none; border: 0; background: none; padding: 6px 8px 7px; cursor: pointer; font: inherit; font-size: 13px; font-weight: 500;
+    color: var(--lc-ink-3); border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap;
+    transition: color 160ms var(--lc-ease), border-color 160ms var(--lc-ease);
+}
+.lc-about-tabs button:hover { color: var(--lc-ink); }
+.lc-about-tabs button[aria-selected="true"] { color: var(--lc-ink); font-weight: 600; border-bottom-color: var(--lc-navy); }
+.lc-about-loading { margin: 24px 14px; font-size: 13px; color: var(--lc-ink-3); }
 .lc-about-head h2 { margin: 0; font-size: 16px; font-weight: 650; letter-spacing: -0.005em; }
 .lc-about-sub { margin: 2px 0 0; font-size: 12px; color: var(--lc-ink-3); }
 .lc-about-body { padding: 6px 14px 18px; }

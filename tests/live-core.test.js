@@ -284,6 +284,8 @@ const manualClock = () => {
         assert.strictEqual(said.length, 1);
         assert.strictEqual(said[0].kind, 'critical');
         assert.ok(verifyCalls >= 1);
+        assert.match(said[0].reason, /watch item "pcn-anaphylaxis" fired/, 'the alert remembers what set it off');
+        assert.ok(typeof said[0].checkMs === 'number');
         cw.hear({ speaker: 'doctor', text: 'Go ahead and hang the Zosyn.' });
         await cw.idle();
         assert.strictEqual(said.length, 1, 'not repeated');
@@ -819,6 +821,14 @@ const manualClock = () => {
         assert.strictEqual(said.length, 1);
         assert.match(said[0].text, /4\.46/);
         assert.deepStrictEqual(statuses, ['Checking labs…'], 'tool status in plain words');
+        // Why it said that: the lookups behind the answer, and what each prompt was made of.
+        assert.strictEqual(said[0].tools.length, 1);
+        assert.strictEqual(said[0].tools[0].name, 'lookup_labs');
+        assert.match(said[0].tools[0].result, /Potassium/);
+        const parts = cw.calls.filter((c) => c.lane === 'answer').map((c) => c.parts);
+        assert.ok(parts[0].rules > 1000 && parts[0].digest > 1000 && parts[0].tools > 500, 'fixed parts: rules, digest, tools');
+        assert.ok(parts[0].memory > 0 && parts[0].conversation > 0 && parts[0].task > 0 && parts[0].lookups === 0);
+        assert.ok(parts[1].lookups > 0, 'the second round carries the lookup results');
         const a = t.log.filter((x) => x.lane === 'answer');
         assert.strictEqual(a.length, 2);
         assert.strictEqual(JSON.stringify(a[0].body.system), JSON.stringify(a[1].body.system));
