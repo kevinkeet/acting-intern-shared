@@ -3,8 +3,8 @@
  * the sheet opens; every rule is scoped to .lc-about inside the live panel, so
  * it uses the panel's colour tokens and touches nothing else.
  *
- * Memory rings, from seconds to years: green (working memory, live), blue
- * (the chart digest), navy/blue/amber dots (long-term records: notes, labs,
+ * The memory, as information flowing: green (the ear and working memory, live),
+ * blue (the chart digest), navy/blue/amber (long-term records: notes, labs,
  * imaging). Red only for safety.
  */
 
@@ -25,7 +25,7 @@
 }
 .lc-about-title { display: flex; align-items: flex-start; gap: 10px; }
 .lc-about-title > div { flex: 1; min-width: 0; }
-/* Views: the rings first, then how the chart was digested, the problems over time, why it said things, each call. */
+/* Views: the memory flow first, then how the chart was digested, the problems over time, why it said things, each call. */
 .lc-about-tabs { display: flex; gap: 2px; margin-top: 8px; overflow-x: auto; scrollbar-width: none; }
 .lc-about-tabs::-webkit-scrollbar { display: none; }
 .lc-about-tabs button {
@@ -62,69 +62,93 @@
 .lc-about-key .k-img { background: var(--lc-about-img); }
 .lc-about-foot { margin: 14px 0 0; font-size: 12px; color: var(--lc-ink-3); font-variant-numeric: tabular-nums; }
 
-/* ── the figure ─────────────────────────────────────────────────────── */
+/* ── the figure: how information flows ───────────────────────────────
+   Down the middle: in the room -> the ear -> working memory -> the brain -> what
+   it says. Beside the brain: the chart digest (always in mind) and long-term
+   memory (a store it reaches into). Nothing moves unless that part works. */
 .lc-about-svg text { text-anchor: middle; }
+.lc-about-svg text.t-start { text-anchor: start; }
+.lc-about-svg text.t-end { text-anchor: end; }
 .lc-about-svg .wire { fill: none; stroke: var(--lc-line-2); stroke-width: 1.2; }
-.lc-about-svg .wire.is-reader { stroke-dasharray: 3 3; }
-.lc-about-svg .ring { fill: none; stroke: var(--lc-line); stroke-width: 1; }
-.lc-about-svg .ring.is-wm { stroke: oklch(0.84 0.06 150); stroke-dasharray: 2 3; }
-.lc-about-svg .ring-name { font-size: 8.5px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; fill: var(--lc-ink-3); }
+.lc-about-svg .wire.is-dashed { stroke-dasharray: 3 3; }
+.lc-about-svg .wire-label { font-size: 7.5px; fill: var(--lc-ink-3); }
+.lc-about-svg .box { fill: var(--lc-surface); stroke: var(--lc-line); stroke-width: 1; transition: stroke 300ms var(--lc-ease); }
+.lc-about-svg .box.is-room { fill: var(--lc-sunken); stroke: transparent; }
+.lc-about-svg .box.is-ear { stroke: oklch(0.78 0.09 150); stroke-width: 1.2; }
+.lc-about-svg .box.is-wm { fill: oklch(0.985 0.012 150); stroke: oklch(0.86 0.05 150); }
+.lc-about-svg .box-name { font-size: 8.5px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; fill: var(--lc-ink-3); }
+.lc-about-svg .box-sub { font-weight: 500; letter-spacing: 0.03em; text-transform: none; }
+.lc-about-svg .node-name { font-size: 11px; font-weight: 650; fill: var(--lc-ink); }
+.lc-about-svg .node-sub { font-size: 8px; fill: var(--lc-ink-3); }
 
-.lc-about-svg .lt-dot { opacity: 0.85; }
-.lc-about-svg .lt-dot.is-note { fill: var(--lc-about-note); }
-.lc-about-svg .lt-dot.is-lab { fill: var(--lc-about-lab); }
-.lc-about-svg .lt-dot.is-imaging { fill: var(--lc-about-img); }
-.lc-about-svg .lt-tick { stroke: var(--lc-ink-3); stroke-width: 1; }
-.lc-about-svg .lt-year { font-size: 8.5px; fill: var(--lc-ink-3); font-variant-numeric: tabular-nums; }
-/* A slow radar sweep over the years of records; brighter while the reader is looking something up. */
-.lc-about-svg .lt-sweep { fill: var(--lc-blue); opacity: 0.7; transform-box: view-box; transform-origin: 200px 246px; animation: lc-about-spin 10s linear infinite; transition: opacity 300ms var(--lc-ease); }
-.lc-about-svg .lt-sweep line { stroke: var(--lc-blue); stroke-opacity: 0.4; stroke-width: 1; }
-.lc-about-svg .lt-sweep.is-lit { opacity: 1; }
+/* In the room: the latest words, newest at the bottom; older ones fade. */
+.lc-about-svg .room-who { font-size: 8.5px; font-weight: 650; fill: var(--lc-ink-2); }
+.lc-about-svg .room-said { font-size: 9.5px; fill: var(--lc-ink); }
+.lc-about-svg .room-line.is-age-1 { opacity: 0.7; }
+.lc-about-svg .room-line.is-age-2 { opacity: 0.45; }
+.lc-about-svg .room-line.is-new { animation: lc-about-arrive 600ms var(--lc-ease); }
+.lc-about-svg .room-empty { font-size: 9.5px; fill: var(--lc-ink-3); }
 
-.lc-about-svg .dg-seg { fill: none; stroke: var(--lc-about-dg); stroke-width: 9; transition: stroke 300ms var(--lc-ease); }
-.lc-about-svg .dg-seg.is-0 { stroke: oklch(0.74 0.09 25); }     /* allergies */
-.lc-about-svg .dg-seg.is-1 { stroke: oklch(0.70 0.09 245); }
-.lc-about-svg .dg-seg.is-2 { stroke: oklch(0.66 0.10 250); }
-.lc-about-svg .dg-seg.is-3 { stroke: oklch(0.76 0.07 240); }
-.lc-about-svg .dg-seg.is-4 { stroke: oklch(0.80 0.06 235); }
-.lc-about-svg .dg-seg.is-5 { stroke: oklch(0.72 0.08 255); }
-.lc-about-svg .dg-seg.is-6 { stroke: oklch(0.62 0.09 262); }
-.lc-about-svg .dg.is-lit .dg-seg { stroke: oklch(0.58 0.15 250); }
-
+/* Working memory: one dot per thing filed, by group. */
+.lc-about-svg .bin-name { font-size: 8px; font-weight: 650; fill: var(--lc-ink-2); transition: fill 300ms var(--lc-ease); }
+.lc-about-svg .bin-n { font-weight: 500; fill: var(--lc-ink-3); font-variant-numeric: tabular-nums; }
+.lc-about-svg .bin-more { font-size: 7.5px; fill: var(--lc-ink-3); }
+.lc-about-svg .wm-bin.is-lit .bin-name { animation: lc-about-filed 1.4s var(--lc-ease); }
 .lc-about-svg .wm-dot.is-fact { fill: var(--lc-green); }
 .lc-about-svg .wm-dot.is-thinking { fill: var(--lc-navy); }
 .lc-about-svg .wm-dot.is-plan { fill: var(--lc-blue); }
-.lc-about-svg .wm-dot.is-watch { fill: var(--lc-amber); }
 .lc-about-svg .wm-dot.is-new { transform-box: fill-box; transform-origin: center; animation: lc-about-pop 700ms var(--lc-ease); }
 
+/* The chart digest: its parts, always in mind. */
+.lc-about-svg .dg-seg { fill: var(--lc-about-dg); }
+.lc-about-svg .dg-seg.is-0 { fill: oklch(0.74 0.09 25); }     /* allergies */
+.lc-about-svg .dg-seg.is-1 { fill: oklch(0.70 0.09 245); }
+.lc-about-svg .dg-seg.is-2 { fill: oklch(0.66 0.10 250); }
+.lc-about-svg .dg-seg.is-3 { fill: oklch(0.76 0.07 240); }
+.lc-about-svg .dg-seg.is-4 { fill: oklch(0.80 0.06 235); }
+.lc-about-svg .dg-seg.is-5 { fill: oklch(0.72 0.08 255); }
+.lc-about-svg .dg-seg.is-6 { fill: oklch(0.62 0.09 262); }
+.lc-about-svg .dg.is-lit .box { stroke: var(--lc-blue); animation: lc-about-lit 1.4s var(--lc-ease); }
+
+/* Long-term memory: a store of every record, one bar per year. */
+.lc-about-svg .lt-bar.is-note { fill: var(--lc-about-note); }
+.lc-about-svg .lt-bar.is-lab { fill: var(--lc-about-lab); }
+.lc-about-svg .lt-bar.is-imaging { fill: var(--lc-about-img); }
+.lc-about-svg .lt-hit { fill: transparent; }
+.lc-about-svg .lt-year { font-size: 7.5px; fill: var(--lc-ink-3); font-variant-numeric: tabular-nums; }
+.lc-about-svg .lt.is-lit .box { stroke: var(--lc-about-img); stroke-width: 1.6; animation: lc-about-lit-amber 1.4s var(--lc-ease); }
+
+/* The brain. */
 .lc-about-svg .core { fill: var(--lc-navy); }
 .lc-about-svg .core-glow { fill: none; stroke: var(--lc-blue); stroke-width: 5; opacity: 0; transform-box: fill-box; transform-origin: center; }
 .lc-about-svg .core-glow.is-lit { animation: lc-about-glow 1.5s var(--lc-ease); }
-.lc-about-svg .core-name { font-size: 11.5px; font-weight: 650; fill: var(--lc-navy-ink); }
-.lc-about-svg .core-model { font-size: 8px; fill: oklch(0.86 0.03 250); }
+.lc-about-svg .core-name { font-size: 11px; font-weight: 650; fill: var(--lc-navy-ink); }
+.lc-about-svg .core-model { font-size: 7.5px; fill: oklch(0.86 0.03 250); }
+.lc-about-svg .ear.is-lit .box { animation: lc-about-lit-green 1.4s var(--lc-ease); }
 
-.lc-about-svg .ear rect { fill: var(--lc-surface); stroke: oklch(0.78 0.09 150); stroke-width: 1.2; }
-.lc-about-svg .node-name { font-size: 11.5px; font-weight: 650; fill: var(--lc-ink); }
-.lc-about-svg .node-sub { font-size: 8.5px; fill: var(--lc-ink-3); }
-.lc-about-svg .node-sub.is-left { text-anchor: end; }
-.lc-about-svg .room circle { fill: var(--lc-green); }
-.lc-about-svg .room path { stroke: var(--lc-line-2); stroke-width: 1.2; }
-.lc-about-svg .reader circle { fill: var(--lc-surface); stroke: var(--lc-about-img); stroke-width: 1.6; }
-.lc-about-svg .out rect { fill: var(--lc-surface); stroke: var(--lc-line-2); stroke-width: 1; }
-.lc-about-svg .out.is-alert rect { stroke: var(--lc-red); }
-.lc-about-svg .out.is-lit rect { animation: lc-about-out 1.5s var(--lc-ease); }
-.lc-about-svg .out.is-alert.is-lit rect { animation-name: lc-about-out-red; }
+/* What comes out. */
+.lc-about-svg .out .pill { fill: var(--lc-surface); stroke: var(--lc-line-2); stroke-width: 1; }
+.lc-about-svg .out.is-alert .pill { stroke: var(--lc-red); }
+.lc-about-svg .out.is-lit .pill { animation: lc-about-out 1.5s var(--lc-ease); }
+.lc-about-svg .out.is-alert.is-lit .pill { animation-name: lc-about-out-red; }
+
+/* A pulse: something moving along a path, only when that part works. */
 .lc-about-svg .pulse { fill: var(--lc-blue); }
 .lc-about-svg .pulse.is-ear { fill: var(--lc-green); }
+.lc-about-svg .pulse.is-read { fill: var(--lc-navy); }
 .lc-about-svg .pulse.is-alert { fill: var(--lc-red); }
 .lc-about-svg .pulse.is-reader { fill: var(--lc-about-img); }
 
 @keyframes lc-about-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-@keyframes lc-about-spin { to { transform: rotate(360deg); } }
+@keyframes lc-about-arrive { from { opacity: 0; } to { opacity: 1; } }
 @keyframes lc-about-pop { 0% { transform: scale(0.2); } 60% { transform: scale(1.35); } 100% { transform: scale(1); } }
 @keyframes lc-about-glow { 0% { opacity: 0.5; transform: scale(1); } 100% { opacity: 0; transform: scale(1.55); } }
 @keyframes lc-about-out { 0%, 35% { fill: var(--lc-blue-bg); } 100% { fill: var(--lc-surface); } }
 @keyframes lc-about-out-red { 0%, 35% { fill: var(--lc-red-bg); } 100% { fill: var(--lc-surface); } }
+@keyframes lc-about-lit { 0%, 35% { fill: var(--lc-blue-bg); } 100% { fill: var(--lc-surface); } }
+@keyframes lc-about-lit-amber { 0%, 35% { fill: var(--lc-amber-bg); } 100% { fill: var(--lc-surface); } }
+@keyframes lc-about-lit-green { 0%, 35% { fill: oklch(0.96 0.03 150); } 100% { fill: var(--lc-surface); } }
+@keyframes lc-about-filed { 0%, 35% { fill: var(--lc-green-ink); } 100% { fill: var(--lc-ink-2); } }
 
 /* Side by side: the figure on the left, the words on the right. */
 @container lc (min-width: 620px) {
@@ -133,7 +157,11 @@
     .lc-about-text h3:first-child { margin-top: 4px; }
 }
 
-.lc-about.is-still .lt-sweep { animation: none; }
+@container lc (min-width: 1100px) {
+    .lc-about-fig { max-width: 660px; }
+}
+
+.lc-about.is-still .lc-about-svg * { animation: none !important; }
 @media (prefers-reduced-motion: reduce) {
-    .lc .lc-about, .lc-about-svg .lt-sweep, .lc-about-svg .wm-dot.is-new, .lc-about-svg .core-glow.is-lit, .lc-about-svg .out.is-lit rect { animation: none; }
+    .lc .lc-about, .lc-about-svg * { animation: none !important; }
 }

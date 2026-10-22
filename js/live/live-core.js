@@ -97,6 +97,79 @@
     /** The words that name a drug: "Piperacillin-tazobactam (Zosyn)" -> piperacillin, tazobactam, zosyn. */
     const drugWords = (name) => normText(name).split(' ').filter((w) => w.length >= 4 && !/^\d/.test(w) && !NOT_A_NAME.has(w));
 
+    // Lab orders that name two or more tests. The radar model sometimes packs them into one order ("BMP and
+    // magnesium in the morning", "Type and screen, repeat CBC tonight") and later renames it to one of them, so
+    // the other is lost. Code splits such an order: one item per test, each with the form's own test name.
+    const LAB_EXTRA = [['Type and screen', ['type and screen', 'type and cross', 'type and crossmatch', 'crossmatch']]];
+    let labTerms = null;
+    /** Every way a test is named (the form's names and their usual short forms), longest first. */
+    function labLexicon() {
+        if (labTerms) return labTerms;
+        const out = [];
+        const add = (phrase, name, customName) => { const ph = normText(phrase); if (ph.length >= 3) out.push({ phrase: ph, name, customName: customName || '' }); };
+        const options = ((P.ORDER_FIELDS.lab || {}).name || []).filter((o) => o !== 'Other');
+        for (const o of options) add(o.replace(/\s*\(.*?\)/g, ''), o);
+        for (const [o, list] of Object.entries(SYNONYMS.name)) if (options.includes(o)) for (const x of list) add(x, o);
+        for (const [custom, list] of LAB_EXTRA) for (const x of list) add(x, 'Other', custom);
+        labTerms = out.sort((a, b) => b.phrase.length - a.phrase.length);
+        return labTerms;
+    }
+    /** The different tests a title names, in the order said: [{name, customName, said, at, end}] (as written in the title). */
+    function labsNamed(title) {
+        const text = String(title || '');
+        const found = [];
+        for (const term of labLexicon()) {
+            const re = new RegExp('(^|[^a-z0-9])(' + term.phrase.split(' ').join('[^a-z0-9]+') + ')(?=$|[^a-z0-9])', 'gi');
+            let m;
+            while ((m = re.exec(text))) {
+                const at = m.index + m[1].length, end = at + m[2].length;
+                if (!found.some((f) => at < f.end && end > f.at)) found.push({ name: term.name, customName: term.customName, said: m[2], at, end });
+                re.lastIndex = Math.max(re.lastIndex, at + 1);
+            }
+        }
+        const seen = new Set();
+        return found.sort((a, b) => a.at - b.at).filter((f) => { const k = f.name + '|' + f.customName; if (seen.has(k)) return false; seen.add(k); return true; });
+    }
+    // The same for a medicine said as a load and then a schedule ("Furosemide 80 mg IV now, then 40 mg IV
+    // twice a day"): two orders, or signing the one order would leave out the second dose.
+    const DOSE_RE = /(\d+(?:\.\d+)?\s*(?:mg|mcg|g|units?|meq|ml)(?:\/kg)?)(?![a-z])/i;
+    function splitThen(c) {
+        if (!c || c.kind !== 'order' || c.order_type !== 'medication') return [c];
+        const parts = String(c.title || '').split(/\s*[,;]?\s*(?:and\s+)?then\s+/i);
+        if (parts.length !== 2 || !DOSE_RE.test(parts[0]) || !DOSE_RE.test(parts[1])) return [c];
+        const fields = Array.isArray(c.fields) ? c.fields : [];
+        const named = (fields.find((f) => f && f.key === 'name') || {}).value || (parts[0].match(/^[A-Za-z][A-Za-z-]+/) || [''])[0];
+        const second = !named || parts[1].toLowerCase().startsWith(String(named).toLowerCase().split(/\s+/)[0]) ? parts[1] : named + ' ' + parts[1];
+        const opts = P.ORDER_FIELDS.medication || {};
+        const keep = fields.filter((f) => f && !['dose', 'route', 'frequency'].includes(f.key));
+        const order = (text) => {
+            const route = matchOption((opts.route || []), 'route', text), freq = matchOption((opts.frequency || []), 'frequency', text);
+            return keep.concat([{ key: 'dose', value: text.match(DOSE_RE)[1] }], route ? [{ key: 'route', value: route }] : [], freq ? [{ key: 'frequency', value: freq }] : []);
+        };
+        return [Object.assign({}, c, { title: parts[0], fields: order(parts[0]) }), Object.assign({}, c, { id: '', title: second, fields: order(second) })];
+    }
+
+    /** One change per test when a lab order names several; the first keeps the change's id. */
+    function splitLabs(c) {
+        if (!c || c.kind !== 'order' || c.order_type !== 'lab') return [c];
+        const tests = labsNamed(c.title);
+        if (tests.length < 2) return [c];
+        const title = String(c.title);
+        const lead = title.slice(0, tests[0].at).trim();
+        const prefix = /^(?:repeat|recheck|check|trend|serial|stat|draw|send|add)$/i.test(lead) ? lead : '';
+        const tail = title.slice(tests[tests.length - 1].end).replace(/^[\s,;:&+/-]*(?:and\s+)?/i, '').trim();
+        const suffix = tail && tail.split(/\s+/).length <= 5 ? tail : '';
+        const keep = (Array.isArray(c.fields) ? c.fields : []).filter((f) => f && f.key !== 'name' && f.key !== 'customName');
+        return tests.map((t, i) => {
+            const said = prefix ? t.said : t.said.charAt(0).toUpperCase() + t.said.slice(1);
+            return Object.assign({}, c, {
+                id: i === 0 ? c.id : '',
+                title: [prefix, said, suffix].filter(Boolean).join(' '),
+                fields: keep.concat([{ key: 'name', value: t.name }], t.customName ? [{ key: 'customName', value: t.customName }] : []),
+            });
+        });
+    }
+
     function newMemory() {
         return {
             startedAt: null,
@@ -1105,11 +1178,15 @@
 
         function applyActions(out, batch) {
             const heard = heardDrugWords();
-            for (const c of (out && Array.isArray(out.changes) ? out.changes : []).slice(0, 24)) {
+            const changes = (out && Array.isArray(out.changes) ? out.changes : []).slice(0, 24).flatMap(splitLabs).flatMap(splitThen).slice(0, 32);
+            for (const c of changes) {
                 if (!c || !ACTION_KINDS.includes(c.kind)) continue;
                 if (coworkerOnlyDrug(c, heard)) continue;   // the coworker's idea, not the doctor's order
                 const title = clip(String(c.title || '').trim(), 90);
                 let a = c.id ? wm.actions.find((x) => x.id === c.id) : null;
+                // A rename into another item already on the list would lose this one (the BMP renamed "Magnesium").
+                if (a && title && normText(title) !== normText(a.title)
+                    && wm.actions.some((x) => x !== a && x.kind === c.kind && x.status !== 'dropped' && sameItem(x.title, title))) continue;
                 // The same thing listed again (or under a made-up id) updates the item already there: the
                 // closest title wins. Two items side by side in one reply are two things ("BMP and magnesium
                 // in the morning" and "Magnesium in the morning"), unless their titles are the same.

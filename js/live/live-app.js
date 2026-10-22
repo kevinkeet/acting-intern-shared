@@ -178,6 +178,8 @@
                         const n = LiveApp._actionNote;
                         const modal = document.getElementById('ai-note-editor-modal');
                         if (n && type === n.type && !(modal && modal.classList.contains('visible')) && LiveApp.engine) { LiveApp.engine.setActionStatus(n.id, 'done', 'saved'); LiveApp._actionNote = null; }
+                        // "Inside the coworker": the note goes into the chart (long-term memory).
+                        if (!(modal && modal.classList.contains('visible')) && typeof LiveAbout !== 'undefined' && LiveAbout.isOpen && LiveAbout.isOpen()) LiveAbout.pulse('saved:note');
                     } catch (e) { console.warn('Live Coworker note hook:', e); }
                     return r;
                 };

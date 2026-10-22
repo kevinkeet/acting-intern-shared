@@ -848,11 +848,58 @@ const manualClock = () => {
         cw.start({ skipPrime: true });
         cw.wm.plan.push({ id: 'P1', t: 0, text: 'Repeat BMP and magnesium in the morning', kind: 'test', line: 'L1' });
         await cw.actions();
-        assert.deepStrictEqual(cw.wm.actions.map((a) => a.title), ['BMP and magnesium in the morning', 'Magnesium in the morning'], 'the BMP is not swallowed');
+        assert.deepStrictEqual(cw.wm.actions.map((a) => a.title), ['BMP in the morning', 'Magnesium in the morning'], 'the BMP is not swallowed (and the packed order is split)');
         await cw.actions();
         assert.strictEqual(cw.wm.actions.length, 2, 'listed again: an update, not a third item');
-        assert.strictEqual(cw.wm.actions[0].title, 'BMP and magnesium in the morning', 'the BMP item keeps its title');
+        assert.strictEqual(cw.wm.actions[0].title, 'BMP in the morning', 'the BMP item keeps its title');
         assert.strictEqual(cw.wm.actions[1].fields.priority, 'Routine', 'the closest title got the update');
+        cw.stop();
+    });
+
+    await check('radar labs: one item per test when an order names several; a rename that would copy another item is ignored', async () => {
+        const replies = [
+            [item({ title: 'Repeat BMP and magnesium in the morning', order_type: 'lab', fields: [{ key: 'name', value: 'Basic Metabolic Panel' }, { key: 'specimen', value: 'Blood' }, { key: 'priority', value: 'Routine' }] }),
+                item({ title: 'Type and screen, repeat CBC tonight', order_type: 'lab', fields: [{ key: 'name', value: 'Complete Blood Count' }, { key: 'priority', value: 'STAT' }] }),
+                item({ title: 'CBC and hemoglobin now', order_type: 'lab', fields: [{ key: 'name', value: 'Complete Blood Count' }] }),
+                item({ title: 'Strict I&O and daily weights', order_type: 'nursing', fields: [{ key: 'orderType', value: 'I&O Monitoring' }] })],
+            [item({ id: 'A1', title: 'Magnesium in the morning', order_type: 'lab', fields: [{ key: 'name', value: 'Magnesium' }] })],
+        ];
+        let n = 0;
+        const t = fakeTransport((lane) => (lane === 'actions' ? radarReply(replies[n++] || []) : reply(JSON.stringify(TAKE()))));
+        const cw = LiveCore.createCoworker({ transport: t, chart, clock: manualClock() });
+        cw.start({ skipPrime: true });
+        cw.wm.plan.push({ id: 'P1', t: 0, text: 'labs', kind: 'test', line: 'L1' });
+        await cw.actions();
+        const by = (title) => cw.wm.actions.find((a) => a.title === title) || {};
+        assert.deepStrictEqual(cw.wm.actions.map((a) => a.title),
+            ['Repeat BMP in the morning', 'Repeat magnesium in the morning', 'Type and screen tonight', 'CBC tonight', 'CBC and hemoglobin now', 'Strict I&O and daily weights'],
+            'two tests, two items (one test said two ways stays one; nursing orders said together may share one)');
+        assert.deepStrictEqual(by('Repeat BMP in the morning').fields, { name: 'Basic Metabolic Panel', specimen: 'Blood', priority: 'Routine' });
+        assert.deepStrictEqual(by('Repeat magnesium in the morning').fields, { name: 'Magnesium', specimen: 'Blood', priority: 'Routine' });
+        assert.deepStrictEqual(by('Type and screen tonight').fields, { name: 'Other', customName: 'Type and screen', priority: 'STAT' }, 'type and screen in the form\'s "Other" box');
+        assert.strictEqual(by('CBC tonight').fields.name, 'Complete Blood Count');
+        await cw.actions();   // the model renames the BMP item into the magnesium order
+        assert.strictEqual(cw.wm.actions[0].title, 'Repeat BMP in the morning', 'the BMP stays');
+        assert.strictEqual(cw.wm.actions[0].fields.name, 'Basic Metabolic Panel');
+        assert.strictEqual(cw.wm.actions.length, 6);
+        cw.stop();
+    });
+
+    await check('radar medicines: a load then a schedule is two orders (signing one would leave out the other dose)', async () => {
+        const t = fakeTransport((lane) => (lane === 'actions' ? radarReply([
+            item({ title: 'Furosemide 80 mg IV now, then 40 mg IV twice a day', order_type: 'medication', fields: [{ key: 'name', value: 'Furosemide' }, { key: 'dose', value: '80 mg' }, { key: 'route', value: 'IV' }, { key: 'frequency', value: 'Once' }, { key: 'indication', value: 'Volume overload' }] }),
+            item({ title: 'Potassium chloride 40 mEq PO now then 20 mEq in 4 hours', order_type: 'medication', fields: [{ key: 'name', value: 'Potassium chloride' }] }),
+            item({ title: 'Heparin 5000 units SC now then every 8 hours', order_type: 'medication', fields: [{ key: 'name', value: 'Heparin' }] }),
+        ]) : reply(JSON.stringify(TAKE()))));
+        const cw = LiveCore.createCoworker({ transport: t, chart, clock: manualClock() });
+        cw.start({ skipPrime: true });
+        cw.wm.lines.push({ id: 'L1', t: 0, speaker: 'doctor', text: 'IV furosemide 80 now then 40 twice a day, potassium chloride 40 now then 20, heparin 5000 SC now then every 8 hours.' });
+        cw.wm.plan.push({ id: 'P1', t: 0, text: 'meds', kind: 'order', line: 'L1' });
+        await cw.actions();
+        assert.deepStrictEqual(cw.wm.actions.map((a) => a.title), ['Furosemide 80 mg IV now', 'Furosemide 40 mg IV twice a day', 'Potassium chloride 40 mEq PO now', 'Potassium chloride 20 mEq in 4 hours', 'Heparin 5000 units SC now then every 8 hours']);
+        assert.deepStrictEqual(cw.wm.actions[0].fields, { name: 'Furosemide', dose: '80 mg', route: 'IV', frequency: 'Once', indication: 'Volume overload' });
+        assert.deepStrictEqual(cw.wm.actions[1].fields, { name: 'Furosemide', dose: '40 mg', route: 'IV', frequency: 'BID', indication: 'Volume overload' });
+        assert.strictEqual(cw.wm.actions[3].fields.dose, '20 mEq', 'the drug name carries over to the second dose');
         cw.stop();
     });
 

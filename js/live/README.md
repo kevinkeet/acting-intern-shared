@@ -129,7 +129,13 @@ on a list, ready to act on with one click:
   medicine only the coworker named stays off the list until the doctor takes it up
   ("let's do that"; brand and generic names count as the same drug); an alert that
   also says to hold a drug does not flag the hold; two items listed side by side are
-  two things ("BMP" and "magnesium"), and a repeat updates the closest title.
+  two things ("BMP" and "magnesium"), and a repeat updates the closest title. A lab
+  order that names several tests is split, one item per test with the form's own test
+  name ("Repeat BMP and magnesium in the morning", "Type and screen, repeat CBC
+  tonight"); so is a medicine said as a load and then a schedule ("Furosemide 80 mg IV
+  now, then 40 mg IV twice a day"), or signing it would leave out the second dose. A
+  reply that would rename an item into another one already listed is ignored (the BMP
+  renamed "Magnesium in the morning" was how the BMP got lost).
 - The model maps to the form's choices; code maps what it says otherwise ("twice
   a day" to BID, "BMP" to Basic Metabolic Panel) and leaves a choice blank rather
   than guess (`LiveCore.toOrderForm`). `tests/live-core.test.js` checks the
@@ -155,13 +161,16 @@ on a list, ready to act on with one click:
 - My take: in the side panel one line, what worries it most; open it for the
   problem representation, assessment and next steps. Open in full screen.
 - Long replies in the conversation show their first lines; "More" shows the rest.
-- **Inside the coworker** (the ⓘ in the header): the memory drawn as rings around the
-  brain, from seconds to years: working memory (a dot for each thing heard this
-  visit), the chart digest (this admission, always in mind) and long-term memory
-  (one dot per record Deep Learn read, placed by date, 2018 to 2026, with a slow
-  radar sweep). The ear feeds in at the top; alerts, answers, the note and the
-  radar come out at the bottom. While it is open each lane pulses as it works and
-  the numbers follow. Loaded only when opened (`live-about.js`, `css/live-about.css`).
+- **Inside the coworker** (the ⓘ in the header): the Memory tab draws information
+  flowing, top to bottom: the last lines heard in the room, the ear, working memory
+  (a dot per thing it filed, by group: story, meds, exam and labs, your thinking,
+  the plan; the note and the radar are written from it), then the brain, with the
+  chart digest beside it (always in mind) and long-term memory (Deep Learn's 373
+  records, one bar per year, 2018 to 2026) that it reaches into only to look
+  something up; alerts and answers come out at the bottom, and a saved H&P goes
+  back into the chart. Something moves only when that lane actually works, and a
+  caption says what just happened ("The ear filed ... under Story"). Loaded only
+  when opened (`live-about.js`, `css/live-about.css`).
   Four more tabs, each its own file loaded on first use (`live-about-<id>.js` and
   `css/live-about-<id>.css`):
   - **Digestion**: how the chart becomes what it keeps in mind, from 392 raw files

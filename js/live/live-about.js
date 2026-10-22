@@ -2,139 +2,152 @@
  * Live Coworker: "Inside the coworker", the about sheet. DOM only; LiveApp loads it
  * the first time it is opened (full-site door only, like every live file).
  *
- * The memory is drawn as rings around the brain, from seconds to years:
- *   working memory (this visit: what it heard, your thinking, the plan),
- *   the chart digest (this admission, always in mind),
- *   long-term memory (every record Deep Learn read, one dot each, placed by date).
- * The ear feeds in from the top; alerts, answers, the note and the radar come
- * out at the bottom. While it is open, each lane pulses as it works, so the
- * picture shows the coworker thinking live.
+ * The Memory view draws how information flows, top to bottom:
+ *   in the room (the latest words heard) -> the ear (Haiku, every few lines) ->
+ *   working memory (this visit: what the ear filed, your thinking, the plan; the note
+ *   and the radar are written from here) -> the brain, which always has the chart
+ *   digest in mind and reaches into long-term memory (every record, by year) only
+ *   when it looks something up -> what it says (alerts, answers). A saved H&P goes
+ *   into the chart, so it joins long-term memory.
+ * Nothing moves for show: a pulse runs along a path only when that part works, and
+ * one line under the figure says what just happened.
  */
 (function (root) {
     'use strict';
 
     const NS = 'http://www.w3.org/2000/svg';
     const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-    const W = 400, H = 470, CX = 200, CY = 246;
-    const R = { core: 31, wm: 60, dg: 98, lt: 140 };
-    const GAP = 0.2;   // radians left open at 12 o'clock, where the ear comes in
+    const clip = (s, n) => { s = String(s == null ? '' : s).replace(/\s+/g, ' ').trim(); return s.length > n ? s.slice(0, n - 1).replace(/[\s,;:.]+\S*$/, '') + '…' : s; };
     const reduceMotion = () => !!(root.matchMedia && root.matchMedia('(prefers-reduced-motion: reduce)').matches);
-    // Angle 0 is 12 o'clock, clockwise.
-    const polar = (r, a) => [CX + r * Math.sin(a), CY - r * Math.cos(a)];
     const f1 = (n) => (Math.round(n * 10) / 10).toString();
-    const arc = (r, a0, a1, sweep) => {
-        const [x0, y0] = polar(r, a0), [x1, y1] = polar(r, a1);
-        return 'M' + f1(x0) + ' ' + f1(y0) + ' A' + r + ' ' + r + ' 0 ' + (Math.abs(a1 - a0) > Math.PI ? 1 : 0) + ' ' + (sweep == null ? 1 : sweep) + ' ' + f1(x1) + ' ' + f1(y1);
-    };
-    const OUT = [
-        { id: 'alert', label: 'Alerts', x: 64 },
-        { id: 'answer', label: 'Answers', x: 156 },
-        { id: 'note', label: 'Note', x: 244 },
-        { id: 'radar', label: 'Radar', x: 336 },
+
+    // ── the figure's layout (viewBox 400 x 398); the flow runs down the line x = FX ──
+    const W = 400, H = 398, FX = 155;
+    const ROOM = { x: 10, y: 6, w: 380, h: 74 };
+    const EAR = { x: FX - 54, y: 94, w: 108, h: 34 };
+    const WM = { x: 10, y: 142, w: 284, h: 98 };
+    const SIDE_X = 316, SIDE_W = 72, PILL_H = 26, RADAR_Y = 150, NOTE_Y = 198;
+    const BRAIN = { x: FX, y: 300, r: 27 };
+    const DG = { x: 10, y: 266, w: 88, h: 68 };
+    const LT = { x: 214, y: 258, w: 176, h: 82 };
+    const OUT_Y = 364;
+    const SAYS = [{ id: 'alert', label: 'Alerts', x: 95 }, { id: 'answer', label: 'Answers', x: 215 }];
+    // Working memory, in the Tracking pane's groups.
+    const BINS = [
+        { id: 'story', label: 'Story', dot: 'fact', kinds: ['symptom', 'history', 'social', 'other'] },
+        { id: 'meds', label: 'Meds', dot: 'fact', kinds: ['medication', 'allergy'] },
+        { id: 'exam', label: 'Exam, labs', dot: 'fact', kinds: ['exam', 'data'] },
+        { id: 'thinking', label: 'Thinking', dot: 'thinking' },
+        { id: 'plan', label: 'Plan', dot: 'plan' },
     ];
-    const outPath = (o) => 'M' + CX + ' ' + (CY + R.core) + ' C' + CX + ' ' + (CY + 120) + ' ' + o.x + ' ' + (H - 104) + ' ' + o.x + ' ' + (H - 44);
-    const EAR_PATH = 'M' + CX + ' 66 L' + CX + ' ' + (CY - R.core);
-    const READER_A = -2.05;   // the long-term memory reader sits on the outer ring, lower left
-    const readerPath = () => { const [x, y] = polar(R.lt, READER_A); return 'M' + CX + ' ' + CY + ' L' + f1(x) + ' ' + f1(y); };
+    const BIN_W = (WM.w - 16) / BINS.length;
+    const binX = (i) => WM.x + 8 + i * BIN_W;
+    const PER_ROW = 8, ROWS = 8, STEP = 6.2, DOT_Y0 = 182;
+    const binOf = (kind) => Math.max(0, BINS.findIndex((b) => b.kinds && b.kinds.includes(kind)));
+
+    const PATH = {
+        roomEar: 'M' + FX + ' ' + (ROOM.y + ROOM.h - 6) + ' L' + FX + ' ' + (EAR.y + 1),   // stops at the ear's edge, clear of its name
+        earBin: (i) => { const cx = f1(binX(i) + 24); return 'M' + FX + ' ' + (EAR.y + EAR.h) + ' C' + FX + ' ' + (WM.y + 8) + ' ' + cx + ' ' + (WM.y + 2) + ' ' + cx + ' ' + (DOT_Y0 + 4); },
+        wmBrain: 'M' + FX + ' ' + (WM.y + WM.h - 10) + ' L' + FX + ' ' + (BRAIN.y - BRAIN.r),
+        digestBrain: 'M' + (DG.x + DG.w - 6) + ' ' + BRAIN.y + ' L' + (FX - BRAIN.r) + ' ' + BRAIN.y,
+        brainDigest: 'M' + (FX - BRAIN.r) + ' ' + BRAIN.y + ' L' + (DG.x + DG.w - 6) + ' ' + BRAIN.y,
+        brainLt: 'M' + (FX + BRAIN.r) + ' ' + BRAIN.y + ' L' + (LT.x + 12) + ' ' + BRAIN.y,
+        ltBrain: 'M' + (LT.x + 12) + ' ' + BRAIN.y + ' L' + (FX + BRAIN.r) + ' ' + BRAIN.y,
+        wmRadar: 'M' + (WM.x + WM.w - 28) + ' ' + (RADAR_Y + PILL_H / 2) + ' L' + (SIDE_X + 6) + ' ' + (RADAR_Y + PILL_H / 2),
+        wmNote: 'M' + (WM.x + WM.w - 28) + ' ' + (NOTE_Y + PILL_H / 2) + ' L' + (SIDE_X + 6) + ' ' + (NOTE_Y + PILL_H / 2),
+        noteLt: 'M' + (SIDE_X + SIDE_W / 2) + ' ' + (NOTE_Y + PILL_H) + ' L' + (SIDE_X + SIDE_W / 2) + ' ' + (LT.y + 6),
+        say: (o) => 'M' + FX + ' ' + (BRAIN.y + BRAIN.r) + ' C' + FX + ' ' + (BRAIN.y + BRAIN.r + 20) + ' ' + o.x + ' ' + (OUT_Y - 20) + ' ' + o.x + ' ' + OUT_Y,
+    };
     const NOW = {
-        ear: 'The ear is reading new lines', verify: 'Checking a possible safety issue', answer: 'Answering you', update: 'Updating its take',
-        prime: 'Reading the chart before the visit', note: 'The scribe is updating the note', actions: 'Updating your radar', helper: 'A helper is looking something up',
+        ear: 'The ear is reading the latest lines', verify: 'The brain is checking a possible safety issue', answer: 'The brain is answering you', update: 'The brain is updating its take',
+        prime: 'Reading the chart digest before the visit', note: 'The scribe is writing the note from working memory', actions: 'Updating your radar from working memory', helper: 'A helper is looking it up in long-term memory',
     };
 
-    function memoryDots(shape) {
-        // One dot per record, by date around the ring (2018 at the top, clockwise); same-day records stack outward.
-        const docs = ((shape && shape.docs) || []).filter((d) => d.d).map((d) => ({ t: Date.parse(d.d), k: d.k })).filter((d) => isFinite(d.t)).sort((a, b) => a.t - b.t);
-        if (!docs.length) return { dots: '', ticks: '', first: null, last: null };
-        const t0 = docs[0].t, t1 = docs[docs.length - 1].t, span = Math.max(1, t1 - t0);
-        const ang = (t) => GAP / 2 + ((t - t0) / span) * (2 * Math.PI - GAP);
-        const perDay = new Map();
-        const dots = docs.map((d) => {
-            const day = Math.floor(d.t / 864e5);
-            const j = perDay.get(day) || 0;
-            perDay.set(day, j + 1);
-            const [x, y] = polar(R.lt - 7 + Math.min(j, 6) * 3.1, ang(d.t));
-            return '<circle class="lt-dot is-' + d.k + '" cx="' + f1(x) + '" cy="' + f1(y) + '" r="1.75"/>';
-        }).join('');
-        const y0 = new Date(t0).getUTCFullYear(), y1 = new Date(t1).getUTCFullYear();
-        const [sx, sy] = polar(R.lt + 30, GAP / 2 + 0.06);
-        let ticks = '<text class="lt-year" x="' + f1(sx) + '" y="' + f1(sy + 3) + '">' + y0 + '</text>';
-        for (let yr = y0 + 1; yr <= y1; yr++) {
-            const a = ang(Date.UTC(yr, 0, 1));
-            const [ax, ay] = polar(R.lt + 15, a), [bx, by] = polar(R.lt + 20, a), [lx, ly] = polar(R.lt + 30, a);
-            ticks += '<line class="lt-tick" x1="' + f1(ax) + '" y1="' + f1(ay) + '" x2="' + f1(bx) + '" y2="' + f1(by) + '"/>'
-                + ((yr - y0) % 2 === 0 || yr === y1 ? '<text class="lt-year" x="' + f1(lx) + '" y="' + f1(ly + 3) + '">' + yr + '</text>' : '');
+    const wire = (d, cls) => '<path class="wire' + (cls ? ' ' + cls : '') + '" d="' + d + '"/>';
+    const box = (r, cls, rx) => '<rect class="box' + (cls ? ' ' + cls : '') + '" x="' + r.x + '" y="' + r.y + '" width="' + r.w + '" height="' + r.h + '" rx="' + (rx || 8) + '"/>';
+
+    /** Long-term memory as a store: every record Deep Learn read, one bar per year (notes, labs, imaging stacked). */
+    function ltStore(shape) {
+        const docs = ((shape && shape.docs) || []).map((d) => ({ y: new Date(Date.parse(d.d)).getUTCFullYear(), k: d.k })).filter((d) => isFinite(d.y));
+        if (!docs.length) return { bars: '', years: '', n: 0, first: null, last: null };
+        const first = Math.min(...docs.map((d) => d.y)), last = Math.max(...docs.map((d) => d.y));
+        const per = new Map();
+        for (const d of docs) { const c = per.get(d.y) || { note: 0, lab: 0, imaging: 0 }; c[d.k] = (c[d.k] || 0) + 1; per.set(d.y, c); }
+        const count = (c) => (c.note || 0) + (c.lab || 0) + (c.imaging || 0);
+        const n = last - first + 1, x0 = LT.x + 12, w = LT.w - 24, step = w / n, bw = Math.max(4, Math.min(12, step - 4));
+        const max = Math.max(1, ...[...per.values()].map(count));
+        const base = LT.y + 64, hMax = 30;
+        let bars = '', years = '';
+        for (let yr = first; yr <= last; yr++) {
+            const c = per.get(yr) || { note: 0, lab: 0, imaging: 0 };
+            const x = x0 + (yr - first) * step + (step - bw) / 2;
+            let top = base;
+            for (const k of ['note', 'lab', 'imaging']) {
+                if (!c[k]) continue;
+                const h = Math.max(1.2, (c[k] / max) * hMax);
+                top -= h;
+                bars += '<rect class="lt-bar is-' + k + '" x="' + f1(x) + '" y="' + f1(top) + '" width="' + f1(bw) + '" height="' + f1(h) + '"/>';
+            }
+            const t = count(c);
+            bars += '<rect class="lt-hit" x="' + f1(x - 1) + '" y="' + (base - hMax) + '" width="' + f1(bw + 2) + '" height="' + hMax + '"><title>' + yr + ': ' + t + ' record' + (t === 1 ? '' : 's')
+                + (t ? ' (' + ['note', 'lab', 'imaging'].filter((k) => c[k]).map((k) => c[k] + ' ' + (k === 'imaging' ? 'imaging' : k + (c[k] === 1 ? '' : 's'))).join(', ') + ')' : '') + '</title></rect>';
+            if (yr === first || yr === last || (n > 4 && yr === first + Math.round((n - 1) / 2))) years += '<text class="lt-year" x="' + f1(x + bw / 2) + '" y="' + (base + 9) + '">' + yr + '</text>';
         }
-        return { dots, ticks, first: y0, last: y1, n: docs.length };
+        return { bars, years, n: docs.length, first, last };
     }
 
-    function digestRing(chart) {
-        const segs = [
-            ['Allergies', chart && chart.allergies], ['Medicines', chart && chart.meds], ['Problems', chart && chart.problems],
-            ['Labs', chart && chart.labs], ['Vitals', null], ['Visits', chart && chart.encounters], ['Its summary', null],
-        ];
-        const step = (2 * Math.PI - GAP) / segs.length;
-        return segs.map((s, i) => {
-            const a0 = GAP / 2 + i * step + 0.035, a1 = GAP / 2 + (i + 1) * step - 0.035;
-            return '<path class="dg-seg is-' + i + '" d="' + arc(R.dg, a0, a1) + '"><title>' + esc(s[0] + (s[1] != null ? ': ' + s[1] : '')) + '</title></path>';
-        }).join('');
-    }
-
-    function sweep() {
-        const r = R.lt + 13, n = 9, step = 0.085;
-        let out = '';
-        for (let k = 0; k < n; k++) {
-            const a1 = -k * step, a0 = a1 - step;
-            const [x0, y0] = polar(r, a0), [x1, y1] = polar(r, a1);
-            out += '<path d="M' + CX + ' ' + CY + ' L' + f1(x0) + ' ' + f1(y0) + ' A' + r + ' ' + r + ' 0 0 1 ' + f1(x1) + ' ' + f1(y1) + ' Z" opacity="' + (0.13 * (1 - k / n)).toFixed(3) + '"/>';
-        }
-        const [ex, ey] = polar(r, 0);
-        return out + '<line x1="' + CX + '" y1="' + CY + '" x2="' + f1(ex) + '" y2="' + f1(ey) + '"/>';
-    }
-
-    function curvedLabel(id, r, a0, a1, text) {
-        return '<path id="' + id + '" d="' + arc(r, a0, a1) + '" fill="none" stroke="none"/><text class="ring-name"><textPath href="#' + id + '" startOffset="50%" text-anchor="middle">' + esc(text) + '</textPath></text>';
+    /** The chart digest: what the brain always has in mind, as a strip of its parts. */
+    function digestBar(chart) {
+        const segs = [['Allergies', chart && chart.allergies], ['Medicines', chart && chart.meds], ['Problems', chart && chart.problems], ['Labs', chart && chart.labs], ['Vitals', null], ['Visits', chart && chart.encounters], ['Its summary of the record', null]];
+        const x0 = DG.x + 9, w = DG.w - 18, gap = 1.6, sw = (w - gap * (segs.length - 1)) / segs.length;
+        return segs.map((s, i) => '<rect class="dg-seg is-' + i + '" x="' + f1(x0 + i * (sw + gap)) + '" y="' + (DG.y + 36) + '" width="' + f1(sw) + '" height="9" rx="1.5"><title>' + esc(s[0] + (s[1] != null ? ': ' + s[1] : '')) + '</title></rect>').join('');
     }
 
     function figure(s) {
-        const lt = memoryDots(s.shape);
-        const reader = polar(R.lt, READER_A);
+        const lt = ltStore(s.shape);
+        const ltSub = lt.n ? ((s.shape && s.shape.processed) || lt.n) + ' records, ' + lt.first + ' to ' + lt.last : 'not built for this patient';
+        const midR = RADAR_Y + PILL_H / 2, midN = NOTE_Y + PILL_H / 2;
         return '<svg class="lc-about-svg" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-labelledby="lc-about-fig-t lc-about-fig-d">'
-            + '<title id="lc-about-fig-t">The coworker\'s memory and how it thinks</title>'
-            + '<desc id="lc-about-fig-d">Three rings of memory around the brain: working memory for this visit, the chart digest for this admission, and long-term memory with one dot per record from '
-            + esc(lt.first || '') + ' to ' + esc(lt.last || '') + '. The ear feeds what it hears into working memory; alerts, answers, the note and the radar come out below.</desc>'
-            // wires first, under everything
-            + '<path class="wire" d="' + EAR_PATH + '"/>'
-            + OUT.map((o) => '<path class="wire is-out" d="' + outPath(o) + '"/>').join('')
-            + '<path class="wire is-reader" d="' + readerPath() + '"/>'
-            // long-term memory: the radar sweep, the records, the years
-            + '<g class="lt-sweep" aria-hidden="true">' + sweep() + '</g>'
-            + '<circle class="ring is-lt" cx="' + CX + '" cy="' + CY + '" r="' + R.lt + '"/>'
-            + '<g class="lt-dots">' + lt.dots + '</g><g class="lt-ticks">' + lt.ticks + '</g>'
-            + curvedLabel('lc-about-lt-name', R.lt - 21, 0.3, 1.3, 'long-term memory')
-            // the chart digest
-            + '<g class="dg">' + digestRing(s.chart) + '</g>'
-            + curvedLabel('lc-about-dg-name', R.dg + 9, -0.95, -0.2, 'chart digest')
-            // working memory: one dot per thing heard this visit (drawn by update())
-            + '<circle class="ring is-wm" cx="' + CX + '" cy="' + CY + '" r="' + R.wm + '"/>'
-            + '<g class="wm-dots"></g>'
-            + curvedLabel('lc-about-wm-name', R.wm + 8, -1.85, -0.1, 'working memory')
+            + '<title id="lc-about-fig-t">How information flows through the coworker</title>'
+            + '<desc id="lc-about-fig-d">Words heard in the room go to the ear, which files them in working memory for this visit. The note and the radar are written from working memory. '
+            + 'The brain works from working memory with the chart digest always in mind, and looks things up in long-term memory (' + esc(ltSub) + ') only when it needs to. It says what matters as alerts and answers. A saved H&amp;P goes into the chart.</desc>'
+            // the wires, under everything
+            + wire('M' + FX + ' ' + (ROOM.y + ROOM.h) + ' L' + FX + ' ' + EAR.y)
+            + wire('M' + FX + ' ' + (EAR.y + EAR.h) + ' L' + FX + ' ' + WM.y)
+            + wire('M' + FX + ' ' + (WM.y + WM.h) + ' L' + FX + ' ' + (BRAIN.y - BRAIN.r))
+            + wire('M' + (DG.x + DG.w) + ' ' + BRAIN.y + ' L' + (FX - BRAIN.r) + ' ' + BRAIN.y)
+            + wire('M' + (FX + BRAIN.r) + ' ' + BRAIN.y + ' L' + LT.x + ' ' + BRAIN.y, 'is-dashed')
+            + wire('M' + (WM.x + WM.w) + ' ' + midR + ' L' + SIDE_X + ' ' + midR)
+            + wire('M' + (WM.x + WM.w) + ' ' + midN + ' L' + SIDE_X + ' ' + midN)
+            + wire('M' + (SIDE_X + SIDE_W / 2) + ' ' + (NOTE_Y + PILL_H) + ' L' + (SIDE_X + SIDE_W / 2) + ' ' + LT.y, 'is-dashed')
+            + SAYS.map((o) => wire(PATH.say(o), 'is-out')).join('')
+            + '<text class="wire-label" x="' + f1((FX + BRAIN.r + LT.x) / 2) + '" y="' + (BRAIN.y - 5) + '">looks up</text>'
+            + '<text class="wire-label t-start" x="' + (SIDE_X + SIDE_W / 2 + 5) + '" y="' + (LT.y - 13) + '">H&amp;P saved</text>'
+            // in the room: the latest words heard (drawn by update())
+            + '<g class="room">' + box(ROOM, 'is-room', 9) + '<text class="box-name t-start" x="' + (ROOM.x + 12) + '" y="' + (ROOM.y + 15) + '">In the room</text><g class="room-lines"></g></g>'
+            // the ear
+            + '<g class="ear">' + box(EAR, 'is-ear', 9) + '<text class="node-name" x="' + FX + '" y="' + (EAR.y + 15) + '">Ear</text><text class="node-sub" x="' + FX + '" y="' + (EAR.y + 27) + '">Haiku 5.5 · every few lines</text></g>'
+            // working memory: what the ear filed this visit, by kind (drawn by update())
+            + '<g class="wm">' + box(WM, 'is-wm', 9) + '<text class="box-name t-start" x="' + (WM.x + 12) + '" y="' + (WM.y + 15) + '">Working memory <tspan class="box-sub">this visit</tspan></text><g class="wm-bins"></g></g>'
+            // the chart digest, always in mind
+            + '<g class="dg">' + box(DG, 'is-dg', 8) + '<text class="node-name t-start" x="' + (DG.x + 9) + '" y="' + (DG.y + 16) + '">Chart digest</text><text class="node-sub t-start" x="' + (DG.x + 9) + '" y="' + (DG.y + 28) + '">always in mind</text>'
+            + digestBar(s.chart) + '<text class="node-sub t-start" x="' + (DG.x + 9) + '" y="' + (DG.y + 60) + '" data-a="dgsize"></text></g>'
             // the brain
-            + '<circle class="core-glow" cx="' + CX + '" cy="' + CY + '" r="' + (R.core + 4) + '"/>'
-            + '<circle class="core" cx="' + CX + '" cy="' + CY + '" r="' + R.core + '"/>'
-            + '<text class="core-name" x="' + CX + '" y="' + (CY - 2) + '">Brain</text>'
-            + '<text class="core-model" x="' + CX + '" y="' + (CY + 11) + '" data-a="model">' + esc(s.brain) + '</text>'
-            // the ear, at the top
-            + '<g class="ear"><rect x="' + (CX - 58) + '" y="22" width="116" height="44" rx="10"/><text class="node-name" x="' + CX + '" y="40">Ear</text><text class="node-sub" x="' + CX + '" y="55">Haiku 5.5 · every few lines</text></g>'
-            + '<g class="room" aria-hidden="true"><circle cx="' + (CX - 82) + '" cy="44" r="3"/><circle cx="' + (CX - 94) + '" cy="38" r="3"/><circle cx="' + (CX - 94) + '" cy="51" r="3"/><path d="M' + (CX - 76) + ' 44 L' + (CX - 62) + ' 44"/></g>'
-            // the long-term memory reader (a helper) on the outer ring
-            + '<g class="reader"><circle cx="' + f1(reader[0]) + '" cy="' + f1(reader[1]) + '" r="6.5"/><text class="node-sub is-left" x="' + f1(reader[0] - 11) + '" y="' + f1(reader[1] + 3) + '">reader</text></g>'
-            // outputs, at the bottom
-            + OUT.map((o) => '<g class="out is-' + o.id + '" data-out="' + o.id + '"><rect x="' + (o.x - 40) + '" y="' + (H - 44) + '" width="80" height="30" rx="15"/><text class="node-name" x="' + o.x + '" y="' + (H - 25) + '">' + o.label + '</text></g>').join('')
+            + '<circle class="core-glow" cx="' + FX + '" cy="' + BRAIN.y + '" r="' + (BRAIN.r + 4) + '"/>'
+            + '<circle class="core" cx="' + FX + '" cy="' + BRAIN.y + '" r="' + BRAIN.r + '"/>'
+            + '<text class="core-name" x="' + FX + '" y="' + (BRAIN.y - 1) + '">Brain</text>'
+            + '<text class="core-model" x="' + FX + '" y="' + (BRAIN.y + 11) + '" data-a="model">' + esc(s.brain) + '</text>'
+            // long-term memory: a store it reaches into
+            + '<g class="lt">' + box(LT, 'is-lt', 8) + '<text class="node-name t-start" x="' + (LT.x + 12) + '" y="' + (LT.y + 16) + '">Long-term memory</text>'
+            + '<text class="node-sub t-start" x="' + (LT.x + 12) + '" y="' + (LT.y + 28) + '">' + esc(ltSub) + '</text><g class="lt-bars">' + lt.bars + '</g>' + lt.years + '</g>'
+            // what comes out: alerts and answers from the brain; the note and the radar, written from working memory
+            + SAYS.map((o) => '<g class="out is-' + o.id + '" data-out="' + o.id + '"><rect class="pill" x="' + (o.x - 41) + '" y="' + OUT_Y + '" width="82" height="' + PILL_H + '" rx="13"/><text class="node-name" x="' + o.x + '" y="' + (OUT_Y + 17) + '">' + o.label + '</text></g>').join('')
+            + [['note', 'Note', NOTE_Y], ['radar', 'Radar', RADAR_Y]].map(([id, label, y]) => '<g class="out is-' + id + '" data-out="' + id + '"><rect class="pill" x="' + SIDE_X + '" y="' + y + '" width="' + SIDE_W + '" height="' + PILL_H + '" rx="13"/><text class="node-name" x="' + (SIDE_X + SIDE_W / 2) + '" y="' + (y + 17) + '">' + label + '</text></g>').join('')
             + '<g class="pulses"></g>'
             + '</svg>';
     }
 
-    // The views: the rings here; the others are their own files (js/live/live-about-<id>.js,
+    // The views: the flow here; the others are their own files (js/live/live-about-<id>.js,
     // css/live-about-<id>.css), loaded the first time their tab opens, and register themselves.
     const TABS = [['memory', 'Memory'], ['digest', 'Digestion'], ['threads', 'Problems'], ['why', 'How it thinks'], ['calls', 'Each call']];
     const TAB_KEY = 'live-about-tab';
@@ -143,7 +156,6 @@
         el: null,
         views: {},
         _onClose: null,
-        _shownWm: 0,
         _state: null,
         _active: 'memory',
         _loader: null,
@@ -184,7 +196,11 @@
                     if (b) b.focus();
                 });
             }
-            this._shownWm = 0;
+            // What the figure has already shown: on opening, the story so far is drawn, not replayed.
+            this._roomKey = null;
+            this._binsKey = null;
+            this._seen = null;
+            this._savedNotes = null;
             this._rendered = {};
             this._state = state;
             this.el.innerHTML = this._html(state);
@@ -235,7 +251,7 @@
                 + '<nav class="lc-about-tabs" role="tablist" aria-label="Views">' + TABS.map(([id, label]) => '<button type="button" role="tab" data-about-tab="' + id + '" aria-selected="false" tabindex="-1">' + label + '</button>').join('') + '</nav></header>'
                 + TABS.slice(1).map(([id, label]) => '<div class="lc-about-view" data-view="' + id + '" role="tabpanel" aria-label="' + label + '" hidden></div>').join('')
                 + '<div class="lc-about-view" data-view="memory" role="tabpanel" aria-label="Memory"><div class="lc-about-body">'
-                + '<figure class="lc-about-fig">' + figure(s) + '<figcaption class="lc-about-now" data-a="now" aria-live="polite">Listening for the next thing to do</figcaption></figure>'
+                + '<figure class="lc-about-fig">' + figure(s) + '<figcaption class="lc-about-now" data-a="now" aria-live="polite">Waiting for the next words</figcaption></figure>'
                 + '<div class="lc-about-text">'
                 + '<h3>Memory, from seconds to years</h3><ul class="lc-about-list" data-a="layers"></ul>'
                 + '<h3>Who does what</h3><ul class="lc-about-list" data-a="lanes"></ul>'
@@ -243,7 +259,7 @@
                 + '</div></div></div>';
         },
 
-        /** Refresh the live parts: the subtitle, working memory's dots, the numbers. */
+        /** Refresh the live parts: the room, working memory, what just arrived, the words and numbers. */
         update(s) {
             if (!this.isOpen() || !s) return;
             this._state = s;
@@ -260,29 +276,20 @@
             if (sub) sub.textContent = [s.brain, s.mode, s.listening ? 'listening' : 'not listening'].filter(Boolean).join(' · ');
             const model = q('model');
             if (model) model.textContent = s.brain || '';
-            // Working memory: a dot for each fact (green), thought of yours (navy), plan item (blue) and tripwire (amber).
-            const items = [].concat(
-                Array(facts).fill('fact'), Array(thinking).fill('thinking'), Array(plan).fill('plan'), Array(watch).fill('watch'));
-            const g = this.el.querySelector('.wm-dots');
-            if (g && items.length !== this._shownWm) {
-                const per = 0.16, lapN = Math.floor((2 * Math.PI - GAP) / per);
-                g.innerHTML = items.slice(0, lapN * 3).map((k, i) => {
-                    const lap = Math.floor(i / lapN);
-                    const a = GAP / 2 + (i % lapN) * per + lap * per / 2;
-                    const [x, y] = polar(R.wm - 8 - lap * 7, a);
-                    return '<circle class="wm-dot is-' + k + (i >= this._shownWm && this._shownWm > 0 ? ' is-new' : '') + '" cx="' + f1(x) + '" cy="' + f1(y) + '" r="2.6"/>';
-                }).join('');
-                this._shownWm = items.length;
-            }
+            this._drawRoom(s);
+            this._drawBins(wm);
+            this._arrivals(s);
             const m = s.memory || {}, sh = s.shape || {}, ch = s.chart || {};
             const tok = (chars, per) => { const t = chars / per; return chars ? '~' + (t >= 10000 ? Math.round(t / 1000) + 'K' : (Math.round(t / 100) / 10) + 'K') + ' tokens' : ''; };
+            const dgsize = q('dgsize');
+            if (dgsize) dgsize.textContent = m.digestChars ? tok(m.digestChars, 4) : '';
             const years = sh.first && sh.last ? sh.first + ' to ' + sh.last : '';
             const layers = q('layers');
             if (layers) {
                 layers.innerHTML = [
-                    ['wm', 'Working memory', 'This visit, rebuilt for every call: ' + facts + ' fact' + (facts === 1 ? '' : 's') + ' heard, ' + thinking + ' of your thoughts, ' + plan + ' plan item' + (plan === 1 ? '' : 's') + ', ' + watch + ' tripwire' + (watch === 1 ? '' : 's') + ' it is watching for.'],
+                    ['wm', 'Working memory', 'This visit: what the ear filed from the room, rebuilt for every call: ' + facts + ' fact' + (facts === 1 ? '' : 's') + ' heard, ' + thinking + ' of your thoughts, ' + plan + ' plan item' + (plan === 1 ? '' : 's') + ', ' + watch + ' tripwire' + (watch === 1 ? '' : 's') + ' it is watching for. The note and the radar are written from it.'],
                     ['dg', 'Chart digest', 'This admission, always in mind (cached): ' + [ch.allergies != null ? ch.allergies + ' allergies' : '', ch.meds != null ? ch.meds + ' medicines' : '', ch.problems != null ? ch.problems + ' problems' : ''].filter(Boolean).join(', ') + ', recent labs, vitals and visits, and its summary of the record' + (m.digestChars ? ' (' + tok(m.digestChars, 4) + ')' : '') + '.'],
-                    ['lt', 'Long-term memory', sh.processed ? (sh.processed + ' records' + (years ? ', ' + years : '') + ', read once by Deep Learn in ' + (sh.levels || '?') + ' passes (Haiku read, Sonnet wrote)' + (m.longTermChars ? '; ' + tok(m.longTermChars, 2.25) : '') + '. A helper looks things up in it when the brain asks. Each dot is one record, by date:') : (s.memoryNote || 'Not built for this patient yet: the coworker works from the chart.'),
+                    ['lt', 'Long-term memory', sh.processed ? (sh.processed + ' records' + (years ? ', ' + years : '') + ', read once by Deep Learn in ' + (sh.levels || '?') + ' passes (Haiku read, Sonnet wrote)' + (m.longTermChars ? '; ' + tok(m.longTermChars, 2.25) : '') + '. The brain reaches into it only to look something up. Each bar is a year of records:') : (s.memoryNote || 'Not built for this patient yet: the coworker works from the chart.'),
                         sh.processed ? ' <span class="lc-about-key"><i class="k-note"></i>notes</span> <span class="lc-about-key"><i class="k-lab"></i>labs</span> <span class="lc-about-key"><i class="k-img"></i>imaging</span>' : ''],
                 ].map(([k, name, text, extra]) => '<li><span class="lc-about-sw is-' + k + '" aria-hidden="true"></span><div><b>' + esc(name) + '</b> ' + esc(text) + (extra || '') + '</div></li>').join('');
             }
@@ -296,10 +303,10 @@
             const lanes = q('lanes');
             if (lanes) {
                 lanes.innerHTML = [
-                    ['ear', 'Ear', 'Haiku 5.5 reads every few lines: facts, your thinking, the plan, questions, tripwires' + med('ear') + '.'],
+                    ['ear', 'Ear', 'Haiku 5.5 reads every few lines and files what matters in working memory: facts, your thinking, the plan, questions, tripwires' + med('ear') + '.'],
                     ['brain', 'Brain', (s.brain || 'Sonnet 5.5') + ' answers you (with exact lookups), checks possible safety issues (say now, wait for you, or stay quiet) and keeps its take' + med('verify') + '.'],
                     ['rules', 'Speaking rules', 'Plain code: a critical alert interrupts, anything else waits until you ask, nothing is said twice; ' + said + ' said, ' + held + ' held.'],
-                    ['scribe', 'Scribe and radar', 'Haiku keeps the note and your to-do list current' + med('note') + '.'],
+                    ['scribe', 'Scribe and radar', 'Haiku writes the note and your to-do list from working memory' + med('note') + '.'],
                     ['helper', 'Helpers', 'Haiku reads the long-term memory and checks medicines, only when the brain asks' + med('helper') + '.'],
                 ].map(([k, name, text]) => '<li><span class="lc-about-sw is-' + k + '" aria-hidden="true"></span><div><b>' + esc(name) + '</b> ' + esc(text) + '</div></li>').join('');
             }
@@ -307,7 +314,84 @@
             if (foot) foot.textContent = st.calls ? 'This encounter so far: ' + st.calls + ' AI calls, $' + st.cost.toFixed(2) + '.' : 'No AI calls yet this encounter.';
         },
 
-        /** A lane just started (or something was said): send a pulse along its wire and light up what it touched. */
+        /** In the room: the last three things heard, newest at the bottom; a new one fades in. */
+        _drawRoom(s) {
+            const g = this.el.querySelector('.room-lines');
+            if (!g) return;
+            const last = (s.lines || []).filter((l) => l && l.text).slice(-3);
+            const key = last.map((l) => l.id).join('|');
+            if (key === this._roomKey) return;
+            const before = new Set(String(this._roomKey || '').split('|'));
+            const first = this._roomKey == null;
+            this._roomKey = key;
+            if (!last.length) {
+                g.innerHTML = '<text class="room-empty" x="' + (ROOM.x + ROOM.w / 2) + '" y="' + (ROOM.y + 47) + '">Nothing heard yet: start the encounter, or play the demo.</text>';
+                return;
+            }
+            const NAMES = { doctor: 'Doctor', patient: 'Patient', other: 'Other', ehr: 'Order' };
+            g.innerHTML = last.map((l, i) => {
+                const y = ROOM.y + 33 + (3 - last.length + i) * 16;
+                const who = clip(l.label || NAMES[l.speaker] || l.speaker || '', 12);
+                return '<g class="room-line is-age-' + (last.length - 1 - i) + (!first && !before.has(String(l.id)) ? ' is-new' : '') + '">'
+                    + '<text class="room-who t-end" x="' + (ROOM.x + 64) + '" y="' + y + '">' + esc(who) + '</text>'
+                    + '<text class="room-said t-start" x="' + (ROOM.x + 70) + '" y="' + y + '">' + esc(clip(l.text, 60)) + '</text></g>';
+            }).join('');
+        },
+
+        /** Working memory: one dot per thing filed this visit, in the Tracking pane's groups; a new one pops in. */
+        _drawBins(wm) {
+            const g = this.el.querySelector('.wm-bins');
+            if (!g) return;
+            const counts = BINS.map((b) => (b.kinds ? (wm.facts || []).filter((f) => b.kinds.includes(f.kind)).length : ((b.id === 'thinking' ? wm.thinking : wm.plan) || []).length));
+            const key = counts.join(',');
+            if (key === this._binsKey) return;
+            const prev = this._binsKey ? this._binsKey.split(',').map(Number) : null;
+            this._binsKey = key;
+            g.innerHTML = BINS.map((b, i) => {
+                const n = counts[i], x0 = binX(i), shown = Math.min(n, PER_ROW * ROWS);
+                let dots = '';
+                for (let j = 0; j < shown; j++) {
+                    const cx = x0 + 3 + (j % PER_ROW) * STEP, cy = DOT_Y0 + Math.floor(j / PER_ROW) * STEP;
+                    dots += '<circle class="wm-dot is-' + b.dot + (prev && j >= prev[i] ? ' is-new' : '') + '" cx="' + f1(cx) + '" cy="' + f1(cy) + '" r="2.3"/>';
+                }
+                return '<g class="wm-bin is-' + b.id + '"><text class="bin-name t-start" x="' + f1(x0) + '" y="' + (WM.y + 29) + '">' + esc(b.label) + ' <tspan class="bin-n">' + n + '</tspan></text>' + dots
+                    + (n > shown ? '<text class="bin-more t-start" x="' + f1(x0) + '" y="' + (DOT_Y0 + ROWS * STEP + 4) + '">+' + (n - shown) + ' more</text>' : '') + '</g>';
+            }).join('');
+        },
+
+        /** What just arrived in working memory goes from the ear into its group, and the line under the figure says so. */
+        _arrivals(s) {
+            const wm = s.wm || {};
+            const counts = { facts: (wm.facts || []).length, thinking: (wm.thinking || []).length, plan: (wm.plan || []).length };
+            const saved = (s.actions || []).filter((a) => a.kind === 'note' && a.statusBy === 'saved').length;
+            if (!this._seen) { this._seen = counts; this._savedNotes = saved; return; }   // just opened: nothing to replay
+            const fresh = []
+                .concat((wm.facts || []).slice(this._seen.facts).map((f) => ({ bin: binOf(f.kind), text: f.text })))
+                .concat((wm.thinking || []).slice(this._seen.thinking).map((x) => ({ bin: 3, text: x.text })))
+                .concat((wm.plan || []).slice(this._seen.plan).map((x) => ({ bin: 4, text: x.text })));
+            this._seen = counts;
+            fresh.slice(-3).forEach((x, k) => setTimeout(() => this._file(x), k * 320));
+            if (saved > (this._savedNotes || 0)) this._savedNote();
+            this._savedNotes = saved;
+        },
+        _file(x) {
+            if (!this.isOpen() || this._active !== 'memory') return;
+            this._say('The ear filed “' + clip(x.text, 70) + '” under ' + BINS[x.bin].label);
+            this._run(PATH.earBin(x.bin), 'is-ear');
+            this._glow('wm-bin is-' + BINS[x.bin].id);
+        },
+        _savedNote() {
+            if (!this.isOpen() || this._active !== 'memory') return;
+            this._say('The H&P went into the chart: it is part of long-term memory now');
+            this._run(PATH.noteLt, 'is-out');
+            this._glow('lt');
+        },
+        _say(t) {
+            const now = this.el && this.el.querySelector('[data-a="now"]');
+            if (now) now.textContent = t;
+        },
+
+        /** A lane just started (or something was said or looked up): a pulse along its path, and what it touched lights up. */
         pulse(what) {
             if (!this.isOpen()) return;
             if (this._active !== 'memory') {
@@ -315,18 +399,23 @@
                 if (v && v.pulse && this._rendered[this._active]) { try { v.pulse(what, this.el.querySelector('.lc-about-view[data-view="' + this._active + '"]')); } catch (e) { /* ignore */ } }
                 return;
             }
-            const now = this.el.querySelector('[data-a="now"]');
             const lane = String(what || '');
-            const say = (t) => { if (now) now.textContent = t; };
-            if (NOW[lane]) say(NOW[lane]);
-            if (lane === 'ear') this._run(EAR_PATH, 'is-ear');
-            else if (/^(verify|answer|update|prime)$/.test(lane)) this._glow('core-glow');
-            else if (lane === 'note') this._run(outPath(OUT[2]), 'is-out');
-            else if (lane === 'actions') this._run(outPath(OUT[3]), 'is-out');
-            else if (lane === 'tool:ask_long_term_memory' || lane === 'helper') { say('Looking it up in the long-term memory'); this._run(readerPath(), 'is-reader'); this._glow('lt-sweep'); }
-            else if (lane === 'tool:lookup_labs' || lane === 'tool:search_chart') { say('Looking it up in the chart'); this._glow('dg'); }
-            else if (lane === 'say:critical') { say('Safety alert'); this._run(outPath(OUT[0]), 'is-alert'); this._glow('out is-alert'); }
-            else if (lane === 'say:answer') { say('Answered'); this._run(outPath(OUT[1]), 'is-out'); this._glow('out is-answer'); }
+            if (NOW[lane]) this._say(NOW[lane]);
+            if (lane === 'ear') { this._run(PATH.roomEar, 'is-ear'); this._glow('ear'); }
+            else if (/^(verify|answer|update)$/.test(lane)) { this._run(PATH.wmBrain, 'is-read'); this._glow('core-glow'); this._glow('dg'); }
+            else if (lane === 'prime') { this._run(PATH.digestBrain, 'is-read'); this._glow('dg'); this._glow('core-glow'); }
+            else if (lane === 'note') { this._run(PATH.wmNote, 'is-out'); this._glow('out is-note'); }
+            else if (lane === 'actions') { this._run(PATH.wmRadar, 'is-out'); this._glow('out is-radar'); }
+            else if (lane === 'helper' || /^tool:(ask_long_term_memory|lookup_labs|search_chart)$/.test(lane)) {
+                this._say({ 'tool:lookup_labs': 'The brain is looking up labs in long-term memory', 'tool:search_chart': 'The brain is searching the record in long-term memory' }[lane] || 'A helper is looking it up in long-term memory');
+                this._run(PATH.brainLt, 'is-reader');
+                setTimeout(() => this._run(PATH.ltBrain, 'is-reader'), 700);   // and what it found comes back
+                this._glow('lt');
+            }
+            else if (lane === 'tool:check_medication') { this._say('Checking the medicine against the chart digest'); this._run(PATH.brainDigest, 'is-reader'); this._glow('dg'); }
+            else if (lane === 'say:critical') { this._say('A safety alert went out'); this._run(PATH.say(SAYS[0]), 'is-alert'); this._glow('out is-alert'); }
+            else if (lane === 'say:answer') { this._say('Answered'); this._run(PATH.say(SAYS[1]), 'is-out'); this._glow('out is-answer'); }
+            else if (lane === 'saved:note') this._savedNote();
         },
 
         _glow(cls) {
@@ -344,7 +433,7 @@
             const g = this.el.querySelector('.pulses');
             if (!g) return;
             const dot = document.createElementNS(NS, 'circle');
-            dot.setAttribute('r', '3.6');
+            dot.setAttribute('r', '3.4');
             dot.setAttribute('class', 'pulse ' + cls);
             const anim = document.createElementNS(NS, 'animateMotion');
             anim.setAttribute('dur', '0.9s');
