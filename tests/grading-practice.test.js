@@ -112,6 +112,26 @@ check('the confirmation is kept in sessionStorage when the browser allows it', (
     } finally { delete ctx.sessionStorage; }
 });
 
+// The AI grader's score in the practice area (migration 022).
+check('the AI box shows points, what was credited, penalised and missed, and the notes, escaped', () => {
+    const realEscape = ctx.AdminDashboard._escape;
+    ctx.AdminDashboard._escape = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    let html;
+    try { html = G._aiBox({ points: 7, max_points: 10, awarded: [{ criterion: 'Holds anticoagulation <script>', points: 5 }, { criterion: 'Checks INR', points: 2 }],
+        missed: ['Repeat imaging'], penalties: [{ criterion: 'Recommends FFP', points: -1 }], notes: 'Solid but misses imaging.' }); } finally { ctx.AdminDashboard._escape = realEscape; }
+    assert.match(html, /AI grader's score:<\/b> 7 \/ 10/);
+    assert.match(html, /\+5<\/span>Holds anticoagulation &lt;script&gt;/);
+    assert.match(html, /-1<\/span>Recommends FFP/);
+    assert.match(html, /missed<\/span>Repeat imaging/);
+    assert.match(html, /Solid but misses imaging\./);
+    assert.ok(!html.includes('<script>'), 'criterion text is escaped');
+});
+check('the study item page never asks for AI scores; only practice does, after a save', () => {
+    const src = G.renderItem.toString();
+    assert.match(src, /if \(practice && existing\) \{ this\._showOthers\(responseId\); this\._showAI\(responseId\); \}/);
+    assert.strictEqual((src.match(/_showAI\(/g) || []).length, 1);
+});
+
 (async () => {
     let calls = 0;
     ctx.AdminDashboard._session = { user: { id: 'u-practice', email: 'p@example.org' } };
@@ -129,6 +149,22 @@ check('the confirmation is kept in sessionStorage when the browser allows it', (
         assert.strictEqual(await G._kind(), null);
         console.log('PASS  before migration 020 the page carries on as before (kind unknown)');
     } catch (e) { fail++; console.log('FAIL  pre-020 fallback -> ' + e.message); }
+    // _showAI: before migration 022 the box disappears; no score → a plain note; a score → the box.
+    const box = { innerHTML: 'Loading', removed: false, remove() { this.removed = true; } };
+    ctx.document.getElementById = (id) => (id === 'grading-ai' ? box : null);
+    try {
+        ctx.AdminDashboard._adminClient = () => ({ rpc: async () => ({ data: null, error: { message: 'function practice_ai(uuid) does not exist' } }) });
+        await G._showAI('i1');
+        assert.strictEqual(box.removed, true);
+        box.removed = false;
+        ctx.AdminDashboard._adminClient = () => ({ rpc: async (n, a) => { assert.strictEqual(n, 'practice_ai'); assert.strictEqual(a.p_item, 'i1'); return { data: [], error: null }; } });
+        await G._showAI('i1');
+        assert.match(box.innerHTML, /has not scored this practice answer/);
+        ctx.AdminDashboard._adminClient = () => ({ rpc: async () => ({ data: [{ points: 3, max_points: 4, awarded: [], missed: [], penalties: [], notes: '' }], error: null }) });
+        await G._showAI('i1');
+        assert.match(box.innerHTML, /AI grader's score:<\/b> 3 \/ 4/);
+        console.log('PASS  the practice page shows the AI score, a note when there is none, and nothing before migration 022');
+    } catch (e) { fail++; console.log('FAIL  practice AI box behaviour -> ' + e.message); }
     check('practice accounts are told study grading is closed and sent to the practice area', () => {
         const html = G._practiceAccountNotice();
         assert.match(html, /practice account, so study grading is closed/);

@@ -14535,6 +14535,15 @@ body.assessment-dock-open { --arail: 440px; }
 .grading-confirm p { font-size: 14px; line-height: 1.5; margin: 0 0 10px; max-width: 64ch; }
 .grading-confirm .grading-actions { margin: 16px 0 12px; }
 .grading-confirm-small { color: #5b6b7f; font-size: 12.5px !important; }
+.grading-ai { margin-top: 10px; padding: 10px 12px; background: #f5f3ff; border: 1px solid #d9d2f5; border-radius: 6px; font-size: 13.5px; }
+.grading-ai-model { color: #6b6189; font-size: 12px; margin-left: 6px; }
+.grading-ai-detail { margin-top: 6px; }
+.grading-ai-detail summary { cursor: pointer; color: #4c3f86; }
+.grading-ai-detail > div { padding: 3px 0 3px 2px; font-size: 13px; line-height: 1.4; }
+.grading-ai-mark { display: inline-block; min-width: 52px; font-variant-numeric: tabular-nums; color: #6b7280; }
+.grading-ai-hit .grading-ai-mark { color: #2f855a; font-weight: 600; }
+.grading-ai-pen .grading-ai-mark { color: #b42318; font-weight: 600; }
+.grading-ai-notes { margin-top: 6px; color: #4b5563; font-style: italic; }
 .grading-cols { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 24px; }
 @media (max-width: 900px) { .grading-cols { grid-template-columns: 1fr; } }
 .grading-col h3 { margin: 0 0 6px; font-size: 13px; text-transform: uppercase; letter-spacing: .04em; color: #4a5568; }

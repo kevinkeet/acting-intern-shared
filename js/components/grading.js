@@ -312,7 +312,7 @@ const Grading = {
         const nextGroup = next ? groups.find((g) => g.ids.includes(next)) : null;
         const intro = practice
             ? `<p>These are answers that residents wrote while testing the cases in August and September 2026, before the trial began. They come one question at a time, as in study grading. Grade them exactly as you would study answers: tick the criteria the answer earns, adjust the points if the rubric caps or branches, and save.</p>
-               <p class="grading-blind">Practice grades are kept apart from the study and never used in it. After you save an item, you see how the other graders scored it in practice, so you can compare your reading of the rubric.</p>`
+               <p class="grading-blind">Practice grades are kept apart from the study and never used in it. After you save an item, you see how the other graders scored it in practice, and what the study's AI grader gave it, so you can compare your reading of the rubric.</p>`
             : `<p>Answers come one question at a time: every answer to Case 1, question 1, then question 2, and so on through Case 3. Each item shows one participant's answer with the rubric as a checklist. Tick the criteria the answer earns, adjust the points if the rubric caps or branches, add a note if useful, and save. You can return to any item later.</p>
                <p class="grading-blind">You are blind to who wrote each answer, which arm they are in, and how anyone else scored it. Every answer is scored by two graders. Your ${this._items.length} items are below; within each question they come in a shuffled order unique to you.</p>`;
         root.innerHTML = `
@@ -416,6 +416,7 @@ const Grading = {
                             <span id="grading-status" class="grading-status">${existing ? (existing.status === 'submitted' ? 'Saved' : 'Draft') : ''}</span>
                         </div>
                         ${practice && existing ? '<div class="grading-others" id="grading-others">Loading the other graders\' practice scores…</div>' : ''}
+                        ${practice && existing ? '<div class="grading-ai" id="grading-ai">Loading the AI grader\'s score…</div>' : ''}
                     </div>
                 </div>
             </div>`;
@@ -423,7 +424,45 @@ const Grading = {
         this._currentItems = parsed.items;
         this._recalc(!existing || existing.points == null);
         App.refreshIcons();
-        if (practice && existing) this._showOthers(responseId);
+        if (practice && existing) { this._showOthers(responseId); this._showAI(responseId); }
+    },
+
+    /**
+     * Practice only: the study AI grader's score for this answer (migration 022), shown once you
+     * have saved yours. Study grading never shows AI scores.
+     */
+    async _showAI(itemId) {
+        const box = document.getElementById('grading-ai');
+        if (!box) return;
+        try {
+            const sb = await this._sb();
+            const { data, error } = await sb.rpc('practice_ai', { p_item: itemId });
+            if (error) { box.remove(); return; }   // before migration 022: no AI scores yet
+            const row = (data || [])[0];
+            box.innerHTML = row ? this._aiBox(row) : 'The AI grader has not scored this practice answer.';
+        } catch (err) {
+            box.remove();
+        }
+    },
+
+    _aiBox(row) {
+        const E = (s) => AdminDashboard._escape(String(s == null ? '' : s));
+        const num = (v) => (v == null || v === '' ? '?' : Number(v));
+        const label = (x) => (x && typeof x === 'object' ? x.criterion : x);
+        const awarded = Array.isArray(row.awarded) ? row.awarded : [];
+        const missed = Array.isArray(row.missed) ? row.missed : [];
+        const penalties = Array.isArray(row.penalties) ? row.penalties : [];
+        const lines = [
+            ...awarded.map((a) => `<div class="grading-ai-hit"><span class="grading-ai-mark">+${E(num(a && a.points))}</span>${E(label(a))}</div>`),
+            ...penalties.map((p) => `<div class="grading-ai-pen"><span class="grading-ai-mark">${E(num(p && p.points))}</span>${E(label(p))}</div>`),
+            ...missed.map((m) => `<div class="grading-ai-miss"><span class="grading-ai-mark">missed</span>${E(label(m))}</div>`),
+        ];
+        return `<b>AI grader's score:</b> ${E(num(row.points))} / ${E(num(row.max_points))}
+            <span class="grading-ai-model">the grader the study uses (Sonnet 5, the middle of three gradings)</span>
+            ${lines.length || row.notes ? `<details class="grading-ai-detail"><summary>What the AI credited and missed</summary>
+                ${lines.join('')}
+                ${row.notes ? `<div class="grading-ai-notes">${E(row.notes)}</div>` : ''}
+            </details>` : ''}`;
     },
 
     /** Practice only: the other graders' points for this item (shown once you have saved yours). */
