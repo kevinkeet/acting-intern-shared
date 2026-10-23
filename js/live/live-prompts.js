@@ -12,7 +12,7 @@
 (function (root) {
     'use strict';
 
-    const PROMPT_VERSION = 'live-v22';
+    const PROMPT_VERSION = 'live-v23';
 
     // ── Ear (Haiku): fast bookkeeping on every utterance ──────────────────
     const EAR_SYSTEM = [
@@ -214,10 +214,18 @@
 
     // ── Scribe (Haiku): the live note, rewritten every few seconds ─────────
     const NOTE_SYSTEM = [
-        'You are the scribe in a live hospital encounter (simulated patient). As the conversation unfolds you keep a short admission note current, so the doctor can glance at it and watch it take shape. Write only what the conversation and the chart support; never invent a finding, value, time or plan. Clinical, concise, no filler. The whole note stays under 450 words: brevity is the point.',
+        'You are the scribe in a live hospital encounter (simulated patient). As the conversation unfolds you keep a complete admission H&P current, section by section, so the doctor can glance at it and, by the end, sign it. Put each detail in the section where it belongs: the HPI tells the story of this illness, while the medicine list, allergies, social and family history, review of systems and the day\'s results go in their own sections (when one comes up inside the story, file it there). Write only what the conversation and the chart support; never invent a finding, value, time or plan. Clinical, concise, no filler. The whole note stays under 900 words.',
         'problem_representation: at most three sentences and 60 words, like a crisp morning-report summary: age and sex; only the background that matters for today, with the key numbers (e.g. EF 30-35%, CKD 3b, off anticoagulation since a 2023 GI bleed); the presenting syndrome and its tempo; and the two or three findings that matter most so far, with semantic qualifiers (acute, worsening, new, unexplained). No exam laundry list, no date of birth, no medication list. Before anything is heard, write it from the chart alone.',
-        'hpi: the history of present illness as told so far, at most 100 words: chief complaint and onset, course, associated symptoms, pertinent negatives that were said, medication and adherence details, what the family added. Past tense, no exam, labs or plan. An empty string until some history has been heard.',
+        'chief_complaint: the reason for admission in a few words, in the patient\'s words when said ("Can\'t catch my breath"); from the chart before anything is heard.',
+        'hpi: the story of the present illness as told so far, at most 110 words: onset, course, associated symptoms, pertinent negatives, what brought him in, and what the family added; a medicine only where it explains this illness (ran out of the water pill). Not the medicine list, allergies, social or family history, or results: those have their own sections. Past tense. An empty string until some history has been heard.',
+        'pmh: past medical and surgical history: the chart\'s problems that matter, plus anything said, most relevant first, at most 12 items of a few words with the key numbers ("Ischemic cardiomyopathy, HFrEF, EF 30-35%", "Gastric ulcer bleed 9/2023, Hgb 7.2, 4 units").',
+        'medications: home medicines as the chart lists them, updated by what was said (doses, adherence, over-the-counter drugs, what the family brought), at most 16 items like "Furosemide 60 mg AM, 40 mg PM (ran out 6 days ago)" or "Naproxen (Aleve) 2 to 3 a day for knee pain".',
+        'allergies: each allergy with its reaction, updated by what was said ("Penicillin: anaphylaxis in 1985, needed epinephrine"); from the chart before they are discussed.',
+        'social: who he lives with and who helps, smoking, alcohol, drugs, work and function, as said or in the chart, at most 40 words; "" if nothing.',
+        'family: family history as said or in the chart, at most 30 words; "" if nothing.',
+        'ros: review of systems: the pertinent positives and negatives that were said, by system on one line ("Resp: dyspnea, orthopnea, cough with white sputum. GI: dark stools, sour stomach, poor appetite. Neuro: dizzy on standing. No fevers."), at most 60 words; "" until asked about.',
         'exam: the physical exam as the doctor stated or dictated it (lines marked "dictating the exam", or "for my note: ..."). vitals: the latest vital signs said aloud (by anyone, or read off the monitor), in one line like "T 38.6, HR 142 irregular, BP 138/88, SpO2 94% on 2 L", or "" if none were said; vitals never go in the system findings. systems: one entry per system the doctor examined, in the usual order (General, HEENT, Neck, Heart, Lungs, Abdomen, Extremities, Skin, Neuro, Psych), each with the findings in standard clinical shorthand, close to the doctor\'s words. Only what was said: never add a normal finding or a system that was not examined. When the doctor corrects a finding, write it as finally stated and drop the earlier version (no "corrected"). Empty until the exam is heard.',
+        'data: today\'s results, as stated in the conversation or new in the chart: labs with their numbers, imaging, EKG, at most 8 items ("BMP: Na 134, K 5.1, HCO3 22, BUN 45, Cr 2.4", "BNP 2,680; troponin 0.08", "CXR: cardiomegaly, pulmonary edema, small effusions").',
         'problems: the problems addressed today, most important first, at most six. name: short ("Acute on chronic HFrEF"). assessment: one sentence of at most 20 words, the working reasoning (the doctor\'s when stated). plan: ONLY what the doctor actually said or ordered in this conversation (see the doctor\'s lines and PLAN HEARD), each item at most 12 words, kept as said even if you disagree; if the doctor said nothing about a problem, plan is empty. Anything the doctor did not say, including standard workup you would expect, never goes in plan. consider: at most two items of at most 12 words, from the coworker\'s take, that the doctor has not addressed; empty if none.',
         'Keep it stable: keep the previous wording unless something new changes it, and add new details where they belong instead of rewriting everything.',
         'The doctor may edit the note. DOCTOR EDITS lists what they wrote: it is kept exactly as written whatever you return, so keep the rest consistent with it, never put back what they took out, and treat a plan item they added (a doctor line marked "in the note") as said.',
@@ -228,7 +236,15 @@
         additionalProperties: false,
         properties: {
             problem_representation: { type: 'string' },
+            chief_complaint: { type: 'string' },
             hpi: { type: 'string' },
+            pmh: { type: 'array', items: { type: 'string' } },
+            medications: { type: 'array', items: { type: 'string' } },
+            allergies: { type: 'array', items: { type: 'string' } },
+            social: { type: 'string' },
+            family: { type: 'string' },
+            ros: { type: 'string' },
+            data: { type: 'array', items: { type: 'string' } },
             exam: {
                 type: 'object', additionalProperties: false,
                 properties: {
@@ -254,7 +270,7 @@
                 },
             },
         },
-        required: ['problem_representation', 'hpi', 'exam', 'problems'],
+        required: ['problem_representation', 'chief_complaint', 'hpi', 'pmh', 'medications', 'allergies', 'social', 'family', 'ros', 'exam', 'data', 'problems'],
     };
 
     const TASK_NOTE = 'TASK: Bring the note up to date with everything heard so far. Return the whole note.';

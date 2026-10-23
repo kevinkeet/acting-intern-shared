@@ -97,6 +97,14 @@
     /** The words that name a drug: "Piperacillin-tazobactam (Zosyn)" -> piperacillin, tazobactam, zosyn. */
     const drugWords = (name) => normText(name).split(' ').filter((w) => w.length >= 4 && !/^\d/.test(w) && !NOT_A_NAME.has(w));
 
+    // The live note's sections: text parts and list parts, by the key the panel uses for editing.
+    const NOTE_TEXT = { pr: 'problem_representation', cc: 'chief_complaint', hpi: 'hpi', social: 'social', family: 'family', ros: 'ros' };
+    const NOTE_LIST = { pmh: 'pmh', meds: 'medications', allergies: 'allergies', data: 'data' };
+    const NOTE_LABEL = { pr: 'Problem representation', cc: 'Chief complaint', hpi: 'HPI', social: 'Social history', family: 'Family history', ros: 'Review of systems', pmh: 'Past medical history', meds: 'Medications', allergies: 'Allergies', data: 'Data' };
+    const NOTE_FIELDS = ['problem_representation', 'chief_complaint', 'hpi', 'pmh', 'medications', 'allergies', 'social', 'family', 'ros', 'exam', 'data', 'problems'];
+    /** Lines typed by the doctor, without bullets or "1." numbering (a leading dose stays). */
+    const toLines = (value, n) => (Array.isArray(value) ? value : String(value).split('\n')).map((x) => clip(String(x).replace(/^\s*(?:[-•*]|\d{1,2}[.)])\s+/, '').trim(), n)).filter(Boolean);
+
     // Lab orders that name two or more tests. The radar model sometimes packs them into one order ("BMP and
     // magnesium in the morning", "Type and screen, repeat CBC tonight") and later renames it to one of them, so
     // the other is lost. Code splits such an order: one item per test, each with the form's own test name.
@@ -183,8 +191,9 @@
                                   // {n, t, why, take, facts[], thinking[], plan[], said[]} (the first and the latest 39)
             notePRs: [],          // the live note's problem representation each time it changed: {t, text}
             noteRaw: null,        // the scribe's own version; wm.note is this with the doctor's edits laid over it
-            noteEdits: { pr: null, hpi: null, problems: [] },   // what the doctor wrote: kept over every rewrite
-                                  // problems: {key, name, assessment, plan, removed[], added[]} (null = the scribe's)
+            noteEdits: { pr: null, cc: null, hpi: null, social: null, family: null, ros: null, lists: {}, problems: [] },
+                                  // what the doctor wrote, kept over every rewrite (null = the scribe's): text parts; lists
+                                  // {pmh|meds|allergies|data: {list, removed}}; problems {key, name, assessment, plan, removed[], added[]}
             watch: [],            // tripwires for the ear
             said: [],             // {id, t, kind, topic, text, why, latencyMs, cueLine}
             held: [],             // thoughts kept for when asked: {t, topic, text, why, kind}
@@ -882,15 +891,20 @@
                 '<doctor_thinking>' + (wm.thinking.length ? wm.thinking.map((x) => x.text).join(' | ') : '(none stated)') + '</doctor_thinking>',
                 '<plan_heard>' + (wm.plan.length ? wm.plan.map((x) => '[' + x.kind + '] ' + x.text).join(' | ') : '(none yet)') + '</plan_heard>',
                 '<coworker_take>' + (t ? [t.assessment, (t.concerns || []).map((c) => c.text).join('; '), (t.next || []).join('; ')].filter(Boolean).join(' || ') : '(none yet)') + '</coworker_take>',
-                '<previous_note>' + (wm.note ? JSON.stringify({ problem_representation: wm.note.problem_representation, hpi: wm.note.hpi, exam: wm.note.exam, problems: wm.note.problems }) : '(none yet)') + '</previous_note>',
+                '<previous_note>' + (wm.note ? JSON.stringify(NOTE_FIELDS.reduce((o, k) => Object.assign(o, { [k]: wm.note[k] }), {})) : '(none yet)') + '</previous_note>',
                 '<doctor_edits>' + (editsText() || '(none)') + '</doctor_edits>',
             ].join('\n');
         }
         /** What the doctor wrote in the note, for the scribe (it keeps the rest consistent; code keeps these as written). */
         function editsText() {
             const e = wm.noteEdits, out = [];
-            if (e.pr != null) out.push('Problem representation (the doctor\'s): ' + e.pr);
-            if (e.hpi != null) out.push('HPI (the doctor\'s): ' + e.hpi);
+            for (const part of Object.keys(NOTE_TEXT)) if (e[part] != null) out.push(NOTE_LABEL[part] + ' (the doctor\'s): ' + e[part]);
+            for (const part of Object.keys(NOTE_LIST)) {
+                const le = e.lists[part];
+                if (!le) continue;
+                out.push(NOTE_LABEL[part] + ' (the doctor\'s list): ' + (le.list.join('; ') || '(empty)'));
+                if (le.removed.length) out.push(NOTE_LABEL[part] + ', taken out by the doctor (do not put back): ' + le.removed.join('; '));
+            }
             for (const pe of e.problems) {
                 const name = pe.name || pe.key;
                 if (pe.name != null) out.push('Problem renamed by the doctor: ' + pe.name);
@@ -906,9 +920,17 @@
         /** The doctor's edits win: laid over each version the scribe writes. */
         function withEdits(raw) {
             const e = wm.noteEdits;
-            const note = Object.assign({}, raw, { edited: { pr: e.pr != null, hpi: e.hpi != null, problems: {} } });
-            if (e.pr != null) note.problem_representation = e.pr;
-            if (e.hpi != null) note.hpi = e.hpi;
+            const note = Object.assign({}, raw, { edited: { problems: {} } });
+            for (const [part, field] of Object.entries(NOTE_TEXT)) {
+                note.edited[part] = e[part] != null;
+                if (e[part] != null) note[field] = e[part];
+            }
+            // A list the doctor edited is theirs; what comes up later still comes in, what they took out stays out.
+            for (const [part, field] of Object.entries(NOTE_LIST)) {
+                const le = e.lists[part];
+                note.edited[part] = !!le;
+                if (le) note[field] = le.list.concat((raw[field] || []).filter((x) => !hasItem(le.list, x) && !hasItem(le.removed, x))).slice(0, 24);
+            }
             const problems = (raw.problems || []).map((p) => Object.assign({}, p, { plan: (p.plan || []).slice(), consider: (p.consider || []).slice() }));
             for (const pe of e.problems) {
                 let p = problems.find((x) => normText(x.name) === pe.key || (pe.name && normText(x.name) === normText(pe.name)));
@@ -945,15 +967,24 @@
          */
         function editNote(part, value, problem) {
             const text = (v, n) => (v == null ? null : clip(String(v).trim(), n));
-            if (part === 'pr' || part === 'hpi') wm.noteEdits[part] = text(value, 1500);
+            if (NOTE_TEXT[part]) wm.noteEdits[part] = text(value, 1500);
+            else if (NOTE_LIST[part]) {
+                if (value == null) wm.noteEdits.lists[part] = null;
+                else {
+                    const list = toLines(value, 200).slice(0, 24);
+                    const prev = wm.noteEdits.lists[part];
+                    const before = (prev && prev.removed) || [];
+                    const shown = (wm.note && wm.note[NOTE_LIST[part]]) || [];
+                    wm.noteEdits.lists[part] = { list, removed: before.concat(shown.filter((x) => !hasItem(list, x) && !hasItem(before, x))) };
+                }
+            }
             else if (part === 'name' || part === 'assessment') {
                 const pe = problemEdit(problem, value != null);
                 if (pe) pe[part] = part === 'name' && value != null && !String(value).trim() ? null : text(value, part === 'name' ? 80 : 500);
             } else if (part === 'plan') {
                 const pe = problemEdit(problem, value != null);
                 if (pe) {
-                    const list = value == null ? null : (Array.isArray(value) ? value : String(value).split('\n'))
-                        .map((x) => clip(String(x).replace(/^\s*(?:[-•*]|\d{1,2}[.)])\s+/, '').trim(), 160)).filter(Boolean).slice(0, 12);
+                    const list = value == null ? null : toLines(value, 160).slice(0, 12);
                     const shown = ((wm.note && wm.note.problems) || []).find((x) => normText(x.name) === normText(problem) || normText(x.name) === normText(pe.name || pe.key));
                     pe.removed = list == null ? [] : pe.removed.concat(((shown && shown.plan) || []).filter((x) => !hasItem(list, x) && !hasItem(pe.removed, x)));
                     pe.added = list == null ? pe.added : pe.added.filter((x) => hasItem(list, x));
@@ -1029,7 +1060,14 @@
                     systems: (Array.isArray(ex.systems) ? ex.systems : []).filter((x) => x && x.system && x.findings)
                         .slice(0, 14).map((x) => ({ system: clip(String(x.system).trim(), 30), findings: clip(String(x.findings).trim(), 400) })),
                 };
-                wm.noteRaw = { problem_representation: out.problem_representation, hpi: out.hpi || '', exam, problems, t: elapsed(), upToLine };
+                const str = (v, n) => clip(String(v || '').trim(), n);
+                const arr = (v, max, n) => (Array.isArray(v) ? v : []).map((x) => str(x, n)).filter(Boolean).slice(0, max);
+                wm.noteRaw = {
+                    problem_representation: out.problem_representation, chief_complaint: str(out.chief_complaint, 120), hpi: out.hpi || '',
+                    pmh: arr(out.pmh, 12, 140), medications: arr(out.medications, 16, 160), allergies: arr(out.allergies, 8, 160),
+                    social: str(out.social, 400), family: str(out.family, 300), ros: str(out.ros, 600), exam, data: arr(out.data, 8, 220),
+                    problems, t: elapsed(), upToLine,
+                };
                 wm.note = Object.assign(withEdits(wm.noteRaw), { t: wm.noteRaw.t, upToLine });
                 const lastPR = wm.notePRs.length ? wm.notePRs[wm.notePRs.length - 1].text : '';
                 if (out.problem_representation && normText(out.problem_representation) !== normText(lastPR)) {

@@ -54,13 +54,20 @@ side-by-side tests.
 
 ## The live note
 
-A scribe (Haiku 5.5, thinking off) keeps a short admission note current: a
-problem representation (two or three sentences with the key qualifiers), the HPI
-as told so far, the physical exam, and assessment and plan by problem (the
-doctor's plan; the coworker's suggestions only as "consider"). It is rewritten a
-few seconds after new speech, at most every 12 s, after each take update and at
-the end of the encounter; new or changed sentences light up briefly. About
-$0.002 per rewrite.
+A scribe (Haiku 5.5, thinking off) keeps a complete admission H&P current, section
+by section (prompts `live-v23`): problem representation, chief complaint, HPI, past
+medical history, medications, allergies, social and family history, review of
+systems, physical exam, data (labs, imaging, EKG) and assessment and plan by
+problem (the doctor's plan; the coworker's suggestions only as "consider"). Each
+detail goes where it belongs: the HPI tells the story, and when a medicine list, an
+allergy reaction, who he lives with or a lab value comes up inside the story, it is
+filed in its own section. The chart fills the history, medicines and allergies from
+the start; what is said updates them (the ran-out furosemide, the Aleve, penicillin
+now anaphylaxis). It is rewritten a few seconds after new speech, at most every
+12 s, after each take update and at the end of the encounter; new or changed
+sentences light up briefly. About $0.002 to $0.004 per rewrite (9 to 14 s). The
+H&P draft and Copy note give it in the usual order, the summary opening the
+assessment.
 
 The physical exam has its own space in the Note tab: vitals said aloud (by
 anyone, or read off the monitor) and the findings by system, only what was said
@@ -76,8 +83,8 @@ ways in:
 - Type a finding in the box under the exam ("Lungs: crackles at both bases").
 Copy note and the H&P draft (On my radar) include the exam.
 
-The doctor can edit the note in place: click the problem representation, the HPI,
-or a problem's name, assessment or plan (one item per line), then Save (⌘↩, or
+The doctor can edit the note in place: click any section, or a problem's name,
+assessment or plan (lists one item per line), then Save (⌘↩, or
 Enter for a name) or Cancel (Esc). What the doctor wrote stays theirs over every
 rewrite ("Edited by you"; "Let it update" hands it back): the scribe sees the edits
 and keeps the rest consistent, and code lays them over its version (`editNote`,

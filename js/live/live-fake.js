@@ -194,7 +194,6 @@
         if (has(/ran out/i)) hpi.push('He ran out of furosemide about six days ago while his wife was away.');
         if (has(/mailbox/i)) hpi.push('He notes chest tightness walking to the mailbox, none at rest.');
         if (has(/almost black/i)) hpi.push('He reports several days of very dark, almost black stools and a sour stomach.');
-        if (has(/Aleve/i)) hpi.push('He takes Aleve two to three times a day for knee pain.');
         if (has(/clumsy/i)) hpi.push('His wife describes about twenty minutes of right hand clumsiness and jumbled speech last Tuesday that resolved.');
         const problems = [];
         if (has(/breath|furosemide/i)) problems.push({ name: 'Acute on chronic HFrEF', assessment: 'Volume overload after a lapse in furosemide, likely worsened by NSAIDs.', plan: [has(/furosemide 80/i) ? 'IV furosemide 80 mg now, then 40 mg IV twice daily' : '', has(/ins and outs|daily weights/i) ? 'Strict ins and outs, daily weights, 2 g sodium' : ''].filter(Boolean), consider: [] });
@@ -218,7 +217,28 @@
             if (i >= 0) sys[i] = [sys[i][0], findings]; else sys.push([system, findings]);
         }
         const exam = { vitals: vit.join(', '), systems: sys.map(([system, findings]) => ({ system, findings })) };
-        return { problem_representation: pr, hpi: hpi.join(' '), exam, problems };
+        // The rest of the H&P, each detail in its own section (the chart's history, medicines and allergies from the start).
+        const pmh = ['Ischemic cardiomyopathy, HFrEF, EF 30-35%', 'Persistent AF, off anticoagulation since 9/2023', 'Gastric ulcer bleed 9/2023 (Hgb 7.2, 4 units)', 'CKD 3b, baseline Cr about 2.0', 'Type 2 diabetes on insulin', 'Hypertension', 'Osteoarthritis of the knees'];
+        if (has(/clumsy/i)) pmh.push('Similar transient right hand weakness 10/2020');
+        const medications = ['Furosemide 60 mg AM, 40 mg PM' + (has(/ran out/i) ? ' (ran out about 6 days ago)' : ''), 'Carvedilol 25 mg twice daily', 'Sacubitril-valsartan (Entresto) 97/103 mg twice daily', 'Spironolactone 25 mg daily', 'Empagliflozin (Jardiance) 10 mg daily', 'Metformin 1000 mg twice daily', 'Insulin glargine at night', 'Aspirin 81 mg daily', 'Pantoprazole 40 mg daily', 'Gabapentin 300 mg three times daily'];
+        if (has(/Aleve/i)) medications.push('Naproxen (Aleve) 2 to 3 a day for knee pain', 'Acetaminophen as needed (does not help)');
+        const allergies = [has(/shot in the emergency room|forty years ago/i) ? 'Penicillin: anaphylaxis, needed epinephrine' : 'Penicillin: rash', 'Lisinopril: lip and tongue swelling (angioedema)', 'Sulfa (Bactrim): hives', 'Shellfish: hives, GI upset'];
+        const social = (has(/Pat usually handles/i) ? 'Lives with his wife Patricia, who manages his medicines.' : '') + (has(/Quit smoking/i) ? ' Former smoker, quit in 1995; rarely drinks.' : '');
+        const family = has(/brother went into the hospital/i) ? 'Brother died after a hospitalization for heart disease.' : '';
+        const ros = [
+            has(/breath|lie down flat|gasping/i) ? 'Resp: dyspnea, orthopnea, PND' + (has(/white stuff/i) ? ', cough with white sputum' : '') + '.' : '',
+            has(/mailbox|tree trunks/i) ? 'CV: leg swelling' + (has(/mailbox/i) ? ', chest tightness on exertion, none at rest' : '') + '.' : '',
+            has(/almost black|sour/i) ? 'GI: dark stools, sour stomach, poor appetite.' : '',
+            has(/dizzy/i) ? 'Neuro: dizzy on standing' + (has(/clumsy/i) ? '; transient right hand clumsiness and jumbled speech last week' : '') + '.' : '',
+            has(/No fevers/i) ? 'No fevers.' : '',
+        ].filter(Boolean).join(' ');
+        const data = [];
+        if (has(/Sodium 134/i)) data.push('BMP: Na 134, K 5.1, HCO3 22, BUN 45, Cr 2.4', 'BNP 2,680; troponin 0.08', 'Hgb 10.2 (13.9 in January); INR 2.3');
+        if (has(/Chest X-ray/i)) data.push('CXR: cardiomegaly, pulmonary edema, small effusions');
+        return {
+            problem_representation: pr, chief_complaint: has(/catch my breath/i) ? "Can't catch my breath" : 'Shortness of breath', hpi: hpi.join(' '),
+            pmh, medications, allergies, social: social.trim(), family, ros, exam, data, problems,
+        };
     }
 
     function reply(obj, ms) {

@@ -446,9 +446,23 @@
             if (!n) return '';
             const ex = n.exam || { vitals: '', systems: [] };
             const exam = (ex.vitals ? ['Vitals: ' + ex.vitals] : []).concat((ex.systems || []).map((x) => x.system + ': ' + x.findings));
-            return ['Problem representation', n.problem_representation, '', 'HPI', n.hpi || '(none yet)', '', 'Physical exam'].concat(exam.length ? exam : ['(not dictated yet)'], ['', 'Assessment and plan'])
-                .concat((n.problems || []).map((p, i) => [(i + 1) + '. ' + p.name + (p.assessment ? ': ' + p.assessment : '')].concat(p.plan.map((x) => '   - ' + x)).join('\n')))
-                .join('\n');
+            const list = (xs, none) => ((xs || []).length ? xs.map((x) => '- ' + x) : [none]);
+            const sec = (title, lines) => [title].concat(lines, ['']);
+            // A complete H&P in the usual order; the summary opens the assessment.
+            return [].concat(
+                sec('Chief complaint', [n.chief_complaint || '(not stated)']),
+                sec('History of present illness', [n.hpi || '(none yet)']),
+                sec('Past medical history', list(n.pmh, '(none recorded)')),
+                sec('Medications', list(n.medications, '(none recorded)')),
+                sec('Allergies', list(n.allergies, 'No known drug allergies recorded')),
+                sec('Social history', [n.social || '(not discussed)']),
+                sec('Family history', [n.family || '(not discussed)']),
+                sec('Review of systems', [n.ros || '(not done)']),
+                sec('Physical exam', exam.length ? exam : ['(not dictated yet)']),
+                sec('Data', list(n.data, '(none yet)')),
+                ['Assessment and plan', n.problem_representation || '', ''],
+                (n.problems || []).map((p, i) => [(i + 1) + '. ' + p.name + (p.assessment ? ': ' + p.assessment : '')].concat((p.plan || []).map((x) => '   - ' + x)).join('\n')),
+            ).join('\n');
         },
 
         copyNote() {

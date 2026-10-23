@@ -9883,7 +9883,7 @@ window.updateAIFromRefresh = function(response) {
         if (typeof DemoMode !== 'undefined' && DemoMode.isActive && DemoMode.isActive()) return;
         if (window.__liveCoworkerLoading) return;
         window.__liveCoworkerLoading = true;
-        const LIVE_V = 'L18';
+        const LIVE_V = 'L19';
         const q = '?v=' + (window.__CACHE_V || '') + '-' + LIVE_V;
         const css = document.createElement('link');
         css.rel = 'stylesheet';

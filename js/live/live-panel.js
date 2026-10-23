@@ -123,6 +123,8 @@
         if ((a.kind === 'message' || a.kind === 'referral') && a.draft) return b('act-copy', 'Copy');
         return '';
     }
+    // The live note's editable sections: the key a part is edited under -> the note's field.
+    const NOTE_PARTS = { pr: 'problem_representation', cc: 'chief_complaint', hpi: 'hpi', pmh: 'pmh', meds: 'medications', allergies: 'allergies', social: 'social', family: 'family', ros: 'ros', data: 'data' };
     // A radar flag is "stop" (red: do not give it as it is) or "check" (amber: check something first, then sign it).
     const stopFlag = (a) => !!a.flag && a.flagLevel !== 'check';
     const checkFlag = (a) => !!a.flag && a.flagLevel === 'check';
@@ -803,7 +805,7 @@
                     + '<div data-n="exam"></div><div class="lc-exam-live" data-n="live" aria-live="polite"></div>'
                     + '<form class="lc-exam-type" data-n="form" autocomplete="off"><label class="lc-sr" for="lc-exam-input">Add an exam finding</label>'
                     + '<input id="lc-exam-input" type="text" placeholder="Type a finding: “Lungs: crackles at both bases”" enterkeyhint="done"><button type="submit" class="lc-btn">Add</button></form></section>'
-                    + '<div data-n="ap"></div>';
+                    + '<div data-n="data"></div><div data-n="ap"></div>';
                 this.refs.noteParts = {};
                 el.querySelectorAll('[data-n]').forEach((x) => { this.refs.noteParts[x.dataset.n] = x; });
             }
@@ -828,17 +830,34 @@
                 return;
             }
             const isNew = (set, x) => !!was && !set.has(normText(x));
-            const prBefore = new Set(was ? sentences(was.problem_representation).map(normText) : []);
-            const hpiBefore = new Set(was ? sentences(was.hpi).map(normText) : []);
             const mark = (list, before) => list.map((x) => '<span' + (isNew(before, x) ? ' class="lc-changed"' : '') + '>' + esc(x) + '</span>').join(' ');
             // Every part can be edited by the doctor (click, or Enter); what they wrote stays theirs over the scribe's rewrites.
             const ed = n.edited || { pr: false, hpi: false, problems: {} };
             const editable = (cls, part, pi) => ' class="' + cls + ' lc-editable" data-edit="' + part + '"' + (pi != null ? ' data-p="' + pi + '"' : '') + ' tabindex="0" role="button" title="Click to edit"';
             const mine = (on, part, pi) => (on ? '<p class="lc-mine">Edited by you <button type="button" class="lc-more" data-act="note-unedit" data-part="' + part + '"' + (pi != null ? ' data-p="' + pi + '"' : '') + ' title="Let the scribe update this part again">Let it update</button></p>' : '');
-            N.top.innerHTML = '<section class="lc-note-sec"><h4>Problem representation</h4><p' + editable('lc-pr', 'pr') + '>' + mark(sentences(n.problem_representation), ed.pr ? new Set(sentences(n.problem_representation).map(normText)) : prBefore) + '</p>' + mine(ed.pr, 'pr') + '</section>'
-                + '<section class="lc-note-sec"><h4>History of present illness</h4>'
-                + (n.hpi ? '<p' + editable('lc-hpi', 'hpi') + '>' + mark(sentences(n.hpi), ed.hpi ? new Set(sentences(n.hpi).map(normText)) : hpiBefore) + '</p>' : '<p' + editable('lc-empty', 'hpi') + '>Fills in as the history is told, or click to write it.</p>')
-                + mine(ed.hpi, 'hpi') + '</section>';
+            // A text section and a list section of the H&P: what is new lights up; empty ones invite writing.
+            const textSec = (title, part, cls, value, empty) => {
+                const before = new Set(was ? sentences(was[NOTE_PARTS[part]]).map(normText) : []);
+                return '<section class="lc-note-sec"><h4>' + title + '</h4>'
+                    + (value ? '<p' + editable(cls, part) + '>' + mark(sentences(value), ed[part] ? new Set(sentences(value).map(normText)) : before) + '</p>' : '<p' + editable('lc-empty', part) + '>' + empty + '</p>')
+                    + mine(ed[part], part) + '</section>';
+            };
+            const listSec = (title, part, list, empty) => {
+                const before = new Set(was ? (was[NOTE_PARTS[part]] || []).map(normText) : []);
+                return '<section class="lc-note-sec"><h4>' + title + '</h4>'
+                    + ((list || []).length ? '<ul' + editable('lc-note-list', part) + '>' + list.map((x) => '<li' + (!ed[part] && isNew(before, x) ? ' class="lc-changed"' : '') + '>' + esc(x) + '</li>').join('') + '</ul>' : '<p' + editable('lc-empty', part) + '>' + empty + '</p>')
+                    + mine(ed[part], part) + '</section>';
+            };
+            N.top.innerHTML = textSec('Problem representation', 'pr', 'lc-pr', n.problem_representation, 'Click to write one.')
+                + textSec('Chief complaint', 'cc', 'lc-note-text', n.chief_complaint, 'Click to write it.')
+                + textSec('History of present illness', 'hpi', 'lc-hpi', n.hpi, 'Fills in as the history is told, or click to write it.')
+                + listSec('Past medical history', 'pmh', n.pmh, 'From the chart, or click to add.')
+                + listSec('Medications', 'meds', n.medications, 'From the chart and what is said, or click to add.')
+                + listSec('Allergies', 'allergies', n.allergies, 'From the chart, or click to add.')
+                + textSec('Social history', 'social', 'lc-note-text', n.social, 'Fills in when it comes up, or click to write it.')
+                + textSec('Family history', 'family', 'lc-note-text', n.family, 'Fills in when it comes up, or click to write it.')
+                + textSec('Review of systems', 'ros', 'lc-note-text', n.ros, 'Fills in as you ask, or click to write it.');
+            N.data.innerHTML = listSec('Data', 'data', n.data, 'Results as they are read out or arrive, or click to add.');
             // The exam, by system as stated; a new or changed line lights up.
             const ex = n.exam || { vitals: '', systems: [] };
             const oldEx = was && was.exam ? was.exam : null;
@@ -878,18 +897,20 @@
             const part = el.dataset.edit, pi = el.dataset.p != null ? Number(el.dataset.p) : null;
             const prob = pi != null ? (n.problems || [])[pi] : null;
             if (pi != null && !prob) return;
-            const value = part === 'pr' ? n.problem_representation : part === 'hpi' ? n.hpi
+            const field = NOTE_PARTS[part];
+            const value = field ? (Array.isArray(n[field]) ? n[field].join('\n') : n[field])
                 : part === 'name' ? prob.name : part === 'assessment' ? prob.assessment : part === 'plan' ? (prob.plan || []).join('\n') : '';
-            const one = part === 'name';
+            const one = part === 'name' || part === 'cc';
+            const lines = part === 'plan' || (field && Array.isArray(n[field]));
             const box = document.createElement('div');
             box.className = 'lc-note-editor' + (pi != null ? ' is-problem' : '');
             box.innerHTML = (one ? '<input type="text" class="lc-note-input" autocomplete="off">' : '<textarea class="lc-note-input" rows="3"></textarea>')
                 + '<div class="lc-note-editor-btns"><button type="button" class="lc-btn lc-btn-primary" data-act="note-save">Save</button>'
                 + '<button type="button" class="lc-btn lc-btn-quiet" data-act="note-cancel">Cancel</button>'
-                + '<span class="lc-note-editor-hint">' + (part === 'plan' ? 'One item per line. ' : '') + (one ? 'Enter' : (/Mac/.test(navigator.platform || '') ? '⌘' : 'Ctrl+') + 'Enter') + ' saves, Esc cancels. The scribe keeps your words.</span></div>';
+                + '<span class="lc-note-editor-hint">' + (lines ? 'One item per line. ' : '') + (one ? 'Enter' : (/Mac/.test(navigator.platform || '') ? '⌘' : 'Ctrl+') + 'Enter') + ' saves, Esc cancels. The scribe keeps your words.</span></div>';
             const input = box.querySelector('.lc-note-input');
             input.value = value || '';
-            input.setAttribute('aria-label', { pr: 'Problem representation', hpi: 'History of present illness', name: 'Problem name', assessment: 'Assessment', plan: 'Plan, one item per line' }[part] || 'Note');
+            input.setAttribute('aria-label', { pr: 'Problem representation', cc: 'Chief complaint', hpi: 'History of present illness', pmh: 'Past medical history, one item per line', meds: 'Medications, one per line', allergies: 'Allergies, one per line', social: 'Social history', family: 'Family history', ros: 'Review of systems', data: 'Data, one result per line', name: 'Problem name', assessment: 'Assessment', plan: 'Plan, one item per line' }[part] || 'Note');
             el.replaceWith(box);
             this._noteEdit = { part, problem: prob ? prob.name : null, box, original: value || '' };
             const fit = () => { if (!one) { input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight + 2, 320) + 'px'; } };

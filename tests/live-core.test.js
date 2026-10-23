@@ -277,6 +277,47 @@ const manualClock = () => {
         cw.stop();
     });
 
+    await check('the note is a whole H&P: each section kept; the doctor can edit any of them (a list keeps later items, not what was taken out)', async () => {
+        let n = 0;
+        const t = fakeTransport((lane) => {
+            if (lane === 'note') {
+                n++;
+                return reply(JSON.stringify({
+                    problem_representation: 'PR v' + n, chief_complaint: "Can't catch my breath", hpi: 'Story v' + n,
+                    pmh: ['HFrEF, EF 30-35%', 'CKD 3b'], medications: ['Furosemide 60 mg AM, 40 mg PM', 'Metformin 1000 mg twice daily'].concat(n > 1 ? ['Naproxen (Aleve) 2 to 3 a day'] : []),
+                    allergies: ['Penicillin: anaphylaxis'], social: 'Lives with his wife v' + n, family: '', ros: 'Resp: dyspnea.', data: ['BNP 2,680'],
+                    exam: { vitals: '', systems: [] }, problems: [{ name: 'Acute on chronic HFrEF', assessment: 'Missed diuretic.', plan: [], consider: [] }],
+                }));
+            }
+            return reply(JSON.stringify(lane === 'ear' ? EMPTY_EAR : TAKE()));
+        });
+        const cw = LiveCore.createCoworker({ transport: t, chart, clock: manualClock() });
+        cw.start({ skipPrime: true });
+        cw.note();
+        await cw.idle();
+        const note = cw.wm.note;
+        assert.strictEqual(note.chief_complaint, "Can't catch my breath");
+        assert.deepStrictEqual(note.pmh, ['HFrEF, EF 30-35%', 'CKD 3b']);
+        assert.deepStrictEqual(note.allergies, ['Penicillin: anaphylaxis']);
+        assert.strictEqual(note.ros, 'Resp: dyspnea.');
+        assert.deepStrictEqual(note.data, ['BNP 2,680']);
+        cw.editNote('meds', '- Furosemide 60 mg AM, 40 mg PM (ran out 6 days ago)\n- Insulin glargine at night');   // metformin taken out
+        cw.editNote('social', 'Lives with his wife Patricia, who manages his pills. Quit smoking in 1995.');
+        assert.strictEqual(cw.wm.note.edited.meds, true);
+        cw.note();
+        await cw.idle();
+        const scribeIn = t.log.filter((x) => x.lane === 'note').pop().body.messages[0].content;
+        assert.match(scribeIn, /<previous_note>\{"problem_representation":"PR v1","chief_complaint":"Can't catch my breath"[^]*"medications":\[/, 'the scribe sees the whole previous note');
+        assert.match(scribeIn, /Medications \(the doctor's list\): Furosemide 60 mg AM, 40 mg PM \(ran out 6 days ago\); Insulin glargine at night/);
+        assert.match(scribeIn, /Medications, taken out by the doctor \(do not put back\): Furosemide 60 mg AM, 40 mg PM; Metformin 1000 mg twice daily|Medications, taken out by the doctor \(do not put back\): Metformin 1000 mg twice daily/);
+        assert.deepStrictEqual(cw.wm.note.medications, ['Furosemide 60 mg AM, 40 mg PM (ran out 6 days ago)', 'Insulin glargine at night', 'Naproxen (Aleve) 2 to 3 a day'], 'later items come in; metformin stays out');
+        assert.strictEqual(cw.wm.note.social, 'Lives with his wife Patricia, who manages his pills. Quit smoking in 1995.', 'the doctor\'s words stay');
+        assert.strictEqual(cw.wm.note.hpi, 'Story v2', 'the rest keeps updating');
+        cw.editNote('meds', null);
+        assert.ok(cw.wm.note.medications.includes('Metformin 1000 mg twice daily'), 'handed back to the scribe');
+        cw.stop();
+    });
+
     await check('dictating the exam: lines are marked, the note catches up within seconds, the exam is kept by system', async () => {
         let n = 0;
         const many = Array.from({ length: 16 }, (_, i) => ({ system: 'System ' + i, findings: 'Finding ' + i }));

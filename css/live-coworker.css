@@ -205,7 +205,9 @@
     border: 0; background: none; cursor: pointer; text-align: left; font-size: 12.5px; color: var(--lc-ink-2); border-radius: var(--lc-radius);
 }
 .lc-radar-toggle:hover { background: var(--lc-sunken); }
-.lc-radar-counts { display: flex; gap: 8px; min-width: 0; overflow: hidden; white-space: nowrap; }
+.lc-radar-counts { display: flex; flex-wrap: wrap; column-gap: 8px; row-gap: 0; min-width: 0; }   /* "18 to do · 5 flagged · 2 to check" wraps, never cut */
+.lc-radar-counts > span { white-space: nowrap; }
+.lc-radar-toggle .lc-label { white-space: nowrap; }
 .lc-radar-all { flex: none; padding: 3px 10px; white-space: nowrap; }
 .lc-radar-icon { flex: none; width: 15px; height: 15px; color: var(--lc-blue); }
 .lc-radar-sum { font-weight: 600; color: var(--lc-ink); font-variant-numeric: tabular-nums; }
@@ -385,6 +387,10 @@
 .lc-note-sec h4 { margin: 0 0 4px; font-size: 11px; font-weight: 600; color: var(--lc-ink-3); letter-spacing: 0.03em; text-transform: uppercase; }
 .lc-pr { margin: 0; font-size: 14.5px; line-height: 1.5; color: var(--lc-ink); max-width: 68ch; }
 .lc-hpi { margin: 0; font-size: 13.5px; line-height: 1.55; color: var(--lc-ink); max-width: 72ch; }
+/* The rest of the H&P: short text sections and compact lists (history, medicines, allergies, results). */
+.lc-note-text { margin: 0; font-size: 13px; line-height: 1.5; color: var(--lc-ink); max-width: 72ch; }
+.lc-note-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; font-size: 13px; line-height: 1.45; color: var(--lc-ink); max-width: 72ch; }
+.lc-note-list li::before { content: '•'; margin-right: 6px; color: var(--lc-ink-3); }
 .lc-problems { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
 .lc-problem-name { display: flex; gap: 8px; align-items: baseline; font-size: 14px; font-weight: 650; color: var(--lc-ink); }
 .lc-problem-num { flex: none; display: inline-grid; place-items: center; min-width: 18px; height: 18px; border-radius: 50%; background: var(--lc-sunken); font-size: 11px; font-weight: 600; color: var(--lc-ink-2); }
