@@ -533,12 +533,12 @@ html.lc-full-on { overflow: hidden; }
     #ai-panel.lc-full .lc-right .lc-pane[data-pane="tracking"] { grid-area: side; overflow: auto; min-height: 0; border-top: 0; }
     #ai-panel.lc-full .lc-right .lc-pane[data-pane="log"] { display: none; }
     #ai-panel.lc-full .lc-pr { font-size: 15px; }
-    /* "Inside the coworker" opens over the live note, so the conversation, the alerts, the radar and the take
-       stay in view while it works (watch it think). */
+    /* "Inside the coworker" opens in the right-hand column, over the radar and the take, so the conversation, the
+       alerts and the live note stay in view while it works (watch it think). The column widens while it is open. */
     #ai-panel.lc-full .lc-right > .lc-about.is-docked {
-        position: relative; inset: auto; grid-area: note; min-height: 0; z-index: 5;
-        border-left: 1px solid var(--lc-line); border-right: 1px solid var(--lc-line);
+        position: relative; inset: auto; grid-column: 2; grid-row: 1 / -1; min-height: 0; z-index: 5;
     }
+    #ai-panel.lc-full .lc-right:has(> .lc-about.is-docked:not([hidden])) { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 }
 
 /* Screenshots and reduced motion: no transitions or entrance animations. */

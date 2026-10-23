@@ -158,6 +158,10 @@ on a list, ready to act on with one click:
 - **Fill the screen** (the button next to ⓘ): three columns: the conversation; the
   live note; then the radar, the take and what it is tracking. The take and the
   radar open by themselves there. Esc or the same button goes back to the side panel.
+  There, ⓘ opens "Inside the coworker" in the right-hand column (widened, over the
+  radar and the take), so the conversation, the alerts and the live note stay in view
+  while it works; ⓘ again or Esc closes it, and it stays open when full screen is
+  turned on or off.
 - Safety alerts: pinned until "Got it". Each shows one line (the action and the
   fact); "Why?" opens the rest: the chart fact and what was heard. A new point
   about a problem already on screen goes onto that card as an update ("Safety ·

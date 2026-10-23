@@ -733,11 +733,11 @@
             this.renderAll();
             setTimeout(() => {
                 this.renderAll();   // after the layout settles (container widths)
-                // "Inside the coworker" stays open: docked over the note in full screen, over the panel otherwise.
+                // "Inside the coworker" stays open: docked in the right-hand column in full screen, over the panel otherwise.
                 if (typeof LiveAbout !== 'undefined' && LiveAbout.isOpen()) this.openAbout(null);
             }, 80);
         },
-        /** Where "Inside the coworker" opens: over the live note in full screen (three columns), else over the panel. */
+        /** Where "Inside the coworker" opens: the right-hand column in full screen (three columns), else over the panel. */
         _aboutHost() {
             const root = LivePanel.el;
             const right = root && root.querySelector('.lc-right');

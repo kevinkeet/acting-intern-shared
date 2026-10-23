@@ -167,8 +167,8 @@
         register(id, view) { this.views[id] = view; },
 
         /**
-         * Open over the panel (container: the live panel's root), or, in full screen, docked over the live note
-         * (opts.docked) so the rest stays in view while it works. opts.load(id) loads a view's files.
+         * Open over the panel (container: the live panel's root), or, in full screen, docked in the right-hand
+         * column (opts.docked) so the rest stays in view while it works. opts.load(id) loads a view's files.
          */
         open(container, state, opts) {
             this._onClose = (opts && opts.onClose) || null;
@@ -211,7 +211,7 @@
             const docked = !!(opts && opts.docked);
             this.el.classList.toggle('is-docked', docked);
             const closeBtn = this.el.querySelector('[data-about=close]');
-            if (closeBtn) { closeBtn.title = docked ? 'Back to the live note (Esc)' : 'Close (Esc)'; closeBtn.setAttribute('aria-label', docked ? 'Back to the live note' : 'Close'); }
+            if (closeBtn) { closeBtn.title = docked ? 'Back to the radar and the take (Esc)' : 'Close (Esc)'; closeBtn.setAttribute('aria-label', docked ? 'Close: back to the radar and the take' : 'Close'); }
             this.el.hidden = false;
             this.el.classList.toggle('is-still', reduceMotion());
             this.update(state);
