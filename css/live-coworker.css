@@ -527,6 +527,12 @@ html.lc-full-on { overflow: hidden; }
     #ai-panel.lc-full .lc-right .lc-pane[data-pane="tracking"] { grid-area: side; overflow: auto; min-height: 0; border-top: 0; }
     #ai-panel.lc-full .lc-right .lc-pane[data-pane="log"] { display: none; }
     #ai-panel.lc-full .lc-pr { font-size: 15px; }
+    /* "Inside the coworker" opens over the live note, so the conversation, the alerts, the radar and the take
+       stay in view while it works (watch it think). */
+    #ai-panel.lc-full .lc-right > .lc-about.is-docked {
+        position: relative; inset: auto; grid-area: note; min-height: 0; z-index: 5;
+        border-left: 1px solid var(--lc-line); border-right: 1px solid var(--lc-line);
+    }
 }
 
 /* Screenshots and reduced motion: no transitions or entrance animations. */

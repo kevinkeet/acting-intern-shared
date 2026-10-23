@@ -464,6 +464,8 @@
         // ── how it thinks (the about sheet, loaded on first open) ─────────
         async openAbout(from) {
             if (!LivePanel.el) return;
+            // Docked in full screen the header button stays in reach: a second press closes it.
+            if (from && typeof LiveAbout !== 'undefined' && LiveAbout.isOpen() && LiveAbout.el && LiveAbout.el.classList.contains('is-docked')) { LiveAbout.close(); return; }
             if (typeof LiveAbout === 'undefined') {
                 const css = document.createElement('link');
                 css.rel = 'stylesheet';
@@ -484,7 +486,8 @@
                 fetch('data/live/' + pid + '-memory-stats.json', { cache: 'no-store' }).then((r) => (r.ok ? r.json() : null)).catch(() => null)
                     .then((st) => { if (st && this.patientId === pid) { this.memStats = st; this.request('about'); } });
             }
-            LiveAbout.open(LivePanel.el, this._aboutState(), { returnFocus: from || null, load: (id) => this._loadAboutView(id) });
+            const host = this._aboutHost();
+            LiveAbout.open(host.el, this._aboutState(), { returnFocus: from || this._aboutBtn(), load: (id) => this._loadAboutView(id), docked: host.docked });
         },
 
         /** A view of "Inside the coworker" (js/live/live-about-<id>.js and its stylesheet), loaded on first use. */
@@ -714,8 +717,20 @@
             panel.classList.toggle('lc-full', this.full);
             document.documentElement.classList.toggle('lc-full-on', this.full);
             this.renderAll();
-            setTimeout(() => this.renderAll(), 80);   // after the layout settles (container widths)
+            setTimeout(() => {
+                this.renderAll();   // after the layout settles (container widths)
+                // "Inside the coworker" stays open: docked over the note in full screen, over the panel otherwise.
+                if (typeof LiveAbout !== 'undefined' && LiveAbout.isOpen()) this.openAbout(null);
+            }, 80);
         },
+        /** Where "Inside the coworker" opens: over the live note in full screen (three columns), else over the panel. */
+        _aboutHost() {
+            const root = LivePanel.el;
+            const right = root && root.querySelector('.lc-right');
+            const three = !!root && root.getBoundingClientRect().width >= 1100;
+            return this.full && right && three ? { el: right, docked: true } : { el: root, docked: false };
+        },
+        _aboutBtn() { return (LivePanel.el && LivePanel.el.querySelector('.lc-head [data-act=about]')) || null; },
 
         /** Side by side: widen the AI panel so the conversation and the note sit in two columns. */
         toggleWide() {

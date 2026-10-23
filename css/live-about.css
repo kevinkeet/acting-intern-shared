@@ -17,6 +17,8 @@
     display: flex; flex-direction: column; overflow: auto;
     background: var(--lc-bg); color: var(--lc-ink);
     animation: lc-about-in 220ms var(--lc-ease);
+    /* Its views lay out by the sheet's own width (over the whole panel, or one column in full screen). */
+    container: lc / inline-size;
 }
 .lc-about-head {
     position: sticky; top: 0; z-index: 1;
