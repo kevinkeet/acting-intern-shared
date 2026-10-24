@@ -62,6 +62,13 @@ class Router {
      */
     handleRoute() {
         const { path, params } = this.parseHash();
+        // Accounts limited to some pages (a signed-in grader: the grading pages
+        // only). App.routeGuard returns the hash to go to instead, or null.
+        if (typeof App !== 'undefined' && App && typeof App.routeGuard === 'function') {
+            let to = null;
+            try { to = App.routeGuard(path); } catch (e) { to = null; }
+            if (to && to !== window.location.hash) { window.location.replace(to); return; }
+        }
         this.currentRoute = path;
         this.currentParams = params;
 

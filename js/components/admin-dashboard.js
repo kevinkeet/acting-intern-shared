@@ -88,21 +88,40 @@ const AdminDashboard = {
         if (!sb) return null;
         if (this._authWired) return this._session;
         this._authWired = true;
+        let restored = false;
         try {
             const { data } = await sb.auth.getSession();
             this._session = (data && data.session) || null;
+            restored = true;
         } catch (err) {
             console.warn('admin session restore failed:', err.message);
             this._session = null;
         }
+        if (restored && !this._session) this._rememberStaffRole(null);
         sb.auth.onAuthStateChange((event, session) => {
             this._session = session || null;
-            if (!session) { this._isAdmin = false; this._adminRole = null; this._cache = null; }
+            if (!session) { this._isAdmin = false; this._isGrader = false; this._adminRole = null; this._cache = null; this._rememberStaffRole(null); }
             window.dispatchEvent(new CustomEvent('admin:auth-change', {
                 detail: { signedIn: !!session },
             }));
         });
         return this._session;
+    },
+
+    /**
+     * Remember the signed-in staff role in this browser, so the next page load
+     * starts in the right view before the session check finishes: a grader
+     * sees the grading pages only (App._graderView, App.routeGuard). Cleared
+     * when the account signs out or the session has gone.
+     */
+    _rememberStaffRole(role) {
+        try {
+            if (role === 'admin' || role === 'proctor' || role === 'grader') localStorage.setItem('staff-role', role);
+            else localStorage.removeItem('staff-role');
+        } catch (e) { /* storage unavailable: the view follows the live session only */ }
+        if (typeof App !== 'undefined' && App && App._syncStaffMode) {
+            try { App._syncStaffMode(); } catch (e) { /* cosmetic */ }
+        }
     },
 
     /**
@@ -113,6 +132,7 @@ const AdminDashboard = {
         const sb = this._adminClient();
         if (!sb || !this._session || !this._session.user) {
             this._isAdmin = false;
+            if (sb) this._rememberStaffRole(null);
             return { ok: false, reason: 'signed_out' };
         }
         try {
@@ -127,25 +147,30 @@ const AdminDashboard = {
             }
             if (!data) {
                 this._isAdmin = false;
+                this._rememberStaffRole(null);
                 return { ok: false, reason: 'no_role' };
             }
             if (data.role === 'admin' || data.role === 'proctor') {
                 this._isAdmin = true;
                 this._isGrader = false;
                 this._adminRole = data.role;
+                this._rememberStaffRole(data.role);
                 if (typeof App !== 'undefined' && App._mountAuthChip) App._mountAuthChip();
                 return { ok: true, role: data.role };
             }
             if (data.role === 'grader') {
-                // Faculty graders: blinded grading pages only (see grading.js).
+                // Faculty graders: blinded grading pages only (see grading.js),
+                // and no other part of the site while signed in (App.routeGuard).
                 this._isAdmin = false;
                 this._isGrader = true;
                 this._adminRole = 'grader';
+                this._rememberStaffRole('grader');
                 if (typeof App !== 'undefined' && App._mountAuthChip) App._mountAuthChip();
                 return { ok: true, role: 'grader' };
             }
             this._isAdmin = false;
             this._isGrader = false;
+            this._rememberStaffRole(null);
             return { ok: false, reason: 'wrong_role', role: data.role };
         } catch (err) {
             this._isAdmin = false;
@@ -184,15 +209,20 @@ const AdminDashboard = {
 
     async signOut() {
         const sb = this._adminClient();
+        // A grader goes back to the grader sign-in, not the admin console's.
+        const toGrading = this._adminRole === 'grader' || (window.location.hash || '').indexOf('#/grade') === 0;
         this._cache = null;
         this._isAdmin = false;
+        this._isGrader = false;
         this._adminRole = null;
+        this._rememberStaffRole(null);
         if (sb) { try { await sb.auth.signOut(); } catch (e) { /* ignore */ } }
         this._session = null;
         window.dispatchEvent(new CustomEvent('admin:auth-change', { detail: { signedIn: false } }));
         if (typeof router !== 'undefined') {
-            if (window.location.hash === '#/admin/attempts') router.handleRoute();
-            else window.location.hash = '#/admin/attempts';
+            const dest = toGrading ? '#/grade' : '#/admin/attempts';
+            if (window.location.hash === dest) router.handleRoute();
+            else window.location.hash = dest;
         }
     },
 
@@ -256,10 +286,10 @@ const AdminDashboard = {
                 <div class="admin-gate">
                     <div class="admin-gate-icon"><i data-lucide="shield"></i></div>
                     <h1>${this._escape(opts.title || 'Study admin sign-in')}</h1>
-                    <p class="admin-gate-note">
+                    <p class="admin-gate-note">${opts.note ? this._escape(opts.note) : `
                         Participants never sign in — they use a participant code. This page is for
                         the study PI / proctors and requires a Supabase Auth account listed in
-                        <code>admin_roles</code>.
+                        <code>admin_roles</code>.`}
                     </p>
                     <form id="admin-login-form" class="admin-gate-form" autocomplete="on">
                         <label for="admin-login-email">Email</label>

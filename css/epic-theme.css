@@ -14584,6 +14584,25 @@ body.mode-staff #assessment-chatbot-panel { display: none !important; }
 body.mode-staff .content { padding: 24px 36px 48px; background: #f6f7f9; }
 body.mode-staff .admin-page { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 18px 26px 30px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
 body.mode-staff .top-header .logo { font-weight: 600; }
+/* Grader view (Kevin, 23 Oct 2026): a signed-in grader, or anyone on a grading page who is not
+   signed in as a study admin, sees the grading pages only. No other part of the site in the header
+   (mode tabs, Home, Sim, Feedback, About), no AI panels, no chat or search pop-ups. Set by
+   App._syncStaffMode; App.routeGuard keeps a signed-in grader on the grading pages. The `html`
+   prefix outranks the mode rules that force the AI panel open with !important. */
+body.grader-view .top-header .header-left > :not(.logo),
+body.grader-view .top-header .header-right > :not(#header-auth-chip),
+html body.grader-view #ai-panel,
+html body.grader-view #ai-panel-floating-btn,
+html body.grader-view #ai-panel-floating-btn.visible,
+html body.grader-view #tutor-panel,
+html body.grader-view #chat-trigger-buttons,
+html body.grader-view #floating-chat-container,
+html body.grader-view #feedback-panel,
+html body.grader-view #feedback-bar,
+html body.grader-view #global-search-modal,
+html body.grader-view #entry-chooser,
+html body.grader-view #mode-chooser,
+html body.grader-view #about-modal-overlay { display: none !important; }
 .header-auth-chip { display: inline-flex; align-items: center; gap: 6px; margin-right: 10px; }
 .header-auth-who { display: inline-flex; align-items: center; gap: 6px; color: #fff; text-decoration: none; font-size: 11.5px; background: rgba(255,255,255,0.14); padding: 3px 10px; border-radius: 12px; }
 .header-auth-who:hover { background: rgba(255,255,255,0.24); }

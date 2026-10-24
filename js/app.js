@@ -104,10 +104,15 @@ const App = {
 
         // Apply the three-purpose app shell (Assessment / Tutor / Assistant).
         // Scopes chrome by mode and renders the top-bar switcher.
-        // An #/admin/... deep link is the ONLY way into the admin dashboard
-        // before you have signed in (the sidebar link is hidden until then),
-        // so mode bootstrapping must not navigate away from it.
-        const _onAdminRoute = (window.location.hash || '').indexOf('#/admin') === 0;
+        // Staff deep links (#/admin/..., #/grade...) are the ONLY way into the
+        // admin console and grading before you have signed in (the sidebar
+        // links are hidden until then), so mode bootstrapping must not navigate
+        // away from them, and the visitor pop-ups (chooser, About) stay off.
+        // A signed-in grader sees the grading pages only (routeGuard).
+        if (this._staffRole() === 'grader' && (window.location.hash || '').indexOf('#/grade') !== 0) {
+            try { history.replaceState(null, '', '#/grade'); } catch (e) { window.location.hash = '#/grade'; }
+        }
+        const _onStaffRoute = /^#\/(admin|grade)/.test(window.location.hash || '');
 
         let _mode = null;
         if (typeof ModeManager !== 'undefined') {
@@ -118,13 +123,13 @@ const App = {
             // after the route had already moved to /assessment/start and paint
             // the chart over the consent + participant-code page — the first
             // thing a new participant saw after the site password.
-            if (!_mode && !_onAdminRoute && ModeManager.isStudyLocked && ModeManager.isStudyLocked()) {
+            if (!_mode && !_onStaffRoute && ModeManager.isStudyLocked && ModeManager.isStudyLocked()) {
                 ModeManager.set('assessment', { navigate: false });
                 _mode = 'assessment';
             }
             // If a mode is already chosen and we booted with no/default route,
             // land on that mode's home instead of the chart-review default.
-            if (_mode && !_onAdminRoute
+            if (_mode && !_onStaffRoute
                 && (!window.location.hash || window.location.hash === '#/' || window.location.hash === '#/chart-review')) {
                 window.location.hash = ModeManager.MODES[_mode].home;
             }
@@ -136,14 +141,14 @@ const App = {
         // First entry: ask which part of the site to use. Otherwise show the
         // About popup on first visit (chooser takes precedence).
         if (typeof ModeManager !== 'undefined' && !_mode) {
-            if (_onAdminRoute) {
+            if (_onStaffRoute) {
                 // Apply the study chrome without navigating (set() would push
-                // the hash to the assessment home and kick us off /admin).
+                // the hash to the assessment home and kick us off the staff page).
                 ModeManager.set('assessment', { navigate: false });
             } else {
                 ModeManager.showChooser();
             }
-        } else if (!_onAdminRoute) {
+        } else if (!_onStaffRoute) {
             About.checkFirstVisit();
         }
 
@@ -300,6 +305,7 @@ const App = {
         // The admin dashboard owns its own Supabase client/session (see
         // admin-dashboard.js) so it emits its own event.
         window.addEventListener('admin:auth-change', () => this._refreshAssessmentNav());
+        window.addEventListener('admin:auth-change', () => this._syncStaffMode());
         window.addEventListener('hashchange', () => { this._syncStaffMode(); setTimeout(() => this._syncBrowseChat(), 80); });
         this._syncStaffMode();
         setTimeout(() => this._syncBrowseChat(), 600);
@@ -395,6 +401,10 @@ const App = {
      */
     _maybeShowEntryChooser() {
         try { if (localStorage.getItem('entry-mode')) return; } catch (e) { return; }
+        // Staff pages (admin console, grading) and graders never get the visitor
+        // chooser: on a grader's first visit it covered the sign-in page and
+        // offered the full site.
+        if (/^#\/(admin|grade)/.test(location.hash || '') || this._graderView()) return;
         if (document.getElementById('entry-chooser')) return;
         const el = document.createElement('div');
         el.id = 'entry-chooser';
@@ -459,22 +469,65 @@ const App = {
      */
     _syncStaffMode() {
         const h = location.hash || '';
-        const staff = h.startsWith('#/admin') || h.startsWith('#/grade');
+        const graderView = this._graderView();
+        const staff = h.startsWith('#/admin') || h.startsWith('#/grade') || graderView;
         document.body.classList.toggle('mode-staff', staff);
-        // The header logo has one owner (this function): staff console label
-        // on admin/grade, study label on the participant lobby pages (case
-        // list / thank-you / exit), the chart label everywhere else.
+        document.body.classList.toggle('grader-view', graderView);
+        // Visitor pop-ups never cover a staff page.
+        if (staff) ['entry-chooser', 'mode-chooser', 'about-modal-overlay'].forEach((id) => {
+            const el = document.getElementById(id);
+            if (el) el.remove();
+        });
+        // The header logo has one owner (this function): grading label in
+        // grader view, staff console label on admin/grade, study label on the
+        // participant lobby pages (case list / thank-you / exit), the chart
+        // label everywhere else.
         const lobby = /^#\/assessment\/(start|complete|exit)(\/|$)/.test(h);
         const logo = document.querySelector('.top-header .logo');
         if (logo) {
             if (!logo.dataset.chartHtml) logo.dataset.chartHtml = logo.innerHTML;
-            logo.innerHTML = staff
+            logo.innerHTML = graderView
+                ? '<i data-lucide="check-square" class="lucide-inline"></i> Acting Intern · Grading'
+                : staff
                 ? '<i data-lucide="clipboard-check" class="lucide-inline"></i> Acting Intern · Study console'
                 : (lobby
                     ? '<i data-lucide="clipboard-list" class="lucide-inline"></i> Acting Intern — TEACH-AI study'
                     : logo.dataset.chartHtml);
             this.refreshIcons();
         }
+    },
+
+    /**
+     * The signed-in staff role ('admin', 'proctor' or 'grader'), or null.
+     * Until this page load has checked the staff session, it is the role
+     * remembered from the last check (AdminDashboard._rememberStaffRole), so a
+     * grader's page opens in grader view instead of showing the site first.
+     */
+    _staffRole() {
+        const live = (typeof AdminDashboard !== 'undefined' && AdminDashboard) ? AdminDashboard._adminRole : null;
+        if (live) return live;
+        try { return localStorage.getItem('staff-role') || null; } catch (e) { return null; }
+    },
+
+    /**
+     * Grader view: the grading pages and nothing else (no links to other
+     * parts of the site, no AI panels). On everywhere for a signed-in grader,
+     * and on the grading pages for anyone not signed in as a study admin or
+     * proctor, which is how a grader first arrives at the sign-in page.
+     */
+    _graderView() {
+        const role = this._staffRole();
+        if (role === 'grader') return true;
+        return (location.hash || '').startsWith('#/grade') && role !== 'admin' && role !== 'proctor';
+    },
+
+    /**
+     * Router hook, run before every route: a signed-in grader may open the
+     * grading pages only. Returns the hash to go to instead, or null.
+     */
+    routeGuard(path) {
+        if (this._staffRole() !== 'grader') return null;
+        return /^\/grade(-practice)?(\/|$)/.test(path || '') ? null : '#/grade';
     },
 
     _syncBrowseChat() {
