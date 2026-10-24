@@ -51,6 +51,21 @@ const App = {
         // One-time cleanup: clear stale simulation data from previous sessions
         this._clearStaleSessionData();
 
+        // A participant link (a four-digit code in the URL) means a resident is at
+        // this browser. They never get grader view, and any staff session a grader
+        // or admin left on this computer is signed out (TEST- codes are staff
+        // testing and are left alone). Not awaited: start-up never waits on it.
+        try {
+            const linkCode = (new URLSearchParams(window.location.search).get('code') || '').trim();
+            if (/^[0-9]{4}$/.test(linkCode)) {
+                this._participantLink = true;
+                try { localStorage.removeItem('staff-role'); } catch (e) { /* ignore */ }
+                if (typeof AdminDashboard !== 'undefined' && AdminDashboard.signOutQuietly) {
+                    AdminDashboard.signOutQuietly().catch(() => {});
+                }
+            }
+        } catch (e) { /* non-fatal */ }
+
         // Start clock
         this.startClock();
 
@@ -109,7 +124,7 @@ const App = {
         // links are hidden until then), so mode bootstrapping must not navigate
         // away from them, and the visitor pop-ups (chooser, About) stay off.
         // A signed-in grader sees the grading pages only (routeGuard).
-        if (this._staffRole() === 'grader' && (window.location.hash || '').indexOf('#/grade') !== 0) {
+        if (!this._participantLink && this._staffRole() === 'grader' && (window.location.hash || '').indexOf('#/grade') !== 0) {
             try { history.replaceState(null, '', '#/grade'); } catch (e) { window.location.hash = '#/grade'; }
         }
         const _onStaffRoute = /^#\/(admin|grade)/.test(window.location.hash || '');
@@ -517,16 +532,20 @@ const App = {
      */
     _graderView() {
         const role = this._staffRole();
-        if (role === 'grader') return true;
+        if (role === 'grader' && !this._participantLink) return true;
         return (location.hash || '').startsWith('#/grade') && role !== 'admin' && role !== 'proctor';
     },
 
+    /** Set when this page was opened from a participant link (see init). */
+    _participantLink: false,
+
     /**
      * Router hook, run before every route: a signed-in grader may open the
-     * grading pages only. Returns the hash to go to instead, or null.
+     * grading pages only. Returns the hash to go to instead, or null. Never
+     * redirects a page opened from a participant link.
      */
     routeGuard(path) {
-        if (this._staffRole() !== 'grader') return null;
+        if (this._participantLink || this._staffRole() !== 'grader') return null;
         return /^\/grade(-practice)?(\/|$)/.test(path || '') ? null : '#/grade';
     },
 

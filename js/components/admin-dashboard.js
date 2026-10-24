@@ -141,6 +141,12 @@ const AdminDashboard = {
                 .select('role')
                 .eq('user_id', this._session.user.id)
                 .maybeSingle();
+            // Signed out while the check was running (e.g. a participant link opened here):
+            // don't bring the role back.
+            if (!this._session) {
+                this._isAdmin = false;
+                return { ok: false, reason: 'signed_out' };
+            }
             if (error) {
                 this._isAdmin = false;
                 return { ok: false, reason: 'query_error', message: error.message };
@@ -205,6 +211,29 @@ const AdminDashboard = {
             const v = await this._verifyAdmin();
             return !!v.ok && (v.role === 'grader' || v.role === 'admin');
         } catch (err) { return false; }
+    },
+
+    /**
+     * Sign a staff session out of this browser only, staying on the page. Used when a participant
+     * link is opened here (App.init): a resident must never land in a grader's or admin's session
+     * left behind on a shared computer. scope 'local' leaves that person's other devices signed in.
+     */
+    async signOutQuietly() {
+        this._rememberStaffRole(null);
+        const sb = this._adminClient();
+        if (!sb) return false;
+        let had = false;
+        try { const { data } = await sb.auth.getSession(); had = !!(data && data.session); } catch (e) { had = false; }
+        if (!had) return false;
+        this._cache = null;
+        this._isAdmin = false;
+        this._isGrader = false;
+        this._adminRole = null;
+        try { await sb.auth.signOut({ scope: 'local' }); } catch (e) { /* ignore */ }
+        this._session = null;
+        this._rememberStaffRole(null);   // again: a role check may have finished meanwhile
+        window.dispatchEvent(new CustomEvent('admin:auth-change', { detail: { signedIn: false } }));
+        return true;
     },
 
     async signOut() {
@@ -477,8 +506,10 @@ const AdminDashboard = {
         for (const list of byResp.values()) list.sort((x, y) => x.slot - y.slot);
         const assigned = new Map();     // attempt_id -> [slot numbers]
         const perGraderAssigned = slots.map(() => 0);
+        let workload = null;            // grading_workload() rows (migration 023), else null
         try {
             await sb.rpc('assign_pending_grading');
+            try { const w = await sb.rpc('grading_workload'); if (!w.error) workload = w.data || []; } catch (e) { /* migration 023 not applied yet */ }
             const asg = await sb.rpc('grading_assignment_list');
             if (!asg.error) for (const x of asg.data || []) {
                 const slot = slots.indexOf(x.grader_id);
@@ -491,7 +522,25 @@ const AdminDashboard = {
         } catch (e) { /* migration 010 not applied yet */ }
         const n = slots.length;
         const pairFor = (attemptId) => assigned.get(attemptId) || [];
-        return { roster: roster.data || [], slots, byResp, perGrader, perGraderAssigned, pairFor, n, adj: new Map((adj.data || []).map((a) => [a.response_id, a])) };
+        return { roster: roster.data || [], slots, byResp, perGrader, perGraderAssigned, pairFor, n, workload, adj: new Map((adj.data || []).map((a) => [a.response_id, a])) };
+    },
+
+    /** Grader workload table for the adjudication page (migration 023's grading_workload()). */
+    _workloadTable(rows) {
+        if (!rows || !rows.length) return '';
+        const E = (s) => this._escape(s);
+        return `
+            <table class="admin-table grading-workload">
+                <thead><tr><th>Grader</th><th>Cases</th><th>Answers</th><th>Graded</th><th>To grade</th><th>Case 1 · 2 · 3</th><th>PRE · POST</th></tr></thead>
+                <tbody>${rows.map((w) => `
+                    <tr${w.on_roster ? '' : ' class="grading-workload-left"'}>
+                        <td>${E(w.label || w.email || 'Grader')}${w.on_roster ? '' : ' <small>(off the roster; keeps the cases they started)</small>'}</td>
+                        <td>${Number(w.cases) || 0}</td><td>${Number(w.answers) || 0}</td><td>${Number(w.graded) || 0}</td><td>${Number(w.to_grade) || 0}</td>
+                        <td>${Number(w.case1) || 0} · ${Number(w.case2) || 0} · ${Number(w.case3) || 0}${Number(w.other_cases) ? ` (+${Number(w.other_cases)} other)` : ''}</td>
+                        <td>${Number(w.pre) || 0} · ${Number(w.post) || 0}${Number(w.no_arm) ? ` (+${Number(w.no_arm)} not registered)` : ''}</td>
+                    </tr>`).join('')}
+                </tbody>
+            </table>`;
     },
 
     async renderGrading() {
@@ -550,7 +599,11 @@ const AdminDashboard = {
                     <div class="admin-card-title">Graders</div>
                     <div class="admin-card-body">
                         ${gr.roster.length ? gr.roster.map((r, i) => `Slot ${i + 1}: <b>${slotLabel(i)}</b>`).join(' &nbsp;·&nbsp; ') : 'No roster graders yet.'}
-                        <div class="admin-export-help">Every completed case is assigned to two graders, always the two with the fewest cases so far (${gr.roster.map((r, i) => `slot ${i + 1}: ${gr.perGraderAssigned[i]} cases`).join(', ') || 'no roster yet'}). Assignments are stored, so a grader added later simply starts receiving new cases; nothing already assigned moves. Slots are the order the grader role was granted (admin_roles.notes = display name; a note starting TEST marks a practice grader with no slot). Graders sign in at <code>actingintern.com/grade</code>. Final points below feed the REDCap export (ar_final_points); when blank, the export uses the mean of the two scores.</div>
+                        ${this._workloadTable(gr.workload)}
+                        <div class="admin-export-help">${gr.workload
+                            ? 'Every finished case goes to two graders: whoever has the fewest cases of the same kind (same case, same arm), then the least work overall. Each grader gets the same mix of Case 1, 2 and 3 and of PRE and POST. A grader added later takes more of the new cases until their mix catches up, and takes over cases other graders have not opened yet. Nothing a grader has opened or started moves. A grader taken off the roster (role removed, or a note starting TEST) hands back the cases they have not started.'
+                            : `Every completed case is assigned to two graders, always the two with the fewest cases so far (${gr.roster.map((r, i) => `slot ${i + 1}: ${gr.perGraderAssigned[i]} cases`).join(', ') || 'no roster yet'}). Assignments are stored, so a grader added later simply starts receiving new cases; nothing already assigned moves.`}
+                            Slots are the order the grader role was granted (admin_roles.notes = display name; a note starting TEST marks a practice grader with no slot). Graders sign in at <code>actingintern.com/grade</code>. Final points below feed the REDCap export (ar_final_points); when blank, the export uses the mean of the two scores.</div>
                     </div>
                 </div>
                 <div class="grading-filter">

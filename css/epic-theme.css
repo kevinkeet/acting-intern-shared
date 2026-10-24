@@ -14575,6 +14575,8 @@ body.assessment-dock-open { --arail: 440px; }
 .grading-adj-diff { color: #c53030; font-weight: 700; }
 .grading-adj-auto { color: #718096; }
 .grading-adj-input { width: 70px; }
+.grading-workload { margin: 10px 0 8px; max-width: 820px; }
+.grading-workload-left td { color: #718096; }
 /* Staff pages (admin console, grading) stand alone — no chart chrome */
 body.mode-staff #sidebar,
 body.mode-staff .allergy-banner,

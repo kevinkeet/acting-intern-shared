@@ -81,6 +81,23 @@ check('the visitor chooser never opens on a staff page or for a grader', () => {
     appCtx.appended.length = 0; as(null, null, '#/assessment/start'); App._maybeShowEntryChooser();
     assert.strictEqual(appCtx.appended.length, 1, 'a visitor still gets the chooser');
 });
+check('a page opened from a participant link never gets grader view or the grading redirect', () => {
+    App._participantLink = true;
+    as('grader', 'grader', '#/assessment/start');
+    assert.strictEqual(App._graderView(), false);
+    assert.strictEqual(App.routeGuard('/assessment/start'), null);
+    as(null, null, '#/grade'); assert.strictEqual(App._graderView(), true, 'the grader sign-in page itself stays clean');
+    App._participantLink = false;
+});
+check('start-up: a four-digit ?code= link clears the remembered role and signs staff out without waiting', () => {
+    const init = App.init.toString();
+    assert.match(init, /\/\^\[0-9\]\{4\}\$\/\.test\(linkCode\)/);
+    assert.match(init, /this\._participantLink = true/);
+    assert.match(init, /localStorage\.removeItem\('staff-role'\)/);
+    assert.match(init, /AdminDashboard\.signOutQuietly\(\)\.catch\(/);
+    assert.ok(!/await AdminDashboard\.signOutQuietly/.test(init), 'start-up must not wait on it');
+    assert.match(init, /if \(!this\._participantLink && this\._staffRole\(\) === 'grader'/);
+});
 check('start-up treats #/grade like #/admin (no chooser, no About) and sends a grader to #/grade', () => {
     const init = App.init.toString();
     assert.match(init, /const _onStaffRoute = \/\^#\\\/\(admin\|grade\)\/\.test/);
@@ -152,6 +169,48 @@ check('remembering the staff role stores it, clears it, and refreshes the view',
         console.log('PASS  sign-out destinations: grader -> #/grade, admin -> #/admin/attempts; role forgotten');
     } catch (e) { fail++; console.log('FAIL  sign-out destinations -> ' + e.message); }
 
+    try {
+        const calls = [];
+        const client = (session) => ({ auth: { getSession: async () => ({ data: { session } }), signOut: async (opts) => { calls.push(opts); return {}; } } });
+        AD._client = client({ user: { id: 'u' } }); AD._adminRole = 'grader'; AD._session = { user: { id: 'u' } };
+        aCtx.localStorage.setItem('staff-role', 'grader'); aCtx.location.hash = '#/assessment/start'; aCtx.events.length = 0;
+        assert.strictEqual(await AD.signOutQuietly(), true);
+        assert.deepStrictEqual(JSON.parse(JSON.stringify(calls)), [{ scope: 'local' }], 'this browser only');
+        assert.strictEqual(aCtx.localStorage.getItem('staff-role'), null);
+        assert.strictEqual(AD._adminRole, null); assert.strictEqual(AD._session, null);
+        assert.strictEqual(aCtx.location.hash, '#/assessment/start', 'stays on the page');
+        assert.ok(aCtx.events.includes('admin:auth-change'));
+        calls.length = 0; AD._client = client(null);
+        assert.strictEqual(await AD.signOutQuietly(), false); assert.strictEqual(calls.length, 0, 'nothing to sign out');
+        console.log('PASS  quiet sign-out: this browser only, stays on the page, role forgotten');
+    } catch (e) { fail++; console.log('FAIL  quiet sign-out -> ' + e.message); }
+
+    try {
+        // The role check finishes after a sign-out: the role must not come back.
+        let release;
+        AD._client = { from: () => ({ select() { return this; }, eq() { return this; }, maybeSingle: () => new Promise((r) => { release = () => r({ data: { role: 'grader' }, error: null }); }) }) };
+        AD._session = { user: { id: 'u' } }; aCtx.localStorage.removeItem('staff-role');
+        const pending = AD._verifyAdmin();
+        AD._session = null; release();
+        const v = await pending;
+        assert.deepStrictEqual(JSON.parse(JSON.stringify(v)), { ok: false, reason: 'signed_out' });
+        assert.strictEqual(aCtx.localStorage.getItem('staff-role'), null);
+        console.log('PASS  a role check that finishes after sign-out does not bring the grader role back');
+    } catch (e) { fail++; console.log('FAIL  role check after sign-out -> ' + e.message); }
+
+    check('adjudication page: workload table (migration 023) escapes names and marks graders off the roster', () => {
+        AD._escape = AD._escape || ((s) => String(s));
+        const html = AD._workloadTable([
+            { label: 'Kathleen <b>Jia</b>', on_roster: true, cases: 4, answers: 28, graded: 7, to_grade: 21, case1: 2, case2: 1, case3: 1, other_cases: 0, pre: 3, post: 1, no_arm: 0 },
+            { label: null, email: 'left@x.org', on_roster: false, cases: 1, answers: 7, graded: 7, to_grade: 0, case1: 1, case2: 0, case3: 0, other_cases: 0, pre: 0, post: 1, no_arm: 2 },
+        ]);
+        assert.match(html, /Kathleen &lt;b&gt;Jia&lt;\/b&gt;/);
+        assert.match(html, /<td>4<\/td><td>28<\/td><td>7<\/td><td>21<\/td>/);
+        assert.match(html, /2 · 1 · 1/); assert.match(html, /3 · 1/);
+        assert.match(html, /class="grading-workload-left"[\s\S]*left@x\.org[\s\S]*off the roster/);
+        assert.match(html, /\+2 not registered/);
+        assert.strictEqual(AD._workloadTable(null), ''); assert.strictEqual(AD._workloadTable([]), '');
+    });
     check('the grader sign-in shows the graders\' note, not the PI/proctor small print', () => {
         const root = { innerHTML: '' };
         aCtx.document = { getElementById: () => null };
